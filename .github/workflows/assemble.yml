@@ -1,0 +1,29 @@
+name: Assemble EUSKARAZ GAMES project
+
+on:
+  push:
+    paths:
+      - 'ASSEMBLE_NOW'
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Rebuild project archive
+        run: |
+          cat .upload_parts/part_*.txt > project.b64
+          base64 -d project.b64 > project.zip
+          unzip -o project.zip -d .
+          rm -rf .upload_parts ASSEMBLE_NOW ACCESS_OK.txt project.b64 project.zip
+          rm -f .github/workflows/assemble.yml
+          git config user.name "EUSKARAZ GAMES Bot"
+          git config user.email "actions@github.com"
+          git add -A
+          git commit -m "Upload EUSKARAZ GAMES V29.1 Cloudflare WebSocket project"
+          git push
