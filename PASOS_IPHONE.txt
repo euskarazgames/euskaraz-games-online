@@ -1,0 +1,46 @@
+EUSKARAZ GAMES V29.1 · PASOS DESDE IPHONE
+
+NO USES LA PANTALLA DE "UPLOAD FILES" DE CLOUDFLARE.
+Ese uploader no puede desplegar Durable Objects + wrangler.jsonc.
+
+PARTE 1 · GITHUB
+1. En Safari abre https://github.com e inicia sesión.
+2. Ve a tu perfil > Your repositories > New.
+3. Nombre: euskaraz-games-online
+4. Create repository.
+5. Dentro del repo: Add file > Upload files.
+6. Sube el contenido de esta carpeta:
+   public/
+   src/
+   wrangler.jsonc
+   package.json
+   README.md
+   .gitignore
+
+Al abrir el repo tienes que ver directamente:
+public
+src
+wrangler.jsonc
+package.json
+README.md
+
+PARTE 2 · CLOUDFLARE
+7. Abre https://dash.cloudflare.com
+8. Workers & Pages > Create application.
+9. Import a repository > Get started.
+10. Elige GitHub y autoriza Cloudflare.
+11. Selecciona euskaraz-games-online.
+12. Configura:
+    Worker name: euskaraz-games-online
+    Root directory: /
+    Build command: VACÍO
+    Deploy command: npx wrangler deploy
+13. Save and Deploy.
+
+PARTE 3 · PRUEBA
+14. Cuando termine, abre:
+    https://TU-WORKER.workers.dev/health
+15. Si devuelve {"ok":true,...}, el servidor funciona.
+16. Abre la URL normal, crea una partida y manda el enlace al segundo dispositivo.
+
+Si una pantalla no coincide, haz una captura y envíamela.
