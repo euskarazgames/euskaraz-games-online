@@ -1,0 +1,30 @@
+name: Compact Itsas Dorrea mission panel
+
+on:
+  push:
+    paths:
+      - 'PATCH_ITSAS_MISIO_NOW'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch ITSAS DORREA mission panel
+        run: |
+          python .github/scripts/patch_itsas_misio.py
+          rm -f PATCH_ITSAS_MISIO_NOW
+          git config user.name "EUSKARAZ GAMES Bot"
+          git config user.email "actions@github.com"
+          git add public/index.html PATCH_ITSAS_MISIO_NOW
+          if git diff --cached --quiet; then
+            echo "No content changes"
+          else
+            git commit -m "Compact Itsas Dorrea mission notifications"
+            git push
+          fi
