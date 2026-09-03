@@ -1,0 +1,30 @@
+name: Professional Herri Pilota online V4
+
+on:
+  push:
+    paths:
+      - 'PATCH_PILOTA_PRO_NOW'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch professional online play
+        run: |
+          python .github/scripts/patch_pilota_pro.py
+          rm -f PATCH_PILOTA_PRO_NOW
+          git config user.name "EUSKARAZ GAMES Bot"
+          git config user.email "actions@github.com"
+          git add public/index.html PATCH_PILOTA_PRO_NOW
+          if git diff --cached --quiet; then
+            echo "No content changes"
+          else
+            git commit -m "Professional Herri Pilota online V4"
+            git push
+          fi
