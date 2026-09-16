@@ -1,0 +1,23 @@
+name: Herri Pilota J2 Gameplay V5
+on:
+  push:
+    paths:
+      - 'J2_GAMEPLAY_V5_REQUEST'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply J2 V5 refinement
+        run: |
+          python .github/scripts/patch_pilota_j2_v5.py
+          rm -f J2_GAMEPLAY_V5_REQUEST
+          git config user.name "EUSKARAZ GAMES Bot"
+          git config user.email "actions@github.com"
+          git add public/index.html J2_GAMEPLAY_V5_REQUEST
+          git commit -m "Refine Herri Pilota J2 online gameplay V5"
+          git push
