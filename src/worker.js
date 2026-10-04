@@ -1,3 +1,4 @@
+import { handleAtariaApi } from "./ataria.js";
 import { DurableObject } from "cloudflare:workers";
 
 function validRoom(v) {
@@ -19,6 +20,10 @@ function sendJson(ws, obj) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/ataria/api/catalog") {
+      return handleAtariaApi(request);
+    }
 
     if (url.pathname === "/health") {
       return new Response(JSON.stringify({ ok: true, service: "euskaraz-games-ws", ts: Date.now() }), {
