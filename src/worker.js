@@ -25,6 +25,13 @@ export default {
       return handleAtariaApi(request);
     }
 
+    if (url.pathname === "/ataria/api/click" || url.pathname === "/ataria/api/ranking") {
+      const stub = env.ATARIA_STATS.getByName("global");
+      const target = new URL(request.url);
+      target.hostname = "ataria-stats";
+      return stub.fetch(new Request(target, request));
+    }
+
     if (url.pathname === "/health") {
       return new Response(JSON.stringify({ ok: true, service: "euskaraz-games-ws", ts: Date.now() }), {
         headers: { "content-type": "application/json", "cache-control": "no-store" }
@@ -156,5 +163,60 @@ export class GameRoom extends DurableObject {
 
   webSocketError(ws) {
     try { ws.close(1011, "websocket error"); } catch {}
+  }
+}
+
+export class AtariaStats extends DurableObject {
+  constructor(ctx, env) {
+    super(ctx, env);
+    this.ctx = ctx;
+  }
+
+  async fetch(request) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/ataria/api/click") {
+      if (request.method !== "POST") return new Response("Method Not Allowed", { status: 405 });
+      let body;
+      try { body = await request.json(); } catch { return new Response("Bad Request", { status: 400 }); }
+
+      const itemUrl = String(body?.url || "").slice(0, 1200);
+      const title = String(body?.title || "").slice(0, 180);
+      const category = String(body?.category || "").slice(0, 40);
+      const source = String(body?.source || "").slice(0, 80);
+      if (!itemUrl.startsWith("https://") || !title) return new Response("Bad Request", { status: 400 });
+
+      const key = "item:" + itemUrl;
+      const current = (await this.ctx.storage.get(key)) || {
+        url: itemUrl, title, category, source, count: 0, lastOpenedAt: null
+      };
+      current.title = title || current.title;
+      current.category = category || current.category;
+      current.source = source || current.source;
+      current.count = Number(current.count || 0) + 1;
+      current.lastOpenedAt = new Date().toISOString();
+      await this.ctx.storage.put(key, current);
+
+      return Response.json({ ok: true, count: current.count }, {
+        headers: { "cache-control": "no-store" }
+      });
+    }
+
+    if (url.pathname === "/ataria/api/ranking") {
+      if (request.method !== "GET" && request.method !== "HEAD") {
+        return new Response("Method Not Allowed", { status: 405, headers: { allow: "GET, HEAD" } });
+      }
+      const entries = await this.ctx.storage.list({ prefix: "item:" });
+      const ranking = [...entries.values()]
+        .filter(x => x && x.url && x.title)
+        .sort((a,b) => (Number(b.count||0)-Number(a.count||0)) || String(b.lastOpenedAt||"").localeCompare(String(a.lastOpenedAt||"")))
+        .slice(0, 20);
+      const payload = JSON.stringify({ ranking, generatedAt: new Date().toISOString() });
+      return new Response(request.method === "HEAD" ? null : payload, {
+        headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
+      });
+    }
+
+    return new Response("Not Found", { status: 404 });
   }
 }
