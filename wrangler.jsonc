@@ -9,7 +9,8 @@
     "run_worker_first": [
       "/ws",
       "/health",
-      "/ataria/api/*"
+      "/ataria/api/*",
+      "/garena/api/*"
     ]
   },
   "durable_objects": {
