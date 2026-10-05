@@ -6,6 +6,8 @@ const SOURCES = [
   { id:'guau', name:'GUAU', url:'https://guau.eus/api/v1/home', origin:'https://guau.eus', kind:'api', base:'audio' },
   { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/', origin:'https://orain.eus', kind:'html', base:'news' },
   { id:'kirolak', name:'KIROLAK EITB', url:'https://kirolakeitb.eus/eu/', origin:'https://kirolakeitb.eus', kind:'html', base:'sports' },
+  { id:'makusi', name:'MAKUSI', url:'https://makusi.eus/', origin:'https://makusi.eus', kind:'makusi', base:'kids' },
+  { id:'gaztea', name:'Gaztea', url:'https://www.gaztea.eus/', origin:'https://www.gaztea.eus', kind:'html', base:'audio' },
 ];
 
 const decode = (s='') => String(s)
@@ -17,7 +19,7 @@ function safeImage(value, base){
   try {
     const u = new URL(decode(value), base);
     if(u.protocol !== 'https:') return null;
-    const allowed = ['cdnstorage.primeran.eus','eitb.scene7.com','s7g10.scene7.com','orain.eus','kirolakeitb.eus','www.eitb.eus','eitb.eus'];
+    const allowed = ['cdnstorage.primeran.eus','eitb.scene7.com','s7g10.scene7.com','orain.eus','kirolakeitb.eus','www.eitb.eus','eitb.eus','makusi.eus','www.makusi.eus','gaztea.eus','www.gaztea.eus'];
     return allowed.some(h=>u.hostname===h || u.hostname.endsWith('.'+h)) ? u.href : null;
   } catch { return null; }
 }
@@ -62,12 +64,57 @@ function parseApi(text, source){
         description:description(source,x.collection), type:x.collection,
         synopsis:clean(x.description||'').slice(0,360)
       });
-      if(++perRow >= 10) break;
-      if(out.length >= 130) break;
+      if(++perRow >= 16) break;
+      if(out.length >= 220) break;
     }
-    if(out.length >= 130) break;
+    if(out.length >= 220) break;
   }
   if(!out.length) throw new Error('Katalogoa hutsik');
+  return out;
+}
+function imageFrom(fragment, base){
+  const patterns=[
+    /<img[^>]+(?:src|data-src|data-cmp-src)=["']([^"']+)["']/i,
+    /<source[^>]+srcset=["']([^"'\s,]+)/i,
+    /background-image\s*:\s*url\(["']?([^"')]+)["']?\)/i
+  ];
+  for(const re of patterns){
+    const v=fragment.match(re)?.[1];
+    if(v){const img=safeImage(v,base);if(img)return img;}
+  }
+  return null;
+}
+function titleFromSlug(path){
+  const slug=decodeURIComponent(path.split('/').filter(Boolean).pop()||'');
+  return slug.replace(/[-_]+/g,' ').replace(/\b\w/g,c=>c.toUpperCase()).trim();
+}
+function parseMakusi(html, source){
+  const out=[], seen=new Set();
+  const re=/<a\b([^>]*\bhref=["']([^"']*\/ikusi\/(?:s|m)\/[^"'?#]+)[^"']*["'][^>]*)>([\s\S]*?)<\/a>/gi;
+  for(const m of html.matchAll(re)){
+    let url;
+    try{url=new URL(decode(m[2]),source.origin)}catch{continue}
+    if(!/^\/ikusi\/(?:s|m)\//.test(url.pathname)||seen.has(url.href))continue;
+    const attrs=m[1],body=m[3];
+    let title=attrs.match(/aria-label=["']([^"']+)/i)?.[1]
+      || body.match(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/i)?.[1]
+      || body.match(/<img[^>]+alt=["']([^"']+)/i)?.[1]
+      || clean(body);
+    title=clean(title);
+    if(!title||title.length<2||/^image|loading$/i.test(title))title=titleFromSlug(url.pathname);
+    const around=html.slice(Math.max(0,(m.index||0)-900),Math.min(html.length,(m.index||0)+m[0].length+900));
+    const image=imageFrom(body,source.origin)||imageFrom(around,source.origin);
+    const type=url.pathname.includes('/ikusi/m/')?'media':'series';
+    seen.add(url.href);
+    out.push({
+      id:`makusi-${type}-${url.pathname.split('/').pop()}`,
+      title,source:'MAKUSI',sourceId:'makusi',category:'kids',
+      url:url.href,image,description:'Ikusi MAKUSIn',type,
+      synopsis:''
+    });
+    if(out.length>=120)break;
+  }
+  if(!out.length)throw new Error('Ez da MAKUSI edukirik aurkitu');
   return out;
 }
 function parseHtml(html, source){
@@ -86,7 +133,7 @@ function parseHtml(html, source){
     let img = body.match(/<img[^>]*\bsrc=["']([^"']+)/i)?.[1] || body.match(/data-cmp-src=["']([^"']+)/i)?.[1];
     img = img ? safeImage(img,source.origin) : null;
     seen.add(url.href);
-    out.push({id:`${source.id}-${url.pathname}`,title,source:source.name,sourceId:source.id,category:source.base,url:url.href,image:img,description:source.id==='orain'?'Irakurri ORAINen':'Irakurri KIROLAK EITBn',type:'article'});
+    out.push({id:`${source.id}-${url.pathname}`,title,source:source.name,sourceId:source.id,category:source.base,url:url.href,image:img,description:source.id==='orain'?'Irakurri ORAINen':source.id==='gaztea'?'Ikusi Gaztean':'Irakurri KIROLAK EITBn',type:'article'});
     if(out.length>=40) break;
   }
   if(!out.length) throw new Error('Ez da albisterik aurkitu');
@@ -95,7 +142,7 @@ function parseHtml(html, source){
 async function readSource(source, request){
   const origin=new URL(request.url).origin;
   const cache=caches.default;
-  const key=new Request(`${origin}/ataria/__cache/${source.id}`);
+  const key=new Request(`${origin}/garena/__cache/${source.id}`);
   const hit=await cache.match(key);
   if(hit){
     const cached=await hit.json();
@@ -103,10 +150,10 @@ async function readSource(source, request){
     if(age < TTL*1000) return {...cached,status:'cache'};
   }
   try{
-    const res=await fetch(source.url,{headers:{accept:source.kind==='api'?'application/json':'text/html','user-agent':'ATARIA/1.0 (+EITB public directory)'},cf:{cacheTtl:TTL,cacheEverything:true}});
+    const res=await fetch(source.url,{headers:{accept:source.kind==='api'?'application/json':'text/html','user-agent':'GARENA/1.0 (+EITB public directory)'},cf:{cacheTtl:TTL,cacheEverything:true}});
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const text=await res.text();
-    const items=source.kind==='api'?parseApi(text,source):parseHtml(text,source);
+    const items=source.kind==='api'?parseApi(text,source):source.kind==='makusi'?parseMakusi(text,source):parseHtml(text,source);
     const fresh={id:source.id,name:source.name,items,fetchedAt:new Date().toISOString(),status:'eguneratuta'};
     await cache.put(key,Response.json(fresh,{headers:{'cache-control':'public,max-age=604800'}}));
     return fresh;
@@ -120,7 +167,7 @@ function merge(parts){
   const lists=parts.map(p=>p.items||[]);
   const max=Math.max(0,...lists.map(x=>x.length));
   for(let i=0;i<max;i++) for(const list of lists){const x=list[i];if(x&&!seen.has(x.url)){seen.add(x.url);out.push(x)}}
-  return out.slice(0,480);
+  return out.slice(0,900);
 }
 
 export async function handleAtariaApi(request){
