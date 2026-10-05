@@ -188,8 +188,8 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
     <p data-eu="Telebista, kirola eta irratia zuzenean" data-es="Televisión, deporte y radio en directo">Telebista, kirola eta irratia zuzenean</p>
   </div>
   <div class="liveGrid">
-    <a class="live" href="https://etbon.eus/ch/etb-1" rel="noopener"><div class="icon">▣</div><strong>ETB1</strong><small data-eu="Ireki zuzeneko emisioa ↗" data-es="Abrir emisión en directo ↗">Ireki zuzeneko emisioa ↗</small></a>
-    <a class="live" href="https://etbon.eus/directos" rel="noopener"><div class="icon">▣</div><strong>ETB2</strong><small data-eu="Ikusi ETB ONeko zuzenekoak ↗" data-es="Ver directos de ETB ON ↗">Ikusi ETB ONeko zuzenekoak ↗</small></a>
+    <a class="live" href="https://etbon.eus/etb-1" rel="noopener"><div class="icon">▣</div><strong>ETB1 ON</strong><small data-eu="Ireki zuzeneko emisioa ↗" data-es="Abrir emisión en directo ↗">Ireki zuzeneko emisioa ↗</small></a>
+    <a class="live" href="https://etbon.eus/etb-2" rel="noopener"><div class="icon">▣</div><strong>ETB2 ON</strong><small data-eu="Ikusi ETB ONeko zuzenekoak ↗" data-es="Ver directos de ETB ON ↗">Ikusi ETB ONeko zuzenekoak ↗</small></a>
     <a class="live" id="sportLive" href="https://kirolakeitb.eus/eu/" rel="noopener"><div class="icon">↗</div><strong data-eu="Kirola zuzenean" data-es="Deporte en directo">Kirola zuzenean</strong><small data-eu="Emisioak eta agenda ↗" data-es="Emisiones y agenda ↗">Emisioak eta agenda ↗</small></a>
     <a class="live" href="https://guau.eus/ch/radio-euskadi" rel="noopener"><div class="icon">≋</div><strong>Radio Euskadi</strong><small data-eu="Entzun zuzenean ↗" data-es="Escuchar en directo ↗">Entzun zuzenean ↗</small></a>
   </div>
@@ -254,6 +254,8 @@ const PLATFORMS=[
 const CATALOG_FEEDS=["/garena/api/catalog"];
 
 const SEED=[
+{title:"ETB1 ON",source:"ETB ON",category:"live",url:"https://etbon.eus/etb-1",eu:"ETB1 zuzenean",es:"ETB1 en directo",type:"stream"},
+{title:"ETB2 ON",source:"ETB ON",category:"live",url:"https://etbon.eus/etb-2",eu:"ETB2 zuzenean",es:"ETB2 en directo",type:"stream"},
 {title:"Odol ilargia",source:"PRIMERAN",category:"series",url:"https://primeran.eus/",eu:"Ikusi telesaila PRIMERANen",es:"Ver la serie en PRIMERAN"},
 {title:"Errotik. Sustraietatik",source:"PRIMERAN · Dokumentalak",category:"docs",url:"https://primeran.eus/",eu:"Dokumentala ireki",es:"Abrir documental"},
 {title:"A un metro",source:"ETB ON",category:"series",url:"https://etbon.eus/m/a-un-metro-2-18035763",eu:"Ikusi atalak ETB ONen",es:"Ver episodios en ETB ON"},
@@ -273,7 +275,6 @@ const SEED=[
 {title:"Radio Euskadi",source:"GUAU",category:"audio",url:"https://guau.eus/",eu:"Entzun zuzenean",es:"Escuchar en directo"},
 {title:"Power Up",source:"MAKUSI",category:"kids",url:"https://www.makusi.eus/",eu:"Ireki MAKUSI",es:"Abrir MAKUSI"},
 {title:"Margolaria",source:"PRIMERAN · Dokumentalak",category:"docs",url:"https://primeran.eus/",eu:"Dokumentala ireki",es:"Abrir documental"},
-{title:"ETB 1",source:"ETB ON",category:"live",url:"https://www.etbon.eus/",eu:"Ireki emisioa",es:"Abrir emisión"},
 {title:"Radio Euskadi +",source:"GUAU",category:"audio",url:"https://guau.eus/",eu:"Ireki emisioa",es:"Abrir emisión"},
 {title:"ORAIN · Azken albisteak",source:"ORAIN",category:"news",url:"https://orain.eus/",eu:"Irakurri eta ikusi",es:"Leer y ver"},
 {title:"KIROLAK · Azken ordua",source:"KIROLAK EITB",category:"sports",url:"https://kirolakeitb.eus/",eu:"Kirol albisteak",es:"Noticias deportivas"},
