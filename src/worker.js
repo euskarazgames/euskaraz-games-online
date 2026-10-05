@@ -21,14 +21,15 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === "/ataria/api/catalog") {
+    if (url.pathname === "/ataria/api/catalog" || url.pathname === "/garena/api/catalog") {
       return handleAtariaApi(request);
     }
 
-    if (url.pathname === "/ataria/api/click" || url.pathname === "/ataria/api/ranking") {
+    if (["/ataria/api/click","/ataria/api/ranking","/garena/api/click","/garena/api/ranking"].includes(url.pathname)) {
       const stub = env.ATARIA_STATS.getByName("global");
       const target = new URL(request.url);
       target.hostname = "ataria-stats";
+      target.pathname = target.pathname.replace(/^\/garena\//,"/ataria/");
       return stub.fetch(new Request(target, request));
     }
 
