@@ -24,6 +24,25 @@ img{display:block;width:100%}
 .nav{max-width:1440px;margin:auto;height:72px;padding:0 22px;display:flex;align-items:center;gap:22px}
 .brand{font-weight:950;font-size:26px;letter-spacing:-1.2px;display:flex;align-items:center;gap:5px}.brand b{color:var(--accent)}
 .navlinks{display:flex;gap:18px;color:#d7d7db;font-weight:650;font-size:14px}
+
+.allLink{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.1);font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.allLink:hover{background:#fff;color:#0865b2}
+.allSection{position:relative}
+.allHead{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.allHead h2{margin:0;font-size:clamp(34px,5vw,62px);letter-spacing:-.05em}
+.allCount{font-size:13px;color:var(--muted)}
+.allGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.allCard{background:rgba(2,64,121,.66);border:1px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;min-width:0}
+.allVisual{aspect-ratio:16/10;position:relative;background:linear-gradient(145deg,#0877ca,#034d94);background-size:cover;background-position:center}
+.allVisual:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,45,92,.8),transparent 64%)}
+.allBadge{position:absolute;left:12px;bottom:12px;z-index:2;font-size:10px;font-weight:950;letter-spacing:.08em;background:rgba(0,35,77,.72);padding:6px 8px;border-radius:999px}
+.allBody{padding:13px}.allBody h3{margin:0 0 9px;font-size:16px;line-height:1.15}.allBody p{margin:0 0 12px;font-size:12px;color:rgba(255,255,255,.68)}
+.allOpen{display:block;text-align:center;background:#fff;color:#0864af;border-radius:11px;padding:9px;font-size:12px;font-weight:900}
+.allSentinel{height:42px;display:grid;place-items:center;color:rgba(255,255,255,.6);font-size:12px}
+.makusiFallback{background:linear-gradient(145deg,#22c55e,#0b8f62 55%,#056b61)}
+@media(max-width:1100px){.allGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.allLink{height:32px;padding:0 10px;font-size:10px}.allGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.allBody h3{font-size:14px}}
+
 .spacer{flex:1}
 .lang,.favbtn{border:1px solid var(--line);background:#111116;color:#fff;border-radius:999px;padding:9px 13px}
 .hero{max-width:1440px;margin:auto;padding:62px 22px 22px}
@@ -134,6 +153,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 <header class="top">
   <nav class="nav">
     <a class="brand" href="#hasiera" aria-label="EITB GARENA"><span class="eitbWord">eitb</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></a>
+    <a class="allLink" href="#guztia" data-eu="Dena" data-es="Todo">Dena</a>
     <div class="navlinks">
       <a href="#edukiak" data-eu="Aurkitu" data-es="Descubrir">Aurkitu</a>
       <a href="#zuzenekoak" data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</a>
@@ -195,6 +215,15 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
     <a class="live" href="https://guau.eus/ch/euskadi-irratia" rel="noopener"><div class="icon">≋</div><strong>Euskadi Irratia</strong><small data-eu="Entzun zuzenean ↗" data-es="Escuchar en directo ↗">Entzun zuzenean ↗</small></a>
     <a class="live" href="https://guau.eus/ch/gaztea" rel="noopener"><div class="icon">♫</div><strong>Gaztea</strong><small data-eu="Entzun zuzenean ↗" data-es="Escuchar en directo ↗">Entzun zuzenean ↗</small></a>
   </div>
+</section>
+
+<section class="section allSection" id="guztia">
+  <div class="allHead">
+    <div><p class="kicker" data-eu="EITB MEDIA · KATALOGO BATERATUA" data-es="EITB MEDIA · CATÁLOGO UNIFICADO">EITB MEDIA · KATALOGO BATERATUA</p><h2 data-eu="Dena" data-es="Todo">Dena</h2></div>
+    <div class="allCount" id="allCount"></div>
+  </div>
+  <div class="allGrid" id="allGrid"></div>
+  <div class="allSentinel" id="allSentinel" data-eu="Eduki gehiago kargatzen…" data-es="Cargando más contenidos…">Eduki gehiago kargatzen…</div>
 </section>
 
 <div class="catalogWrap" id="edukiak">
@@ -302,7 +331,7 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderAll(false); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -378,6 +407,33 @@ function updateLocalizedLinks(){
   if(sport)sport.href=lang==="eu"?"https://kirolakeitb.eus/eu/":"https://kirolakeitb.eus/es/";
 }
 
+let allLimit=40;
+function allPool(){
+  const seen=new Set();
+  return items.filter(x=>x&&x.url&&x.title&&!seen.has(x.url)&&(seen.add(x.url),true));
+}
+function allCardHtml(x){
+  const fallback=x.source==="MAKUSI"&&!x.image?" makusiFallback":"";
+  const image=x.image?`style="background-image:url('${esc(x.image).replace(/'/g,"%27")}')"`:"";
+  const desc=lang==="eu"?(x.eu||x.description||"Ireki eduki ofiziala"):(x.es||x.description||"Abrir contenido oficial");
+  return `<article class="allCard"><a href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}><div class="allVisual${fallback}" ${image}><span class="allBadge">${esc(x.source)}</span></div></a><div class="allBody"><h3>${esc(x.title)}</h3><p>${esc(desc)}</p><a class="allOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a></div></article>`;
+}
+function renderAll(reset=false){
+  const root=$("#allGrid"),sentinel=$("#allSentinel"); if(!root||!sentinel)return;
+  if(reset)allLimit=40;
+  const pool=allPool();
+  root.innerHTML=pool.slice(0,allLimit).map(allCardHtml).join("");
+  $("#allCount").textContent=lang==="eu"?`${Math.min(allLimit,pool.length)} / ${pool.length} eduki`:`${Math.min(allLimit,pool.length)} / ${pool.length} contenidos`;
+  sentinel.hidden=allLimit>=pool.length;
+  sentinel.textContent=lang==="eu"?"Eduki gehiago kargatzen…":"Cargando más contenidos…";
+}
+const allObserver=new IntersectionObserver(entries=>{
+  if(entries.some(e=>e.isIntersecting)){
+    const pool=allPool();
+    if(allLimit<pool.length){allLimit=Math.min(allLimit+40,pool.length);renderAll(false)}
+  }
+},{rootMargin:"500px 0px"});
+
 function renderCards(){
   const q=$("#search").value.trim().toLowerCase();
   let view=items.filter(x=>(active==="all"||x.category===active) && (!q || (x.title+" "+x.source+" "+(x.eu||"")+" "+(x.es||"")).toLowerCase().includes(q)));
@@ -420,13 +476,14 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderFeatured(); renderCards();
+  renderFeatured(); renderAll(true); renderCards();
 }
 $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("ataria-lang",lang);applyLang()};
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
 applyLang(); loadFeeds(); loadRanking();
+if($("#allSentinel"))allObserver.observe($("#allSentinel"));
 setInterval(()=>{if(!document.hidden){loadFeeds();loadRanking()}},15*60*1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
 </script>
