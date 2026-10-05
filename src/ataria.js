@@ -35,6 +35,7 @@ function description(source, type){
   if(source.id==='guau') return 'Entzun GUAUn';
   if(source.id==='primeran-docs') return 'Ikusi dokumentala PRIMERANen';
   if(type==='series') return `Ikusi atalak ${source.name}en`;
+  if(type==='stream') return `Ireki zuzenekoa ${source.name}en`;
   return `Ireki edukia ${source.name}en`;
 }
 function parseApi(text, source){
@@ -44,20 +45,20 @@ function parseApi(text, source){
   for(const row of data.children){
     let perRow=0;
     for(const x of row.children||[]){
-      if(!x || !['media','series'].includes(x.collection) || !x.slug || !x.title) continue;
-      const route = x.collection==='media' ? 'm' : 's';
+      if(!x || !['media','series','stream'].includes(x.collection) || !x.slug || !x.title) continue;
+      const route = x.collection==='media' ? 'm' : x.collection==='series' ? 's' : 'ch';
       const url = `${source.origin}/${route}/${encodeURIComponent(x.slug)}`;
       if(seen.has(url)) continue;
       if(x.end_date && Date.parse(x.end_date) < Date.now()) continue;
       const images = Array.isArray(x.images) ? x.images : [];
       const preferred = images.find(i=>i.format===1&&i.has_text) || images.find(i=>i.format===1) || images.find(i=>i.format===7) || images[0];
       const image = preferred ? safeImage(preferred.file, source.origin) : null;
-      if(!image) continue;
+      if(!image && x.collection!=='stream') continue;
       seen.add(url);
       out.push({
         id:`${source.id}-${x.collection}-${x.slug}`,
         title:clean(x.title), source:source.name, sourceId:source.id,
-        category:inferCategory(source,row), url, image,
+        category:x.collection==='stream'?'live':inferCategory(source,row), url, image,
         description:description(source,x.collection), type:x.collection,
         synopsis:clean(x.description||'').slice(0,360)
       });
