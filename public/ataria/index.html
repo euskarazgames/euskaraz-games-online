@@ -27,8 +27,8 @@ img{display:block;width:100%}
 .spacer{flex:1}
 .lang,.favbtn{border:1px solid var(--line);background:#111116;color:#fff;border-radius:999px;padding:9px 13px}
 .hero{max-width:1440px;margin:auto;padding:62px 22px 22px}
-.heroGrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.7fr);gap:18px}
-.heroMain,.heroSide{border-radius:30px;overflow:hidden;position:relative;min-height:510px;background:#18181c;box-shadow:var(--shadow)}
+.heroGrid{display:block}
+.heroMain{border-radius:30px;overflow:hidden;position:relative;min-height:510px;background:#18181c;box-shadow:var(--shadow)}
 .heroMain{background:
 radial-gradient(circle at 72% 22%,rgba(255,117,76,.24),transparent 30%),
 linear-gradient(145deg,#111 20%,#23232a 62%,#151515)}
@@ -44,6 +44,21 @@ h1{font-size:clamp(48px,7vw,96px);line-height:.92;letter-spacing:-.065em;margin:
 .feature.audio{background:linear-gradient(155deg,#ff754c,#d94f31);color:#090909}
 .feature .tag{font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
 .feature h3{font-size:28px;line-height:1.04;letter-spacing:-.035em;margin:8px 0}
+
+.featuredIntro{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:26px 0 14px}
+.featuredIntro p{margin:0;color:var(--muted);font-size:13px}
+.featuredRail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px;align-items:stretch}
+.featuredCard{position:relative;min-height:265px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(145deg,#27272e,#111);box-shadow:0 14px 34px rgba(0,0,0,.24);transition:.2s;isolation:isolate}
+.featuredCard:nth-child(odd){transform:rotate(-1deg)}.featuredCard:nth-child(even){transform:rotate(1deg)}
+.featuredCard:hover{transform:translateY(-4px) rotate(0);border-color:#666}
+.featuredCard .bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.featuredCard:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.1) 68%);z-index:-1}
+.featuredCard .inside{position:absolute;inset:auto 16px 16px;display:flex;flex-direction:column;gap:7px}
+.featuredCard .kind{font-size:10px;font-weight:950;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+.featuredCard .featuredSource{font-size:10px;font-weight:850;letter-spacing:.08em;color:#ddd}
+.featuredCard h3{margin:0;font-size:22px;line-height:1.03;letter-spacing:-.035em}
+.platform small{display:block;color:var(--muted);font-size:11px;line-height:1.3;margin-top:7px}
+
 .section{max-width:1440px;margin:auto;padding:42px 22px}
 .sectionHead{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:18px}
 .sectionHead h2{font-size:clamp(30px,4vw,52px);letter-spacing:-.045em;margin:0}
@@ -73,8 +88,8 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
 .audioBanner{border-radius:28px;background:var(--accent);color:#070708;padding:34px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}.audioBanner h2{margin:0;font-size:clamp(34px,5vw,64px);letter-spacing:-.05em}.audioBanner p{max-width:700px;font-size:18px}.wave{font-size:30px;letter-spacing:7px;font-weight:900}
 .footer{max-width:1440px;margin:auto;padding:34px 22px 70px;color:#8f8f96;font-size:13px;line-height:1.55}.footer .brand{color:#fff;margin-bottom:14px}
 .toast{position:fixed;right:18px;bottom:18px;z-index:90;padding:11px 14px;border-radius:12px;background:#fff;color:#111;font-weight:750;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
-@media(max-width:1100px){.platforms{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.heroGrid{grid-template-columns:1fr}.heroSide{grid-template-columns:1fr 1fr;grid-template-rows:1fr}.liveGrid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:520px}.heroCopy{left:22px;right:22px;bottom:25px}.heroSide{grid-template-columns:1fr}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}}
+@media(max-width:1100px){.platforms{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.featuredRail{grid-template-columns:repeat(3,minmax(0,1fr))}.liveGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:520px}.heroCopy{left:22px;right:22px;bottom:25px}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}.featuredIntro{margin-top:22px}.featuredRail{display:flex;overflow-x:auto;gap:14px;padding:7px 20px 20px 6px;scroll-snap-type:x mandatory}.featuredRail::-webkit-scrollbar{display:none}.featuredCard{flex:0 0 72vw;min-height:300px;scroll-snap-align:start}.featuredCard:nth-child(odd){transform:rotate(-2deg)}.featuredCard:nth-child(even){transform:rotate(2deg)}}
 @media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.poster{aspect-ratio:1/1}.source{font-size:9px}.card p{display:none}.open{padding:9px 6px}}
 </style>
 </head>
@@ -109,15 +124,12 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
         </div>
       </div>
     </article>
-    <aside class="heroSide">
-      <a class="feature" href="https://primeran.eus/" target="_blank" rel="noopener">
-        <div class="tag">PRIMERAN</div><h3>Odol ilargia</h3><span data-eu="IREKI EDUKIA ↗" data-es="ABRIR CONTENIDO ↗">IREKI EDUKIA ↗</span>
-      </a>
-      <a class="feature audio" href="https://guau.eus/" target="_blank" rel="noopener">
-        <div class="tag">GUAU</div><h3 data-eu="Entzun. Aurkitu. Geratu." data-es="Escucha. Descubre. Quédate.">Entzun. Aurkitu. Geratu.</h3><span>▂ ▅ ▃ ▇ ▅ ▂</span>
-      </a>
-    </aside>
   </div>
+  <div class="featuredIntro">
+    <div><p class="kicker" data-eu="ATARIAK AUKERATUTA" data-es="DESTACADOS DE ATARIA">ATARIAK AUKERATUTA</p></div>
+    <p data-eu="Albistea · filma · saioa · podcasta · kirola" data-es="Noticia · película · programa · podcast · deporte">Albistea · filma · saioa · podcasta · kirola</p>
+  </div>
+  <div class="featuredRail" id="featuredGrid" aria-live="polite"></div>
 </section>
 
 <section class="section" id="plataformak">
@@ -129,14 +141,14 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
 
 <section class="section" id="zuzenekoak">
   <div class="sectionHead">
-    <div><p class="kicker" data-eu="GERTATZEN ARI DENAREKIN KONEKTATU" data-es="CONECTA CON LO QUE PASA">GERTATZEN ARI DENAREKIN KONEKTATU</p><h2 data-eu="Zuzenean" data-es="Tu ventana al directo">Zuzenean</h2></div>
-    <p data-eu="Emisioak eta ordutegiak plataforma bakoitzean" data-es="Emisiones y horarios en cada plataforma">Emisioak eta ordutegiak plataforma bakoitzean</p>
+    <div><p class="kicker" data-eu="GERTATZEN ARI DENAREKIN KONEKTATU" data-es="CONECTA CON LO QUE PASA">GERTATZEN ARI DENAREKIN KONEKTATU</p><h2 data-eu="Zuzeneko nagusiak" data-es="Emisiones principales">Zuzeneko nagusiak</h2></div>
+    <p data-eu="Telebista, kirola eta irratia zuzenean" data-es="Televisión, deporte y radio en directo">Telebista, kirola eta irratia zuzenean</p>
   </div>
   <div class="liveGrid">
-    <a class="live" href="https://www.etbon.eus/" target="_blank" rel="noopener"><div class="icon">▣</div><strong>ETB1</strong><small data-eu="Ireki zuzeneko emisioa ↗" data-es="Abrir la emisión oficial ↗">Ireki zuzeneko emisioa ↗</small></a>
-    <a class="live" href="https://www.etbon.eus/" target="_blank" rel="noopener"><div class="icon">◉</div><strong>Gaur Egun</strong><small data-eu="Ikusi ETB ONen ↗" data-es="Ver informativo en ETB ON ↗">Ikusi ETB ONen ↗</small></a>
-    <a class="live" href="https://kirolakeitb.eus/" target="_blank" rel="noopener"><div class="icon">↗</div><strong data-eu="Kirolak" data-es="Deportes">Kirolak</strong><small data-eu="Emisioak eta agenda ↗" data-es="Emisiones y agenda ↗">Emisioak eta agenda ↗</small></a>
-    <a class="live" href="https://guau.eus/" target="_blank" rel="noopener"><div class="icon">≋</div><strong>Radio Euskadi</strong><small data-eu="Entzun zuzeneko emisioa ↗" data-es="Escuchar emisión oficial ↗">Entzun zuzeneko emisioa ↗</small></a>
+    <a class="live" href="https://etbon.eus/ch/etb-1" rel="noopener"><div class="icon">▣</div><strong>ETB1</strong><small data-eu="Ireki zuzeneko emisioa ↗" data-es="Abrir emisión en directo ↗">Ireki zuzeneko emisioa ↗</small></a>
+    <a class="live" href="https://etbon.eus/directos" rel="noopener"><div class="icon">▣</div><strong>ETB2</strong><small data-eu="Ikusi ETB ONeko zuzenekoak ↗" data-es="Ver directos de ETB ON ↗">Ikusi ETB ONeko zuzenekoak ↗</small></a>
+    <a class="live" id="sportLive" href="https://kirolakeitb.eus/eu/" rel="noopener"><div class="icon">↗</div><strong data-eu="Kirola zuzenean" data-es="Deporte en directo">Kirola zuzenean</strong><small data-eu="Emisioak eta agenda ↗" data-es="Emisiones y agenda ↗">Emisioak eta agenda ↗</small></a>
+    <a class="live" href="https://guau.eus/ch/radio-euskadi" rel="noopener"><div class="icon">≋</div><strong>Radio Euskadi</strong><small data-eu="Entzun zuzenean ↗" data-es="Escuchar en directo ↗">Entzun zuzenean ↗</small></a>
   </div>
 </section>
 
@@ -172,10 +184,15 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
 
 <script>
 const PLATFORMS=[
-  ["ORAIN","https://orain.eus/"],["PRIMERAN","https://primeran.eus/"],["ETB ON","https://www.etbon.eus/"],
-  ["KIROLAK","https://kirolakeitb.eus/"],["GUAU","https://guau.eus/"],["Gaztea","https://www.gaztea.eus/"],
-  ["MAKUSI","https://www.makusi.eus/"],["YouTube","https://www.youtube.com/@eitb"]
-];
+  ["ORAIN","https://orain.eus/eu/","https://orain.eus/es/","Albisteak eta aktualitatea","Noticias y actualidad"],
+  ["PRIMERAN","https://primeran.eus/","https://primeran.eus/","Filmak, telesailak eta dokumentalak","Películas, series y documentales"],
+  ["ETB ON","https://etbon.eus/","https://etbon.eus/","Telebista, zuzenekoak eta saioak","Televisión, directos y programas"],
+  ["KIROLAK","https://kirolakeitb.eus/eu/","https://kirolakeitb.eus/es/","Kirola, emaitzak eta emankizunak","Deporte, resultados y retransmisiones"],
+  ["GUAU","https://guau.eus/","https://guau.eus/","Irratia, podcastak eta audioa","Radio, podcasts y audio"],
+  ["Gaztea","https://www.gaztea.eus/","https://www.gaztea.eus/","Musika eta gazte kultura","Música y cultura joven"],
+  ["MAKUSI","https://makusi.eus/","https://makusi.eus/","Haur eta gazteentzako edukiak","Contenido infantil y juvenil"],
+  ["YouTube","https://www.youtube.com/@eitb","https://www.youtube.com/@eitb","Bideoak, klipak eta kanalak","Vídeos, clips y canales"]
+]
 
 /*
   ATARIA katalogo dinamikoa
@@ -239,15 +256,47 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
-  $("#platformGrid").innerHTML=PLATFORMS.map(([n,u])=>`<a class="platform" href="${u}" target="_blank" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><strong>${n}</strong></a>`).join("");
+  $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc])=>`<a class="platform" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
 }
 function renderChips(){
   $("#chips").innerHTML=CATS.map(c=>`<button class="chip ${active===c[0]?"active":""}" data-cat="${c[0]}">${lang==="eu"?c[1]:c[2]}</button>`).join("");
   document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{active=b.dataset.cat;renderChips();renderCards()});
 }
+const FEATURE_KINDS=[
+  {key:"news",eu:"ALBISTEA",es:"NOTICIA",pick:x=>x.category==="news"},
+  {key:"movie",eu:"FILMA",es:"PELÍCULA",pick:x=>x.category==="series"&&x.type==="media"},
+  {key:"program",eu:"SAIOA",es:"PROGRAMA",pick:x=>x.category==="entertainment"},
+  {key:"podcast",eu:"PODCASTA",es:"PODCAST",pick:x=>x.category==="audio"&&!/radio euskadi|euskadi irratia|gaztea$/i.test(x.title||"")},
+  {key:"sport",eu:"KIROLA",es:"DEPORTE",pick:x=>x.category==="sports"}
+];
+function renderFeatured(){
+  const root=$("#featuredGrid"); if(!root)return;
+  const used=new Set(), chosen=[];
+  const take=(fn,fallback)=>{
+    let x=items.find(y=>!used.has(y.url)&&fn(y)&&y.image);
+    if(!x)x=items.find(y=>!used.has(y.url)&&fn(y));
+    if(!x&&fallback)x=items.find(y=>!used.has(y.url)&&fallback(y)&&y.image)||items.find(y=>!used.has(y.url)&&fallback(y));
+    if(x){used.add(x.url);return x}
+    return null;
+  };
+  for(const k of FEATURE_KINDS){
+    const fallback=k.key==="movie"?(x=>x.category==="series"):k.key==="podcast"?(x=>x.category==="audio"):null;
+    chosen.push([k,take(k.pick,fallback)]);
+  }
+  root.innerHTML=chosen.map(([k,x])=>{
+    if(!x)return `<div class="featuredCard"><div class="inside"><span class="kind">${lang==="eu"?k.eu:k.es}</span><h3>${lang==="eu"?"Laster":"Próximamente"}</h3></div></div>`;
+    const bg=x.image?`<div class="bg" style="background-image:url('${esc(x.image).replace(/'/g,"%27")}')"></div>`:"";
+    return `<a class="featuredCard" href="${esc(x.url)}" rel="noopener">${bg}<div class="inside"><span class="kind">${lang==="eu"?k.eu:k.es}</span><span class="featuredSource">${esc(x.source)}</span><h3>${esc(x.title)}</h3></div></a>`;
+  }).join("");
+}
+function updateLocalizedLinks(){
+  const sport=$("#sportLive");
+  if(sport)sport.href=lang==="eu"?"https://kirolakeitb.eus/eu/":"https://kirolakeitb.eus/es/";
+}
+
 function renderCards(){
   const q=$("#search").value.trim().toLowerCase();
   let view=items.filter(x=>(active==="all"||x.category===active) && (!q || (x.title+" "+x.source+" "+(x.eu||"")+" "+(x.es||"")).toLowerCase().includes(q)));
@@ -290,13 +339,13 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderCards();
+  renderFeatured(); renderCards();
 }
-$("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("ataria-lang",lang);applyLang();renderPlatforms()};
+$("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("ataria-lang",lang);applyLang()};
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-renderPlatforms(); applyLang(); loadFeeds();
+applyLang(); loadFeeds();
 </script>
 </body>
 </html>
