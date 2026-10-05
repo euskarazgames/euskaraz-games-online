@@ -45,20 +45,33 @@ h1{font-size:clamp(48px,7vw,96px);line-height:.92;letter-spacing:-.065em;margin:
 .feature .tag{font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
 .feature h3{font-size:28px;line-height:1.04;letter-spacing:-.035em;margin:8px 0}
 
-.featuredIntro{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:26px 0 14px}
+.featuredIntro{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:26px 0 18px}
 .featuredIntro p{margin:0;color:var(--muted);font-size:13px}
-.featuredRail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px;align-items:stretch}
-.featuredCard{position:relative;min-height:265px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(145deg,#27272e,#111);box-shadow:0 14px 34px rgba(0,0,0,.24);transition:.2s;isolation:isolate}
-.featuredCard:nth-child(odd){transform:rotate(-1deg)}.featuredCard:nth-child(even){transform:rotate(1deg)}
+.featuredShelves{display:flex;flex-direction:column;gap:30px}
+.featuredShelf{display:flex;flex-direction:column;gap:12px}
+.shelfHead{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.shelfHead h3{margin:0;font-size:24px;letter-spacing:-.035em}
+.shelfHead span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:850}
+.shelfGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.featuredCard{position:relative;min-height:245px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(145deg,#27272e,#111);box-shadow:0 14px 34px rgba(0,0,0,.24);transition:.2s;isolation:isolate}
+.featuredCard:nth-child(1){transform:rotate(-.6deg)}.featuredCard:nth-child(3){transform:rotate(.6deg)}
 .featuredCard:hover{transform:translateY(-4px) rotate(0);border-color:#666}
 .featuredCard .bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
-.featuredCard:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.86),rgba(0,0,0,.1) 68%);z-index:-1}
+.featuredCard:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9),rgba(0,0,0,.08) 70%);z-index:-1}
 .featuredCard .inside{position:absolute;inset:auto 16px 16px;display:flex;flex-direction:column;gap:7px}
 .featuredCard .kind{font-size:10px;font-weight:950;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
 .featuredCard .featuredSource{font-size:10px;font-weight:850;letter-spacing:.08em;color:#ddd}
-.featuredCard h3{margin:0;font-size:22px;line-height:1.03;letter-spacing:-.035em}
-.platform small{display:block;color:var(--muted);font-size:11px;line-height:1.3;margin-top:7px}
-
+.featuredCard h3{margin:0;font-size:23px;line-height:1.03;letter-spacing:-.035em}
+.platform{position:relative;overflow:hidden}
+.platform:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,var(--pc),transparent 58%);opacity:.72;z-index:0}
+.platform>*{position:relative;z-index:1}
+.platform small{display:block;color:#e8e8eb;font-size:11px;line-height:1.3;margin-top:7px;max-width:15ch}
+.rankingGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.rankCard{position:relative;border:1px solid var(--line);border-radius:18px;background:#111114;padding:16px;min-height:145px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.rankNum{font-size:44px;line-height:1;font-weight:950;color:var(--accent);letter-spacing:-.06em}
+.rankCard h3{font-size:15px;line-height:1.15;margin:12px 0 8px}
+.rankMeta{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.rankEmpty{grid-column:1/-1;color:var(--muted);border:1px dashed var(--line);border-radius:18px;padding:24px}
 .section{max-width:1440px;margin:auto;padding:42px 22px}
 .sectionHead{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:18px}
 .sectionHead h2{font-size:clamp(30px,4vw,52px);letter-spacing:-.045em;margin:0}
@@ -89,7 +102,7 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
 .footer{max-width:1440px;margin:auto;padding:34px 22px 70px;color:#8f8f96;font-size:13px;line-height:1.55}.footer .brand{color:#fff;margin-bottom:14px}
 .toast{position:fixed;right:18px;bottom:18px;z-index:90;padding:11px 14px;border-radius:12px;background:#fff;color:#111;font-weight:750;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
 @media(max-width:1100px){.platforms{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.featuredRail{grid-template-columns:repeat(3,minmax(0,1fr))}.liveGrid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:520px}.heroCopy{left:22px;right:22px;bottom:25px}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}.featuredIntro{margin-top:22px}.featuredRail{display:flex;overflow-x:auto;gap:14px;padding:7px 20px 20px 6px;scroll-snap-type:x mandatory}.featuredRail::-webkit-scrollbar{display:none}.featuredCard{flex:0 0 72vw;min-height:300px;scroll-snap-align:start}.featuredCard:nth-child(odd){transform:rotate(-2deg)}.featuredCard:nth-child(even){transform:rotate(2deg)}}
+@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:520px}.heroCopy{left:22px;right:22px;bottom:25px}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}.featuredIntro{margin-top:22px}.shelfGrid{display:flex;overflow-x:auto;gap:14px;padding:7px 20px 20px 6px;scroll-snap-type:x mandatory}.shelfGrid::-webkit-scrollbar{display:none}.featuredCard{flex:0 0 72vw;min-height:300px;scroll-snap-align:start}.featuredCard:nth-child(1){transform:rotate(-1.2deg)}.featuredCard:nth-child(3){transform:rotate(1.2deg)}.rankingGrid{display:flex;overflow-x:auto;gap:10px;padding-bottom:10px}.rankCard{flex:0 0 62vw}}
 @media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.poster{aspect-ratio:1/1}.source{font-size:9px}.card p{display:none}.open{padding:9px 6px}}
 </style>
 </head>
@@ -129,7 +142,15 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
     <div><p class="kicker" data-eu="ATARIAK AUKERATUTA" data-es="DESTACADOS DE ATARIA">ATARIAK AUKERATUTA</p></div>
     <p data-eu="Albistea · filma · saioa · podcasta · kirola" data-es="Noticia · película · programa · podcast · deporte">Albistea · filma · saioa · podcasta · kirola</p>
   </div>
-  <div class="featuredRail" id="featuredGrid" aria-live="polite"></div>
+  <div class="featuredShelves" id="featuredShelves" aria-live="polite"></div>
+</section>
+
+<section class="section" id="ranking">
+  <div class="sectionHead">
+    <div><p class="kicker" data-eu="ATARIAN GEHIEN IREKITAKOAK" data-es="LO MÁS ABIERTO EN ATARIA">ATARIAN GEHIEN IREKITAKOAK</p><h2 data-eu="Ranking-a" data-es="Ranking">Ranking-a</h2></div>
+    <p data-eu="ATARIA barruko irekieretan oinarrituta" data-es="Basado en aperturas dentro de ATARIA">ATARIA barruko irekieretan oinarrituta</p>
+  </div>
+  <div class="rankingGrid" id="rankingGrid"></div>
 </section>
 
 <section class="section" id="plataformak">
@@ -184,14 +205,14 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
 
 <script>
 const PLATFORMS=[
-  ["ORAIN","https://orain.eus/eu/","https://orain.eus/es/","Albisteak eta aktualitatea","Noticias y actualidad"],
-  ["PRIMERAN","https://primeran.eus/","https://primeran.eus/","Filmak, telesailak eta dokumentalak","Películas, series y documentales"],
-  ["ETB ON","https://etbon.eus/","https://etbon.eus/","Telebista, zuzenekoak eta saioak","Televisión, directos y programas"],
-  ["KIROLAK","https://kirolakeitb.eus/eu/","https://kirolakeitb.eus/es/","Kirola, emaitzak eta emankizunak","Deporte, resultados y retransmisiones"],
-  ["GUAU","https://guau.eus/","https://guau.eus/","Irratia, podcastak eta audioa","Radio, podcasts y audio"],
-  ["Gaztea","https://www.gaztea.eus/","https://www.gaztea.eus/","Musika eta gazte kultura","Música y cultura joven"],
-  ["MAKUSI","https://makusi.eus/","https://makusi.eus/","Haur eta gazteentzako edukiak","Contenido infantil y juvenil"],
-  ["YouTube","https://www.youtube.com/@eitb","https://www.youtube.com/@eitb","Bideoak, klipak eta kanalak","Vídeos, clips y canales"]
+  ["ORAIN","https://orain.eus/eu/","https://orain.eus/es/","Albisteak eta aktualitatea","Noticias y actualidad","#ff754c"],
+  ["PRIMERAN","https://primeran.eus/","https://primeran.eus/","Filmak, telesailak eta dokumentalak","Películas, series y documentales","#7656ff"],
+  ["ETB ON","https://etbon.eus/","https://etbon.eus/","Telebista, zuzenekoak eta saioak","Televisión, directos y programas","#258cff"],
+  ["KIROLAK","https://kirolakeitb.eus/eu/","https://kirolakeitb.eus/es/","Kirola, emaitzak eta emankizunak","Deporte, resultados y retransmisiones","#17b978"],
+  ["GUAU","https://guau.eus/","https://guau.eus/","Irratia, podcastak eta audioa","Radio, podcasts y audio","#f0b91c"],
+  ["Gaztea","https://www.gaztea.eus/","https://www.gaztea.eus/","Musika eta gazte kultura","Música y cultura joven","#ff4fa3"],
+  ["MAKUSI","https://makusi.eus/","https://makusi.eus/","Haur eta gazteentzako edukiak","Contenido infantil y juvenil","#23c7d9"],
+  ["YouTube","https://www.youtube.com/@eitb","https://www.youtube.com/@eitb","Bideoak, klipak eta kanalak","Vídeos, clips y canales","#ff1f36"]
 ]
 
 /*
@@ -256,42 +277,77 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
-  $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc])=>`<a class="platform" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
+  $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
 }
 function renderChips(){
   $("#chips").innerHTML=CATS.map(c=>`<button class="chip ${active===c[0]?"active":""}" data-cat="${c[0]}">${lang==="eu"?c[1]:c[2]}</button>`).join("");
   document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{active=b.dataset.cat;renderChips();renderCards()});
 }
-const FEATURE_KINDS=[
-  {key:"news",eu:"ALBISTEA",es:"NOTICIA",pick:x=>x.category==="news"},
-  {key:"movie",eu:"FILMA",es:"PELÍCULA",pick:x=>x.category==="series"&&x.type==="media"},
-  {key:"program",eu:"SAIOA",es:"PROGRAMA",pick:x=>x.category==="entertainment"},
-  {key:"podcast",eu:"PODCASTA",es:"PODCAST",pick:x=>x.category==="audio"&&!/radio euskadi|euskadi irratia|gaztea$/i.test(x.title||"")},
-  {key:"sport",eu:"KIROLA",es:"DEPORTE",pick:x=>x.category==="sports"}
+const FEATURE_SHELVES=[
+  {key:"news",eu:"Albisteak",es:"Noticias",tagEu:"3 albiste",tagEs:"3 noticias",pick:x=>x.category==="news"},
+  {key:"sports",eu:"Kirolak",es:"Deportes",tagEu:"3 kirol",tagEs:"3 deportes",pick:x=>x.category==="sports"},
+  {key:"movies",eu:"Filmak",es:"Películas",tagEu:"3 film",tagEs:"3 películas",pick:x=>x.category==="series"&&x.type==="media"},
+  {key:"series",eu:"Telesailak",es:"Series",tagEu:"3 telesail",tagEs:"3 series",pick:x=>x.category==="series"&&x.type==="series"},
+  {key:"programs",eu:"Saioak",es:"Programas",tagEu:"3 saio",tagEs:"3 programas",pick:x=>x.category==="entertainment"},
+  {key:"docs",eu:"Dokumentalak",es:"Documentales",tagEu:"3 dokumental",tagEs:"3 documentales",pick:x=>x.category==="docs"},
+  {key:"audio",eu:"Podcastak eta audioa",es:"Podcasts y audio",tagEu:"3 audio",tagEs:"3 audios",pick:x=>x.category==="audio"},
+  {key:"kids",eu:"Haurrak",es:"Infantil",tagEu:"3 eduki",tagEs:"3 contenidos",pick:x=>x.category==="kids"}
 ];
+function shelfItems(def){
+  let list=items.filter(def.pick);
+  if(def.key==="movies" && list.length<3) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="series")];
+  if(def.key==="series" && list.length<3) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="media")];
+  const seen=new Set();
+  return list.filter(x=>x&&x.url&&!seen.has(x.url)&&(seen.add(x.url),true))
+    .sort((a,b)=>Number(Boolean(b.image))-Number(Boolean(a.image)))
+    .slice(0,3);
+}
+function trackedAttrs(x){
+  return `data-track="content" data-url="${esc(x.url)}" data-title="${esc(x.title)}" data-category="${esc(x.category||"")}" data-source="${esc(x.source||"")}"`;
+}
 function renderFeatured(){
-  const root=$("#featuredGrid"); if(!root)return;
-  const used=new Set(), chosen=[];
-  const take=(fn,fallback)=>{
-    let x=items.find(y=>!used.has(y.url)&&fn(y)&&y.image);
-    if(!x)x=items.find(y=>!used.has(y.url)&&fn(y));
-    if(!x&&fallback)x=items.find(y=>!used.has(y.url)&&fallback(y)&&y.image)||items.find(y=>!used.has(y.url)&&fallback(y));
-    if(x){used.add(x.url);return x}
-    return null;
-  };
-  for(const k of FEATURE_KINDS){
-    const fallback=k.key==="movie"?(x=>x.category==="series"):k.key==="podcast"?(x=>x.category==="audio"):null;
-    chosen.push([k,take(k.pick,fallback)]);
-  }
-  root.innerHTML=chosen.map(([k,x])=>{
-    if(!x)return `<div class="featuredCard"><div class="inside"><span class="kind">${lang==="eu"?k.eu:k.es}</span><h3>${lang==="eu"?"Laster":"Próximamente"}</h3></div></div>`;
-    const bg=x.image?`<div class="bg" style="background-image:url('${esc(x.image).replace(/'/g,"%27")}')"></div>`:"";
-    return `<a class="featuredCard" href="${esc(x.url)}" rel="noopener">${bg}<div class="inside"><span class="kind">${lang==="eu"?k.eu:k.es}</span><span class="featuredSource">${esc(x.source)}</span><h3>${esc(x.title)}</h3></div></a>`;
+  const root=$("#featuredShelves"); if(!root)return;
+  root.innerHTML=FEATURE_SHELVES.map(def=>{
+    const chosen=shelfItems(def);
+    const cards=chosen.map(x=>{
+      const bg=x.image?`<div class="bg" style="background-image:url('${esc(x.image).replace(/'/g,"%27")}')"></div>`:"";
+      return `<a class="featuredCard" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${bg}<div class="inside"><span class="kind">${lang==="eu"?def.eu:def.es}</span><span class="featuredSource">${esc(x.source)}</span><h3>${esc(x.title)}</h3></div></a>`;
+    }).join("");
+    const missing=Array.from({length:Math.max(0,3-chosen.length)},()=>`<div class="featuredCard"><div class="inside"><span class="kind">${lang==="eu"?def.eu:def.es}</span><h3>${lang==="eu"?"Eduki gehiago laster":"Más contenidos próximamente"}</h3></div></div>`).join("");
+    return `<div class="featuredShelf"><div class="shelfHead"><h3>${lang==="eu"?def.eu:def.es}</h3><span>${lang==="eu"?def.tagEu:def.tagEs}</span></div><div class="shelfGrid">${cards}${missing}</div></div>`;
   }).join("");
 }
+let ranking=[];
+async function loadRanking(){
+  try{
+    const r=await fetch("/ataria/api/ranking",{cache:"no-store"});
+    if(!r.ok)throw 0;
+    const j=await r.json();
+    ranking=Array.isArray(j.ranking)?j.ranking:[];
+  }catch{ranking=[]}
+  renderRanking();
+}
+function renderRanking(){
+  const root=$("#rankingGrid"); if(!root)return;
+  if(!ranking.length){
+    root.innerHTML=`<div class="rankEmpty">${lang==="eu"?"Ranking-a ATARIAk irekierak jaso ahala agertuko da. Ez dugu daturik asmatzen.":"El ranking aparecerá a medida que ATARIA registre aperturas. No mostramos datos inventados."}</div>`;
+    return;
+  }
+  root.innerHTML=ranking.slice(0,5).map((x,i)=>`<a class="rankCard" href="${esc(x.url)}" rel="noopener" data-track="content" data-url="${esc(x.url)}" data-title="${esc(x.title)}" data-category="${esc(x.category||"")}" data-source="${esc(x.source||"")}"><div class="rankNum">#${i+1}</div><h3>${esc(x.title)}</h3><div class="rankMeta"><span>${esc(x.source||"ATARIA")}</span><span>${Number(x.count||0)} ${lang==="eu"?"irekiera":"aperturas"}</span></div></a>`).join("");
+}
+function trackOpen(a){
+  const payload={url:a.dataset.url,title:a.dataset.title,category:a.dataset.category||"",source:a.dataset.source||""};
+  if(!payload.url||!payload.title)return;
+  fetch("/ataria/api/click",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload),keepalive:true})
+    .then(()=>setTimeout(loadRanking,250)).catch(()=>{});
+}
+document.addEventListener("click",e=>{
+  const a=e.target.closest('a[data-track="content"]');
+  if(a)trackOpen(a);
+});
 function updateLocalizedLinks(){
   const sport=$("#sportLive");
   if(sport)sport.href=lang==="eu"?"https://kirolakeitb.eus/eu/":"https://kirolakeitb.eus/es/";
@@ -313,7 +369,7 @@ function renderCards(){
         <h3>${esc(x.title)}</h3>
         <p>${esc(lang==="eu"?(x.eu||"Ireki eduki ofiziala"):(x.es||"Abrir contenido oficial"))}</p>
         <div class="cardActions">
-          <a class="open" href="${esc(x.url)}" target="_blank" rel="noopener">${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a>
+          <a class="open" href="${esc(x.url)}" target="_blank" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a>
           <button class="save" data-title="${esc(x.title)}" aria-label="Guardar">${favs.has(x.title)?"♥":"♡"}</button>
         </div>
       </div>
@@ -345,7 +401,7 @@ $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("atar
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-applyLang(); loadFeeds();
+applyLang(); loadFeeds(); loadRanking();
 </script>
 </body>
 </html>
