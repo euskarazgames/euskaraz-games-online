@@ -312,14 +312,14 @@ function renderChips(){
   document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{active=b.dataset.cat;renderChips();renderCards()});
 }
 const FEATURE_SHELVES=[
-  {key:"news",eu:"Albisteak",es:"Noticias",tagEu:"3 albiste",tagEs:"3 noticias",pick:x=>x.category==="news"},
-  {key:"sports",eu:"Kirolak",es:"Deportes",tagEu:"3 kirol",tagEs:"3 deportes",pick:x=>x.category==="sports"},
-  {key:"movies",eu:"Filmak",es:"Películas",tagEu:"3 film",tagEs:"3 películas",pick:x=>x.category==="series"&&x.type==="media"},
-  {key:"series",eu:"Telesailak",es:"Series",tagEu:"3 telesail",tagEs:"3 series",pick:x=>x.category==="series"&&x.type==="series"},
-  {key:"programs",eu:"Saioak",es:"Programas",tagEu:"3 saio",tagEs:"3 programas",pick:x=>x.category==="entertainment"},
-  {key:"docs",eu:"Dokumentalak",es:"Documentales",tagEu:"3 dokumental",tagEs:"3 documentales",pick:x=>x.category==="docs"},
-  {key:"audio",eu:"Podcastak eta audioa",es:"Podcasts y audio",tagEu:"3 audio",tagEs:"3 audios",pick:x=>x.category==="audio"},
-  {key:"kids",eu:"Haurrak",es:"Infantil",tagEu:"3 eduki",tagEs:"3 contenidos",pick:x=>x.category==="kids"}
+  {key:"news",eu:"Albisteak",es:"Noticias",pick:x=>x.category==="news"},
+  {key:"sports",eu:"Kirolak",es:"Deportes",pick:x=>x.category==="sports"},
+  {key:"movies",eu:"Filmak",es:"Películas",pick:x=>x.category==="series"&&x.type==="media"},
+  {key:"series",eu:"Telesailak",es:"Series",pick:x=>x.category==="series"&&x.type==="series"},
+  {key:"programs",eu:"Saioak",es:"Programas",pick:x=>x.category==="entertainment"},
+  {key:"docs",eu:"Dokumentalak",es:"Documentales",pick:x=>x.category==="docs"},
+  {key:"audio",eu:"Podcastak eta audioa",es:"Podcasts y audio",pick:x=>x.category==="audio"},
+  {key:"kids",eu:"Haurrak",es:"Infantil",pick:x=>x.category==="kids"}
 ];
 function shelfItems(def){
   let list=items.filter(def.pick);
@@ -342,7 +342,7 @@ function renderFeatured(){
       return `<a class="featuredCard" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${bg}<div class="inside"><span class="kind">${lang==="eu"?def.eu:def.es}</span><span class="featuredSource">${esc(x.source)}</span><h3>${esc(x.title)}</h3></div></a>`;
     }).join("");
     const missing=Array.from({length:Math.max(0,3-chosen.length)},()=>`<div class="featuredCard"><div class="inside"><span class="kind">${lang==="eu"?def.eu:def.es}</span><h3>${lang==="eu"?"Eduki gehiago laster":"Más contenidos próximamente"}</h3></div></div>`).join("");
-    return `<div class="featuredShelf"><div class="shelfHead"><h3>${lang==="eu"?def.eu:def.es}</h3><span>${lang==="eu"?def.tagEu:def.tagEs}</span></div><div class="shelfGrid">${cards}${missing}</div></div>`;
+    return `<div class="featuredShelf"><div class="shelfHead"><h3>${lang==="eu"?def.eu:def.es}</h3></div><div class="shelfGrid">${cards}${missing}</div></div>`;
   }).join("");
 }
 let ranking=[];
@@ -427,6 +427,8 @@ $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background
 $("#search").addEventListener("input",renderCards);
 
 applyLang(); loadFeeds(); loadRanking();
+setInterval(()=>{if(!document.hidden){loadFeeds();loadRanking()}},15*60*1000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
 </script>
 </body>
 </html>
