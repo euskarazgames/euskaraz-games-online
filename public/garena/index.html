@@ -24,25 +24,6 @@ img{display:block;width:100%}
 .nav{max-width:1440px;margin:auto;height:72px;padding:0 22px;display:flex;align-items:center;gap:22px}
 .brand{font-weight:950;font-size:26px;letter-spacing:-1.2px;display:flex;align-items:center;gap:5px}.brand b{color:var(--accent)}
 .navlinks{display:flex;gap:18px;color:#d7d7db;font-weight:650;font-size:14px}
-
-.allLink{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.1);font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
-.allLink:hover{background:#fff;color:#0865b2}
-.allSection{position:relative}
-.allHead{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:18px}
-.allHead h2{margin:0;font-size:clamp(34px,5vw,62px);letter-spacing:-.05em}
-.allCount{font-size:13px;color:var(--muted)}
-.allGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
-.allCard{background:rgba(2,64,121,.66);border:1px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;min-width:0}
-.allVisual{aspect-ratio:16/10;position:relative;background:linear-gradient(145deg,#0877ca,#034d94);background-size:cover;background-position:center}
-.allVisual:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,45,92,.8),transparent 64%)}
-.allBadge{position:absolute;left:12px;bottom:12px;z-index:2;font-size:10px;font-weight:950;letter-spacing:.08em;background:rgba(0,35,77,.72);padding:6px 8px;border-radius:999px}
-.allBody{padding:13px}.allBody h3{margin:0 0 9px;font-size:16px;line-height:1.15}.allBody p{margin:0 0 12px;font-size:12px;color:rgba(255,255,255,.68)}
-.allOpen{display:block;text-align:center;background:#fff;color:#0864af;border-radius:11px;padding:9px;font-size:12px;font-weight:900}
-.allSentinel{height:42px;display:grid;place-items:center;color:rgba(255,255,255,.6);font-size:12px}
-.makusiFallback{background:linear-gradient(145deg,#22c55e,#0b8f62 55%,#056b61)}
-@media(max-width:1100px){.allGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:700px){.allLink{height:32px;padding:0 10px;font-size:10px}.allGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.allBody h3{font-size:14px}}
-
 .spacer{flex:1}
 .lang,.favbtn{border:1px solid var(--line);background:#111116;color:#fff;border-radius:999px;padding:9px 13px}
 .hero{max-width:1440px;margin:auto;padding:62px 22px 22px}
@@ -145,6 +126,29 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 .audioBanner{background:#fff;color:#0864af}footer{color:rgba(255,255,255,.62)}
 @media(max-width:700px){.brand{gap:8px}.eitbWord{font-size:24px}.garenaWord{font-size:18px}.brandDivider{height:28px}}
 
+
+.tikButton{height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.11);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;white-space:nowrap}
+.tikButton:hover{background:#fff;color:#0865b2}
+.generatedCover{position:relative;overflow:hidden}
+.generatedCover:before{content:"";position:absolute;inset:0;background:linear-gradient(25deg,transparent 46%,rgba(255,255,255,.12) 46.5%,rgba(255,255,255,.12) 47%,transparent 47.5%),linear-gradient(120deg,transparent 54%,rgba(255,255,255,.08) 54.5%,rgba(255,255,255,.08) 55%,transparent 55.5%);background-size:160px 130px,210px 170px}
+.generatedCover:after{content:attr(data-cover-title);position:absolute;left:14px;right:14px;bottom:14px;font-size:clamp(16px,2vw,26px);line-height:1;font-weight:950;letter-spacing:-.04em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.35);z-index:2}
+.tikOverlay{position:fixed;inset:0;z-index:9999;background:#02070d;color:#fff;display:none}
+.tikOverlay.open{display:block}
+.tikTop{position:absolute;top:0;left:0;right:0;z-index:5;height:70px;display:flex;align-items:center;justify-content:space-between;padding:env(safe-area-inset-top,0) 16px 0;background:linear-gradient(to bottom,rgba(0,0,0,.5),transparent)}
+.tikBrand{display:flex;align-items:center;gap:10px;font-weight:900}
+.tikClose{width:42px;height:42px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(0,0,0,.34);color:#fff;font-size:28px;line-height:1}
+.tikFeed{height:100dvh;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain}
+.tikItem{height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;align-items:flex-end;overflow:hidden;background:#08284a}
+.tikMedia{position:absolute;inset:0;background-size:cover;background-position:center}
+.tikMedia:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.16) 100%)}
+.tikInfo{position:relative;z-index:2;width:min(760px,100%);padding:0 22px calc(36px + env(safe-area-inset-bottom,0));}
+.tikSource{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:11px;font-weight:900;letter-spacing:.08em}
+.tikInfo h2{font-size:clamp(30px,7vw,64px);line-height:.94;letter-spacing:-.045em;margin:12px 0 10px}
+.tikInfo p{font-size:15px;line-height:1.4;color:rgba(255,255,255,.82);max-width:62ch}
+.tikOpen{display:inline-flex;margin-top:14px;padding:12px 16px;border-radius:999px;background:#fff;color:#075eaa;font-weight:900}
+.tikHint{position:absolute;right:18px;bottom:28px;z-index:2;writing-mode:vertical-rl;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+@media(max-width:700px){.tikButton{height:32px;padding:0 9px;font-size:9px}.tikInfo{padding-left:18px;padding-right:18px}.tikInfo h2{font-size:42px}}
+
 </style>
 </head>
 <body>
@@ -153,7 +157,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 <header class="top">
   <nav class="nav">
     <a class="brand" href="#hasiera" aria-label="EITB GARENA"><span class="eitbWord">eitb</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></a>
-    <a class="allLink" href="#guztia" data-eu="Dena" data-es="Todo">Dena</a>
+    <button class="tikButton" id="tikButton" type="button">Scroll tik tak</button>
     <div class="navlinks">
       <a href="#edukiak" data-eu="Aurkitu" data-es="Descubrir">Aurkitu</a>
       <a href="#zuzenekoak" data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</a>
@@ -217,15 +221,6 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
   </div>
 </section>
 
-<section class="section allSection" id="guztia">
-  <div class="allHead">
-    <div><p class="kicker" data-eu="EITB MEDIA · KATALOGO BATERATUA" data-es="EITB MEDIA · CATÁLOGO UNIFICADO">EITB MEDIA · KATALOGO BATERATUA</p><h2 data-eu="Dena" data-es="Todo">Dena</h2></div>
-    <div class="allCount" id="allCount"></div>
-  </div>
-  <div class="allGrid" id="allGrid"></div>
-  <div class="allSentinel" id="allSentinel" data-eu="Eduki gehiago kargatzen…" data-es="Cargando más contenidos…">Eduki gehiago kargatzen…</div>
-</section>
-
 <div class="catalogWrap" id="edukiak">
 <section class="section">
   <div class="sectionHead">
@@ -247,6 +242,14 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
   </a>
 </section>
 </main>
+
+<div class="tikOverlay" id="tikOverlay" aria-hidden="true">
+  <div class="tikTop">
+    <div class="tikBrand"><span class="eitbWord">eitb</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></div>
+    <button class="tikClose" id="tikClose" type="button" aria-label="Cerrar">×</button>
+  </div>
+  <div class="tikFeed" id="tikFeed" tabindex="0"></div>
+</div>
 
 <footer class="footer">
   <div class="brand"><span class="eitbWord">eitb</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></div>
@@ -325,13 +328,29 @@ let favs=new Set(JSON.parse(localStorage.getItem("ataria-favs")||"[]"));
 
 const $=s=>document.querySelector(s);
 const esc=s=>(s??"").toString().replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+const COVER_COLORS={
+  "ORAIN":["#ff754c","#b53d25"],"PRIMERAN":["#7656ff","#3b24a8"],"ETB ON":["#258cff","#0b4aa7"],
+  "KIROLAK EITB":["#17b978","#087346"],"GUAU":["#f0b91c","#9a6a00"],"Gaztea":["#ff4fa3","#9b1f60"],
+  "MAKUSI":["#23c7d9","#087d8f"],"PRIMERAN · Dokumentalak":["#7656ff","#302070"]
+};
+function coverColors(x){
+  const key=Object.keys(COVER_COLORS).find(k=>(x.source||"").startsWith(k));
+  return COVER_COLORS[key]||["#0e7ac7","#084d91"];
+}
+function coverStyle(x){
+  if(x.image)return `background-image:linear-gradient(to top,rgba(0,0,0,.5),transparent 58%),url('${esc(x.image).replace(/'/g,"%27")}');background-size:cover;background-position:center`;
+  const [a,b]=coverColors(x);
+  return `background:radial-gradient(circle at 72% 24%,rgba(255,255,255,.22),transparent 28%),linear-gradient(145deg,${a},${b})`;
+}
+function coverClass(x){return x.image?"":" generatedCover"}
+
 
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderAll(false); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderTik(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -367,7 +386,7 @@ function renderFeatured(){
   root.innerHTML=FEATURE_SHELVES.map(def=>{
     const chosen=shelfItems(def);
     const cards=chosen.map(x=>{
-      const bg=x.image?`<div class="bg" style="background-image:url('${esc(x.image).replace(/'/g,"%27")}')"></div>`:"";
+      const bg=`<div class="bg${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>`;
       return `<a class="featuredCard" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${bg}<div class="inside"><span class="kind">${lang==="eu"?def.eu:def.es}</span><span class="featuredSource">${esc(x.source)}</span><h3>${esc(x.title)}</h3></div></a>`;
     }).join("");
     const missing=Array.from({length:Math.max(0,3-chosen.length)},()=>`<div class="featuredCard"><div class="inside"><span class="kind">${lang==="eu"?def.eu:def.es}</span><h3>${lang==="eu"?"Eduki gehiago laster":"Más contenidos próximamente"}</h3></div></div>`).join("");
@@ -407,32 +426,24 @@ function updateLocalizedLinks(){
   if(sport)sport.href=lang==="eu"?"https://kirolakeitb.eus/eu/":"https://kirolakeitb.eus/es/";
 }
 
-let allLimit=40;
-function allPool(){
+
+function tikItems(){
   const seen=new Set();
   return items.filter(x=>x&&x.url&&x.title&&!seen.has(x.url)&&(seen.add(x.url),true));
 }
-function allCardHtml(x){
-  const fallback=x.source==="MAKUSI"&&!x.image?" makusiFallback":"";
-  const image=x.image?`style="background-image:url('${esc(x.image).replace(/'/g,"%27")}')"`:"";
-  const desc=lang==="eu"?(x.eu||x.description||"Ireki eduki ofiziala"):(x.es||x.description||"Abrir contenido oficial");
-  return `<article class="allCard"><a href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}><div class="allVisual${fallback}" ${image}><span class="allBadge">${esc(x.source)}</span></div></a><div class="allBody"><h3>${esc(x.title)}</h3><p>${esc(desc)}</p><a class="allOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a></div></article>`;
+function renderTik(){
+  const root=$("#tikFeed"); if(!root)return;
+  root.innerHTML=tikItems().map((x,i)=>{
+    const desc=lang==="eu"?(x.eu||x.description||x.synopsis||"Ireki eduki ofiziala"):(x.es||x.description||x.synopsis||"Abrir contenido oficial");
+    return `<article class="tikItem"><div class="tikMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div><div class="tikInfo"><span class="tikSource">${esc(x.source)}</span><h2>${esc(x.title)}</h2><p>${esc(desc)}</p><a class="tikOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a></div><div class="tikHint">${lang==="eu"?"Irristatu gora":"Desliza arriba"} · ${i+1}/${tikItems().length}</div></article>`;
+  }).join("");
 }
-function renderAll(reset=false){
-  const root=$("#allGrid"),sentinel=$("#allSentinel"); if(!root||!sentinel)return;
-  if(reset)allLimit=40;
-  const pool=allPool();
-  root.innerHTML=pool.slice(0,allLimit).map(allCardHtml).join("");
-  $("#allCount").textContent=lang==="eu"?`${Math.min(allLimit,pool.length)} / ${pool.length} eduki`:`${Math.min(allLimit,pool.length)} / ${pool.length} contenidos`;
-  sentinel.hidden=allLimit>=pool.length;
-  sentinel.textContent=lang==="eu"?"Eduki gehiago kargatzen…":"Cargando más contenidos…";
+function openTik(){
+  renderTik();$("#tikOverlay").classList.add("open");$("#tikOverlay").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";setTimeout(()=>$("#tikFeed")?.focus(),0);
 }
-const allObserver=new IntersectionObserver(entries=>{
-  if(entries.some(e=>e.isIntersecting)){
-    const pool=allPool();
-    if(allLimit<pool.length){allLimit=Math.min(allLimit+40,pool.length);renderAll(false)}
-  }
-},{rootMargin:"500px 0px"});
+function closeTik(){
+  $("#tikOverlay").classList.remove("open");$("#tikOverlay").setAttribute("aria-hidden","true");document.body.style.overflow="";
+}
 
 function renderCards(){
   const q=$("#search").value.trim().toLowerCase();
@@ -443,7 +454,7 @@ function renderCards(){
   if(!view.length){$("#grid").innerHTML=`<div class="empty">${lang==="eu"?"Ez da edukirik aurkitu.":"No se han encontrado contenidos."}</div>`;return}
   $("#grid").innerHTML=view.map(x=>`
     <article class="card">
-      <div class="poster" ${x.image?`style="background-image:linear-gradient(to top,rgba(0,0,0,.58),transparent 55%),url('${esc(x.image)}');background-size:cover;background-position:center"`:""}>
+      <div class="poster${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}">
         <span class="source">${esc(x.source)}</span>
       </div>
       <div class="cardBody">
@@ -476,14 +487,16 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderFeatured(); renderAll(true); renderCards();
+  renderFeatured(); renderTik(); renderCards();
 }
+$("#tikButton").onclick=openTik;
+$("#tikClose").onclick=closeTik;
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#tikOverlay").classList.contains("open"))closeTik()});
 $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("ataria-lang",lang);applyLang()};
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
 applyLang(); loadFeeds(); loadRanking();
-if($("#allSentinel"))allObserver.observe($("#allSentinel"));
 setInterval(()=>{if(!document.hidden){loadFeeds();loadRanking()}},15*60*1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
 </script>
