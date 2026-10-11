@@ -3395,6 +3395,13 @@
       c.lineTo(xx(E.x) - 4, zz(E.z));
       c.fill();
     }
+    for (const e of ENEMIES)
+      if (e.state !== "dead") {
+        c.fillStyle = "#ff5a6e";
+        c.beginPath();
+        c.arc(xx(e.x), zz(e.z), e.type === "brute" ? 4 : 3, 0, TAU);
+        c.fill();
+      }
     for (const m of pickups)
       if (!m.collected) {
         c.fillStyle = "#ffe4a2";
@@ -3449,16 +3456,26 @@
     shiftFlash = Math.max(0, shiftFlash - dt * 2.8);
     $("phaseFlash").style.opacity = shiftFlash * 0.35;
     if (frame % 8 === 0) hud();
+    /* bizitza bakarra: binjeta gorria taupadaka eta bihotz-soinua */
+    const low = P.hp === 1 && started && !ENDING.on;
+    lowBeat = low ? lowBeat + dt : 0;
+    if (low && lowBeat > 0.95) {
+      lowBeat = 0;
+      SND.thud();
+    }
+    $("vignette").style.boxShadow = low ? `inset 0 0 ${110 + 50 * Math.abs(Math.sin(time * 3.3))}px #b0102ea6` : "";
     if (frame % 15 === 0) coachUpdate();
     if (time > 75 && !keysFaded) {
       keysFaded = true;
       $("keys").style.opacity = 0;
     }
   }
-  let keysFaded = false;
+  let keysFaded = false,
+    lowBeat = 0;
   let last = performance.now();
   function loop(now) {
     requestAnimationFrame(loop);
+    if (window.__hold) return; /* probetarako: fotogramaz fotograma grabatzeko */
     const raw = Math.min(0.12, (now - last) / 1000);
     last = now;
     if (workshop.active) {
@@ -4663,6 +4680,21 @@
           $("overlay").hidden = true;
           $("start").hidden = true;
           $("hud").hidden = false;
+        },
+        /* fotograma bat (bideoa grabatzeko): logika + efektuak + kamera + errendatzea */
+        step: (dt) => {
+          for (let k = 0; k < Math.round(dt * 120); k++) tick(1 / 120);
+          if (CRAFT.on) craftCamera(dt);
+          else cameraUpdate(dt);
+          drawGuide();
+          fxUpdate(dt);
+          juiceUpdate(dt);
+          cageVisual(dt);
+          numbersUpdate(dt);
+          atmoUpdate(dt);
+          if (mixer) mixer.update(0);
+          sky.position.copy(camera.position);
+          renderer.render(scene, camera);
         },
         draw: () => {
           cameraUpdate(1);
