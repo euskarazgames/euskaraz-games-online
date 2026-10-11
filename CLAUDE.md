@@ -8,8 +8,9 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   `pilota`, `zesta`, `artzain` ("Kirol" motorra), `basoa`, `itsas` ("Solid" motorra) eta
   `oihartzun` (bi garaiko plataforma-jokoa; `elur.html` haren aurreko bertsioa da).
   OIHARTZUN-ek `?test` parametroarekin `window.__game` proba-kakoa erakusten du.
-  OIHARTZUN-en iturburua: `tools/oihartzun/src/` (game.js…). Ez editatu `public/games/oihartzun.html`
-  zuzenean: `python3 tools/oihartzun/build.py` exekutatu (three.js eta modeloak handik ateratzen ditu).
+  OIHARTZUN-en iturburua: `tools/oihartzun/src/` (game.js, combat.js, magic.js, ascent.js, story.js,
+  runes.js…). Ez editatu `public/games/oihartzun.html` zuzenean: `python3 tools/oihartzun/build.py`
+  exekutatu (three.js handik ateratzen du; sorgina eta hezurdurak `tools/oihartzun/models/*.glb`-tik).
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
 - `public/assets/{tex,sky,covers}` — testurak, zeruak eta atariko irudiak. Kredituak: `public/assets/CREDITS.md`.
 - `public/garena`, `public/ataria`, `src/ataria.js` — GARENA katalogoa (jokoetatik aparte).
@@ -29,4 +30,5 @@ NODE_PATH=$(npm root -g) node tools/test/errcheck.js http://127.0.0.1:8091/games
 NODE_PATH=$(npm root -g) node tools/test/shot.js http://127.0.0.1:8091/ /tmp/ataria 390 844 3000
 NODE_PATH=$(npm root -g) node tools/test/oihartzun_routes.js http://127.0.0.1:8091/games/oihartzun.html
 NODE_PATH=$(npm root -g) node tools/test/oihartzun_combat.js http://127.0.0.1:8091/games/oihartzun.html
+NODE_PATH=$(npm root -g) node tools/test/oihartzun_boss.js http://127.0.0.1:8091/games/oihartzun.html
 ```

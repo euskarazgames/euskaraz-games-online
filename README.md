@@ -24,16 +24,31 @@ texturas de siempre. En móviles lentos la calidad se ajusta sola. Opciones en l
 - `?gfx=high`: calidad máxima siempre.
 
 ## OIHARTZUN
-Acción y puzles en 3D con dos épocas: el pasado (atardecer, mar vivo) y el presente (noche, mar helado).
-Cada isla es una jaula: no se puede caer de ella y la salida se abre al superar su reto. Las islas
-alternan **combate** (combo con autoapuntado, dash invulnerable, sombras que solo se hieren en su época)
-y **construcción** (cajas que se tocan, arrastran, giran, apilan y pegan, estilo «Ultrahand», para
-llegar a una runa). Jefe final con tres fases y refuerzos, cuatro finales, tres campanas opcionales.
-La música es una banda épica sintetizada en tiempo real por capas (exploración, combate, jefe).
-- Código fuente legible: `tools/oihartzun/src/` → `python3 tools/oihartzun/build.py`
+Acción, plataformas y puzles en 3D con dos épocas: el pasado (atardecer, mar vivo) y el presente
+(noche, mar helado). Amaiur es una **bruja que dispara magia**: el rayo busca solo a su objetivo
+(autoapuntado), el tercero seguido lanza tres rayos, manteniendo se carga **INDARRA** (rayo grande que
+atraviesa y explota) y, durante el dash, un golpe giratorio. Los enemigos son **esqueletos animados**
+(KayKit, CC0, GitHub): espadachines que esprintan, magos que disparan y se teletransportan y guerreros
+con hacha que embisten. Cada uno solo se hiere en la época del color de sus ojos. Contador **KATEA**,
+cámara lenta en la última baja y oleadas cada vez más frenéticas.
+- Cada isla es una jaula: no se puede caer y la salida se abre al superar su reto (combate o
+  construcción con cajas estilo «Ultrahand»). En islas liberadas hay **puzles de runas** por épocas.
+- **La Aguja de Gaueko**: ascenso estilo Celeste de la isla 5 (y 11) al reloj sobre las nubes (y 42):
+  rocas basálticas flotantes, cristales de época, cristales verdes que renuevan el dash, piedras que se
+  derrumban, corriente de viento, runa que materializa piedras espirituales y tres campanas de control
+  (al caer no se pierde vida).
+- Guion con misterios y giros: páginas del diario de Amaiur con números de bucle, escenas breves al
+  terminar cada isla que dejan una pregunta abierta, el giro de la máscara de Gaueko y un último
+  mensaje de radio tras el final.
+- Jefe final con cuatro fases, escudo de tres luces en el núcleo, coronas de proyectiles y refuerzos.
+  Cuatro finales, tres campanas y cuatro páginas opcionales. Música épica sintetizada por capas.
+- Código fuente legible: `tools/oihartzun/src/` (`game.js`, `combat.js`, `magic.js`, `ascent.js`,
+  `story.js`, `runes.js`, `arena.js`, `craft.js`, `music.js`) → `python3 tools/oihartzun/build.py`
+- Modelos: `tools/oihartzun/models/*.glb` (generados con `build_models.mjs` desde KayKit).
 - Versión de un solo archivo: `python3 tools/oihartzun/standalone.py /tmp/OIHARTZUN.html`
-- Pruebas: `tools/test/oihartzun_routes.js` (recorridos y puzles con la física real),
-  `tools/test/oihartzun_combat.js` (un bot supera las arenas), `tools/test/errcheck.js`.
+- Pruebas: `tools/test/oihartzun_routes.js` (recorridos, puzles, la Aguja entera y las runas con la
+  física real), `tools/test/oihartzun_combat.js` (un bot supera las arenas a distancia),
+  `tools/test/oihartzun_boss.js` (jefe completo y giro final), `tools/test/errcheck.js`.
 
 ## Cloudflare
 - Worker name: `euskaraz-games-online`

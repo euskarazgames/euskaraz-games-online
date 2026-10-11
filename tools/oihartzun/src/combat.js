@@ -1,19 +1,22 @@
   /* ==================================================================
-     BORROKA · Amaiurren makila magikoa eta Gauekoren itzalak
-     · Konboa (3 kolpe), auto-helburua, DASH-kolpea eta garai-uhina.
-     · Itzal bakoitza garai batean bakarrik zauritzen da: begi urreak →
-       iragana, begi urdinak → oraina, morea → biak. Beste garaian ezkutua du.
+     BORROKA · Gauekoren hezurrezko zaindariak (KayKit Skeletons, CC0)
+     · Hiru mota: ezpatadun hezurdura (lasterka eta ebakia), hezurdun
+       sorgina (urrutitik jaurtitzen du eta teleportatzen da) eta
+       aizkoradun gudaria (orroa, oldarraldia, kaiolaren kontra zorabiatu).
+     · Zaindari bakoitza garai batean bakarrik zauritzen da: begi urreak →
+       iragana, begi urdinak → oraina, moreak → biak. Beste garaian ezkutua.
+     · Jokalariaren sorginkeria: magic.js.
      ================================================================== */
   const ENEMIES = [],
     SHOTS = [];
-  /* S: eskala bisuala (kamera urrun dago: siluetak handiak eta argiak) */
+  /* S: eskala bisuala (prozedurazko ordezkoa) · H: gorputzaren erdiaren altuera (helburua) */
   const EN_DEF = {
-    grunt: { hp: 3, speed: 3.6, r: 0.9, dmg: 1, mass: 1, S: 1.55 },
-    eye: { hp: 2, speed: 2.9, r: 0.8, dmg: 1, mass: 0.7, S: 1.5 },
-    brute: { hp: 7, speed: 2.3, r: 1.4, dmg: 2, mass: 2.6, S: 1.45 },
+    grunt: { hp: 3, speed: 3.9, r: 0.85, dmg: 1, mass: 1, S: 1.55, H: 1.2 },
+    eye: { hp: 3, speed: 3.1, r: 0.85, dmg: 1, mass: 0.8, S: 1.5, H: 1.25 },
+    brute: { hp: 10, speed: 2.5, r: 1.3, dmg: 2, mass: 2.6, S: 1.45, H: 1.6 },
   };
   const ERA_COL = ["#ffb85c", "#7fe9ff", "#c98bff"];
-  const ATK = { n: 0, t: 9, chain: 0, buf: 0, dir: 0, hitSet: new Set(), waveCd: 0, lungeT: 0, dashStrike: 0, slash: null, hold: false };
+  const ATK = { n: 0, t: 9, dir: 0, waveCd: 0, lungeT: 0, hold: false };
   const NUMS = [];
   let combatMat = null;
   function combatLevel() {
@@ -22,8 +25,114 @@
   function enemiesAlive() {
     return ENEMIES.filter((e) => e.state !== "dead").length;
   }
-  /* --------------------------- itzalen eredua --------------------------- */
+  /* --------------------------- hezurdurak (KayKit, animatuak) --------------------------- */
+  const SKEL_OF = { grunt: ["skel_minion", 1.32], eye: ["skel_mage", 1.32], brute: ["skel_warrior", 1.62] };
+  const SKEL_TINT = ["#f0d6ae", "#c4ddf0", "#dccbf5"];
+  function skelMesh(type, era) {
+    const def = SKEL_OF[type],
+      src = models[def[0]],
+      clips = models.skel_minion && models.skel_minion.animations;
+    if (!src || !clips || !clips.length) return null;
+    const ei = era < 0 ? 2 : era,
+      root = cloneSkinned(src.scene),
+      g = new T.Group();
+    root.scale.setScalar(def[1]);
+    g.add(root);
+    let base = null;
+    root.traverse((n) => {
+      if (n.isMesh && !/Eyes/.test(n.name) && !base) base = n.material;
+    });
+    /* three r128: hezurdun sareek "skinning" duen materiala behar dute; armek ez */
+    const body = base.clone();
+    body.skinning = true;
+    body.color = new T.Color(SKEL_TINT[ei]);
+    body.emissive = new T.Color("#000000");
+    body.envMapIntensity = 0.55;
+    const rigid = body.clone();
+    rigid.skinning = false;
+    const eye = new T.MeshBasicMaterial({ color: ERA_COL[ei], skinning: true });
+    /* itzal-mapan ez (11 sare × etsai bakoitza mugikorrean garestia da): itzal leuna lurrean */
+    root.traverse((n) => {
+      if (!n.isMesh) return;
+      n.castShadow = false;
+      n.receiveShadow = false;
+      n.frustumCulled = false;
+      n.material = /Eyes/.test(n.name) ? eye : n.isSkinnedMesh ? body : rigid;
+    });
+    /* begien distira (buruari lotuta) */
+    const head = root.getObjectByName("head"),
+      shine = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: ERA_COL[ei], transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.9 }));
+    shine.scale.setScalar(0.9);
+    if (head) {
+      shine.position.set(0, 0.42, 0.33);
+      head.add(shine);
+    }
+    const mixer = new T.AnimationMixer(root),
+      actions = {};
+    for (const c of clips) actions[c.name] = mixer.clipAction(c);
+    const R = EN_DEF[type].r * 1.2;
+    const parts = enemyExtras(type, era, R, R * 0.95);
+    g.add(parts.shield);
+    return { g, body, rigid, eye, shine, mixer, actions, anim: "", skel: true, ...parts };
+  }
+  /* garai-ezkutua, aura eta bizitza-barra (bi ereduentzat) */
+  function enemyExtras(type, era, R, cy) {
+    const col = ERA_COL[era < 0 ? 2 : era];
+    const shield = new T.Mesh(
+      new T.IcosahedronGeometry(1, 3),
+      new T.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: T.AdditiveBlending,
+        uniforms: { uC: { value: new T.Color(col) }, uA: { value: 0 }, uT: { value: 0 } },
+        vertexShader: "varying vec3 vN;varying vec3 vV;varying vec3 vP;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);vP=position;gl_Position=projectionMatrix*mv;}",
+        fragmentShader: "uniform vec3 uC;uniform float uA,uT;varying vec3 vN;varying vec3 vV;varying vec3 vP;void main(){float f=pow(1.-abs(dot(vN,vV)),2.6);float hex=step(.86,fract(vP.y*6.+uT*.6))*.25;gl_FragColor=vec4(uC,(f+hex*f)*uA);}",
+      }),
+    );
+    shield.material.opacity = 0;
+    shield.scale.set(R, R * 1.25, R);
+    shield.position.y = cy;
+    const aura = new T.Mesh(new T.RingGeometry(EN_DEF[type].r * 0.9, EN_DEF[type].r * 1.25, 28), new T.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.7, depthWrite: false }));
+    aura.rotation.x = -PI / 2;
+    const blob = new T.Mesh(new T.PlaneGeometry(1, 1), new T.MeshBasicMaterial({ map: glowTexture, color: "#000000", transparent: true, opacity: 0.55, depthWrite: false }));
+    /* auraren barruan (dagoeneko etzanda): z lokala = gora */
+    blob.scale.setScalar(EN_DEF[type].r * 2.6);
+    blob.position.z = -0.02;
+    aura.add(blob);
+    const bar = new T.Group(),
+      bg = new T.Mesh(new T.PlaneGeometry(1, 0.11), new T.MeshBasicMaterial({ color: "#16091f", transparent: true, opacity: 0.75, depthTest: false })),
+      fg = new T.Mesh(new T.PlaneGeometry(1, 0.11), new T.MeshBasicMaterial({ color: col, depthTest: false }));
+    fg.position.z = 0.001;
+    bar.add(bg, fg);
+    bar.renderOrder = fg.renderOrder = bg.renderOrder = 9;
+    scene.add(aura, bar);
+    return { shield, aura, bar, fg };
+  }
+  /* animazioa: izen bera bada, abiadura bakarrik eguneratu */
+  function enAnim(e, name, ts = 1, once = false, fade = 0.18) {
+    if (!e.mixer) return;
+    const a = e.actions[name];
+    if (!a) return;
+    if (e.anim === name) {
+      a.timeScale = ts;
+      return;
+    }
+    const old = e.actions[e.anim];
+    a.reset();
+    a.timeScale = ts;
+    a.setLoop(once ? T.LoopOnce : T.LoopRepeat, Infinity);
+    a.clampWhenFinished = once;
+    a.fadeIn(fade).play();
+    if (old) old.fadeOut(fade);
+    e.anim = name;
+  }
+  /* --------------------------- itzalen eredua (ordezkoa: modelorik gabe) --------------------------- */
   function enemyMesh(type, era) {
+    const sk = skelMesh(type, era);
+    if (sk) {
+      scene.add(sk.g);
+      return sk;
+    }
     const g = new T.Group(),
       body = new T.MeshStandardMaterial({ color: "#0d0812", roughness: 0.62, metalness: 0, envMapIntensity: 0.25, emissive: new T.Color("#1a0626"), emissiveIntensity: 0.6 }),
       eye = new T.MeshBasicMaterial({ color: ERA_COL[era < 0 ? 2 : era] }),
@@ -68,40 +177,20 @@
         h.rotation.x = -0.3;
       }
     }
-    /* garai-ezkutua: beste garaian dagoenean ikusten da */
-    const shield = new T.Mesh(
-      new T.IcosahedronGeometry(1, 3),
-      new T.ShaderMaterial({
-        transparent: true,
-        depthWrite: false,
-        blending: T.AdditiveBlending,
-        uniforms: { uC: { value: new T.Color(ERA_COL[era < 0 ? 2 : era]) }, uA: { value: 0 }, uT: { value: 0 } },
-        vertexShader: "varying vec3 vN;varying vec3 vV;varying vec3 vP;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);vP=position;gl_Position=projectionMatrix*mv;}",
-        fragmentShader: "uniform vec3 uC;uniform float uA,uT;varying vec3 vN;varying vec3 vV;varying vec3 vP;void main(){float f=pow(1.-abs(dot(vN,vV)),2.6);float hex=step(.86,fract(vP.y*6.+uT*.6))*.25;gl_FragColor=vec4(uC,(f+hex*f)*uA);}",
-      }),
-    );
-    shield.material.opacity = 0;
-    const R = (EN_DEF[type].r / EN_DEF[type].S) * 1.35;
-    shield.scale.set(R, R * 1.1, R);
-    shield.position.y = type === "eye" ? 0 : R * 0.8;
-    g.add(shield);
-    const aura = new T.Mesh(new T.RingGeometry(EN_DEF[type].r * 0.9, EN_DEF[type].r * 1.25, 28), new T.MeshBasicMaterial({ color: ERA_COL[era < 0 ? 2 : era], transparent: true, opacity: 0.7, depthWrite: false }));
-    aura.rotation.x = -PI / 2;
-    /* bizitza-barra */
-    const bar = new T.Group(),
-      bg = new T.Mesh(new T.PlaneGeometry(1, 0.11), new T.MeshBasicMaterial({ color: "#16091f", transparent: true, opacity: 0.75, depthTest: false })),
-      fg = new T.Mesh(new T.PlaneGeometry(1, 0.11), new T.MeshBasicMaterial({ color: ERA_COL[era < 0 ? 2 : era], depthTest: false }));
-    fg.position.z = 0.001;
-    bar.add(bg, fg);
-    bar.renderOrder = fg.renderOrder = bg.renderOrder = 9;
-    scene.add(g, aura, bar);
-    return { g, body, eye, shield, aura, bar, fg };
+    const R = (EN_DEF[type].r / EN_DEF[type].S) * 1.35,
+      parts = enemyExtras(type, era, R, type === "eye" ? 0 : R * 0.8);
+    g.add(parts.shield);
+    scene.add(g);
+    return { g, body, eye, ...parts };
   }
   function spawnEnemy(type, era, x, z, y) {
     const D = EN_DEF[type],
       M = enemyMesh(type, era),
-      e = { type, era, x, z, y, vx: 0, vz: 0, hp: D.hp, max: D.hp, state: "spawn", t: 0, cd: 1 + Math.random(), dir: 0, flash: 0, stun: 0, island: currentStage, ...M, D };
-    e.g.position.set(x, y - 1.5, z);
+      e = { type, era, x, z, y, vx: 0, vz: 0, hp: D.hp, max: D.hp, state: "spawn", t: 0, cd: 1 + Math.random(), dir: Math.atan2(P.x - x, P.z - z), flash: 0, stun: 0, hitT: 0, blinkCd: 2, island: currentStage, H: !M.skel && type === "eye" ? 1.9 : D.H, ...M, D };
+    e.g.position.set(x, e.skel ? y : y - 1.5, z);
+    e.g.rotation.y = e.dir;
+    e.spawnLen = e.skel ? 1.25 : 0.7;
+    enAnim(e, "Spawn_Ground_Skeletons", 2.85, true, 0.01);
     ENEMIES.push(e);
     fxRing(x, y + 0.05, z, "#8a3dff", 2.2, 0.6);
     fxBurst(x, y + 0.2, z, { n: 14, speed: 2.5, up: 3, life: 0.7, size: 0.3, color: "#6d28c9", grav: 2 });
@@ -110,6 +199,10 @@
   function removeEnemy(e) {
     scene.remove(e.g, e.aura, e.bar);
     e.body.dispose();
+    e.eye.dispose();
+    if (e.rigid) e.rigid.dispose();
+    if (e.shine) e.shine.material.dispose();
+    if (e.mixer) e.mixer.stopAllAction();
   }
   function clearEnemies() {
     for (const e of ENEMIES) removeEnemy(e);
@@ -133,137 +226,16 @@
           best = [x, z];
           break;
         }
-        if (best) spawnEnemy(type, era, best[0], best[1], I.y).island = island;
+        if (best) {
+          const e = spawnEnemy(type, era, best[0], best[1], I.y);
+          e.island = island;
+          /* bizitza uhartearen arabera (tutoriala: oinarrizkoa) */
+          e.hp = e.max = Math.round(e.D.hp * (HP_K[island] || 1));
+        }
       }
-  }
-  /* --------------------------- jokalariaren erasoa --------------------------- */
-  function attack() {
-    if (!started || paused || ascent || respawnTimer || CRAFT.on) return;
-    if (ATK.t < 0.17) {
-      ATK.buf = 0.25; /* konboa: sakatze goiztiarra gorde */
-      return;
-    }
-    ATK.n = ATK.t < 0.55 && ATK.chain < 3 ? ATK.chain + 1 : 1;
-    ATK.chain = ATK.n;
-    ATK.t = 0;
-    ATK.hitSet.clear();
-    ATK.dashStrike = P.dashT > 0 ? 1 : 0;
-    if (P.dashT > 0) P.dashT = 0.01;
-    /* auto-helburua: sarrerako norabidean edo hurbilena (4.5 m) */
-    let d = direction(),
-      best = null,
-      bs = 1e9;
-    const len = Math.hypot(d.x, d.z);
-    for (const e of ENEMIES) {
-      if (e.state === "dead" || e.state === "spawn") continue;
-      const dx = e.x - P.x,
-        dz = e.z - P.z,
-        dd = Math.hypot(dx, dz);
-      if (dd > 4.8) continue;
-      const align = len > 0.2 ? (dx * d.x + dz * d.z) / (dd * len || 1) : 0;
-      const score = dd - align * 1.6;
-      if (score < bs) (bs = score), (best = e);
-    }
-    if (bossTarget()) {
-      const dx = 0 - P.x,
-        dz = -179 - P.z,
-        dd = Math.hypot(dx, dz);
-      if (dd < 6 && dd < bs) best = { x: 0, z: -179 };
-    }
-    if (best) P.angle = Math.atan2(best.x - P.x, best.z - P.z);
-    else if (len > 0.2) P.angle = Math.atan2(d.x, d.z);
-    ATK.dir = P.angle;
-    ATK.lungeT = best ? Math.min(0.1, Math.max(0, Math.hypot(best.x - P.x, best.z - P.z) - 1.7) / 10) : 0.035;
-    slashFx(ATK.n, ATK.dashStrike);
-    SND.swing(ATK.n);
-    squash(ATK.n === 3 ? -1.6 : -0.8);
-    coachDone("attack");
   }
   function bossTarget() {
     return saved.stage === 5 && !saved.ending && boss.state === "open" && boss.hitLock <= 0;
-  }
-  function slashFx(n, strong) {
-    if (!ATK.slash) {
-      const geo = new T.RingGeometry(0.9, 2.9, 40, 1, -1.2, 2.4);
-      geo.rotateX(-PI / 2);
-      ATK.slash = new T.Mesh(geo, new T.MeshBasicMaterial({ transparent: true, depthWrite: false, blending: T.AdditiveBlending, side: T.DoubleSide }));
-      ATK.slash.renderOrder = 7;
-      scene.add(ATK.slash);
-      const g2 = new T.RingGeometry(0.4, 2.9, 48);
-      g2.rotateX(-PI / 2);
-      ATK.spin = new T.Mesh(g2, ATK.slash.material.clone());
-      ATK.spin.renderOrder = 7;
-      scene.add(ATK.spin);
-    }
-    ATK.slashT = 0;
-    ATK.slashN = n;
-    const c = strong ? "#ffffff" : phase ? "#9ff4ff" : "#ffd58c";
-    ATK.slash.material.color.set(c);
-    ATK.spin.material.color.set(c);
-  }
-  function attackUpdate(dt) {
-    ATK.t += dt;
-    ATK.waveCd = Math.max(0, ATK.waveCd - dt);
-    if (ATK.buf > 0) {
-      ATK.buf -= dt;
-      if (ATK.t >= 0.17) {
-        ATK.buf = 0;
-        attack();
-      }
-    }
-    if (ATK.t > 0.75) ATK.chain = 0;
-    /* botoia sakatuta: konboa bera jarraitzen da */
-    if (ATK.hold && ATK.t > 0.3 && !paused) attack();
-    /* kolpe-eremua: 0.05–0.16 s artean */
-    if (ATK.t > 0.04 && ATK.t < 0.17 && ATK.n) {
-      const spin = ATK.n === 3,
-        R = spin ? 3 : ATK.dashStrike ? 3.1 : 2.6,
-        dmg = (spin ? 2 : 1) + (ATK.dashStrike ? 1 : 0) + (saved.boons?.includes("sharp") ? 1 : 0) * (spin ? 1 : 0);
-      for (const e of ENEMIES) {
-        if (e.state === "dead" || e.state === "spawn" || ATK.hitSet.has(e)) continue;
-        const dx = e.x - P.x,
-          dz = e.z - P.z,
-          dd = Math.hypot(dx, dz);
-        if (dd > R + e.D.r || Math.abs(e.y + (e.type === "eye" ? 1.9 : 0.8) - (P.y + 0.9)) > 2.4) continue;
-        if (!spin) {
-          const a = Math.atan2(dx, dz),
-            diff = angDiff(a, ATK.dir);
-          if (diff > 1.25 && dd > e.D.r + 0.4) continue;
-        }
-        ATK.hitSet.add(e);
-        hitEnemy(e, dmg, dx / (dd || 1), dz / (dd || 1));
-      }
-      if (bossTarget() && !ATK.hitSet.has(boss) && Math.hypot(P.x, P.z + 179) < R + 1.6) {
-        ATK.hitSet.add(boss);
-        bossStrike();
-      }
-    }
-    /* VFX */
-    if (ATK.slash) {
-      ATK.slashT = (ATK.slashT ?? 9) + dt;
-      const k = ATK.slashT / 0.16,
-        spin = ATK.slashN === 3;
-      ATK.slash.visible = !spin && k < 1;
-      ATK.spin.visible = spin && k < 1.3;
-      const s = ATK.slashN === 2 ? -1 : 1;
-      ATK.slash.position.set(P.x, P.y + 0.9, P.z);
-      ATK.slash.rotation.set(0, ATK.dir + s * (0.9 - k * 1.6) * 0.35, 0);
-      ATK.slash.scale.set(s, 1, 1);
-      ATK.slash.material.opacity = Math.max(0, 1 - k * k) * 1;
-      ATK.spin.position.set(P.x, P.y + 0.7, P.z);
-      ATK.spin.scale.setScalar(0.6 + k * 0.6);
-      ATK.spin.material.opacity = Math.max(0, 1 - k / 1.3) * 0.8;
-    }
-  }
-  /* erasoaren animazio prozedurala: gorputzaren biraketa (KayKit pertsonaiak ez du eraso-animaziorik) */
-  function attackPose() {
-    if (ATK.t > 0.4 || !ATK.n) return 0;
-    const t = ATK.t;
-    if (ATK.n === 3) return t < 0.3 ? smooth01(t / 0.3) * TAU : 0;
-    const s = ATK.n === 2 ? -1 : 1;
-    if (t < 0.05) return s * -0.7 * (t / 0.05);
-    if (t < 0.17) return s * mix(-0.7, 0.95, smooth01((t - 0.05) / 0.12));
-    return s * 0.95 * (1 - smooth01((t - 0.17) / 0.23));
   }
   function hitEnemy(e, dmg, nx, nz) {
     if (e.era !== -1 && e.era !== phase) {
@@ -274,6 +246,8 @@
       haptic(12);
       e.vx += nx * 3;
       e.vz += nz * 3;
+      /* ezkutuaren abisua: behin testua, gero beti ikur bat buruaren gainean */
+      shieldHint(e);
       if (!COACH.seen.has("era-shield")) {
         coachDone("era-shield");
         notify(
@@ -287,24 +261,58 @@
     const mult = e.state === "stun" ? 2 : 1;
     e.hp -= dmg * mult;
     e.flash = 0.1;
-    const kb = (dmg >= 2 ? 9 : 5.5) / e.D.mass;
+    e.hitT = 0.3;
+    const kb = (dmg >= 2 ? 9 : 4.2) / e.D.mass;
     e.vx += nx * kb;
     e.vz += nz * kb;
-    if (e.state === "wind" && e.type !== "brute") {
+    if (e.state === "wind" && e.type !== "brute" && dmg >= 2) {
       e.state = "recover";
       e.t = 0;
     }
-    hitStop = Math.max(hitStop, dmg >= 2 ? 0.07 : 0.045);
-    shake(dmg >= 2 ? 0.2 : 0.1);
-    haptic(dmg >= 2 ? 18 : 9);
-    fxBurst(e.x, e.y + (e.type === "eye" ? 1.4 : 0.8), e.z, { n: 10 + dmg * 5, speed: 5, life: 0.4, size: 0.26, color: ERA_COL[e.era < 0 ? 2 : e.era], grav: 3 });
+    hitStop = Math.max(hitStop, dmg >= 2 ? 0.06 : 0.022);
+    shake(dmg >= 2 ? 0.18 : 0.06);
+    haptic(dmg >= 2 ? 18 : 7);
+    fxBurst(e.x, e.y + e.H, e.z, { n: 8 + dmg * 5, speed: 5, life: 0.4, size: 0.26, color: ERA_COL[e.era < 0 ? 2 : e.era], grav: 3 });
     damageNumber(e, dmg * mult);
     SND.hit(dmg * mult);
+    comboHit();
     if (e.hp <= 0) killEnemy(e);
+  }
+  /* ezkutuaren ikurra: "ALDATU" eta garaiaren kolorea, etsaiaren gainean */
+  function shieldHint(e) {
+    const el = $("shieldHint");
+    if (!el) return;
+    SHIELD_HINT.e = e;
+    SHIELD_HINT.t = 1.4;
+    el.textContent = (e.era ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + " · " + L("ALDATU", "CAMBIA") + kb(" (Q)");
+    el.style.borderColor = el.style.color = ERA_COL[e.era];
+  }
+  const SHIELD_HINT = { e: null, t: 0 };
+  function shieldHintUpdate(dt) {
+    const el = $("shieldHint");
+    if (!el) return;
+    SHIELD_HINT.t -= dt;
+    const e = SHIELD_HINT.e;
+    if (!e || SHIELD_HINT.t <= 0 || e.state === "dead" || e.era === phase) {
+      el.hidden = true;
+      return;
+    }
+    const v = new T.Vector3(e.x, e.y + e.H * 2 + 1.2, e.z).project(camera);
+    el.hidden = false;
+    el.style.transform = `translate(${(v.x * 0.5 + 0.5) * innerWidth}px,${(-v.y * 0.5 + 0.5) * innerHeight}px) translate(-50%,-100%)`;
   }
   function killEnemy(e) {
     e.state = "dead";
     e.t = 0;
+    e.vx *= 0.3;
+    e.vz *= 0.3;
+    enAnim(e, "Death_C_Skeletons", 1.7, true, 0.08);
+    /* hiltzeak DASH berritzen du (erasoa saritu: mugimendu bizia) */
+    P.dashReady = true;
+    P.dashes = Math.max(P.dashes, 1);
+    if (e.shine) e.shine.visible = false;
+    e.aura.visible = e.bar.visible = false;
+    e.shield.visible = false;
     fxBurst(e.x, e.y + 0.8, e.z, { n: 34, speed: 6, up: 2, life: 0.9, size: 0.36, color: "#7a2fd6", grav: 1 });
     fxBurst(e.x, e.y + 0.8, e.z, { n: 16, speed: 3, up: 3, life: 1.1, size: 0.3, color: ERA_COL[e.era < 0 ? 2 : e.era], grav: -1 });
     fxRing(e.x, e.y + 0.1, e.z, ERA_COL[e.era < 0 ? 2 : e.era], 3, 0.5);
@@ -341,8 +349,12 @@
     if (hit) fxRing(P.x, P.y + 0.4, P.z, eraCol(), R, 0.35);
   }
   /* --------------------------- itzalen adimena --------------------------- */
+  /* zailtasuna uhartearen arabera: tutoriala leun, azken arenak frenetikoak */
+  const DIFF = [0.8, 1, 1.05, 1, 1.18, 1.25];
+  const HP_K = [1, 1, 1.34, 1, 1.67, 1.67];
   function enemyUpdate(dt) {
     for (const e of ENEMIES) {
+      const K = DIFF[e.island] || 1;
       const I = ISLANDS[e.island] || null;
       e.t += dt;
       e.flash = Math.max(0, e.flash - dt);
@@ -355,30 +367,46 @@
       let want = 0,
         wx = 0,
         wz = 0;
+      if (e.mixer) e.mixer.update(dt);
       if (e.state === "dead") {
+        e.aura.visible = e.bar.visible = false;
+        if (e.skel) {
+          /* hezurrak lurrera erori, gero lurrean hondoratu */
+          e.x += e.vx * dt;
+          e.z += e.vz * dt;
+          e.vx *= Math.exp(-dt * 6);
+          e.vz *= Math.exp(-dt * 6);
+          e.g.position.set(e.x, e.y - Math.max(0, e.t - 1.05) * 1.6, e.z);
+          e.body.emissive.set("#000000");
+          continue;
+        }
         const k = e.t / 0.45;
         e.g.scale.setScalar(Math.max(0.001, (1 - k) * e.D.S));
         e.g.position.y = e.y + k * 0.6;
-        e.aura.visible = e.bar.visible = false;
         continue;
       }
+      e.hitT = Math.max(0, e.hitT - dt);
+      e.blinkCd = Math.max(0, e.blinkCd - dt);
       if (e.state === "spawn") {
-        e.g.position.set(e.x, e.y - 2 + smooth01(Math.min(1, e.t / 0.7)) * 2 + (e.type === "eye" ? 1.9 : 0), e.z);
-        if (e.t > 0.7) (e.state = e.type === "eye" ? "hover" : "chase"), (e.t = 0);
+        if (e.skel) e.g.position.set(e.x, e.y, e.z);
+        else e.g.position.set(e.x, e.y - 2 + smooth01(Math.min(1, e.t / 0.7)) * 2 + (e.type === "eye" ? 1.9 : 0), e.z);
+        if (e.t > e.spawnLen) (e.state = e.type === "eye" ? "hover" : "chase"), (e.t = 0);
       } else if (e.stun > 0 && e.state !== "stun") {
         /* garai-uhinak gelditua */
       } else if (e.type === "grunt") {
         if (e.state === "chase") {
-          want = e.D.speed;
+          /* urrun badago, lasterka (esprinta); hurbil, kontuz */
+          want = e.D.speed * K * (d > 6 ? 1.5 : 1);
           wx = ux;
           wz = uz;
           e.dir = Math.atan2(ux, uz);
-          if (d < 2.1 && e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz);
+          if (d < 2.6 && e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz);
         } else if (e.state === "wind") {
-          if (e.t > 0.42) (e.state = "lunge"), (e.t = 0);
+          e.dir = Math.atan2(e.lx, e.lz);
+          if (e.t > 0.46 / Math.sqrt(K)) (e.state = "lunge"), (e.t = 0);
         } else if (e.state === "lunge") {
-          e.vx = e.lx * 9;
-          e.vz = e.lz * 9;
+          e.vx = e.lx * 10.5;
+          e.vz = e.lz * 10.5;
           if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) playerHit(e.D.dmg, e.x, e.z);
           if (e.t > 0.22) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "recover" && e.t > 0.6) (e.state = "chase"), (e.t = 0);
@@ -386,28 +414,35 @@
         if (e.state === "hover") {
           const desired = 7,
             side = Math.sin(time * 0.7 + e.x) > 0 ? 1 : -1;
-          want = e.D.speed;
+          want = e.D.speed * K;
           wx = ux * (d - desired) * 0.35 + -uz * side * 0.6;
           wz = uz * (d - desired) * 0.35 + ux * side * 0.6;
           e.dir = Math.atan2(ux, uz);
           e.cd -= dt;
-          if (e.cd <= 0 && d < 13) (e.state = "aim"), (e.t = 0);
+          if (e.skel && d < 3.6 && e.blinkCd <= 0) blink(e, I);
+          else if (e.cd <= 0 && d < 13) (e.state = "aim"), (e.t = 0);
         } else if (e.state === "aim") {
           e.dir = Math.atan2(ux, uz);
           if (e.t > 0.7) {
-            shoot(e, ux, uz);
+            /* gero eta zailago: hiru proiektileko haizea (txandaka) */
+            const fan = K > 1.1 && (e.volley = (e.volley || 0) + 1) % 2 === 0;
+            shoot(e, ux, uz, K);
+            if (fan) {
+              const a = Math.atan2(ux, uz);
+              for (const s of [-0.32, 0.32]) shoot(e, Math.sin(a + s), Math.cos(a + s), K);
+            }
             e.state = "hover";
             e.t = 0;
-            e.cd = 2.2 + Math.random() * 0.9;
+            e.cd = (1.9 + Math.random() * 0.8) / K;
           }
         }
       } else if (e.type === "brute") {
         if (e.state === "chase") {
-          want = e.D.speed;
+          want = e.D.speed * K;
           wx = ux;
           wz = uz;
           e.dir = Math.atan2(ux, uz);
-          e.cd -= dt;
+          e.cd -= dt * K;
           if (e.cd <= 0 && d > 3 && d < 12) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), telegraph(e);
           else if (d < 2.2 && e.t > 0.5) (e.state = "wind"), (e.t = 0.4), (e.lx = ux), (e.lz = uz), telegraph(e);
         } else if (e.state === "wind") {
@@ -478,30 +513,41 @@
       e.x = nx;
       e.z = nz;
       /* ikusmena */
-      const bob = e.type === "eye" ? 1.9 + Math.sin(time * 2.4 + e.x) * 0.2 : 0;
+      const bob = e.type === "eye" && !e.skel ? 1.9 + Math.sin(time * 2.4 + e.x) * 0.2 : 0;
       if (e.state !== "spawn") e.g.position.set(e.x, e.y + bob, e.z);
-      e.g.rotation.y = mix(e.g.rotation.y, e.dir, 1 - Math.exp(-dt * 10));
+      e.g.rotation.y += Math.atan2(Math.sin(e.dir - e.g.rotation.y), Math.cos(e.dir - e.g.rotation.y)) * (1 - Math.exp(-dt * 10));
       const wind = e.state === "wind" || e.state === "aim";
-      const sq = wind ? 1 - 0.18 * Math.min(1, e.t / 0.4) : e.state === "lunge" || e.state === "charge" ? 1.15 : 1 + Math.sin(time * 6 + e.x) * 0.04;
-      e.g.scale.set(e.D.S / Math.sqrt(sq), e.D.S * sq, e.D.S / Math.sqrt(sq));
-      if (e.state === "stun") e.g.rotation.z = Math.sin(time * 18) * 0.12;
-      else e.g.rotation.z = 0;
-      e.body.emissive.set(e.flash > 0 ? "#ffffff" : wind ? "#c01a3c" : "#1a0626");
-      e.body.emissiveIntensity = e.flash > 0 ? 2 : wind ? 0.7 + 0.6 * Math.sin(time * 30) : 0.6;
+      if (e.skel) {
+        enemyAnim(e);
+        e.g.rotation.z = e.state === "stun" ? Math.sin(time * 18) * 0.08 : 0;
+        e.body.emissive.set(e.flash > 0 ? "#ffffff" : wind ? "#d0203e" : "#000000");
+        e.body.emissiveIntensity = e.flash > 0 ? 1.4 : wind ? 0.35 + 0.35 * Math.sin(time * 30) : 0;
+        e.rigid.emissive.copy(e.body.emissive);
+        e.rigid.emissiveIntensity = e.body.emissiveIntensity;
+        if (e.shine) e.shine.material.opacity = wind ? 1 : 0.75 + Math.sin(time * 5 + e.x) * 0.15;
+      } else {
+        const sq = wind ? 1 - 0.18 * Math.min(1, e.t / 0.4) : e.state === "lunge" || e.state === "charge" ? 1.15 : 1 + Math.sin(time * 6 + e.x) * 0.04;
+        e.g.scale.set(e.D.S / Math.sqrt(sq), e.D.S * sq, e.D.S / Math.sqrt(sq));
+        if (e.state === "stun") e.g.rotation.z = Math.sin(time * 18) * 0.12;
+        else e.g.rotation.z = 0;
+        e.body.emissive.set(e.flash > 0 ? "#ffffff" : wind ? "#c01a3c" : "#1a0626");
+        e.body.emissiveIntensity = e.flash > 0 ? 2 : wind ? 0.7 + 0.6 * Math.sin(time * 30) : 0.6;
+      }
       const vulnerable = e.era === -1 || e.era === phase;
       e.shield.material.opacity = Math.max(vulnerable ? 0 : 0.85 + 0.15 * Math.sin(time * 5), e.shield.material.opacity - dt * 3);
       e.shield.material.uniforms.uA.value = e.shield.material.opacity;
+      e.shield.visible = e.shield.material.opacity > 0.01;
       e.shield.material.uniforms.uT.value = time;
       e.aura.position.set(e.x, e.y + 0.04, e.z);
       e.aura.material.opacity = vulnerable ? 0.85 : 0.35;
       e.bar.visible = e.hp < e.max;
-      e.bar.position.set(e.x, e.y + (e.type === "brute" ? 3.7 : e.type === "eye" ? 3.2 : 2.5), e.z);
+      e.bar.position.set(e.x, e.y + (e.skel ? e.H * 2 + 0.75 : e.type === "brute" ? 3.7 : e.type === "eye" ? 3.2 : 2.5), e.z);
       e.bar.quaternion.copy(camera.quaternion);
       e.fg.scale.x = Math.max(0.001, e.hp / e.max);
       e.fg.position.x = -(1 - e.fg.scale.x) / 2;
     }
     for (let i = ENEMIES.length - 1; i >= 0; i--)
-      if (ENEMIES[i].state === "dead" && ENEMIES[i].t > 0.5) {
+      if (ENEMIES[i].state === "dead" && ENEMIES[i].t > (ENEMIES[i].skel ? 1.9 : 0.5)) {
         removeEnemy(ENEMIES[i]);
         ENEMIES.splice(i, 1);
       }
@@ -527,6 +573,60 @@
       }
     }
   }
+  /* hezurduraren animazioa egoeraren arabera */
+  function enemyAnim(e) {
+    const sp = Math.hypot(e.vx, e.vz);
+    let name = "Idle_Combat",
+      ts = 1,
+      once = false;
+    switch (e.state) {
+      case "spawn":
+        return;
+      case "chase":
+      case "hover":
+        if (sp > 3.4) (name = "Running_C"), (ts = clamp(sp / 4.6, 0.8, 1.6));
+        else if (sp > 0.5) (name = "Walking_D_Skeletons"), (ts = clamp(sp / 1.4, 0.8, 2.2));
+        break;
+      case "wind":
+        if (e.type === "brute") (name = "Taunt"), (ts = 1.15), (once = true);
+        else (name = "1H_Melee_Attack_Chop"), (ts = 1.25), (once = true);
+        break;
+      case "lunge":
+        (name = "1H_Melee_Attack_Chop"), (ts = 1.25), (once = true);
+        break;
+      case "charge":
+        (name = "Running_C"), (ts = 1.9);
+        break;
+      case "aim":
+        (name = "Spellcast_Shoot"), (ts = 1.3), (once = true);
+        break;
+      case "stun":
+        (name = "Hit_A"), (ts = 0.5);
+        break;
+    }
+    if (e.hitT > 0 && (e.state === "chase" || e.state === "hover" || e.state === "recover")) (name = "Hit_A"), (ts = 1.8), (once = true);
+    enAnim(e, name, ts, once, name === "Hit_A" ? 0.06 : 0.18);
+  }
+  /* hezurdun sorgina: hurbiltzen bazara, teleportatu egiten da */
+  function blink(e, I) {
+    e.blinkCd = 4.5;
+    fxBurst(e.x, e.y + 1, e.z, { n: 18, speed: 4, up: 2, life: 0.5, size: 0.3, color: ERA_COL[e.era < 0 ? 2 : e.era], grav: 1 });
+    for (let k = 0; k < 16; k++) {
+      const a = Math.random() * TAU,
+        r = 7 + Math.random() * 3,
+        x = P.x + Math.cos(a) * r,
+        z = P.z + Math.sin(a) * r;
+      if (I && ((x - I.x) / I.rx) ** 2 + ((z - I.z) / I.rz) ** 2 > 0.62) continue;
+      if (solids.some((o) => Math.hypot(x - o.x, z - o.z) < o.r + 1.2)) continue;
+      e.x = x;
+      e.z = z;
+      break;
+    }
+    e.vx = e.vz = 0;
+    e.cd = Math.min(e.cd, 0.6);
+    fxRing(e.x, e.y + 0.1, e.z, ERA_COL[e.era < 0 ? 2 : e.era], 2, 0.4);
+    SND.shot();
+  }
   const TELE = [];
   let teleGeo = null;
   function telegraph(e) {
@@ -540,37 +640,33 @@
     scene.add(m);
     TELE.push({ m, e, t: 0 });
   }
-  function shoot(e, ux, uz) {
-    const m = orb(e.x, e.y + 1.4, e.z, 0.24, ERA_COL[e.era < 0 ? 2 : e.era]);
+  function shoot(e, ux, uz, K = 1) {
+    const y0 = e.y + (e.skel ? 1.9 : 1.4),
+      m = orb(e.x + ux * 0.6, y0, e.z + uz * 0.6, 0.26, ERA_COL[e.era < 0 ? 2 : e.era]);
     m.castShadow = false;
-    SHOTS.push({ m, x: e.x, z: e.z, y: e.y + 1.4, vx: ux * 8, vz: uz * 8, t: 0, era: e.era });
+    SHOTS.push({ m, x: e.x + ux * 0.6, z: e.z + uz * 0.6, y: y0, vx: ux * 8.5 * K, vz: uz * 8.5 * K, sp: 8.5 * K, t: 0, era: e.era });
     SND.shot();
   }
   function shotsUpdate(dt) {
     for (let i = SHOTS.length - 1; i >= 0; i--) {
       const s = SHOTS[i];
       s.t += dt;
-      if (s.t < 0.35) {
+      if (s.t < 0.35 && !s.radial) {
         const dx = P.x - s.x,
           dz = P.z - s.z,
           d = Math.hypot(dx, dz) || 1;
-        s.vx = mix(s.vx, (dx / d) * 8, dt * 2);
-        s.vz = mix(s.vz, (dz / d) * 8, dt * 2);
+        s.vx = mix(s.vx, (dx / d) * s.sp, dt * 2);
+        s.vz = mix(s.vz, (dz / d) * s.sp, dt * 2);
       }
       s.x += s.vx * dt;
       s.z += s.vz * dt;
-      s.y = mix(s.y, P.y + 1, dt * 2);
+      if (!s.radial) s.y = mix(s.y, P.y + 1, dt * 2);
       s.m.position.set(s.x, s.y, s.z);
       s.m.scale.setScalar(1 + Math.sin(s.t * 20) * 0.15);
       let gone = s.t > 3.5;
       if (Math.hypot(P.x - s.x, P.z - s.z) < 0.75 && Math.abs(P.y + 1 - s.y) < 1.2) {
         playerHit(1, s.x - s.vx, s.z - s.vz);
         gone = true;
-      }
-      /* erasoak proiektilak suntsitzen ditu */
-      if (ATK.t > 0.04 && ATK.t < 0.17 && Math.hypot(P.x - s.x, P.z - s.z) < 2.6) {
-        gone = true;
-        fxBurst(s.x, s.y, s.z, { n: 8, speed: 3, life: 0.3, size: 0.2, color: "#ffffff", grav: 0 });
       }
       if (gone) {
         scene.remove(s.m);
@@ -594,8 +690,9 @@
   }
   /* jokalaria zauritua (DASH bitartean ukiezina) */
   function playerHit(dmg, fx, fz) {
-    if (damageTime > 0 || respawnTimer || P.dashT > 0 || ENDING.on) return;
+    if (damageTime > 0 || respawnTimer || P.dashT > 0 || MAG.spinT < 0.3 || ENDING.on) return;
     P.hp -= dmg;
+    comboBreak();
     damageTime = 1.05;
     const dx = P.x - fx,
       dz = P.z - fz,
@@ -621,7 +718,7 @@
     }
     el.t = 0;
     el.x = e.x;
-    el.y = e.y + (e.type === "eye" ? 2.2 : 1.6);
+    el.y = e.y + e.H * 2 + 0.3;
     el.z = e.z;
     el.d.textContent = n;
     el.d.style.color = n >= 3 ? "#fff1a8" : "#ffffff";

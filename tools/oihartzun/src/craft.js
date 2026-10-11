@@ -388,7 +388,10 @@
         return;
       }
       /* pieza ez bada: sagu-klika = erasoa (mahaigainean) */
-      if (e.pointerType === "mouse" && !CRAFT.on) attack();
+      if (e.pointerType === "mouse" && !CRAFT.on) {
+        ATK.hold = true;
+        attack();
+      }
     });
     view.addEventListener("pointermove", (e) => {
       const d = CRAFT.down;

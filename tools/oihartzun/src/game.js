@@ -163,16 +163,19 @@
     {
       x: 0,
       z: -174,
-      y: 15,
+      y: 42,
       rx: 19,
       rz: 19,
       name: ["Gauekoren Erlojua", "El Reloj de Gaueko"],
       hint: [
-        "Uhina: beste garaira aldatu. Nukleoa irekita: jo DASHarekin.",
-        "Onda: cambia a la otra época. Núcleo abierto: golpéalo con DASH.",
+        "Uhina: beste garaira aldatu. Nukleoa irekita: SORGINKERIA edo DASH.",
+        "Onda: cambia a la otra época. Núcleo abierto: HECHIZO o DASH.",
       ],
     },
   ];
+  /* Gauekoren erlojua hodeien gainean: Orratzaren igoera (ascent.js) */
+  const BOSS_Y = ISLANDS[5].y,
+    BOSS_HITS = 4;
   const checkpointPositions = [
     [0, 29],
     [0, -20],
@@ -915,6 +918,57 @@
       },
       update() { if (ctx) schedule(); },
       stinger(big) { if (ok()) mzStinger(big); },
+      /* sorginkeria: izpi distiratsua (garaiaren arabera tonu bat edo bestea) */
+      cast(triple) {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          f = (phase ? 1318.5 : 987.77) * (0.97 + Math.random() * 0.06);
+        tone("triangle", f, t, 0.002, 0.11, triple ? 0.05 : 0.035, sfx, f * 0.42);
+        tone("sine", f * 2, t, 0.001, 0.06, 0.02, sfx, f * 0.9);
+        hiss(t, 0.1, triple ? 0.07 : 0.045, "bandpass", 5200, 1700, 2.2);
+        if (triple) bell(f * 1.5, t + 0.03, 0.02);
+      },
+      charge() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 220, t, 0.05, 0.7, 0.04, sfx, 660);
+        tone("triangle", 330, t + 0.05, 0.05, 0.65, 0.02, sfx, 990);
+        hiss(t, 0.7, 0.03, "bandpass", 600, 4200, 3);
+      },
+      ready() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        bell(1760, t, 0.03);
+        bell(2637, t + 0.05, 0.018);
+      },
+      blast(full) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 140, t, 0.004, 0.45, full ? 0.2 : 0.14, sfx, 38);
+        tone("sawtooth", 480, t, 0.002, 0.25, 0.04, sfx, 90);
+        hiss(t, 0.5, full ? 0.14 : 0.1, "lowpass", 5000, 260, 0.8);
+      },
+      wind(v) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.5, 0.03 * v, "bandpass", 500, 1300, 1.2);
+      },
+      crumble() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.35, 0.09, "lowpass", 1400, 180, 0.9);
+        tone("sine", 95, t, 0.003, 0.25, 0.08, sfx, 45);
+      },
+      rune(on) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        if (on) [523.25, 783.99, 1046.5, 1567.98].forEach((f, i) => bell(f, t + i * 0.05, 0.03));
+        else tone("sine", 660, t, 0.004, 0.3, 0.04, sfx, 330);
+      },
+      tickTock(k) {
+        if (!ok()) return;
+        tone("square", k ? 1760 : 1320, ctx.currentTime, 0.001, 0.03, 0.015, sfx);
+      },
       /* borroka eta eraikuntza */
       swing(n) {
         if (!ok()) return;
@@ -1201,12 +1255,21 @@
     const st = saved.stage,
       fight = ARENA.state === "fight";
     if (ATK.n && COACH.cur === "attack") coachDone("attack");
+    if (MAG.charging && COACH.cur === "charge") coachDone("charge");
     if (P.travel >= 4) coachDone("move");
     /* lehentasun-ordena: une bakoitzean irakaspen bakarra */
     (fight &&
       ARENA.island === 0 &&
       ENEMIES.some((e) => e.state !== "spawn") &&
-      coach("attack", "J", "ERASO: J edo saguaren klika · sakatuta: hiru kolpeko konboa", "ATACA: J o clic · mantén: combo de tres golpes", "attackBtn", "ERASO: sakatu · sakatuta: hiru kolpeko konboa", "ATACA: pulsa · mantén: combo de tres golpes")) ||
+      coach("attack", "J", "SORGINKERIA: J edo klika · izpiak bakarrik bilatzen du helburua", "HECHIZO: J o clic · el rayo busca solo a su objetivo", "attackBtn", "SORGINKERIA: sakatu · izpiak bakarrik bilatzen du helburua", "HECHIZO: pulsa · el rayo busca solo a su objetivo")) ||
+      (fight &&
+        ATK.n >= 6 &&
+        ENEMIES.some((e) => e.state !== "spawn" && e.state !== "dead") &&
+        coach("charge", "J", "Mantendu J: INDARRA kargatu · askatu: eztanda", "Mantén J: carga INDARRA · suelta: explosión", "attackBtn", "Mantendu SORGINKERIA: INDARRA · askatu: eztanda", "Mantén HECHIZO: INDARRA · suelta: explosión")) ||
+      (fight &&
+        COACH.seen.has("charge") &&
+        ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 3.2) &&
+        coach("spin", "F+J", "DASH eta SORGINKERIA: biraka-kolpea", "DASH y HECHIZO: golpe giratorio", "dashBtn", "DASH eta SORGINKERIA: biraka-kolpea", "DASH y HECHIZO: golpe giratorio")) ||
       (fight &&
         COACH.seen.has("attack") &&
         ENEMIES.some((e) => e.state === "wind" && Math.hypot(e.x - P.x, e.z - P.z) < 4) &&
@@ -1670,6 +1733,11 @@
       t[0] += "\n\nHiru oihartzunak zurekin daude. Itsasoak gogoratzen du.";
       t[1] += "\n\nLos tres ecos están contigo. El mar la recuerda.";
     }
+    /* azken kakoa: irratiak berriro hitz egiten du */
+    if (which !== "keep") {
+      t[0] += "\n\n· · · 140.85 · · ·\n«Amaiur? Entzuten nauzu? Hau ez da grabazio bat. Itsasoaren beste aldean nago.»";
+      t[1] += "\n\n· · · 140.85 · · ·\n«¿Amaiur? ¿Me oyes? Esto no es una grabación. Estoy al otro lado del mar.»";
+    }
     return t;
   }
   function endingStart(which) {
@@ -1691,13 +1759,13 @@
     SND.ending(which);
     for (const f of ENDING.fx) scene.remove(f.m);
     ENDING.fx = [];
-    const core = new T.Vector3(0, 18, -179);
+    const core = new T.Vector3(0, BOSS_Y + 3, -179);
     if (which === "bridge") {
       /* argi-zubia erlojutik herrira, ortzadarra bezala */
       for (let i = 0; i < 40; i++) {
         const u = i / 39,
           z = mix(-158, 4, u),
-          y = mix(15.2, 0.5, u) + Math.sin(u * PI) * 15;
+          y = mix(BOSS_Y + 0.2, 0.5, u) + Math.sin(u * PI) * 15;
         const m = box(0, y, z, 2.6, 0.14, 3.7, material("#ffd68f", 1.6));
         m.castShadow = false;
         m.scale.setScalar(0.001);
@@ -1723,8 +1791,8 @@
     E.t += dt;
     time += dt;
     const u = smooth01(clamp(E.t / 15, 0, 1));
-    bez(E.p0, new T.Vector3(36, 36, -148), new T.Vector3(17, 52, -247), u, camera.position);
-    const look = bez(E.l0, new T.Vector3(0, 18, -179), new T.Vector3(0, 3, -92), smooth01(clamp(E.t / 13, 0, 1)), new T.Vector3());
+    bez(E.p0, new T.Vector3(36, BOSS_Y + 21, -148), new T.Vector3(17, BOSS_Y + 37, -247), u, camera.position);
+    const look = bez(E.l0, new T.Vector3(0, BOSS_Y + 3, -179), new T.Vector3(0, 3, -92), smooth01(clamp(E.t / 13, 0, 1)), new T.Vector3());
     camera.lookAt(look);
     const target = E.which === "keep" ? 1 : E.which === "unite" ? 0.5 : 0;
     phaseBlend = mix(E.b0, target, smooth01(clamp((E.t - 2.2) / 6.5, 0, 1)));
@@ -1748,7 +1816,7 @@
       }
     }
     if (E.which === "release" && E.t > 2 && E.t < 9 && frame++ % 6 === 0)
-      fxBurst(mix(-20, 20, Math.random()), 16 + Math.random() * 6, -179 + mix(-20, 20, Math.random()), { n: 3, speed: 0.6, up: 1.4, life: 2.4, size: 0.3, color: "#ffd99a", grav: -0.5, drag: 0.6 });
+      fxBurst(mix(-20, 20, Math.random()), BOSS_Y + 1 + Math.random() * 6, -179 + mix(-20, 20, Math.random()), { n: 3, speed: 0.6, up: 1.4, life: 2.4, size: 0.3, color: "#ffd99a", grav: -0.5, drag: 0.6 });
     if (mixer) mixer.update(dt);
     if (E.t > 3 && E.s < 1) (E.s = 1), $("endFx").classList.add("s1");
     if (E.t > 5.5 && E.s < 2) (E.s = 2), $("endFx").classList.add("s2");
@@ -1769,6 +1837,8 @@
       [L("ERORIALDIAK", "CAÍDAS"), saved.deaths || 0],
       [L("OROITZAPENAK", "RECUERDOS"), saved.memories.length + "/5"],
       [L("OIHARTZUNAK", "ECOS"), (saved.echoes?.length || 0) + "/3"],
+      [L("EGUNKARIA", "DIARIO"), (saved.pages?.length || 0) + "/4"],
+      [L("KATEA ONENA", "MEJOR CADENA"), MAG.best],
       [L("AMAIERAK", "FINALES"), seen.length + "/4"],
     ];
     $("endStats").replaceChildren(
@@ -1816,11 +1886,17 @@
 
   /* @include arena.js */
   /* @include combat.js */
+  /* @include magic.js */
+  /* @include ascent.js */
+  /* @include story.js */
+  /* @include runes.js */
   /* @include craft.js */
   /* musikaren intentsitatea: 0 izenburua/zinematika · 1 esplorazioa · 2 borroka · 3 bossa */
   function musicLevel() {
     if (!started || cinematic || ENDING.on) return 0;
     if (saved.stage === 5 && !saved.ending && boss.state !== "sleep" && boss.state !== "done") return 3;
+    /* Orratzaren igoera: musika bizia (borrokaren geruzak) */
+    if (ASC.inZone) return 2;
     return typeof combatLevel === "function" ? combatLevel() : 1;
   }
   let stepAcc = 0;
@@ -1845,6 +1921,11 @@
     input.keys = {};
     $("knob").style.transform = "";
     jumpBuffer = 0;
+    /* sorginkeria: botoia askatuta (INDARRA ez da eszena baten ondoren jaurtitzen) */
+    ATK.hold = false;
+    MAG.charging = false;
+    MAG.charge = 0;
+    MAG.holdT = 0;
   }
   function dialog(s, a, b, ea, eb, choices) {
     paused = true;
@@ -1990,6 +2071,26 @@
     scene.add(m);
     glows.push(m);
     return m;
+  }
+  /* SkeletonUtils.clone (three r128 adibideetatik): hezurdun sareak hezurdura propioarekin klonatu */
+  function cloneSkinned(source) {
+    const src = new Map(),
+      dst = new Map(),
+      clone = source.clone();
+    (function walk(a, b) {
+      src.set(b, a);
+      dst.set(a, b);
+      for (let i = 0; i < a.children.length; i++) walk(a.children[i], b.children[i]);
+    })(source, clone);
+    clone.traverse((n) => {
+      if (!n.isSkinnedMesh) return;
+      const s = src.get(n);
+      n.skeleton = s.skeleton.clone();
+      n.bindMatrix.copy(s.bindMatrix);
+      n.skeleton.bones = s.skeleton.bones.map((b) => dst.get(b));
+      n.bind(n.skeleton, n.bindMatrix);
+    });
+    return clone;
   }
   function parseAsset(name) {
     return new Promise((resolve, reject) => loader.parse(ASSETS[name], "", (g) => resolve(g), reject));
@@ -2252,8 +2353,6 @@
     bridge(4, -83, 7.2, 5, 5, 0);
     bridge(-14, -111, 8.8, 5, 5, 0);
     bridge(-22, -118, 9.8, 5, 5, 1);
-    bridge(-19, -145, 11.7, 5.2, 5.2, 1);
-    bridge(-10, -153, 13, 5.2, 5.2, 0);
     // Extra routes contain memories, never compulsory currency.
     bridge(19, 29, 1, 4, 4, 0);
     bridge(25, 26, 2, 4, 4, 1);
@@ -2293,7 +2392,7 @@
     }
     // Monolithic arena: the final encounter uses the same change-and-dash vocabulary.
     let root = new T.Group();
-    root.position.set(0, 15, -179);
+    root.position.set(0, BOSS_Y, -179);
     scene.add(root);
     for (let i = 0; i < 8; i++) {
       const a = (i * TAU) / 8;
@@ -2307,15 +2406,22 @@
     boss.group = root;
     boss.ring = halo;
     boss.core = core;
-    boss.wave = ring(0, 15.2, -179, 1, "#ffb382");
-    boss.waves = [boss.wave, ring(0, 15.25, -179, 1, "#88e3f4"), ring(0, 15.3, -179, 1, "#ffb382")];
+    boss.pips = 3;
+    boss.pipOrbs = [0, 1, 2].map(() => {
+      const o = orb(0, 3, 0, 0.32, "#fff6d0", root);
+      o.castShadow = false;
+      o.visible = false;
+      return o;
+    });
+    boss.wave = ring(0, BOSS_Y + 0.2, -179, 1, "#ffb382");
+    boss.waves = [boss.wave, ring(0, BOSS_Y + 0.25, -179, 1, "#88e3f4"), ring(0, BOSS_Y + 0.3, -179, 1, "#ffb382")];
     for (const w of boss.waves) w.visible = false;
-    glow(0, 18, -179, "#aee7ff", 8);
+    glow(0, BOSS_Y + 3, -179, "#aee7ff", 8);
     for (let i = 0; i < 12; i++) {
       let a = (i * TAU) / 12;
       const x = Math.cos(a) * 17,
         z = -174 + Math.sin(a) * 17;
-      model("rock_single_A", x, 15, z, 3.5, a);
+      model("rock_single_A", x, BOSS_Y, z, 3.5, a);
     }
     // Distant sea stacks frame the route without adding navigational clutter.
     for (let i = 0; i < 20; i++) {
@@ -2381,6 +2487,7 @@
     models.mage.actions = {};
     for (const a of models.mage.animations) models.mage.actions[a.name] = mixer.clipAction(a);
     animate("Idle");
+    magicInit();
     const lamp = orb(0.5, 1, 0, 0.12, "#ffd3a0", hero);
     glow(0, 1, 0, "#f0ca8f", 1.2).userData.player = true;
     fxInit();
@@ -2388,6 +2495,9 @@
     buildEchoes();
     buildCages();
     buildCraft();
+    buildAscent();
+    buildRunePuzzles();
+    STORY.pages.push(journalPickup(0, -12.5, 1.3, 29.5));
     teleport(0, 29, 0);
     phase = 0;
     setPhaseVisual(true);
@@ -2440,6 +2550,7 @@
   }
   function returnCheckpoint() {
     ascent = null;
+    magicReset();
     const cpStage = currentStage >= 0 && currentStage <= saved.stage ? currentStage : saved.stage;
     routeStep = stageRoute[cpStage];
     magic.history = [];
@@ -2572,8 +2683,8 @@
       len = 0;
     }
     const groundSpeed = surf ? 12.8 : 7.7;
-    /* erasoan: konpromisoa (mugimendu motelagoa) eta helburu-magnetismoa */
-    const atkSlow = ATK.t < 0.2 && ATK.n ? 0.32 : 1;
+    /* sorginkeria kargatzean edo biraka: mugimendu motelagoa */
+    const atkSlow = MAG.charging ? 0.58 : MAG.spinT < 0.3 ? 0.45 : 1;
     const speed = (P.grounded ? groundSpeed : Math.max(groundSpeed, P.airSpeed)) * atkSlow;
     P.wallGrace = Math.max(0, P.wallGrace - dt);
     P.wallLock = Math.max(0, P.wallLock - dt);
@@ -2608,14 +2719,19 @@
       if (frame % 3 === 0) spawnTrail();
     } else {
       const t = 1 - Math.exp(-dt * (P.grounded ? 22 : len > 0.1 ? 6.5 : 3));
-      if (ATK.n && ATK.t < ATK.lungeT) {
-        P.vx = Math.sin(ATK.dir) * 10;
-        P.vz = Math.cos(ATK.dir) * 10;
-      } else if (P.wallLock <= 0) {
+      if (P.wallLock <= 0) {
         P.vx = mix(P.vx, d.x * speed, t);
         P.vz = mix(P.vz, d.z * speed, t);
       }
       P.vy -= 25 * dt;
+      /* Orratzeko haize-korrontea: gora eraman eta jauzi bikoitza/DASH berritu */
+      const lift = ascLift(P.x, P.z, P.y);
+      if (lift > 0) {
+        P.vy = Math.min(P.vy + lift * dt, 9);
+        P.jumps = Math.min(P.jumps, 1);
+        P.dashReady = true;
+        P.dashes = Math.max(P.dashes, 1);
+      }
     }
     const px = P.x,
       pz = P.z,
@@ -2694,14 +2810,27 @@
         FB.step();
       }
     }
-    if (len > 0.12 && P.dashT <= 0) {
+    /* sorginkeria jaurtitzean, helburuari begira (hankak korrika jarraitzen dute) */
+    if (len > 0.12 && P.dashT <= 0 && MAG.aimT <= 0) {
       const a = Math.atan2(d.x, d.z);
       P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 18);
     }
     hero.position.set(P.x, P.y, P.z);
-    hero.rotation.y = P.angle + attackPose();
+    hero.rotation.y = mix(hero.rotation.y, hero.rotation.y + Math.atan2(Math.sin(P.angle - hero.rotation.y), Math.cos(P.angle - hero.rotation.y)), Math.min(1, dt * 30));
     hero.visible = damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0;
-    animate(CRAFT.held ? "Spellcast_Raise" : P.dashT > 0 ? "Dodge_Forward" : !P.grounded ? "Jump_Idle" : len > 0.15 ? "Running_A" : "Idle");
+    animate(
+      CRAFT.held
+        ? "Spellcast_Raise"
+        : MAG.spinT < 0.5
+          ? "2H_Melee_Attack_Spin"
+          : P.dashT > 0
+            ? "Dodge_Forward"
+            : !P.grounded
+              ? "Jump_Idle"
+              : len > 0.15
+                ? "Running_A"
+                : "Idle",
+    );
     trackSafe(dt);
     if (P.y < -9.3) fall();
     if (landing && landing.island !== undefined && landing.island > saved.stage) {
@@ -2711,8 +2840,15 @@
       enterStage(saved.stage);
     }
     if (landing?.island !== undefined) currentStage = landing.island;
-    footRing.visible = !!landing;
-    footRing.position.set(P.x, (landing?.y || 0) + 0.035, P.z);
+    /* itzal-marka: airean, azpiko plataforma erakutsi (3D plataformetan sakonera irakurtzeko) */
+    const under = landing || support(P.x, P.z, P.y);
+    footRing.visible = !!under;
+    if (under) {
+      const h = Math.max(0, P.y - under.y);
+      footRing.position.set(P.x, under.y + 0.035, P.z);
+      footRing.scale.setScalar(1 + Math.min(1.2, h * 0.08));
+      footRing.material.opacity = landing ? 0.25 : clamp(0.55 - h * 0.025, 0.2, 0.55);
+    }
   }
   function enterStage(i) {
     const I = ISLANDS[i];
@@ -2783,11 +2919,12 @@
         boss.state = "wave";
         boss.clock = 0;
         boss.waves.forEach((w, k) => (w.material = material((boss.attackPhase + k) % 2 ? "#88e3f4" : "#ffb77b", 1.3)));
+        if (boss.hits >= 1) bossBurst();
         if (boss.hits && boss.warned !== boss.hits) {
           boss.warned = boss.hits;
           notify(
-            boss.hits === 1 ? "Bi uhin datoz: bi aldiz ALDATU!" : "Hiru uhin! Erritmoa: aldatu, aldatu, aldatu.",
-            boss.hits === 1 ? "Vienen dos ondas: ¡CAMBIA dos veces!" : "¡Tres ondas! Ritmo: cambia, cambia, cambia.",
+            boss.hits === 1 ? "Bi uhin eta proiektil-koroa: bi aldiz ALDATU, eta jo proiektilak!" : "Hiru uhin! Erritmoa: aldatu, aldatu, aldatu.",
+            boss.hits === 1 ? "Dos ondas y una corona de proyectiles: ¡CAMBIA dos veces y destruye los proyectiles!" : "¡Tres ondas! Ritmo: cambia, cambia, cambia.",
             2.6,
           );
         }
@@ -2804,44 +2941,85 @@
         if (!w.visible) return;
         const r = 1 + t * speed;
         w.scale.setScalar(r);
-        if (phase === (boss.attackPhase + k) % 2 && Math.abs(dist(P, bpos) - r) < 1 && P.y < 16.1) takeHit();
+        if (phase === (boss.attackPhase + k) % 2 && Math.abs(dist(P, bpos) - r) < 1 && P.y < BOSS_Y + 1.1) takeHit();
       });
       if (!live) {
         boss.state = "open";
         boss.clock = 0;
+        boss.pips = 3;
         for (const w of boss.waves) w.visible = false;
         boss.core.material = material("#fff1b3", 1.8);
-        notify("ORAIN! DASH nukleora.", "¡AHORA! DASH hacia el núcleo.", 2.5);
+        notify("ORAIN! SORGINKERIA edo DASH nukleora.", "¡AHORA! HECHIZO o DASH al núcleo.", 2.5);
       }
     } else if (boss.state === "open") {
       if (dist(P, bpos) < 3.4 && P.dashT > 0 && boss.hitLock <= 0) bossStrike();
-      if (boss.clock > 4 - boss.hits * 0.5 && boss.state !== "done") {
+      if (boss.clock > 4.2 - boss.hits * 0.4 && boss.state !== "done") {
         boss.state = "tell";
         boss.clock = 0;
       }
     }
+    /* nukleoaren ezkutua: hiru argi biraka (izpi bakoitzak bat itzaltzen du) */
+    for (let i = 0; i < boss.pipOrbs.length; i++) {
+      const o = boss.pipOrbs[i],
+        on = boss.state === "open" && i < boss.pips,
+        a = time * 2.4 + (i * TAU) / 3;
+      o.visible = on;
+      o.position.set(Math.cos(a) * 2.2, 3 + Math.sin(time * 3 + i) * 0.3, Math.sin(a) * 2.2);
+    }
+  }
+  /* izpiek ezkutua higatzen dute; INDARRAk (izpi handia) osorik apurtzen du */
+  function bossChip(n) {
+    if (boss.state !== "open" || boss.hitLock > 0) return;
+    boss.pips -= n;
+    SND.clang();
+    fxBurst(0, BOSS_Y + 3, -179, { n: 14, speed: 5, life: 0.4, size: 0.3, color: "#fff1b3", grav: 2 });
+    if (boss.pips <= 0) bossStrike();
+  }
+  /* uhinarekin batera: proiektil-koroa (izpiekin suntsitu daiteke) */
+  function bossBurst() {
+    const n = 8 + boss.hits * 3;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * TAU + time,
+        era = (i + boss.hits) % 2,
+        m = orb(Math.cos(a) * 2.5, BOSS_Y + 1.3, -179 + Math.sin(a) * 2.5, 0.26, ERA_COL[era]);
+      m.castShadow = false;
+      SHOTS.push({ m, x: Math.cos(a) * 2.5, z: -179 + Math.sin(a) * 2.5, y: BOSS_Y + 1.3, vx: Math.cos(a) * 6.5, vz: Math.sin(a) * 6.5, sp: 6.5, t: 0.4, era, radial: true });
+    }
+    SND.shot();
   }
   /* nukleoa jo (DASH edo makila-kolpea) */
   function bossStrike() {
     boss.hits++;
     boss.hitLock = 1;
     boss.clock = 4.1;
-    FB.bossHit(0, 18, -179);
-    P.vx = -Math.sin(P.angle) * 12;
-    P.vz = -Math.cos(P.angle) * 12;
-    P.dashT = 0;
-    P.vy = 7;
+    FB.bossHit(0, BOSS_Y + 3, -179);
+    if (Math.hypot(P.x, P.z + 179) < 5) {
+      P.vx = -Math.sin(P.angle) * 12;
+      P.vz = -Math.cos(P.angle) * 12;
+      P.dashT = 0;
+      P.vy = 7;
+    }
     shiftFlash = 1;
     haptic(70);
-    if (boss.hits === 3) {
+    if (boss.hits === BOSS_HITS) {
       boss.state = "done";
       saved.bossDone = true;
       clearEnemies();
       if (!saved.cleared.includes(5)) saved.cleared.push(5);
       persist();
       SND.stinger(true);
+      slowmo = 0.9;
+      storyQueue("twist", false, 1.6);
       notify("IRATI: «Orain bai. Orain zure erabakia da.»", "IRATI: «Ahora sí. Ahora la decisión es tuya.»", 8);
-    } else spawnWave(boss.hits === 1 ? [["grunt", 0, 1], ["grunt", 1, 1]] : [["grunt", 0, 1], ["grunt", 1, 1], ["eye", -1, 1]], 5);
+    } else
+      spawnWave(
+        [
+          [["grunt", 0, 2], ["grunt", 1, 2]],
+          [["grunt", 0, 2], ["grunt", 1, 1], ["eye", -1, 2]],
+          [["brute", -1, 1], ["grunt", 0, 2], ["eye", 1, 1], ["eye", 0, 1]],
+        ][boss.hits - 1],
+        5,
+      );
   }
   function updateWorld(dt) {
     for (const s of phaseObjects)
@@ -3010,8 +3188,10 @@
     );
     /* borrokan kamera hurbilago (itzalak eta erasoak irakurgarri) */
     CAM.zoom = mix(CAM.zoom ?? 1, ARENA.state === "fight" ? 0.74 : 1, 1 - Math.exp(-dt * 2.5));
-    const look = new T.Vector3(P.x, P.y + 1, P.z).add(CAM.look),
-      offset = new T.Vector3(15.5, 18, 23).multiplyScalar(CAM.zoom);
+    /* Orratzean: kamera baxuagoa eta gorantz begira (hurrengo harriak ikusteko) */
+    CAM.asc = mix(CAM.asc ?? 0, ASC.inZone ? 1 : 0, 1 - Math.exp(-dt * 1.8));
+    const look = new T.Vector3(P.x, P.y + 1 + CAM.asc * 2.6, P.z).add(CAM.look),
+      offset = new T.Vector3(mix(15.5, 13.5, CAM.asc), mix(18, 10, CAM.asc), mix(23, 22, CAM.asc)).multiplyScalar(CAM.zoom);
     if (mobile && innerHeight > innerWidth) offset.multiplyScalar(1.04);
     const target = look.clone().add(offset);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) CAM.pos = camera.position.clone();
@@ -3067,8 +3247,8 @@
       "OIHARTZUN",
       "Bi garaien artean.",
       "Entre dos épocas.",
-      "Uharte bakoitza Gauekoren kaiola da: ezin zara erori, eta irteera erronka gainditzean irekitzen da. Uharteak txandaka: BORROKA eta ERAIKUNTZA.\n\nMUGITU: WASD edo makila (ertzeraino: korrika). JAUZI: Espazioa, bi aldiz airean. DASH (F): bultzada; bitartean ukiezina zara.\n\nERASO: J, saguaren klika edo ERASO botoia. Sakatuta: hiru kolpeko konboa (hirugarrena birakaria). DASH-aren ondoren erasotzean, kolpe indartsua.\n\nGARAIA (Q): URREA iragana da, URDINA oraina. Zubi bakoitza bere garaian bakarrik da sendoa. Itzalek begien koloreko garaian bakarrik hartzen dute kalte: beste garaian ezkutua dute. Garaia aldatzean, inguruko itzalak bultzatzen dituzu.\n\nESKU MAGIKOA (G edo ESKU): ukitu kaxa bat eta arrastatu; ukitu laburrak biratu egiten du. Kaxa bat beste baten gainean utziz gero, pilatu egiten dira; ondoan utziz gero, itsatsi. Errunara iristeko eskailerak eraiki.\n\nZubitik erortzean, azken lur seguruan berragertzen zara (bizitza bat). EHUNDU (C), ATZERA (V), IGO (X) eta GELDITU (Z): botereen menuan (H).",
-      "Cada isla es una jaula de Gaueko: no puedes caerte, y la salida se abre al superar su reto. Las islas se alternan: COMBATE y CONSTRUCCIÓN.\n\nMOVER: WASD o palanca (al máximo: correr). SALTAR: Espacio, dos veces en el aire. DASH (F): impulso; durante el DASH eres invulnerable.\n\nATACAR: J, clic o el botón ATACAR. Mantén pulsado: combo de tres golpes (el tercero gira). Atacar justo después del DASH da un golpe fuerte.\n\nÉPOCA (Q): el ORO es el pasado, el AZUL el presente. Cada puente solo es sólido en su época. Las sombras solo reciben daño en la época del color de sus ojos: en la otra tienen escudo. Al cambiar de época empujas a las sombras cercanas.\n\nMANO MÁGICA (G o MANO): toca una caja y arrástrala; un toque corto la gira. Si la sueltas sobre otra, se apilan; si la dejas al lado, se unen. Construye escaleras para llegar a la runa.\n\nSi caes de un puente, reapareces en el último suelo seguro (pierdes una vida). TEJER (C), RETORNO (V), ASCENDER (X) y ESTASIS (Z): en el menú de poderes (H).",
+      "Uharte bakoitza Gauekoren kaiola da: ezin zara erori, eta irteera erronka gainditzean irekitzen da. Uharteak txandaka: BORROKA eta ERAIKUNTZA.\n\nMUGITU: WASD edo makila (ertzeraino: korrika). JAUZI: Espazioa, bi aldiz airean. DASH (F): bultzada; bitartean ukiezina zara.\n\nSORGINKERIA: J, saguaren klika edo SORGINKERIA botoia. Izpiak bakarrik bilatzen du helburua (18 m); segidako hirugarrenak hiru izpi jaurtitzen ditu. Mantendu: INDARRA kargatu; askatu: izpi handia eta eztanda. DASH bitartean sakatu: biraka-kolpea. Izpiek itzalen proiektilak suntsitzen dituzte eta errunak pizten.\n\nGAUEKOREN ORRATZA: harriz harri igo. Kristal berdeek DASH berritzen dute, haizeak gora darama, harri arreak erori egiten dira eta kanpaiek zure azken urratsa gogoratzen dute (erortzean ez duzu bizitzarik galtzen). Airean, jauzia mantenduz gero, gorago iristen zara.\n\nGARAIA (Q): URREA iragana da, URDINA oraina. Zubi bakoitza bere garaian bakarrik da sendoa. Itzalek begien koloreko garaian bakarrik hartzen dute kalte: beste garaian ezkutua dute. Garaia aldatzean, inguruko itzalak bultzatzen dituzu.\n\nESKU MAGIKOA (G edo ESKU): ukitu kaxa bat eta arrastatu; ukitu laburrak biratu egiten du. Kaxa bat beste baten gainean utziz gero, pilatu egiten dira; ondoan utziz gero, itsatsi. Errunara iristeko eskailerak eraiki.\n\nZubitik erortzean, azken lur seguruan berragertzen zara (bizitza bat). EHUNDU (C), ATZERA (V), IGO (X) eta GELDITU (Z): botereen menuan (H).",
+      "Cada isla es una jaula de Gaueko: no puedes caerte, y la salida se abre al superar su reto. Las islas se alternan: COMBATE y CONSTRUCCIÓN.\n\nMOVER: WASD o palanca (al máximo: correr). SALTAR: Espacio, dos veces en el aire. DASH (F): impulso; durante el DASH eres invulnerable.\n\nHECHIZO: J, clic o el botón HECHIZO. El rayo busca solo a su objetivo (18 m); el tercero seguido lanza tres rayos. Mantén: carga INDARRA; suelta: rayo grande con explosión. Pulsa durante el DASH: golpe giratorio. Los rayos destruyen los proyectiles de las sombras y encienden runas.\n\nLA AGUJA DE GAUEKO: sube de piedra en piedra. Los cristales verdes renuevan el DASH, el viento te eleva, las piedras marrones se derrumban y las campanas recuerdan tu último paso (al caer no pierdes vida). En el aire, mantener el salto te lleva más alto.\n\nÉPOCA (Q): el ORO es el pasado, el AZUL el presente. Cada puente solo es sólido en su época. Las sombras solo reciben daño en la época del color de sus ojos: en la otra tienen escudo. Al cambiar de época empujas a las sombras cercanas.\n\nMANO MÁGICA (G o MANO): toca una caja y arrástrala; un toque corto la gira. Si la sueltas sobre otra, se apilan; si la dejas al lado, se unen. Construye escaleras para llegar a la runa.\n\nSi caes de un puente, reapareces en el último suelo seguro (pierdes una vida). TEJER (C), RETORNO (V), ASCENDER (X) y ESTASIS (Z): en el menú de poderes (H).",
     );
   }
   function pause() {
@@ -3110,14 +3290,14 @@
     document.documentElement.lang = language;
     $("lang").textContent = language === "eu" ? "ES" : "EU";
     $("premise").textContent = L(
-      "Uharte bakoitzak bi bizitza ditu.\nBatek bidea ezkutatzen du. Besteak, egia.",
-      "Cada isla tiene dos vidas.\nUna esconde el camino. La otra, la verdad.",
+      "Uharte bakoitzak bi bizitza ditu.\nBatek bidea ezkutatzen du. Besteak, egia.\nZu Amaiur zara, sorgina. Irratiak zure izena daki.",
+      "Cada isla tiene dos vidas.\nUna esconde el camino. La otra, la verdad.\nEres Amaiur, la bruja. La radio sabe tu nombre.",
     );
     $("play").textContent = saved.stage ? L("JARRAITU →", "CONTINUAR →") : L("BIDAIA HASI →", "COMENZAR →");
     $("helpBtn").textContent = L("NOLA JOKATU", "CÓMO JUGAR");
     $("phaseBtn").textContent = L("ALDATU", "CAMBIAR");
     $("jumpBtn").textContent = L("JAUZI", "SALTAR");
-    $("attackBtn").textContent = L("ERASO", "ATACAR");
+    $("attackBtn").textContent = L("SORGIN-\nKERIA", "HECHIZO");
     $("rotateBtn").textContent = "↻";
     $("rotateBtn").onclick = () => {
       const p = CRAFT.held || CRAFT.last;
@@ -3134,8 +3314,8 @@
     $("echoLab").textContent = L("OIHARTZUNAK", "ECOS");
     $("keys").innerHTML = (
       language === "eu"
-        ? [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "eraso"], ["F", "DASH"], ["Q", "garaia"], ["E", "ekin"], ["G", "esku magikoa"], ["R", "biratu"], ["H", "botereak"]]
-        : [["WASD", "mover"], ["Shift", "correr"], ["␣ ×2", "salto"], ["J / clic", "atacar"], ["F", "DASH"], ["Q", "época"], ["E", "actuar"], ["G", "mano mágica"], ["R", "girar"], ["H", "poderes"]]
+        ? [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria (mantendu: INDARRA)"], ["F", "DASH"], ["Q", "garaia"], ["E", "ekin"], ["G", "esku magikoa"], ["R", "biratu"], ["H", "botereak"]]
+        : [["WASD", "mover"], ["Shift", "correr"], ["␣ ×2", "salto"], ["J / clic", "hechizo (mantén: INDARRA)"], ["F", "DASH"], ["Q", "época"], ["E", "actuar"], ["G", "mano mágica"], ["R", "girar"], ["H", "poderes"]]
     )
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
@@ -3340,13 +3520,13 @@
     if (!$("bossHud").hidden)
       $("bossHud").innerHTML =
         (boss.state === "open"
-          ? L("DASH NUKLEORA", "DASH AL NÚCLEO")
+          ? L("SORGINKERIA NUKLEORA", "HECHIZO AL NÚCLEO")
           : boss.state === "done"
             ? L("ERLOJUA ISILIK", "EL RELOJ CALLA")
             : L("BESTE GARAIRA!", "¡A LA OTRA ÉPOCA!")) +
         "<small>" +
         "◆ ".repeat(boss.hits) +
-        "◇ ".repeat(3 - boss.hits) +
+        "◇ ".repeat(Math.max(0, BOSS_HITS - boss.hits)) +
         "</small>";
     map();
   }
@@ -3443,7 +3623,11 @@
     } else {
       updateWorld(dt);
       if (!ascent) move(dt);
-      attackUpdate(dt);
+      magicUpdate(dt);
+      ascentUpdate(dt);
+      for (const J of STORY.pages) journalUpdate(J, dt);
+      storyUpdate(dt);
+      runePuzzlesUpdate(dt);
       enemyUpdate(dt);
       arenaUpdate(dt);
       craftUpdate(dt);
@@ -3471,7 +3655,8 @@
     }
   }
   let keysFaded = false,
-    lowBeat = 0;
+    lowBeat = 0,
+    slowmo = 0;
   let last = performance.now();
   function loop(now) {
     requestAnimationFrame(loop);
@@ -3488,7 +3673,8 @@
       if (hitStop > 0) {
         hitStop -= raw;
         accumulator = 0;
-      } else accumulator += raw * (saved.assist ? 0.72 : 1);
+      } else accumulator += raw * (saved.assist ? 0.72 : 1) * (slowmo > 0 ? 0.28 : 1);
+      slowmo = Math.max(0, slowmo - raw);
       let n = 0;
       while (accumulator >= 1 / 120 && n++ < 15) {
         tick(1 / 120);
@@ -3509,6 +3695,7 @@
     juiceUpdate(raw);
     cageVisual(raw);
     numbersUpdate(raw);
+    shieldHintUpdate(raw);
     SND.update();
     atmoUpdate(raw);
     sky.position.copy(camera.position);
@@ -3535,12 +3722,13 @@
     [-22, -118, 9.8, 1],
     [-28, -125, 11, -1],
     [-25, -138, 11, -1],
-    [-19, -145, 11.7, 1],
-    [-10, -153, 13, 0],
-    [-3, -162, 15, -1],
-    [0, -173, 15, -1],
+    [-21.65, -141.78, 11.6, -1],
+    [-16.65, -147.06, 23.5, -1],
+    [-17.25, -153.88, 35.6, -1],
+    [-6, -164, BOSS_Y, -1],
+    [0, -173, BOSS_Y, -1],
   ];
-  const stageRoute = [0, 4, 8, 13, 17, 21];
+  const stageRoute = [0, 4, 8, 13, 17, 22];
   let routeStep = 0,
     guideBeacon = null,
     cinematic = null;
@@ -3572,9 +3760,14 @@
     if (saved.stage === 5)
       return saved.bossDone
         ? L("Hurbildu erlojura. EKIN: azken erabakia.", "Acércate al reloj. ACTUAR: decisión final.")
-        : L("Uhina: ALDATU garaia. Nukleo zuria: DASH barrura.", "Onda: CAMBIAR época. Núcleo blanco: DASH hacia él.");
+        : L("Uhina: ALDATU garaia. Nukleo zuria: SORGINKERIA edo DASH.", "Onda: CAMBIAR época. Núcleo blanco: HECHIZO o DASH.");
     const p = targetPoint(),
       d = Math.round(Math.hypot(P.x - p[0], P.z - p[1]));
+    if (ASC.inZone)
+      return L(
+        "ORRATZA · igo hodeietaraino. Kristal berdeek DASH berritzen dute; haizeak gora darama; erruna: SORGINKERIA.",
+        "LA AGUJA · sube hasta las nubes. Los cristales verdes renuevan el DASH; el viento te eleva; la runa: HECHIZO.",
+      );
     if (routeStep === 0)
       return (
         L(
@@ -3611,7 +3804,7 @@
       return;
     }
     const Zp = CRAFT.puzzles.find((Z) => Z.D.island === currentStage && !Z.solved);
-    const p = saved.stage === 5 ? [0, -179, 15] : Zp ? [Zp.plat.x, Zp.plat.z, Zp.plat.y] : targetPoint();
+    const p = saved.stage === 5 ? [0, -179, BOSS_Y] : Zp ? [Zp.plat.x, Zp.plat.z, Zp.plat.y] : targetPoint();
     if (ARENA.state === "fight" || CRAFT.on) {
       $("waypoint").hidden = true;
       if (guideBeacon) guideBeacon.visible = false;
@@ -3730,6 +3923,13 @@
       ],
       [
         "IRATI · 140.85",
+        "Kontuz: Gauekoren hezurrezko zaindariak esnatu dira. Zure makilak sua du: SORGINKERIA, eta urrutitik jo. Izpiak bakarrik bilatzen du helburua.",
+        "Cuidado: los guardianes de hueso de Gaueko han despertado. Tu varita tiene fuego: HECHIZO, y golpéalos desde lejos. El rayo busca solo su objetivo.",
+        0,
+        23,
+      ],
+      [
+        "IRATI · 140.85",
         "Ur-errotara etorri. Urrezko marka jarraitu. Zubi ertzean, ALDATU garaia: egurra berriro agertuko da.",
         "Ven al molino. Sigue la marca dorada. Al borde del puente, CAMBIA de época: la madera volverá a aparecer.",
         0,
@@ -3823,8 +4023,8 @@
       ],
       [
         "IRATI · 140.85",
-        "Azken zubia. Erlojuaren uhina datorrenean, beste garaira joan. Zuriz irekitzen denean, DASH nukleora.",
-        "El último puente. Cuando venga la onda del reloj, pasa a la otra época. Cuando se abra en blanco, DASH al núcleo.",
+        "Erlojua Orratzaren gainean dago, hodeien artean. Garbitu uhartea eta igo: harriz harri, haizez haize.",
+        "El reloj está sobre la Aguja, entre las nubes. Limpia la isla y sube: de piedra en piedra, de viento en viento.",
         0,
         -179,
       ],
@@ -3832,16 +4032,17 @@
     [
       [
         "GAUEKO · 000.00",
-        "Askatu denbora, eta ezin izango duzu egun hau berreskuratu. Ziur zaude?",
-        "Libera el tiempo y no podrás recuperar este día. ¿Estás segura?",
+        "Iritsi zara. Beti iristen zara. Askatu denbora, eta egun hau betiko galduko duzu.",
+        "Has llegado. Siempre llegas. Libera el tiempo y perderás este día para siempre.",
         0,
         -179,
       ],
-      ["AMAIUR", "Ez. Baina herriak biharamuna merezi du.", "No. Pero el pueblo merece un mañana.", 0, -173],
+      ["AMAIUR", "Kendu maskara hori, Gaueko. Ikusi nahi zaitut.", "Quítate esa máscara, Gaueko. Quiero verte.", 0, -173],
+      ["GAUEKO · 000.00", "Jo nire nukleoa hiru aldiz, eta zeuk kenduko didazu.", "Golpea mi núcleo tres veces y me la quitarás tú misma.", 0, -179],
       [
         "IRATI · 140.85",
-        "Uhina saihestu garaia aldatuz. Ondoren, nukleo zuria jo DASHarekin. Hiru aldiz. Zurekin nago.",
-        "Evita la onda cambiando de época. Después, golpea el núcleo blanco con DASH. Tres veces. Estoy contigo.",
+        "Uhina datorrenean, ALDATU garaia. Nukleoa zuri dagoenean: SORGINKERIA edo DASH. Zurekin nago.",
+        "Cuando venga la onda, CAMBIA de época. Cuando el núcleo esté blanco: HECHIZO o DASH. Estoy contigo.",
         0,
         -179,
       ],
@@ -3900,6 +4101,7 @@
     $("touch").style.visibility = "";
     $("chapterTitle").style.opacity = 0;
     titleTimer = 0;
+    storyAfterScene();
     if (wasEcho)
       notify(
         saved.echoes.length === 3 ? "Hiru oihartzunak entzun dituzu." : "OIHARTZUNA · " + saved.echoes.length + " / 3 · Beste kanpai batzuk zain daude.",
@@ -4022,6 +4224,10 @@
   }
   function ascend() {
     if (!started || paused || respawnTimer || ascent || ascendCooldown > 0) return;
+    if (ascZone()) {
+      notify("Orratzak IGO xurgatzen du: igo zure hankekin.", "La Aguja absorbe ASCENDER: sube con tus piernas.", 2.5);
+      return;
+    }
     const roof = platforms
       .filter(
         (s) =>
@@ -4171,7 +4377,6 @@
       [15, -40, 6],
       [14, -76, 9],
       [-17, -114, 12],
-      [-14, -150, 16],
     ]) {
       const [x, z, y] = row;
       const m = orb(x, y, z, 0.34, "#b3ffc9");
@@ -4578,10 +4783,22 @@
         $("loadBar").style.width = (++done / (names.length + 1)) * 90 + "%";
       }),
     );
-    const binary = atob(MAGE),
-      bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    models.mage = await new Promise((res, rej) => loader.parse(bytes.buffer, "", res, rej));
+    const glb = (b64) => {
+      const binary = atob(b64),
+        bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new Promise((res, rej) => loader.parse(bytes.buffer, "", res, rej));
+    };
+    models.mage = await glb(MAGE);
+    /* KayKit hezurdurak (CC0): animazioak skel_minion-en daude, hiru aldaerek partekatzen dituzte */
+    if (typeof SKEL_GLB !== "undefined")
+      for (const k of Object.keys(SKEL_GLB)) {
+        try {
+          models["skel_" + k] = await glb(SKEL_GLB[k]);
+        } catch (e) {
+          console.warn("skel", k, e);
+        }
+      }
     $("loadLabel").textContent = L("Itsasoa eta zerua…", "El mar y el cielo…");
     await egReady;
     build();
@@ -4633,6 +4850,15 @@
         TRIALS,
         attack,
         ATK,
+        MAG,
+        BOLTS,
+        RUNES,
+        ASC,
+        STORY,
+        RUNE_PUZ,
+        ascRespawn,
+        ascZone,
+        magicReset,
         dbg: () => ({ started, paused, ascent: !!ascent, respawnTimer, craft: CRAFT.on, cinematic: !!cinematic }),
         spawnEnemy,
         spawnWave,
@@ -4682,15 +4908,17 @@
           $("hud").hidden = false;
         },
         /* fotograma bat (bideoa grabatzeko): logika + efektuak + kamera + errendatzea */
-        step: (dt) => {
-          for (let k = 0; k < Math.round(dt * 120); k++) tick(1 / 120);
-          if (CRAFT.on) craftCamera(dt);
+        step: (dt, logic = true) => {
+          if (logic) for (let k = 0; k < Math.round(dt * 120); k++) tick(1 / 120);
+          if (cinematic) updateCinema(dt);
+          else if (CRAFT.on) craftCamera(dt);
           else cameraUpdate(dt);
           drawGuide();
           fxUpdate(dt);
           juiceUpdate(dt);
           cageVisual(dt);
           numbersUpdate(dt);
+          shieldHintUpdate(dt);
           atmoUpdate(dt);
           if (mixer) mixer.update(0);
           sky.position.copy(camera.position);

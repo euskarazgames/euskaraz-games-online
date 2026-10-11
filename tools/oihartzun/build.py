@@ -8,7 +8,7 @@ lehendik muntatutako fitxategitik ateratzen dira ("vendor" blokea).
   python3 tools/oihartzun/build.py            # muntatu
   python3 tools/oihartzun/build.py --check    # muntatu gabe, sintaxia egiaztatu
 """
-import pathlib, re, subprocess, sys, tempfile
+import base64, pathlib, re, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SRC = pathlib.Path(__file__).resolve().parent / 'src'
@@ -17,11 +17,22 @@ VENDOR_START = '<script>/**\n * @license\n * Copyright 2010-2021 Three.js Author
 GAME_START = "\n</script><script>(()=>{'use strict';\n"
 
 
+MODELS = pathlib.Path(__file__).resolve().parent / 'models'
+
+
 def vendor_block():
     html = OUT.read_text(encoding='utf-8')
     a = html.index(VENDOR_START)
     b = html.index(GAME_START, a)
-    return html[a:b]
+    v = html[a:b]
+    # KayKit modeloak (models/*.glb, build_models.mjs-ek sortuak): sorgina eta hezurdurak
+    v = re.sub(r'/\*SKEL\*/.*?/\*SKEL-END\*/', '', v, flags=re.S)
+    b64 = lambda f: base64.b64encode((MODELS / f).read_bytes()).decode()
+    if (MODELS / 'mage.glb').exists():
+        v = re.sub(r'const MAGE="[^"]*"', lambda m: 'const MAGE="' + b64('mage.glb') + '"', v, count=1)
+    skel = {k: b64('skel_%s.glb' % k) for k in ('minion', 'mage', 'warrior') if (MODELS / ('skel_%s.glb' % k)).exists()}
+    v += '/*SKEL*/;const SKEL_GLB=' + repr(skel).replace("'", '"') + ';/*SKEL-END*/'
+    return v
 
 
 def include(text):

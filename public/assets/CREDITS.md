@@ -31,3 +31,13 @@ Jatorrizko material guztiak **CC0** (domeinu publikoa) lizentziakoak dira.
 | `tex/water_n.jpg` | EUSKARAZ GAMES | prozedurala (FFT zarata) |
 
 Poly Haven: https://polyhaven.com/license · ambientCG: https://ambientcg.com/license
+
+## OIHARTZUN · pertsonaiak (CC0)
+
+| Modeloa | Iturria | Jatorrizko materiala |
+|---|---|---|
+| Sorgina (Amaiur): `Mage` + animazioak | Kay Lousberg / KayKit | [KayKit Character Pack: Adventurers](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0) |
+| Hezurdurak: `Skeleton_Minion`, `Skeleton_Mage`, `Skeleton_Warrior`, armak eta animazioak | Kay Lousberg / KayKit | [KayKit Character Pack: Skeletons](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0) |
+
+`tools/oihartzun/models/build_models.mjs` scriptak murrizten ditu (behar diren animazioak, sare kuantizatuak,
+hezurduren animazio partekatuak). KayKit: https://kaylousberg.com · lizentzia CC0.

@@ -20,6 +20,12 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
     const isl = (i) => g.platforms.find(s => s.island === i);
     const islet = (i) => g.platforms.find(s => s.islet === i);
     const half = (s, dx, dz) => (s.rx ? s.rx : Math.min(Math.abs(dx) > 1e-6 ? s.w / 2 / Math.abs(dx) : 1e9, Math.abs(dz) > 1e-6 ? s.d / 2 / Math.abs(dz) : 1e9));
+    /* eszenak eta elkarrizketak (misterioak, sariak) ez dute bot-a geldiarazi behar */
+    function skip() {
+      if (g.cinematicState()) g.endScene();
+      const b = document.querySelector('#choices button');
+      if (b && !document.getElementById('overlay').hidden) b.click();
+    }
     function steer(dx, dz) {
       const n = Math.hypot(dx, dz) || 1;
       dx /= n; dz /= n;
@@ -27,11 +33,12 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
       g.input.z = 0.557 * dx + 0.83 * dz;
     }
     /* A plataformatik B-ra: korrika, ertzean jauzi, behar bada garaia airean, jauzi bikoitza eta DASH */
-    function hop(A, B, label) {
+    function hop(A, B, label, quick) {
       const T0 = performance.now();
       const ph = B.phase === -1 ? null : B.phase;
       if (A.phase !== -1 && g.phase() !== A.phase) g.switchPhase();
-      for (let i = 0; i < 80; i++) g.tick(1 / 120); /* faseCooldown eta lurreratzea */
+      /* faseCooldown eta lurreratzea (harri erorkorretan: berehala) */
+      for (let i = 0; i < (quick ? 2 : 80); i++) g.tick(1 / 120);
       let dx = B.x - P.x, dz = B.z - P.z;
       const n = Math.hypot(dx, dz);
       const ux = dx / n, uz = dz / n;
@@ -40,6 +47,7 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
       g.input.keys = { ShiftLeft: true };
       let state = 'run', t = 0, jumped2 = false, dashed = false, switched = false, landedOn = null;
       for (let k = 0; k < 120 * 6; k++) {
+        skip();
         t += 1 / 120;
         const tx = B.x - P.x, tz = B.z - P.z, d = Math.hypot(tx, tz);
         const over = d < half(B, tx / (d || 1), tz / (d || 1)) * 0.45;
@@ -59,7 +67,7 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
         g.tick(1 / 120);
       }
       g.input.x = g.input.z = 0; g.input.keys = {};
-      for (let i = 0; i < 30; i++) g.tick(1 / 120);
+      for (let i = 0; i < (quick ? 4 : 30); i++) g.tick(1 / 120);
       const ok = landedOn === B || P.platform === B;
       out.push({ label, ok, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)], jumped2, dashed, switched, ms: Math.round(performance.now() - T0) });
       return ok;
@@ -70,6 +78,7 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
       for (let i = 0; i < 20; i++) g.tick(1 / 120);
       let state = 'run', t = 0, j2 = false, landed = false;
       for (let k = 0; k < 120 * 6; k++) {
+        skip();
         t += 1 / 120;
         const tx = B.x - P.x, tz = B.z - P.z, d = Math.hypot(tx, tz), hw = (B.w || 2) / 2;
         if (state === 'run') {
@@ -112,8 +121,9 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
     /* eraikuntza-puzzleak: kaxak pilatu (API) eta errunara igo jokalariaren fisikarekin */
     const C = g.CRAFT;
     function place(Z, q, x, z) {
+      skip();
       C.on = true; C.zone = Z; C.held = q; C.tx = x; C.tz = z;
-      for (let i = 0; i < 120; i++) g.tick(1 / 120);
+      for (let i = 0; i < 120; i++) { skip(); C.on = true; g.tick(1 / 120); }
       g.craftRelease();
       for (let i = 0; i < 10; i++) g.tick(1 / 120);
       g.craftExit();
@@ -139,6 +149,77 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
     }
     craftPuzzle(0, [[-2, 0], [-2, 0]], [-1, -21], 'P1');
     craftPuzzle(1, [[-2.5, 0], [-2.5, 0], [-2.5, 0], [-4.5, 0], [-4.5, 0]], [-3, -90], 'P2');
+    /* ORRATZA: Gauekoren erlojurako igoera osoa (kristal-harriak, erorkorrak, haizea, erruna) */
+    function ascentRoute() {
+      const A = g.ASC, Ls = A.list, I4 = isl(4), I5 = isl(5);
+      if (g.cinematicState()) g.endScene();
+      g.saved.stage = 4;
+      g.saved.cleared = [0, 1, 2, 3, 4];
+      for (const C of g.CAGES) for (const x of C.gates) x.open = true;
+      g.teleport(-27, -135, I4.y);
+      const [C0, C1, C2, C3, E1, E2, C4, S1, S2, C5, , C6, L1, L2] = Ls;
+      const chain = [[I4, C0], [C0, C1], [C1, C2], [C2, C3], [C3, E1], [E1, E2], [E2, C4], [C4, S1], [S1, S2, 1], [S2, C5, 1]];
+      for (const [a, b, q] of chain) if (!hop(a, b, 'ORR ' + Ls.indexOf(b), q)) return false;
+      /* haizea: C5-etik korrontera, gora, eta C6-ra */
+      const W = A.winds[0];
+      let ok = false;
+      g.input.keys = {};
+      for (let k = 0; k < 120 * 8 && !ok; k++) {
+        if (g.cinematicState()) g.endScene();
+        if (P.y < C6.y + 1.4) steer(W.x - P.x, W.z - P.z);
+        else steer(C6.x - P.x, C6.z - P.z);
+        if (Math.hypot(P.x - C6.x, P.z - C6.z) < 0.6) g.input.x = g.input.z = 0;
+        g.tick(1 / 120);
+        ok = P.grounded && P.platform === C6;
+      }
+      g.input.x = g.input.z = 0;
+      for (let i = 0; i < 30; i++) g.tick(1 / 120);
+      out.push({ label: 'ORR haizea', ok, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)] });
+      if (!ok) return false;
+      /* erruna: sorginkeria (auto-helburua) */
+      g.attack();
+      for (let i = 0; i < 90; i++) g.tick(1 / 120);
+      out.push({ label: 'ORR erruna', ok: A.rune.lit, at: [+A.rune.x.toFixed(1), +A.rune.y.toFixed(1), +A.rune.z.toFixed(1)] });
+      if (!A.rune.lit) return false;
+      for (const [a, b] of [[C6, L1], [L1, L2], [L2, I5]]) if (!hop(a, b, 'ORR ' + (b === I5 ? 'I5' : Ls.indexOf(b)), true)) return false;
+      out.push({ label: 'ORR gailurra', ok: g.saved.stage === 5, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)], falls: A.falls });
+      /* erortzea: azken kanpaian berragertu, bizitzarik galdu gabe */
+      for (let i = 0; i < 4; i++) { skip(); g.tick(1 / 120); }
+      g.saved.stage = 4;
+      g.teleport(C4.x, C4.z, C4.y);
+      for (let i = 0; i < 20; i++) g.tick(1 / 120);
+      const hp0 = P.hp, f0 = A.falls;
+      g.teleport(C4.x + 3.5, C4.z + 3.5, C4.y + 0.5);
+      for (let i = 0; i < 240 && A.falls === f0; i++) g.tick(1 / 120);
+      for (let i = 0; i < 30; i++) g.tick(1 / 120);
+      out.push({ label: 'ORR erorketa', ok: A.falls === f0 + 1 && P.hp === hp0 && Math.hypot(P.x - C6.x, P.z - C6.z) < 0.5, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)] });
+      return true;
+    }
+    ascentRoute();
+    /* errun-puzzleak: garai bakoitzeko errunak sorginkeriaz piztu, denbora-mugaren barruan */
+    function runePuzzle(k) {
+      const S = g.RUNE_PUZ[k], I = g.ISLANDS[S.D.island];
+      for (let i = 0; i < 4; i++) { skip(); g.tick(1 / 120); }
+      g.saved.stage = Math.max(g.saved.stage, S.D.island);
+      if (!g.saved.cleared.includes(S.D.island)) g.saved.cleared.push(S.D.island);
+      g.teleport(I.x, I.z, I.y);
+      for (let i = 0; i < 30; i++) { skip(); g.tick(1 / 120); }
+      const t0 = performance.now();
+      for (const R of S.list) {
+        if (R.era !== -1 && g.phase() !== R.era) { g.switchPhase(); for (let i = 0; i < 30; i++) g.tick(1 / 120); }
+        /* errunari begira jarri (auto-helburua) eta jaurti */
+        for (let i = 0; i < 120 * 2 && Math.hypot(R.x - P.x, R.z - P.z) > 9; i++) { skip(); steer(R.x - P.x, R.z - P.z); g.tick(1 / 120); }
+        g.input.x = g.input.z = 0;
+        steer(R.x - P.x, R.z - P.z); g.tick(1 / 120); g.input.x = g.input.z = 0;
+        for (let tries = 0; tries < 4 && !R.lit; tries++) {
+          g.attack();
+          for (let i = 0; i < 40; i++) { skip(); g.tick(1 / 120); }
+        }
+      }
+      out.push({ label: 'ERRUNAK ' + S.D.island, ok: S.solved, at: [I.x, I.y, I.z], secs: Math.round(performance.now() - t0) });
+    }
+    runePuzzle(0);
+    runePuzzle(1);
     return { out, echoes: g.saved.echoes };
   });
   let fails = 0;

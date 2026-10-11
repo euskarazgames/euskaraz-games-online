@@ -13,7 +13,7 @@
     [2, 20, -44, "in"], [2, 20, -72, "exit"], [2, 44, -51, "side"],
     [3, 4, -83, "in"], [3, -14, -111, "exit"], [3, 16, -105.5, "side"], [3, 9, -118, "side"],
     [4, -22, -118, "in"], [4, -19, -145, "exit"], [4, -45, -125, "side"], [4, -47.5, -136, "side"],
-    [5, -10, -153, "in"],
+    [5, -12, -157.3, "in"],
   ];
   /* uharte bakoitzaren erronka */
   const TRIALS = ["fight", "craft", "fight", "craft", "fight", "boss"];
@@ -246,17 +246,17 @@
   const WAVES = {
     0: [
       [["grunt", -1, 2]],
-      [["grunt", -1, 3]],
+      [["grunt", -1, 4]],
     ],
     2: [
-      [["grunt", 0, 2], ["grunt", 1, 2]],
-      [["grunt", -1, 2], ["eye", 0, 1], ["eye", 1, 1]],
-      [["brute", 1, 1], ["grunt", 0, 2]],
+      [["grunt", 0, 3], ["grunt", 1, 3]],
+      [["grunt", -1, 4], ["eye", 0, 1], ["eye", 1, 1]],
+      [["brute", 1, 1], ["grunt", 0, 3], ["grunt", 1, 2]],
     ],
     4: [
-      [["eye", 0, 2], ["grunt", 1, 2]],
-      [["brute", 0, 1], ["brute", 1, 1], ["eye", -1, 1]],
-      [["grunt", 0, 2], ["grunt", 1, 1], ["eye", 1, 2], ["brute", -1, 1]],
+      [["eye", 0, 2], ["grunt", 1, 3], ["grunt", 0, 2]],
+      [["brute", 0, 1], ["brute", 1, 1], ["eye", -1, 2], ["grunt", -1, 3]],
+      [["grunt", 0, 4], ["grunt", 1, 3], ["eye", 1, 2], ["eye", 0, 1], ["brute", -1, 1]],
     ],
   };
   const ARENA = { island: -1, wave: -1, state: "idle", t: 0, announced: new Set() };
@@ -305,6 +305,7 @@
   }
   function arenaWin() {
     const i = ARENA.island;
+    slowmo = 0.75; /* azken hezurdura: kamera geldo */
     ARENA.state = "idle";
     ARENA.island = -1;
     islandDone(i, true);
@@ -324,7 +325,8 @@
       "La salida está abierta. Sigue la marca dorada.",
       4,
     );
-    if (fight && i > 0) setTimeout(() => offerBoon(i), 1600);
+    /* eszena laburra (misterioa / kakoa) eta, borrokaren ondoren, saria */
+    storyQueue(i, fight && i > 0);
     hud();
   }
   function arenaReset() {
