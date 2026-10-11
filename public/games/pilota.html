@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>HERRI PILOTA — EUSKARAZ GAMES · REALISTIC EDITION</title>
+<script src="/assets/egfx.js"></script>
 <meta property="og:title" content="HERRI PILOTA · EUSKARAZ GAMES">
 <meta property="og:description" content="Hogeita bi tantora, esku huska.">
 <style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}html,body{width:100%;height:100%;overflow:hidden;background:#06100c;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;color:#fff;}canvas{display:block;}#gl{position:fixed;inset:0;z-index:1;}.card{background:rgba(8,16,13,.72);border:1px solid rgba(255,255,255,.16);border-radius:14px;backdrop-filter:blur(6px);}#hud{position:fixed;inset:0;z-index:10;pointer-events:none;}#topbar{position:absolute;top:calc(8px + env(safe-area-inset-top));left:calc(10px + env(safe-area-inset-left));display:none;flex-direction:column;align-items:stretch;gap:0;padding:6px;background:linear-gradient(180deg,#2f343b,#161a20 24%,#0a0c10)!important;border:1px solid #525964!important;border-radius:9px;box-shadow:0 10px 26px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.16),0 0 0 1px rgba(255,170,90,.08);backdrop-filter:none;min-width:138px;}#topbar::before,#topbar::after{content:'';position:absolute;width:4px;height:4px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#9aa0aa,#4a4e55);top:4px;}#topbar::before{left:4px;}#topbar::after{right:4px;}#topbar .sp{display:block;font-size:8px;letter-spacing:2.2px;color:#ffbf72;font-weight:900;text-align:center;padding:2px 7px 4px;text-shadow:0 0 12px rgba(255,124,30,.98);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:54vw;}#topbar .div{display:none;}#topbar .led{display:flex;align-items:stretch;justify-content:center;gap:8px;background:linear-gradient(180deg,#24080b,#120305);border-radius:5px;border:1px solid #0a0507;box-shadow:inset 0 0 14px rgba(0,0,0,.95),0 2px 10px rgba(0,0,0,.35);padding:4px 8px;position:relative;}#topbar .ledBlk{display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:44px;}#topbar .ledSm{font-size:6px;line-height:1;letter-spacing:1.7px;color:#ffb067;opacity:.92;font-weight:900;margin-bottom:2px;text-shadow:0 0 6px rgba(255,124,30,.65);}#topbar .ledSep{width:1px;align-self:stretch;background:linear-gradient(180deg,transparent,rgba(255,173,94,.45),transparent);opacity:.8;}#topbar .scoreBlk{min-width:34px;}#topbar .led::after{content:'';position:absolute;inset:0;pointer-events:none;border-radius:4px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.42) 0 1px,transparent 1px 3px),repeating-linear-gradient(180deg,rgba(0,0,0,.42) 0 1px,transparent 1px 3px);}#topbar .tm,#topbar .sc{font-family:'Courier New',Courier,monospace;font-weight:700;font-variant-numeric:tabular-nums;line-height:.95;}#topbar .tm{font-size:20px;color:#ff3434;letter-spacing:1px;text-shadow:0 0 7px #ff2020,0 0 18px rgba(255,20,20,.82);}#topbar .sc{font-size:22px;color:#ffbf4f;letter-spacing:1px;text-shadow:0 0 7px #ff961d,0 0 18px rgba(255,140,20,.7);}body.court #topbar{min-width:136px;padding:5px;}body.court #topbar .tm{font-size:17px;}body.court #topbar .sc{font-size:18px;}body.court #topbar .ledSm{font-size:5px;letter-spacing:1.4px;}#meters{top:calc(70px + env(safe-area-inset-top));}#ptsTag{display:none!important;position:absolute;top:calc(12px + env(safe-area-inset-top));left:calc(12px + env(safe-area-inset-left));padding:8px 13px;font-size:11px;letter-spacing:2px;}#ptsTag b{color:#ffd45e;font-size:15px;}#lvlTag{position:absolute;top:calc(12px + env(safe-area-inset-top));right:calc(12px + env(safe-area-inset-right));padding:6px 10px;font-size:8px;letter-spacing:2px;display:none;text-align:right;max-width:34vw;opacity:.9;transition:opacity .6s;}#lvlTag b{display:block;font-size:11px;letter-spacing:1px;color:#fff;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}#lvlTag .dots{margin-top:3px;font-size:9px;color:#ffd45e;}#bar2{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:min(46vw,230px);height:9px;display:none;border-radius:7px;overflow:hidden;opacity:.9;background:linear-gradient(180deg,rgba(20,28,24,.86),rgba(8,16,13,.74))!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:0 6px 16px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.14);}#bar2 .fl{height:100%;width:50%;background:linear-gradient(90deg,#eb2c2c,#ff9b47);}#bar2 .mk{position:absolute;top:0;bottom:0;width:2px;background:rgba(255,255,255,.92);box-shadow:0 0 8px rgba(255,255,255,.55);left:70%;}#bar2L{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(23px + env(safe-area-inset-bottom));font-size:8px;letter-spacing:2px;color:#cfe9dc;display:none;text-shadow:0 2px 8px #000;opacity:.8;}#suaBar{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(23px + env(safe-area-inset-bottom));width:min(34vw,170px);height:4px;display:none;border-radius:3px;overflow:hidden;opacity:.9;background:rgba(8,16,13,.58)!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:0 3px 8px rgba(0,0,0,.18);}#suaBar .fl{height:100%;width:0%;background:linear-gradient(90deg,#2ee59d,#ffd45e);}#suaBar.full .fl{background:linear-gradient(90deg,#ffd45e,#ff7a4a,#ffd45e);}body.court #bar2{width:min(34vw,160px);height:7px;opacity:.92;bottom:calc(8px + env(safe-area-inset-bottom));box-shadow:0 5px 14px rgba(0,0,0,.26);}body.court #bar2L{display:none!important;}body.court #suaBar{width:min(26vw,130px);height:3px;opacity:.7;bottom:calc(19px + env(safe-area-inset-bottom));}body.court #meters{opacity:.55;width:96px;padding:5px 7px;}body.court #meters .mt span{font-size:7px;letter-spacing:1px;}body.court #meters .mt .track{height:4px;}body.bigbar #bar2{width:min(74vw,400px)!important;height:18px!important;bottom:calc(150px + env(safe-area-inset-bottom))!important;opacity:1!important;border-radius:9px!important;background:rgba(8,16,13,.72)!important;border:1px solid rgba(255,255,255,.22)!important;box-shadow:0 4px 16px rgba(0,0,0,.45);}body.bigbar #bar2 .mk{width:4px!important;background:#fff!important;box-shadow:0 0 8px rgba(255,255,255,.9);}body.bigbar #bar2L{display:block!important;font-size:11px!important;letter-spacing:3px!important;bottom:calc(174px + env(safe-area-inset-bottom))!important;opacity:1!important;color:#fff!important;}body.bigbar #meters{opacity:.95;width:126px;padding:8px 10px;}body.bigbar #meters .mt span{font-size:8px;letter-spacing:2px;}body.bigbar #meters .mt .track{height:7px;}#beat{position:absolute;left:calc(14px + env(safe-area-inset-left));bottom:calc(44px + env(safe-area-inset-bottom));width:64px;height:64px;display:none;opacity:.8;}#beat .ring{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.24);}#beat .pulse{position:absolute;inset:0;border-radius:50%;border:3px solid #2ee59d;}#beat .lb{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:8px;letter-spacing:1px;color:#cfe9dc;text-align:center;line-height:1.25;}#sides{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(38px + env(safe-area-inset-bottom));display:none;gap:8px;opacity:.85;}#sides div{padding:4px 11px;border-radius:8px;font-size:10px;letter-spacing:2px;font-weight:800;background:rgba(8,16,13,.62);border:1px solid rgba(255,255,255,.16);}#sides .on{background:rgba(46,229,157,.35);border-color:#2ee59d;}#sides .ciar{background:rgba(255,122,74,.35);border-color:#ff7a4a;}#popup{position:absolute;left:50%;top:calc(86px + env(safe-area-inset-top));transform:translateX(-50%);white-space:nowrap;font-size:min(5.6vw,26px);font-weight:900;letter-spacing:3px;opacity:0;padding:7px 17px;border-radius:14px;background:linear-gradient(180deg,rgba(8,18,14,.56),rgba(6,14,10,.36));border:1px solid rgba(255,255,255,.16);box-shadow:0 10px 28px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.14);text-shadow:0 3px 12px rgba(0,0,0,.9);transition:opacity .18s;text-align:center;}body.court #popup{top:calc(56px + env(safe-area-inset-top));font-size:min(4.6vw,20px);letter-spacing:2px;background:rgba(6,14,10,.34);}#say{position:absolute;left:50%;bottom:calc(46px + env(safe-area-inset-bottom));transform:translateX(-50%);font-size:14px;font-weight:600;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.8);letter-spacing:.4px;padding:7px 14px;opacity:0;transition:opacity .3s;text-align:center;max-width:80vw;}body.court #say{font-size:11px;bottom:calc(40px + env(safe-area-inset-bottom));}#prompt{position:absolute;left:50%;bottom:calc(160px + env(safe-area-inset-bottom));transform:translateX(-50%);padding:11px 20px;display:none;text-align:center;}#prompt b{color:#ffd45e;letter-spacing:2px;font-size:15px;}#prompt i{display:block;font-style:normal;font-size:11px;letter-spacing:2px;color:#9fd8bb;margin-top:3px;}#meters{position:absolute;right:calc(10px + env(safe-area-inset-right));top:calc(70px + env(safe-area-inset-top));width:108px;padding:7px 9px;display:none;opacity:.88;box-shadow:0 8px 18px rgba(0,0,0,.18);}.mt{margin-bottom:5px;}.mt:last-child{margin-bottom:0;}.mt span{font-size:7px;letter-spacing:1px;color:#9fd8bb;display:block;margin-bottom:2px;}.mt .track{height:5px;border-radius:3px;background:rgba(255,255,255,.13);overflow:hidden;}.mt .fl{height:100%;width:100%;}#stamFl{background:linear-gradient(90deg,#2ee59d,#9be36a);}#syncFl{background:linear-gradient(90deg,#ff7a4a,#ffd45e,#2ee59d);}#mapBox{position:absolute;left:calc(10px + env(safe-area-inset-left));bottom:calc(120px + env(safe-area-inset-bottom));padding:4px;display:none;border-radius:10px;opacity:.82;}#mapCv{display:block;width:88px;height:88px;border-radius:7px;}#stickL,#stickR{position:fixed;display:none;z-index:15;}#stickL{left:0;bottom:0;width:46vw;height:62vh;}#stickR{right:0;top:0;width:44vw;height:100%;z-index:14;}.touch #stickL,.touch #stickR{display:block;}.nubBase,.nubTop{position:fixed;border-radius:50%;pointer-events:none;z-index:16;display:none;}.nubBase{width:104px;height:104px;background:rgba(6,16,12,.28);border:2px solid rgba(255,255,255,.34);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 24px rgba(0,0,0,.18);}.nubTop{width:46px;height:46px;background:rgba(255,255,255,.5);box-shadow:0 4px 10px rgba(0,0,0,.2);}.btn{position:fixed;z-index:22;display:none;align-items:center;justify-content:center;border-radius:50%;font-weight:800;letter-spacing:1.4px;text-align:center;line-height:1.05;background:radial-gradient(circle at 34% 26%,rgba(88,94,89,.74),rgba(10,16,14,.9));border:2px solid rgba(255,255,255,.48);box-shadow:0 12px 26px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2),0 0 0 1px rgba(255,185,90,.08);color:#fff;font-size:12px;-webkit-user-select:none;user-select:none;cursor:pointer;padding:4px;}.touch .btn{display:flex;}.btn:active,.btn.on{background:radial-gradient(circle at 35% 28%,rgba(77,230,169,.68),rgba(18,114,78,.92));border-color:#7af2c1;box-shadow:0 10px 22px rgba(0,0,0,.32),0 0 16px rgba(70,227,166,.25);transform:scale(.94);}#bA{width:92px;height:92px;font-size:13px;right:calc(18px + env(safe-area-inset-right));bottom:calc(24px + env(safe-area-inset-bottom));}#bB{width:78px;height:78px;font-size:12px;right:calc(120px + env(safe-area-inset-right));bottom:calc(28px + env(safe-area-inset-bottom));}#bC{width:62px;height:62px;font-size:10px;right:calc(30px + env(safe-area-inset-right));bottom:calc(130px + env(safe-area-inset-bottom));}.ovl{position:fixed;inset:0;z-index:40;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:radial-gradient(ellipse at 50% 40%,rgba(10,30,22,.9),rgba(2,6,5,.96));}.ovl h1{font-size:min(12vw,66px);font-weight:900;letter-spacing:5px;line-height:1;}.ovl h2{font-size:min(8vw,34px);font-weight:800;letter-spacing:4px;}.ovl h3{font-size:12px;letter-spacing:5px;color:#2ee59d;font-weight:700;margin-top:8px;}.ovl p{font-size:14px;line-height:1.7;color:#cfe9dc;max-width:520px;margin-top:12px;}.briefVersus{display:grid;grid-template-columns:minmax(120px,1fr) auto minmax(120px,1fr);gap:10px;align-items:stretch;width:min(92vw,720px);margin-top:16px;}.briefPlayer{padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.18);box-shadow:0 12px 26px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:center;min-height:86px;}.briefPlayer.me{background:linear-gradient(180deg,rgba(120,10,10,.72),rgba(54,7,7,.88));}.briefPlayer.foe{background:linear-gradient(180deg,rgba(11,54,148,.70),rgba(7,22,74,.88));}.briefTag{font-size:10px;letter-spacing:3px;color:#ffd991;font-weight:800;opacity:.92;}.briefPlayer b{display:block;margin-top:6px;font-size:clamp(18px,3.6vw,30px);line-height:1.15;letter-spacing:1px;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.45);}.briefVS{align-self:center;font-size:clamp(18px,4vw,34px);font-weight:900;letter-spacing:3px;color:#ffd45e;text-shadow:0 0 16px rgba(255,165,60,.35);padding:0 4px;}.briefWhere{margin-top:12px;padding:12px 18px;width:min(92vw,720px);display:flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(180deg,rgba(8,18,14,.88),rgba(5,11,9,.84));box-shadow:0 10px 24px rgba(0,0,0,.22);}.briefWhere span{font-size:10px;letter-spacing:4px;color:#9fd8bb;font-weight:800;}.briefWhere b{font-size:clamp(18px,4vw,28px);letter-spacing:2px;color:#fff;}.briefWhere i{font-style:normal;font-size:11px;letter-spacing:2px;color:#ffd45e;opacity:.94;}@media (max-width:680px){.briefVersus{grid-template-columns:1fr;gap:8px;}.briefVS{font-size:16px;letter-spacing:5px;padding:2px 0;}}
@@ -1331,9 +1332,12 @@ renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.36;
 if(THREE.sRGBEncoding!==undefined)renderer.outputEncoding=THREE.sRGBEncoding;
+const EG=(window.EGFX&&EGFX.enabled&&EGFX.ready)?EGFX:null;
+if(EG){EG.setRenderer(renderer);EG.envDefault=0.7;renderer.toneMappingExposure=1.08;}
 $('gl').appendChild(renderer.domElement);
 const scene=new THREE.Scene();
 (function(){
+if(EG&&EG.hasSky('day')){const sm=EG.skyMesh('day',980,{yaw:-0.9});if(sm){scene.add(sm);return;}}
 const cv=document.createElement('canvas');cv.width=32;cv.height=256;
 const c=cv.getContext('2d');
 const g=c.createLinearGradient(0,0,0,256);
@@ -1346,9 +1350,12 @@ new THREE.MeshBasicMaterial({map:t,side:THREE.BackSide,fog:false}));
 scene.add(sky);
 })();
 scene.fog=new THREE.Fog(0xfcf7ee,560,1600);
+if(EG&&EG.hasSky('day')){scene.fog.color.copy(EG.horizon('day'));EG.environment(renderer,scene,'day');}
 const camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,0.1,1200);
+if(EG)EG.track(scene,renderer,camera);
 camera.position.set(0,14,22);
 const hemi=new THREE.HemisphereLight(0xfffdf8,0x8a562d,1.12);scene.add(hemi);
+if(EG&&scene.environment)hemi.intensity=0.5;
 const sunL=new THREE.DirectionalLight(0xffefda,1.52);
 sunL.position.set(-48,70,36);sunL.castShadow=true;
 sunL.shadow.mapSize.set(2048,2048);
@@ -1361,6 +1368,8 @@ const fillL=new THREE.DirectionalLight(0xfff3e4,0.46);fillL.position.set(30,20,-
 const M=(c,r,m)=>new THREE.MeshStandardMaterial({color:c,roughness:r===undefined?0.9:r,metalness:m===undefined?0.04:m});
 const B=c=>new THREE.MeshBasicMaterial({color:c});
 const world=new THREE.Group();scene.add(world);
+/* EGFX: frontoia harana batean — lur zabala eta mendilerroa atzealdean */
+if(EG){const eg0=EG.ground('grass',1500,{color:0xa8bc88,tile:4});if(eg0)world.add(eg0);world.add(EG.mountains({inner:150,outer:520,height:120,seed:5,low:0x5f7f45,mid:0x41633a,rock:0x7a786e,albedo:false}));}
 const hub=new THREE.Group();scene.add(hub);
 const arena=new THREE.Group();scene.add(arena);
 function fit(){
@@ -1656,8 +1665,21 @@ MT.furDark=texFur('#7a4a1e','rgba(150,96,40,0.5)');
 MT.cloth=texCloth('#ffffff');MT.water=texWater();MT.leaf=texLeaf();
 MT.thorn=texThornLeaf();MT.mount=texMountain();
 MT.ikur=ikurrinaTex();MT.lauburu=lauburuTex();MT.egu=eguzkiloreTex();
+for(const[k,e]of[['grass','grass'],['dirt','dirt'],['stone','stone'],['rock','rock'],['wood','wood'],['woodDark','planks'],['plaster','plaster'],['tile','roof'],['mount','rock']])if(MT[k])MT[k].egKey=e;
 }
+/* EGFX: testura bakoitzaren eskala (zenbat aldiz errepikatu argazkia, prozeduralaren aldean) */
+const EG_SCALE={grass:1.5,dirt:1,stone:0.8,rock:0.6,wood:1,planks:1,plaster:1,roof:0.9,concrete:1,wall:1,bark:1};
 function MX(tex,col,r,rx,ry){
+const ek=tex&&tex.egKey;
+if(EG&&ek&&EG.has(ek))return MXK(ek,tex,col,r,rx,ry);
+return MX0(tex,col,r,rx,ry);
+}
+/* MXK: CC0 material zehatz bat (adib. 'bark', 'wall'), edo prozedurala ez badago */
+function MXK(key,tex,col,r,rx,ry,o){
+if(EG&&EG.has(key)){const sc=EG_SCALE[key]||1;const m=EG.material(key,Object.assign({color:col===undefined?0xffffff:col,roughness:r===undefined?0.92:r,repeat:[(rx||1)*sc,(ry||rx||1)*sc]},o||{}));if(m)return m;}
+return MX0(tex,col,r,rx,ry);
+}
+function MX0(tex,col,r,rx,ry){
 return new THREE.MeshStandardMaterial({
 map:rx?rep(tex,rx,ry):tex,color:col===undefined?0xffffff:col,
 roughness:r===undefined?0.92:r,metalness:0.02});
@@ -1946,7 +1968,7 @@ return g;
 function buildPerson(shirt,pant,crook){return humanRig({shirt,pant,crook});}
 function buildTree(){
 const g=new THREE.Group();
-const t=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.45,3.6,8),MX(MT.wood,0x8a6a44,0.96,1,3));
+const t=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.45,3.6,8),MXK('bark',MT.wood,0xc8b8a4,0.96,1,1.6));
 t.position.y=1.8;t.castShadow=true;g.add(t);
 const lm=MX(MT.leaf,0xffffff,0.98,2,2);
 for(let i=0;i<3;i++){
@@ -2799,14 +2821,15 @@ function buildHub(){
 texInit();
 const gr=new THREE.Mesh(new THREE.PlaneGeometry(1080,1080),MX(MT.grass,0xffffff,0.98,205,205));
 gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;hub.add(gr);
-for(let i=0;i<16;i++){
+if(EG){const eg0=EG.ground('grass',1500,{color:0xb8cc98,tile:4});if(eg0)world.add(eg0);world.add(EG.mountains({inner:330,outer:700,height:150,seed:11,low:0x6f8f50,mid:0x4a7040,rock:0x8a887e,albedo:false}));}
+else for(let i=0;i<16;i++){
 const a=i/16*Math.PI*2+RNG()*0.2;
 const rad=450+RNG()*130,hh=34+RNG()*52,rr=34+RNG()*30;
 const m=new THREE.Mesh(new THREE.ConeGeometry(rr,hh,7),
 MX(i%3?MT.leaf:MT.mount,i%3?0x9fb890:0xffffff,0.98,5,4));
 m.position.set(Math.cos(a)*rad,hh/2-3,Math.sin(a)*rad);world.add(m);
 }
-for(let i=0;i<12;i++){
+for(let i=0;i<(EG&&EG.hasSky('day')?0:12);i++){
 const c=new THREE.Mesh(new THREE.SphereGeometry(7+RNG()*7,10,7),
 new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.85,fog:false}));
 c.scale.y=0.34;c.position.set((RNG()-0.5)*740,62+RNG()*30,(RNG()-0.5)*740);world.add(c);
@@ -2954,10 +2977,14 @@ function hpRealCourtEnhance(D,H,FY,PASS){
  /* pista satinada encima de la base original */
  const fm=new THREE.MeshStandardMaterial({map:tx.floor,color:theme.floorHex,roughness:.38,metalness:.02});
  fm.map.wrapS=fm.map.wrapT=THREE.RepeatWrapping;fm.map.repeat.set(3.3,7.8);
+ /* EGFX: zementu leundu erreala (CC0), frontoiaren kolorearekin */
+ if(EG&&EG.has('concrete'))EG.apply(fm,'concrete',{color:new THREE.Color(theme.base).multiplyScalar(.82),repeat:[2.4,5.6],roughness:.74,envMapIntensity:.38});
  const fl=new THREE.Mesh(new THREE.PlaneGeometry(19.15,D+12.1),fm);fl.rotation.x=-Math.PI/2;fl.position.set(-.1,.061,(-D+12)/2);fl.receiveShadow=true;arena.add(fl);
  const gloss=new THREE.Mesh(new THREE.PlaneGeometry(19.0,D+11.7),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.028,depthWrite:false}));gloss.rotation.x=-Math.PI/2;gloss.position.set(-.1,.067,(-D+12)/2);arena.add(gloss);
  /* capas de pared con material más fino y marcas de uso */
  const wm=new THREE.MeshStandardMaterial({map:tx.wall,color:theme.wallHex,roughness:.43,metalness:0});wm.map.wrapS=wm.map.wrapT=THREE.RepeatWrapping;wm.map.repeat.set(3.2,2.6);
+ const egWall=EG&&EG.has('wall');
+ if(egWall)EG.apply(wm,'wall',{color:theme.wallHex,repeat:[2.6,1.6],roughness:.8,envMapIntensity:.45});
  const front=new THREE.Mesh(new THREE.PlaneGeometry(19.8,H-.35),wm);front.position.set(-.1,H/2,-D+.012);front.receiveShadow=true;arena.add(front);
  const frontGlow=new THREE.Mesh(new THREE.PlaneGeometry(18.9,H-1.4),new THREE.MeshBasicMaterial({color:theme.wallGlow,transparent:true,opacity:.09,depthWrite:false}));frontGlow.position.set(-.1,H/2+0.2,-D+.02);arena.add(frontGlow);
  /* acento vasco + look más Virtua Tennis */
@@ -2965,7 +2992,9 @@ function hpRealCourtEnhance(D,H,FY,PASS){
  const frBandR=new THREE.Mesh(new THREE.BoxGeometry(18.4,.08,.031),new THREE.MeshBasicMaterial({color:0xc91b1b}));frBandR.position.set(-.1,H-1.24,-D+.031);arena.add(frBandR);
  const sideAccent=new THREE.Mesh(new THREE.BoxGeometry(.03,H-1.2,0.22),new THREE.MeshBasicMaterial({color:theme.accent}));sideAccent.position.set(9.16,(H-1.2)/2+0.46,-D+.11);arena.add(sideAccent);
  const crest=labelSprite('HERRI PILOTA','EUSKARAZ GAMES', '#f0b34a');crest.position.set(4.1,H-2.22,-D+.13);crest.scale.set(6.15,1.92,1);arena.add(crest);
- const sideM=wm.clone();sideM.map=tx.wall.clone();sideM.map.needsUpdate=true;sideM.map.wrapS=sideM.map.wrapT=THREE.RepeatWrapping;sideM.map.repeat.set(5.5,2.6);
+ let sideM;
+ if(egWall)sideM=EG.material('wall',{color:theme.wallHex,repeat:[4.6,1.6],roughness:.8,envMapIntensity:.45});
+ else{sideM=wm.clone();sideM.map=tx.wall.clone();sideM.map.needsUpdate=true;sideM.map.wrapS=sideM.map.wrapT=THREE.RepeatWrapping;sideM.map.repeat.set(5.5,2.6);}
  const left=new THREE.Mesh(new THREE.PlaneGeometry(D+13.4,H-.35),sideM);left.position.set(-9.485,H/2,-D/2+5);left.rotation.y=Math.PI/2;left.receiveShadow=true;arena.add(left);
  /* zócalo inferior: típico desgaste oscuro del frontón */
  const sk=new THREE.MeshStandardMaterial({color:theme.sk,roughness:.72,metalness:0});
@@ -5701,8 +5730,15 @@ if(__hpRoom){setTimeout(()=>hpSimpleJoin(__hpRoom),80);}else{showSplash();}
   });
   function boot(){
     if(started)return;started=true;
-    try{hide();BOOT();}
-    catch(err){started=false;fail('Errorea: '+(err&&err.message?err.message:err));}
+    var go=function(){
+      try{hide();BOOT();}
+      catch(err){started=false;fail('Errorea: '+(err&&err.message?err.message:err));}
+    };
+    /* EGFX: CC0 testura errealak eta zerua (huts eginez gero, testura prozeduralak) */
+    if(window.EGFX&&EGFX.enabled){
+      show('Testurak kargatzen…',false);
+      EGFX.preload(['concrete','wall','dirt','wood','planks','plaster','stone','rock','roof','grass','metal'],['day'],6000).then(go,go);
+    }else go();
   }
   function next(){
     if(window.THREE){boot();return;}

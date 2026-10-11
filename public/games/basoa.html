@@ -7,6 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#05070a">
 <title>BASOA SOLID — Zazpi Zigiluak</title>
+<script src="/assets/egfx.js"></script>
 <meta name="description" content="BASOA SOLID: infiltración táctica y acción vertical de mitología vasca. Gorka White, espada, sigilo, radar y siete sellos bajo el Anboto.">
 <meta property="og:title" content="BASOA SOLID — Zazpi Zigiluak">
 <meta property="og:description" content="Infiltrazio taktikoa. Thriller de espías con mitología vasca: dobles agentes, guerra sucia y siete expedientes lacrados. Ficción.">
@@ -403,6 +404,15 @@ const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x070c10);
 scene.fog=new THREE.Fog(0x070c10,52,150);
 const camera=new THREE.PerspectiveCamera(54,innerWidth/innerHeight,0.5,420);
+/* EGFX: CC0 testura errealak. Eszena berehala eraikitzen da; testurak iristean materialak eguneratzen dira. */
+const EG=(window.EGFX&&EGFX.enabled)?EGFX:null;
+const EGQ=[];let EGOK=false;
+function egLater(fn){if(!EG)return;if(EGOK){try{fn();}catch(e){}}else EGQ.push(fn);}
+function egMat(m,key,o){egLater(()=>EG.apply(m,key,Object.assign({match:true},o||{})));return m;}
+if(EG){EG.setRenderer(renderer);EG.track(scene,renderer,camera);EG.envDefault=0.6;
+  EG.preload(['rock','forest','grass','concrete','stone','planks','bark'],['night'],9000).then(()=>{EGOK=true;
+    if(EG.hasSky('night'))EG.environment(renderer,scene,'night');
+    for(const fn of EGQ.splice(0)){try{fn();}catch(e){}}});}
 const PR=Math.min(devicePixelRatio,2);
 const rt=new THREE.WebGLRenderTarget(innerWidth*PR,innerHeight*PR,
   {minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter});
@@ -723,14 +733,14 @@ function inShadow(){
 
 /* --------- geometría base --------- */
 {
-  const fl=new THREE.Mesh(new THREE.PlaneGeometry(GW*TS+40,GD*TS+40),M(0x1e262c));
+  const fl=new THREE.Mesh(new THREE.PlaneGeometry(GW*TS+40,GD*TS+40),egMat(M(0x1e262c),'forest',{repeat:[46,92]}));
   fl.rotation.x=-Math.PI/2;level.add(fl);
   /* muralla orgánica: columnas de roca facetada con corona de musgo */
   let n=0;for(let z=0;z<GD;z++)for(let x=0;x<GW;x++)if(grid[z][x]===1)n++;
   const wg=new THREE.CylinderGeometry(TS*0.62,TS*0.8,1,7);
-  const walls=new THREE.InstancedMesh(wg,M(0x3c4854),n);
+  const walls=new THREE.InstancedMesh(wg,egMat(M(0x3c4854),'rock',{repeat:[2,1.4],normal:1.3}),n);
   const mg=new THREE.SphereGeometry(TS*0.62,10,7);
-  const caps=new THREE.InstancedMesh(mg,M(0x2a343c),n);
+  const caps=new THREE.InstancedMesh(mg,egMat(M(0x2a343c),'grass',{repeat:[2,1.5],color:0x55705e,normal:1.4,match:false}),n);
   walls.castShadow=walls.receiveShadow=true;caps.castShadow=true;
   const m1=new THREE.Matrix4(),q=new THREE.Quaternion(),e=new THREE.Euler(),v=new THREE.Vector3(),sc=new THREE.Vector3();
   let i=0;
@@ -752,7 +762,7 @@ function inShadow(){
   /* suelos por sector + abismos */
   for(const s of SECTORS){
     const w=(s.x1-s.x0+1)*TS,d=(s.z1-s.z0+1)*TS;
-    const p=new THREE.Mesh(new THREE.PlaneGeometry(w,d),M(s.boss?0x3d2c30:(s.id%2?0x2f3e46:0x28363d)));
+    const p=new THREE.Mesh(new THREE.PlaneGeometry(w,d),egMat(M(s.boss?0x3d2c30:(s.id%2?0x2f3e46:0x28363d)),['forest','concrete','concrete','stone','concrete','planks','rock'][s.id]||'concrete',{repeat:[w/6,d/6]}));
     p.rotation.x=-Math.PI/2;p.position.set(gx2w((s.x0+s.x1)/2),0.04,gz2w((s.z0+s.z1)/2));level.add(p);
   }
   for(let z=0;z<GD;z++)for(let x=0;x<GW;x++){
@@ -820,8 +830,8 @@ function ambientArt(){ try{ (function(){
     level.add(grassIM);
   }catch(e){}
   /* 3 · rocas y tocones al borde de los muros */
-  var rockM = new THREE.MeshStandardMaterial({color:0x2a3540, roughness:0.95, metalness:0.02});
-  var stumpM = new THREE.MeshStandardMaterial({color:0x4a3423, roughness:1, metalness:0});
+  var rockM = egMat(new THREE.MeshStandardMaterial({color:0x2a3540, roughness:0.95, metalness:0.02}),'rock',{repeat:[0.6,0.6]});
+  var stumpM = egMat(new THREE.MeshStandardMaterial({color:0x4a3423, roughness:1, metalness:0}),'bark',{repeat:[1.5,0.5]});
   var capM = new THREE.MeshStandardMaterial({color:0x6a4c33, roughness:1, metalness:0});
   var rocks = 0, stumps = 0;
   for (gz=1; gz<GD-1 && (rocks<55 || stumps<20); gz++) for (gx=1; gx<GW-1; gx++){
@@ -913,7 +923,7 @@ function deco(){
         const hgt=1+Math.floor(RNG()*2);
         const pg=new THREE.Group();
         for(let i=0;i<hgt;i++){
-          const c=new THREE.Mesh(new THREE.BoxGeometry(2.2,2.2,2.2),M(0x7a5f3a));
+          const c=new THREE.Mesh(new THREE.BoxGeometry(2.2,2.2,2.2),egMat(M(0x7a5f3a),'planks',{repeat:[1,1]}));
           c.position.set(0,1.1+i*2.2,0);ink(c,1.04);pg.add(c);
           const band=new THREE.Mesh(new THREE.BoxGeometry(2.3,0.22,2.3),M(0x4a3a22));
           band.position.set(0,1.1+i*2.2,0);pg.add(band);

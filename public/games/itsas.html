@@ -7,6 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#05070a">
 <title>ITSAS DORREA SOLID</title>
+<script src="/assets/egfx.js"></script>
 <meta name="description" content="BASOA SOLID II — ITSAS DORREA: infiltración en una torre marina del golfo de Bizkaia. Gorka White, cinco llaves, un faro que vigila y un chico que viene a sustituirte.">
 <meta property="og:title" content="ITSAS DORREA SOLID">
 <meta property="og:description" content="II. EKITALDIA. Una torre en el mar, cinco llaves y un duelo contra tu propio relevo. Ficción.">
@@ -499,6 +500,15 @@ const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x070c10);
 scene.fog=new THREE.Fog(0x070c10,52,150);
 const camera=new THREE.PerspectiveCamera(54,innerWidth/innerHeight,0.5,420);
+/* EGFX: CC0 testura errealak. Eszena berehala eraikitzen da; testurak iristean materialak eguneratzen dira. */
+const EG=(window.EGFX&&EGFX.enabled)?EGFX:null;
+const EGQ=[];let EGOK=false;
+function egLater(fn){if(!EG)return;if(EGOK){try{fn();}catch(e){}}else EGQ.push(fn);}
+function egMat(m,key,o){egLater(()=>EG.apply(m,key,Object.assign({match:true},o||{})));return m;}
+if(EG){EG.setRenderer(renderer);EG.track(scene,renderer,camera);EG.envDefault=0.6;
+  EG.preload(['rock','forest','grass','concrete','stone','planks','bark','metal','rust','corrugated','water'],['night'],9000).then(()=>{EGOK=true;
+    if(EG.hasSky('night'))EG.environment(renderer,scene,'night');
+    for(const fn of EGQ.splice(0)){try{fn();}catch(e){}}});}
 const PR=Math.min(devicePixelRatio,2);
 const rt=new THREE.WebGLRenderTarget(innerWidth*PR,innerHeight*PR,
   {minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter});
@@ -821,14 +831,14 @@ function inShadow(){
 
 /* --------- geometría base --------- */
 if(ACT1){
-  const fl=new THREE.Mesh(new THREE.PlaneGeometry(GW*TS+40,GD*TS+40),M(0x1e262c));
+  const fl=new THREE.Mesh(new THREE.PlaneGeometry(GW*TS+40,GD*TS+40),egMat(M(0x1e262c),'forest',{repeat:[46,92]}));
   fl.rotation.x=-Math.PI/2;level.add(fl);
   /* muralla orgánica: columnas de roca facetada con corona de musgo */
   let n=0;for(let z=0;z<GD;z++)for(let x=0;x<GW;x++)if(grid[z][x]===1)n++;
   const wg=new THREE.CylinderGeometry(TS*0.62,TS*0.8,1,7);
-  const walls=new THREE.InstancedMesh(wg,M(0x3c4854),n);
+  const walls=new THREE.InstancedMesh(wg,egMat(M(0x3c4854),'rock',{repeat:[2,1.4],normal:1.3}),n);
   const mg=new THREE.SphereGeometry(TS*0.62,10,7);
-  const caps=new THREE.InstancedMesh(mg,M(0x2a343c),n);
+  const caps=new THREE.InstancedMesh(mg,egMat(M(0x2a343c),'grass',{repeat:[2,1.5],color:0x55705e,normal:1.4,match:false}),n);
   walls.castShadow=walls.receiveShadow=true;caps.castShadow=true;
   const m1=new THREE.Matrix4(),q=new THREE.Quaternion(),e=new THREE.Euler(),v=new THREE.Vector3(),sc=new THREE.Vector3();
   let i=0;
@@ -850,7 +860,7 @@ if(ACT1){
   /* suelos por sector + abismos */
   for(const s of SECTORS){
     const w=(s.x1-s.x0+1)*TS,d=(s.z1-s.z0+1)*TS;
-    const p=new THREE.Mesh(new THREE.PlaneGeometry(w,d),M(s.boss?0x3d2c30:(s.id%2?0x2f3e46:0x28363d)));
+    const p=new THREE.Mesh(new THREE.PlaneGeometry(w,d),egMat(M(s.boss?0x3d2c30:(s.id%2?0x2f3e46:0x28363d)),['forest','concrete','concrete','stone','concrete','planks','rock'][s.id]||'concrete',{repeat:[w/6,d/6]}));
     p.rotation.x=-Math.PI/2;p.position.set(gx2w((s.x0+s.x1)/2),0.04,gz2w((s.z0+s.z1)/2));level.add(p);
   }
   for(let z=0;z<GD;z++)for(let x=0;x<GW;x++){
@@ -955,7 +965,7 @@ function deco(){
         const hgt=1+Math.floor(RNG()*2);
         const pg=new THREE.Group();
         for(let i=0;i<hgt;i++){
-          const c=new THREE.Mesh(new THREE.BoxGeometry(2.2,2.2,2.2),M(0x7a5f3a));
+          const c=new THREE.Mesh(new THREE.BoxGeometry(2.2,2.2,2.2),egMat(M(0x7a5f3a),'planks',{repeat:[1,1]}));
           c.position.set(0,1.1+i*2.2,0);ink(c,1.04);pg.add(c);
           const band=new THREE.Mesh(new THREE.BoxGeometry(2.3,0.22,2.3),M(0x4a3a22));
           band.position.set(0,1.1+i*2.2,0);pg.add(band);
@@ -3212,6 +3222,8 @@ function a2Sky(){
   hemi.color.setHex(0x8fe4ff);hemi.groundColor.setHex(0x1d4a6b);hemi.intensity=0.9;
   keyL.color.setHex(0xffd9a0);keyL.intensity=1.35;keyL.position.set(-40,52,-30);
   rimL.color.setHex(0x35e0d8);rimL.intensity=1.0;
+  /* 04:12 — egunsentia baino lehen: gaueko zerua islatzen du itsasoak */
+  egLater(()=>{if(EG.hasSky('night'))EG.environment(renderer,scene,'night');});
 }
 function a2Dome(){
   const cv=document.createElement('canvas');cv.width=8;cv.height=256;
@@ -3264,6 +3276,8 @@ function a2Sea(){
     new THREE.MeshBasicMaterial({color:0x4fd8e8,transparent:true,opacity:0.22,depthWrite:false,
       blending:THREE.AdditiveBlending}));
   gl.rotation.x=-Math.PI/2;gl.position.y=-0.9;level.add(gl);
+  egLater(()=>{const w=EG.water({color:0x06253a,roughness:0.26,metalness:0.5,normal:0.5,repeat:[48,48],envMapIntensity:1.6,speed:1.2});
+    if(w){sea.material=w;gl.material.opacity=0.035;}});
   /* boyas del perímetro */
   for(let i=0;i<10;i++){
     const a=i/10*Math.PI*2+0.4,r=(GD*TS/2)*0.62+RNG()*30;
@@ -3292,7 +3306,7 @@ function a2Floor(){
   for(let z=0;z<GD;z++)for(let x=0;x<GW;x++)if(grid[z][x]===0)cells.push([x,z]);
   const geo=new THREE.BoxGeometry(TS,0.5,TS);
   const im=new THREE.InstancedMesh(geo,
-    new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.72,metalness:0.45}),cells.length);
+    egMat(new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.72,metalness:0.45}),'metal',{repeat:[1.5,1.5],roughness:0.62}),cells.length);
   im.receiveShadow=true;
   const m4=new THREE.Matrix4(),q=new THREE.Quaternion(),v=new THREE.Vector3(),s=new THREE.Vector3(1,1,1);
   const col=new THREE.Color();
@@ -3313,6 +3327,7 @@ function a2Floor(){
     const disc=new THREE.Mesh(new THREE.PlaneGeometry(w*1.06,dd*1.06),
       new THREE.MeshBasicMaterial({color:HUE[s.id],transparent:true,opacity:0.13,
         depthWrite:false,blending:THREE.AdditiveBlending}));
+    egLater(()=>{disc.material.opacity=0.06;});
     disc.rotation.x=-Math.PI/2;
     disc.position.set(gx2w((s.x0+s.x1)/2),0.09,gz2w((s.z0+s.z1)/2));
     level.add(disc);
@@ -3359,7 +3374,7 @@ function a2Floor(){
   /* pilotes bajo cada sector */
   for(const s of SECTORS){
     for(const gx of [s.x0+1,s.x1-1])for(const gz of [s.z0+1,s.z1-1]){
-      const p=new THREE.Mesh(new THREE.CylinderGeometry(1.15,1.35,26,10),M(0x1d4a63));
+      const p=new THREE.Mesh(new THREE.CylinderGeometry(1.15,1.35,26,10),egMat(M(0x1d4a63),'rust',{repeat:[2,6]}));
       p.position.set(gx2w(gx),-13.4,gz2w(gz));level.add(p);
       const rust=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,1.6,10),M(0x8a5a2a));
       rust.position.set(gx2w(gx),-1.4,gz2w(gz));level.add(rust);
@@ -3370,7 +3385,7 @@ function a2Catwalk(L){
   const a=A2_SECTORS[L.a],b=A2_SECTORS[L.b];
   const z0=b.z1+1,z1=a.z0-1;
   const len=(z1-z0+1)*TS, cz=gz2w((z0+z1)/2), cx=gx2w(L.x)+TS/2;
-  const deck=new THREE.Mesh(new THREE.BoxGeometry(TS*2.2,0.35,len),MET(0x54798c));
+  const deck=new THREE.Mesh(new THREE.BoxGeometry(TS*2.2,0.35,len),egMat(MET(0x54798c),'metal',{repeat:[1.2,len/4]}));
   deck.position.set(cx,-0.1,cz);deck.receiveShadow=true;level.add(deck);
   for(const sx of [-1,1]){
     const rail=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.12,len),MET(0xa8cadb));
@@ -3396,7 +3411,7 @@ function a2Block(gx,gz,gw,gd,h,col,metalness){
     if(x>=0&&x<GW&&z>=0&&z<GD&&grid[z][x]===0)grid[z][x]=1;
   const w=gw*TS,d=gd*TS;
   const x=gx2w(gx)+(gw-1)*TS/2, z=gz2w(gz)+(gd-1)*TS/2;
-  const mat=metalness?MET(col):M(col);
+  const mat=metalness?egMat(MET(col),'metal',{repeat:[w/4,h/4]}):egMat(M(col),'corrugated',{repeat:[w/3,1]});
   const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
   m.position.set(x,h/2,z);m.castShadow=m.receiveShadow=true;level.add(m);
   return m;
@@ -3758,6 +3773,7 @@ function startAct2(){
 function updateAct2(dt){
   A2.t+=dt;
   if(A2.seaTex){A2.seaTex.offset.x+=dt*0.012;A2.seaTex.offset.y+=dt*0.02;}
+  if(EG)EG.update(dt);
   if(A2.foamMat)A2.foamMat.opacity=0.22+Math.sin(A2.t*1.6)*0.12;
   for(const b of A2.buoys){
     b.g.position.y=-0.8+Math.sin(A2.t*1.3+b.ph)*0.4;

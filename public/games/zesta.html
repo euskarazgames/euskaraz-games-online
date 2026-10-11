@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>ZESTA PUNTA · EUSKARAZ GAMES</title>
+<script src="/assets/egfx.js"></script>
 <meta property="og:title" content="ZESTA PUNTA">
 <meta property="og:description" content="KARRERA: lau gimnasio, lau txapela eta euskal herri kirolak.">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1086,9 +1087,13 @@ renderer.shadowMap.enabled=true;
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure=1.14;
+const EG=(window.EGFX&&EGFX.enabled&&EGFX.ready)?EGFX:null;
+if(EG){EG.setRenderer(renderer);EG.envDefault=0.55;}
+let egSky=null;
 $('gl').appendChild(renderer.domElement);
 const scene=new THREE.Scene();
 (function(){
+if(EG&&EG.hasSky('day')){egSky=EG.skyRig(renderer,scene,'day',980,{yaw:-0.9});if(egSky)return;}
 const cv=document.createElement('canvas');cv.width=32;cv.height=256;
 const c=cv.getContext('2d');
 const g=c.createLinearGradient(0,0,0,256);
@@ -1101,9 +1106,12 @@ new THREE.MeshBasicMaterial({map:t,side:THREE.BackSide,fog:false}));
 scene.add(sky);
 })();
 scene.fog=new THREE.Fog(0xbcdcea,160,740);
+if(egSky)scene.fog.color.copy(EG.horizon('day')).lerp(new THREE.Color(0xbcdcea),0.3);
 const camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,0.1,1200);
+if(EG)EG.track(scene,renderer,camera);
 camera.position.set(0,14,22);
 const hemi=new THREE.HemisphereLight(0xe4f2ff,0x40603c,0.92);scene.add(hemi);
+if(egSky)hemi.intensity=0.55;
 const sunL=new THREE.DirectionalLight(0xffe9c4,1.42);
 sunL.position.set(-48,70,36);sunL.castShadow=true;
 sunL.shadow.mapSize.set(2048,2048);
@@ -1411,8 +1419,21 @@ MT.furDark=texFur('#7a4a1e','rgba(150,96,40,0.5)');
 MT.cloth=texCloth('#ffffff');MT.water=texWater();MT.leaf=texLeaf();
 MT.thorn=texThornLeaf();MT.mount=texMountain();
 MT.ikur=ikurrinaTex();MT.lauburu=lauburuTex();MT.egu=eguzkiloreTex();
+for(const[k,e]of[['grass','grass'],['dirt','dirt'],['stone','stone'],['rock','rock'],['wood','wood'],['woodDark','planks'],['plaster','plaster'],['tile','roof'],['mount','rock']])if(MT[k])MT[k].egKey=e;
 }
+/* EGFX: testura bakoitzaren eskala (zenbat aldiz errepikatu argazkia, prozeduralaren aldean) */
+const EG_SCALE={grass:1.5,dirt:1,stone:0.8,rock:0.6,wood:1,planks:1,plaster:1,roof:0.9,concrete:1,wall:1,bark:1};
 function MX(tex,col,r,rx,ry){
+const ek=tex&&tex.egKey;
+if(EG&&ek&&EG.has(ek))return MXK(ek,tex,col,r,rx,ry);
+return MX0(tex,col,r,rx,ry);
+}
+/* MXK: CC0 material zehatz bat (adib. 'bark', 'wall'), edo prozedurala ez badago */
+function MXK(key,tex,col,r,rx,ry,o){
+if(EG&&EG.has(key)){const sc=EG_SCALE[key]||1;const m=EG.material(key,Object.assign({color:col===undefined?0xffffff:col,roughness:r===undefined?0.92:r,repeat:[(rx||1)*sc,(ry||rx||1)*sc]},o||{}));if(m)return m;}
+return MX0(tex,col,r,rx,ry);
+}
+function MX0(tex,col,r,rx,ry){
 return new THREE.MeshStandardMaterial({
 map:rx?rep(tex,rx,ry):tex,color:col===undefined?0xffffff:col,
 roughness:r===undefined?0.92:r,metalness:0.02});
@@ -1744,7 +1765,7 @@ return g;
 function buildPerson(shirt,pant,crook){return humanRig({shirt,pant,crook});}
 function buildTree(){
 const g=new THREE.Group();
-const t=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.45,3.6,8),MX(MT.wood,0x8a6a44,0.96,1,3));
+const t=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.45,3.6,8),MXK('bark',MT.wood,0xc8b8a4,0.96,1,1.6));
 t.position.y=1.8;t.castShadow=true;g.add(t);
 const lm=MX(MT.leaf,0xffffff,0.98,2,2);
 for(let i=0;i<3;i++){
@@ -2578,14 +2599,15 @@ function buildHub(){
 texInit();
 const gr=new THREE.Mesh(new THREE.PlaneGeometry(1080,1080),MX(MT.grass,0xffffff,0.98,205,205));
 gr.rotation.x=-Math.PI/2;gr.receiveShadow=true;hub.add(gr);
-for(let i=0;i<16;i++){
+if(EG){const eg0=EG.ground('grass',1500,{color:0xb8cc98,tile:4});if(eg0)world.add(eg0);world.add(EG.mountains({inner:330,outer:700,height:150,seed:11,low:0x86a860,mid:0x5d8a4a,rock:0x9c9a8e,albedo:false}));}
+else for(let i=0;i<16;i++){
 const a=i/16*Math.PI*2+RNG()*0.2;
 const rad=450+RNG()*130,hh=34+RNG()*52,rr=34+RNG()*30;
 const m=new THREE.Mesh(new THREE.ConeGeometry(rr,hh,7),
 MX(i%3?MT.leaf:MT.mount,i%3?0x9fb890:0xffffff,0.98,5,4));
 m.position.set(Math.cos(a)*rad,hh/2-3,Math.sin(a)*rad);world.add(m);
 }
-for(let i=0;i<12;i++){
+for(let i=0;i<(egSky?0:12);i++){
 const c=new THREE.Mesh(new THREE.SphereGeometry(7+RNG()*7,10,7),
 new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0.85,fog:false}));
 c.scale.y=0.34;c.position.set((RNG()-0.5)*740,62+RNG()*30,(RNG()-0.5)*740);world.add(c);
@@ -2691,7 +2713,9 @@ a.userData.spec=true;spectators.push(a);arena.add(a);
 }
 function buildCourt(D,H,FY,cuadros,PASS){
 PASS=PASS||4.6;
-groundPatch(20,D+26,MT.dirt,7,0xd8c8a8,0,2);
+if(EG&&EG.has('concrete')){const cf=new THREE.Mesh(new THREE.PlaneGeometry(20,D+26),MXK('concrete',MT.dirt,0x8f7d60,0.9,4,(D+26)/5,{envMapIntensity:0.18}));
+cf.rotation.x=-Math.PI/2;cf.position.set(0,0.03,2);cf.receiveShadow=true;arena.add(cf);}
+else groundPatch(20,D+26,MT.dirt,7,0xd8c8a8,0,2);
 /* KONTRAKANTXA: egurrezko pasabidea kantxa eta harmailen artean */
 (function(){
 const wm=MX(MT.wood,0xa87f4e,0.9,4,10);
@@ -2704,11 +2728,11 @@ const ed=new THREE.Mesh(new THREE.BoxGeometry(w||0.12,0.06,d2||0.12),M(0x6b4a2c,
 ed.position.set(x,0.08,z);arena.add(ed);
 }
 })();
-const wall=new THREE.Mesh(new THREE.BoxGeometry(20.5,H,1),MX(MT.plaster,0xffffff,0.9,5,4));
+const wall=new THREE.Mesh(new THREE.BoxGeometry(20.5,H,1),MXK('wall',MT.plaster,0xffffff,0.9,5,4));
 wall.position.set(0,H/2,-D-0.5);wall.receiveShadow=true;arena.add(wall);
 const ln=new THREE.Mesh(new THREE.BoxGeometry(20.5,0.3,0.16),B(0xd21c1c));
 ln.position.set(0,FY,-D+0.07);arena.add(ln);
-const side=new THREE.Mesh(new THREE.BoxGeometry(1,H,D+14),MX(MT.plaster,0xffffff,0.9,6,5));
+const side=new THREE.Mesh(new THREE.BoxGeometry(1,H,D+14),MXK('wall',MT.plaster,0xffffff,0.9,6,5));
 side.position.set(-10,H/2,-D/2+5);side.receiveShadow=true;arena.add(side);
 if(cuadros){
 /* ---- KOADROAK: zenbakiak kantxa osoan zehar, Bizkaia frontoiaren erara ----
@@ -4314,6 +4338,9 @@ laino  :{grass:0x9cb894,stripe:0x8aa884,sky:0xc9d6d4,fog:[26,86], sun:0.72,tint:
 };
 const A=AMB[this.amb||'eguerdi']||AMB.eguerdi;
 if(scene.fog){scene.fog.color.setHex(A.sky);scene.fog.near=A.fog[0];scene.fog.far=A.fog[1];}
+/* EGFX: zerua giroaren arabera (goiza/eguerdia → eguna, arratsaldea → ilunabarra, lainoa → hodeitsua) */
+if(egSky){const sk={goiz:'day',eguerdi:'day',arrats:'dusk',haize:'day',laino:'overcast'}[this.amb||'eguerdi']||'day';
+const hc=egSky.set(sk);if(hc&&scene.fog)scene.fog.color.copy(hc).lerp(new THREE.Color(A.sky),this.amb==='laino'?0.75:0.35);}
 if(typeof sunL!=='undefined'&&sunL){sunL.intensity=A.sun;sunL.color.setHex(A.tint);}
 groundPatch(104,104,MT.grass,22,A.grass,0,0);
 /* segatutako marrak: ardiak nabarmentzeko */
@@ -8495,8 +8522,15 @@ frame();
   });
   function boot(){
     if(started)return;started=true;
-    try{hide();BOOT();}
-    catch(err){started=false;fail('Errorea: '+(err&&err.message?err.message:err));}
+    var go=function(){
+      try{hide();BOOT();}
+      catch(err){started=false;fail('Errorea: '+(err&&err.message?err.message:err));}
+    };
+    /* EGFX: CC0 testura errealak eta zerua (huts eginez gero, testura prozeduralak) */
+    if(window.EGFX&&EGFX.enabled){
+      show('Testurak kargatzen…',false);
+      EGFX.preload(['grass','dirt','concrete','wall','wood','planks','plaster','stone','rock','roof','bark'],['day','dusk','overcast'],6000).then(go,go);
+    }else go();
   }
   function next(){
     if(window.THREE){boot();return;}
