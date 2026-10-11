@@ -163,6 +163,9 @@
     if (!Z || CRAFT.on || !started || paused || cinematic) return false;
     CRAFT.on = true;
     CRAFT.zone = Z;
+    /* kamera-trantsizioa uneko kameratik abiatu */
+    CRAFT.camPos.copy(camera.position);
+    CRAFT.camLook.set(P.x, P.y + 1, P.z);
     clearInput();
     document.body.classList.add("crafting");
     coachHide();
@@ -368,10 +371,6 @@
       pos = c.clone().add(new T.Vector3(7, mobile && innerHeight > innerWidth ? 30 : 22, 17));
     CRAFT.camPos.lerp(pos, 1 - Math.exp(-dt * 4));
     CRAFT.camLook.lerp(c, 1 - Math.exp(-dt * 4));
-    if (CRAFT.camPos.lengthSq() < 1) {
-      CRAFT.camPos.copy(camera.position);
-      CRAFT.camLook.copy(c);
-    }
     camera.position.copy(CRAFT.camPos);
     camera.lookAt(CRAFT.camLook);
   }

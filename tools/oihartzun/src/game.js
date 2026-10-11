@@ -3067,8 +3067,8 @@
       "OIHARTZUN",
       "Bi garaien artean.",
       "Entre dos épocas.",
-      "Mugitu: WASD edo makila. Jauzi: Espazioa. Garaia aldatu: Q. Ekintza: E.\n\nURDINA: oraina. URREA: iragana. Zubi bakoitza bere garaian bakarrik da sendoa. Lerro meheek falta dena erakusten dute.\n\nJAUZI BIKOITZA: sakatu Espazioa bi aldiz. DASH (F): lurrean edo airean. EHUNDU (C): gertuko zubia bi garaietan sendo bihurtu, 12 segundoz. ATZERA (V): duela une bateko lur segurura itzuli. Bigarren uhartetik Q-k aireko DASH berreskuratzen du.\n\nErortzen bazara, azken uhartera berehala itzuliko zara. Laguntza modua pausaren menuan dago.\n\nKORRIKA: Shift edo makila ertzera. JAUZI mantendu gorago igotzeko; askatu laburrago egiteko. G: esku magikoa. X: igo plataformen azpitik. Z: 5 segundo gelditu. H: botere guztiak.",
-      "Mover: WASD o palanca. Saltar: Espacio. Cambiar de época: Q. Actuar: E.\n\nAZUL: presente. ORO: pasado. Cada puente solo es sólido en su época. Las líneas tenues muestran lo que falta.\n\nDOBLE SALTO: pulsa Espacio dos veces. DASH (F): suelo o aire. TEJER (C): materializa el puente cercano en ambas épocas durante 12 segundos. RETORNO (V): vuelve a un suelo seguro reciente. Desde la segunda isla, Q recupera el DASH aéreo.\n\nSi caes, vuelves enseguida a la última isla. El modo de ayuda está en el menú de pausa.\n\nCORRER: Shift o palanca al máximo. Mantén SALTAR para subir más; suelta para un salto corto. G: mano mágica. X: ascender bajo plataformas. Z: estasis de 5 segundos. H: todos los poderes.",
+      "Uharte bakoitza Gauekoren kaiola da: ezin zara erori, eta irteera erronka gainditzean irekitzen da. Uharteak txandaka: BORROKA eta ERAIKUNTZA.\n\nMUGITU: WASD edo makila (ertzeraino: korrika). JAUZI: Espazioa, bi aldiz airean. DASH (F): bultzada; bitartean ukiezina zara.\n\nERASO: J, saguaren klika edo ERASO botoia. Sakatuta: hiru kolpeko konboa (hirugarrena birakaria). DASH-aren ondoren erasotzean, kolpe indartsua.\n\nGARAIA (Q): URREA iragana da, URDINA oraina. Zubi bakoitza bere garaian bakarrik da sendoa. Itzalek begien koloreko garaian bakarrik hartzen dute kalte: beste garaian ezkutua dute. Garaia aldatzean, inguruko itzalak bultzatzen dituzu.\n\nESKU MAGIKOA (G edo ESKU): ukitu kaxa bat eta arrastatu; ukitu laburrak biratu egiten du. Kaxa bat beste baten gainean utziz gero, pilatu egiten dira; ondoan utziz gero, itsatsi. Errunara iristeko eskailerak eraiki.\n\nZubitik erortzean, azken lur seguruan berragertzen zara (bizitza bat). EHUNDU (C), ATZERA (V), IGO (X) eta GELDITU (Z): botereen menuan (H).",
+      "Cada isla es una jaula de Gaueko: no puedes caerte, y la salida se abre al superar su reto. Las islas se alternan: COMBATE y CONSTRUCCIÓN.\n\nMOVER: WASD o palanca (al máximo: correr). SALTAR: Espacio, dos veces en el aire. DASH (F): impulso; durante el DASH eres invulnerable.\n\nATACAR: J, clic o el botón ATACAR. Mantén pulsado: combo de tres golpes (el tercero gira). Atacar justo después del DASH da un golpe fuerte.\n\nÉPOCA (Q): el ORO es el pasado, el AZUL el presente. Cada puente solo es sólido en su época. Las sombras solo reciben daño en la época del color de sus ojos: en la otra tienen escudo. Al cambiar de época empujas a las sombras cercanas.\n\nMANO MÁGICA (G o MANO): toca una caja y arrástrala; un toque corto la gira. Si la sueltas sobre otra, se apilan; si la dejas al lado, se unen. Construye escaleras para llegar a la runa.\n\nSi caes de un puente, reapareces en el último suelo seguro (pierdes una vida). TEJER (C), RETORNO (V), ASCENDER (X) y ESTASIS (Z): en el menú de poderes (H).",
     );
   }
   function pause() {
@@ -3288,8 +3288,8 @@
         "BI ALDE · v2",
         "Egileak eta erreferentziak",
         "Autores y referencias",
-        "Pertsonaia, animazioak eta ingurune-modeloak: Kay Lousberg / KayKit, CC0.\nMotorra: Three.js r128, MIT. Jatorrizko ELUR JOKOA modua: Snowflow / Maksymilian Dendura, MIT.\n\nJokoaren kodea, mailen diseinua, itsasoa, musika eta bi garaien sistema bertsio honetarako sortu dira.\n\nDiseinu-erreferentziak: Celeste (mugimenduaren zehaztasuna), Outer Wilds (jakiteko gogoa), Journey (bidaia bisuala). Ez ditu joko horien baliabideak erabiltzen.",
-        "Personaje, animaciones y modelos de entorno: Kay Lousberg / KayKit, CC0.\nMotor: Three.js r128, MIT. Modo ELUR JOKOA original: Snowflow / Maksymilian Dendura, MIT.\n\nCódigo del juego, diseño de niveles, océano, música y sistema de dos épocas creados para esta versión.\n\nReferencias de diseño: Celeste (precisión de movimiento), Outer Wilds (curiosidad), Journey (viaje visual). No utiliza recursos de esos juegos.",
+        "Pertsonaia, animazioak eta ingurune-modeloak: Kay Lousberg / KayKit, CC0.\nMotorra: Three.js r128, MIT. Jatorrizko ELUR JOKOA modua: Snowflow / Maksymilian Dendura, MIT.\n\nJokoaren kodea, mailen diseinua, itsasoa, musika eta bi garaien sistema bertsio honetarako sortu dira.\n\nDiseinu-erreferentziak: Hades (borroka eta musika-geruzak), Zelda: Tears of the Kingdom (eraikuntza), Celeste (mugimenduaren zehaztasuna), Outer Wilds (jakiteko gogoa). Ez ditu joko horien baliabideak erabiltzen: musika eta soinu guztiak jokoak berak sortzen ditu.",
+        "Personaje, animaciones y modelos de entorno: Kay Lousberg / KayKit, CC0.\nMotor: Three.js r128, MIT. Modo ELUR JOKOA original: Snowflow / Maksymilian Dendura, MIT.\n\nCódigo del juego, diseño de niveles, océano, música y sistema de dos épocas creados para esta versión.\n\nReferencias de diseño: Hades (combate y música por capas), Zelda: Tears of the Kingdom (construcción), Celeste (precisión de movimiento), Outer Wilds (curiosidad). No utiliza recursos de esos juegos: toda la música y el sonido los genera el propio juego.",
       );
     /* ELUR JOKOA: jatorrizko modua bere orrian dago (/games/elur.html), ez fitxategi honen barruan. */
     if (location.protocol === "file:") $("legacy").hidden = true;
@@ -3428,7 +3428,11 @@
     damageTime = Math.max(0, damageTime - dt);
     if (respawnTimer > 0) {
       respawnTimer -= dt;
-      if (respawnTimer <= 0) hardFall ? returnCheckpoint() : softRespawn();
+      if (respawnTimer <= 0) {
+        /* zero zehatza: balio negatibo txiki batek "egia" emango luke eta DASH, garaia… blokeatuko lituzke */
+        respawnTimer = 0;
+        hardFall ? returnCheckpoint() : softRespawn();
+      }
     } else {
       updateWorld(dt);
       if (!ascent) move(dt);
@@ -4611,6 +4615,8 @@
         SAFE,
         TRIALS,
         attack,
+        ATK,
+        dbg: () => ({ started, paused, ascent: !!ascent, respawnTimer, craft: CRAFT.on, cinematic: !!cinematic }),
         spawnEnemy,
         spawnWave,
         playerHit,

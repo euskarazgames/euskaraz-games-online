@@ -24,13 +24,16 @@ texturas de siempre. En móviles lentos la calidad se ajusta sola. Opciones en l
 - `?gfx=high`: calidad máxima siempre.
 
 ## OIHARTZUN
-Plataformas 3D con dos épocas: el pasado (atardecer, mar vivo) y el presente (noche, mar helado).
-Cada puente existe solo en su época; en el presente las olas que inundaron el pueblo están congeladas
-y se puede caminar sobre ellas. Seis islas, cinco recuerdos, tres campanas opcionales (retos de
-dificultad creciente), un jefe final con tres fases y cuatro finales con su propia secuencia.
-- Prueba de errores: `node tools/test/errcheck.js http://127.0.0.1:8091/games/oihartzun.html 12000`
-- Prueba de recorridos (un bot completa los retos con la física real del juego):
-  `node tools/test/oihartzun_routes.js http://127.0.0.1:8091/games/oihartzun.html`
+Acción y puzles en 3D con dos épocas: el pasado (atardecer, mar vivo) y el presente (noche, mar helado).
+Cada isla es una jaula: no se puede caer de ella y la salida se abre al superar su reto. Las islas
+alternan **combate** (combo con autoapuntado, dash invulnerable, sombras que solo se hieren en su época)
+y **construcción** (cajas que se tocan, arrastran, giran, apilan y pegan, estilo «Ultrahand», para
+llegar a una runa). Jefe final con tres fases y refuerzos, cuatro finales, tres campanas opcionales.
+La música es una banda épica sintetizada en tiempo real por capas (exploración, combate, jefe).
+- Código fuente legible: `tools/oihartzun/src/` → `python3 tools/oihartzun/build.py`
+- Versión de un solo archivo: `python3 tools/oihartzun/standalone.py /tmp/OIHARTZUN.html`
+- Pruebas: `tools/test/oihartzun_routes.js` (recorridos y puzles con la física real),
+  `tools/test/oihartzun_combat.js` (un bot supera las arenas), `tools/test/errcheck.js`.
 
 ## Cloudflare
 - Worker name: `euskaraz-games-online`

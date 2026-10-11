@@ -28,4 +28,5 @@ npx http-server public -p 8091 -c-1 -s &
 NODE_PATH=$(npm root -g) node tools/test/errcheck.js http://127.0.0.1:8091/games/pilota.html 9000
 NODE_PATH=$(npm root -g) node tools/test/shot.js http://127.0.0.1:8091/ /tmp/ataria 390 844 3000
 NODE_PATH=$(npm root -g) node tools/test/oihartzun_routes.js http://127.0.0.1:8091/games/oihartzun.html
+NODE_PATH=$(npm root -g) node tools/test/oihartzun_combat.js http://127.0.0.1:8091/games/oihartzun.html
 ```
