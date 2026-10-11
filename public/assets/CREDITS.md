@@ -20,6 +20,7 @@ Jatorrizko material guztiak **CC0** (domeinu publikoa) lizentziakoak dira.
 | `tex/rust_*.jpg` | Poly Haven | [rusty_metal_02](https://polyhaven.com/a/rusty_metal_02) |
 | `tex/corrugated_*.jpg` | Poly Haven | [corrugated_iron](https://polyhaven.com/a/corrugated_iron) |
 | `tex/granite_*.jpg` | Poly Haven | [granite_tile_04](https://polyhaven.com/a/granite_tile_04) |
+| `tex/cliff_*.jpg` | Poly Haven | [cliff_side](https://polyhaven.com/a/cliff_side) |
 | `tex/bark_*.jpg` | Poly Haven | [bark_brown_02](https://polyhaven.com/a/bark_brown_02) |
 | `tex/snow_*.jpg` | Poly Haven | [snow_02](https://polyhaven.com/a/snow_02) |
 | `tex/sand_*.jpg` | Poly Haven | [coast_sand_01](https://polyhaven.com/a/coast_sand_01) |
