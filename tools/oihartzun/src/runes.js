@@ -83,7 +83,7 @@
     haptic(50);
     P.hp = P.maxHp;
     hud();
-    if (BOONS.some((b) => !saved.boons.includes(b[0]))) setTimeout(() => offerBoon(set.D.island), 900);
+    if (BOONS.some((b) => !saved.boons.includes(b[0]))) STORY.boonQ = { i: set.D.island, t: 0.9 };
     else notify("Argiak zure arnasa berritu du.", "La luz ha renovado tu aliento.", 3);
   }
   function runePuzzlesUpdate(dt) {

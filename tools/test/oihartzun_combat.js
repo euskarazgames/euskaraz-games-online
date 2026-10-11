@@ -19,6 +19,8 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
       g.input.x = 0.83 * dx - 0.557 * dz;
       g.input.z = 0.557 * dx + 0.83 * dz;
     }
+    /* sariaren elkarrizketa itxi (badago) */
+    const closeDialog = () => { const b = document.querySelector('#choices button'); if (b && !document.getElementById('overlay').hidden) b.click(); };
     function fight(island, cp, label) {
       g.saved.stage = Math.max(g.saved.stage, island);
       g.teleport(cp[0], cp[1], g.ISLANDS[island].y);
@@ -26,8 +28,9 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
       let t = 0, atkT = 0, hpLost = 0, lastHp = P.hp, maxEn = 0, switches = 0, dashes = 0, bolts0 = g.ATK.n, charges = 0, spins = 0;
       const startDeaths = g.saved.deaths;
       while (t < 150) {
-        /* eszenak (misterioak) ez dute bot-a geldiarazi behar */
+        /* eszenak (misterioak) eta sarien elkarrizketak ez dute bot-a geldiarazi behar */
         if (g.cinematicState()) g.endScene();
+        closeDialog();
         t += 1 / 120;
         atkT -= 1 / 120;
         const A = g.ARENA;
@@ -66,8 +69,6 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
       out.push({ label, cleared: g.isCleared(island), secs: +t.toFixed(1), hpLost, deaths: g.saved.deaths - startDeaths, maxEnemies: maxEn, switches, dashes, bolts: g.ATK.n - bolts0, charges, spins, bestChain: g.MAG.best, gateOpen: g.CAGES[island].gates.filter((x) => x.kind !== 'in').every((x) => x.open) });
     }
     fight(0, [0, 29], 'I0 tutoriala');
-    /* sariaren elkarrizketa itxi (badago) */
-    const closeDialog = () => { const b = document.querySelector('#choices button'); if (b && !document.getElementById('overlay').hidden) b.click(); };
     closeDialog();
     fight(2, [31, -53], 'I2 arena');
     closeDialog();

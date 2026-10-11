@@ -6516,11 +6516,14 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     g.add(parts.shield);
     return { g, body, rigid, eye, shine, mixer, actions, anim: "", skel: true, ...parts };
   }
+  /* geometria partekatuak (etsai bakoitzak materialak bakarrik ditu bereak) */
+  const EGEO = {};
+  const egeo = (k, f) => EGEO[k] || (EGEO[k] = f());
   /* garai-ezkutua, aura eta bizitza-barra (bi ereduentzat) */
   function enemyExtras(type, era, R, cy) {
     const col = ERA_COL[era < 0 ? 2 : era];
     const shield = new T.Mesh(
-      new T.IcosahedronGeometry(1, 3),
+      egeo("shield", () => new T.IcosahedronGeometry(1, 3)),
       new T.ShaderMaterial({
         transparent: true,
         depthWrite: false,
@@ -6533,16 +6536,16 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     shield.material.opacity = 0;
     shield.scale.set(R, R * 1.25, R);
     shield.position.y = cy;
-    const aura = new T.Mesh(new T.RingGeometry(EN_DEF[type].r * 0.9, EN_DEF[type].r * 1.25, 28), new T.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.7, depthWrite: false }));
+    const aura = new T.Mesh(egeo("aura" + type, () => new T.RingGeometry(EN_DEF[type].r * 0.9, EN_DEF[type].r * 1.25, 28)), new T.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.7, depthWrite: false }));
     aura.rotation.x = -PI / 2;
-    const blob = new T.Mesh(new T.PlaneGeometry(1, 1), new T.MeshBasicMaterial({ map: glowTexture, color: "#000000", transparent: true, opacity: 0.55, depthWrite: false }));
+    const blob = new T.Mesh(egeo("blob", () => new T.PlaneGeometry(1, 1)), new T.MeshBasicMaterial({ map: glowTexture, color: "#000000", transparent: true, opacity: 0.55, depthWrite: false }));
     /* auraren barruan (dagoeneko etzanda): z lokala = gora */
     blob.scale.setScalar(EN_DEF[type].r * 2.6);
     blob.position.z = -0.02;
     aura.add(blob);
     const bar = new T.Group(),
-      bg = new T.Mesh(new T.PlaneGeometry(1, 0.11), new T.MeshBasicMaterial({ color: "#16091f", transparent: true, opacity: 0.75, depthTest: false })),
-      fg = new T.Mesh(new T.PlaneGeometry(1, 0.11), new T.MeshBasicMaterial({ color: col, depthTest: false }));
+      bg = new T.Mesh(egeo("bar", () => new T.PlaneGeometry(1, 0.11)), new T.MeshBasicMaterial({ color: "#16091f", transparent: true, opacity: 0.75, depthTest: false })),
+      fg = new T.Mesh(egeo("bar", () => new T.PlaneGeometry(1, 0.11)), new T.MeshBasicMaterial({ color: col, depthTest: false }));
     fg.position.z = 0.001;
     bar.add(bg, fg);
     bar.renderOrder = fg.renderOrder = bg.renderOrder = 9;
@@ -6637,19 +6640,38 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     fxBurst(x, y + 0.2, z, { n: 14, speed: 2.5, up: 3, life: 0.7, size: 0.3, color: "#6d28c9", grav: 2 });
     return e;
   }
+  /* GPU memoria askatu: materialak, hezurduren testurak (geometria partekatuak ez) */
   function removeEnemy(e) {
     scene.remove(e.g, e.aura, e.bar);
     e.body.dispose();
     e.eye.dispose();
     if (e.rigid) e.rigid.dispose();
     if (e.shine) e.shine.material.dispose();
-    if (e.mixer) e.mixer.stopAllAction();
+    e.shield.material.dispose();
+    e.aura.material.dispose();
+    for (const c of e.aura.children) c.material.dispose();
+    for (const c of e.bar.children) c.material.dispose();
+    if (e.mixer) {
+      e.mixer.stopAllAction();
+      e.mixer.uncacheRoot(e.mixer.getRoot());
+    }
+    e.g.traverse((n) => {
+      if (n.isSkinnedMesh && n.skeleton && n.skeleton.dispose) n.skeleton.dispose();
+      /* ordezko eredu prozeduralak bere geometriak ditu (KayKit klonek iturriarekin partekatzen dituzte) */
+      if (!e.skel && n.isMesh && n !== e.shield) n.geometry.dispose();
+    });
   }
   function clearEnemies() {
     for (const e of ENEMIES) removeEnemy(e);
     ENEMIES.length = 0;
     for (const s of SHOTS) scene.remove(s.m);
     SHOTS.length = 0;
+    /* oldarraldiaren seinale gorriak ere bai (bestela betiko taupaka geratzen dira) */
+    for (const t of TELE) {
+      scene.remove(t.m);
+      t.m.material.dispose();
+    }
+    TELE.length = 0;
   }
   function spawnWave(list, island = ARENA.island) {
     const I = ISLANDS[island];
@@ -7186,7 +7208,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* --------------------------- sariak (arena bakoitzaren ondoren) --------------------------- */
   const BOONS = [
     ["heart", "ARNASA SAKONA", "ALIENTO PROFUNDO", "+1 bizitza gehienez.", "+1 de vida máxima."],
-    ["sharp", "MAKILA ZORROTZA", "VARA AFILADA", "Konboaren hirugarren kolpeak +1 kalte.", "El tercer golpe del combo hace +1 de daño."],
+    ["sharp", "MAKILA ZORROTZA", "VARA AFILADA", "Izpi hirukoitzek eta INDARRAk +1 kalte egiten dute.", "Los rayos triples y la INDARRA hacen +1 de daño."],
     ["wave", "GARAI-UHIN HANDIA", "GRAN ONDA DE ÉPOCA", "Garaia aldatzean uhin zabalagoa eta indartsuagoa.", "Al cambiar de época, la onda es más amplia y fuerte."],
     ["dash", "AIRE-DASH BIKOITZA", "DOBLE DASH AÉREO", "Bi DASH airean, lurrera jaitsi gabe.", "Dos DASH en el aire sin tocar el suelo."],
   ];
@@ -7344,12 +7366,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const o = muzzle();
     spawnBolt(o, dir, tgt, { dmg: 1 });
     if (triple) {
-      const skip = new Set([tgt]),
+      /* MAKILA ZORROTZA (saria): hiru izpiek +1 kalte */
+      const sharp = saved.boons?.includes("sharp") ? 1 : 0,
+        skip = new Set([tgt]),
         a = pickTarget(BOLT_RANGE, skip);
       if (a) skip.add(a);
       const b = pickTarget(BOLT_RANGE, skip);
-      spawnBolt(o, dir - 0.3, a || tgt, { dmg: 1 });
-      spawnBolt(o, dir + 0.3, b || a || tgt, { dmg: 1 });
+      BOLTS[BOLTS.length - 1].dmg += sharp;
+      spawnBolt(o, dir - 0.3, a || tgt, { dmg: 1 + sharp });
+      spawnBolt(o, dir + 0.3, b || a || tgt, { dmg: 1 + sharp });
     }
     MAG.cd = 0.13;
     castAnim("Spellcast_Shoot", 2.7, 6);
@@ -7520,7 +7545,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     P.angle = dir;
     MAG.aimT = 0.35;
     ATK.n++;
-    spawnBolt(muzzle(), dir, tgt, { big: true, full, dmg: full ? 4 : 2 + Math.round(MAG.charge) });
+    spawnBolt(muzzle(), dir, tgt, { big: true, full, dmg: (full ? 4 : 2 + Math.round(MAG.charge)) + (saved.boons?.includes("sharp") ? 1 : 0) });
     castAnim("Spellcast_Shoot", 2.2, 8);
     MAG.charge = 0;
     P.vx -= Math.sin(dir) * 5;
@@ -7690,13 +7715,23 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (MAG.comboT <= 0) MAG.combo = 0;
     if (frame % 4 === 0) comboHud();
   }
+  /* goiko gorputzeko kargaren animazioa itzali (eszena, elkarrizketa edo heriotza batek etenda) */
+  function castStop() {
+    if (MAG.layer.Spellcasting) MAG.layer.Spellcasting.fadeOut(0.15);
+    MAG.cast = null;
+  }
   function magicReset() {
-    for (const b of BOLTS) scene.remove(b.s);
+    for (const b of BOLTS) {
+      scene.remove(b.s);
+      b.s.material.dispose();
+      b.s.children[0].material.dispose();
+    }
     BOLTS.length = 0;
     MAG.charging = false;
     MAG.charge = 0;
     MAG.holdT = 0;
     ATK.hold = false;
+    castStop();
     comboBreak();
   }
   /* ==================================================================
@@ -7710,7 +7745,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
        berragertzen zara, bizitzarik galdu gabe. Erorketak kontatzen dira.
      Koordenatuak: u = pantailaren eskuinera, w = kamerarantz (sakonera).
      ================================================================== */
-  const ASC = { O: { x: -19, z: -145 }, list: [], cps: [], cp: -1, falls: 0, slabs: [], winds: [], spirits: [], rune: null, page: null, inZone: false, windT: 0, hud: "", spiritT: 0, tickN: -1, built: false };
+  const ASC = { O: { x: -19, z: -145 }, list: [], cps: [], cp: -1, armed: false, falls: 0, slabs: [], winds: [], spirits: [], rune: null, page: null, inZone: false, windT: 0, hud: "", spiritT: 0, tickN: -1, built: false };
   const ascAt = (u, w) => ({ x: ASC.O.x + u * 0.83 + w * 0.557, z: ASC.O.z - u * 0.557 + w * 0.83 });
   /* [mota, u, y, w, erradioa, gehigarria] · col: gehigarria = kanpaiaren zenbakia */
   const ASC_DEF = [
@@ -7856,7 +7891,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     /* egunkari-orria (hautazkoa): harri urrunean */
     const pr = ASC.pageRock;
-    if (pr) ASC.page = journalPickup(2, pr.x, pr.y + 1.2, pr.z);
+    if (pr) ASC.page = journalPickup(3, pr.x, pr.y + 1.2, pr.z);
     ASC.built = true;
   }
   /* --------------------------- eguneratzea --------------------------- */
@@ -7893,6 +7928,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function ascRespawn() {
     const C = ASC.cps[Math.max(0, ASC.cp)];
+    ASC.armed = true;
     ASC.falls++;
     saved.ascFalls = (saved.ascFalls || 0) + 1;
     teleport(C.x, C.z, C.y);
@@ -8009,15 +8045,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       }
     }
     if (ASC.page) journalUpdate(ASC.page, dt);
-    /* erortzean: azken kanpaira (bizitzarik galdu gabe) */
-    if (ASC.cp >= 0 && !respawnTimer) {
-      const C = ASC.cps[ASC.cp],
-        dx = P.x - ASC.O.x,
-        dz = P.z - ASC.O.z,
-        u = dx * 0.83 - dz * 0.557,
-        w = dx * 0.557 + dz * 0.83;
-      const over = u > -8.5 && u < 19 && w > -10 && w < 4.5;
-      if (over && !P.grounded && P.y < C.y - 6.5 && P.platform?.island === undefined) ascRespawn();
+    /* erortzean: azken kanpaira (bizitzarik galdu gabe). Orratzeko harri batean egon ondoren
+       "armatuta" dago; uharte batera iristean desarmatzen da (eremu-laukirik ez: ertzetan ere) */
+    if (P.grounded && P.platform) {
+      if (P.platform.asc) ASC.armed = true;
+      else if (P.platform.island !== undefined) ASC.armed = false;
+    }
+    if (ASC.armed && ASC.cp >= 0 && !respawnTimer) {
+      const C = ASC.cps[ASC.cp];
+      if (!P.grounded && P.y < C.y - 6.5) ascRespawn();
     }
     /* HUD */
     const txt = ASC.inZone && saved.stage === 4 ? Math.max(0, ASC.cp + 1) + "/3|" + ASC.falls : "";
@@ -8073,7 +8109,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       "«Hoy no romperé el reloj. Hoy le quitaré la máscara a Gaueko. Creo que conozco lo que hay debajo… y tengo miedo.»",
     ],
   ];
-  const STORY = { pending: null, afterBoon: -1, pages: [] };
+  const STORY = { pending: null, afterBoon: -1, pages: [], boonQ: null };
   const jName = (k) => L("EGUNKARIA · " + JOURNAL[k][0] + ". BEGIZTA", "DIARIO · BUCLE " + JOURNAL[k][0]);
   function journalShot(k, x, z, y) {
     return [jName(k), JOURNAL[k][1], JOURNAL[k][2], x, z, y];
@@ -8136,6 +8172,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     STORY.pending = { i, boon, t: delay };
   }
   function storyUpdate(dt) {
+    /* sariak jokoaren denboran (pausan edo beste elkarrizketa batean ez dira agertzen) */
+    const B = STORY.boonQ;
+    if (B && !cinematic && !ENDING.on && $("overlay").hidden) {
+      B.t -= dt;
+      if (B.t <= 0) {
+        STORY.boonQ = null;
+        offerBoon(B.i);
+      }
+    }
     const S = STORY.pending;
     if (!S || cinematic || ENDING.on) return;
     S.t -= dt;
@@ -8161,7 +8206,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (STORY.afterBoon < 0) return;
     const k = STORY.afterBoon;
     STORY.afterBoon = -1;
-    setTimeout(() => offerBoon(k), 350);
+    STORY.boonQ = { i: k, t: 0.35 };
   }
   /* --------------------------- egunkari-orri ezkutuak --------------------------- */
   function pageTexture() {
@@ -8291,7 +8336,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     haptic(50);
     P.hp = P.maxHp;
     hud();
-    if (BOONS.some((b) => !saved.boons.includes(b[0]))) setTimeout(() => offerBoon(set.D.island), 900);
+    if (BOONS.some((b) => !saved.boons.includes(b[0]))) STORY.boonQ = { i: set.D.island, t: 0.9 };
     else notify("Argiak zure arnasa berritu du.", "La luz ha renovado tu aliento.", 3);
   }
   function runePuzzlesUpdate(dt) {
@@ -8779,6 +8824,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     jumpBuffer = 0;
     /* sorginkeria: botoia askatuta (INDARRA ez da eszena baten ondoren jaurtitzen) */
     ATK.hold = false;
+    if (MAG.charging) castStop();
     MAG.charging = false;
     MAG.charge = 0;
     MAG.holdT = 0;
@@ -9968,7 +10014,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (saved.bossDone && boss.state !== "done") boss.state = "done";
     updateBoss(dt);
     near = null;
-    if (saved.bossDone && dist(P, { x: 0, z: -179 }) < 6) near = "ending";
+    /* bihurguneko eszena (maskara) amaierako erabakiaren aurretik */
+    if (saved.bossDone && dist(P, { x: 0, z: -179 }) < 6 && !STORY.pending) near = "ending";
     $("prompt").hidden = !near;
     if (near) $("prompt").textContent = L("E / EKIN · IRATIREN AZKEN MEZUA", "E / ACTUAR · EL ÚLTIMO MENSAJE");
   }
@@ -10894,7 +10941,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         -179,
       ],
       ["AMAIUR", "Kendu maskara hori, Gaueko. Ikusi nahi zaitut.", "Quítate esa máscara, Gaueko. Quiero verte.", 0, -173],
-      ["GAUEKO · 000.00", "Jo nire nukleoa hiru aldiz, eta zeuk kenduko didazu.", "Golpea mi núcleo tres veces y me la quitarás tú misma.", 0, -179],
+      ["GAUEKO · 000.00", "Jo nire nukleoa lau aldiz, eta zeuk kenduko didazu.", "Golpea mi núcleo cuatro veces y me la quitarás tú misma.", 0, -179],
       [
         "IRATI · 140.85",
         "Uhina datorrenean, ALDATU garaia. Nukleoa zuri dagoenean: SORGINKERIA edo DASH. Zurekin nago.",

@@ -128,12 +128,15 @@
     const o = muzzle();
     spawnBolt(o, dir, tgt, { dmg: 1 });
     if (triple) {
-      const skip = new Set([tgt]),
+      /* MAKILA ZORROTZA (saria): hiru izpiek +1 kalte */
+      const sharp = saved.boons?.includes("sharp") ? 1 : 0,
+        skip = new Set([tgt]),
         a = pickTarget(BOLT_RANGE, skip);
       if (a) skip.add(a);
       const b = pickTarget(BOLT_RANGE, skip);
-      spawnBolt(o, dir - 0.3, a || tgt, { dmg: 1 });
-      spawnBolt(o, dir + 0.3, b || a || tgt, { dmg: 1 });
+      BOLTS[BOLTS.length - 1].dmg += sharp;
+      spawnBolt(o, dir - 0.3, a || tgt, { dmg: 1 + sharp });
+      spawnBolt(o, dir + 0.3, b || a || tgt, { dmg: 1 + sharp });
     }
     MAG.cd = 0.13;
     castAnim("Spellcast_Shoot", 2.7, 6);
@@ -304,7 +307,7 @@
     P.angle = dir;
     MAG.aimT = 0.35;
     ATK.n++;
-    spawnBolt(muzzle(), dir, tgt, { big: true, full, dmg: full ? 4 : 2 + Math.round(MAG.charge) });
+    spawnBolt(muzzle(), dir, tgt, { big: true, full, dmg: (full ? 4 : 2 + Math.round(MAG.charge)) + (saved.boons?.includes("sharp") ? 1 : 0) });
     castAnim("Spellcast_Shoot", 2.2, 8);
     MAG.charge = 0;
     P.vx -= Math.sin(dir) * 5;
@@ -474,12 +477,22 @@
     if (MAG.comboT <= 0) MAG.combo = 0;
     if (frame % 4 === 0) comboHud();
   }
+  /* goiko gorputzeko kargaren animazioa itzali (eszena, elkarrizketa edo heriotza batek etenda) */
+  function castStop() {
+    if (MAG.layer.Spellcasting) MAG.layer.Spellcasting.fadeOut(0.15);
+    MAG.cast = null;
+  }
   function magicReset() {
-    for (const b of BOLTS) scene.remove(b.s);
+    for (const b of BOLTS) {
+      scene.remove(b.s);
+      b.s.material.dispose();
+      b.s.children[0].material.dispose();
+    }
     BOLTS.length = 0;
     MAG.charging = false;
     MAG.charge = 0;
     MAG.holdT = 0;
     ATK.hold = false;
+    castStop();
     comboBreak();
   }

@@ -193,6 +193,21 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
       for (let i = 0; i < 240 && A.falls === f0; i++) g.tick(1 / 120);
       for (let i = 0; i < 30; i++) g.tick(1 / 120);
       out.push({ label: 'ORR erorketa', ok: A.falls === f0 + 1 && P.hp === hp0 && Math.hypot(P.x - C6.x, P.z - C6.z) < 0.5, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)] });
+      /* goian erori (azken harritik kanpora, eremutik urrun): kanpaian, ez itsasoan */
+      g.teleport(L2.x, L2.z, L2.y);
+      for (let i = 0; i < 20; i++) g.tick(1 / 120);
+      const f1 = A.falls, hp1 = P.hp;
+      for (let i = 0; i < 120 * 4 && A.falls === f1; i++) { steer(0.83, -0.557); g.input.keys = { ShiftLeft: true }; g.tick(1 / 120); }
+      g.input.x = g.input.z = 0; g.input.keys = {};
+      for (let i = 0; i < 30; i++) g.tick(1 / 120);
+      out.push({ label: 'ORR goian erori', ok: A.falls === f1 + 1 && P.hp === hp1 && Math.hypot(P.x - C6.x, P.z - C6.z) < 0.5, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)] });
+      /* 4. uharteko atean jauzi (kanpaiak lortuta): ez da kanpaira teleportatu behar */
+      g.teleport(-24.5, -138.5, I4.y);
+      for (let i = 0; i < 30; i++) g.tick(1 / 120);
+      const f2 = A.falls;
+      g.jump();
+      for (let i = 0; i < 120; i++) g.tick(1 / 120);
+      out.push({ label: 'ORR I4 atea', ok: A.falls === f2 && Math.hypot(P.x + 24.5, P.z + 138.5) < 1 && Math.abs(P.y - I4.y) < 0.1, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)] });
       return true;
     }
     ascentRoute();

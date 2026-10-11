@@ -75,11 +75,14 @@
     g.add(parts.shield);
     return { g, body, rigid, eye, shine, mixer, actions, anim: "", skel: true, ...parts };
   }
+  /* geometria partekatuak (etsai bakoitzak materialak bakarrik ditu bereak) */
+  const EGEO = {};
+  const egeo = (k, f) => EGEO[k] || (EGEO[k] = f());
   /* garai-ezkutua, aura eta bizitza-barra (bi ereduentzat) */
   function enemyExtras(type, era, R, cy) {
     const col = ERA_COL[era < 0 ? 2 : era];
     const shield = new T.Mesh(
-      new T.IcosahedronGeometry(1, 3),
+      egeo("shield", () => new T.IcosahedronGeometry(1, 3)),
       new T.ShaderMaterial({
         transparent: true,
         depthWrite: false,
@@ -92,16 +95,16 @@
     shield.material.opacity = 0;
     shield.scale.set(R, R * 1.25, R);
     shield.position.y = cy;
-    const aura = new T.Mesh(new T.RingGeometry(EN_DEF[type].r * 0.9, EN_DEF[type].r * 1.25, 28), new T.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.7, depthWrite: false }));
+    const aura = new T.Mesh(egeo("aura" + type, () => new T.RingGeometry(EN_DEF[type].r * 0.9, EN_DEF[type].r * 1.25, 28)), new T.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.7, depthWrite: false }));
     aura.rotation.x = -PI / 2;
-    const blob = new T.Mesh(new T.PlaneGeometry(1, 1), new T.MeshBasicMaterial({ map: glowTexture, color: "#000000", transparent: true, opacity: 0.55, depthWrite: false }));
+    const blob = new T.Mesh(egeo("blob", () => new T.PlaneGeometry(1, 1)), new T.MeshBasicMaterial({ map: glowTexture, color: "#000000", transparent: true, opacity: 0.55, depthWrite: false }));
     /* auraren barruan (dagoeneko etzanda): z lokala = gora */
     blob.scale.setScalar(EN_DEF[type].r * 2.6);
     blob.position.z = -0.02;
     aura.add(blob);
     const bar = new T.Group(),
-      bg = new T.Mesh(new T.PlaneGeometry(1, 0.11), new T.MeshBasicMaterial({ color: "#16091f", transparent: true, opacity: 0.75, depthTest: false })),
-      fg = new T.Mesh(new T.PlaneGeometry(1, 0.11), new T.MeshBasicMaterial({ color: col, depthTest: false }));
+      bg = new T.Mesh(egeo("bar", () => new T.PlaneGeometry(1, 0.11)), new T.MeshBasicMaterial({ color: "#16091f", transparent: true, opacity: 0.75, depthTest: false })),
+      fg = new T.Mesh(egeo("bar", () => new T.PlaneGeometry(1, 0.11)), new T.MeshBasicMaterial({ color: col, depthTest: false }));
     fg.position.z = 0.001;
     bar.add(bg, fg);
     bar.renderOrder = fg.renderOrder = bg.renderOrder = 9;
@@ -196,19 +199,38 @@
     fxBurst(x, y + 0.2, z, { n: 14, speed: 2.5, up: 3, life: 0.7, size: 0.3, color: "#6d28c9", grav: 2 });
     return e;
   }
+  /* GPU memoria askatu: materialak, hezurduren testurak (geometria partekatuak ez) */
   function removeEnemy(e) {
     scene.remove(e.g, e.aura, e.bar);
     e.body.dispose();
     e.eye.dispose();
     if (e.rigid) e.rigid.dispose();
     if (e.shine) e.shine.material.dispose();
-    if (e.mixer) e.mixer.stopAllAction();
+    e.shield.material.dispose();
+    e.aura.material.dispose();
+    for (const c of e.aura.children) c.material.dispose();
+    for (const c of e.bar.children) c.material.dispose();
+    if (e.mixer) {
+      e.mixer.stopAllAction();
+      e.mixer.uncacheRoot(e.mixer.getRoot());
+    }
+    e.g.traverse((n) => {
+      if (n.isSkinnedMesh && n.skeleton && n.skeleton.dispose) n.skeleton.dispose();
+      /* ordezko eredu prozeduralak bere geometriak ditu (KayKit klonek iturriarekin partekatzen dituzte) */
+      if (!e.skel && n.isMesh && n !== e.shield) n.geometry.dispose();
+    });
   }
   function clearEnemies() {
     for (const e of ENEMIES) removeEnemy(e);
     ENEMIES.length = 0;
     for (const s of SHOTS) scene.remove(s.m);
     SHOTS.length = 0;
+    /* oldarraldiaren seinale gorriak ere bai (bestela betiko taupaka geratzen dira) */
+    for (const t of TELE) {
+      scene.remove(t.m);
+      t.m.material.dispose();
+    }
+    TELE.length = 0;
   }
   function spawnWave(list, island = ARENA.island) {
     const I = ISLANDS[island];
@@ -745,7 +767,7 @@
   /* --------------------------- sariak (arena bakoitzaren ondoren) --------------------------- */
   const BOONS = [
     ["heart", "ARNASA SAKONA", "ALIENTO PROFUNDO", "+1 bizitza gehienez.", "+1 de vida máxima."],
-    ["sharp", "MAKILA ZORROTZA", "VARA AFILADA", "Konboaren hirugarren kolpeak +1 kalte.", "El tercer golpe del combo hace +1 de daño."],
+    ["sharp", "MAKILA ZORROTZA", "VARA AFILADA", "Izpi hirukoitzek eta INDARRAk +1 kalte egiten dute.", "Los rayos triples y la INDARRA hacen +1 de daño."],
     ["wave", "GARAI-UHIN HANDIA", "GRAN ONDA DE ÉPOCA", "Garaia aldatzean uhin zabalagoa eta indartsuagoa.", "Al cambiar de época, la onda es más amplia y fuerte."],
     ["dash", "AIRE-DASH BIKOITZA", "DOBLE DASH AÉREO", "Bi DASH airean, lurrera jaitsi gabe.", "Dos DASH en el aire sin tocar el suelo."],
   ];

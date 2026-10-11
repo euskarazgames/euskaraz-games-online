@@ -28,7 +28,7 @@
       "«Hoy no romperé el reloj. Hoy le quitaré la máscara a Gaueko. Creo que conozco lo que hay debajo… y tengo miedo.»",
     ],
   ];
-  const STORY = { pending: null, afterBoon: -1, pages: [] };
+  const STORY = { pending: null, afterBoon: -1, pages: [], boonQ: null };
   const jName = (k) => L("EGUNKARIA · " + JOURNAL[k][0] + ". BEGIZTA", "DIARIO · BUCLE " + JOURNAL[k][0]);
   function journalShot(k, x, z, y) {
     return [jName(k), JOURNAL[k][1], JOURNAL[k][2], x, z, y];
@@ -91,6 +91,15 @@
     STORY.pending = { i, boon, t: delay };
   }
   function storyUpdate(dt) {
+    /* sariak jokoaren denboran (pausan edo beste elkarrizketa batean ez dira agertzen) */
+    const B = STORY.boonQ;
+    if (B && !cinematic && !ENDING.on && $("overlay").hidden) {
+      B.t -= dt;
+      if (B.t <= 0) {
+        STORY.boonQ = null;
+        offerBoon(B.i);
+      }
+    }
     const S = STORY.pending;
     if (!S || cinematic || ENDING.on) return;
     S.t -= dt;
@@ -116,7 +125,7 @@
     if (STORY.afterBoon < 0) return;
     const k = STORY.afterBoon;
     STORY.afterBoon = -1;
-    setTimeout(() => offerBoon(k), 350);
+    STORY.boonQ = { i: k, t: 0.35 };
   }
   /* --------------------------- egunkari-orri ezkutuak --------------------------- */
   function pageTexture() {

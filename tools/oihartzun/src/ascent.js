@@ -9,7 +9,7 @@
        berragertzen zara, bizitzarik galdu gabe. Erorketak kontatzen dira.
      Koordenatuak: u = pantailaren eskuinera, w = kamerarantz (sakonera).
      ================================================================== */
-  const ASC = { O: { x: -19, z: -145 }, list: [], cps: [], cp: -1, falls: 0, slabs: [], winds: [], spirits: [], rune: null, page: null, inZone: false, windT: 0, hud: "", spiritT: 0, tickN: -1, built: false };
+  const ASC = { O: { x: -19, z: -145 }, list: [], cps: [], cp: -1, armed: false, falls: 0, slabs: [], winds: [], spirits: [], rune: null, page: null, inZone: false, windT: 0, hud: "", spiritT: 0, tickN: -1, built: false };
   const ascAt = (u, w) => ({ x: ASC.O.x + u * 0.83 + w * 0.557, z: ASC.O.z - u * 0.557 + w * 0.83 });
   /* [mota, u, y, w, erradioa, gehigarria] · col: gehigarria = kanpaiaren zenbakia */
   const ASC_DEF = [
@@ -155,7 +155,7 @@
     }
     /* egunkari-orria (hautazkoa): harri urrunean */
     const pr = ASC.pageRock;
-    if (pr) ASC.page = journalPickup(2, pr.x, pr.y + 1.2, pr.z);
+    if (pr) ASC.page = journalPickup(3, pr.x, pr.y + 1.2, pr.z);
     ASC.built = true;
   }
   /* --------------------------- eguneratzea --------------------------- */
@@ -192,6 +192,7 @@
   }
   function ascRespawn() {
     const C = ASC.cps[Math.max(0, ASC.cp)];
+    ASC.armed = true;
     ASC.falls++;
     saved.ascFalls = (saved.ascFalls || 0) + 1;
     teleport(C.x, C.z, C.y);
@@ -308,15 +309,15 @@
       }
     }
     if (ASC.page) journalUpdate(ASC.page, dt);
-    /* erortzean: azken kanpaira (bizitzarik galdu gabe) */
-    if (ASC.cp >= 0 && !respawnTimer) {
-      const C = ASC.cps[ASC.cp],
-        dx = P.x - ASC.O.x,
-        dz = P.z - ASC.O.z,
-        u = dx * 0.83 - dz * 0.557,
-        w = dx * 0.557 + dz * 0.83;
-      const over = u > -8.5 && u < 19 && w > -10 && w < 4.5;
-      if (over && !P.grounded && P.y < C.y - 6.5 && P.platform?.island === undefined) ascRespawn();
+    /* erortzean: azken kanpaira (bizitzarik galdu gabe). Orratzeko harri batean egon ondoren
+       "armatuta" dago; uharte batera iristean desarmatzen da (eremu-laukirik ez: ertzetan ere) */
+    if (P.grounded && P.platform) {
+      if (P.platform.asc) ASC.armed = true;
+      else if (P.platform.island !== undefined) ASC.armed = false;
+    }
+    if (ASC.armed && ASC.cp >= 0 && !respawnTimer) {
+      const C = ASC.cps[ASC.cp];
+      if (!P.grounded && P.y < C.y - 6.5) ascRespawn();
     }
     /* HUD */
     const txt = ASC.inZone && saved.stage === 4 ? Math.max(0, ASC.cp + 1) + "/3|" + ASC.falls : "";

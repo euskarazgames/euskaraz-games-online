@@ -1923,6 +1923,7 @@
     jumpBuffer = 0;
     /* sorginkeria: botoia askatuta (INDARRA ez da eszena baten ondoren jaurtitzen) */
     ATK.hold = false;
+    if (MAG.charging) castStop();
     MAG.charging = false;
     MAG.charge = 0;
     MAG.holdT = 0;
@@ -3112,7 +3113,8 @@
     if (saved.bossDone && boss.state !== "done") boss.state = "done";
     updateBoss(dt);
     near = null;
-    if (saved.bossDone && dist(P, { x: 0, z: -179 }) < 6) near = "ending";
+    /* bihurguneko eszena (maskara) amaierako erabakiaren aurretik */
+    if (saved.bossDone && dist(P, { x: 0, z: -179 }) < 6 && !STORY.pending) near = "ending";
     $("prompt").hidden = !near;
     if (near) $("prompt").textContent = L("E / EKIN · IRATIREN AZKEN MEZUA", "E / ACTUAR · EL ÚLTIMO MENSAJE");
   }
@@ -4038,7 +4040,7 @@
         -179,
       ],
       ["AMAIUR", "Kendu maskara hori, Gaueko. Ikusi nahi zaitut.", "Quítate esa máscara, Gaueko. Quiero verte.", 0, -173],
-      ["GAUEKO · 000.00", "Jo nire nukleoa hiru aldiz, eta zeuk kenduko didazu.", "Golpea mi núcleo tres veces y me la quitarás tú misma.", 0, -179],
+      ["GAUEKO · 000.00", "Jo nire nukleoa lau aldiz, eta zeuk kenduko didazu.", "Golpea mi núcleo cuatro veces y me la quitarás tú misma.", 0, -179],
       [
         "IRATI · 140.85",
         "Uhina datorrenean, ALDATU garaia. Nukleoa zuri dagoenean: SORGINKERIA edo DASH. Zurekin nago.",
