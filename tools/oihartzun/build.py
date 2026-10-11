@@ -8,7 +8,7 @@ lehendik muntatutako fitxategitik ateratzen dira ("vendor" blokea).
   python3 tools/oihartzun/build.py            # muntatu
   python3 tools/oihartzun/build.py --check    # muntatu gabe, sintaxia egiaztatu
 """
-import pathlib, subprocess, sys, tempfile
+import pathlib, re, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 SRC = pathlib.Path(__file__).resolve().parent / 'src'
@@ -24,13 +24,20 @@ def vendor_block():
     return html[a:b]
 
 
+def include(text):
+    """/* @include fitxategia.js */ lerroak src/ karpetako fitxategiarekin ordezkatu."""
+    def sub(m):
+        return include((SRC / m.group(1)).read_text(encoding='utf-8').rstrip('\n'))
+    return re.sub(r'^[ \t]*/\* @include ([\w.-]+) \*/[ \t]*$', sub, text, flags=re.M)
+
+
 def assemble():
     head = (SRC / 'head.html').read_text(encoding='utf-8')
     css = (SRC / 'extra.css').read_text(encoding='utf-8')
     head = head.replace('</style></head>', '</style><style id="oih2">\n' + css + '\n</style></head>', 1)
     body = (SRC / 'extra_body.html').read_text(encoding='utf-8')
     head = head.replace('<div id="fatal" hidden></div>', body + '<div id="fatal" hidden></div>', 1)
-    game = (SRC / 'game.js').read_text(encoding='utf-8')
+    game = include((SRC / 'game.js').read_text(encoding='utf-8'))
     tail = (SRC / 'tail.html').read_text(encoding='utf-8')
     return head + '\n' + vendor_block() + GAME_START + game + '\n' + tail, game
 

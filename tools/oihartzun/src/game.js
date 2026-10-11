@@ -891,40 +891,16 @@
       ambNodes = { s, g };
     }
     /* Musika: ritmo-egutegia aurrera begira (0.3 s) */
+    /* @include music.js */
     function schedule() {
-      if (!ok()) return;
+      if (!ok() || MZ.rendering) return;
       const t0 = ctx.currentTime;
       if (pads.length > 6) pads = pads.filter((p) => p.end > t0 - 1);
-      const ph = phase;
-      if (ph !== lastPhase) {
-        lastPhase = ph;
-        fadePads(t0);
-        ambience(ph);
-        nextBeat = Math.max(nextBeat, t0 + 0.05);
-        beatN -= beatN % 8;
+      if (phase !== lastPhase) {
+        lastPhase = phase;
+        ambience(phase);
       }
-      const fight = boss.state !== "sleep" && boss.state !== "done" && started && saved.stage === 5;
-      while (nextBeat < t0 + 0.3) {
-        const t = nextBeat,
-          n = beatN++,
-          bar = Math.floor(n / 8) % 4,
-          H = (ph ? HARM.now : HARM.past)[bar];
-        if (n % 8 === 0) pad(H.slice(0, 4), t, BEAT * 8 + 0.4, fight ? 0.05 : 0.07);
-        if (fight) {
-          if ([0, 2, 3, 5, 6].includes(n % 8)) knock(t, 0.16, n % 8 === 0 ? 0.8 : 1 + (n % 3) * 0.12);
-          if (n % 4 === 0) tone("sine", 55, t, 0.01, 0.6, 0.12, mus, 48);
-        } else {
-          const step = n % 8,
-            pat = ph ? [0, 3, 6] : [0, 2, 3, 5, 6];
-          if (pat.includes(step) && Math.random() < (ph ? 0.6 : 0.8)) {
-            const f = H[1 + ((n * 3 + bar) % 4)] * (ph ? 4 : 2);
-            if (ph) bell(f, t, 0.035, mus);
-            else pluck(f, t, 0.05, mus);
-          }
-          if (ph && step === 4 && started) tone("square", 2400, t, 0.001, 0.025, 0.012, amb); /* erlojua */
-        }
-        nextBeat += BEAT;
-      }
+      mzSchedule(t0);
     }
     return {
       init,
@@ -935,6 +911,39 @@
         if (!m) { lastPhase = -1; nextBeat = ctx.currentTime + 0.1; }
       },
       update() { if (ctx) schedule(); },
+      stinger(big) { if (ok()) mzStinger(big); },
+      /* probetarako: musika-maila bat fitxategira errendatu (OfflineAudioContext) */
+      async render(level, bars, era, only) {
+        const keep = [ctx, master, comp, sfx, mus, amb, verbIn, noise, MZ.L, MZ.ks, MZ.level, MZ.era, MZ.eraD, MZ.off];
+        ctx = null;
+        MZ.L = null;
+        MZ.ks = new Map();
+        MZ.off = {};
+        MZ.rendering = true;
+        const off = new OfflineAudioContext(2, Math.ceil(44100 * (bars * 16 * MZ.step + 2.5)), 44100);
+        init(off);
+        mzBuild();
+        MZ.level = -1;
+        const plan = Array.isArray(level) ? level : [[0, level]];
+        mzLevel(plan[0][1], 0);
+        if (only)
+          for (const k of Object.keys(MZ.L))
+            if (!only.includes(k)) {
+              MZ.L[k].gain.cancelScheduledValues(0);
+              MZ.L[k].gain.value = 0;
+            }
+        MZ.era.frequency.value = era ? 3600 : 16000;
+        MZ.eraD.frequency.value = era ? 5200 : 16000;
+        for (let n = 0; n < bars * 16; n++) {
+          const ch = plan.find((p) => p[0] * 16 === n && n > 0);
+          if (ch) mzLevel(ch[1], 0.05 + n * MZ.step);
+          mzStep(0.05 + n * MZ.step, n);
+        }
+        const buf = await off.startRendering();
+        [ctx, master, comp, sfx, mus, amb, verbIn, noise, MZ.L, MZ.ks, MZ.level, MZ.era, MZ.eraD, MZ.off] = keep;
+        MZ.rendering = false;
+        return buf;
+      },
       note(f, t, v, type) { if (ok()) tone(type || "sine", f, ctx.currentTime, 0.01, t, Math.min(0.12, v * 2), sfx); },
       chord() {
         if (!ok()) return;
@@ -1723,6 +1732,12 @@
     hud();
   }
 
+  /* musikaren intentsitatea: 0 izenburua/zinematika · 1 esplorazioa · 2 borroka · 3 bossa */
+  function musicLevel() {
+    if (!started || cinematic || ENDING.on) return 0;
+    if (saved.stage === 5 && !saved.ending && boss.state !== "sleep" && boss.state !== "done") return 3;
+    return typeof combatLevel === "function" ? combatLevel() : 1;
+  }
   let stepAcc = 0;
   function persist() {
     try {
@@ -4423,6 +4438,7 @@
         ISLANDS,
         ECHO,
         ECHO_DEFS,
+        SND,
         ENDING,
         ringEcho,
         endingFinish,
