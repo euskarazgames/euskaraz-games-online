@@ -1,4 +1,4 @@
-<!doctype html><html lang="eu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17364b"><title>OIHARTZUN · Bi alde</title><script src="/assets/egfx.js"></script><style>
+<!doctype html><html lang="eu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17364b"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23102e46'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23f4cf8f' stroke-width='2.5'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%239ae3e5'/%3E%3C/svg%3E"><title>OIHARTZUN · Bi alde</title><script src="/assets/egfx.js"></script><style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#132f46;color:#fff3df;font-family:system-ui,-apple-system,sans-serif;touch-action:none}button{font:600 12px system-ui;letter-spacing:.05em;cursor:pointer;border:1px solid #ffffff40;background:#19374fe6;color:#fff3df;border-radius:4px;padding:12px 18px}button:hover{background:#426879}button:active{transform:scale(.96)}button:focus-visible{outline:2px solid #ffc885}.primary{background:#f4cf8f;color:#233d50;border:0}[hidden]{display:none!important}#view{display:block;position:fixed;inset:0;width:100%;height:100%}#vignette{position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 120px #08223866}#start{position:fixed;inset:0;z-index:20;background:linear-gradient(90deg,#102e46f5,#102e46aa 35%,#102e4600 75%);padding:8vw;display:flex;flex-direction:column;justify-content:center}.eyebrow{font-size:10px;letter-spacing:.3em;color:#d7b77d}h1{font:clamp(62px,9vw,134px)/.85 Georgia,serif;letter-spacing:-.05em;font-weight:400;margin:28px 0 12px}h1 span{display:block;font:italic clamp(22px,3vw,36px) Georgia;letter-spacing:.3em;margin:25px 0;color:#edc589}#premise{max-width:390px;font:17px/1.8 Georgia;color:#d3e0e2}#startActions{display:flex;gap:10px;margin:22px 0}#startFooter{position:absolute;bottom:25px;left:8vw;right:5vw;display:flex;justify-content:space-between;align-items:center;font-size:9px;letter-spacing:.15em;color:#a9c0cd}#startFooter button{padding:7px 11px;font-size:9px}#top{position:fixed;top:max(17px,env(safe-area-inset-top));right:max(18px,env(safe-area-inset-right));display:flex;gap:7px;z-index:22}#top button{padding:7px 10px;font-size:10px}#hud{position:fixed;inset:0;pointer-events:none;text-shadow:0 2px 6px #102f45}#place{position:absolute;top:24px;left:26px;font:28px Georgia}#chapter{font:9px system-ui;letter-spacing:.18em;display:block;margin-bottom:8px;color:#e9ce9d}#goal{position:absolute;left:26px;top:97px;max-width:280px;font-size:12px;line-height:1.6;background:linear-gradient(90deg,#102d46a0,transparent);border-left:2px solid #edc88a;padding:8px 12px}#phaseHud{position:absolute;left:50%;top:24px;transform:translateX(-50%);font-size:11px;letter-spacing:.18em;text-align:center}#phaseHud b{display:block;font:19px Georgia;margin-top:5px}#phaseMark{width:30px;height:30px;margin:auto;border:1px solid #f6ce90;border-radius:50%;box-shadow:0 0 20px #f6ce9044}#life{position:absolute;left:27px;bottom:34px;display:flex;align-items:center;gap:22px;font-size:21px}#life small{display:block;font-size:8px;letter-spacing:.15em;color:#c4dce5;margin-top:5px}#dashDot{color:#ffd199}#map{position:absolute;right:24px;bottom:24px;width:120px;height:120px;border:1px solid #cceaf040;border-radius:50%;background:#102b40bb}#keys{position:absolute;bottom:20px;left:25%;right:25%;text-align:center;font-size:10px;line-height:1.8;color:#c8dce4}#subtitle{position:absolute;bottom:105px;left:50%;transform:translateX(-50%);width:min(620px,75vw);text-align:center;font:19px/1.6 Georgia;background:linear-gradient(90deg,transparent,#0d2c47b0,transparent);padding:10px 25px;transition:opacity .6s;opacity:0}#prompt{position:absolute;bottom:170px;left:50%;transform:translateX(-50%);font-size:11px;border:1px solid #ffd69a55;background:#16374eee;border-radius:25px;padding:10px 20px}#chapterTitle{position:absolute;left:50%;top:39%;transform:translate(-50%,-50%);text-align:center;font:43px Georgia;transition:opacity 1s;opacity:0;white-space:pre-line}#chapterTitle small{display:block;font:10px system-ui;letter-spacing:.28em;margin-bottom:20px}#phaseFlash{position:fixed;inset:0;z-index:12;pointer-events:none;background:radial-gradient(ellipse,transparent 10%,#9ae9ef 150%);opacity:0}#touch{position:fixed;inset:0;pointer-events:none;z-index:14;display:none}#stick{pointer-events:auto;position:absolute;left:24px;bottom:26px;width:110px;height:110px;border:1px solid #daedf45a;border-radius:50%;background:#15374b66}#knob{position:absolute;left:35px;top:35px;width:38px;height:38px;border-radius:50%;background:#d5e8e699}#touchActions{position:absolute;right:24px;bottom:24px;display:grid;grid-template-columns:62px 62px;gap:10px;pointer-events:auto}#touchActions button{width:62px;height:62px;border-radius:50%;padding:0;font-size:9px;background:#193a50b0;backdrop-filter:blur(5px)}#touchActions button:nth-child(1){color:#b7f5ef;border-color:#a8efe3}#touchActions button:nth-child(3){background:#e2b271cc;color:#1c3b50}#overlay{position:fixed;inset:0;z-index:30;display:grid;place-items:center;background:#09223f99;backdrop-filter:blur(7px);padding:24px}#card{width:min(650px,94vw);background:linear-gradient(140deg,#284961,#102e48);border:1px solid #99bbc544;border-top:2px solid #f5c582;border-radius:5px;padding:36px 40px;box-shadow:0 30px 100px #061c3699}#speaker{font-size:10px;letter-spacing:.22em;color:#ebc886}h2{font:35px Georgia;margin:14px 0 18px}#text{font-size:15px;line-height:1.8;white-space:pre-line;color:#d3e1e6}#choices{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}#loading{position:fixed;inset:0;display:grid;place-items:center;background:#132e46;z-index:99;text-align:center;font:28px Georgia}#loading small{display:block;font:11px system-ui;color:#b8d2dc;margin-top:20px;letter-spacing:.1em}#loading i{display:block;height:2px;width:200px;margin:30px auto;background:#617780}#loading i b{display:block;height:100%;background:#f4cb90;width:10%;transition:width .2s}#fatal{position:fixed;inset:15%;z-index:100;padding:30px;background:#14354e}#bossHud{position:absolute;top:93px;right:24px;text-align:right;font:22px Georgia}#bossHud small{font:10px system-ui;display:block;color:#f5d1a0;margin-top:6px}#route{position:absolute;right:25px;bottom:154px;font:9px system-ui;letter-spacing:.12em}
 @media(pointer:coarse){#touch.play{display:block}#keys{display:none}#life{bottom:165px;left:23px;font-size:19px}#map{bottom:178px;width:98px;height:98px}#route{bottom:283px;font-size:8px}#subtitle{bottom:160px;font-size:16px;max-width:55%;left:48%}#prompt{bottom:212px;max-width:55%;font-size:10px}#goal{max-width:240px}#phaseHud{top:70px;left:auto;right:24px;transform:none}#phaseMark{width:20px;height:20px}#phaseHud b{font-size:14px}#phaseHud{font-size:8px}#bossHud{top:145px}}
 @media(max-width:600px){#start{padding:8vw}h1{font-size:16.5vw}#premise{font-size:15px;max-width:90%}#startActions{flex-wrap:wrap}#startFooter{bottom:18px;flex-wrap:wrap;gap:12px}#place{top:19px;left:19px;font-size:23px}#chapter{font-size:8px}#goal{left:19px;top:84px;max-width:58%;font-size:10px;padding:8px 10px}#top{right:12px;gap:5px}#top button{padding:7px 8px;font-size:9px}#phaseHud{top:68px;right:18px}#card{padding:24px}h2{font-size:28px}#text{font-size:13px}#choices button{font-size:11px}#subtitle{bottom:305px;max-width:92%;width:92%;left:50%;font-size:16px}#prompt{bottom:285px;max-width:84%}#chapterTitle{font-size:33px}#touchActions{right:18px;grid-template-columns:58px 58px;gap:9px}#touchActions button{width:58px;height:58px}#life{gap:15px;font-size:18px}#stick{left:20px;width:104px;height:104px}#knob{left:32px;top:32px}}
@@ -58,13 +58,35 @@
 @media(pointer:coarse) and (max-height:520px){#stick:after{top:auto;bottom:-15px;left:50%;transform:translateX(-50%)}}
 @media(pointer:coarse) and (orientation:portrait){#goal{max-width:58%}#subtitle{bottom:296px}#prompt{bottom:auto;top:276px}}
 @media(pointer:coarse){#keys{display:none}}
+/* amaiera: izenburua, testua eta laburpena, zinema-bandekin */
+#endFx{position:fixed;inset:0;z-index:27;display:grid;place-items:center;padding:9vh 6vw;text-align:center;pointer-events:none;background:linear-gradient(#020a12 0 8%,transparent 8% 92%,#020a12 92%);color:#fff3df}
+#endFx .wrap{max-width:min(760px,90vw);display:flex;flex-direction:column;align-items:center}
+#endName{margin:0;font:400 clamp(40px,7vw,92px)/1 Georgia,serif;letter-spacing:-.02em;opacity:0;transform:translateY(16px);transition:opacity 2.4s ease,transform 2.4s cubic-bezier(.2,.8,.2,1);text-shadow:0 4px 34px #000a}
+#endText{margin:22px 0 0;font:italic clamp(15px,1.8vw,20px)/1.7 Georgia,serif;color:#e8eef0;max-width:36em;white-space:pre-line;opacity:0;transition:opacity 2.6s ease;text-shadow:0 2px 16px #000d}
+#endFx.s1 #endName{opacity:1;transform:none}
+#endFx.s2 #endText{opacity:1}
+#endCard{margin-top:28px;padding:20px 28px 22px;background:#0b2234e0;border:1px solid #f1cf8f40;border-top:2px solid #f4cf8f;border-radius:6px;backdrop-filter:blur(6px);opacity:0;transform:translateY(12px);transition:opacity 1.2s ease,transform 1.2s ease;pointer-events:none}
+#endFx.s3 #endCard{opacity:1;transform:none;pointer-events:auto}
+#endStats{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 30px;margin:0}
+#endStats div{display:flex;flex-direction:column-reverse;align-items:center;gap:5px;min-width:64px}
+#endStats dt{font:600 9px system-ui;letter-spacing:.16em;color:#a9c0cd}
+#endStats dd{margin:0;font:26px Georgia,serif;color:#fff3df;font-variant-numeric:tabular-nums}
+#endHint{margin:16px 0 0;font:13px/1.5 system-ui;color:#e3c48c}
+#endActions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+#echoBox b{color:#ffe0a0}
+@media(max-height:520px){#endFx{padding:6vh 6vw}#endName{font-size:40px}#endText{font-size:13px;line-height:1.5;margin-top:10px}#endFx.s3 #endText{display:none}#endCard{margin-top:12px;padding:12px 18px}#endStats dd{font-size:20px}#endHint{margin-top:8px;font-size:11px}#endActions{margin-top:10px}}
+@media(max-width:600px){#endStats{gap:10px 18px}#endStats div{min-width:54px}#endStats dd{font-size:21px}#endCard{padding:16px 16px 18px}}
+@media (prefers-reduced-motion: reduce){#endName,#endText,#endCard{transition:opacity .6s}}
+#endFx .wrap{padding:34px 40px;background:radial-gradient(closest-side,#04121dc4,#04121d8a 55%,#04121d00)}
+@media(max-height:520px){#endFx .wrap{padding:14px 20px}}
 
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>OIHARTZUN<small id="loadLabel">Bi mundu, istorio bat…</small><i><b id="loadBar"></b></i></div></div>
 <section id="start"><div class="eyebrow">EUSKARAZ GAMES · BERRASMATUA / REIMAGINADO</div><h1>OIHARTZUN<span>BI ALDE</span></h1><p id="premise"></p><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>01 · ITSASOAREN BESTALDEAN</span><div><button id="credits">KREDITUAK</button> <button id="legacy">ELUR JOKOA ↗</button> <button id="reset">↺</button></div></div></section>
 <div id="top"><button id="lang">ES</button><button id="audio">♫</button><button id="quality">HD</button><button id="pause" hidden>Ⅱ</button></div>
-<div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="secrets">0/5</b><small id="secretLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
+<div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="secrets">0/5</b><small id="secretLab"></small></div><div id="echoBox" hidden><b id="echoes">0/3</b><small id="echoLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
 <div id="touch"><div id="stick"><i id="knob"></i></div><div id="touchActions"><button id="weaveBtn"></button><button id="recallBtn"></button><button id="phaseBtn"></button><button id="dashBtn">DASH</button><button id="jumpBtn"></button><button id="useBtn"></button></div></div>
-<section id="buildPanel" hidden><header><div><small>OIHARTZUN · SORGINAREN TAILERRA</small><h3 id="buildTitle"></h3></div><button id="buildClose" data-eu="PROBATU →" data-es="PROBAR →">PROBATU →</button></header><p id="buildInfo"></p><p id="buildHint"></p><div class="buildControls"><div class="buildMove"><button id="buildNext" data-eu="PIEZA ↻" data-es="PIEZA ↻">PIEZA ↻</button><button id="buildUp">↑</button><button id="buildRise" data-eu="IGO +" data-es="SUBIR +">IGO +</button><button id="buildLeft">←</button><button id="buildDown">↓</button><button id="buildRight">→</button><button id="buildRotate" data-eu="BIRATU ↻" data-es="GIRAR ↻">BIRATU ↻</button><button id="buildLower" data-eu="JAITSI −" data-es="BAJAR −">JAITSI −</button><button id="buildJoin" class="primary" data-eu="LOTU +" data-es="UNIR +">LOTU +</button></div><div class="buildTools"><button id="buildUndo" data-eu="↶ DESEGIN" data-es="↶ DESHACER">↶ DESEGIN</button><button id="buildDetach" data-eu="BEREIZI" data-es="SEPARAR">BEREIZI</button><button id="buildReset" data-eu="JATORRIRA" data-es="AL ORIGEN">JATORRIRA</button></div></div></section><section id="cinema" hidden><div id="cineTop"><span>OIHARTZUN · TRANSMISIOA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="fatal" hidden></div>
+<section id="buildPanel" hidden><header><div><small>OIHARTZUN · SORGINAREN TAILERRA</small><h3 id="buildTitle"></h3></div><button id="buildClose" data-eu="PROBATU →" data-es="PROBAR →">PROBATU →</button></header><p id="buildInfo"></p><p id="buildHint"></p><div class="buildControls"><div class="buildMove"><button id="buildNext" data-eu="PIEZA ↻" data-es="PIEZA ↻">PIEZA ↻</button><button id="buildUp">↑</button><button id="buildRise" data-eu="IGO +" data-es="SUBIR +">IGO +</button><button id="buildLeft">←</button><button id="buildDown">↓</button><button id="buildRight">→</button><button id="buildRotate" data-eu="BIRATU ↻" data-es="GIRAR ↻">BIRATU ↻</button><button id="buildLower" data-eu="JAITSI −" data-es="BAJAR −">JAITSI −</button><button id="buildJoin" class="primary" data-eu="LOTU +" data-es="UNIR +">LOTU +</button></div><div class="buildTools"><button id="buildUndo" data-eu="↶ DESEGIN" data-es="↶ DESHACER">↶ DESEGIN</button><button id="buildDetach" data-eu="BEREIZI" data-es="SEPARAR">BEREIZI</button><button id="buildReset" data-eu="JATORRIRA" data-es="AL ORIGEN">JATORRIRA</button></div></div></section><section id="cinema" hidden><div id="cineTop"><span>OIHARTZUN · TRANSMISIOA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="endFx" hidden role="dialog" aria-modal="true" aria-labelledby="endName"><div class="wrap"><h2 id="endName"></h2><p id="endText"></p><div id="endCard"><dl id="endStats"></dl><p id="endHint"></p><div id="endActions"><button id="endExplore" class="primary"></button><button id="endVillage"></button></div></div></div></div>
+<div id="fatal" hidden></div>
 <script>/**
  * @license
  * Copyright 2010-2021 Three.js Authors
@@ -4508,6 +4530,19 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       s.start(t, Math.random());
       s.stop(t + dur + 0.1);
     }
+    /* Eliza-kanpaia: partzial ez-harmonikoak (hum, prime, tierce, quint, nominal…) */
+    function toll(f, t, v, dec = 5, out = sfx) {
+      for (const [k, a] of [[0.5, 0.55], [1, 1], [1.19, 0.42], [1.5, 0.3], [2, 0.5], [2.52, 0.2], [3.01, 0.16]]) {
+        const o = ctx.createOscillator(),
+          g = ctx.createGain();
+        o.frequency.value = f * k;
+        env(g, t, 0.004, v * a, dec * (k < 1 ? 1.3 : 1 / Math.sqrt(k)));
+        o.connect(g);
+        g.connect(out);
+        o.start(t);
+        o.stop(t + dec * 1.4 + 0.1);
+      }
+    }
     function knock(t, v, p = 1) {
       tone("sine", 260 * p, t, 0.002, 0.11, v, mus, 150 * p);
       hiss(t, 0.04, v * 0.5, "bandpass", 1800 * p, 1200 * p, 4, mus);
@@ -4709,6 +4744,37 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
         if (!ok()) return;
         tone("triangle", 880, ctx.currentTime, 0.002, 0.05, 0.03, sfx, 660);
       },
+      /* oihartzun-kanpaia: v<1 urrutiko deia, v=1 jo eta bere oihartzunak */
+      echo(v = 1) {
+        if (!ok() || v < 0.02) return;
+        const t = ctx.currentTime;
+        toll(196, t, 0.075 * v, v < 1 ? 3.5 : 5.5);
+        if (v >= 1) {
+          toll(196, t + 1.35, 0.028, 4.5);
+          toll(196, t + 2.7, 0.011, 4);
+        }
+      },
+      freeze() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.55, 0.045, "highpass", 6200, 2600, 1.4);
+        tone("sine", 2093, t + 0.04, 0.002, 0.3, 0.012, sfx);
+        tone("sine", 2637, t + 0.12, 0.002, 0.25, 0.008, sfx);
+      },
+      splash() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.9, 0.07, "lowpass", 1600, 260, 0.8);
+        hiss(t + 0.12, 0.6, 0.03, "bandpass", 3200, 900, 1.2);
+      },
+      ending(which) {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          cold = which === "keep";
+        pad(cold ? [146.83, 174.61, 220, 293.66] : [146.83, 220, 293.66, 369.99], t + 0.5, 11, 0.11);
+        toll(98, t + 0.2, 0.1, 8);
+        (cold ? [587.33, 698.46, 880, 1046.5] : [587.33, 739.99, 880, 1174.66]).forEach((f, i) => bell(f, t + 3 + i * 0.42, 0.04));
+      },
     };
   })();
 
@@ -4794,6 +4860,593 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       coach("weave", "C", "EHUNDU · zubia bi garaietan sendo, 12 segundoz", "TEJER · el puente sólido en ambas épocas, 12 s", "weaveBtn", "BOTEREAK → EHUNDU · zubia bi garaietan sendo, 12 s", "PODERES → TEJER · el puente sólido en ambas épocas, 12 s");
     if (st === 2 && !P.grounded && P.vy < 2) coach("airshift", "Q", "Airean garaia aldatu: DASH berri bat", "Cambia de época en el aire: un DASH nuevo", "phaseBtn", "Airean ALDATU: DASH berri bat", "CAMBIAR en el aire: un DASH nuevo");
     if (st === 3 && Math.hypot(P.x + 9, P.z + 108) < 10) coach("beam", "Q", "Argi gorriak iraganean bakarrik egiten du min", "La luz roja solo daña en el pasado", "phaseBtn");
+  }
+
+  /* ==================================================================
+     OIHARTZUNAK · hiru erronka hautazko, hiru kanpai
+     Orainean, herria ito zuen olatua izoztuta dago: haren gandorretan
+     ibil daiteke. Iraganean itsaso arrunta da. Kanpai bakoitzak Iratiren
+     benetako ahotsaren zati bat gordetzen du — ez grabazioa.
+     Datuak: [x, z, goiko y, erradioa, biraketa] · oholak: [x, z, y, w, d, mugikorra]
+     ================================================================== */
+  const ECHO_DEFS = [
+    {
+      /* A · Uhin Izoztuak (2. uhartea): olatuen eskailera leuna; itzulera iraganeko oholetatik */
+      islet: [-29, -44.5, 5.4, 4.4],
+      waves: [
+        [-16.5, -19.5, 2.7, 2.5, 0.6],
+        [-22.5, -23, 3.4, 2.5, 1.0],
+        [-27, -29, 4.1, 2.5, 1.5],
+        [-29, -36, 4.8, 2.5, 1.9],
+      ],
+      planks: [
+        [-20.5, -44, 4.8, 4, 4],
+        [-13, -38.5, 3.4, 4, 4],
+      ],
+      crystals: [],
+    },
+    {
+      /* B · Ekaitzaren Eskailera (4. uhartea): garaiak txandakatzen dira, airean aldatu behar da */
+      islet: [9, -118, 13.8, 3.2],
+      waves: [
+        [16, -105.5, 9.2, 2.4, 2.7],
+        [24.5, -117, 11.6, 2.4, 3.6],
+      ],
+      planks: [
+        [22, -110, 10.4, 4, 4],
+        [19.5, -122.5, 12.8, 4, 4],
+      ],
+      crystals: [],
+    },
+    {
+      /* C · Isiltasunaren Gandorra (5. uhartea): ohol mugikorra, jauzi bikoitza eta kristala */
+      islet: [-30, -152.5, 18.6, 3.4],
+      waves: [
+        [-47.5, -136, 12.2, 2.4, 4.4],
+        [-50.5, -152, 14.6, 2.4, 5.3],
+      ],
+      planks: [
+        [-53, -143.5, 13.4, 3.6, 3.6, true],
+        [-41.5, -157, 15.6, 3.6, 3.6],
+      ],
+      crystals: [[-36, -155, 18.4]],
+    },
+  ];
+  const ECHO_SCENES = [
+    [
+      ["IRATI · OIHARTZUNA", "Amaiur… hau ez da grabazioa. Olatu hau izoztu zenean, nire ahotsa barruan geratu zen.", "Amaiur… esto no es la grabación. Cuando esta ola se heló, mi voz se quedó dentro."],
+      ["IRATI · OIHARTZUNA", "Txikitan bezala: oihu egin itsasoari, eta itzuli egiten da. Oihartzuna da itsasoak ematen duen erantzun bakarra.", "Como cuando éramos pequeñas: le gritas al mar y vuelve. El eco es la única respuesta que da el mar."],
+      ["AMAIUR", "Beste kanpai batzuk entzuten ditut. Urrunago.", "Oigo otras campanas. Más lejos."],
+    ],
+    [
+      ["IRATI · OIHARTZUNA", "Kanpaia nik jo nuen lehenengo aldiz, ura etxeetara sartu zenean. Ez nekien denbora geldituko zenik.", "Yo toqué la campana la primera vez, cuando el agua entró en las casas. No sabía que el tiempo se detendría."],
+      ["IRATI · OIHARTZUNA", "Zu deitzen ari nintzela uste nuen. Barkatu, Amaiur. Ehun aldiz jo dut geroztik.", "Creía que te estaba llamando. Perdóname, Amaiur. La he tocado cien veces desde entonces."],
+    ],
+    [
+      ["IRATI · OIHARTZUNA", "Gaueko ez da gaiztoa. Gaua da, besterik ez. Eta gau orok egunsenti bat zor dio norbaiti.", "Gaueko no es malvado. Es la noche, nada más. Y toda noche le debe un amanecer a alguien."],
+      ["IRATI · OIHARTZUNA", "Erlojuaren aurrean zaudenean, ez pentsatu nigan. Pentsatu herriko leihoetan, goizean.", "Cuando estés ante el reloj, no pienses en mí. Piensa en las ventanas del pueblo, por la mañana."],
+    ],
+  ];
+  const ECHO_ALL = ["AMAIUR", "Hiru oihartzunak entzun ditut. Ez zara grabazio bat, Irati. Itsasoak gogoratzen zaitu.", "He oído los tres ecos. No eres una grabación, Irati. El mar te recuerda."];
+  const ECHO = { list: [], waves: [], spray: null, ghostMat: null, hinted: new Set(), callT: 0, lastPhase: -1 };
+
+  /* Izotz-materiala: gandorretan izotz-hautsa (zapaltzeko lekua), alboetan beira urdina;
+     iraganean ur iluna bihurtzen da. Itsasoaren ur-normalak ematen dio izoztutako uhin-ehundura. */
+  function iceMaterial() {
+    if (ATMO.iceMat) return ATMO.iceMat;
+    const wn = rawTex("water_n", false),
+      sc = rawTex("snow_c", true);
+    const m = new T.MeshStandardMaterial({
+      color: "#7fc6de",
+      roughness: 0.14,
+      metalness: 0.02,
+      envMapIntensity: 1.5,
+      emissive: new T.Color("#1b5a73"),
+      emissiveIntensity: 0.38,
+    });
+    if (wn) {
+      m.normalMap = wn;
+      m.normalScale.set(0.5, 0.5);
+    }
+    const u = { uBlend: { value: 1 }, uSnow: { value: sc } };
+    m.userData.u = u;
+    m.onBeforeCompile = (sh) => {
+      Object.assign(sh.uniforms, u);
+      sh.vertexShader = sh.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying vec3 vWN;\nvarying vec3 vWP;")
+        .replace(
+          "#include <project_vertex>",
+          "#include <project_vertex>\nvWN=normalize(mat3(modelMatrix)*objectNormal);\nvWP=(modelMatrix*vec4(transformed,1.)).xyz;",
+        );
+      sh.fragmentShader =
+        "uniform float uBlend;\nuniform sampler2D uSnow;\nvarying vec3 vWN;\nvarying vec3 vWP;\n" +
+        sh.fragmentShader
+          .replace(
+            "#include <map_fragment>",
+            [
+              "float iceUp = smoothstep( 0.88, 0.97, normalize( vWN ).y ) * uBlend;",
+              "diffuseColor.rgb *= mix( 0.42, 1.12, smoothstep( -8.5, 9.0, vWP.y ) );",
+              sc ? "vec3 frostC = pow( texture2D( uSnow, vWP.xz * 0.21 ).rgb, vec3( 2.2 ) ) * vec3( 1.02, 1.06, 1.12 );" : "vec3 frostC = vec3( 0.86, 0.92, 0.98 );",
+              "diffuseColor.rgb = mix( diffuseColor.rgb, frostC, iceUp * 0.9 );",
+              "diffuseColor.rgb = mix( vec3( 0.04, 0.2, 0.24 ), diffuseColor.rgb, uBlend );",
+            ].join("\n"),
+          )
+          .replace(
+            "#include <roughnessmap_fragment>",
+            "#include <roughnessmap_fragment>\nroughnessFactor = mix( 0.06, mix( roughnessFactor, 0.78, iceUp ), uBlend );",
+          )
+          .replace(
+            "#include <emissivemap_fragment>",
+            "#include <emissivemap_fragment>\nfloat iceRim = pow( 1.0 - abs( dot( normalize( vViewPosition ), normal ) ), 3.0 );\ntotalEmissiveRadiance = totalEmissiveRadiance * uBlend + iceRim * vec3( 0.42, 0.78, 1.0 ) * 0.55 * uBlend;",
+          );
+    };
+    m.customProgramCacheKey = () => "oih-ice";
+    return (ATMO.iceMat = m);
+  }
+  /* Olatu izoztua: itsasotik jauzi eta izoztu zen ur-zutabea. Zurtoin mehea (hutsuneak
+     ondo ikusteko), goian koroa laua (zapaltzeko) eta aurrean gandor kizkurra (olatuaren ertza). */
+  function waveGeometry(r, H, seed) {
+    const ctl = [
+      [1.55 * r, -0.9],
+      [1.2 * r, 0.12 * H],
+      [0.66 * r, 0.42 * H],
+      [0.6 * r, 0.68 * H],
+      [0.78 * r, H - 2.4],
+      [1.02 * r, H - 0.9],
+      [1.16 * r, H - 0.3],
+      [1.08 * r, H - 0.02],
+      [0.8 * r, H],
+      [0.001, H],
+    ].map(([R, Y]) => new T.Vector2(R, Y));
+    const prof = new T.SplineCurve(ctl).getSpacedPoints(40),
+      A = 44,
+      N = prof.length,
+      pos = [],
+      uv = [],
+      idx = [];
+    for (let j = 0; j <= A; j++) {
+      const th = (j / A) * TAU,
+        front = Math.pow(Math.max(0, Math.cos(th)), 3);
+      for (let i = 0; i < N; i++) {
+        let { x: R, y: Y } = prof[i];
+        const rimZone = T.MathUtils.smoothstep(R, 0.85 * r, 1.12 * r) * T.MathUtils.smoothstep(Y, H - 3, H - 0.4);
+        /* gandorra: aurrean ertza kanporantz eta gorantz, gero behera kizkurtzen */
+        R += front * rimZone * 0.75 * r;
+        Y += front * rimZone * (0.9 - Math.max(0, R - 1.5 * r) * 1.4);
+        const stem = Y < H - 1.2 ? 1 : 0;
+        R *= 1 + stem * (0.07 * Math.sin(5 * th + Y * 0.55 + seed) + 0.04 * Math.sin(11 * th - Y * 1.3 + seed * 2));
+        pos.push(Math.cos(th) * R, Y, Math.sin(th) * R);
+        uv.push(th * 1.6, Y / 3);
+      }
+    }
+    for (let j = 0; j < A; j++)
+      for (let i = 0; i < N - 1; i++) {
+        const a = j * N + i,
+          b = a + N;
+        idx.push(a, a + 1, b, a + 1, b + 1, b);
+      }
+    const g = new T.BufferGeometry();
+    g.setAttribute("position", new T.Float32BufferAttribute(pos, 3));
+    g.setAttribute("uv", new T.Float32BufferAttribute(uv, 2));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  }
+  function addWave([x, z, y, r, rot], k) {
+    const H = y + 8.5,
+      m = obj(waveGeometry(r, H, k * 1.7 + 0.3), iceMaterial());
+    m.position.set(x, -8.5, z);
+    m.rotation.y = rot;
+    m.castShadow = true;
+    m.receiveShadow = true;
+    if (!ECHO.ghostMat)
+      ECHO.ghostMat = new T.MeshBasicMaterial({ color: "#9feaf5", transparent: true, opacity: 0, depthWrite: false });
+    const ghost = new T.Mesh(new T.TorusGeometry(r, 0.05, 4, 48), ECHO.ghostMat);
+    ghost.rotation.x = -PI / 2;
+    ghost.position.set(x, y + 0.06, z);
+    scene.add(ghost);
+    const plat = { x, z, y, rx: r, rz: r, phase: 1, wave: true, m };
+    platforms.push(plat);
+    const W = { x, z, y, r, rot, H, m, ghost, plat, seed: k * 2.3 };
+    ECHO.waves.push(W);
+    return W;
+  }
+  /* Izotz-zintzilikarioak koroaren ertzean eta ur-tanta izoztuak gandorraren aurrean (orainean bakarrik) */
+  function addSpray() {
+    const per = mobile ? 9 : 16,
+      n = ECHO.waves.length * per,
+      im = new T.InstancedMesh(new T.ConeGeometry(0.16, 1, 5), iceMaterial(), n);
+    im.castShadow = false;
+    const base = [];
+    let s = 4242;
+    const rnd = () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+    for (const W of ECHO.waves)
+      for (let i = 0; i < per; i++) {
+        const th = rnd() * TAU,
+          drop = i % 3 === 2,
+          R = W.r * (drop ? 1.9 + rnd() * 0.9 : 1.08 + rnd() * 0.1) * (Math.cos(th) > 0 && !drop ? 1 + 0.6 * Math.pow(Math.cos(th), 3) : 1),
+          len = drop ? 0.35 : 0.7 + rnd() * 1.5,
+          a = th - W.rot,
+          v = drop ? W.H - 1.4 + rnd() * 2.4 : W.H - 0.55 - len / 2;
+        base.push({ p: new T.Vector3(W.x + Math.cos(a) * R, -8.5 + v, W.z + Math.sin(a) * R), s: new T.Vector3(drop ? 1.1 : 1, drop ? 0.35 : -len, drop ? 1.1 : 1) });
+      }
+    scene.add(im);
+    ECHO.spray = { im, base, k: -1 };
+  }
+  /* Kanpai-uhartetxoa: uharteen antzeko harri flotatzailea, gainean kanpai-arkua */
+  function addIslet([x, z, y, r], id) {
+    const geo = new T.CylinderGeometry(1, 1, 1, 26, 4),
+      a = geo.attributes.position;
+    for (let i = 0; i < a.count; i++) {
+      const px = a.getX(i),
+        pz = a.getZ(i),
+        py = a.getY(i),
+        ang = Math.atan2(pz, px),
+        t = py + 0.5,
+        edge = 1 + 0.06 * Math.sin(ang * 5 + id * 2) + 0.04 * Math.sin(ang * 9 + id);
+      const sc = (0.42 + t * 0.58) * (t > 0.99 ? 1 : edge);
+      a.setXYZ(i, px * r * sc, y - 6 + t * 6, pz * r * sc);
+    }
+    geo.computeVertexNormals();
+    obj(geo, rockMaterial()).position.set(x, 0, z);
+    const cap = new T.CircleGeometry(r, 32);
+    cap.rotateX(-PI / 2);
+    const tm = terrainMaterial();
+    let top;
+    if (tm) {
+      worldUV(cap, x, z);
+      top = obj(cap, tm);
+    } else top = obj(cap, material("#b7cbd0"));
+    top.position.set(x, y + 0.015, z);
+    top.castShadow = false;
+    platforms.push({ x, z, y, rx: r, rz: r, phase: -1, islet: id, m: top });
+    for (let i = 0; i < 7; i++) {
+      const an = (i * TAU) / 7 + id;
+      model(i % 2 ? "rock_single_A" : "rock_single_C", x + Math.cos(an) * r * 0.97, y - 0.9, z + Math.sin(an) * r * 0.97, 1.7 + (i % 3) * 0.3, an);
+    }
+    /* arkua eta kanpaia */
+    const g = new T.Group();
+    g.position.set(x, y, z);
+    g.rotation.y = id * 1.3 + 0.4;
+    scene.add(g);
+    for (const sx of [-1.25, 1.25]) box(sx, 1.65, 0, 0.34, 3.3, 0.34, "#76868c", g);
+    box(0, 3.35, 0, 3.1, 0.3, 0.42, "#5f4330", g);
+    const pivot = new T.Group();
+    pivot.position.set(0, 3.2, 0);
+    g.add(pivot);
+    const prof = [
+      [0, 0], [0.16, 0.01], [0.25, 0.09], [0.29, 0.3], [0.33, 0.56], [0.42, 0.79], [0.53, 0.93], [0.56, 0.97],
+      [0.5, 0.96], [0.39, 0.84], [0.29, 0.6], [0.25, 0.32], [0.2, 0.12], [0, 0.08],
+    ].map(([px, py]) => new T.Vector2(px * 1.5, -py * 1.5));
+    const bell = obj(
+      new T.LatheGeometry(prof, 30),
+      ATMO.bronze ||
+        (ATMO.bronze = new T.MeshStandardMaterial({ color: "#b8873f", metalness: 0.9, roughness: 0.3, side: T.DoubleSide })),
+      pivot,
+    );
+    bell.castShadow = true;
+    const clap = orb(0, -1.2, 0, 0.12, "#3d2f22", pivot);
+    clap.castShadow = false;
+    /* argi-zutabea: urrunetik ikusten da, kanpaia jo arte */
+    const shaft = new T.Mesh(
+      new T.CylinderGeometry(0.85, 0.85, 46, 20, 1, true),
+      new T.ShaderMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: T.AdditiveBlending,
+        side: T.DoubleSide,
+        uniforms: { uA: { value: 1 }, uTime: { value: 0 }, uC: { value: new T.Color("#ffd58a") } },
+        vertexShader:
+          "varying vec2 vUv;varying float vE;void main(){vUv=uv;vec4 mv=modelViewMatrix*vec4(position,1.);vE=abs(dot(normalize(normalMatrix*normal),normalize(-mv.xyz)));gl_Position=projectionMatrix*mv;}",
+        fragmentShader:
+          "uniform float uA,uTime;uniform vec3 uC;varying vec2 vUv;varying float vE;void main(){float a=pow(vE,2.)*pow(vUv.y,1.7)*(.78+.22*sin(vUv.y*36.+uTime*2.2));gl_FragColor=vec4(uC,a*uA*.42);}",
+      }),
+    );
+    /* CylinderGeometry-n uv.y=1 goian dago: alderantziz, argia behean indartsuena izan dadin */
+    shaft.rotation.x = PI;
+    shaft.position.set(x, y + 23, z);
+    shaft.renderOrder = 5;
+    scene.add(shaft);
+    const halo = glow(x, y + 2.6, z, "#ffd9a0", 3.2);
+    return { id, x, z, y, r, g, pivot, bell, shaft, halo, swing: 0, swingT: 9, rung: false };
+  }
+  function buildEchoes() {
+    saved.echoes = Array.isArray(saved.echoes) ? saved.echoes.filter((n) => n >= 0 && n < 3) : [];
+    ECHO_DEFS.forEach((d, id) => {
+      d.waves.forEach((w, k) => addWave(w, id * 10 + k));
+      for (const [x, z, y, w, dd, moving] of d.planks) bridge(x, z, y, w, dd, 0, !!moving);
+      for (const [x, z, y] of d.crystals) {
+        const m = orb(x, y, z, 0.34, "#b3ffc9");
+        buildCrystals.push({ x, z, y, m, cool: 0 });
+      }
+      const E = addIslet(d.islet, id);
+      E.rung = saved.echoes.includes(id);
+      if (E.rung) E.shaft.visible = false;
+      ECHO.list.push(E);
+    });
+    addSpray();
+    ECHO.lastPhase = phase;
+  }
+  /* Olatuen itxura phaseBlend-en arabera: orainean zutik eta izoztuta, iraganean itsasoan desegiten */
+  function wavesVisual(dt) {
+    const k = phaseBlend,
+      e = k * k * (3 - 2 * k);
+    if (ATMO.iceMat) ATMO.iceMat.userData.u.uBlend.value = e;
+    for (const W of ECHO.waves) {
+      const bob = (1 - e) * (0.012 + 0.008 * Math.sin(time * 1.1 + W.seed));
+      W.m.scale.y = Math.max(0.004, e + bob);
+    }
+    if (ECHO.ghostMat) ECHO.ghostMat.opacity = (1 - e) * 0.42;
+    const sp = ECHO.spray;
+    if (sp && Math.abs(sp.k - e) > 0.002) {
+      sp.k = e;
+      const mt = new T.Matrix4(),
+        q = new T.Quaternion(),
+        sc = new T.Vector3();
+      const k2 = Math.max(0.0001, (e - 0.6) / 0.4);
+      sp.base.forEach((b, i) => {
+        sc.copy(b.s).multiplyScalar(k2);
+        const p = b.p.clone();
+        p.y = -8.5 + (p.y + 8.5) * e;
+        mt.compose(p, q, sc);
+        sp.im.setMatrixAt(i, mt);
+      });
+      sp.im.instanceMatrix.needsUpdate = true;
+      sp.im.visible = e > 0.6;
+    }
+  }
+  /* Garaia aldatzean: olatuak lehertu (iragana) edo izoztu (oraina) — hurbilekoek bakarrik */
+  function wavesOnShift() {
+    let near = false;
+    for (const W of ECHO.waves) {
+      if (Math.hypot(P.x - W.x, P.z - W.z) > 46) continue;
+      near = true;
+      if (phase === 0) fxBurst(W.x, W.y - 1.5, W.z, { n: 12, speed: 4, up: 5, life: 1.1, size: 0.42, color: "#cfefff", grav: 9, drag: 1.2, jitter: 2.5 });
+      else fxBurst(W.x, W.y + 0.2, W.z, { n: 8, speed: 1.4, up: 1.5, life: 0.9, size: 0.26, color: "#e8fbff", grav: -0.3, drag: 3, jitter: W.r });
+    }
+    if (near) phase === 0 ? SND.splash() : SND.freeze();
+  }
+  function echoUpdate(dt) {
+    wavesVisual(dt);
+    for (const E of ECHO.list) {
+      E.shaft.material.uniforms.uTime.value = time;
+      if (E.rung) {
+        const a = E.shaft.material.uniforms.uA;
+        a.value = Math.max(0, a.value - dt * 0.6);
+        E.shaft.visible = a.value > 0;
+        E.halo.material.color.set("#9feaf5");
+      }
+      E.swingT += dt;
+      E.pivot.rotation.z = E.swing * Math.sin(E.swingT * 5.2) * Math.exp(-E.swingT * 0.55);
+      const d = Math.hypot(P.x - E.x, P.z - E.z);
+      if (!E.rung && d < 44 && !ECHO.hinted.has(E.id) && started && !cinematic) {
+        ECHO.hinted.add(E.id);
+        notify("Kanpai-hots bat… itsasoaren gainean.", "Una campanada… sobre el mar.", 4);
+      }
+      if (!E.rung && P.grounded && d < 2.4 && Math.abs(P.y - E.y) < 1.2) ringEcho(E);
+    }
+    /* deia: kanpai jo gabeko hurbilenak noizean behin jotzen du, distantziaren arabera */
+    ECHO.callT -= dt;
+    if (ECHO.callT <= 0) {
+      ECHO.callT = 7;
+      let best = null,
+        bd = 1e9;
+      for (const E of ECHO.list)
+        if (!E.rung) {
+          const d = Math.hypot(P.x - E.x, P.z - E.z);
+          if (d < bd) (bd = d), (best = E);
+        }
+      if (best && bd < 70) {
+        SND.echo(0.5 * (1 - bd / 70));
+        best.swing = Math.max(best.swing * Math.exp(-best.swingT * 0.55), 0.06);
+        best.swingT = 0;
+      }
+    }
+  }
+  function ringEcho(E) {
+    E.rung = true;
+    E.swing = 0.42;
+    E.swingT = 0;
+    if (!saved.echoes.includes(E.id)) saved.echoes.push(E.id);
+    persist();
+    SND.echo(1);
+    shake(0.22);
+    fxRing(E.x, E.y + 0.15, E.z, "#ffe2a6", 11, 1.4);
+    fxRing(E.x, E.y + 2.4, E.z, "#ffe2a6", 6, 0.9);
+    fxBurst(E.x, E.y + 2.6, E.z, { n: 46, speed: 4.5, up: 2.5, life: 1.4, size: 0.32, color: "#ffe2a6", grav: -0.6, drag: 1.6 });
+    notify(
+      "OIHARTZUNA · " + saved.echoes.length + " / 3",
+      "ECO · " + saved.echoes.length + " / 3",
+      3,
+    );
+    /* eszena pausarik edo menurik ez dagoenean */
+    const go = () => (ENDING.on || cinematic || !$("overlay").hidden || paused ? setTimeout(go, 600) : playEchoScene(E.id));
+    setTimeout(go, 1500);
+  }
+  function playEchoScene(id) {
+    const E = ECHO.list[id],
+      shots = ECHO_SCENES[id].map(([who, eu, es]) => [who, eu, es, E.x, E.z, E.y]);
+    if (saved.echoes.length === 3) shots.push([...ECHO_ALL, E.x, E.z, E.y]);
+    scenes[6] = shots;
+    playScene(6);
+  }
+
+  /* ==================================================================
+     AMAIERA · kamera-bidaia, munduaren eraldaketa eta laburpena
+     ================================================================== */
+  const ENDINGS = {
+    release: ["Denbora askatua", "El tiempo liberado"],
+    keep: ["Egun hau, betiko", "Este día, para siempre"],
+    bridge: ["Biharko zubia", "El puente al mañana"],
+    unite: ["Bi aldeak", "Los dos lados"],
+  };
+  const ENDING = { on: false, which: null, t: 0, b0: 1, s: 0, p0: new T.Vector3(), l0: new T.Vector3(), fx: [], exp0: 1.12 };
+  const bez = (a, b, c, u, out) =>
+    out.set(
+      (1 - u) * (1 - u) * a.x + 2 * u * (1 - u) * b.x + u * u * c.x,
+      (1 - u) * (1 - u) * a.y + 2 * u * (1 - u) * b.y + u * u * c.y,
+      (1 - u) * (1 - u) * a.z + 2 * u * (1 - u) * b.z + u * u * c.z,
+    );
+  const smooth01 = (t) => t * t * (3 - 2 * t);
+  function endingText(which) {
+    const t =
+      which === "bridge"
+        ? [
+            "Ez duzu egun hau hautsi. Irteera bat eraiki diozu.\nHiru mundutako ahotsek zubi berean bat egin dute. Herriak bihar du.",
+            "No has roto este día. Le has construido una salida.\nLas voces de tres mundos se encuentran sobre el mismo puente. El pueblo tiene un mañana.",
+          ]
+        : which === "unite"
+          ? [
+              "Irati ez da itzuli. Baina ez da desagertu ere.\nHerriko ate urdina berriro ireki da.",
+              "Irati no ha vuelto. Pero tampoco ha desaparecido.\nLa puerta azul del pueblo vuelve a abrirse.",
+            ]
+          : which === "keep"
+            ? ["Itsasoak arnasari eutsi dio.\nBihar berriro izango da gaur.", "El mar contiene la respiración.\nMañana volverá a ser hoy."]
+            : ["Ordua askatu duzu.\nLehen aldiz, kanpaiak ez du berriro jotzen.", "Has soltado la hora.\nPor primera vez, la campana no vuelve a sonar."];
+    if (saved.echoes?.length === 3) {
+      t[0] += "\n\nHiru oihartzunak zurekin daude. Itsasoak gogoratzen du.";
+      t[1] += "\n\nLos tres ecos están contigo. El mar la recuerda.";
+    }
+    return t;
+  }
+  function endingStart(which) {
+    Object.assign(ENDING, { on: true, which, t: 0, b0: phaseBlend, s: 0, exp0: renderer.toneMappingExposure });
+    ENDING.p0.copy(camera.position);
+    ENDING.l0.set(P.x, P.y + 1, P.z);
+    paused = true;
+    clearInput();
+    coachHide();
+    $("hud").style.opacity = "0";
+    $("touch").style.visibility = "hidden";
+    $("waypoint").hidden = true;
+    if (guideBeacon) guideBeacon.visible = false;
+    $("endName").textContent = L(...ENDINGS[which]);
+    $("endText").textContent = L(...endingText(which));
+    $("endFx").className = "";
+    $("endFx").hidden = false;
+    SND.ending(which);
+    for (const f of ENDING.fx) scene.remove(f.m);
+    ENDING.fx = [];
+    const core = new T.Vector3(0, 18, -179);
+    if (which === "bridge") {
+      /* argi-zubia erlojutik herrira, ortzadarra bezala */
+      for (let i = 0; i < 40; i++) {
+        const u = i / 39,
+          z = mix(-158, 4, u),
+          y = mix(15.2, 0.5, u) + Math.sin(u * PI) * 15;
+        const m = box(0, y, z, 2.6, 0.14, 3.7, material("#ffd68f", 1.6));
+        m.castShadow = false;
+        m.scale.setScalar(0.001);
+        ENDING.fx.push({ m, kind: "plank", at: 3.2 + i * 0.16 });
+      }
+    } else if (which === "unite" || which === "release") {
+      const n = which === "unite" ? 10 : 6;
+      for (let i = 0; i < n; i++) {
+        const c = which === "unite" && i % 2 ? "#a9ecf5" : "#ffdca0",
+          m = orb(core.x, core.y, core.z, 0.3, c);
+        m.castShadow = false;
+        const dest = new T.Vector3(Math.sin(i * 2.4) * 28, 6 + (i % 4) * 5, -40 - i * 13);
+        ENDING.fx.push({ m, kind: "mote", at: 3 + i * 0.45, from: core.clone(), mid: new T.Vector3(dest.x * 0.4, 34 + i, mix(core.z, dest.z, 0.4)), to: dest });
+      }
+    }
+    if (which !== "keep") {
+      fxBurst(core.x, core.y, core.z, { n: 70, speed: 8, up: 2, life: 1.6, size: 0.4, color: which === "unite" ? "#d9f4ff" : "#ffe6b0", grav: -0.4, drag: 1.4 });
+      fxRing(core.x, core.y - 2.7, core.z, "#ffe6b0", 18, 1.6);
+    }
+  }
+  function endingUpdate(dt) {
+    const E = ENDING;
+    E.t += dt;
+    time += dt;
+    const u = smooth01(clamp(E.t / 15, 0, 1));
+    bez(E.p0, new T.Vector3(36, 36, -148), new T.Vector3(17, 52, -247), u, camera.position);
+    const look = bez(E.l0, new T.Vector3(0, 18, -179), new T.Vector3(0, 3, -92), smooth01(clamp(E.t / 13, 0, 1)), new T.Vector3());
+    camera.lookAt(look);
+    const target = E.which === "keep" ? 1 : E.which === "unite" ? 0.5 : 0;
+    phaseBlend = mix(E.b0, target, smooth01(clamp((E.t - 2.2) / 6.5, 0, 1)));
+    eraVisuals(dt);
+    wavesVisual(dt);
+    const warm = E.which === "release" || E.which === "bridge" ? smooth01(clamp((E.t - 3) / 8, 0, 1)) : 0;
+    renderer.toneMappingExposure = E.exp0 + warm * 0.18 - (E.which === "keep" ? smooth01(clamp(E.t / 8, 0, 1)) * 0.12 : 0);
+    sun.intensity *= 1 + warm * 0.35;
+    if (boss.group) {
+      const fade = E.which === "keep" ? 0 : smooth01(clamp((E.t - 1) / 4, 0, 1));
+      boss.core.scale.setScalar(Math.max(0.001, 1 - fade));
+      boss.ring.position.y = 3 - fade * 22;
+      boss.ring.rotation.z += dt * (E.which === "keep" ? 0 : 0.4 * (1 - fade));
+    }
+    for (const f of E.fx) {
+      const k = clamp((E.t - f.at) / (f.kind === "plank" ? 0.5 : 6), 0, 1);
+      if (f.kind === "plank") f.m.scale.setScalar(Math.max(0.001, 1 - Math.pow(1 - k, 3)));
+      else {
+        bez(f.from, f.mid, f.to, smooth01(k), f.m.position);
+        f.m.scale.setScalar(Math.max(0.001, k <= 0 ? 0.001 : 1 - Math.max(0, k - 0.8) * 5));
+      }
+    }
+    if (E.which === "release" && E.t > 2 && E.t < 9 && frame++ % 6 === 0)
+      fxBurst(mix(-20, 20, Math.random()), 16 + Math.random() * 6, -179 + mix(-20, 20, Math.random()), { n: 3, speed: 0.6, up: 1.4, life: 2.4, size: 0.3, color: "#ffd99a", grav: -0.5, drag: 0.6 });
+    if (mixer) mixer.update(dt);
+    if (E.t > 3 && E.s < 1) (E.s = 1), $("endFx").classList.add("s1");
+    if (E.t > 5.5 && E.s < 2) (E.s = 2), $("endFx").classList.add("s2");
+    if (E.t > 11 && E.s < 3) {
+      E.s = 3;
+      endingCard();
+      $("endFx").classList.add("s3");
+      $("endExplore").focus({ preventScroll: true });
+    }
+  }
+  function endingCard() {
+    const t = Math.round(saved.playTime || 0),
+      mm = Math.floor(t / 60),
+      ss = String(t % 60).padStart(2, "0"),
+      seen = saved.endings || [];
+    const stats = [
+      [L("DENBORA", "TIEMPO"), (mm >= 60 ? Math.floor(mm / 60) + "h " + String(mm % 60).padStart(2, "0") : mm) + ":" + ss],
+      [L("ERORIALDIAK", "CAÍDAS"), saved.deaths || 0],
+      [L("OROITZAPENAK", "RECUERDOS"), saved.memories.length + "/5"],
+      [L("OIHARTZUNAK", "ECOS"), (saved.echoes?.length || 0) + "/3"],
+      [L("AMAIERAK", "FINALES"), seen.length + "/4"],
+    ];
+    $("endStats").replaceChildren(
+      ...stats.map(([k, v]) => {
+        const d = document.createElement("div"),
+          dt = document.createElement("dt"),
+          dd = document.createElement("dd");
+        dt.textContent = k;
+        dd.textContent = v;
+        d.append(dt, dd);
+        return d;
+      }),
+    );
+    $("endHint").textContent = !seen.includes("unite")
+      ? L("Bost oroitzapenekin, beste amaiera bat irekitzen da.", "Con los cinco recuerdos se abre otro final.")
+      : !seen.includes("bridge")
+        ? L("Hiru eraikuntza-loturak osatuz gero, beste amaiera bat dago.", "Si completas los tres enlaces de construcción, hay otro final.")
+        : seen.length < 4
+          ? L("Erlojuaren aurrean, beste erabaki bat har dezakezu.", "Ante el reloj, puedes tomar otra decisión.")
+          : (saved.echoes?.length || 0) < 3
+            ? L("Itsasoaren gainean kanpaiak daude oraindik.", "Aún quedan campanas sobre el mar.")
+            : L("Dena entzun duzu. Eskerrik asko, bidaiari.", "Lo has escuchado todo. Gracias, viajera.");
+    $("endExplore").textContent = L("UHARTEAK ARRAKATU", "EXPLORAR LAS ISLAS");
+    $("endVillage").textContent = L("HERRIRA ITZULI", "VOLVER AL PUEBLO");
+  }
+  function endingFinish(village) {
+    if (!ENDING.on) return;
+    ENDING.on = false;
+    $("endFx").hidden = true;
+    $("endFx").className = "";
+    $("hud").style.opacity = "1";
+    $("touch").style.visibility = "";
+    renderer.toneMappingExposure = ENDING.exp0;
+    paused = false;
+    accumulator = 0;
+    if (village) {
+      teleport(0, 29, 0);
+      currentStage = 0;
+      notify("Bide bera. Beste begirada bat.", "El mismo camino. Otra mirada.", 4);
+    }
+    CAM.pos = null;
+    hud();
   }
 
   let stepAcc = 0;
@@ -5281,7 +5934,8 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     boss.ring = halo;
     boss.core = core;
     boss.wave = ring(0, 15.2, -179, 1, "#ffb382");
-    boss.wave.visible = false;
+    boss.waves = [boss.wave, ring(0, 15.25, -179, 1, "#88e3f4"), ring(0, 15.3, -179, 1, "#ffb382")];
+    for (const w of boss.waves) w.visible = false;
     glow(0, 18, -179, "#aee7ff", 8);
     for (let i = 0; i < 12; i++) {
       let a = (i * TAU) / 12;
@@ -5357,6 +6011,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     glow(0, 1, 0, "#f0ca8f", 1.2).userData.player = true;
     fxInit();
     buildWorkshop();
+    buildEchoes();
     teleport(0, 29, 0);
     phase = 0;
     setPhaseVisual(true);
@@ -5409,10 +6064,11 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
   }
   function returnCheckpoint() {
     ascent = null;
-    routeStep = stageRoute[saved.stage];
+    const cpStage = currentStage >= 0 && currentStage <= saved.stage ? currentStage : saved.stage;
+    routeStep = stageRoute[cpStage];
     magic.history = [];
-    const cp = checkpointPositions[saved.stage];
-    teleport(cp[0], cp[1], ISLANDS[saved.stage].y);
+    const cp = checkpointPositions[cpStage];
+    teleport(cp[0], cp[1], ISLANDS[cpStage].y);
     P.hp = 3;
     damageTime = 1;
     boss.hits = 0;
@@ -5465,6 +6121,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     }
     setPhaseVisual();
     FB.shift();
+    wavesOnShift();
     coachDone("shift");
     if (saved.stage === 3) coachDone("beam");
     if (!P.platform || P.platform.phase !== -1) {
@@ -5704,7 +6361,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
   function updateBoss(dt) {
     if (stasisActive()) return;
     if (saved.stage < 5 || saved.ending) {
-      boss.wave.visible = false;
+      for (const w of boss.waves) w.visible = false;
       boss.core.rotation.y += dt * 0.5;
       return;
     }
@@ -5714,6 +6371,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     boss.ring.rotation.z += dt * (boss.state === "open" ? 2 : 0.45);
     boss.core.position.y = 3 + Math.sin(time * 2) * 0.15;
     if (boss.state === "tell") {
+      for (const w of boss.waves) w.visible = false;
       boss.attackPhase = Math.floor((boss.hits + Math.floor(time * 0.05)) % 2);
       const c = boss.attackPhase ? "#88e3f4" : "#ffb77b";
       boss.core.material = material(c, 1.8);
@@ -5721,17 +6379,34 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       if (boss.clock > 2) {
         boss.state = "wave";
         boss.clock = 0;
-        boss.wave.visible = true;
-        boss.wave.material = material(c, 1.3);
+        boss.waves.forEach((w, k) => (w.material = material((boss.attackPhase + k) % 2 ? "#88e3f4" : "#ffb77b", 1.3)));
+        if (boss.hits && boss.warned !== boss.hits) {
+          boss.warned = boss.hits;
+          notify(
+            boss.hits === 1 ? "Bi uhin datoz: bi aldiz ALDATU!" : "Hiru uhin! Erritmoa: aldatu, aldatu, aldatu.",
+            boss.hits === 1 ? "Vienen dos ondas: ¡CAMBIA dos veces!" : "¡Tres ondas! Ritmo: cambia, cambia, cambia.",
+            2.6,
+          );
+        }
       }
     } else if (boss.state === "wave") {
-      let r = 1 + boss.clock * 15;
-      boss.wave.scale.setScalar(r);
-      if (phase === boss.attackPhase && Math.abs(dist(P, bpos) - r) < 1 && P.y < 16.1) takeHit();
-      if (boss.clock > 1.65) {
+      /* bossaren faseak: kolpe bakoitzaren ondoren uhin bat gehiago, garai txandakatuetan */
+      const n = 1 + Math.min(2, boss.hits),
+        speed = 15 + boss.hits * 2.5;
+      let live = false;
+      boss.waves.forEach((w, k) => {
+        const t = boss.clock - k * 0.85;
+        w.visible = k < n && t > 0 && t < 1.65;
+        if (k < n && t < 1.65) live = true;
+        if (!w.visible) return;
+        const r = 1 + t * speed;
+        w.scale.setScalar(r);
+        if (phase === (boss.attackPhase + k) % 2 && Math.abs(dist(P, bpos) - r) < 1 && P.y < 16.1) takeHit();
+      });
+      if (!live) {
         boss.state = "open";
         boss.clock = 0;
-        boss.wave.visible = false;
+        for (const w of boss.waves) w.visible = false;
         boss.core.material = material("#fff1b3", 1.8);
         notify("ORAIN! DASH nukleora.", "¡AHORA! DASH hacia el núcleo.", 2.5);
       }
@@ -5753,7 +6428,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
           notify("IRATI: «Orain bai. Orain zure erabakia da.»", "IRATI: «Ahora sí. Ahora la decisión es tuya.»", 8);
         }
       }
-      if (boss.clock > 4 && boss.state !== "done") {
+      if (boss.clock > 4 - boss.hits * 0.5 && boss.state !== "done") {
         boss.state = "tell";
         boss.clock = 0;
       }
@@ -5833,17 +6508,8 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       }
     }
     phaseBlend = mix(phaseBlend, phase, 1 - Math.exp(-dt * 3.5));
-    sky.material.uniforms.blend.value = phaseBlend;
-    sea.material.uniforms.blend.value = phaseBlend;
-    sea.material.uniforms.clock.value = time;
-    const grass = new T.Color("#829977").convertSRGBToLinear(),
-      snow = new T.Color("#b9ccd5").convertSRGBToLinear();
-    for (const m of terrainMats) m.color.copy(grass).lerp(snow, phaseBlend);
-    sun.color.set(phaseBlend > 0.5 ? "#cadcf7" : "#ffddb3");
-    sun.intensity = mix(1.8, 1.2, phaseBlend);
-    ambient.intensity = mix(0.86, 0.75, phaseBlend) * (scene.environment ? 0.55 : 1);
-    scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
-    scene.background.copy(scene.fog.color);
+    eraVisuals();
+    echoUpdate(dt);
     for (let i = 0; i < birds.length; i++) {
       let b = birds[i],
         a = time * 0.07 + i;
@@ -5862,6 +6528,19 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     if (saved.bossDone && dist(P, { x: 0, z: -179 }) < 6) near = "ending";
     $("prompt").hidden = !near;
     if (near) $("prompt").textContent = L("E / EKIN · IRATIREN AZKEN MEZUA", "E / ACTUAR · EL ÚLTIMO MENSAJE");
+  }
+  const GRASS = new T.Color("#829977").convertSRGBToLinear(),
+    SNOW = new T.Color("#b9ccd5").convertSRGBToLinear();
+  function eraVisuals() {
+    sky.material.uniforms.blend.value = phaseBlend;
+    sea.material.uniforms.blend.value = phaseBlend;
+    sea.material.uniforms.clock.value = time;
+    for (const m of terrainMats) m.color.copy(GRASS).lerp(SNOW, phaseBlend);
+    sun.color.set(phaseBlend > 0.5 ? "#cadcf7" : "#ffddb3");
+    sun.intensity = mix(1.8, 1.2, phaseBlend);
+    ambient.intensity = mix(0.86, 0.75, phaseBlend) * (scene.environment ? 0.55 : 1);
+    scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
+    scene.background.copy(scene.fog.color);
   }
   function interact() {
     if (!started || paused) return;
@@ -5892,53 +6571,22 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
   }
   function end(which) {
     saved.ending = which;
+    saved.endings = [...new Set([...(saved.endings || []), which])];
     persist();
     phase = which === "keep" ? 1 : 0;
     setPhaseVisual();
     boss.state = "done";
-    boss.wave.visible = false;
-    chord();
+    for (const w of boss.waves) w.visible = false;
     endingActive = true;
-    const txt =
-      which === "bridge"
-        ? [
-            "Ez duzu egun hau hautsi. Irteera bat eraiki diozu.\nHiru mundutako ahotsek zubi berean bat egin dute. Herriak bihar du.",
-            "No has roto este día. Le has construido una salida.\nLas voces de tres mundos se encuentran sobre el mismo puente. El pueblo tiene un mañana.",
-          ]
-        : which === "unite"
-          ? [
-              "Irati ez da itzuli. Baina ez da desagertu ere.\nHerriko ate urdina berriro ireki da.",
-              "Irati no ha vuelto. Pero tampoco ha desaparecido.\nLa puerta azul del pueblo vuelve a abrirse.",
-            ]
-          : which === "keep"
-            ? [
-                "Itsasoak arnasari eutsi dio.\nBihar berriro izango da gaur.",
-                "El mar contiene la respiración.\nMañana volverá a ser hoy.",
-              ]
-            : [
-                "Ordua askatu duzu.\nLehen aldiz, kanpaiak ez du berriro jotzen.",
-                "Has soltado la hora.\nPor primera vez, la campana no vuelve a sonar.",
-              ];
-    dialog(
-      "OIHARTZUN · BI ALDE",
-      "Biharamuna.",
-      "El día siguiente.",
-      txt[0] + "\n\nIbilbidea osatu duzu. Oroitzapen guztiak bilatu edo bidaiari berriro ekin diezaiokezu.",
-      txt[1] + "\n\nHas completado el recorrido. Puedes buscar los recuerdos restantes o volver a empezar.",
-      [
-        [L("UHARTEAK ARRAKATU", "EXPLORAR LAS ISLAS"), () => {}],
-        [
-          L("HERRIRA ITZULI", "VOLVER AL PUEBLO"),
-          () => {
-            teleport(0, 29, 0);
-            currentStage = 0;
-            notify("Bide bera. Beste begirada bat.", "El mismo camino. Otra mirada.", 4);
-          },
-        ],
-      ],
-    );
+    endingStart(which);
   }
   function cameraUpdate(dt) {
+    const ov = window.__camOverride; /* probetarako soilik (?test) */
+    if (ov) {
+      camera.position.set(...ov.pos);
+      camera.lookAt(...ov.look);
+      return;
+    }
     if (workshop.active) {
       const a = workshop.selected,
         look = new T.Vector3(a.x, a.y, a.z);
@@ -6012,7 +6660,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     );
   }
   function pause() {
-    if (cinematic) return;
+    if (cinematic || ENDING.on) return;
     if (!started || !$("overlay").hidden) return;
     dialog(
       "OIHARTZUN",
@@ -6065,6 +6713,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     $("heartLab").textContent = L("ARNASA", "ALIENTO");
     $("dashLab").textContent = L("IMPULTSUA", "IMPULSO");
     $("secretLab").textContent = L("OROITZAPENAK", "RECUERDOS");
+    $("echoLab").textContent = L("OIHARTZUNAK", "ECOS");
     $("keys").innerHTML = (
       language === "eu"
         ? [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["Q", "garaia"], ["F", "DASH"], ["E", "ekin"], ["G", "eraiki"], ["X", "igo"], ["Z", "gelditu"], ["H", "botereak"]]
@@ -6119,6 +6768,8 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     $("weaveBtn").onclick = powerMenu;
     $("recallBtn").onclick = ascend;
     $("cineNext").onclick = nextShot;
+    $("endExplore").onclick = () => endingFinish(false);
+    $("endVillage").onclick = () => endingFinish(true);
     $("cineSkip").onclick = endScene;
     $("phaseBtn").onclick = switchPhase;
     $("dashBtn").onclick = dash;
@@ -6244,8 +6895,12 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     $("chapter").textContent = "0" + (idx + 1) + " / 06 · OIHARTZUN";
     $("placeName").textContent = L(...I.name);
     $("goal").textContent = saved.ending
-      ? L("Bilatu falta diren oroitzapenak.", "Busca los recuerdos que faltan.")
+      ? saved.memories.length === 5 && saved.echoes.length === 3
+        ? L("Dena aurkitu duzu. Uharteak zureak dira.", "Lo has encontrado todo. Las islas son tuyas.")
+        : L("Bilatu falta diren oroitzapenak eta kanpaiak.", "Busca los recuerdos y las campanas que faltan.")
       : guideText();
+    $("echoBox").hidden = !saved.echoes.length;
+    $("echoes").textContent = saved.echoes.length + "/3";
     $("hearts").textContent = "● ".repeat(Math.max(0, P.hp)) + "○ ".repeat(Math.max(0, 3 - P.hp));
     $("dashDot").textContent = P.dashReady ? "◆" : "◇";
     $("dashDot").style.opacity = P.dashReady ? 1 : 0.5;
@@ -6291,6 +6946,25 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       c.fillStyle = s.phase === -1 || s.phase === phase ? "#f2d298" : "#4b6a80";
       c.fillRect(xx(s.x) - 3, zz(s.z) - 3, 6, 6);
     }
+    for (const W of ECHO.waves) {
+      c.fillStyle = phase === 1 ? "#bfeaf5" : "#2f5266";
+      c.beginPath();
+      c.arc(xx(W.x), zz(W.z), W.r * 1.6, 0, TAU);
+      c.fill();
+    }
+    for (const E of ECHO.list) {
+      c.fillStyle = "#6e9198";
+      c.beginPath();
+      c.arc(xx(E.x), zz(E.z), E.r * 1.6, 0, TAU);
+      c.fill();
+      c.fillStyle = E.rung ? "#7fb9c4" : "#ffd27a";
+      c.beginPath();
+      c.moveTo(xx(E.x), zz(E.z) - 5);
+      c.lineTo(xx(E.x) + 4, zz(E.z));
+      c.lineTo(xx(E.x), zz(E.z) + 5);
+      c.lineTo(xx(E.x) - 4, zz(E.z));
+      c.fill();
+    }
     for (const m of pickups)
       if (!m.collected) {
         c.fillStyle = "#ffe4a2";
@@ -6318,6 +6992,8 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     updateMagic(dt);
     frame++;
     time += dt;
+    saved.playTime = (saved.playTime || 0) + dt;
+    if (frame % 2400 === 0) persist();
     phaseCooldown = Math.max(0, phaseCooldown - dt);
     damageTime = Math.max(0, damageTime - dt);
     if (respawnTimer > 0) {
@@ -6351,6 +7027,8 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       cameraUpdate(raw);
     } else if (cinematic) {
       updateCinema(raw);
+    } else if (ENDING.on) {
+      endingUpdate(raw);
     } else if (started && !paused) {
       if (hitStop > 0) {
         hitStop -= raw;
@@ -6738,6 +7416,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
   function endScene() {
     if (!cinematic) return;
     $("portrait").classList.remove("talk");
+    const wasEcho = cinematic.i === 6;
     cinematic = null;
     paused = false;
     clearInput();
@@ -6747,11 +7426,18 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     $("touch").style.visibility = "";
     $("chapterTitle").style.opacity = 0;
     titleTimer = 0;
-    notify(
-      "Jarraitu urrezko markari. Zure bidea aurrean dago.",
-      "Sigue la marca dorada. Tu camino está delante de ti.",
-      4,
-    );
+    if (wasEcho)
+      notify(
+        saved.echoes.length === 3 ? "Hiru oihartzunak entzun dituzu." : "OIHARTZUNA · " + saved.echoes.length + " / 3 · Beste kanpai batzuk zain daude.",
+        saved.echoes.length === 3 ? "Has escuchado los tres ecos." : "ECO · " + saved.echoes.length + " / 3 · Otras campanas esperan.",
+        4,
+      );
+    else
+      notify(
+        "Jarraitu urrezko markari. Zure bidea aurrean dago.",
+        "Sigue la marca dorada. Tu camino está delante de ti.",
+        4,
+      );
     hud();
   }
   function updateCinema(dt) {
@@ -6759,7 +7445,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     c.t += dt;
     const sh = scenes[c.i][c.n],
       I = ISLANDS[c.i] || ISLANDS[Math.max(0, currentStage)];
-    const look = new T.Vector3(sh[3], I.y + 1.4, sh[4]),
+    const look = new T.Vector3(sh[3], (sh[5] ?? I.y) + 1.4, sh[4]),
       a = c.n % 2 ? -0.35 : 0.3;
     const pos = look.clone().add(new T.Vector3(12 * Math.cos(a + c.t * 0.035), 9, 17));
     camera.position.lerp(pos, 1 - Math.exp(-dt * 2));
@@ -7458,6 +8144,12 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
         platforms,
         pickups,
         ISLANDS,
+        ECHO,
+        ECHO_DEFS,
+        ENDING,
+        ringEcho,
+        endingFinish,
+        blend: () => phaseBlend,
         boss,
         teleport,
         jump,
