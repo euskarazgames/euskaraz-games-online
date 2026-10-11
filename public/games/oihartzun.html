@@ -79,6 +79,9 @@
 @media (prefers-reduced-motion: reduce){#endName,#endText,#endCard{transition:opacity .6s}}
 #endFx .wrap{padding:34px 40px;background:radial-gradient(closest-side,#04121dc4,#04121d8a 55%,#04121d00)}
 @media(max-height:520px){#endFx .wrap{padding:14px 20px}}
+.eg-embed #phaseHud{top:46px}
+@media(max-height:520px){.eg-embed #phaseHud{top:40px}}
+@media(pointer:coarse) and (orientation:portrait){.eg-embed #phaseHud{top:68px}}
 
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>OIHARTZUN<small id="loadLabel">Bi mundu, istorio bat…</small><i><b id="loadBar"></b></i></div></div>
 <section id="start"><div class="eyebrow">EUSKARAZ GAMES · BERRASMATUA / REIMAGINADO</div><h1>OIHARTZUN<span>BI ALDE</span></h1><p id="premise"></p><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>01 · ITSASOAREN BESTALDEAN</span><div><button id="credits">KREDITUAK</button> <button id="legacy">ELUR JOKOA ↗</button> <button id="reset">↺</button></div></div></section>
@@ -5173,8 +5176,9 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       e = k * k * (3 - 2 * k);
     if (ATMO.iceMat) ATMO.iceMat.userData.u.uBlend.value = e;
     for (const W of ECHO.waves) {
-      const bob = (1 - e) * (0.012 + 0.008 * Math.sin(time * 1.1 + W.seed));
-      W.m.scale.y = Math.max(0.004, e + bob);
+      /* iraganean itsasoaren azpian desagertzen dira (trantsizioan hondoratzen ikusten dira) */
+      W.m.scale.y = Math.max(0.004, e);
+      W.m.visible = e > 0.03;
     }
     if (ECHO.ghostMat) ECHO.ghostMat.opacity = (1 - e) * 0.42;
     const sp = ECHO.spray;
@@ -5219,7 +5223,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       E.swingT += dt;
       E.pivot.rotation.z = E.swing * Math.sin(E.swingT * 5.2) * Math.exp(-E.swingT * 0.55);
       const d = Math.hypot(P.x - E.x, P.z - E.z);
-      if (!E.rung && d < 44 && !ECHO.hinted.has(E.id) && started && !cinematic) {
+      if (!E.rung && d < 44 && !ECHO.hinted.has(E.id) && started && !cinematic && subTimer <= 0) {
         ECHO.hinted.add(E.id);
         notify("Kanpai-hots bat… itsasoaren gainean.", "Una campanada… sobre el mar.", 4);
       }
@@ -5318,6 +5322,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     coachHide();
     $("hud").style.opacity = "0";
     $("touch").style.visibility = "hidden";
+    $("top").style.visibility = "hidden";
     $("waypoint").hidden = true;
     if (guideBeacon) guideBeacon.visible = false;
     $("endName").textContent = L(...ENDINGS[which]);
@@ -5437,6 +5442,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     $("endFx").className = "";
     $("hud").style.opacity = "1";
     $("touch").style.visibility = "";
+    $("top").style.visibility = "";
     renderer.toneMappingExposure = ENDING.exp0;
     paused = false;
     accumulator = 0;
@@ -8089,6 +8095,9 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
   }
 
   async function boot() {
+    /* atariaren barruan (iframe): goiko erdiko "itzuli" botoiari lekua utzi */
+    if (window.__EG_GAME) document.body.classList.add("eg-embed");
+    if (window.__EG_LANG === "es" || window.__EG_LANG === "eu") language = window.__EG_LANG;
     controls();
     translate();
     const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water"], ["dusk", "night"], 8000) : Promise.resolve();

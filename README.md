@@ -4,7 +4,8 @@ Proyecto preparado para desplegar **EUSKARAZ GAMES** en Cloudflare Workers media
 
 ## Estructura
 - `public/index.html`: portal (ligero; carga cada juego solo cuando se abre).
-- `public/games/<juego>.html`: cada juego en su propio archivo (`pilota`, `zesta`, `artzain`, `basoa`, `itsas`).
+- `public/games/<juego>.html`: cada juego en su propio archivo (`pilota`, `zesta`, `artzain`, `basoa`, `itsas`, `oihartzun`).
+  `elur.html` es la versión anterior de OIHARTZUN (ELUR JOKOA), accesible desde su pantalla de inicio.
 - `public/assets/egfx.js`: módulo gráfico común de los juegos (texturas reales, cielos, agua, montañas).
 - `public/assets/tex`, `sky`, `covers`: texturas CC0, cielos y portadas del portal. Créditos en `public/assets/CREDITS.md`.
 - `src/worker.js`: servidor WebSocket con Durable Objects.
@@ -21,6 +22,15 @@ texturas de siempre. En móviles lentos la calidad se ajusta sola. Opciones en l
 - `?gfx=0`: gráficos originales (sin texturas nuevas).
 - `?gfx=lite`: modo ligero.
 - `?gfx=high`: calidad máxima siempre.
+
+## OIHARTZUN
+Plataformas 3D con dos épocas: el pasado (atardecer, mar vivo) y el presente (noche, mar helado).
+Cada puente existe solo en su época; en el presente las olas que inundaron el pueblo están congeladas
+y se puede caminar sobre ellas. Seis islas, cinco recuerdos, tres campanas opcionales (retos de
+dificultad creciente), un jefe final con tres fases y cuatro finales con su propia secuencia.
+- Prueba de errores: `node tools/test/errcheck.js http://127.0.0.1:8091/games/oihartzun.html 12000`
+- Prueba de recorridos (un bot completa los retos con la física real del juego):
+  `node tools/test/oihartzun_routes.js http://127.0.0.1:8091/games/oihartzun.html`
 
 ## Cloudflare
 - Worker name: `euskaraz-games-online`
