@@ -44,6 +44,20 @@
 @media(pointer:coarse){#coach{bottom:auto;top:128px;font-size:12px;padding:9px 16px}}
 @media(pointer:coarse) and (orientation:portrait){#map{bottom:auto;top:118px;right:16px;width:78px;height:78px}#route{display:none}#coach{top:212px}}
 @media (prefers-reduced-motion: reduce){#portrait *{animation:none!important}#coach{animation:none}}
+/* teklen legenda: tekla bakoitza bere kutxan */
+#keys{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 14px;left:22%;right:22%}
+#keys span{white-space:nowrap}
+#keys kbd{display:inline-block;margin-right:5px;padding:1px 5px;border:1px solid #c8dce45c;border-bottom-width:2px;border-radius:4px;background:#0f2a3f8c;font:700 9px/1.5 system-ui;color:#fff3df}
+/* HUD-a elur zuriaren gainean ere irakurgarri */
+#life,#magicStatus{z-index:0}
+#life::before{content:"";position:absolute;z-index:-1;inset:-30px -46px -24px -34px;background:radial-gradient(closest-side,#0a2236c4,#0a223600);pointer-events:none}
+#life small{font-size:9px;color:#dcecf2}
+#magicStatus{color:#c8f6f2;text-shadow:0 1px 3px #071a2a,0 0 10px #071a2acc}
+#touchActions button{font-size:8.5px;letter-spacing:0}
+@media(max-width:600px){h1{font-size:13vw}.eyebrow{font-size:9px;letter-spacing:.24em}}
+@media(pointer:coarse) and (max-height:520px){#stick:after{top:auto;bottom:-15px;left:50%;transform:translateX(-50%)}}
+@media(pointer:coarse) and (orientation:portrait){#goal{max-width:58%}#subtitle{bottom:296px}#prompt{bottom:auto;top:276px}}
+@media(pointer:coarse){#keys{display:none}}
 
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>OIHARTZUN<small id="loadLabel">Bi mundu, istorio bat…</small><i><b id="loadBar"></b></i></div></div>
 <section id="start"><div class="eyebrow">EUSKARAZ GAMES · BERRASMATUA / REIMAGINADO</div><h1>OIHARTZUN<span>BI ALDE</span></h1><p id="premise"></p><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>01 · ITSASOAREN BESTALDEAN</span><div><button id="credits">KREDITUAK</button> <button id="legacy">ELUR JOKOA ↗</button> <button id="reset">↺</button></div></div></section>
@@ -3704,6 +3718,8 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     language = localStorage.getItem("oihartzun-language") || "eu";
   } catch {}
   const L = (a, b) => (language === "eu" ? a : b);
+  /* teklatuaren letrak: mugikorrean ez dute zentzurik */
+  const kb = (s) => (mobile ? "" : s);
   let saved = { stage: 0, memories: [], ending: null, deaths: 0, assist: false };
   try {
     const s = JSON.parse(localStorage.getItem("oihartzun-bialde-v2"));
@@ -4741,14 +4757,15 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
   try {
     for (const k of JSON.parse(localStorage.getItem("oihartzun-coach") || "[]")) COACH.seen.add(k);
   } catch {}
-  function coach(id, key, eu, es, btn) {
+  /* euM/esM: ukipen-pantailarako testua, teklatuaren aipamenik gabe */
+  function coach(id, key, eu, es, btn, euM, esM) {
     if (COACH.seen.has(id) || COACH.cur === id || cinematic || workshop.active) return;
     coachHide();
     COACH.cur = id;
     COACH.btn = mobile ? btn : null;
     $("coachKey").textContent = mobile ? "" : key;
     $("coachKey").hidden = mobile || !key;
-    $("coachText").textContent = L(eu, es);
+    $("coachText").textContent = mobile && euM ? L(euM, esM) : L(eu, es);
     $("coach").hidden = false;
     if (COACH.btn && $(COACH.btn)) $(COACH.btn).classList.add("coach");
   }
@@ -4768,14 +4785,14 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
   function coachUpdate() {
     if (!started || paused || cinematic || saved.ending) return;
     const st = saved.stage;
-    if (st === 0 && P.travel < 4) coach("move", "WASD", "Mugitu: WASD edo geziak", "Muévete: WASD o flechas", "stick");
+    if (st === 0 && P.travel < 4) coach("move", "WASD", "Mugitu: WASD edo geziak · Shift: korrika", "Muévete: WASD o flechas · Shift: correr", "stick", "Mugitu: arrastatu makila · ertzeraino, korrika", "Muévete: arrastra la palanca · hasta el borde, corres");
     else if (P.travel >= 4) coachDone("move");
-    if (st === 0 && phase === 1 && Math.hypot(P.x, P.z - 0.5) < 9) coach("shift", "Q", "Zubia iraganean dago · ALDATU GARAIA", "El puente existe en el pasado · CAMBIA DE ÉPOCA", "phaseBtn");
+    if (st === 0 && phase === 1 && Math.hypot(P.x, P.z - 0.5) < 9) coach("shift", "Q", "Zubia iraganean dago · ALDATU GARAIA", "El puente existe en el pasado · CAMBIA DE ÉPOCA", "phaseBtn", "Zubia iraganean dago · sakatu ALDATU", "El puente existe en el pasado · pulsa CAMBIAR");
     if (st === 0 && phase === 0 && P.z < -6 && P.z > -14) coach("jump", "␣ ×2", "JAUZI · airean berriro sakatu: jauzi bikoitza", "SALTA · pulsa otra vez en el aire: doble salto", "jumpBtn");
     if (st === 1 && P.x > 3 && P.z < -26) coach("dash", "F", "DASH · bultzada luzea, lurrean edo airean", "DASH · impulso largo, en el suelo o en el aire", "dashBtn");
     if (st === 1 && Math.hypot(P.x - 12, P.z + 37) < 11 && magic.weaveCooldown <= 0)
-      coach("weave", "C", "EHUNDU · zubia bi garaietan sendo, 12 segundoz", "TEJER · el puente sólido en ambas épocas, 12 s", "weaveBtn");
-    if (st === 2 && !P.grounded && P.vy < 2) coach("airshift", "Q", "Airean garaia aldatu: DASH berri bat", "Cambia de época en el aire: un DASH nuevo", "phaseBtn");
+      coach("weave", "C", "EHUNDU · zubia bi garaietan sendo, 12 segundoz", "TEJER · el puente sólido en ambas épocas, 12 s", "weaveBtn", "BOTEREAK → EHUNDU · zubia bi garaietan sendo, 12 s", "PODERES → TEJER · el puente sólido en ambas épocas, 12 s");
+    if (st === 2 && !P.grounded && P.vy < 2) coach("airshift", "Q", "Airean garaia aldatu: DASH berri bat", "Cambia de época en el aire: un DASH nuevo", "phaseBtn", "Airean ALDATU: DASH berri bat", "CAMBIAR en el aire: un DASH nuevo");
     if (st === 3 && Math.hypot(P.x + 9, P.z + 108) < 10) coach("beam", "Q", "Argi gorriak iraganean bakarrik egiten du min", "La luz roja solo daña en el pasado", "phaseBtn");
   }
 
@@ -5469,7 +5486,7 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       p.m.visible = p.g.visible = !p.collected && p.p === phase;
     }
     for (const h of hazards) h.beam.visible = h.phase === phase;
-    $("phaseName").textContent = phase ? L("ORAINA · Q", "PRESENTE · Q") : L("IRAGANA · Q", "PASADO · Q");
+    $("phaseName").textContent = (phase ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + kb(" · Q");
     $("phaseMark").style.background = phase ? "#9ae3e555" : "#f1c58166";
     if (immediate) phaseBlend = phase;
   }
@@ -6048,10 +6065,13 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     $("heartLab").textContent = L("ARNASA", "ALIENTO");
     $("dashLab").textContent = L("IMPULTSUA", "IMPULSO");
     $("secretLab").textContent = L("OROITZAPENAK", "RECUERDOS");
-    $("keys").textContent = L(
-      "WASD · mugitu     Shift · korrika   Espazioa ×2 · jauzi     Q · garaia     F · DASH     E · ekin\nG · eraiki   X · igo   Z · gelditu   H · botereak",
-      "WASD · mover     Shift · correr   Espacio ×2 · salto     Q · época     F · DASH     E · actuar\nG · construir   X · ascender   Z · estasis   H · poderes",
-    );
+    $("keys").innerHTML = (
+      language === "eu"
+        ? [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["Q", "garaia"], ["F", "DASH"], ["E", "ekin"], ["G", "eraiki"], ["X", "igo"], ["Z", "gelditu"], ["H", "botereak"]]
+        : [["WASD", "mover"], ["Shift", "correr"], ["␣ ×2", "salto"], ["Q", "época"], ["F", "DASH"], ["E", "actuar"], ["G", "construir"], ["X", "ascender"], ["Z", "estasis"], ["H", "poderes"]]
+    )
+      .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
+      .join("");
     if (ready) {
       setPhaseVisual();
       hud();
@@ -6467,15 +6487,16 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
     const arrows = ["→", "↘", "↓", "↙", "←", "↖", "↑", "↗"];
     const arrow = arrows[(Math.round(Math.atan2(y - innerHeight / 2, x - innerWidth / 2) / (PI / 4)) + 8) % 8];
     el.textContent = (outside ? arrow : "◆") + " " + Math.round(Math.hypot(P.x - p[0], P.z - p[1])) + " m";
-    $("magicStatus").textContent =
-      L("EHUNDU", "TEJER") +
-      " " +
-      (magic.weaveCooldown > 0 ? Math.ceil(magic.weaveCooldown) + "s" : "C ✓") +
-      "  ·  " +
-      L("IGO", "ASCENDER") +
-      " X  ·  " +
-      L("ESKU MAGIKOA", "MANO MÁGICA") +
-      " G";
+    $("magicStatus").textContent = mobile
+      ? L("EHUNDU", "TEJER") + " " + (magic.weaveCooldown > 0 ? Math.ceil(magic.weaveCooldown) + "s" : "✓")
+      : L("EHUNDU", "TEJER") +
+        " " +
+        (magic.weaveCooldown > 0 ? Math.ceil(magic.weaveCooldown) + "s" : "C ✓") +
+        "  ·  " +
+        L("IGO", "ASCENDER") +
+        " X  ·  " +
+        L("ESKU MAGIKOA", "MANO MÁGICA") +
+        " G";
   }
   function weave() {
     if (!started || paused || respawnTimer || magic.weaveCooldown > 0) return;
@@ -6811,11 +6832,11 @@ const MAGE="Z2xURgIAAACAjQoAsBEEAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6Iktocm9ub3Mg
       "Korrika: Shift edo makila ertzera. Jauzi luzea: mantendu JAUZI; laburra: askatu. Bigarren jauzia airean. Horman beste jauzi bat egin dezakezu.\n\nESKU MAGIKOA: oholak mugitu, biratu eta lotu. IGO: gaineko plataforma zeharkatu. GELDITU: plataformak eta arriskuak izoztu.",
       "Correr: Shift o palanca al máximo. Salto alto: mantén SALTAR; corto: suelta. Segundo salto en el aire. Puedes rebotar de una pared.\n\nMANO MÁGICA: mueve, gira y une tablones. ASCENDER: atraviesa una plataforma encima de ti. ESTASIS: detén plataformas y peligros.",
       [
-        [L("ESKU MAGIKOA · G", "MANO MÁGICA · G"), openWorkshop],
-        [L("IGO · X", "ASCENDER · X"), ascend],
-        [L("GELDITU · Z", "ESTASIS · Z"), stasis],
-        [L("EHUNDU · C", "TEJER · C"), weave],
-        [L("ATZERA · V", "RETORNO · V"), recall],
+        [L("ESKU MAGIKOA", "MANO MÁGICA") + kb(" · G"), openWorkshop],
+        [L("IGO", "ASCENDER") + kb(" · X"), ascend],
+        [L("GELDITU", "ESTASIS") + kb(" · Z"), stasis],
+        [L("EHUNDU", "TEJER") + kb(" · C"), weave],
+        [L("ATZERA", "RETORNO") + kb(" · V"), recall],
         [L("JARRAITU", "CONTINUAR"), () => {}],
       ],
     );
