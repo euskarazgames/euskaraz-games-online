@@ -109,6 +109,8 @@
     },
 
     has: function (key) { return !OFF && !!imgs[key + '_c']; },
+    /* Kargatutako irudi gordina (shader propioetarako): 'sky_night', 'grass_c', 'water_n'… */
+    image: function (id) { return OFF ? null : (imgs[id] || null); },
     hasSky: function (name) { return !OFF && !!imgs['sky_' + name]; },
 
     /* Arazketarako: jokoaren eszena gorde (EGFX.scene / EGFX.camera). */
