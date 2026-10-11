@@ -3,7 +3,8 @@
 Proyecto preparado para desplegar **EUSKARAZ GAMES** en Cloudflare Workers mediante GitHub.
 
 ## Estructura
-- `public/index.html`: portal y juegos.
+- `public/index.html`: portal (ligero; carga cada juego solo cuando se abre).
+- `public/games/<juego>.html`: cada juego en su propio archivo (`pilota`, `zesta`, `artzain`, `basoa`, `itsas`).
 - `src/worker.js`: servidor WebSocket con Durable Objects.
 - `wrangler.jsonc`: configuración de Cloudflare Workers.
 - `package.json`: Wrangler.
