@@ -14,10 +14,11 @@
   var script = document.currentScript;
   var BASE = '/assets/';
   try { BASE = new URL('.', (script && script.src) || location.href).href; } catch (e) {}
-  var OFF = false;
+  var OFF = false, FORCE = '';
   try {
     var q = new URLSearchParams(location.search);
-    OFF = q.get('gfx') === '0' || localStorage.getItem('eg_gfx') === '0';
+    FORCE = q.get('gfx') || localStorage.getItem('eg_gfx') || '';   /* '0' | 'lite' | 'high' */
+    OFF = FORCE === '0';
   } catch (e) {}
 
   /* n: normal maparen indarra · r: zimurtasun mapa · m: makro aldaketa (errepikapena ezkutatzeko) */
@@ -46,6 +47,8 @@
   var lum = {};       // 'grass' → batez besteko argitasun lineala (makro aldaketarako)
   var lumS = {};      // 'grass' → batez besteko argitasuna sRGB balioetan
   var waters = [];
+  var mats = [];      // EGFX materialak (kalitatea jaisteko)
+  var lights = [];    // argi hemisferikoak (IBL gabe jatorrizko indarra itzultzeko)
   var renderer = null;
   var maxAniso = 4;
 
@@ -83,6 +86,7 @@
     enabled: !OFF,
     ready: false,
     envDefault: 1,      /* ingurune-argiaren indarra materialetan (jokoak doitu dezake) */
+    tier: 0,            /* 0 = osoa · 1 = IBL eta zimurtasunik gabe · 2 = normal maparik gabe ere */
 
     /* Testurak eta zeruak aurrez kargatu. Beti ebazten da (timeout barne). */
     preload: function (texKeys, skyKeys, timeoutMs) {
@@ -157,6 +161,8 @@
       mat.onBeforeCompile = egCompile;
       mat.customProgramCacheKey = egKey;
       mat.needsUpdate = true;
+      if (mats.indexOf(mat) < 0) mats.push(mat);
+      if (EGFX.tier > 0) degrade(mat, EGFX.tier);
       return mat;
     },
 
@@ -213,8 +219,16 @@
       return col;
     },
 
+    /* Argi hemisferikoa jaitsi IBL dagoenean (jatorrizkoa gordeta, kalitatea jaisten bada itzultzeko). */
+    ambient: function (light, value) {
+      if (!light) return;
+      if (light.userData.egOrig === undefined) { light.userData.egOrig = light.intensity; lights.push(light); }
+      if (EGFX.tier === 0) light.intensity = value;
+    },
+
     /* Ingurune-argia (IBL) zeruaren argazkitik. */
     environment: function (r, scene, name) {
+      if (EGFX.tier > 0) return null;
       var t = EGFX.texture('sky_' + name, true);
       if (!t || !THREE.PMREMGenerator) return null;
       try {
@@ -245,8 +259,10 @@
           if (rig.name !== n) {
             mesh.material.map = EGFX.texture('sky_' + n, true);
             mesh.material.needsUpdate = true;
-            if (!envs[n]) envs[n] = EGFX.environment(r, scene, n);
-            scene.environment = envs[n];
+            if (EGFX.tier === 0) {
+              if (!envs[n]) envs[n] = EGFX.environment(r, scene, n);
+              scene.environment = envs[n];
+            }
             rig.name = n;
           }
           return EGFX.horizon(n);
@@ -369,6 +385,46 @@
       return m;
     },
 
+    /* Kalitate moldagarria: fps < minFps bada, IBL eta zimurtasuna kendu (1. maila),
+       eta oraindik motel badoa, normal mapak ere (2. maila). Testurak beti geratzen dira.
+       ?gfx=lite → 1. mailatik hasi · ?gfx=high → ez jaitsi inoiz. */
+    autoQuality: function (o) {
+      o = o || {};
+      if (OFF || EGFX._aq) return;
+      EGFX._aq = true;
+      if (FORCE === 'lite') { EGFX.setTier(1); return; }
+      if (FORCE === 'high') return;
+      var minFps = o.minFps || 45, warm = o.warmup || 2500, win = 3000;
+      var n = 0, t0 = 0, last = 0, bad = 0, checks = 0;
+      var loop = function (now) {
+        if (!t0) t0 = now;
+        if (last && now - last > 250) { t0 = now; n = 0; }   /* fitxa ezkutatuta / etenda: neurketa berrabiatu */
+        last = now; n++;
+        if (now - t0 >= win) {
+          var fps = n * 1000 / (now - t0);
+          checks++;
+          if (fps < minFps) {
+            bad++;
+            if (EGFX.tier < 2) EGFX.setTier(EGFX.tier + 1);
+          }
+          t0 = now; n = 0;
+          if (EGFX.tier >= 2 || checks >= 6 || (checks >= 2 && fps >= minFps)) return;
+        }
+        requestAnimationFrame(loop);
+      };
+      setTimeout(function () { requestAnimationFrame(loop); }, warm);
+    },
+
+    setTier: function (t) {
+      EGFX.tier = Math.max(EGFX.tier, t);
+      if (EGFX.tier >= 1) {
+        if (EGFX.scene) EGFX.scene.environment = null;
+        lights.forEach(function (l) { l.intensity = l.userData.egOrig; });
+      }
+      mats.forEach(function (m) { degrade(m, EGFX.tier); });
+      try { console.info('[EGFX] kalitate-maila', EGFX.tier); } catch (e) {}
+    },
+
     /* Animazioak (ura). Jokoaren begiztan deitu: EGFX.update(dt). */
     update: function (dt) {
       for (var i = 0; i < waters.length; i++) {
@@ -378,6 +434,13 @@
       }
     }
   };
+
+  function degrade(m, tier) {
+    if (tier >= 1 && (m.roughnessMap || m.userData.egMacro)) {
+      m.roughnessMap = null; m.userData.egMacro = 0; m.needsUpdate = true;
+    }
+    if (tier >= 2 && m.normalMap && !m.userData.egWater) { m.normalMap = null; m.needsUpdate = true; }
+  }
 
   /* Shader aldaketa partekatua: funtzio bera → programa bera material guztientzat. */
   function egCompile(shader) {

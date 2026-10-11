@@ -125,6 +125,8 @@ Testurak berriro sortzeko: `python3 tools/assets/build_assets.py`. Kredituak: `p
 - Kolorea jokoaren irteerarekin bat dator automatikoki (sRGB irteera ↔ sRGB testurak).
 - `match: true`: testurak batez beste kolore originala ematen du — gaueko eszenetarako (Basoa, Itsas).
 - Huts egiten badu (sarerik ez, `?gfx=0`), jokoak bere testura prozeduralekin jarraitzen du. Ez kendu fallback-a.
+- Kalitate moldagarria (`EGFX.autoQuality()`): gailua 45 fps-tik behera badabil, lehenik IBL eta zimurtasun-mapak
+  kentzen ditu (1. maila) eta gero normal mapak (2. maila). `?gfx=lite` → arina beti, `?gfx=high` → osoa beti.
 - Jokoaren RNG-a ez ukitu (mailak hazi finkoarekin sortzen dira); aldaketa bisualetarako hash finkoa erabili.
 
 ## Do's and Don'ts

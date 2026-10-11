@@ -44,7 +44,12 @@ EGFX.mountains({inner, outer, height, low, mid, rock, albedo:false})
 EGFX.ground('grass', 1500, {color, tile})
 EGFX.water({color, roughness, metalness, normal, repeat}) + EGFX.update(dt) every frame
 EGFX.envDefault = 0.55                               // per game IBL strength
+EGFX.ambient(hemi, 0.55)                             // lower hemi while IBL is on (restored in lite tiers)
+EGFX.autoQuality()                                   // < 45 fps → tier 1 (no IBL/roughness) → tier 2 (no normal maps)
 ```
+
+URL flags: `?gfx=0` (procedural only), `?gfx=lite`, `?gfx=high` (also `localStorage.eg_gfx`).
+Headless swiftshader runs at ~2 fps, so use `?gfx=high` for screenshots/key art.
 
 Rules: one GPU upload per image (repeat happens in the shader); keep the procedural fallback
 (`?gfx=0`, offline, or `egfx.js` missing must still work); `match:true` keeps the old average

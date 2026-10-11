@@ -414,6 +414,7 @@ const EGQ=[];let EGOK=false;
 function egLater(fn){if(!EG)return;if(EGOK){try{fn();}catch(e){}}else EGQ.push(fn);}
 function egMat(m,key,o){egLater(()=>EG.apply(m,key,Object.assign({match:true},o||{})));return m;}
 if(EG){EG.setRenderer(renderer);EG.track(scene,renderer,camera);EG.envDefault=0.6;
+  EG.autoQuality();
   EG.preload(['rock','forest','grass','concrete','stone','planks','bark'],['night'],9000).then(()=>{EGOK=true;
     if(EG.hasSky('night'))EG.environment(renderer,scene,'night');
     for(const fn of EGQ.splice(0)){try{fn();}catch(e){}}});}
