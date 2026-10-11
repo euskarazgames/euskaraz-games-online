@@ -8,6 +8,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   `pilota`, `zesta`, `artzain` ("Kirol" motorra), `basoa`, `itsas` ("Solid" motorra) eta
   `oihartzun` (bi garaiko plataforma-jokoa; `elur.html` haren aurreko bertsioa da).
   OIHARTZUN-ek `?test` parametroarekin `window.__game` proba-kakoa erakusten du.
+  OIHARTZUN-en iturburua: `tools/oihartzun/src/` (game.js…). Ez editatu `public/games/oihartzun.html`
+  zuzenean: `python3 tools/oihartzun/build.py` exekutatu (three.js eta modeloak handik ateratzen ditu).
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
 - `public/assets/{tex,sky,covers}` — testurak, zeruak eta atariko irudiak. Kredituak: `public/assets/CREDITS.md`.
 - `public/garena`, `public/ataria`, `src/ataria.js` — GARENA katalogoa (jokoetatik aparte).
