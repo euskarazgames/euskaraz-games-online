@@ -838,7 +838,7 @@ if(ACT1){
   const wg=new THREE.CylinderGeometry(TS*0.62,TS*0.8,1,7);
   const walls=new THREE.InstancedMesh(wg,egMat(M(0x3c4854),'rock',{repeat:[2,1.4],normal:1.3}),n);
   const mg=new THREE.SphereGeometry(TS*0.62,10,7);
-  const caps=new THREE.InstancedMesh(mg,egMat(M(0x2a343c),'grass',{repeat:[2,1.5],color:0x55705e,normal:1.4,match:false}),n);
+  const caps=new THREE.InstancedMesh(mg,egMat(M(0x2a343c),'grass',{repeat:[2,1.5],color:0x435448,normal:1.4,match:false}),n);
   walls.castShadow=walls.receiveShadow=true;caps.castShadow=true;
   const m1=new THREE.Matrix4(),q=new THREE.Quaternion(),e=new THREE.Euler(),v=new THREE.Vector3(),sc=new THREE.Vector3();
   let i=0;
@@ -856,6 +856,16 @@ if(ACT1){
   }
   caps.instanceMatrix.needsUpdate=true;
   walls.instanceMatrix.needsUpdate=true;
+  /* EGFX: tonu-aldaketa harri eta goroldio bakoitzean (hash finkoa: mailaren RNG-a ez da ukitzen) */
+  {const hc=new THREE.Color(),hs=k=>{const h=Math.sin(k*91.37+17.1)*43758.5453;return h-Math.floor(h);};
+   for(let k=0;k<n;k++){
+     const a=hs(k),b=hs(k+311);
+     hc.setRGB(0.78+a*0.4,0.8+a*0.36,0.74+b*0.34);walls.setColorAt(k,hc);
+     if(b<0.22)hc.setRGB(0.95+a*0.2,0.9+a*0.15,0.82);            /* goroldio gutxi: harri biluzia */
+     else hc.setRGB(0.6+a*0.35,0.72+b*0.38,0.52+a*0.2);           /* goroldio berde-hori aldakorra */
+     caps.setColorAt(k,hc);}
+   if(walls.instanceColor)walls.instanceColor.needsUpdate=true;
+   if(caps.instanceColor)caps.instanceColor.needsUpdate=true;}
   level.add(walls);level.add(caps);
   /* suelos por sector + abismos */
   for(const s of SECTORS){

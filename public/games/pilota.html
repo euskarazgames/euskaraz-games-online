@@ -231,7 +231,7 @@ body.court #musicToggle{display:flex;}
 .hp13-share-note{margin-top:11px;color:#8da398;font-size:9px;line-height:1.45}
 @media(max-width:520px){.hp13-share-card{border-radius:22px;padding:17px}.hp13-share-card h2{font-size:23px}.hp13-share-actions{grid-template-columns:1fr}.hp13-share-actions button{min-height:54px}}
 </style>
-<style id="eg-solo-menus">#mdMp,#mp,#multiSetup,#hpOnlineBtn{display:none!important;pointer-events:none!important}.hp8-mode-grid{grid-template-columns:1fr!important;max-width:760px;margin-inline:auto}</style></head>
+<style id="eg-solo-menus">#mdMp,#mp,#multiSetup,#hpOnlineBtn{display:none!important;pointer-events:none!important}.hp8-mode-grid{grid-template-columns:1fr!important;width:100%;max-width:760px;margin-inline:auto}</style></head>
 <body>
 <div id="gl"></div>
 
@@ -1369,7 +1369,7 @@ const M=(c,r,m)=>new THREE.MeshStandardMaterial({color:c,roughness:r===undefined
 const B=c=>new THREE.MeshBasicMaterial({color:c});
 const world=new THREE.Group();scene.add(world);
 /* EGFX: frontoia harana batean — lur zabala eta mendilerroa atzealdean */
-if(EG){const eg0=EG.ground('grass',1500,{color:0xa8bc88,tile:4});if(eg0)world.add(eg0);world.add(EG.mountains({inner:150,outer:520,height:120,seed:5,low:0x5f7f45,mid:0x41633a,rock:0x7a786e,albedo:false}));}
+if(EG){const eg0=EG.ground('grass',1500,{color:0xa8bc88,tile:4});if(eg0)world.add(eg0);world.add(EG.mountains({inner:240,outer:620,height:105,seed:5,low:0x5f7f45,mid:0x41633a,rock:0x7a786e,albedo:false}));}
 const hub=new THREE.Group();scene.add(hub);
 const arena=new THREE.Group();scene.add(arena);
 function fit(){
