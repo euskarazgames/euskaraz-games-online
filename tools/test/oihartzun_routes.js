@@ -13,6 +13,9 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
   const res = await page.evaluate(() => {
     const g = window.__game, P = g.P, out = [];
     g.resume();
+    /* kaiolak: erronkak gaindituta (alboko ateak irekita) erronken ibilbideetarako */
+    g.saved.cleared = [0, 1, 2, 3, 4];
+    for (const C of g.CAGES) for (const x of C.gates) x.open = true;
     const find = (x, z, y) => g.platforms.find(s => Math.abs((s.baseX ?? s.x) - x) < 0.01 && Math.abs(s.z - z) < 0.01 && Math.abs(s.y - y) < 0.01);
     const isl = (i) => g.platforms.find(s => s.island === i);
     const islet = (i) => g.platforms.find(s => s.islet === i);
@@ -61,6 +64,32 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
       out.push({ label, ok, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)], jumped2, dashed, switched, ms: Math.round(performance.now() - T0) });
       return ok;
     }
+    /* uharte barruko helburu altu batera igo: hurbildu, jauzi, jauzi bikoitza */
+    function climb(B, label) {
+      g.input.keys = {};
+      for (let i = 0; i < 20; i++) g.tick(1 / 120);
+      let state = 'run', t = 0, j2 = false, landed = false;
+      for (let k = 0; k < 120 * 6; k++) {
+        t += 1 / 120;
+        const tx = B.x - P.x, tz = B.z - P.z, d = Math.hypot(tx, tz), hw = (B.w || 2) / 2;
+        if (state === 'run') {
+          /* jauzi-tartea: helburuaren ertzetik 1.3 m; urrunegi bada hurbildu, gertuegi bada atzera */
+          if (d - hw > 1.5) steer(tx, tz);
+          else if (d - hw < 0.8) steer(-tx, -tz);
+          else { steer(tx, tz); g.jump(); state = 'air'; t = 0; }
+        } else {
+          if (d > hw * 0.4) steer(tx, tz); else { g.input.x = g.input.z = 0; }
+          if (!j2 && P.vy < 0.8) { g.jump(); j2 = true; }
+          if (P.grounded && t > 0.08) { landed = P.platform === B; if (landed || P.y < B.y - 0.3) break; }
+        }
+        g.tick(1 / 120);
+      }
+      g.input.x = g.input.z = 0;
+      for (let i = 0; i < 20; i++) g.tick(1 / 120);
+      landed = landed || P.platform === B;
+      out.push({ label, ok: landed, at: [+P.x.toFixed(1), +P.y.toFixed(1), +P.z.toFixed(1)], jumped2: j2 });
+      return landed;
+    }
     function route(name, stage, start, chain) {
       g.saved.stage = stage;
       g.teleport(start.x, start.z, start.y);
@@ -80,6 +109,36 @@ const url = (process.argv[2] || 'http://127.0.0.1:8091/games/oihartzun.html') + 
     /* C: I4 → olatua → ohol mugikorra → olatua → ohola → uhartetxoa (kristala) → I4 */
     const c = D[2];
     route('C', 4, { x: -38, z: -134, y: I4.y }, [I4, W(c, 0), K(c, 0), W(c, 1), K(c, 1), islet(2), I4]);
+    /* eraikuntza-puzzleak: kaxak pilatu (API) eta errunara igo jokalariaren fisikarekin */
+    const C = g.CRAFT;
+    function place(Z, q, x, z) {
+      C.on = true; C.zone = Z; C.held = q; C.tx = x; C.tz = z;
+      for (let i = 0; i < 120; i++) g.tick(1 / 120);
+      g.craftRelease();
+      for (let i = 0; i < 10; i++) g.tick(1 / 120);
+      g.craftExit();
+    }
+    function craftPuzzle(k, layout, start, label) {
+      const Z = C.puzzles[k];
+      g.saved.cleared = g.saved.cleared.filter((i) => i !== Z.D.island);
+      Z.solved = false;
+      g.saved.stage = Z.D.island;
+      g.teleport(start[0], start[1], Z.I.y);
+      for (let i = 0; i < 30; i++) g.tick(1 / 120);
+      const pcs = C.pieces.filter((q) => q.kind === 'crate' && Math.hypot(q.home.x - Z.I.x, q.home.z - Z.I.z) < 20);
+      layout.forEach(([x, z], i) => place(Z, pcs[i], Z.plat.x + x, Z.plat.z + z));
+      /* eskailera: lurretik pila txikienera, gero handienera, gero errunara */
+      const tops = {};
+      for (const q of pcs) { const key = q.x + ',' + q.z; if (!tops[key] || q.y > tops[key].y) tops[key] = q; }
+      const steps = Object.values(tops).sort((a, b) => a.y - b.y);
+      const ground = g.platforms.find((s) => s.island === Z.D.island);
+      let ok = true;
+      for (const st of steps) { ok = climb(st, label + ' kaxa ' + st.y.toFixed(0)); if (!ok) break; }
+      if (ok) ok = climb(Z.plat, label + ' erruna');
+      out.push({ label: label + ' ebatzita', ok: ok && Z.solved && g.isCleared(Z.D.island), at: [Z.plat.x, Z.plat.y, Z.plat.z] });
+    }
+    craftPuzzle(0, [[-2, 0], [-2, 0]], [-1, -21], 'P1');
+    craftPuzzle(1, [[-2.5, 0], [-2.5, 0], [-2.5, 0], [-4.5, 0], [-4.5, 0]], [-3, -90], 'P2');
     return { out, echoes: g.saved.echoes };
   });
   let fails = 0;

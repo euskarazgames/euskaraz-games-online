@@ -67,3 +67,28 @@
 .eg-embed #phaseHud{top:46px}
 @media(max-height:520px){.eg-embed #phaseHud{top:40px}}
 @media(pointer:coarse) and (orientation:portrait){.eg-embed #phaseHud{top:68px}}
+/* ===== ukipen-kontrolak: Nintendo estiloko diamantea, erasoa erpurdiaren azpian ===== */
+#touchActions{display:block!important;width:236px;height:222px;grid-template-columns:none}
+#touchActions button{position:absolute;width:auto;height:auto;border-radius:50%;padding:0;font:800 9px/1.05 system-ui;letter-spacing:.02em;display:grid;place-items:center;text-align:center;background:#193a50c4;color:#e9f6f5;border:1px solid #ffffff38;box-shadow:0 4px 14px #0007;touch-action:none;-webkit-user-select:none;user-select:none}
+#touchActions #attackBtn{right:0;bottom:0;width:86px;height:86px;font-size:12px;background:radial-gradient(circle at 35% 30%,#ff8f6b,#c9353f 70%);color:#fff;border-color:#ffd0c4}
+#touchActions #jumpBtn{right:94px;bottom:2px;width:68px;height:68px;font-size:10px;background:#e2b271d9;color:#1c3b50;border-color:#ffe7bd}
+#touchActions #dashBtn{right:6px;bottom:96px;width:62px;height:62px;background:#2f6f78d9;border-color:#a8efe3}
+#touchActions #phaseBtn{right:86px;bottom:80px;width:62px;height:62px;background:#3c4f86d9;border-color:#bfd2ff;color:#fff}
+#touchActions #useBtn{right:172px;bottom:8px;width:52px;height:52px}
+#touchActions #craftBtn{right:162px;bottom:70px;width:56px;height:56px;background:#245b45d9;border-color:#9dffc4;color:#cbffe3}
+#touchActions #weaveBtn{right:150px;bottom:136px;width:50px;height:50px;font-size:8px}
+#touchActions #recallBtn{right:96px;bottom:156px;width:46px;height:46px;font-size:8px}
+#touchActions #rotateBtn{right:20px;bottom:176px;width:52px;height:52px;font-size:22px;display:none;background:#245b45d9;border-color:#9dffc4}
+#touchActions #craftBtn[hidden]{display:none!important}
+body.crafting #touchActions #rotateBtn{display:grid}
+body.crafting #touchActions #attackBtn,body.crafting #touchActions #jumpBtn,body.crafting #touchActions #dashBtn,body.crafting #touchActions #phaseBtn{opacity:.25}
+#touchActions .pressed{transform:scale(.9)!important;filter:brightness(1.3)}
+@media(max-width:600px){#touchActions{width:226px;height:214px;right:10px!important}#touchActions #attackBtn{width:80px;height:80px}#touchActions #jumpBtn{right:88px;width:64px;height:64px}#touchActions #dashBtn{bottom:90px;width:58px;height:58px}#touchActions #phaseBtn{right:80px;bottom:74px;width:58px;height:58px}}
+@media(max-height:520px){#touchActions{width:236px;height:190px;bottom:10px!important}#touchActions #attackBtn{width:76px;height:76px}#touchActions #jumpBtn{right:84px;width:60px;height:60px}#touchActions #dashBtn{bottom:84px;width:54px;height:54px}#touchActions #phaseBtn{right:76px;bottom:68px;width:54px;height:54px}#touchActions #useBtn{right:154px;width:46px;height:46px}#touchActions #craftBtn{right:148px;bottom:60px;width:48px;height:48px}#touchActions #weaveBtn{right:136px;bottom:116px;width:44px;height:44px}#touchActions #recallBtn{right:84px;bottom:132px;width:42px;height:42px}#touchActions #rotateBtn{bottom:140px;width:46px;height:46px}}
+/* kalte-zenbakiak */
+.dmg{position:absolute;left:0;top:0;font:900 24px/1 system-ui;color:#fff;text-shadow:0 2px 0 #3b1060,0 0 14px #9a4dff;pointer-events:none;will-change:transform,opacity;opacity:0}
+/* eraikitzean: HUDa arindu */
+body.crafting #goal,body.crafting #keys,body.crafting #magicStatus{opacity:.35}
+body.crafting #touchActions #weaveBtn,body.crafting #touchActions #recallBtn,body.crafting #touchActions #useBtn{display:none}
+body.crafting #touchActions #rotateBtn{right:150px;bottom:126px;width:60px;height:60px}
+@media(max-height:520px){body.crafting #touchActions #rotateBtn{right:140px;bottom:112px;width:54px;height:54px}}

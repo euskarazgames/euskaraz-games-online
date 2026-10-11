@@ -13,7 +13,7 @@
   const L = (a, b) => (language === "eu" ? a : b);
   /* teklatuaren letrak: mugikorrean ez dute zentzurik */
   const kb = (s) => (mobile ? "" : s);
-  let saved = { stage: 0, memories: [], ending: null, deaths: 0, assist: false };
+  let saved = { stage: 0, memories: [], ending: null, deaths: 0, assist: false, cleared: [], boons: [] };
   try {
     const s = JSON.parse(localStorage.getItem("oihartzun-bialde-v2"));
     if (s && Number.isInteger(s.stage) && s.stage >= 0 && s.stage < 6 && Array.isArray(s.memories))
@@ -92,10 +92,13 @@
     dashX: 0,
     dashZ: -1,
     shiftAir: false,
-    hp: 3,
+    hp: 5,
+    maxHp: 5,
+    dashes: 1,
     travel: 0,
     platform: null,
   };
+  P.maxHp = P.hp = (saved.boons || []).includes("heart") ? 6 : 5;
   const ISLANDS = [
     {
       x: 0,
@@ -912,6 +915,69 @@
       },
       update() { if (ctx) schedule(); },
       stinger(big) { if (ok()) mzStinger(big); },
+      /* borroka eta eraikuntza */
+      swing(n) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, n === 3 ? 0.26 : 0.13, n === 3 ? 0.12 : 0.08, "bandpass", 700, n === 3 ? 3800 : 2900, 1.3);
+        bell([880, 987.77, 1174.66][n - 1] * (phase ? 1.5 : 1), t + 0.01, 0.022);
+      },
+      hit(d) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.09, 0.16 + d * 0.04, "lowpass", 2600, 300, 0.8);
+        tone("sine", 190, t, 0.002, 0.12, 0.14 + d * 0.04, sfx, 70);
+        tone("square", 2400, t, 0.001, 0.02, 0.02, sfx, 1800);
+      },
+      clang() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 1830, t, 0.001, 0.35, 0.05, sfx, 1790);
+        tone("sine", 2710, t, 0.001, 0.25, 0.035, sfx, 2650);
+        hiss(t, 0.06, 0.08, "highpass", 5000, 3000, 0.7);
+      },
+      kill() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 620, t, 0.003, 0.42, 0.06, sfx, 70);
+        hiss(t, 0.4, 0.07, "bandpass", 1800, 300, 1);
+        bell(1318.5, t + 0.08, 0.025);
+      },
+      roar() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sawtooth", 96, t, 0.02, 0.6, 0.07, sfx, 58);
+        hiss(t, 0.5, 0.06, "lowpass", 700, 200, 1.2);
+      },
+      thud() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 82, t, 0.002, 0.3, 0.16, sfx, 40);
+        hiss(t, 0.18, 0.08, "lowpass", 900, 150, 0.7);
+      },
+      shot() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 920, t, 0.004, 0.22, 0.035, sfx, 480);
+        hiss(t, 0.15, 0.03, "bandpass", 2500, 1200, 2);
+      },
+      heal() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        [659.25, 880, 1318.5].forEach((f, i) => bell(f, t + i * 0.06, 0.03));
+      },
+      glue() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.18, 0.06, "bandpass", 400, 1400, 2.5);
+        tone("sine", 300, t, 0.004, 0.12, 0.05, sfx, 560);
+      },
+      grab() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 440, t, 0.01, 0.25, 0.03, sfx, 660);
+        tone("triangle", 880, t + 0.02, 0.01, 0.2, 0.015, sfx, 1320);
+      },
       /* probetarako: musika-maila bat fitxategira errendatu (OfflineAudioContext) */
       async render(level, bars, era, only) {
         const keep = [ctx, master, comp, sfx, mus, amb, verbIn, noise, MZ.L, MZ.ks, MZ.level, MZ.era, MZ.eraD, MZ.off];
@@ -1105,7 +1171,8 @@
   } catch {}
   /* euM/esM: ukipen-pantailarako testua, teklatuaren aipamenik gabe */
   function coach(id, key, eu, es, btn, euM, esM) {
-    if (COACH.seen.has(id) || COACH.cur === id || cinematic || workshop.active) return;
+    if (COACH.seen.has(id) || cinematic || workshop.active) return false;
+    if (COACH.cur === id) return true;
     coachHide();
     COACH.cur = id;
     COACH.btn = mobile ? btn : null;
@@ -1114,6 +1181,7 @@
     $("coachText").textContent = mobile && euM ? L(euM, esM) : L(eu, es);
     $("coach").hidden = false;
     if (COACH.btn && $(COACH.btn)) $(COACH.btn).classList.add("coach");
+    return true;
   }
   function coachHide() {
     $("coach").hidden = true;
@@ -1130,17 +1198,31 @@
   }
   function coachUpdate() {
     if (!started || paused || cinematic || saved.ending) return;
-    const st = saved.stage;
-    if (st === 0 && P.travel < 4) coach("move", "WASD", "Mugitu: WASD edo geziak · Shift: korrika", "Muévete: WASD o flechas · Shift: correr", "stick", "Mugitu: arrastatu makila · ertzeraino, korrika", "Muévete: arrastra la palanca · hasta el borde, corres");
-    else if (P.travel >= 4) coachDone("move");
-    if (st === 0 && phase === 1 && Math.hypot(P.x, P.z - 0.5) < 9) coach("shift", "Q", "Zubia iraganean dago · ALDATU GARAIA", "El puente existe en el pasado · CAMBIA DE ÉPOCA", "phaseBtn", "Zubia iraganean dago · sakatu ALDATU", "El puente existe en el pasado · pulsa CAMBIAR");
-    if (st === 0 && phase === 0 && P.z < -6 && P.z > -14) coach("jump", "␣ ×2", "JAUZI · airean berriro sakatu: jauzi bikoitza", "SALTA · pulsa otra vez en el aire: doble salto", "jumpBtn");
-    if (st === 1 && P.x > 3 && P.z < -26) coach("dash", "F", "DASH · bultzada luzea, lurrean edo airean", "DASH · impulso largo, en el suelo o en el aire", "dashBtn");
-    if (st === 1 && Math.hypot(P.x - 12, P.z + 37) < 11 && magic.weaveCooldown <= 0)
-      coach("weave", "C", "EHUNDU · zubia bi garaietan sendo, 12 segundoz", "TEJER · el puente sólido en ambas épocas, 12 s", "weaveBtn", "BOTEREAK → EHUNDU · zubia bi garaietan sendo, 12 s", "PODERES → TEJER · el puente sólido en ambas épocas, 12 s");
-    if (st === 2 && !P.grounded && P.vy < 2) coach("airshift", "Q", "Airean garaia aldatu: DASH berri bat", "Cambia de época en el aire: un DASH nuevo", "phaseBtn", "Airean ALDATU: DASH berri bat", "CAMBIAR en el aire: un DASH nuevo");
-    if (st === 3 && Math.hypot(P.x + 9, P.z + 108) < 10) coach("beam", "Q", "Argi gorriak iraganean bakarrik egiten du min", "La luz roja solo daña en el pasado", "phaseBtn");
+    const st = saved.stage,
+      fight = ARENA.state === "fight";
+    if (ATK.n && COACH.cur === "attack") coachDone("attack");
+    if (P.travel >= 4) coachDone("move");
+    /* lehentasun-ordena: une bakoitzean irakaspen bakarra */
+    (fight &&
+      ARENA.island === 0 &&
+      ENEMIES.some((e) => e.state !== "spawn") &&
+      coach("attack", "J", "ERASO: J edo saguaren klika · sakatuta: hiru kolpeko konboa", "ATACA: J o clic · mantén: combo de tres golpes", "attackBtn", "ERASO: sakatu · sakatuta: hiru kolpeko konboa", "ATACA: pulsa · mantén: combo de tres golpes")) ||
+      (fight &&
+        COACH.seen.has("attack") &&
+        ENEMIES.some((e) => e.state === "wind" && Math.hypot(e.x - P.x, e.z - P.z) < 4) &&
+        coach("dodge", "F", "DASH bitartean ukiezina zara: saihestu erasoa!", "Durante el DASH eres invulnerable: ¡esquiva!", "dashBtn", "DASH bitartean ukiezina zara: saihestu erasoa!", "Durante el DASH eres invulnerable: ¡esquiva!")) ||
+      (!fight && zoneHere() && !isCleared(currentStage) && !CRAFT.on &&
+        coach("craft", "G", "ESKU MAGIKOA: egin klik kaxa batean eta arrastatu", "MANO MÁGICA: haz clic en una caja y arrástrala", "craftBtn", "ESKU MAGIKOA: ukitu kaxa bat eta arrastatu", "MANO MÁGICA: toca una caja y arrástrala")) ||
+      (st === 0 && P.travel < 4 && coach("move", "WASD", "Mugitu: WASD edo geziak · Shift: korrika", "Muévete: WASD o flechas · Shift: correr", "stick", "Mugitu: arrastatu makila · ertzeraino, korrika", "Muévete: arrastra la palanca · hasta el borde, corres")) ||
+      (st === 0 && !fight && phase === 1 && Math.hypot(P.x, P.z - 0.5) < 9 && coach("shift", "Q", "Zubia iraganean dago · ALDATU GARAIA", "El puente existe en el pasado · CAMBIA DE ÉPOCA", "phaseBtn", "Zubia iraganean dago · sakatu ALDATU", "El puente existe en el pasado · pulsa CAMBIAR")) ||
+      (st === 0 && phase === 0 && P.z < -6 && P.z > -14 && coach("jump", "␣ ×2", "JAUZI · airean berriro sakatu: jauzi bikoitza", "SALTA · pulsa otra vez en el aire: doble salto", "jumpBtn")) ||
+      (st === 1 && isCleared(1) && P.x > 3 && P.z < -26 && coach("dash", "F", "DASH · bultzada luzea, lurrean edo airean", "DASH · impulso largo, en el suelo o en el aire", "dashBtn")) ||
+      (st === 1 && isCleared(1) && Math.hypot(P.x - 12, P.z + 37) < 11 && magic.weaveCooldown <= 0 &&
+        coach("weave", "C", "EHUNDU · zubia bi garaietan sendo, 12 segundoz", "TEJER · el puente sólido en ambas épocas, 12 s", "weaveBtn", "BOTEREAK → EHUNDU · zubia bi garaietan sendo, 12 s", "PODERES → TEJER · el puente sólido en ambas épocas, 12 s")) ||
+      (st === 2 && !fight && !P.grounded && P.vy < 2 && coach("airshift", "Q", "Airean garaia aldatu: DASH berri bat", "Cambia de época en el aire: un DASH nuevo", "phaseBtn", "Airean ALDATU: DASH berri bat", "CAMBIAR en el aire: un DASH nuevo")) ||
+      (st === 3 && isCleared(3) && Math.hypot(P.x + 9, P.z + 108) < 10 && coach("beam", "Q", "Argi gorriak iraganean bakarrik egiten du min", "La luz roja solo daña en el pasado", "phaseBtn"));
   }
+
 
   /* ==================================================================
      OIHARTZUNAK · hiru erronka hautazko, hiru kanpai
@@ -1732,6 +1814,9 @@
     hud();
   }
 
+  /* @include arena.js */
+  /* @include combat.js */
+  /* @include craft.js */
   /* musikaren intentsitatea: 0 izenburua/zinematika · 1 esplorazioa · 2 borroka · 3 bossa */
   function musicLevel() {
     if (!started || cinematic || ENDING.on) return 0;
@@ -2288,7 +2373,7 @@
         n.castShadow = true;
         n.receiveShadow = true;
       }
-      if (/Spellbook|1H_Wand|2H_Staff/.test(n.name)) n.visible = false;
+      if (/Spellbook|2H_Staff/.test(n.name)) n.visible = false;
     });
     actor.scale.setScalar(1.15);
     hero.add(actor);
@@ -2301,6 +2386,8 @@
     fxInit();
     buildWorkshop();
     buildEchoes();
+    buildCages();
+    buildCraft();
     teleport(0, 29, 0);
     phase = 0;
     setPhaseVisual(true);
@@ -2358,8 +2445,11 @@
     magic.history = [];
     const cp = checkpointPositions[cpStage];
     teleport(cp[0], cp[1], ISLANDS[cpStage].y);
-    P.hp = 3;
+    P.hp = P.maxHp;
     damageTime = 1;
+    arenaReset();
+    if (CRAFT.held) craftRelease();
+    craftExit();
     boss.hits = 0;
     if (saved.stage === 5 && !saved.ending) {
       boss.state = "tell";
@@ -2371,9 +2461,11 @@
     FB.respawn();
     notify("Berriro. Orain badakizu bidea.", "Otra vez. Ahora conoces el camino.", 2.3);
   }
-  function fall() {
+  let hardFall = false;
+  function fall(hard) {
     if (respawnTimer > 0) return;
-    respawnTimer = 0.38;
+    hardFall = !!hard;
+    respawnTimer = hard ? 0.6 : 0.38;
     P.vx = P.vz = 0;
   }
   function jump() {
@@ -2388,7 +2480,8 @@
     P.dashX = d.x / n;
     P.dashZ = d.z / n;
     P.dashT = saved.assist ? 0.32 : 0.25;
-    P.dashReady = false;
+    P.dashes = Math.max(0, P.dashes - 1);
+    P.dashReady = P.dashes > 0;
     P.vy = 0;
     P.grounded = false;
     P.angle = Math.atan2(P.dashX, P.dashZ);
@@ -2405,12 +2498,14 @@
       coachDone("airshift");
       P.shiftAir = true;
       P.dashReady = true;
+      P.dashes = Math.max(P.dashes, 1);
       P.vy = Math.max(P.vy, 2.3);
       notify("Beste une bat. Beste bultzada bat.", "Otro instante. Otro impulso.", 1.7);
     }
     setPhaseVisual();
     FB.shift();
     wavesOnShift();
+    eraWave();
     coachDone("shift");
     if (saved.stage === 3) coachDone("beam");
     if (!P.platform || P.platform.phase !== -1) {
@@ -2470,8 +2565,16 @@
     let d = direction(),
       len = Math.hypot(d.x, d.z),
       surf = !!(input.keys.ShiftLeft || input.keys.ShiftRight) || (mobile && Math.hypot(input.x, input.z) > 0.88);
+    /* eraikitzean: pieza eskuan → geldirik; mugitzen hasiz gero, eraikuntza-modutik irten */
+    if (CRAFT.on && !CRAFT.held && len > 0.3) craftExit();
+    if (CRAFT.held) {
+      d = { x: 0, z: 0 };
+      len = 0;
+    }
     const groundSpeed = surf ? 12.8 : 7.7;
-    const speed = P.grounded ? groundSpeed : Math.max(groundSpeed, P.airSpeed);
+    /* erasoan: konpromisoa (mugimendu motelagoa) eta helburu-magnetismoa */
+    const atkSlow = ATK.t < 0.2 && ATK.n ? 0.32 : 1;
+    const speed = (P.grounded ? groundSpeed : Math.max(groundSpeed, P.airSpeed)) * atkSlow;
     P.wallGrace = Math.max(0, P.wallGrace - dt);
     P.wallLock = Math.max(0, P.wallLock - dt);
     if (P.platform?.moving && P.grounded) {
@@ -2505,7 +2608,10 @@
       if (frame % 3 === 0) spawnTrail();
     } else {
       const t = 1 - Math.exp(-dt * (P.grounded ? 22 : len > 0.1 ? 6.5 : 3));
-      if (P.wallLock <= 0) {
+      if (ATK.n && ATK.t < ATK.lungeT) {
+        P.vx = Math.sin(ATK.dir) * 10;
+        P.vz = Math.cos(ATK.dir) * 10;
+      } else if (P.wallLock <= 0) {
         P.vx = mix(P.vx, d.x * speed, t);
         P.vz = mix(P.vz, d.z * speed, t);
       }
@@ -2517,9 +2623,11 @@
     let nx = P.x + P.vx * dt,
       nz = P.z + P.vz * dt,
       ny = P.y + P.vy * dt;
+    /* kaiolak: uhartetik ezin da erori */
+    [nx, nz] = cageCollide(px, pz, nx, nz, py);
     // Raised platforms have sides. Falling through an absent platform is intentional.
     for (const o of solids) {
-      const top = o.y + (phase === 0 ? o.h : o.h * 0.19);
+      const top = o.y + (phase === 0 || o.pillar ? o.h : o.h * 0.19);
       let dx = nx - o.x,
         dz = nz - o.z,
         dd = Math.hypot(dx, dz);
@@ -2528,7 +2636,7 @@
           dx = 1;
           dd = 1;
         }
-        P.wallGrace = 0.15;
+        P.wallGrace = o.slick ? 0 : 0.15;
         P.wallX = dx / dd;
         P.wallZ = dz / dd;
         nx = o.x + (dx / dd) * (o.r + 0.27);
@@ -2538,7 +2646,7 @@
     for (const s of platforms) {
       if (s.phase !== -1 && s.phase !== phase) continue;
       if (contains(s, nx, nz, 0.18) && !contains(s, px, pz, 0.18) && py < s.y - 0.32 && py + 1.8 > s.y - 0.5) {
-        P.wallGrace = 0.15;
+        P.wallGrace = s.slick ? 0 : 0.15;
         const wn = Math.hypot(px - s.x, pz - s.z) || 1;
         P.wallX = (px - s.x) / wn;
         P.wallZ = (pz - s.z) / wn;
@@ -2568,7 +2676,10 @@
       P.jumps = 0;
       ny = landing.y;
       P.vy = 0;
-      if (P.dashT <= 0) P.dashReady = true;
+      if (P.dashT <= 0) {
+        P.dashReady = true;
+        P.dashes = saved.boons.includes("dash") ? 2 : 1;
+      }
       P.shiftAir = false;
       P.platform = landing;
     } else P.platform = null;
@@ -2588,13 +2699,14 @@
       P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 18);
     }
     hero.position.set(P.x, P.y, P.z);
-    hero.rotation.y = P.angle;
+    hero.rotation.y = P.angle + attackPose();
     hero.visible = damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0;
-    animate(P.dashT > 0 ? "Dodge_Forward" : !P.grounded ? "Jump_Idle" : len > 0.15 ? "Running_A" : "Idle");
+    animate(CRAFT.held ? "Spellcast_Raise" : P.dashT > 0 ? "Dodge_Forward" : !P.grounded ? "Jump_Idle" : len > 0.15 ? "Running_A" : "Idle");
+    trackSafe(dt);
     if (P.y < -9.3) fall();
     if (landing && landing.island !== undefined && landing.island > saved.stage) {
       saved.stage = landing.island;
-      P.hp = 3;
+      P.hp = P.maxHp;
       persist();
       enterStage(saved.stage);
     }
@@ -2640,12 +2752,14 @@
     if (!saved.ending) playScene(i);
   }
   function takeHit() {
-    if (damageTime > 0 || respawnTimer) return;
+    if (damageTime > 0 || respawnTimer || P.dashT > 0) return;
     P.hp--;
-    damageTime = 1.5;
+    damageTime = 1.2;
     shiftFlash = 0.4;
     FB.hurt();
-    if (P.hp <= 0) fall();
+    haptic(45);
+    hud();
+    if (P.hp <= 0) fall(true);
   }
   function updateBoss(dt) {
     if (stasisActive()) return;
@@ -2700,28 +2814,34 @@
         notify("ORAIN! DASH nukleora.", "¡AHORA! DASH hacia el núcleo.", 2.5);
       }
     } else if (boss.state === "open") {
-      if (dist(P, bpos) < 3.4 && P.dashT > 0 && boss.hitLock <= 0) {
-        boss.hits++;
-        boss.hitLock = 1;
-        boss.clock = 4.1;
-        FB.bossHit(0, 18, -179);
-        P.vx = -Math.sin(P.angle) * 12;
-        P.vz = -Math.cos(P.angle) * 12;
-        P.dashT = 0;
-        P.vy = 7;
-        shiftFlash = 1;
-        if (boss.hits === 3) {
-          boss.state = "done";
-          saved.bossDone = true;
-          persist();
-          notify("IRATI: «Orain bai. Orain zure erabakia da.»", "IRATI: «Ahora sí. Ahora la decisión es tuya.»", 8);
-        }
-      }
+      if (dist(P, bpos) < 3.4 && P.dashT > 0 && boss.hitLock <= 0) bossStrike();
       if (boss.clock > 4 - boss.hits * 0.5 && boss.state !== "done") {
         boss.state = "tell";
         boss.clock = 0;
       }
     }
+  }
+  /* nukleoa jo (DASH edo makila-kolpea) */
+  function bossStrike() {
+    boss.hits++;
+    boss.hitLock = 1;
+    boss.clock = 4.1;
+    FB.bossHit(0, 18, -179);
+    P.vx = -Math.sin(P.angle) * 12;
+    P.vz = -Math.cos(P.angle) * 12;
+    P.dashT = 0;
+    P.vy = 7;
+    shiftFlash = 1;
+    haptic(70);
+    if (boss.hits === 3) {
+      boss.state = "done";
+      saved.bossDone = true;
+      clearEnemies();
+      if (!saved.cleared.includes(5)) saved.cleared.push(5);
+      persist();
+      SND.stinger(true);
+      notify("IRATI: «Orain bai. Orain zure erabakia da.»", "IRATI: «Ahora sí. Ahora la decisión es tuya.»", 8);
+    } else spawnWave(boss.hits === 1 ? [["grunt", 0, 1], ["grunt", 1, 1]] : [["grunt", 0, 1], ["grunt", 1, 1], ["eye", -1, 1]], 5);
   }
   function updateWorld(dt) {
     for (const s of phaseObjects)
@@ -2839,6 +2959,7 @@
       return;
     }
     if (near === "ending") finishDialog();
+    else if (zoneHere() && !isCleared(currentStage)) craftToggle();
     else powerMenu();
   }
   function finishDialog() {
@@ -2851,7 +2972,7 @@
       [
         [L("DENBORA ASKATU", "LIBERAR EL TIEMPO"), () => end("release")],
         [L("EGUN HAU GORDE", "GUARDAR ESTE DÍA"), () => end("keep")],
-        ...(saved.workshopEcho?.length === 3
+        ...(saved.echoes?.length === 3
           ? [[L("BIHARKO ZUBIA ERAIKI", "CONSTRUIR EL PUENTE A MAÑANA"), () => end("bridge")]]
           : []),
         ...(saved.memories.length === 5 ? [[L("BI ALDEAK ELKARTU", "UNIR LOS DOS LADOS"), () => end("unite")]] : []),
@@ -2887,8 +3008,10 @@
       new T.Vector3(clamp(P.vx * 0.26, -3.2, 3.2), 0, clamp(P.vz * 0.26, -3.2, 3.2)),
       1 - Math.exp(-dt * 2.4),
     );
+    /* borrokan kamera hurbilago (itzalak eta erasoak irakurgarri) */
+    CAM.zoom = mix(CAM.zoom ?? 1, ARENA.state === "fight" ? 0.74 : 1, 1 - Math.exp(-dt * 2.5));
     const look = new T.Vector3(P.x, P.y + 1, P.z).add(CAM.look),
-      offset = new T.Vector3(15.5, 18, 23);
+      offset = new T.Vector3(15.5, 18, 23).multiplyScalar(CAM.zoom);
     if (mobile && innerHeight > innerWidth) offset.multiplyScalar(1.04);
     const target = look.clone().add(offset);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) CAM.pos = camera.position.clone();
@@ -2994,6 +3117,12 @@
     $("helpBtn").textContent = L("NOLA JOKATU", "CÓMO JUGAR");
     $("phaseBtn").textContent = L("ALDATU", "CAMBIAR");
     $("jumpBtn").textContent = L("JAUZI", "SALTAR");
+    $("attackBtn").textContent = L("ERASO", "ATACAR");
+    $("rotateBtn").textContent = "↻";
+    $("rotateBtn").onclick = () => {
+      const p = CRAFT.held || CRAFT.last;
+      if (p) craftRotate(p);
+    };
     $("useBtn").textContent = L("EKIN", "ACTUAR");
     $("weaveBtn").textContent = L("BOTEREAK", "PODERES");
     $("recallBtn").textContent = L("IGO", "ASCENDER");
@@ -3005,8 +3134,8 @@
     $("echoLab").textContent = L("OIHARTZUNAK", "ECOS");
     $("keys").innerHTML = (
       language === "eu"
-        ? [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["Q", "garaia"], ["F", "DASH"], ["E", "ekin"], ["G", "eraiki"], ["X", "igo"], ["Z", "gelditu"], ["H", "botereak"]]
-        : [["WASD", "mover"], ["Shift", "correr"], ["␣ ×2", "salto"], ["Q", "época"], ["F", "DASH"], ["E", "actuar"], ["G", "construir"], ["X", "ascender"], ["Z", "estasis"], ["H", "poderes"]]
+        ? [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "eraso"], ["F", "DASH"], ["Q", "garaia"], ["E", "ekin"], ["G", "esku magikoa"], ["R", "biratu"], ["H", "botereak"]]
+        : [["WASD", "mover"], ["Shift", "correr"], ["␣ ×2", "salto"], ["J / clic", "atacar"], ["F", "DASH"], ["Q", "época"], ["E", "actuar"], ["G", "mano mágica"], ["R", "girar"], ["H", "poderes"]]
     )
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
@@ -3022,7 +3151,9 @@
       KeyF: dash,
       KeyC: weave,
       KeyV: recall,
-      KeyG: openWorkshop,
+      KeyG: craftToggle,
+      KeyJ: attack,
+      KeyK: attack,
       KeyX: ascend,
       KeyZ: stasis,
       KeyH: powerMenu,
@@ -3039,6 +3170,11 @@
         e.preventDefault();
         return;
       }
+      if (CRAFT.on && !e.repeat) {
+        if (e.code === "KeyR") return craftRotate();
+        if (e.code === "Escape" || e.code === "KeyG") return craftExit();
+      }
+      if ((e.code === "KeyJ" || e.code === "KeyK") && !e.repeat) ATK.hold = true;
       if (cinematic) {
         if (!e.repeat && (e.code === "Space" || e.code === "Enter")) nextShot();
         if (e.code === "Escape") endScene();
@@ -3053,7 +3189,10 @@
     addEventListener("keyup", (e) => {
       delete input.keys[e.code];
       if (e.code === "Space") releaseJump();
+      if (e.code === "KeyJ" || e.code === "KeyK") ATK.hold = false;
     });
+    addEventListener("mouseup", () => (ATK.hold = false));
+    bindCraftPointer();
     $("weaveBtn").onclick = powerMenu;
     $("recallBtn").onclick = ascend;
     $("cineNext").onclick = nextShot;
@@ -3190,7 +3329,9 @@
       : guideText();
     $("echoBox").hidden = !saved.echoes.length;
     $("echoes").textContent = saved.echoes.length + "/3";
-    $("hearts").textContent = "● ".repeat(Math.max(0, P.hp)) + "○ ".repeat(Math.max(0, 3 - P.hp));
+    $("hearts").textContent = "● ".repeat(Math.max(0, P.hp)) + "○ ".repeat(Math.max(0, P.maxHp - P.hp));
+    $("craftBtn").hidden = !CRAFT.on && !zoneHere();
+    $("craftBtn").textContent = CRAFT.on ? L("EGINDA", "LISTO") : L("ESKU", "MANO");
     $("dashDot").textContent = P.dashReady ? "◆" : "◇";
     $("dashDot").style.opacity = P.dashReady ? 1 : 0.5;
     $("secrets").textContent = saved.memories.length + "/5";
@@ -3287,10 +3428,14 @@
     damageTime = Math.max(0, damageTime - dt);
     if (respawnTimer > 0) {
       respawnTimer -= dt;
-      if (respawnTimer <= 0) returnCheckpoint();
+      if (respawnTimer <= 0) hardFall ? returnCheckpoint() : softRespawn();
     } else {
       updateWorld(dt);
       if (!ascent) move(dt);
+      attackUpdate(dt);
+      enemyUpdate(dt);
+      arenaUpdate(dt);
+      craftUpdate(dt);
     }
     music(dt);
     subTimer -= dt;
@@ -3328,7 +3473,8 @@
         tick(1 / 120);
         accumulator -= 1 / 120;
       }
-      cameraUpdate(raw);
+      if (CRAFT.on) craftCamera(raw);
+      else cameraUpdate(raw);
       drawGuide();
     } else if (!started) {
       let t = now * 0.000035;
@@ -3340,6 +3486,8 @@
     }
     fxUpdate(raw);
     juiceUpdate(raw);
+    cageVisual(raw);
+    numbersUpdate(raw);
     SND.update();
     atmoUpdate(raw);
     sky.position.copy(camera.position);
@@ -3390,6 +3538,16 @@
     return p;
   }
   function guideText() {
+    const ci = currentStage;
+    if (ARENA.state === "fight") return L("Garaitu itzalak", "Derrota a las sombras") + " · " + enemiesAlive();
+    if (ci >= 0 && ci < 5 && !isCleared(ci)) {
+      if (TRIALS[ci] === "craft")
+        return L(
+          "Atea itxita: igo errunaren zutabera. Pilatu kaxak ESKU MAGIKOArekin (ukitu eta arrastatu).",
+          "Puerta cerrada: sube a la columna de la runa. Apila cajas con la MANO MÁGICA (toca y arrastra).",
+        );
+      if (TRIALS[ci] === "fight") return L("Atea itxita. Itzalak uhartearen erdian daude.", "Puerta cerrada. Las sombras esperan en el centro de la isla.");
+    }
     if (saved.stage === 5)
       return saved.bossDone
         ? L("Hurbildu erlojura. EKIN: azken erabakia.", "Acércate al reloj. ACTUAR: decisión final.")
@@ -3431,7 +3589,13 @@
       $("waypoint").hidden = true;
       return;
     }
-    const p = saved.stage === 5 ? [0, -179, 15] : targetPoint();
+    const Zp = CRAFT.puzzles.find((Z) => Z.D.island === currentStage && !Z.solved);
+    const p = saved.stage === 5 ? [0, -179, 15] : Zp ? [Zp.plat.x, Zp.plat.z, Zp.plat.y] : targetPoint();
+    if (ARENA.state === "fight" || CRAFT.on) {
+      $("waypoint").hidden = true;
+      if (guideBeacon) guideBeacon.visible = false;
+      return;
+    }
     if (workshop.active) {
       $("waypoint").hidden = true;
       return;
@@ -3779,6 +3943,8 @@
       ["dashBtn", dash],
       ["phaseBtn", switchPhase],
       ["recallBtn", ascend],
+      ["attackBtn", attack],
+      ["craftBtn", craftToggle],
     ]) {
       const el = $(id);
       el.onclick = null;
@@ -3786,6 +3952,7 @@
         e.preventDefault();
         el.setPointerCapture(e.pointerId);
         if (id === "jumpBtn") jumpHeld = true;
+        if (id === "attackBtn") ATK.hold = true;
         fn();
         el.classList.add("pressed");
       };
@@ -3795,6 +3962,7 @@
           (e) => {
             el.classList.remove("pressed");
             if (id === "jumpBtn") releaseJump();
+            if (id === "attackBtn") ATK.hold = false;
           };
     }
   }
@@ -3807,7 +3975,7 @@
       "Korrika: Shift edo makila ertzera. Jauzi luzea: mantendu JAUZI; laburra: askatu. Bigarren jauzia airean. Horman beste jauzi bat egin dezakezu.\n\nESKU MAGIKOA: oholak mugitu, biratu eta lotu. IGO: gaineko plataforma zeharkatu. GELDITU: plataformak eta arriskuak izoztu.",
       "Correr: Shift o palanca al máximo. Salto alto: mantén SALTAR; corto: suelta. Segundo salto en el aire. Puedes rebotar de una pared.\n\nMANO MÁGICA: mueve, gira y une tablones. ASCENDER: atraviesa una plataforma encima de ti. ESTASIS: detén plataformas y peligros.",
       [
-        [L("ESKU MAGIKOA", "MANO MÁGICA") + kb(" · G"), openWorkshop],
+        [L("ESKU MAGIKOA", "MANO MÁGICA") + kb(" · G"), craftToggle],
         [L("IGO", "ASCENDER") + kb(" · X"), ascend],
         [L("GELDITU", "ESTASIS") + kb(" · Z"), stasis],
         [L("EHUNDU", "TEJER") + kb(" · C"), weave],
@@ -3951,11 +4119,8 @@
     return a;
   }
   function buildWorkshop() {
-    const configs = [
-      { id: 0, x: -7, z: 18, y: 0.5, socketX: -9, socketZ: 14, liftX: -12, liftZ: 20 },
-      { id: 1, x: 37, z: -50, y: 5.5, socketX: 36, socketZ: -48, liftX: 39, liftZ: -54 },
-      { id: 2, x: -30, z: -123, y: 11.5, socketX: -33, socketZ: -125, liftX: -29, liftZ: -129 },
-    ];
+    /* lehengo eraikuntza-estazioak ordezkatuta daude (craft.js: ukipen bidezko puzzleak) */
+    const configs = [];
     for (const c of configs) {
       const station = { ...c };
       station.mark = ring(c.socketX, c.y + 0.06, c.socketZ, 2.3, "#68dcec");
@@ -4383,7 +4548,7 @@
     if (window.__EG_LANG === "es" || window.__EG_LANG === "eu") language = window.__EG_LANG;
     controls();
     translate();
-    const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water"], ["dusk", "night"], 8000) : Promise.resolve();
+    const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "night"], 8000) : Promise.resolve();
     const names = Object.keys(ASSETS);
     let done = 0;
     await Promise.all(
@@ -4439,6 +4604,27 @@
         ECHO,
         ECHO_DEFS,
         SND,
+        ARENA,
+        ENEMIES,
+        CRAFT,
+        CAGES,
+        SAFE,
+        TRIALS,
+        attack,
+        spawnEnemy,
+        spawnWave,
+        playerHit,
+        islandDone,
+        isCleared,
+        craftEnter,
+        craftExit,
+        craftGrab,
+        craftDrag,
+        craftRelease,
+        craftRotate,
+        settle,
+        bossStrike,
+        pickPiece,
         ENDING,
         ringEcho,
         endingFinish,
