@@ -45,6 +45,7 @@ TEXTURES = {
     'metal':    ('ph', 'metal_plate', 512, 'detail'),
     'rust':     ('ph', 'rusty_metal_02', 512, 'color'),
     'corrugated': ('ph', 'corrugated_iron', 512, 'detail'),
+    'granite':  ('ph', 'granite_tile_04', 512, 'detail'),
     'bark':     ('ph', 'bark_brown_02', 512, 'color'),
     'snow':     ('ph', 'snow_02', 512, 'color'),
     'sand':     ('ph', 'coast_sand_01', 512, 'color'),

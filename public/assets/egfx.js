@@ -37,6 +37,7 @@
     metal:    { n: 0.9,  r: 1, m: 0 },
     rust:     { n: 0.8,  r: 1, m: 0 },
     corrugated: { n: 1.0, r: 1, m: 0 },
+    granite:  { n: 0.9,  r: 1, m: 0 },
     bark:     { n: 1.2,  r: 1, m: 0 },
     snow:     { n: 0.8,  r: 0, m: 1 },
     sand:     { n: 0.9,  r: 0, m: 1 }

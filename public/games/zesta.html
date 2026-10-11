@@ -2729,7 +2729,9 @@ const ed=new THREE.Mesh(new THREE.BoxGeometry(w||0.12,0.06,d2||0.12),M(0x6b4a2c,
 ed.position.set(x,0.08,z);arena.add(ed);
 }
 })();
-const wall=new THREE.Mesh(new THREE.BoxGeometry(20.5,H,1),MXK('wall',MT.plaster,0xffffff,0.9,5,4));
+/* jai alai: frontisa granito-blokeekin, benetako kantxetan bezala */
+const jaiAlai=(sportId==='zesta'||sportId==='remonte');
+const wall=new THREE.Mesh(new THREE.BoxGeometry(20.5,H,1),jaiAlai?MXK('granite',MT.plaster,0xb4b1a8,0.8,4.2,3.4,{normal:1.6}):MXK('wall',MT.plaster,0xffffff,0.9,5,4));
 wall.position.set(0,H/2,-D-0.5);wall.receiveShadow=true;arena.add(wall);
 const ln=new THREE.Mesh(new THREE.BoxGeometry(20.5,0.3,0.16),B(0xd21c1c));
 ln.position.set(0,FY,-D+0.07);arena.add(ln);
@@ -8530,7 +8532,7 @@ frame();
     /* EGFX: CC0 testura errealak eta zerua (huts eginez gero, testura prozeduralak) */
     if(window.EGFX&&EGFX.enabled){
       show('Testurak kargatzen…',false);
-      EGFX.preload(['grass','dirt','concrete','wall','wood','planks','plaster','stone','rock','roof','bark'],['day','dusk','overcast'],6000).then(go,go);
+      EGFX.preload(['grass','dirt','concrete','wall','granite','wood','planks','plaster','stone','rock','roof','bark'],['day','dusk','overcast'],6000).then(go,go);
     }else go();
   }
   function next(){
