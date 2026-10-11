@@ -54,6 +54,11 @@
   var renderer = null;
   var maxAniso = 4;
 
+  /* Fitxategi bakarreko bertsioetan (window.EGFX_INLINE) irudiak data-URI gisa datoz. */
+  function src(path) {
+    var m = window.EGFX_INLINE;
+    return (m && m[path]) || BASE + path;
+  }
   function load(id, url) {
     if (imgs[id]) return Promise.resolve(imgs[id]);
     return new Promise(function (res) {
@@ -95,15 +100,15 @@
       if (OFF) return Promise.resolve(false);
       var jobs = [];
       (texKeys || []).forEach(function (k) {
-        if (k === 'water') { jobs.push(load('water_n', BASE + 'tex/water_n.jpg')); return; }
+        if (k === 'water') { jobs.push(load('water_n', src('tex/water_n.jpg'))); return; }
         var L = LIB[k] || {};
-        jobs.push(load(k + '_c', BASE + 'tex/' + k + '_c.jpg').then(function (img) {
+        jobs.push(load(k + '_c', src('tex/' + k + '_c.jpg')).then(function (img) {
           if (img) { var a = avgLum(img); lum[k] = a[0]; lumS[k] = a[1]; }
         }));
-        jobs.push(load(k + '_n', BASE + 'tex/' + k + '_n.jpg'));
-        if (L.r) jobs.push(load(k + '_r', BASE + 'tex/' + k + '_r.jpg'));
+        jobs.push(load(k + '_n', src('tex/' + k + '_n.jpg')));
+        if (L.r) jobs.push(load(k + '_r', src('tex/' + k + '_r.jpg')));
       });
-      (skyKeys || []).forEach(function (s) { jobs.push(load('sky_' + s, BASE + 'sky/' + s + '.jpg')); });
+      (skyKeys || []).forEach(function (s) { jobs.push(load('sky_' + s, src('sky/' + s + '.jpg'))); });
       var all = Promise.all(jobs).then(function () { EGFX.ready = true; return true; });
       var timer = new Promise(function (res) { setTimeout(function () { EGFX.ready = true; res(false); }, timeoutMs || 6000); });
       return Promise.race([all, timer]);
