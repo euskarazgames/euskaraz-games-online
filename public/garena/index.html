@@ -165,7 +165,6 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
     </div>
     <div class="spacer"></div>
     <button class="favbtn" id="favToggle">♡ <span data-eu="Nire zerrenda" data-es="Mi lista">Nire zerrenda</span> <b id="favCount">0</b></button>
-    <button class="lang" id="langBtn">ES</button>
   </nav>
 </header>
 
@@ -246,7 +245,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 <div class="tikOverlay" id="tikOverlay" aria-hidden="true">
   <div class="tikTop">
     <div class="tikBrand"><span class="eitbWord">eitb</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></div>
-    <button class="tikClose" id="tikClose" type="button" aria-label="Cerrar">×</button>
+    <button class="tikClose" id="tikClose" type="button" aria-label="Itxi">×</button>
   </div>
   <div class="tikFeed" id="tikFeed" tabindex="0"></div>
 </div>
@@ -322,7 +321,7 @@ const CATS=[
 ["audio","Podcast eta irratia","Podcast y radio"],["kids","Haurrak","Infantil"]
 ];
 
-let lang=localStorage.getItem("ataria-lang")||"eu";
+let lang="eu"; /* euskara hutsean: gordetako "ataria-lang" hobespena ez da kontuan hartzen */
 let active="all", showFavs=false, items=[...SEED];
 let favs=new Set(JSON.parse(localStorage.getItem("ataria-favs")||"[]"));
 
@@ -348,7 +347,6 @@ function coverClass(x){return x.image?"":" generatedCover"}
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
-  $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
   renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderTik(); updateLocalizedLinks(); renderCards();
 }
@@ -462,7 +460,7 @@ function renderCards(){
         <p>${esc(lang==="eu"?(x.eu||"Ireki eduki ofiziala"):(x.es||"Abrir contenido oficial"))}</p>
         <div class="cardActions">
           <a class="open" href="${esc(x.url)}" target="_blank" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a>
-          <button class="save" data-title="${esc(x.title)}" aria-label="Guardar">${favs.has(x.title)?"♥":"♡"}</button>
+          <button class="save" data-title="${esc(x.title)}" aria-label="Nire zerrendan gorde">${favs.has(x.title)?"♥":"♡"}</button>
         </div>
       </div>
     </article>`).join("");
@@ -492,7 +490,6 @@ async function loadFeeds(){
 $("#tikButton").onclick=openTik;
 $("#tikClose").onclick=closeTik;
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#tikOverlay").classList.contains("open"))closeTik()});
-$("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("ataria-lang",lang);applyLang()};
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 

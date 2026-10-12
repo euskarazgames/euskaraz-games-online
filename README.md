@@ -2,7 +2,9 @@
 
 **EUSKARAZ GAMES** Cloudflare Workers-en hedatzeko prestatutako proiektua, GitHub bidez.
 
-Ataria euskara hutsean dago, eta beti euskara pasatzen die jokoei (`window.__EG_LANG = "eu"`).
+Atari osoa eta joko guztiak euskara hutsean daude: ez dago hizkuntza-hautatzailerik, eta atariak
+beti euskara pasatzen die jokoei (`window.__EG_LANG = "eu"`). Gordetako hizkuntza-hobespen zaharrak
+(`kirol-lang`, `elur-lang`, `oihartzun-language`, `ataria-lang`) ez dira kontuan hartzen.
 
 ## Egitura
 - `public/index.html`: ataria (arina; joko bakoitza irekitzen denean bakarrik kargatzen du).

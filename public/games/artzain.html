@@ -57,7 +57,8 @@ body.replay #quitBtn{display:none!important;}
 <style id="artzainStandaloneOnly">
 #mdPra,#prahub,#practice,#liga{display:none!important}
 </style>
-<style id="eg-solo-menus">#mdMp,#mp,#multiSetup,#hpOnlineBtn{display:none!important;pointer-events:none!important}.hp8-mode-grid{grid-template-columns:1fr!important;max-width:760px;margin-inline:auto}</style></head>
+<style id="eg-solo-menus">#mdMp,#mp,#multiSetup,#hpOnlineBtn{display:none!important;pointer-events:none!important}.hp8-mode-grid{grid-template-columns:1fr!important;max-width:760px;margin-inline:auto}</style>
+<style id="eg-euskaraz">/* beti euskaraz: ez dago hizkuntza-hautatzailerik */#lang,#mdLang{display:none!important}</style></head>
 <body>
 <div id="gl"></div>
 
@@ -225,7 +226,7 @@ body.replay #quitBtn{display:none!important;}
 
 <div class="ovl" id="ceremony">
   <div class="flag3"><i style="background:#d21c1c"></i><i style="background:#0f8a3c"></i><i style="background:#fff"></i></div>
-  <h3>EUSKAL CHAMPIONS</h3>
+  <h3>EUSKAL TXAPELKETA</h3>
   <h1 id="ceTitle" style="font-size:min(11vw,58px)">TXAPELDUN!</h1>
   <p id="ceTxt">—</p>
   <table class="rank" id="ceTable"></table>
@@ -254,7 +255,7 @@ body.replay #quitBtn{display:none!important;}
    ================================================================== */
 var LANG = 'eu';                 /* beti euskaraz hasten da */
 var LANG_SAVED = 'eu';
-try { LANG_SAVED = localStorage.getItem('kirol-lang') || 'eu'; } catch (e) {}
+/* beti euskaraz: gordetako hizkuntza ('kirol-lang'), ?lang= eta __EG_LANG ez dira kontuan hartzen */
 
 var DICT = {
 
@@ -366,18 +367,18 @@ en: {
 /* === REGLAS DE JUEGO: inglés y castellano === */
 var RULES_TR = {
 en: {
-'<b>Partido erreala 22 tantora</b> (esku huska) · 11an deskantsua':'<b>Real match to 22 points</b> (bare hand) · break at 11',
-'<b>Ezker palanka</b> — korrika ETA <b>puntería</b>: kolpea ematean palankak agintzen du':'<b>Left stick</b> — run AND <b>aim</b>: the stick decides where the ball goes',
+'<b>Partida osoa 22 tantora</b> (esku huska) · 11an deskantsua':'<b>Real match to 22 points</b> (bare hand) · break at 11',
+'<b>Ezker palanka</b> — korrika ETA <b>punteria</b>: kolpea ematean palankak agintzen du':'<b>Left stick</b> — run AND <b>aim</b>: the stick decides where the ball goes',
 'Palanka <b>aurrera</b> = zuzena eta luzea · <b>atzera</b> = altua eta motza · <b>albora</b> = frontiseko ertzera':'Stick <b>forward</b> = flat and deep · <b>back</b> = high and short · <b>sideways</b> = to the front wall edge',
 '<b>A</b> eutsi kargatzeko; kolpea automatikoki ateratzen da pilota irismenean':'<b>A</b> hold to charge; the shot fires automatically when the ball is in reach',
-'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: dejada arriskutsua, txaparen ondo-ondoan':'<b>B</b> lob · <b>C</b> <b>DROP</b>: risky drop shot, right above the tin',
+'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: kolpe arriskutsua, txaparen ondo-ondoan':'<b>B</b> lob · <b>C</b> <b>DROP</b>: risky drop shot, right above the tin',
 'Falta gorriaren azpitik jotzea tantoa galtzea da':'Hitting below the red fault line loses the point',
 '<b>SUA</b> beteta: super-tiroa':'<b>FIRE</b> bar full: super shot',
-'<b>Partido erreala 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du':'<b>Real match to 30 points</b> (35 in major events) · the point winner serves',
+'<b>Partida osoa 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du':'<b>Real match to 30 points</b> (35 in major events) · the point winner serves',
 '<b>SAKEA</b>: frontisa jo eta lehen jauzia <b>4. eta 7. koadroen artean</b>. Motz = <b>FALTA</b>, luze = <b>PASA</b> (tantoa aurkariarentzat)':'<b>SERVE</b>: hit the front wall and the first bounce must land <b>between squares 4 and 7</b>. Short = <b>FAULT</b>, long = <b>OVER</b> (point for the opponent)',
 '<b>A</b> eutsi pilota zestan hartzeko eta <b>askatu</b> jaurtitzeko (edo A berriro)':'<b>A</b> hold to catch the ball in the cesta and <b>release</b> to throw (or press A again)',
 '<b>ATXIKITZEA</b>: pilota ezin da zestan geratu. Barra berdean askatu behar duzu edo <b>falta</b> da':'<b>HOLDING</b>: the ball may not stay in the cesta. Release inside the green bar or it is a <b>fault</b>',
-'<b>Ezker palanka</b> — korrika ETA puntería: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera':'<b>Left stick</b> — run AND aim: the stick decides the throw · <b>C</b> corner · <b>B</b> to the back wall',
+'<b>Ezker palanka</b> — korrika ETA punteria: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera':'<b>Left stick</b> — run AND aim: the stick decides the throw · <b>C</b> corner · <b>B</b> to the back wall',
 'Frontisa <b>txaparen gainetik</b> jo behar da; ezker horma eta errebotea jokoan daude':'The front wall must be hit <b>above the tin</b>; left wall and back wall are in play',
 '<b>Lehen boteak kantxa barruan</b> egin behar du; gero kontrakantxan jarraitu dezake jokoan':'The <b>first bounce must land inside the court</b>; after that the ball stays alive in the side corridor',
 '<b>A</b> eta <b>B</b> <b>txandaka</b>: pala bat bestearen atzetik, ezker-eskuin':'<b>A</b> and <b>B</b> <b>alternating</b>: one oar after the other, left-right',
@@ -433,18 +434,18 @@ en: {
 'Hiru aurkari eta kronometroa: 900 metro':'Three rivals and the clock: 900 metres'
 },
 es: {
-'<b>Partido erreala 22 tantora</b> (esku huska) · 11an deskantsua':'<b>Partido real a 22 tantos</b> (mano desnuda) · descanso en el 11',
-'<b>Ezker palanka</b> — korrika ETA <b>puntería</b>: kolpea ematean palankak agintzen du':'<b>Palanca izquierda</b> — correr Y <b>apuntar</b>: al golpear manda la palanca',
+'<b>Partida osoa 22 tantora</b> (esku huska) · 11an deskantsua':'<b>Partido real a 22 tantos</b> (mano desnuda) · descanso en el 11',
+'<b>Ezker palanka</b> — korrika ETA <b>punteria</b>: kolpea ematean palankak agintzen du':'<b>Palanca izquierda</b> — correr Y <b>apuntar</b>: al golpear manda la palanca',
 'Palanka <b>aurrera</b> = zuzena eta luzea · <b>atzera</b> = altua eta motza · <b>albora</b> = frontiseko ertzera':'Palanca <b>adelante</b> = raso y largo · <b>atrás</b> = alto y corto · <b>al lado</b> = al canto del frontis',
 '<b>A</b> eutsi kargatzeko; kolpea automatikoki ateratzen da pilota irismenean':'<b>A</b> mantener para cargar; el golpe sale solo cuando la pelota entra en alcance',
-'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: dejada arriskutsua, txaparen ondo-ondoan':'<b>B</b> globo · <b>C</b> <b>DEJADA</b>: arriesgada, pegadita a la chapa',
+'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: kolpe arriskutsua, txaparen ondo-ondoan':'<b>B</b> globo · <b>C</b> <b>DEJADA</b>: arriesgada, pegadita a la chapa',
 'Falta gorriaren azpitik jotzea tantoa galtzea da':'Golpear por debajo de la línea roja de falta es perder el tanto',
 '<b>SUA</b> beteta: super-tiroa':'<b>FUEGO</b> lleno: súper tiro',
-'<b>Partido erreala 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du':'<b>Partido real a 30 tantos</b> (35 en las grandes) · saca quien gana el tanto',
+'<b>Partida osoa 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du':'<b>Partido real a 30 tantos</b> (35 en las grandes) · saca quien gana el tanto',
 '<b>SAKEA</b>: frontisa jo eta lehen jauzia <b>4. eta 7. koadroen artean</b>. Motz = <b>FALTA</b>, luze = <b>PASA</b> (tantoa aurkariarentzat)':'<b>SAQUE</b>: golpear el frontis y que el primer bote caiga <b>entre los cuadros 4 y 7</b>. Corto = <b>FALTA</b>, largo = <b>PASA</b> (tanto para el rival)',
 '<b>A</b> eutsi pilota zestan hartzeko eta <b>askatu</b> jaurtitzeko (edo A berriro)':'<b>A</b> mantener para atrapar en la cesta y <b>soltar</b> para lanzar (o A otra vez)',
 '<b>ATXIKITZEA</b>: pilota ezin da zestan geratu. Barra berdean askatu behar duzu edo <b>falta</b> da':'<b>RETENCIÓN</b>: la pelota no puede quedarse en la cesta. Suelta dentro de la barra verde o es <b>falta</b>',
-'<b>Ezker palanka</b> — korrika ETA puntería: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera':'<b>Palanca izquierda</b> — correr y apuntar: al lanzar manda la palanca · <b>C</b> txoko · <b>B</b> al rebote',
+'<b>Ezker palanka</b> — korrika ETA punteria: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera':'<b>Palanca izquierda</b> — correr y apuntar: al lanzar manda la palanca · <b>C</b> txoko · <b>B</b> al rebote',
 'Frontisa <b>txaparen gainetik</b> jo behar da; ezker horma eta errebotea jokoan daude':'Hay que dar al frontis <b>por encima de la chapa</b>; pared izquierda y rebote están en juego',
 '<b>Lehen boteak kantxa barruan</b> egin behar du; gero kontrakantxan jarraitu dezake jokoan':'El <b>primer bote debe caer dentro de la cancha</b>; después la pelota sigue viva en la contracancha',
 '<b>A</b> eta <b>B</b> <b>txandaka</b>: pala bat bestearen atzetik, ezker-eskuin':'<b>A</b> y <b>B</b> <b>alternando</b>: una pala tras otra, izquierda-derecha',
@@ -1060,8 +1061,8 @@ function applyStaticTexts(){
 }
 
 function setLang(v){
-  LANG = v;
-  try { localStorage.setItem('kirol-lang', v); } catch (e) {}
+  LANG = 'eu';                     /* beti euskaraz: v ez da kontuan hartzen */
+  try { localStorage.setItem('kirol-lang', 'eu'); } catch (e) {}
   try { applyStaticTexts(); } catch (e) {}
 }
 
@@ -2546,11 +2547,11 @@ const player={g:null,x:0,z:12,yaw:0,spd:0};
 const CALENDAR=[
 {d:'URT 18',sp:'pilota',   n:'URTE BERRI SARIA'},
 {d:'OTS 08',sp:'artzain',  n:'NEGU ARTALDEA'},
-{d:'OTS 22',sp:'zesta',    n:'INAUTERI PARTIDOA'},
+{d:'OTS 22',sp:'zesta',    n:'INAUTERI PARTIDA'},
 {d:'MAR 15',sp:'pilota',   n:'SAN JOSE TXAPELKETA'},
 {d:'API 05',sp:'estropada',n:'UDABERRIKO BATELAK',mod:0},
 {d:'API 26',sp:'artzain',  n:'ARANTZAZUKO PROBA'},
-{d:'MAI 10',sp:'zesta',    n:'MAIATZEKO PARTIDOA'},
+{d:'MAI 10',sp:'zesta',    n:'MAIATZEKO PARTIDA'},
 {d:'MAI 31',sp:'pilota',   n:'ESKUZ BANAKA'},
 {d:'EKA 14',sp:'estropada',n:'TRAINERILLEN BANDERA',mod:1},
 {d:'EKA 28',sp:'artzain',  n:'SAN JOAN ARTZAINAK'},
@@ -2559,7 +2560,7 @@ const CALENDAR=[
 {d:'ABU 09',sp:'pilota',   n:'ASTE NAGUSIA'},
 {d:'ABU 23',sp:'artzain',  n:'MENDIKO LEHIA'},
 {d:'IRA 06',sp:'estropada',n:'KONTXAKO BANDERA',mod:3},
-{d:'IRA 20',sp:'zesta',    n:'ZESTA PUNTA MASTERS'},
+{d:'IRA 20',sp:'zesta',    n:'ZESTA PUNTA MASTERRA'},
 {d:'URR 04',sp:'artzain',  n:'ARTZAIN EGUNA'},
 {d:'URR 25',sp:'pilota',   n:'LAU T ERDIKO FINALA'},
 {d:'AZA 15',sp:'zesta',    n:'ESKU HUTSAK GAUA'},
@@ -2827,11 +2828,11 @@ const SPORTS={};
 SPORTS.pilota={
 name:'PILOTA',place:'FRONTOIA',unit:'tanto',
 rules:[
-'<b>Partido erreala 22 tantora</b> (esku huska) · 11an deskantsua',
-'<b>Ezker palanka</b> — korrika ETA <b>puntería</b>: kolpea ematean palankak agintzen du',
+'<b>Partida osoa 22 tantora</b> (esku huska) · 11an deskantsua',
+'<b>Ezker palanka</b> — korrika ETA <b>punteria</b>: kolpea ematean palankak agintzen du',
 'Palanka <b>aurrera</b> = zuzena eta luzea · <b>atzera</b> = altua eta motza · <b>albora</b> = frontiseko ertzera',
 '<b>A</b> eutsi kargatzeko; kolpea automatikoki ateratzen da pilota irismenean',
-'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: dejada arriskutsua, txaparen ondo-ondoan',
+'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: kolpe arriskutsua, txaparen ondo-ondoan',
 'Falta gorriaren azpitik jotzea tantoa galtzea da',
 '<b>SUA</b> beteta: super-tiroa'],
 par(L){return 13+L.t*6;},
@@ -3132,11 +3133,11 @@ Sakea 4-7 koadroen artean · errebotea jokoan · atxikitzea falta
 SPORTS.zesta={
 name:'ZESTA PUNTA',place:'JAI ALAI',unit:'tanto',
 rules:[
-'<b>Partido erreala 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du',
+'<b>Partida osoa 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du',
 '<b>SAKEA</b>: frontisa jo eta lehen jauzia <b>4. eta 7. koadroen artean</b>. Motz = <b>FALTA</b>, luze = <b>PASA</b> (tantoa aurkariarentzat)',
 '<b>A</b> eutsi pilota zestan hartzeko eta <b>askatu</b> jaurtitzeko (edo A berriro)',
 '<b>ATXIKITZEA</b>: pilota ezin da zestan geratu. Barra berdean askatu behar duzu edo <b>falta</b> da',
-'<b>Ezker palanka</b> — korrika ETA puntería: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera',
+'<b>Ezker palanka</b> — korrika ETA punteria: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera',
 'Frontisa <b>txaparen gainetik</b> jo behar da; ezker horma eta errebotea jokoan daude',
 '<b>Lehen boteak kantxa barruan</b> egin behar du; gero kontrakantxan jarraitu dezake jokoan'],
 par(L){return 18+L.t*9;},
@@ -3607,11 +3608,11 @@ par(L){return 1000+L.t*700;},
 modeRules(m){
 return[
 '<b>'+m.n+'</b> · '+m.rowers+' arraunlari · '+m.real+' m · '+
-(m.legs-1?(m.legs+' largo eta <b>'+(m.legs-1)+' ziaboga</b>'):'largo bakarra, ziabogarik gabe'),
+(m.legs-1?(m.legs+' luzera eta <b>'+(m.legs-1)+' ziaboga</b>'):'luzera bakarra, ziabogarik gabe'),
 '<b>A = ESKUIN aldea · B = EZKER aldea</b>. Biak <b>batera</b> sakatu palada bakoitzean:',
 'zenbat eta <b>sintonia</b> hobea, orduan eta indar handiagoa eta lerro zuzenagoa',
 'Alde bakarrarekin arraun eginez gero, ontzia <b>beste aldera okertzen</b> da',
-m.legs>1?'<b>ZIABOGA</b>: bi GO barra jarraian; sakatu biak zona berdean eta bira itxia aterako dute (atzera) eta kanpokoek (<b>ESKUIN</b>) arraun: bi aldeen sintoniak ematen du bira itxia inertzia galdu gabe':'Erritmoa mantendu: kadentzia egokia da giltza',
+m.legs>1?'<b>ZIABOGA</b>: bi barra jarraian; sakatu biak zona berdean eta bira itxia aterako dute (atzera) eta kanpokoek (<b>ESKUIN</b>) arraun: bi aldeen sintoniak ematen du bira itxia inertzia galdu gabe':'Erritmoa mantendu: kadentzia egokia da giltza',
 '<b>Ezker palanka</b> — lema fina · <b>Eskuin palanka</b> — kamera'
 ];
 },
@@ -3872,7 +3873,7 @@ if(this.cyc>=1){
 this.cyc-=1;this.cycId++;this.preTick=false;this.tickC=false;
 if(this.lastCyc<this.cycId-1&&this.pwT<=0){
 this.chain=0;this.sync=lerp(this.sync,0.25,0.2);
-if(RNG()<0.4)say('Palada galduta: sakatu GO zona berdean, eskuin muturrean',1.8);
+if(RNG()<0.4)say('Palada galduta: sakatu zona berdean, eskuin muturrean',1.8);
 }
 }
 /* AZKEN SPRINTA: azken 120 metroak, bizkor sakatu */
@@ -3990,7 +3991,7 @@ min:99,turn:0,sync:0.4,v0:this.v,t:0};
 popup('ZIABOGA!','#ffd45e');sfxWhistle();oarLoopStop(0.12);this.pwT=0;
 this.ciaB=null;this.ciaN=0;
 say('ZIABOGA: sakatu botoia ahalik eta bizkorren!',2.6);
-say('EZKER aldea CIAR, ESKUIN aldea ARRAUN: biak batera!',3.4);
+say('EZKER aldea ATZERA, ESKUIN aldea AURRERA: biak batera!',3.4);
 }
 if(this.cia){
 this.cia.t+=dt;
@@ -4979,7 +4980,7 @@ const eff=(0.45+0.55*(this.stam/100))*(0.7+this.rhythm*0.6);
 this.x+=(0.16+ideal*0.2)*eff*(this.dig?0.3:1);
 this.stam-=1.5+(this.dig?1.2:0);
 nz(0.06,0.12,200,900);blip(150+ideal*90,0.09,0.1,'sawtooth',80);
-if(ideal>0.8&&this.rhythm>0.7)popup('HEEE-UP!','#2ee59d');
+if(ideal>0.8&&this.rhythm>0.7)popup('AUPA!','#2ee59d');
 },
 update(dt){
 updateChips(dt);this.time+=dt;
@@ -5066,7 +5067,7 @@ camMode='free';camPos.set(2.6,3,6);camTarget.set(0,1.2,0);
 begin(){say('A eta B txandaka, eta orekan mantendu',3);beatShow(true,'PAUSOA');},
 step(side){
 if(this.pen>0)return;
-if(side!==this.side){sfxBad();this.cad*=0.5;popup('TROPEZU','#ff7a6a');this.bal+=side*0.3;return;}
+if(side!==this.side){sfxBad();this.cad*=0.5;popup('BEHAZTOPA','#ff7a6a');this.bal+=side*0.3;return;}
 const gap=this.time-this.lastT;this.lastT=this.time;this.side=-side;
 const ideal=clamp(1-Math.abs(gap-0.32)/0.3,0,1);
 this.cad=clamp(this.cad+(ideal>0.5?0.14:-0.1),0,1);
@@ -5695,7 +5696,7 @@ ABENTURA — maisua,gimnasioak,bidean erronkak eta tiro bereziak
 const PB={zone:0,speed:0,charge:0,sua:0,stam:0,bal:0};
 const MOVES={
 globoa  :{n:'GLOBOA',      d:'Pilota altua: aurkaria atzera botatzen du (B botoia)'},
-txikito :{n:'MOTZ',        d:'Dejada motza, frontisaren kontra hiltzen dena (C botoia)'},
+txikito :{n:'MOTZ',        d:'Kolpe motza, frontisaren kontra hiltzen dena (C botoia)'},
 tximista:{n:'TXIMISTA',    d:'SUA beteta: super-tiroa, 1,5 aldiz azkarragoa'},
 punta   :{n:'PUNTA SUTAN', d:'Zestako super-jaurtiketa sutan'},
 bihorma :{n:'BI HORMA',    d:'Efektua: ezker hormatik itzultzen den kolpea'},
@@ -6854,14 +6855,8 @@ if(v&&v.value){try{localStorage.setItem(SAVE_KEY,v.value);}catch(e){}hasSave=tru
 /* ================= HIZKUNTZA ETA MODUAK ================= */
 let GAMEMODE='story',arcEv=null,praLvl=10,sT=0;
 function showLang(){
-setLang('eu');                     /* aukeratzeko unean beti euskaraz */
-state='lang';showOvl('lang');
-const mark=(id,on)=>{const e=$(id);if(e)e.classList.toggle('ghost',!on);};
-mark('lgEu',LANG_SAVED==='eu');mark('lgEn',LANG_SAVED==='en');mark('lgEs',LANG_SAVED==='es');
-const go=v=>{initAudio();LANG_SAVED=v;setLang(v);showModes();};
-$('lgEu').onclick=()=>go('eu');
-$('lgEn').onclick=()=>go('en');
-$('lgEs').onclick=()=>go('es');
+/* hizkuntza-hautatzailerik ez: beti euskaraz, zuzenean modu-menura */
+initAudio();LANG_SAVED='eu';setLang('eu');showModes();
 }
 function showModes(){
 state='mode';showOvl('mode');
@@ -8010,11 +8005,11 @@ async function egSigWait(room,pred,onTick,timeout){
 function egInviteLink(game,room,lang){
  try{
   if(window.parent&&window.parent!==window&&typeof window.parent.egInviteUrl==='function')
-    return window.parent.egInviteUrl(game,room,lang||'eu');
+    return window.parent.egInviteUrl(game,room,'eu');
  }catch(e){}
  const u=new URL(location.href);u.search='';u.hash='';
  u.searchParams.set('game',game);u.searchParams.set('room',room);
- if(lang)u.searchParams.set('lang',lang);
+ u.searchParams.set('lang','eu');
  return u.toString();
 }
 async function egShareLink(title,link){
@@ -8032,8 +8027,7 @@ function kcNetRoom(){
  catch(e){return ''}
 }
 function kcNetLang(){
- try{return window.__EG_LANG||new URL(location.href).searchParams.get('lang')||''}
- catch(e){return window.__EG_LANG||''}
+ return 'eu';                         /* beti euskaraz */
 }
 async function kcNetCreate(name){
  mpReset();MP.active=true;MP.isHost=true;
@@ -8312,8 +8306,8 @@ function kcWsRoomId(){
  catch(e){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
 }
 function kcWsInvite(game,room,lang){
- try{if(window.parent&&window.parent!==window&&typeof window.parent.egInviteUrl==='function')return window.parent.egInviteUrl(game,room,lang)}catch(e){}
- const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('game',game);u.searchParams.set('room',room);if(lang)u.searchParams.set('lang',lang);return u.toString();
+ try{if(window.parent&&window.parent!==window&&typeof window.parent.egInviteUrl==='function')return window.parent.egInviteUrl(game,room,'eu')}catch(e){}
+ const u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('game',game);u.searchParams.set('room',room);u.searchParams.set('lang','eu');return u.toString();
 }
 function kcWsStop(){KCWS.manual=true;clearTimeout(KCWS.retry);clearInterval(KCWS.pingTimer);try{KCWS.ws&&KCWS.ws.close(1000,'bye')}catch(e){}KCWS.ws=null}
 function kcWsConnect(room,side,game,name,onPaired){
@@ -8377,7 +8371,7 @@ async function kcWsCreate(name){
  return kcWsInvite(KCWS_GAME,room,LANG);
 }
 async function kcWsJoin(room){
- const lg=window.__EG_LANG||'';if(['eu','es','en'].includes(lg)){try{LANG_SAVED=lg;setLang(lg)}catch(e){}}
+ const lg='eu';if(['eu','es','en'].includes(lg)){try{LANG_SAVED=lg;setLang(lg)}catch(e){}}
  mpReset();MP.active=true;MP.isHost=false;MP.connected=false;MP.transport='ws';MP.myName='URDIN';
  state='mp';showOvl('mp');$('mpTit').textContent=KCWS_TITLE;
  $('mpBody').innerHTML='<p style="font-size:14px;line-height:1.6;color:#dff3ea">ONLINE PARTIDARA SARTZEN</p>'

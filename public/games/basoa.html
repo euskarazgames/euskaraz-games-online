@@ -8,9 +8,9 @@
 <meta name="theme-color" content="#05070a">
 <title>BASOA SOLID — Zazpi Zigiluak</title>
 <script src="/assets/egfx.js"></script>
-<meta name="description" content="BASOA SOLID: infiltración táctica y acción vertical de mitología vasca. Gorka White, espada, sigilo, radar y siete sellos bajo el Anboto.">
+<meta name="description" content="BASOA SOLID: euskal mitologiako infiltrazio taktikoa eta ekintza bertikala. Gorka White, ezpata, isilpeko ibilera, radarra eta zazpi zigilu Anboto azpian.">
 <meta property="og:title" content="BASOA SOLID — Zazpi Zigiluak">
-<meta property="og:description" content="Infiltrazio taktikoa. Thriller de espías con mitología vasca: dobles agentes, guerra sucia y siete expedientes lacrados. Ficción.">
+<meta property="og:description" content="Infiltrazio taktikoa. Espioi-istorio bat euskal mitologiaren giroan: agente bikoitzak, gerra zikina eta zazpi txosten lakratu. Fikzioa.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <meta name="author" content="Gorka">
@@ -289,7 +289,7 @@
 
   <text x="1024" y="1372" text-anchor="middle"
         font-family="Georgia, 'Times New Roman', serif" font-size="56"
-        letter-spacing="20" fill="#3ad17e">by GORKA WHITE</text>
+        letter-spacing="20" fill="#3ad17e">GORKA WHITE</text>
 
   <text x="1024" y="1494" text-anchor="middle"
         font-family="Georgia, 'Times New Roman', serif" font-size="42"
@@ -333,7 +333,7 @@
 <div class="ovl" id="codec">
   <div class="freq" id="cFreq">140.85</div>
   <div class="sig">· KODEK KONEXIOA ·</div>
-  <div class="recbar"><i></i>REC · LIVE UPLINK · SNR 31dB</div>
+  <div class="recbar"><i></i>GRABATZEN · ZUZENEKO LOTURA · SNR 31dB</div>
   <div class="faces">
     <canvas id="cvL" width="140" height="156"></canvas>
     <div class="wv"><i style="animation-delay:0s"></i><i style="animation-delay:.09s"></i><i style="animation-delay:.18s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.13s"></i></div>
@@ -4300,7 +4300,7 @@ function drawRadar(){
     rctx.fillStyle='rgba(120,255,190,0.09)';
     for(let i=0;i<150;i++)rctx.fillRect(Math.random()*S,Math.random()*S,2,2);
     rctx.fillStyle='#ff5555';rctx.font='bold 11px Courier New';rctx.textAlign='center';
-    rctx.fillText(player.chaffT>0?'JAMMED':'OFFLINE',C,C+4);return;
+    rctx.fillText(player.chaffT>0?'INTERFERENTZIA':'LINEAZ KANPO',C,C+4);return;
   }
   const pgx=w2gx(gorka.position.x),pgz=w2gz(gorka.position.z),R=16;
   for(let dz=-R;dz<=R;dz++)for(let dx=-R;dx<=R;dx++){
@@ -4748,7 +4748,7 @@ function update(dt){
       ? (Math.abs(gorka.position.z-l.z)<0.55&&Math.abs(gorka.position.x-l.x)<l.len/2)
       : (Math.abs(gorka.position.x-l.x)<0.55&&Math.abs(gorka.position.z-l.z)<l.len/2);
     if(inLine&&player.y<2.4&&!player.crouch){
-      if(alertState!=='alert'){alarm(gorka.position.x,gorka.position.z);say('¡Laserra! Alarma piztu da',2.4);}
+      if(alertState!=='alert'){alarm(gorka.position.x,gorka.position.z);say('Laserra! Alarma piztu da',2.4);}
     }
   }
 

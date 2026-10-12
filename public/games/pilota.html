@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>HERRI PILOTA — EUSKARAZ GAMES · REALISTIC EDITION</title>
+<title>HERRI PILOTA — EUSKARAZ GAMES · EDIZIO ERREALISTA</title>
 <script src="/assets/egfx.js"></script>
 <meta property="og:title" content="HERRI PILOTA · EUSKARAZ GAMES">
 <meta property="og:description" content="Hogeita bi tantora, esku huska.">
@@ -231,7 +231,8 @@ body.court #musicToggle{display:flex;}
 .hp13-share-note{margin-top:11px;color:#8da398;font-size:9px;line-height:1.45}
 @media(max-width:520px){.hp13-share-card{border-radius:22px;padding:17px}.hp13-share-card h2{font-size:23px}.hp13-share-actions{grid-template-columns:1fr}.hp13-share-actions button{min-height:54px}}
 </style>
-<style id="eg-solo-menus">#mdMp,#mp,#multiSetup,#hpOnlineBtn{display:none!important;pointer-events:none!important}.hp8-mode-grid{grid-template-columns:1fr!important;width:100%;max-width:760px;margin-inline:auto}</style></head>
+<style id="eg-solo-menus">#mdMp,#mp,#multiSetup,#hpOnlineBtn{display:none!important;pointer-events:none!important}.hp8-mode-grid{grid-template-columns:1fr!important;width:100%;max-width:760px;margin-inline:auto}</style>
+<style id="eg-euskaraz">/* beti euskaraz: ez dago hizkuntza-hautatzailerik */#lang,#mdLang,#hpMainLang,#hp8Lang,.hp8-langchip{display:none!important}</style></head>
 <body>
 <div id="gl"></div>
 
@@ -240,17 +241,17 @@ body.court #musicToggle{display:flex;}
     <span class="sp" id="hSport">—</span>
     <div class="led">
       <div class="ledBlk">
-        <span class="ledSm">TIME</span>
+        <span class="ledSm">DENBORA</span>
         <span class="tm" id="hTime">0:00</span>
       </div>
       <div class="ledSep"></div>
       <div class="ledBlk scoreBlk">
-        <span class="ledSm">PTS</span>
+        <span class="ledSm">TANTOAK</span>
         <span class="sc" id="hScore">0</span>
       </div>
     </div>
   </div>
-  <button id="musicToggle" type="button" aria-label="Activar o quitar la melodía del partido">♫ MUSIKA</button>
+  <button id="musicToggle" type="button" aria-label="Partidako doinua piztu edo itzali">♫ MUSIKA</button>
   <div id="matchFlash">
     <small>HERRI PILOTA · EUSKARAZ GAMES</small>
     <b id="matchFlashMain">PARTIDA</b>
@@ -328,7 +329,7 @@ body.court #musicToggle{display:flex;}
   <div class="row" style="flex-direction:column;align-items:center;margin-top:16px">
     <div class="mbtn" id="mdStory" style="min-width:min(80vw,340px);padding:14px 18px"><b id="mdT1">HISTORIA</b><br><span id="mdD1" style="font-size:9px;letter-spacing:1px;opacity:.8">Mundua, gimnasioak eta trama</span></div>
     <div class="mbtn ghost" id="mdLiga" style="min-width:min(80vw,340px);padding:14px 18px"><b id="mdT5">FRONTOI LIGA</b><br><span id="mdD5" style="font-size:9px;letter-spacing:1px;opacity:.8">Frontoi txapelketa guztiak</span></div>
-    <div class="mbtn ghost" id="mdArc" style="min-width:min(80vw,340px);padding:14px 18px"><b id="mdT2">ARCADE</b><br><span id="mdD2" style="font-size:9px;letter-spacing:1px;opacity:.8">Txapelketen egutegia</span></div>
+    <div class="mbtn ghost" id="mdArc" style="min-width:min(80vw,340px);padding:14px 18px"><b id="mdT2">TXAPELKETAK</b><br><span id="mdD2" style="font-size:9px;letter-spacing:1px;opacity:.8">Txapelketen egutegia</span></div>
     <div class="mbtn ghost" id="mdPra" style="min-width:min(80vw,340px);padding:14px 18px"><b id="mdT3">ENTRENATU</b><br><span id="mdD3" style="font-size:9px;letter-spacing:1px;opacity:.8">Proba guztiak, historiarik gabe</span></div>
     <div class="mbtn ghost" id="mdMp" hidden inert aria-hidden="true" style="min-width:min(80vw,340px);padding:14px 18px"><b id="mdT4">MULTIJOKALARIA</b><br><span id="mdD4" style="font-size:9px;letter-spacing:1px;opacity:.8">Lagunen kontra</span></div>
     <div class="mbtn ghost" id="mdLang" style="min-width:min(50vw,200px);padding:10px;margin-top:6px;font-size:10px">HIZKUNTZA</div>
@@ -341,7 +342,7 @@ body.court #musicToggle{display:flex;}
   <div class="row"><div class="mbtn ghost" id="ligBack">ITZULI</div></div>
 </div>
 <div class="ovl" id="arcade">
-  <h3 id="arcSub">ARCADE</h3>
+  <h3 id="arcSub">TXAPELKETAK</h3>
   <h1 id="arcTit" style="font-size:min(8vw,38px)">TXAPELKETA EGUTEGIA</h1>
   <div class="calWrap"><table class="cal" id="arcTable"></table></div>
   <div class="row"><div class="mbtn ghost" id="arcBack">ITZULI</div></div>
@@ -405,7 +406,7 @@ body.court #musicToggle{display:flex;}
 
 <div class="ovl" id="ceremony">
   <div class="flag3"><i style="background:#d21c1c"></i><i style="background:#0f8a3c"></i><i style="background:#fff"></i></div>
-  <h3>EUSKAL CHAMPIONS</h3>
+  <h3>EUSKAL TXAPELKETA</h3>
   <h1 id="ceTitle" style="font-size:min(11vw,58px)">TXAPELDUN!</h1>
   <p id="ceTxt">—</p>
   <table class="rank" id="ceTable"></table>
@@ -415,24 +416,24 @@ body.court #musicToggle{display:flex;}
 
 <div class="ovl" id="careerSetup">
   <div class="setupBox">
-    <div class="ey">NUEVA PARTIDA · TEMPORADA PROFESIONAL</div>
+    <div class="ey">PARTIDA BERRIA · DENBORALDI PROFESIONALA</div>
     <h1>PILOTARI<br><span>KARRERA</span></h1>
-    <p style="color:#b9d3c5;line-height:1.6;font-size:12px">Empieza como joven profesional dentro de un circuito vivo. Gestiona forma, entrenamiento, manos, contratos, ranking y relaciones mientras rivales y empresas también evolucionan.</p>
+    <p style="color:#b9d3c5;line-height:1.6;font-size:12px">Hasi profesional gazte gisa zirkuitu bizi batean. Kudeatu sasoia, entrenamendua, eskuak, kontratuak, sailkapena eta harremanak; bitartean aurkariak eta enpresak ere eboluzionatzen dute.</p>
     <div class="setupGrid" style="margin-top:14px">
-      <input class="setupInput" id="careerName" value="GORKA" maxlength="14" aria-label="Nombre del pelotari">
-      <input class="setupInput" id="careerAge" value="20" type="number" min="18" max="35" aria-label="Edad">
+      <input class="setupInput" id="careerName" value="GORKA" maxlength="14" aria-label="Pilotariaren izena">
+      <input class="setupInput" id="careerAge" value="20" type="number" min="18" max="35" aria-label="Adina">
     </div>
-    <div style="font-size:8px;letter-spacing:2px;color:#7fa18f;margin-top:13px">PERFIL DE JUEGO</div>
-    <div class="rolePick"><div class="roleOpt on" id="roleFront"><b>DELANTERO</b><br><span style="opacity:.65">velocidad · remate · txoko</span></div><div class="roleOpt" id="roleBack"><b>ZAGUERO</b><br><span style="opacity:.65">potencia · defensa · fondo</span></div></div>
-    <div class="managerActions"><button class="managerBtn primary" id="careerCreate">FIRMAR PRIMER CONTRATO</button><button class="managerBtn" id="setupMulti">ONLINE P2P</button></div>
-    <p style="opacity:.55;font-size:9px">Todos los clubes, frontones, empresas, competiciones secundarias y pelotaris del modo carrera son ficticios. La estructura deportiva se inspira en la temporada profesional real.</p>
+    <div style="font-size:8px;letter-spacing:2px;color:#7fa18f;margin-top:13px">JOKO PROFILA</div>
+    <div class="rolePick"><div class="roleOpt on" id="roleFront"><b>AURRELARIA</b><br><span style="opacity:.65">abiadura · errematea · txokoa</span></div><div class="roleOpt" id="roleBack"><b>ATZELARIA</b><br><span style="opacity:.65">indarra · defentsa · erresistentzia</span></div></div>
+    <div class="managerActions"><button class="managerBtn primary" id="careerCreate">LEHEN KONTRATUA SINATU</button><button class="managerBtn" id="setupMulti">MULTIJOKALARIA</button></div>
+    <p style="opacity:.55;font-size:9px">Karrera moduko enpresak, frontoiak, babesleak eta pelotariak fikziozkoak dira. Kirol egiturak benetako profesionaltasunaren logikan inspiratzen dira.</p>
   </div>
 </div>
 <div class="ovl" id="career">
   <div class="careerShell">
     <div class="careerHead">
       <div class="careerBrand"><div class="ey">HERRI PILOTA · PILOTARI KARRERA · V7.1</div><h1>PILOTARI <span>KARRERA</span></h1></div>
-      <div class="careerMeta" id="careerSeasonMeta">TEMPORADA 2026<b>—</b></div>
+      <div class="careerMeta" id="careerSeasonMeta">DENBORALDIA 2026<b>—</b></div>
     </div>
     <div class="managerGrid">
       <section class="mcard" id="profileCard"></section>
@@ -457,19 +458,19 @@ body.court #musicToggle{display:flex;}
 
 <div class="ovl" id="multiSetup">
   <div class="multiBox">
-    <div class="ey">MULTIJUGADOR ONLINE · P2P</div>
+    <div class="ey">MULTIJOKALARIA ONLINE · P2P</div>
     <h1>BI JOKALARI</h1>
-    <p style="font-size:11px;line-height:1.6;color:#b9d3c5">Dos personas, un frontón. Mano a mano, Cuatro y Medio o Parejas con compañeros controlados por IA. No necesita servidor ni cuenta.</p>
+    <p style="font-size:11px;line-height:1.6;color:#b9d3c5">Bi pertsona, frontoi bat. Buruz burukoa, Lau t’Erdi edo Binakakoa AA bidezko bikotekideekin. Ez du zerbitzaririk behar.</p>
     <div class="multiGrid">
-      <div><div class="multiLabel">JUGADOR 1</div><input class="setupInput" id="mpName1" value="GORRI" maxlength="12"></div>
-      <div><div class="multiLabel">JUGADOR 2</div><input class="setupInput" id="mpName2" value="URDIN" maxlength="12"></div>
-      <div><div class="multiLabel">MODALIDAD</div><select class="proSelect" id="mpMode"><option value="singles">MANO A MANO</option><option value="fourhalf">CUATRO Y MEDIO</option><option value="pairs">PAREJAS + COMPAÑEROS IA</option></select></div>
-      <div><div class="multiLabel">REGLA DE SAQUE</div><select class="proSelect" id="mpServe"><option value="none">SAQUE LIBRE</option><option value="4-7">BOTE ENTRE 4 Y 7</option><option value="4half">SAQUE 4½</option></select></div>
-      <div><div class="multiLabel">PARTIDO</div><select class="proSelect" id="mpTarget"><option value="12">12 TANTOS</option><option value="18">18 TANTOS</option><option value="22" selected>22 TANTOS</option></select></div>
-      <div><div class="multiLabel">FRONTÓN FICTICIO</div><select class="proSelect" id="mpVenue"><option>Harri Beltza Frontoia</option><option>Itsasargi Kantxa</option><option>Burdinola Frontoia</option><option>Ibaiondo Pilotalekua</option></select></div>
+      <div><div class="multiLabel">1. JOKALARIA</div><input class="setupInput" id="mpName1" value="GORRI" maxlength="12"></div>
+      <div><div class="multiLabel">2. JOKALARIA</div><input class="setupInput" id="mpName2" value="URDIN" maxlength="12"></div>
+      <div><div class="multiLabel">MODALITATEA</div><select class="proSelect" id="mpMode"><option value="singles">BURUZ BURUKOA</option><option value="fourhalf">LAU T’ERDI</option><option value="pairs">BINAKAKOA + AA</option></select></div>
+      <div><div class="multiLabel">SAKE ARAUA</div><select class="proSelect" id="mpServe"><option value="none">SAKE LIBREA</option><option value="4-7">SAKEA 4 → 7</option><option value="4half">4½-EKO SAKEA</option></select></div>
+      <div><div class="multiLabel">PARTIDA</div><select class="proSelect" id="mpTarget"><option value="12">12 TANTO</option><option value="18">18 TANTO</option><option value="22" selected>22 TANTO</option></select></div>
+      <div><div class="multiLabel">FRONTOI FIKTIZIOA</div><select class="proSelect" id="mpVenue"><option>Harri Beltza Frontoia</option><option>Itsasargi Kantxa</option><option>Burdinola Frontoia</option><option>Ibaiondo Pilotalekua</option></select></div>
     </div>
-    <div class="controlCard"><div><b>JUGADOR 1 · GORRI</b><br>WASD mover/apuntar · J golpe · K globo · L dejada · Shift correr</div><div><b>JUGADOR 2 · URDIN</b><br>FLECHAS mover/apuntar · N golpe · M globo · , dejada · . correr</div></div>
-    <div class="managerActions"><button class="managerBtn primary" id="mpStart">JUGAR</button><button class="managerBtn" id="mpBack">VOLVER</button></div>
+    <div class="controlCard"><div><b>1. JOKALARIA · GORRI</b><br>WASD mugitu/apuntatu · J jo · K globoa · L motza · Shift korrika</div><div><b>2. JOKALARIA · URDIN</b><br>GEZIAK mugitu/apuntatu · N jo · M globoa · , motza · . korrika</div></div>
+    <div class="managerActions"><button class="managerBtn primary" id="mpStart">JOKATU</button><button class="managerBtn" id="mpBack">ITZULI</button></div>
   </div>
 </div>
 
@@ -498,7 +499,7 @@ body.court #musicToggle{display:flex;}
    ================================================================== */
 var LANG = 'eu';                 /* beti euskaraz hasten da */
 var LANG_SAVED = 'eu';
-try { LANG_SAVED = localStorage.getItem('kirol-lang') || 'eu'; } catch (e) {}
+/* beti euskaraz: gordetako hizkuntza ('kirol-lang'), ?lang= eta __EG_LANG ez dira kontuan hartzen */
 
 var DICT = {
 
@@ -610,18 +611,18 @@ en: {
 /* === REGLAS DE JUEGO: inglés y castellano === */
 var RULES_TR = {
 en: {
-'<b>Partido erreala 22 tantora</b> (esku huska) · 11an deskantsua':'<b>Real match to 22 points</b> (bare hand) · break at 11',
-'<b>Ezker palanka</b> — korrika ETA <b>puntería</b>: kolpea ematean palankak agintzen du':'<b>Left stick</b> — run AND <b>aim</b>: the stick decides where the ball goes',
+'<b>Partida osoa 22 tantora</b> (esku huska) · 11an deskantsua':'<b>Real match to 22 points</b> (bare hand) · break at 11',
+'<b>Ezker palanka</b> — korrika ETA <b>punteria</b>: kolpea ematean palankak agintzen du':'<b>Left stick</b> — run AND <b>aim</b>: the stick decides where the ball goes',
 'Palanka <b>aurrera</b> = zuzena eta luzea · <b>atzera</b> = altua eta motza · <b>albora</b> = frontiseko ertzera':'Stick <b>forward</b> = flat and deep · <b>back</b> = high and short · <b>sideways</b> = to the front wall edge',
 '<b>A</b> eutsi kargatzeko; kolpea automatikoki ateratzen da pilota irismenean':'<b>A</b> hold to charge; the shot fires automatically when the ball is in reach',
-'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: dejada arriskutsua, txaparen ondo-ondoan':'<b>B</b> lob · <b>C</b> <b>DROP</b>: risky drop shot, right above the tin',
+'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: kolpe arriskutsua, txaparen ondo-ondoan':'<b>B</b> lob · <b>C</b> <b>DROP</b>: risky drop shot, right above the tin',
 'Falta gorriaren azpitik jotzea tantoa galtzea da':'Hitting below the red fault line loses the point',
 '<b>SUA</b> beteta: super-tiroa':'<b>FIRE</b> bar full: super shot',
-'<b>Partido erreala 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du':'<b>Real match to 30 points</b> (35 in major events) · the point winner serves',
+'<b>Partida osoa 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du':'<b>Real match to 30 points</b> (35 in major events) · the point winner serves',
 '<b>SAKEA</b>: frontisa jo eta lehen jauzia <b>4. eta 7. koadroen artean</b>. Motz = <b>FALTA</b>, luze = <b>PASA</b> (tantoa aurkariarentzat)':'<b>SERVE</b>: hit the front wall and the first bounce must land <b>between squares 4 and 7</b>. Short = <b>FAULT</b>, long = <b>OVER</b> (point for the opponent)',
 '<b>A</b> eutsi pilota zestan hartzeko eta <b>askatu</b> jaurtitzeko (edo A berriro)':'<b>A</b> hold to catch the ball in the cesta and <b>release</b> to throw (or press A again)',
 '<b>ATXIKITZEA</b>: pilota ezin da zestan geratu. Barra berdean askatu behar duzu edo <b>falta</b> da':'<b>HOLDING</b>: the ball may not stay in the cesta. Release inside the green bar or it is a <b>fault</b>',
-'<b>Ezker palanka</b> — korrika ETA puntería: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera':'<b>Left stick</b> — run AND aim: the stick decides the throw · <b>C</b> corner · <b>B</b> to the back wall',
+'<b>Ezker palanka</b> — korrika ETA punteria: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera':'<b>Left stick</b> — run AND aim: the stick decides the throw · <b>C</b> corner · <b>B</b> to the back wall',
 'Frontisa <b>txaparen gainetik</b> jo behar da; ezker horma eta errebotea jokoan daude':'The front wall must be hit <b>above the tin</b>; left wall and back wall are in play',
 '<b>Lehen boteak kantxa barruan</b> egin behar du; gero kontrakantxan jarraitu dezake jokoan':'The <b>first bounce must land inside the court</b>; after that the ball stays alive in the side corridor',
 '<b>A</b> eta <b>B</b> <b>txandaka</b>: pala bat bestearen atzetik, ezker-eskuin':'<b>A</b> and <b>B</b> <b>alternating</b>: one oar after the other, left-right',
@@ -677,18 +678,18 @@ en: {
 'Hiru aurkari eta kronometroa: 900 metro':'Three rivals and the clock: 900 metres'
 },
 es: {
-'<b>Partido erreala 22 tantora</b> (esku huska) · 11an deskantsua':'<b>Partido real a 22 tantos</b> (mano desnuda) · descanso en el 11',
-'<b>Ezker palanka</b> — korrika ETA <b>puntería</b>: kolpea ematean palankak agintzen du':'<b>Palanca izquierda</b> — correr Y <b>apuntar</b>: al golpear manda la palanca',
+'<b>Partida osoa 22 tantora</b> (esku huska) · 11an deskantsua':'<b>Partido real a 22 tantos</b> (mano desnuda) · descanso en el 11',
+'<b>Ezker palanka</b> — korrika ETA <b>punteria</b>: kolpea ematean palankak agintzen du':'<b>Palanca izquierda</b> — correr Y <b>apuntar</b>: al golpear manda la palanca',
 'Palanka <b>aurrera</b> = zuzena eta luzea · <b>atzera</b> = altua eta motza · <b>albora</b> = frontiseko ertzera':'Palanca <b>adelante</b> = raso y largo · <b>atrás</b> = alto y corto · <b>al lado</b> = al canto del frontis',
 '<b>A</b> eutsi kargatzeko; kolpea automatikoki ateratzen da pilota irismenean':'<b>A</b> mantener para cargar; el golpe sale solo cuando la pelota entra en alcance',
-'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: dejada arriskutsua, txaparen ondo-ondoan':'<b>B</b> globo · <b>C</b> <b>DEJADA</b>: arriesgada, pegadita a la chapa',
+'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: kolpe arriskutsua, txaparen ondo-ondoan':'<b>B</b> globo · <b>C</b> <b>DEJADA</b>: arriesgada, pegadita a la chapa',
 'Falta gorriaren azpitik jotzea tantoa galtzea da':'Golpear por debajo de la línea roja de falta es perder el tanto',
 '<b>SUA</b> beteta: super-tiroa':'<b>FUEGO</b> lleno: súper tiro',
-'<b>Partido erreala 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du':'<b>Partido real a 30 tantos</b> (35 en las grandes) · saca quien gana el tanto',
+'<b>Partida osoa 30 tantora</b> (35 proba nagusietan) · tantoa irabazten duenak sakatzen du':'<b>Partido real a 30 tantos</b> (35 en las grandes) · saca quien gana el tanto',
 '<b>SAKEA</b>: frontisa jo eta lehen jauzia <b>4. eta 7. koadroen artean</b>. Motz = <b>FALTA</b>, luze = <b>PASA</b> (tantoa aurkariarentzat)':'<b>SAQUE</b>: golpear el frontis y que el primer bote caiga <b>entre los cuadros 4 y 7</b>. Corto = <b>FALTA</b>, largo = <b>PASA</b> (tanto para el rival)',
 '<b>A</b> eutsi pilota zestan hartzeko eta <b>askatu</b> jaurtitzeko (edo A berriro)':'<b>A</b> mantener para atrapar en la cesta y <b>soltar</b> para lanzar (o A otra vez)',
 '<b>ATXIKITZEA</b>: pilota ezin da zestan geratu. Barra berdean askatu behar duzu edo <b>falta</b> da':'<b>RETENCIÓN</b>: la pelota no puede quedarse en la cesta. Suelta dentro de la barra verde o es <b>falta</b>',
-'<b>Ezker palanka</b> — korrika ETA puntería: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera':'<b>Palanca izquierda</b> — correr y apuntar: al lanzar manda la palanca · <b>C</b> txoko · <b>B</b> al rebote',
+'<b>Ezker palanka</b> — korrika ETA punteria: jaurtitzean palankak agintzen du · <b>C</b> txoko · <b>B</b> errebotera':'<b>Palanca izquierda</b> — correr y apuntar: al lanzar manda la palanca · <b>C</b> txoko · <b>B</b> al rebote',
 'Frontisa <b>txaparen gainetik</b> jo behar da; ezker horma eta errebotea jokoan daude':'Hay que dar al frontis <b>por encima de la chapa</b>; pared izquierda y rebote están en juego',
 '<b>Lehen boteak kantxa barruan</b> egin behar du; gero kontrakantxan jarraitu dezake jokoan':'El <b>primer bote debe caer dentro de la cancha</b>; después la pelota sigue viva en la contracancha',
 '<b>A</b> eta <b>B</b> <b>txandaka</b>: pala bat bestearen atzetik, ezker-eskuin':'<b>A</b> y <b>B</b> <b>alternando</b>: una pala tras otra, izquierda-derecha',
@@ -1304,8 +1305,8 @@ function applyStaticTexts(){
 }
 
 function setLang(v){
-  LANG = v;
-  try { localStorage.setItem('kirol-lang', v); } catch (e) {}
+  LANG = 'eu';                     /* beti euskaraz: v ez da kontuan hartzen */
+  try { localStorage.setItem('kirol-lang', 'eu'); } catch (e) {}
   try { applyStaticTexts(); } catch (e) {}
 }
 
@@ -1785,7 +1786,7 @@ const PLAY_ROOTS=[[0,-3,-4,-3],[0,-1,-3,-1],[-3,0,-1,-4],[0,4,-1,-3]];
 function noteHz(deg){const s=SCALE[((deg%7)+7)%7]+12*Math.floor(deg/7);return 220*Math.pow(2,s/12);}
 function musicHash(s){s=String(s||'');let h=0;for(let i=0;i<s.length;i++)h=(h*33+s.charCodeAt(i))>>>0;return h;}
 function selectMatchMusic(e){matchMusicVariant=musicHash((e&&e.venue)+'|'+(e&&e.comp)+'|'+(e&&e.phase))%PLAY_MELS.length;musicStep=0;musicT=0;}
-function updateMusicButton(){const b=document.getElementById('musicToggle');if(!b)return;b.classList.toggle('off',!musicEnabled);b.textContent=musicEnabled?'♫ MUSIKA':'♫ OFF';b.setAttribute('aria-pressed',musicEnabled?'true':'false');}
+function updateMusicButton(){const b=document.getElementById('musicToggle');if(!b)return;b.classList.toggle('off',!musicEnabled);b.textContent=musicEnabled?'♫ MUSIKA':'♫ ISILIK';b.setAttribute('aria-pressed',musicEnabled?'true':'false');}
 function setMusicEnabled(on){musicEnabled=!!on;try{localStorage.setItem('hp_music_enabled',musicEnabled?'1':'0')}catch(e){};initAudio();if(musicBus&&actx){const now=actx.currentTime;musicBus.gain.cancelScheduledValues(now);musicBus.gain.setTargetAtTime(musicEnabled?1:0,now,.045);}if(musicEnabled){musicStep=0;musicT=0;}updateMusicButton();}
 function toggleMatchMusic(){setMusicEnabled(!musicEnabled);}
 function musicTick(dt){
@@ -2768,11 +2769,11 @@ const player={g:null,x:0,z:12,yaw:0,spd:0};
 const CALENDAR=[
 {d:'URT 18',sp:'pilota',   n:'URTE BERRI SARIA'},
 {d:'OTS 08',sp:'artzain',  n:'NEGU ARTALDEA'},
-{d:'OTS 22',sp:'zesta',    n:'INAUTERI PARTIDOA'},
+{d:'OTS 22',sp:'zesta',    n:'INAUTERI PARTIDA'},
 {d:'MAR 15',sp:'pilota',   n:'SAN JOSE TXAPELKETA'},
 {d:'API 05',sp:'estropada',n:'UDABERRIKO BATELAK',mod:0},
 {d:'API 26',sp:'artzain',  n:'ARANTZAZUKO PROBA'},
-{d:'MAI 10',sp:'zesta',    n:'MAIATZEKO PARTIDOA'},
+{d:'MAI 10',sp:'zesta',    n:'MAIATZEKO PARTIDA'},
 {d:'MAI 31',sp:'pilota',   n:'ESKUZ BANAKA'},
 {d:'EKA 14',sp:'estropada',n:'TRAINERILLEN BANDERA',mod:1},
 {d:'EKA 28',sp:'artzain',  n:'SAN JOAN ARTZAINAK'},
@@ -2781,7 +2782,7 @@ const CALENDAR=[
 {d:'ABU 09',sp:'pilota',   n:'ASTE NAGUSIA'},
 {d:'ABU 23',sp:'artzain',  n:'MENDIKO LEHIA'},
 {d:'IRA 06',sp:'estropada',n:'KONTXAKO BANDERA',mod:3},
-{d:'IRA 20',sp:'zesta',    n:'ZESTA PUNTA MASTERS'},
+{d:'IRA 20',sp:'zesta',    n:'ZESTA PUNTA MASTERRA'},
 {d:'URR 04',sp:'artzain',  n:'ARTZAIN EGUNA'},
 {d:'URR 25',sp:'pilota',   n:'LAU T ERDIKO FINALA'},
 {d:'AZA 15',sp:'zesta',    n:'ESKU HUTSAK GAUA'},
@@ -3128,11 +3129,11 @@ const SPORTS={};
 SPORTS.pilota={
 name:'PILOTA',place:'FRONTOIA',unit:'tanto',
 rules:[
-'<b>Partido erreala 22 tantora</b> (esku huska) · 11an deskantsua',
-'<b>Ezker palanka</b> — korrika ETA <b>puntería</b>: kolpea ematean palankak agintzen du',
+'<b>Partida osoa 22 tantora</b> (esku huska) · 11an deskantsua',
+'<b>Ezker palanka</b> — korrika ETA <b>punteria</b>: kolpea ematean palankak agintzen du',
 'Palanka <b>aurrera</b> = zuzena eta luzea · <b>atzera</b> = altua eta motza · <b>albora</b> = frontiseko ertzera',
 '<b>A</b> eutsi kargatzeko; kolpea automatikoki ateratzen da pilota irismenean',
-'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: dejada arriskutsua, txaparen ondo-ondoan',
+'<b>B</b> globoa · <b>C</b> <b>MOTZ</b>: kolpe arriskutsua, txaparen ondo-ondoan',
 'Falta gorriaren azpitik jotzea tantoa galtzea da',
 '<b>SUA</b> beteta: super-tiroa'],
 par(L){return 13+L.t*6;},
@@ -3871,7 +3872,7 @@ function proRating(p){return clamp(p.tech*.29+p.power*.22+p.speed*.15+p.stamina*
 function makePro(n,i,season){let top=Math.max(0,10-i),age=19+(i*3%17),role=i%2?'back':'front',base=64+Math.max(0,18-i*.55)+(i%4-1.5);return{id:v5id(n),n,age,role,team:PRO_TEAMS[i%PRO_TEAMS.length],tech:clamp(base+(i%3),56,92),power:clamp(base+(role==='back'?5:0)-(i%4),55,93),speed:clamp(base+(role==='front'?5:-1)-(i%5),54,94),stamina:clamp(base+(role==='back'?3:0)+(i%4-2),55,94),mental:clamp(base+(i%6-2),54,93),potential:clamp(base+4+(i%5),65,94),rankingPts:1500-i*31+top*5+(season-2026)*2,form:[],injury:null,seasonWins:0,seasonPlayed:0};}
 function makeYouth(c,slot){let first=['AIMAR','EKHI','JAKES','ENEKO','UNAX','ARITZ','HAIZE','MARKEL','BEÑAT','OIER'][Math.floor(RNG()*10)],last=['LIZAR','IBAI','ARGI','URKI','SORO','MENDI','ARAN','ETXE','LUR','BIDE'][Math.floor(RNG()*10)],n=first+' '+last+' '+(slot+1);let p=makePro(n,24+slot,c.season);p.age=18+Math.floor(RNG()*3);p.potential=78+Math.floor(RNG()*15);p.rankingPts=720+Math.floor(RNG()*180);p.tech=57+Math.floor(RNG()*8);p.power=57+Math.floor(RNG()*9);p.speed=58+Math.floor(RNG()*10);p.stamina=58+Math.floor(RNG()*9);p.mental=55+Math.floor(RNG()*9);p.team=PRO_TEAMS[Math.floor(RNG()*PRO_TEAMS.length)];return p;}
 function initUniverse(c){if(!c)return c;if(!c.roster||c.roster.length<20)c.roster=V5_NAMES.map((n,i)=>makePro(n,i,c.season||2026));c.rankPts=c.rankPts||Math.max(780,1510-(c.ranking||24)*30);c.transferLog=c.transferLog||[];c.awards=c.awards||[];c.eventOverrides=c.eventOverrides||{};c.worldWeek=c.worldWeek||0;c.renewalTriedSeason=c.renewalTriedSeason||0;c.sponsor=c.sponsor||null;c.scoutNotes=c.scoutNotes||{};c.pairPartnerId=c.pairPartnerId||null;c.pairChem=c.pairChem||c.relation||62;if(!c.pairTeams||c.pairTeams.length!==8)setupSeasonPairs(c);recalcRanking(c);return c;}
-freshCareer=function(name,age,role){let c=_v4FreshCareer(name,age,role);c=_v4UpgradeCareer(c);initUniverse(c);c.news.unshift({t:'La dirección deportiva ha registrado una plantilla profesional completa para la temporada.',d:'HOY'});return c;};
+freshCareer=function(name,age,role){let c=_v4FreshCareer(name,age,role);c=_v4UpgradeCareer(c);initUniverse(c);c.news.unshift({t:N6('roster_ready'),d:'GAUR'});return c;};
 upgradeCareer=function(c){c=_v4UpgradeCareer(c);return initUniverse(c);};
 function rosterByName(n){return career?.roster?.find(p=>p.n===n)||null}
 function rosterById(id){return career?.roster?.find(p=>p.id===id)||null}
@@ -3925,7 +3926,7 @@ const V6T={
   next_match:{eu:'HURRENGO PARTIDA',en:'NEXT MATCH',es:'PRÓXIMO PARTIDO'},play:{eu:'JOKATU',en:'PLAY',es:'JUGAR'},simulate:{eu:'SIMULATU',en:'SIMULATE',es:'SIMULAR'},
   rules:{eu:'ARAUDIA',en:'RULES',es:'REGLAMENTO'},serve_free:{eu:'SAKE LIBREA',en:'FREE SERVE',es:'SAQUE LIBRE'},serve_47:{eu:'SAKEA 4 → 7',en:'SERVE 4 → 7',es:'SAQUE 4 → 7'},serve_half:{eu:'4½-EKO SAKEA',en:'4½ SERVE',es:'SAQUE 4½'},
   singles:{eu:'BURUZ BURUKOA',en:'SINGLES',es:'MANO A MANO'},pairs:{eu:'BINAKAKOA',en:'DOUBLES',es:'PAREJAS'},fourhalf:{eu:'LAU T’ERDI',en:'FOUR AND A HALF',es:'CUATRO Y MEDIO'},
-  training:{eu:'ASTeko LANA',en:'WEEKLY WORK',es:'TRABAJO SEMANAL'},weekly_plan:{eu:'ASTeko PLANA',en:'WEEKLY PLAN',es:'PLAN SEMANAL'},
+  training:{eu:'ASTEKO LANA',en:'WEEKLY WORK',es:'TRABAJO SEMANAL'},weekly_plan:{eu:'ASTEKO PLANA',en:'WEEKLY PLAN',es:'PLAN SEMANAL'},
   focus_balanced:{eu:'OREKATUA',en:'BALANCED',es:'EQUILIBRADO'},focus_recovery:{eu:'ERREKUPERAZIOA',en:'RECOVERY',es:'RECUPERACIÓN'},focus_tech:{eu:'TEKNIKA',en:'TECHNIQUE',es:'TÉCNICA'},focus_power:{eu:'INDARRA',en:'POWER',es:'POTENCIA'},focus_serve:{eu:'SAKEA + BURUA',en:'SERVE + MENTAL',es:'SAQUE + CABEZA'},focus_tactical:{eu:'TAKTIKA',en:'TACTICAL',es:'TÁCTICO'},
   hands:{eu:'ESKUAK',en:'HANDS',es:'MANOS'},left:{eu:'EZKERRA',en:'LEFT',es:'IZQUIERDA'},right:{eu:'ESKUINA',en:'RIGHT',es:'DERECHA'},fatigue:{eu:'NEKEA',en:'FATIGUE',es:'FATIGA'},confidence:{eu:'KONFIANTZA',en:'CONFIDENCE',es:'CONFIANZA'},medical:{eu:'MEDIKUNTZA',en:'MEDICAL',es:'MÉDICO'},available:{eu:'PREST',en:'AVAILABLE',es:'DISPONIBLE'},injured:{eu:'LESIONATUTA',en:'INJURED',es:'LESIONADO'},
   staff:{eu:'LAN TALDEA',en:'STAFF',es:'CUERPO TÉCNICO'},coach:{eu:'ENTRENATZAILEA',en:'COACH',es:'ENTRENADOR'},botillero:{eu:'BOTILLEROA',en:'BOTILLERO',es:'BOTILLERO'},physio:{eu:'FISIOA',en:'PHYSIO',es:'FISIO'},agent:{eu:'ORDEZKARIA',en:'AGENT',es:'AGENTE'},upgrade:{eu:'HOBETU',en:'UPGRADE',es:'MEJORAR'},level:{eu:'MAILA',en:'LEVEL',es:'NIVEL'},
@@ -3934,7 +3935,7 @@ const V6T={
   ph_balance:{eu:'OREKA ETA EMAITZAK',en:'BALANCE & RESULTS',es:'EQUILIBRIO Y RESULTADOS'},ph_youth:{eu:'GAZTEEN ALDEKO APUSTUA',en:'YOUTH DEVELOPMENT',es:'APUESTA POR JÓVENES'},ph_win:{eu:'ORAIN IRABAZI',en:'WIN NOW',es:'GANAR YA'},
   director_plan:{eu:'ZUZENDARITZAREN PLANA',en:'DIRECTOR PLAN',es:'PLAN DE DIRECCIÓN'},accept_plan:{eu:'PLANA ONARTU',en:'ACCEPT PLAN',es:'ACEPTAR PLAN'},challenge_plan:{eu:'BILERA ESKATU',en:'REQUEST MEETING',es:'PEDIR REUNIÓN'},request_partner:{eu:'BIKOTE ALDAKETA ESKATU',en:'REQUEST PARTNER CHANGE',es:'PEDIR CAMBIO DE PAREJA'},discuss_objectives:{eu:'HELBURUAK NEGOZIATU',en:'NEGOTIATE TARGETS',es:'NEGOCIAR OBJETIVOS'},
   partner:{eu:'BIKOTEKIDEA',en:'PARTNER',es:'COMPAÑERO'},chemistry:{eu:'KIMIKA',en:'CHEMISTRY',es:'QUÍMICA'},squad:{eu:'PLANTILLA',en:'SQUAD',es:'PLANTILLA'},
-  scouting:{eu:'SCOUTING-A',en:'SCOUTING',es:'SCOUTING'},next_opponent:{eu:'HURRENGO AURKARIA',en:'NEXT OPPONENT',es:'PRÓXIMO RIVAL'},knowledge:{eu:'EZAGUTZA',en:'KNOWLEDGE',es:'CONOCIMIENTO'},study:{eu:'AZTERTU',en:'SCOUT',es:'ESTUDIAR'},unknown:{eu:'EZEZAGUNA',en:'UNKNOWN',es:'DESCONOCIDO'},strong:{eu:'INDARGUNEA',en:'STRENGTH',es:'PUNTO FUERTE'},weak:{eu:'AHULGUNEA',en:'WEAKNESS',es:'DEBILIDAD'},form:{eu:'SASOIA',en:'FORM',es:'FORMA'},
+  scouting:{eu:'AZTERKETA',en:'SCOUTING',es:'SCOUTING'},next_opponent:{eu:'HURRENGO AURKARIA',en:'NEXT OPPONENT',es:'PRÓXIMO RIVAL'},knowledge:{eu:'EZAGUTZA',en:'KNOWLEDGE',es:'CONOCIMIENTO'},study:{eu:'AZTERTU',en:'SCOUT',es:'ESTUDIAR'},unknown:{eu:'EZEZAGUNA',en:'UNKNOWN',es:'DESCONOCIDO'},strong:{eu:'INDARGUNEA',en:'STRENGTH',es:'PUNTO FUERTE'},weak:{eu:'AHULGUNEA',en:'WEAKNESS',es:'DEBILIDAD'},form:{eu:'SASOIA',en:'FORM',es:'FORMA'},
   h2h:{eu:'AURREZ AURRE',en:'HEAD TO HEAD',es:'CARA A CARA'},wins:{eu:'GARAIPENAK',en:'WINS',es:'VICTORIAS'},losses:{eu:'PORROTAK',en:'LOSSES',es:'DERROTAS'},last_meetings:{eu:'AZKEN PARTIDAK',en:'LAST MEETINGS',es:'ÚLTIMOS DUELOS'},
   database:{eu:'ZIRKUITUKO DATU BASEA',en:'CIRCUIT DATABASE',es:'BASE DE DATOS DEL CIRCUITO'},open_database:{eu:'DATU BASEA IREKI',en:'OPEN DATABASE',es:'ABRIR BASE DE DATOS'},close:{eu:'ITXI',en:'CLOSE',es:'CERRAR'},search:{eu:'BILATU',en:'SEARCH',es:'BUSCAR'},all_teams:{eu:'ENPRESA GUZTIAK',en:'ALL TEAMS',es:'TODAS LAS EMPRESAS'},
   sponsors:{eu:'BABESLEAK',en:'SPONSORS',es:'PATROCINADORES'},sponsor_offer:{eu:'BABESLETZA ESKAINTZA',en:'SPONSOR OFFER',es:'OFERTA DE PATROCINIO'},accept:{eu:'ONARTU',en:'ACCEPT',es:'ACEPTAR'},decline:{eu:'UKATU',en:'DECLINE',es:'RECHAZAR'},season_bonus:{eu:'DENBORALDI SARIA',en:'SEASON BONUS',es:'BONUS DE TEMPORADA'},sponsor_goal:{eu:'HELBURUA',en:'TARGET',es:'OBJETIVO'},
@@ -4038,6 +4039,7 @@ const V6M={
  counteroffer:{eu:'KONTRAESKAINTZA: {team} · {salary} € + {bonus} €.',en:'COUNTEROFFER: {team} · {salary} € + {bonus} €.',es:'CONTRAOFERTA: {team} · {salary} € + {bonus} €.'},
  counteroffer_fail:{eu:'Eskaintza hautsi da kontraeskaintzaren ondoren.',en:'The offer collapsed after the counteroffer.',es:'La oferta se rompió tras la contraoferta.'},
  director_plan_initial:{eu:'Kirol zuzendaritzak denboraldiko plana prestatu du.',en:'Sporting direction has prepared the season plan.',es:'La dirección deportiva ha preparado el plan de temporada.'},
+ roster_ready:{eu:'Kirol zuzendaritzak denboraldirako plantilla profesional osoa erregistratu du.',en:'Sporting direction has registered a full professional squad for the season.',es:'La dirección deportiva ha registrado una plantilla profesional completa para la temporada.'},
  error:{eu:'Akatsa: {message}',en:'Error: {message}',es:'Error: {message}'}
 };
 function M6(k,vars){
@@ -4102,7 +4104,8 @@ function V6legacy(s){
     ['Eskaintza hautsi da kontraeskaintzaren ondoren.','counteroffer_fail'],['La oferta se rompió tras la contraoferta.','counteroffer_fail'],
     ['Tu agente obtiene una extensión puente de una temporada mientras negocia el futuro.','bridge_extension'],
     ['Kirol zuzendaritzak lehen denboraldiko plana prestatu du.','director_first_plan'],
-    ['La dirección deportiva ha preparado el plan de tu primera temporada.','director_first_plan']
+    ['La dirección deportiva ha preparado el plan de tu primera temporada.','director_first_plan'],
+    ['La dirección deportiva ha registrado una plantilla profesional completa para la temporada.','roster_ready']
   ];
   for(const [a,k] of exact)if(x===a)return M6(k);
   if((m=x.match(/^Has firmado tu primer contrato profesional con (.+)\.$/)))return M6('first_contract',{team:m[1]});
@@ -4206,13 +4209,13 @@ function v6Bind(){document.querySelectorAll('[data-train]').forEach(b=>b.onclick
 
 renderCareer=function(){if(!career)return;career=upgradeCareer(career);processGates();v6EnsureCards();showOvl('career');state='career';courtMode(false);$('topbar').style.display='none';bar2Show(false);suaShow(false);let e=career.flags.seasonDone?null:resolveDynamic(CAREER_EVENTS[career.eventIndex]);if(e)e.rating=clamp(e.rating+(career.season-2026)*.08,58,94);currentCareerEvent=e;let mate=currentMate(),dir=career.sportDirector,plan=v6DirectorPlan(e);v6SponsorOffers();
  document.querySelector('.careerBrand .ey').textContent='HERRI PILOTA · '+T6('universe')+' · V6.2';document.querySelector('.careerBrand h1').textContent=T6('game_title');$('careerSeasonMeta').innerHTML=T6('season')+' '+career.season+'/'+String(career.season+1).slice(-2)+' · '+T6('universe')+'<b>'+career.contract.team+' · #'+career.ranking+'</b><div class="topCareerActions"><button class="miniBtn" id="careerMainHome">'+hpMainTxt('back_home')+'</button></div>';
- $('profileCard').innerHTML='<h3>'+T6('profile')+'</h3><h2>'+career.name+'</h2><p>'+V6role(career.role)+' · '+T6('age')+' '+career.age+' · '+career.contract.team+'</p><div class="moneyRow"><div><small>'+T6('money')+'</small><b>'+Math.round(career.money).toLocaleString()+' €</b></div><div><small>'+T6('market_value')+'</small><b>'+Math.round(career.market).toLocaleString()+' €</b></div><div><small>'+T6('ranking')+'</small><b>#'+career.ranking+'</b></div></div>'+v6Stat(T6('technique'),career.stats.tech)+v6Stat(T6('power'),career.stats.power)+v6Stat(T6('speed'),career.stats.speed)+v6Stat(T6('stamina'),career.stats.stamina)+v6Stat(T6('mental'),career.stats.mental);
+ $('profileCard').innerHTML='<h3>'+T6('profile')+'</h3><h2>'+career.name+'</h2><p>'+V6role(career.role)+' · '+T6('age')+' '+career.age+' · '+career.contract.team+'</p><div class="moneyRow"><div><small>'+T6('money')+'</small><b>'+Math.round(career.money).toLocaleString('eu')+' €</b></div><div><small>'+T6('market_value')+'</small><b>'+Math.round(career.market).toLocaleString('eu')+' €</b></div><div><small>'+T6('ranking')+'</small><b>#'+career.ranking+'</b></div></div>'+v6Stat(T6('technique'),career.stats.tech)+v6Stat(T6('power'),career.stats.power)+v6Stat(T6('speed'),career.stats.speed)+v6Stat(T6('stamina'),career.stats.stamina)+v6Stat(T6('mental'),career.stats.mental);
  $('nextCard').innerHTML=e?'<h3>'+T6('next_match')+'</h3><div class="versus"><div><small>'+V6comp(e.comp)+'</small><div class="nm">'+career.name+(e.mode==='pairs'&&mate?' / '+mate.n:'')+'</div></div><div class="vs">VS</div><div><small>'+V6phase(e.phase)+'</small><div class="nm">'+e.opponent+(e.mode==='pairs'&&e.opponentMate?' / '+e.opponentMate:'')+'</div></div></div><p>'+V6date(e.date)+' · '+e.venue+' · '+V6mode(e.mode)+' · '+V6serve(e.serve)+' · '+e.target+' '+T6('points')+'</p><div class="managerActions">'+v6Button(T6('play'),'id="v6Play"','primary')+v6Button(T6('simulate'),'id="v6Sim"','good')+(career.injury?v6Button(T6('medical_leave'),'id="v6Med"',''):'')+'</div>':'<h3>'+T6('season')+'</h3><h2>'+T6('no_match')+'</h2><div class="managerActions">'+v6Button(T6('next_season'),'id="v6NextSeason"','primary')+'</div>';
  $('trainingCard').innerHTML='<h3>'+T6('training')+'</h3><p>'+T6('training')+': '+career.trainingUsed+' / '+(2+((career.staff.coach||0)>=3?1:0))+'</p><div class="choiceRow">'+[['tech','technique'],['power','power'],['speed','speed'],['stamina','stamina'],['serve','focus_serve'],['hands','hands'],['rest','focus_recovery']].map(x=>'<button class="choiceBtn" data-train="'+x[0]+'">'+T6(x[1])+'</button>').join('')+'</div>';
  $('weeklyCard').innerHTML='<h3>'+T6('weekly_plan')+'</h3><p>'+T6('director_plan')+': <b>'+T6('focus_'+(plan.focus==='balanced'?'balanced':plan.focus))+'</b></p><div class="choiceRow">'+[['balanced','focus_balanced'],['recovery','focus_recovery'],['tech','focus_tech'],['power','focus_power'],['serve','focus_serve'],['tactical','focus_tactical']].map(x=>'<button class="choiceBtn '+(career.weekFocus===x[0]?'on':'')+'" data-week="'+x[0]+'">'+T6(x[1])+'</button>').join('')+'</div>';
  $('healthCard').innerHTML='<h3>'+T6('hands')+' & '+T6('medical')+'</h3>'+v6Stat(T6('left'),career.hands.left,career.hands.left<45)+v6Stat(T6('right'),career.hands.right,career.hands.right<45)+v6Stat(T6('fatigue'),career.fatigue,career.fatigue>75)+v6Stat(T6('confidence'),career.confidence,false)+'<p><span class="statusTag '+(career.injury?'bad':'good')+'">'+T6(career.injury?'injured':'available')+'</span>'+(career.injury?' '+V6injury(career.injury.name)+' · '+career.injury.weeks+' '+T6('weeks_short'):'')+'</p>';
  $('staffCard').innerHTML='<h3>'+T6('staff')+'</h3>'+['coach','botillero','physio','agent'].map(k=>'<div class="staffPerson"><div><b>'+T6(k)+'</b><span>'+T6('level')+' '+(career.staff[k]||0)+'</span></div><button class="miniBtn" data-staff="'+k+'">'+T6('upgrade')+' · '+staffCost(k)+' €</button></div>').join('');
- $('contractCard').innerHTML='<h3>'+T6('contract')+'</h3><h2>'+career.contract.team+'</h2><div class="kv"><div><b>'+T6('salary')+':</b> '+career.contract.salary+' €</div><div><b>'+T6('win_bonus')+':</b> '+career.contract.winBonus+' €</div><div><b>'+T6('title_bonus')+':</b> '+career.contract.clauses.titleBonus+' €</div><div><b>'+T6('release')+':</b> '+career.contract.clauses.release.toLocaleString()+' €</div><div><b>'+T6('until')+':</b> '+career.contract.until+'</div></div><div class="choiceRow"><button class="choiceBtn" data-renew="safe">'+T6('renewal')+'</button><button class="choiceBtn" data-renew="market">'+T6('market_value')+'</button><button class="choiceBtn" data-renew="ambitious">'+T6('negotiate')+' ↑</button></div>'+(career.offers?.length?'<div class="renewBox"><b>'+career.offers[0].team+'</b><p>'+career.offers[0].salary+' € + '+career.offers[0].winBonus+' € · '+career.offers[0].until+'</p><div class="choiceRow"><button class="choiceBtn" id="v6OfferAccept">'+T6('accept')+'</button><button class="choiceBtn" id="v6OfferCounter">'+T6('negotiate')+'</button></div></div>':'');
+ $('contractCard').innerHTML='<h3>'+T6('contract')+'</h3><h2>'+career.contract.team+'</h2><div class="kv"><div><b>'+T6('salary')+':</b> '+career.contract.salary+' €</div><div><b>'+T6('win_bonus')+':</b> '+career.contract.winBonus+' €</div><div><b>'+T6('title_bonus')+':</b> '+career.contract.clauses.titleBonus+' €</div><div><b>'+T6('release')+':</b> '+career.contract.clauses.release.toLocaleString('eu')+' €</div><div><b>'+T6('until')+':</b> '+V6date(career.contract.until)+'</div></div><div class="choiceRow"><button class="choiceBtn" data-renew="safe">'+T6('renewal')+'</button><button class="choiceBtn" data-renew="market">'+T6('market_value')+'</button><button class="choiceBtn" data-renew="ambitious">'+T6('negotiate')+' ↑</button></div>'+(career.offers?.length?'<div class="renewBox"><b>'+career.offers[0].team+'</b><p>'+career.offers[0].salary+' € + '+career.offers[0].winBonus+' € · '+V6date(career.offers[0].until)+'</p><div class="choiceRow"><button class="choiceBtn" id="v6OfferAccept">'+T6('accept')+'</button><button class="choiceBtn" id="v6OfferCounter">'+T6('negotiate')+'</button></div></div>':'');
  let sorted=pairSort();$('standCard').innerHTML='<h3>'+T6('pairs')+' · '+T6('ranking')+'</h3><table class="proTable"><tr><th>#</th><th>'+T6('pairs')+'</th><th>'+T6('played_short')+'</th><th>'+T6('won_short')+'</th><th>+/-</th></tr>'+sorted.slice(0,8).map((x,i)=>'<tr class="'+(x.id==='me'?'me':'')+'"><td>'+(i+1)+'</td><td>'+x.name.replace('ZU',career.name)+'</td><td>'+x.p+'</td><td>'+x.w+'</td><td>'+((x.pf-x.pa)>=0?'+':'')+(x.pf-x.pa)+'</td></tr>').join('')+'</table>';
  let top=(career.worldRanking||[]).slice(0,10);$('rankingCard').innerHTML='<h3>'+T6('ranking')+'</h3><table class="proTable"><tr><th>#</th><th>'+T6('profile')+'</th><th>'+T6('points_abbr')+'</th></tr>'+top.map((x,i)=>'<tr class="'+(x.id==='me'?'me':'')+'"><td>'+(i+1)+'</td><td>'+x.n+'</td><td class="num">'+Math.round(x.pts)+'</td></tr>').join('')+'</table>';
  let opp=e&&(rosterById(e.opponentId)||rosterByName(e.opponent)),sc=v6Scout(opp),h=v6H2H(opp);$('scoutCard').innerHTML='<h3>'+T6('scouting')+' · '+T6('next_opponent')+'</h3>'+(sc?'<h2>'+opp.n+'</h2><p><span class="teamTag">'+sc.team+'</span> <span class="roleTag">'+V6role(opp.role)+'</span> · '+T6('age')+' '+opp.age+'</p><div class="scoutGrid"><div class="scoutStat"><small>'+T6('knowledge')+'</small><b>'+sc.k+'/3</b></div><div class="scoutStat"><small>'+T6('form')+'</small><b>'+sc.form+'</b></div><div class="scoutStat"><small>'+T6('strong')+'</small><b>'+sc.strong+'</b></div><div class="scoutStat"><small>'+T6('weak')+'</small><b>'+sc.weak+'</b></div></div><p><b>'+T6('h2h')+':</b> '+h.w+'-'+h.l+'</p><div class="managerActions">'+v6Button(T6('study'),'id="v6Scout"','good')+'</div>':'<p>'+T6('unknown')+'</p>');
@@ -4223,7 +4226,7 @@ renderCareer=function(){if(!career)return;career=upgradeCareer(career);processGa
  $('calendarCard').innerHTML='<h3>'+T6('calendar')+'</h3><div class="calWrap"><table class="cal">'+CAREER_EVENTS.slice(career.eventIndex,career.eventIndex+8).map((x,i)=>'<tr class="'+(i===0?'next':'')+'"><td class="dt">'+V6date(x.date)+'</td><td class="nm"><b>'+V6comp(x.comp)+'</b><span>'+V6phase(x.phase)+' · '+x.venue+'</span></td><td class="lv">'+V6mode(x.mode)+'</td></tr>').join('')+'</table></div>';
  $('newsCard').innerHTML='<h3>'+T6('news')+'</h3>'+(career.pendingDecision?'<div class="pressBox"><b>'+T6('press')+'</b><p>'+V6legacy(career.pendingDecision.q)+'</p><div class="choiceRow"><button class="choiceBtn" data-press="bold">'+T6('press_bold')+'</button><button class="choiceBtn" data-press="calm">'+T6('press_calm')+'</button><button class="choiceBtn" data-press="team">'+T6('press_team')+'</button></div></div>':'')+(career.news||[]).slice(0,7).map(n=>'<div class="newsItem"><b>'+V6date(n.d)+'</b> '+V6legacy(n.t)+'</div>').join('');document.querySelectorAll('[data-press]').forEach(b=>b.onclick=()=>pressDecision(b.dataset.press));
  $('historyCard').innerHTML='<h3>'+T6('history')+'</h3><p><b>'+T6('titles')+':</b> '+(career.titles.length?career.titles.map(t=>V6comp(t.name)+' '+t.season).join(' · '):'—')+'</p>'+(career.careerYears||[]).slice(0,5).map(y=>'<div class="historyRow"><b>'+y.season+'</b><span>'+y.w+'/'+y.p+' · #'+y.rank+'</span></div>').join('');
- $('recordsCard').innerHTML='<h3>'+T6('records')+'</h3><div class="kv"><div><b>'+T6('best_rank')+':</b> #'+career.records.bestRank+'</div><div><b>'+T6('best_streak')+':</b> '+career.records.bestStreak+'</div><div><b>'+T6('career_earnings')+':</b> '+Math.round(career.records.earnings).toLocaleString()+' €</div><div><b>H2H:</b> '+Object.keys(career.h2h).length+' '+T6('next_opponent').toLowerCase()+'</div></div>';
+ $('recordsCard').innerHTML='<h3>'+T6('records')+'</h3><div class="kv"><div><b>'+T6('best_rank')+':</b> #'+career.records.bestRank+'</div><div><b>'+T6('best_streak')+':</b> '+career.records.bestStreak+'</div><div><b>'+T6('career_earnings')+':</b> '+Math.round(career.records.earnings).toLocaleString('eu')+' €</div><div><b>'+T6('h2h')+':</b> '+Object.keys(career.h2h).length+' '+T6('next_opponent').toLowerCase()+'</div></div>';
  $('relationsCard').innerHTML='<h3>'+T6('relationships')+'</h3>'+v6Stat(T6('relationship_partner'),career.pairChem)+v6Stat(T6('relationship_director'),dir.relation)+v6Stat(T6('relationship_agent'),career.relationships.agent||58);
  let so=career.sponsors.offers[0],sa=career.sponsors.active;$('sponsorCard').innerHTML='<h3>'+T6('sponsors')+'</h3>'+(sa?'<h2>'+sa.brand+'</h2><p>'+T6('sponsor_goal')+': '+career.sponsorProgress.wins+' / '+sa.goalWins+' '+T6('wins')+' · '+T6('bonus')+' '+sa.bonus+' €</p>':so?'<h2>'+so.brand+'</h2><p>'+T6('season_bonus')+': '+so.fee+' € · '+T6('sponsor_goal')+': '+so.goalWins+' '+T6('wins')+' · '+T6('bonus')+' '+so.bonus+' €</p><div class="managerActions">'+v6Button(T6('accept'),'id="v6SponsorAccept"','primary')+v6Button(T6('decline'),'id="v6SponsorDecline"','')+'</div>':'<p>—</p>');
  $('databaseCard').innerHTML='<h3>'+T6('database')+'</h3><p>'+career.roster.length+' pelotari · '+PRO_TEAMS.length+' '+(LANG==='eu'?'enpresa':LANG==='en'?'companies':'empresas')+'.</p><div class="managerActions">'+v6Button(T6('open_database'),'id="v6Db"','good')+'</div>';
@@ -4289,11 +4292,11 @@ function showMainMenu(){
  $('hpMainMulti').onclick=showMultiplayer;
  $('hpMainLang').onclick=showLanguageSelector;
 }
-function showLanguageSelector(){showOvl('lang');state='lang';document.querySelector('#lang h3').textContent=T6('choose_language');document.querySelector('#lang h1').textContent='HERRI PILOTA';$('lgEu').className='mbtn';$('lgEn').className='mbtn ghost';$('lgEs').className='mbtn ghost';let go=lg=>{setLang(lg);career=loadCareer();if(career){career=upgradeCareer(career);career.lang=lg;saveCareer();}showMainMenu();};$('lgEu').onclick=()=>go('eu');$('lgEn').onclick=()=>go('en');$('lgEs').onclick=()=>go('es')}
+function showLanguageSelector(){/* hizkuntza-hautatzailerik ez: beti euskaraz (EUSKARA aukeratzea bezala) */setLang('eu');career=loadCareer();if(career){career=upgradeCareer(career);career.lang='eu';saveCareer();}showMainMenu();}
 showCareerSetup=function(){showOvl('careerSetup');state='careerSetup';let box=document.querySelector('#careerSetup .setupBox');box.innerHTML='<div class="ey">'+T6('new_game')+'</div><h1>'+H8('career_title').replace(' ','<br><span>')+'</span></h1><p style="color:#b9d3c5;line-height:1.6;font-size:12px">'+T6('new_game_desc')+'</p><div class="setupGrid" style="margin-top:14px"><input class="setupInput" id="careerName" value="GORKA" maxlength="14"><input class="setupInput" id="careerAge" value="20" type="number" min="18" max="35"></div><div style="font-size:8px;letter-spacing:2px;color:#7fa18f;margin-top:13px">'+T6('game_profile')+'</div><div class="rolePick"><div class="roleOpt on" id="roleFront"><b>'+T6('front')+'</b><br><span style="opacity:.65">'+T6('front_desc')+'</span></div><div class="roleOpt" id="roleBack"><b>'+T6('back')+'</b><br><span style="opacity:.65">'+T6('back_desc')+'</span></div></div><div class="managerActions"><button class="managerBtn primary" id="careerCreate">'+T6('sign_first')+'</button><button class="managerBtn" id="careerHome">'+hpMainTxt('back_home')+'</button></div><p style="opacity:.55;font-size:9px">'+T6('fiction_note')+'</p>';let rf=$('roleFront'),rb=$('roleBack');rf.onclick=()=>{careerRole='front';rf.classList.add('on');rb.classList.remove('on')};rb.onclick=()=>{careerRole='back';rb.classList.add('on');rf.classList.remove('on')};$('careerCreate').onclick=()=>{career=freshCareer($('careerName').value,$('careerAge').value,careerRole);career=upgradeCareer(career);saveCareer();renderCareer()};$('careerHome').onclick=showMainMenu};
-showMultiplayer=function(){showOvl('multiSetup');state='multiSetup';let box=document.querySelector('#multiSetup .multiBox');box.innerHTML='<div class="ey">'+T6('multiplayer')+' · '+T6('same_screen')+'</div><h1>'+T6('two_players')+'</h1><p style="font-size:11px;line-height:1.6;color:#b9d3c5">'+(LANG==='eu'?'Bi pertsona, frontoi bat. Buruz burukoa, Lau t’Erdi edo Binakakoa IA bidezko bikotekideekin. Ez du zerbitzaririk behar.':LANG==='en'?'Two people, one fronton. Singles, Four and a Half or Doubles with AI partners. No server or account required.':'Dos personas, un frontón. Mano a mano, Cuatro y Medio o Parejas con compañeros controlados por IA. No necesita servidor ni cuenta.')+'</p><div class="multiGrid"><div><div class="multiLabel">'+T6('player1')+'</div><input class="setupInput" id="mpName1" value="GORRI" maxlength="12"></div><div><div class="multiLabel">'+T6('player2')+'</div><input class="setupInput" id="mpName2" value="URDIN" maxlength="12"></div><div><div class="multiLabel">'+T6('mode')+'</div><select class="proSelect" id="mpMode"><option value="singles">'+T6('singles')+'</option><option value="fourhalf">'+T6('fourhalf')+'</option><option value="pairs">'+T6('pairs')+' + '+T6('ai')+'</option></select></div><div><div class="multiLabel">'+T6('serve_rule')+'</div><select class="proSelect" id="mpServe"><option value="none">'+T6('serve_free')+'</option><option value="4-7">'+T6('serve_47')+'</option><option value="4half">'+T6('serve_half')+'</option></select></div><div><div class="multiLabel">'+T6('match')+'</div><select class="proSelect" id="mpTarget"><option value="12">12</option><option value="18">18</option><option value="22" selected>22</option></select></div><div><div class="multiLabel">'+T6('venue')+'</div><select class="proSelect" id="mpVenue"><option>Harri Beltza Frontoia</option><option>Itsasargi Kantxa</option><option>Burdinola Frontoia</option><option>Ibaiondo Pilotalekua</option></select></div></div><div class="controlCard"><div><b>'+T6('player1')+' · GORRI</b><br>WASD · J/K/L · Shift</div><div><b>'+T6('player2')+' · URDIN</b><br>'+T6('arrows')+' · N/M/, · .</div></div><div class="managerActions"><button class="managerBtn primary" id="mpStart">'+T6('play')+'</button><button class="managerBtn" id="mpBack">'+T6('back_btn')+'</button></div>'; $('mpBack').onclick=showMainMenu;$('mpMode').onchange=()=>{if($('mpMode').value==='fourhalf')$('mpServe').value='4half'};$('mpStart').onclick=startMultiplayer};
+showMultiplayer=function(){showOvl('multiSetup');state='multiSetup';let box=document.querySelector('#multiSetup .multiBox');box.innerHTML='<div class="ey">'+T6('multiplayer')+' · '+T6('same_screen')+'</div><h1>'+T6('two_players')+'</h1><p style="font-size:11px;line-height:1.6;color:#b9d3c5">'+(LANG==='eu'?'Bi pertsona, frontoi bat. Buruz burukoa, Lau t’Erdi edo Binakakoa AA bidezko bikotekideekin. Ez du zerbitzaririk behar.':LANG==='en'?'Two people, one fronton. Singles, Four and a Half or Doubles with AI partners. No server or account required.':'Dos personas, un frontón. Mano a mano, Cuatro y Medio o Parejas con compañeros controlados por IA. No necesita servidor ni cuenta.')+'</p><div class="multiGrid"><div><div class="multiLabel">'+T6('player1')+'</div><input class="setupInput" id="mpName1" value="GORRI" maxlength="12"></div><div><div class="multiLabel">'+T6('player2')+'</div><input class="setupInput" id="mpName2" value="URDIN" maxlength="12"></div><div><div class="multiLabel">'+T6('mode')+'</div><select class="proSelect" id="mpMode"><option value="singles">'+T6('singles')+'</option><option value="fourhalf">'+T6('fourhalf')+'</option><option value="pairs">'+T6('pairs')+' + '+T6('ai')+'</option></select></div><div><div class="multiLabel">'+T6('serve_rule')+'</div><select class="proSelect" id="mpServe"><option value="none">'+T6('serve_free')+'</option><option value="4-7">'+T6('serve_47')+'</option><option value="4half">'+T6('serve_half')+'</option></select></div><div><div class="multiLabel">'+T6('match')+'</div><select class="proSelect" id="mpTarget"><option value="12">12</option><option value="18">18</option><option value="22" selected>22</option></select></div><div><div class="multiLabel">'+T6('venue')+'</div><select class="proSelect" id="mpVenue"><option>Harri Beltza Frontoia</option><option>Itsasargi Kantxa</option><option>Burdinola Frontoia</option><option>Ibaiondo Pilotalekua</option></select></div></div><div class="controlCard"><div><b>'+T6('player1')+' · GORRI</b><br>WASD · J/K/L · Shift</div><div><b>'+T6('player2')+' · URDIN</b><br>'+T6('arrows')+' · N/M/, · .</div></div><div class="managerActions"><button class="managerBtn primary" id="mpStart">'+T6('play')+'</button><button class="managerBtn" id="mpBack">'+T6('back_btn')+'</button></div>'; $('mpBack').onclick=showMainMenu;$('mpMode').onchange=()=>{if($('mpMode').value==='fourhalf')$('mpServe').value='4half'};$('mpStart').onclick=startMultiplayer};
 
-const _v6StartGameBase=startGame;startGame=function(){_v6StartGameBase();let e=currentCareerEvent;if(!e)return;$('bPlace').textContent=e.venue;$('bName').textContent=V6mode(e.mode);$('bLvl').textContent=V6comp(e.comp)+' · '+V6phase(e.phase)+' · '+V6date(e.date);hpFillBriefIntro(e);let rules=['<b>'+e.target+' '+T6('points')+'</b> · '+V6mode(e.mode),'<b>'+T6('rules')+':</b> '+V6serve(e.serve),e.mode==='fourhalf'?'<b>'+T6('fourhalf')+'</b> · 4½':'<b>'+V6mode(e.mode)+'</b>',e.multiplayer?'<b>'+T6('player1')+'</b> WASD + J/K/L · <b>'+T6('player2')+'</b> ARROWS + N/M/,':'<b>A</b> '+TR('JO')+' · <b>B</b> '+TR('GLOBOA')+' · <b>C</b> '+TR('MOTZ')];$('bRules').innerHTML=rules.map(r=>'<li>'+r+'</li>').join('')};
+const _v6StartGameBase=startGame;startGame=function(){_v6StartGameBase();let e=currentCareerEvent;if(!e)return;$('bPlace').textContent=e.venue;$('bName').textContent=V6mode(e.mode);$('bLvl').textContent=V6comp(e.comp)+' · '+V6phase(e.phase)+' · '+V6date(e.date);hpFillBriefIntro(e);let rules=['<b>'+e.target+' '+T6('points')+'</b> · '+V6mode(e.mode),'<b>'+T6('rules')+':</b> '+V6serve(e.serve),e.mode==='fourhalf'?'<b>'+T6('fourhalf')+'</b> · 4½':'<b>'+V6mode(e.mode)+'</b>',e.multiplayer?'<b>'+T6('player1')+'</b> WASD + J/K/L · <b>'+T6('player2')+'</b> '+T6('arrows')+' + N/M/,':'<b>A</b> '+TR('JO')+' · <b>B</b> '+TR('GLOBOA')+' · <b>C</b> '+TR('MOTZ')];$('bRules').innerHTML=rules.map(r=>'<li>'+r+'</li>').join('')};
 const _v6EndBase=endSport;endSport=function(){_v6EndBase();if(state!=='result'||!currentCareerEvent)return;let won=lastWon;$('resPos').textContent=T6(won?'victory':'defeat');$('resPts').textContent=T6(currentCareerEvent.multiplayer?'return_multi':'return_career');$('rTable').innerHTML='<tr><td>'+T6('mode')+'</td><td class="n">'+V6mode(currentCareerEvent.mode)+'</td></tr><tr><td>'+T6('serve_rule')+'</td><td class="n">'+V6serve(currentCareerEvent.serve)+'</td></tr>'};
 const _v6SimBase=simulateCareerMatch;simulateCareerMatch=function(){if(!currentCareerEvent)return;if(career.injury&&career.injury.weeks>1){ctoast(T6('medical_leave'));return;}let e=currentCareerEvent,me=careerRating(e),opp=e.rating+(e.mode==='pairs'?(e.opponentMateRating||0)*.02:0);if(career.tactics.style==='attack')me+=1.2;if(career.tactics.style==='defense')me+=.7;let [pf,pa]=simScore(me,opp);if(e.target!==22){pf=pf===22?e.target:Math.min(e.target-1,Math.round(pf/22*e.target));pa=pa===22?e.target:Math.min(e.target-1,Math.round(pa/22*e.target))}applyMatchResult(e,pf,pa);ctoast(T6(pf>pa?'victory':'defeat')+' '+pf+'-'+pa+' · '+T6('simulated'));renderCareer()};
 
@@ -4745,7 +4748,7 @@ function hp13ShareTxt(k){
 }
 function hp13EnsureShareSheet(){
  let sh=document.getElementById('hp13ShareSheet');if(sh)return sh;
- sh=document.createElement('div');sh.id='hp13ShareSheet';sh.innerHTML='<div class="hp13-share-card" role="dialog" aria-modal="true"><div class="hp13-share-top"><div><div class="hp13-share-ey" id="hp13ShareEy"></div><h2 id="hp13ShareTitle"></h2></div><button class="hp13-share-close" id="hp13ShareClose" aria-label="Cerrar">×</button></div><textarea class="hp13-share-link" id="hp13ShareLink" readonly></textarea><div class="hp13-share-actions"><button class="hp13-wa" id="hp13ShareWa"></button><button class="hp13-copy" id="hp13ShareCopy"></button></div><div class="hp13-share-note" id="hp13ShareNote"></div></div>';
+ sh=document.createElement('div');sh.id='hp13ShareSheet';sh.innerHTML='<div class="hp13-share-card" role="dialog" aria-modal="true"><div class="hp13-share-top"><div><div class="hp13-share-ey" id="hp13ShareEy"></div><h2 id="hp13ShareTitle"></h2></div><button class="hp13-share-close" id="hp13ShareClose" aria-label="Itxi">×</button></div><textarea class="hp13-share-link" id="hp13ShareLink" readonly></textarea><div class="hp13-share-actions"><button class="hp13-wa" id="hp13ShareWa"></button><button class="hp13-copy" id="hp13ShareCopy"></button></div><div class="hp13-share-note" id="hp13ShareNote"></div></div>';
  document.body.appendChild(sh);
  const close=()=>sh.classList.remove('on');
  sh.addEventListener('click',e=>{if(e.target===sh)close()});
@@ -4782,11 +4785,11 @@ showMainMenu=function(){
  let saved=loadCareer();if(saved){career=upgradeCareer(saved)}
  let pending=hp8Pending();
  root.innerHTML='<div class="hp8-home"><div class="hp8-home-head"><div class="hp8-home-brand"><div class="ey">EUSKARAZ GAMES</div><div class="hp8-gamebrand">HERRI PILOTA</div><h1>'+H8('choose')+' <span>'+H8('game')+'</span></h1></div><button class="hp8-langchip" id="hp8Lang">'+H8('language')+' · '+String(LANG).toUpperCase()+'</button></div><div class="hp8-mode-grid">'+
- '<article class="hp8-mode-card career" id="hp8Career"><div class="hp8-card-top"><span class="hp8-badge">PILOTARI KARRERA</span><span class="hp8-badge">'+(career?H8('continue'):H8('newc'))+'</span></div><div class="hp8-card-copy"><div class="k">MANAGER · TEMPORADA</div><h2>'+H8('career')+'</h2><p>'+H8('career_d')+'</p><div class="hp8-enter"><span>'+(career?H8('continue'):H8('newc'))+'</span><i>→</i></div></div></article></div></div>';
+ '<article class="hp8-mode-card career" id="hp8Career"><div class="hp8-card-top"><span class="hp8-badge">PILOTARI KARRERA</span><span class="hp8-badge">'+(career?H8('continue'):H8('newc'))+'</span></div><div class="hp8-card-copy"><div class="k">KUDEAKETA · DENBORALDIA</div><h2>'+H8('career')+'</h2><p>'+H8('career_d')+'</p><div class="hp8-enter"><span>'+(career?H8('continue'):H8('newc'))+'</span><i>→</i></div></div></article></div></div>';
  $('hp8Career').onclick=()=>{career?renderCareer():showCareerSetup()};$('hp8Lang').onclick=showLanguageSelector;
 };
 
-showLanguageSelector=function(){showOvl('lang');state='lang';document.querySelector('#lang h3').textContent=T6('choose_language');document.querySelector('#lang h1').textContent='HERRI PILOTA';$('lgEu').className='mbtn';$('lgEn').className='mbtn ghost';$('lgEs').className='mbtn ghost';let go=lg=>{setLang(lg);career=loadCareer();if(career){career=upgradeCareer(career);career.lang=lg;saveCareer()}showMainMenu();if(hp8Pending()?.kind==='invite')setTimeout(showMultiplayer,80)};$('lgEu').onclick=()=>go('eu');$('lgEn').onclick=()=>go('en');$('lgEs').onclick=()=>go('es')};
+showLanguageSelector=function(){/* hizkuntza-hautatzailerik ez: beti euskaraz (EUSKARA aukeratzea bezala) */setLang('eu');career=loadCareer();if(career){career=upgradeCareer(career);career.lang='eu';saveCareer()}showMainMenu();if(hp8Pending()?.kind==='invite')setTimeout(showMultiplayer,80)};
 
 showCareerSetup=function(){showOvl('careerSetup');state='careerSetup';let box=document.querySelector('#careerSetup .setupBox');box.innerHTML='<div class="ey">HERRI PILOTA · '+H8('career')+'</div><h1>'+H8('career_title').replace(' ','<br><span>')+'</span></h1><p style="color:#b9d3c5;line-height:1.55;font-size:11px">'+T6('new_game_desc')+'</p><div class="setupGrid" style="margin-top:14px"><input class="setupInput" id="careerName" value="GORKA" maxlength="14"><input class="setupInput" id="careerAge" value="20" type="number" min="18" max="35"></div><div style="font-size:8px;letter-spacing:2px;color:#7fa18f;margin-top:13px">'+T6('game_profile')+'</div><div class="rolePick"><div class="roleOpt on" id="roleFront"><b>'+T6('front')+'</b><br><span style="opacity:.65">'+T6('front_desc')+'</span></div><div class="roleOpt" id="roleBack"><b>'+T6('back')+'</b><br><span style="opacity:.65">'+T6('back_desc')+'</span></div></div><div class="managerActions"><button class="managerBtn primary" id="careerCreate">'+T6('sign_first')+'</button><button class="managerBtn" id="careerHome">'+H8('back')+'</button></div><p style="opacity:.5;font-size:9px">'+T6('fiction_note')+'</p>';let rf=$('roleFront'),rb=$('roleBack');rf.onclick=()=>{careerRole='front';rf.classList.add('on');rb.classList.remove('on')};rb.onclick=()=>{careerRole='back';rb.classList.add('on');rf.classList.remove('on')};$('careerCreate').onclick=()=>{career=freshCareer($('careerName').value,$('careerAge').value,careerRole);career=upgradeCareer(career);saveCareer();renderCareer()};$('careerHome').onclick=showMainMenu};
 
@@ -4805,7 +4808,7 @@ renderCareer=function(){
   let e=currentCareerEvent;
   let form=Math.max(0,Math.round(100-career.fatigue));
   let hero=document.createElement('section');hero.id='hp8CareerHero';hero.className='hp8-career-hero';
-  hero.innerHTML='<div class="hp8-career-hero-in"><div class="hp8-career-top"><div class="logo">HERRI PILOTA <span style="opacity:.58">· EUSKARAZ GAMES</span></div><button class="hp8-home-btn" id="hp8CareerHome">← '+H8('back')+'</button></div><div class="hp8-career-name">'+career.name+'</div><div class="hp8-career-sub">'+career.contract.team+' · '+T6('season')+' '+career.season+' · '+V6role(career.role)+'</div><div class="hp8-career-chips"><span>'+T6('ranking')+' #'+career.ranking+'</span><span>'+T6('form')+' '+form+'%</span><span>'+T6('money')+' '+Math.round(career.money).toLocaleString()+' €</span><span>'+T6('hands')+' '+Math.round((career.hands.left+career.hands.right)/2)+'%</span></div><div class="hp8-quick">'+(e?'<button id="hp8QuickPlay">'+H8('play')+'</button><button class="secondary" id="hp8QuickSim">'+H8('simulate')+'</button>':'')+'<button class="secondary" id="hp8QuickTrain">'+H8('train')+'</button></div></div>';
+  hero.innerHTML='<div class="hp8-career-hero-in"><div class="hp8-career-top"><div class="logo">HERRI PILOTA <span style="opacity:.58">· EUSKARAZ GAMES</span></div><button class="hp8-home-btn" id="hp8CareerHome">← '+H8('back')+'</button></div><div class="hp8-career-name">'+career.name+'</div><div class="hp8-career-sub">'+career.contract.team+' · '+T6('season')+' '+career.season+' · '+V6role(career.role)+'</div><div class="hp8-career-chips"><span>'+T6('ranking')+' #'+career.ranking+'</span><span>'+T6('form')+' '+form+'%</span><span>'+T6('money')+' '+Math.round(career.money).toLocaleString('eu')+' €</span><span>'+T6('hands')+' '+Math.round((career.hands.left+career.hands.right)/2)+'%</span></div><div class="hp8-quick">'+(e?'<button id="hp8QuickPlay">'+H8('play')+'</button><button class="secondary" id="hp8QuickSim">'+H8('simulate')+'</button>':'')+'<button class="secondary" id="hp8QuickTrain">'+H8('train')+'</button></div></div>';
   shell.prepend(hero);
   let nav=document.createElement('nav');nav.id='hp8CareerTabs';nav.className='hp8-tabs';nav.innerHTML='<button class="hp8-tab" data-tab="home">'+H8('home')+'</button><button class="hp8-tab" data-tab="training">'+H8('train')+'</button><button class="hp8-tab" data-tab="season">'+H8('season')+'</button><button class="hp8-tab" data-tab="club">'+H8('club')+'</button>';
   hero.after(nav);
@@ -4946,7 +4949,7 @@ renderCareer=function(){
    let cls=r.won?'#8ff0bd':'#ff9b87';
    return '<div class="historyRow" style="align-items:flex-start;gap:10px">'+
      '<b style="color:'+cls+';min-width:54px">'+r.pf+'–'+r.pa+'</b>'+
-     '<span style="flex:1">'+V6comp(r.comp||'PARTIDA')+' · '+rival+'<small style="display:block;opacity:.55;margin-top:2px">'+(r.date||r.season)+' · '+(r.source==='simulated'?HP10('sim'):HP10('played'))+'</small></span></div>';
+     '<span style="flex:1">'+V6comp(r.comp||'PARTIDA')+' · '+rival+'<small style="display:block;opacity:.55;margin-top:2px">'+(r.date?V6date(r.date):r.season)+' · '+(r.source==='simulated'?HP10('sim'):HP10('played'))+'</small></span></div>';
  }).join('');
  h.innerHTML='<h3>'+HP10('results')+'</h3><p><b>'+T6('season')+' '+career.season+':</b> '+career.seasonWins+' / '+career.seasonPlayed+' · '+T6('ranking')+' #'+career.ranking+'</p>'+(rows||'<p>'+HP10('empty')+'</p>');
 };
@@ -4967,8 +4970,8 @@ const HPS_TXT={
 };
 function HPS(k){return (HPS_TXT[LANG]||HPS_TXT.eu)[k]||k;}
 function hpSimpleRoomId(){return '';try{return new URL(location.href).searchParams.get('room')||''}catch(e){return''}}
-function hpSimpleLang(){try{return new URL(location.href).searchParams.get('lang')||''}catch(e){return''}}
-function hpSimpleInviteLink(id){let u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('room',id);u.searchParams.set('lang',LANG);return u.toString();}
+function hpSimpleLang(){return 'eu'}                 /* beti euskaraz */
+function hpSimpleInviteLink(id){let u=new URL(location.href);u.search='';u.hash='';u.searchParams.set('room',id);u.searchParams.set('lang','eu');return u.toString();}
 function hpSimpleLoadPeerJS(){
  if(window.Peer)return Promise.resolve(window.Peer);
  if(HPSIMPLE.libPromise)return HPSIMPLE.libPromise;
@@ -5039,7 +5042,7 @@ async function hpSimpleCreateRoom(){
  });
 }
 async function hpSimpleJoin(room){
- let lg=hpSimpleLang();if(['eu','es','en'].includes(lg)){try{setLang(lg)}catch(e){LANG=lg}}
+ let lg=hpSimpleLang();if(['eu','es','en'].includes(lg)){try{setLang(lg)}catch(e){LANG='eu'}}
  HPSIMPLE.join=true;HPSIMPLE.room=room;HPOnline.active=true;HPOnline.isHost=false;HPOnline.room=room;HPOnline.name=(career?.name||'URDIN').toUpperCase().slice(0,14);
  showOvl('multiSetup');state='multiSetup';let box=document.querySelector('#multiSetup .multiBox');
  box.innerHTML='<div class="hp8-online-head"><div class="ey">HERRI PILOTA · EUSKARAZ GAMES</div><h1>'+HPS('guest')+'</h1><p>'+HPS('guesthelp')+'</p></div><div class="hp8-status" id="onStatus" style="margin-top:14px">'+HPS('connecting')+'</div><div class="hp8-online-actions"><button id="hpSimpleRetry" style="display:none">'+HPS('retry')+'</button><button id="hpSimpleBack">← '+HPS('back')+'</button></div>';
@@ -5145,11 +5148,11 @@ async function egSigWait(room,pred,onTick,timeout){
 function egInviteLink(game,room,lang){
  try{
   if(window.parent&&window.parent!==window&&typeof window.parent.egInviteUrl==='function')
-    return window.parent.egInviteUrl(game,room,lang||'eu');
+    return window.parent.egInviteUrl(game,room,'eu');
  }catch(e){}
  const u=new URL(location.href);u.search='';u.hash='';
  u.searchParams.set('game',game);u.searchParams.set('room',room);
- if(lang)u.searchParams.set('lang',lang);
+ u.searchParams.set('lang','eu');
  return u.toString();
 }
 async function egShareLink(title,link){
@@ -5166,8 +5169,7 @@ function hpNetRoom(){
  catch(e){return ''}
 }
 function hpNetLang(){
- try{return window.__EG_LANG||new URL(location.href).searchParams.get('lang')||''}
- catch(e){return window.__EG_LANG||''}
+ return 'eu';                         /* beti euskaraz */
 }
 function hpNetStatus(t){hpStatus(t)}
 function hpNetIceCount(pc){
@@ -5240,7 +5242,7 @@ async function hpNetCreate(){
 
 async function hpNetJoin(room){
  const lg=hpNetLang();
- if(['eu','es','en'].includes(lg)){try{setLang(lg)}catch(e){LANG=lg}}
+ if(['eu','es','en'].includes(lg)){try{setLang(lg)}catch(e){LANG='eu'}}
 
  showOvl('multiSetup');state='multiSetup';
  const box=document.querySelector('#multiSetup .multiBox');
@@ -5457,7 +5459,7 @@ async function hpRelayCreate(){
 
 async function hpRelayJoin(room){
  const lg=hpNetLang();
- if(['eu','es','en'].includes(lg)){try{setLang(lg)}catch(e){LANG=lg}}
+ if(['eu','es','en'].includes(lg)){try{setLang(lg)}catch(e){LANG='eu'}}
  hpDisconnect();
 
  showOvl('multiSetup');state='multiSetup';
@@ -5525,11 +5527,11 @@ function egWsRoomId(){
 function egWsInvite(game,room,lang){
  try{
   if(window.parent&&window.parent!==window&&typeof window.parent.egInviteUrl==='function')
-    return window.parent.egInviteUrl(game,room,lang);
+    return window.parent.egInviteUrl(game,room,'eu');
  }catch(e){}
  const u=new URL(location.href);u.search='';u.hash='';
  u.searchParams.set('game',game);u.searchParams.set('room',room);
- if(lang)u.searchParams.set('lang',lang);
+ u.searchParams.set('lang','eu');
  return u.toString();
 }
 function egWsStop(){
@@ -5629,7 +5631,7 @@ async function hpWsCreate(){
  return egWsInvite('pilota',room,LANG);
 }
 async function hpWsJoin(room){
- const lg=window.__EG_LANG||'';if(['eu','es','en'].includes(lg)){try{setLang(lg)}catch(e){}}
+ const lg='eu';if(['eu','es','en'].includes(lg)){try{setLang(lg)}catch(e){}}
  hpDisconnect();
  HPOnline.active=true;HPOnline.isHost=false;HPOnline.connected=false;HPOnline.transport='ws';
  HPOnline.room=room;HPOnline.name=(career?.name||'URDIN').toUpperCase().slice(0,14);
