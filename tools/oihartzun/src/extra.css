@@ -103,3 +103,4 @@ body.crafting #touchActions #rotateBtn{right:150px;bottom:126px;width:60px;heigh
 #ascHud small{display:block;font:9px system-ui;letter-spacing:.18em;color:#cfe6ee;margin-top:5px}
 #touchActions #attackBtn{white-space:pre-line;line-height:1.15;font-size:11px}
 @media(pointer:coarse){#katea{top:76px;font-size:22px}#ascHud{top:128px;right:18px;font-size:16px}}
+@media(pointer:coarse) and (orientation:portrait){#ascHud{top:150px;left:20px;right:auto;text-align:left}}

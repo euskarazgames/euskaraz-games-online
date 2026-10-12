@@ -40,6 +40,11 @@ cámara lenta en la última baja y oleadas cada vez más frenéticas.
 - Guion con misterios y giros: páginas del diario de Amaiur con números de bucle, escenas breves al
   terminar cada isla que dejan una pregunta abierta, el giro de la máscara de Gaueko y un último
   mensaje de radio tras el final.
+- Mundo abierto rodeado de mar: el presente es un día despejado sobre el mar helado y el pasado un
+  atardecer con el mar vivo; en el horizonte hay islas con pueblos y faros, y veleros que navegan en el
+  pasado y quedan atrapados en el hielo en el presente. Las jaulas de las islas son invisibles (solo
+  chispas al tocar el borde) y sus postes se levantan únicamente cuando se cierra una arena.
+- Cámara: en vertical se aleja sola (más campo de visión); botón ⤢ con tres distancias (se recuerda).
 - Jefe final con cuatro fases, escudo de tres luces en el núcleo, coronas de proyectiles y refuerzos.
   Cuatro finales, tres campanas y cuatro páginas opcionales. Música épica sintetizada por capas.
 - Código fuente legible: `tools/oihartzun/src/` (`game.js`, `combat.js`, `magic.js`, `ascent.js`,

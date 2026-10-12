@@ -187,13 +187,13 @@
   /* ==================================================================
      ATMOSFERA · bi garai, bi zeru
      Iragana: ilunabar urrekara, itsasoa bizirik.
-     Oraina: gau izarratua, denbora hautsia — itsasoa izoztuta eta
-     elur-maluten antzeko denbora-hautsa airean geldirik.
+     Oraina: egun argi eta hotza, denbora hautsia — itsasoa izoztuta (izotz-zelai
+     zabala) eta denbora-hauts gutxi airean geldirik. Mundu irekiaren sentsazioa.
      EGFX (/assets/egfx.js) ez badago, lehengo gradienteak erabiltzen dira.
      ================================================================== */
   const EG = window.EGFX && EGFX.enabled ? EGFX : null;
   const ATMO = { skyPast: null, skyNow: null, envPast: null, envNow: null, terrain: undefined, rockMat: null, dust: null,
-    fogPast: new T.Color("#5a829d"), fogNow: new T.Color("#2c4e75"), envOn: null, falls: [] };
+    fogPast: new T.Color("#5a829d"), fogNow: new T.Color("#a9c6de"), envOn: null, falls: [] };
   function rawTex(id, srgb) {
     const img = EG && EG.image(id);
     if (!img) return null;
@@ -329,11 +329,11 @@
         "  float past=1.-uBlend;",
         "  pp.x+=past*sin(uTime*.23+seed*11.)*1.6; pp.y+=past*sin(uTime*.5+seed*30.)*.9; pp.z+=past*cos(uTime*.19+seed*7.)*1.6;",
         "  vec4 mv=modelViewMatrix*vec4(pp,1.);",
-        "  float vis=mix(step(.84,seed),1.,uBlend);",
+        "  float vis=mix(step(.84,seed),step(.62,seed),uBlend);",
         "  gl_PointSize=(mix(2.6,1.5,uBlend)+fract(seed*13.)*1.7)*uPx*55./max(-mv.z,1.)*vis;",
         "  float tw=.62+.38*sin(uTime*(.7+seed*2.)*(1.-uBlend*.85)+seed*40.);",
         "  vA=vis*(.35+.65*fract(seed*7.))*tw*smoothstep(70.,20.,-mv.z);",
-        "  vC=mix(vec3(1.,.8,.48),vec3(.82,.92,1.),uBlend);",
+        "  vC=mix(vec3(1.,.8,.48),vec3(.9,.96,1.),uBlend);",
         "  gl_Position=projectionMatrix*mv;}",
       ].join("\n"),
       fragmentShader:
@@ -370,6 +370,7 @@
   }
   function atmoUpdate(dt) {
     const b = phaseBlend;
+    horizonUpdate(dt);
     if (sky.material.uniforms.blend) sky.material.uniforms.blend.value = b;
     const su = sea.material.uniforms;
     su.blend.value = b;
@@ -392,6 +393,51 @@
       if (want && scene.environment !== want) scene.environment = want;
     }
   }
+  /* Izotz-pitzadurak aldez aurretik (voronoi, lauza errepikagarria): pixel bakoitzeko kalkulu
+     garestiaren ordez bi testura-irakurketa (R: pitzadura handiak, G: finak). */
+  function crackTexture() {
+    const N = 256,
+      C = 4,
+      img = new Uint8Array(N * N * 4);
+    const hash = (x, y, s) => {
+      const h = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453;
+      return h - Math.floor(h);
+    };
+    const vor = (px, py, s) => {
+      const ix = Math.floor(px),
+        iy = Math.floor(py),
+        fx = px - ix,
+        fy = py - iy;
+      let d1 = 8,
+        d2 = 8;
+      for (let y = -1; y <= 1; y++)
+        for (let x = -1; x <= 1; x++) {
+          const cx = (((ix + x) % C) + C) % C,
+            cy = (((iy + y) % C) + C) % C,
+            d = Math.hypot(x + hash(cx, cy, s) - fx, y + hash(cx, cy, s + 19) - fy);
+          if (d < d1) (d2 = d1), (d1 = d);
+          else if (d < d2) d2 = d;
+        }
+      return d2 - d1;
+    };
+    const edge = (d, w) => 255 * (1 - smooth01(clamp(d / w, 0, 1)));
+    for (let j = 0; j < N; j++)
+      for (let i = 0; i < N; i++) {
+        const u = (i / N) * C,
+          v = (j / N) * C,
+          k = (j * N + i) * 4;
+        img[k] = edge(vor(u, v, 1), 0.035);
+        img[k + 1] = edge(vor(u, v, 2), 0.025);
+        img[k + 3] = 255;
+      }
+    const t = new T.DataTexture(img, N, N, T.RGBAFormat);
+    t.wrapS = t.wrapT = T.RepeatWrapping;
+    t.minFilter = T.LinearMipmapLinearFilter;
+    t.magFilter = T.LinearFilter;
+    t.generateMipmaps = true;
+    t.needsUpdate = true;
+    return t;
+  }
   /* Itsasoa: iraganean bizirik (olatuak, islapena, apar-eraztunak); orainean izoztuta (izotz-pitzadurak). */
   function seaMaterial() {
     const tPast = ATMO.skyPast,
@@ -410,19 +456,18 @@
         tNow: { value: tNow },
         tWater: { value: tWater },
         useSky: { value: tPast && tNow ? 1 : 0 },
+        tCrack: { value: crackTexture() },
         useWater: { value: tWater ? 1 : 0 },
         falls: { value: falls },
       },
       vertexShader:
         "varying vec3 wp;void main(){vec4 w=modelMatrix*vec4(position,1.);wp=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}",
       fragmentShader: [
-        "uniform float clock,blend,useSky,useWater;uniform vec3 camPos;uniform sampler2D tPast,tNow,tWater;uniform vec3 falls[5];varying vec3 wp;",
+        "uniform float clock,blend,useSky,useWater;uniform vec3 camPos;uniform sampler2D tPast,tNow,tWater,tCrack;uniform vec3 falls[5];varying vec3 wp;",
         "vec2 eq(vec3 d){return vec2(atan(d.z,d.x)*.15915494+.5,asin(clamp(d.y,-1.,1.))*.31830989+.5);}",
         "vec3 skyCol(vec3 d){",
         "  if(useSky>.5){vec2 uv=eq(d);return mix(texture2D(tPast,uv).rgb,texture2D(tNow,uv).rgb,blend);}",
-        "  float t=pow(max(d.y,0.),.6);vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 night=mix(vec3(.22,.39,.55),vec3(.035,.10,.23),t);return mix(day,night,blend);}",
-        "float h2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}",
-        "float vor(vec2 p){vec2 i=floor(p),f=fract(p);float d1=8.,d2=8.;for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++){vec2 g=vec2(float(x),float(y));vec2 o=vec2(h2(i+g),h2(i+g+19.));float d=length(g+o-f);if(d<d1){d2=d1;d1=d;}else if(d<d2)d2=d;}return d2-d1;}",
+        "  float t=pow(max(d.y,0.),.6);vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 night=mix(vec3(.74,.85,.94),vec3(.27,.53,.86),t);return mix(day,night,blend);}",
         "void main(){",
         "  float fr=smoothstep(0.,1.,blend);",
         "  float tt=clock*(1.-fr*.995);",
@@ -436,22 +481,24 @@
         "  vec3 v=normalize(wp-camPos);",
         "  vec3 r=reflect(v,n);r.y=abs(r.y);",
         "  float f=.03+.97*pow(1.-max(dot(-v,n),0.),5.);",
-        "  vec3 deep=mix(vec3(.04,.22,.26),vec3(.08,.13,.21),fr);",
-        "  vec3 shal=mix(vec3(.12,.44,.45),vec3(.25,.34,.44),fr);",
+        "  vec3 deep=mix(vec3(.04,.22,.26),vec3(.34,.48,.6),fr);",
+        "  vec3 shal=mix(vec3(.12,.44,.45),vec3(.64,.77,.87),fr);",
         "  float wv=sin(q.x*.19+q.y*.27+tt*.9)*sin(q.x*.43-q.y*.18-tt*.6);",
         "  vec3 col=mix(deep,shal,.35+wv*.15*(1.-fr));",
         "  vec3 rc=skyCol(r);",
-        "  col=mix(col,rc,clamp(f*mix(.85,.7,fr)+mix(.08,.2,fr),0.,1.));",
-        "  vec2 wq=q+vec2(sin(q.y*.07)*6.,sin(q.x*.06)*6.);",
-        "  float crack=1.-smoothstep(0.,.035,vor(wq*.045));float fine=1.-smoothstep(0.,.025,vor(wq*.17+3.));",
-        "  float frost=sin(q.x*.11+sin(q.y*.13)*2.)*sin(q.y*.09-sin(q.x*.07)*2.);",
-        "  col+=fr*(crack*vec3(.22,.3,.34)+fine*vec3(.06,.08,.09)+frost*vec3(.03,.04,.05));",
+        "  col=mix(col,rc,clamp(f*mix(.85,.45,fr)+mix(.08,.1,fr),0.,1.));",
+        "  if(fr>.01){",
+        "    vec2 wq=q+vec2(sin(q.y*.07)*6.,sin(q.x*.06)*6.);",
+        "    float crack=texture2D(tCrack,wq*.01125).r;float fine=texture2D(tCrack,(wq*.17+3.)*.25).g;",
+        "    float frost=sin(q.x*.11+sin(q.y*.13)*2.)*sin(q.y*.09-sin(q.x*.07)*2.);",
+        "    col=mix(col,vec3(.17,.33,.48),fr*crack*.5);col+=fr*(fine*vec3(.07,.09,.1)+frost*vec3(.04,.05,.06));",
+        "  }",
         "  float foam=0.;",
         "  for(int i=0;i<5;i++){float w=falls[i].z;if(w<.5)continue;float d=length(q-falls[i].xy);",
         "    foam+=(1.-smoothstep(1.5,5.5,d))*(.55+.45*sin(d*3.-tt*4.));}",
         "  col+=clamp(foam,0.,1.)*mix(vec3(.55,.68,.68),vec3(.75,.85,.9),fr)*.5;",
         "  vec3 sd=normalize(vec3(-.45,.32,-.83));",
-        "  col+=pow(max(dot(r,sd),0.),70.)*(1.-fr)*vec3(1.,.82,.55)*.45;",
+        "  col+=pow(max(dot(r,sd),0.),70.)*(1.-fr)*vec3(1.,.82,.55)*.45+pow(max(dot(r,sd),0.),18.)*fr*vec3(.9,.95,1.)*.22;",
         "  float far=smoothstep(140.,520.,length(wp.xz-camPos.xz));",
         "  col=mix(col,skyCol(normalize(vec3(v.x,.015,v.z))),far);",
         "  gl_FragColor=vec4(col,1.);}",
@@ -467,6 +514,25 @@
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const FX = { N: 0, pts: null, pos: null, vel: null, life: null, max: null, size: null, col: null, grav: null, drag: null, next: 0, rings: [] };
   const CAM = { trauma: 0, fovKick: 0, look: new T.Vector3(), lookVel: new T.Vector3(), baseFov: 44, shakeT: 0 };
+  /* Kamera-distantzia (⤢ botoia): hurbil · ertaina · urrun. Bertikalean ikus-eremu horizontala
+     estua da: kamera askoz urrunago, FOV zabalagoa eta jokalaria ukipen-botoien gainetik. */
+  const CAM_LEVELS = [0.8, 1, 1.3];
+  let camLevel = 1;
+  try {
+    const v = localStorage.getItem("oihartzun-cam");
+    if (v !== null) camLevel = clamp(Math.round(+v), 0, 2) || 0;
+  } catch {}
+  function camFrame() {
+    const portrait = innerHeight > innerWidth;
+    return {
+      k: (portrait ? 1.95 : mobile ? 1.12 : 1) * CAM_LEVELS[camLevel],
+      fov: portrait ? 50 : 44,
+      lift: portrait ? 5.5 : mobile ? 1.2 : 0,
+      fight: portrait ? 0.86 : 0.74,
+      /* kameraren altuera (angelua): baxuagoa → zerua eta urruneko uharteak ikusten dira */
+      h: portrait ? 12 : 13.5,
+    };
+  }
   const SQ = { y: 1, v: 0 };
   let hitStop = 0;
   function fxInit() {
@@ -1890,6 +1956,7 @@
   /* @include ascent.js */
   /* @include story.js */
   /* @include runes.js */
+  /* @include horizon.js */
   /* @include craft.js */
   /* musikaren intentsitatea: 0 izenburua/zinematika · 1 esplorazioa · 2 borroka · 3 bossa */
   function musicLevel() {
@@ -2251,8 +2318,9 @@
   function build() {
     scene = new T.Scene();
     scene.background = new T.Color("#527b9b");
-    scene.fog = new T.Fog("#527b9b", 80, 260);
-    camera = new T.PerspectiveCamera(44, innerWidth / innerHeight, 0.1, 700);
+    /* mundu irekia: urrunera ikusten da (urruneko uharteak eta itsasontziak) */
+    scene.fog = new T.Fog("#527b9b", 130, 560);
+    camera = new T.PerspectiveCamera(44, innerWidth / innerHeight, 0.1, 1400);
     renderer = new T.WebGLRenderer({ canvas: $("view"), antialias: true, powerPreference: "high-performance" });
     renderer.setPixelRatio(Math.min(devicePixelRatio, quality ? 1.5 : 1));
     renderer.setSize(innerWidth, innerHeight);
@@ -2279,7 +2347,7 @@
     glowTexture = makeGlowTexture();
     textures();
     ATMO.skyPast = skyTex("sky_dusk");
-    ATMO.skyNow = skyTex("sky_night");
+    ATMO.skyNow = skyTex("sky_day");
     const skyMat = new T.ShaderMaterial({
       side: T.BackSide,
       depthWrite: false,
@@ -2289,16 +2357,19 @@
         tPast: { value: ATMO.skyPast },
         tNow: { value: ATMO.skyNow },
         useTex: { value: ATMO.skyPast && ATMO.skyNow ? 1 : 0 },
+        uFog: { value: new T.Color("#9fb9cc") },
       },
       vertexShader:
         "varying vec3 p;void main(){p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",
       fragmentShader: [
-        "varying vec3 p;uniform float blend,useTex;uniform sampler2D tPast,tNow;",
+        "varying vec3 p;uniform float blend,useTex;uniform sampler2D tPast,tNow;uniform vec3 uFog;",
         "vec2 eq(vec3 d){return vec2(atan(d.z,d.x)*.15915494+.5,asin(clamp(d.y,-1.,1.))*.31830989+.5);}",
         "void main(){vec3 d=normalize(p);float t=pow(max(d.y,0.),.6);",
-        "vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 night=mix(vec3(.22,.39,.55),vec3(.035,.10,.23),t);",
+        "vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 night=mix(vec3(.74,.85,.94),vec3(.27,.53,.86),t);",
         "vec3 c=mix(day,night,blend);",
         "if(useTex>.5){vec2 uv=eq(d);c=mix(texture2D(tPast,uv).rgb,texture2D(tNow,uv).rgb,smoothstep(0.,1.,blend));}",
+        /* horizontearen azpian (itsasoaren muga urrunetik haratago): lainoaren kolorea, banda argirik gabe */
+        "c=mix(c,uFog,smoothstep(.035,-.015,d.y));",
         "gl_FragColor=vec4(c,1.);}",
       ].join("\n"),
     });
@@ -2309,9 +2380,9 @@
     sky.renderOrder = -1;
     if (EG && ATMO.skyPast && ATMO.skyNow) {
       ATMO.fogPast.copy(EG.horizon("dusk", 0.45)).lerp(new T.Color("#7a6a62"), 0.25);
-      ATMO.fogNow.copy(EG.horizon("night", 0.45)).lerp(new T.Color("#1c3550"), 0.35);
+      ATMO.fogNow.copy(EG.horizon("day", 0.45)).lerp(new T.Color("#b9d3ea"), 0.3);
       ATMO.envPast = EG.environment(renderer, scene, "dusk");
-      ATMO.envNow = EG.environment(renderer, scene, "night");
+      ATMO.envNow = EG.environment(renderer, scene, "day");
       scene.environment = ATMO.envNow;
     }
     const seaMat = new T.ShaderMaterial({
@@ -2321,7 +2392,7 @@
       fragmentShader:
         "varying vec3 p;uniform float clock;uniform float blend;void main(){float a=sin(p.x*.19+p.y*.27+clock*.9);float b=sin(p.x*.43-p.y*.18-clock*.6);float w=a*b;float foam=pow(max(0.,sin(p.x*.9+p.y*.61+clock)+sin(p.x*.14-p.y*.31-clock)-1.2),3.);vec3 day=mix(vec3(.055,.24,.29),vec3(.17,.49,.51),w*.15+.4);vec3 night=mix(vec3(.022,.065,.15),vec3(.07,.25,.36),w*.15+.4);vec3 col=mix(day,night,blend)+foam*vec3(.035,.065,.07);gl_FragColor=vec4(col,1.);}",
     });
-    sea = obj(new T.PlaneGeometry(1500, 1500, 1, 1), seaMaterial());
+    sea = obj(new T.PlaneGeometry(3000, 3000, 1, 1), seaMaterial());
     sea.receiveShadow = false;
     sea.rotation.x = -PI / 2;
     sea.position.y = -8.5;
@@ -2425,9 +2496,10 @@
       model("rock_single_A", x, BOSS_Y, z, 3.5, a);
     }
     // Distant sea stacks frame the route without adding navigational clutter.
-    for (let i = 0; i < 20; i++) {
-      let x = (i % 2 ? -1 : 1) * (65 + (i % 4) * 17),
-        z = 40 - i * 14;
+    /* mundu irekia: gutxiago eta urrunago (ez dute horma bat osatzen; horizontea ikusten da) */
+    for (let i = 0; i < 12; i++) {
+      let x = (i % 2 ? -1 : 1) * (96 + (i % 4) * 26),
+        z = 46 - i * 24;
       if (EG && (EG.has("cliff") || EG.has("rock"))) {
         seaStack(x, z, 15 + (i % 5) * 3, i);
         continue;
@@ -2450,6 +2522,7 @@
       scene.add(bird);
       birds.push(bird);
     }
+    horizonWorld();
     footRing = ring(0, 0.05, 0, 0.45, "#d7ecdd");
     footRing.material = new T.MeshBasicMaterial({ color: "#172c3c", transparent: true, opacity: 0.25 });
     footRing.castShadow = false;
@@ -3125,11 +3198,12 @@
     sea.material.uniforms.blend.value = phaseBlend;
     sea.material.uniforms.clock.value = time;
     for (const m of terrainMats) m.color.copy(GRASS).lerp(SNOW, phaseBlend);
-    sun.color.set(phaseBlend > 0.5 ? "#cadcf7" : "#ffddb3");
-    sun.intensity = mix(1.8, 1.2, phaseBlend);
-    ambient.intensity = mix(0.86, 0.75, phaseBlend) * (scene.environment ? 0.55 : 1);
+    sun.color.set(phaseBlend > 0.5 ? "#f3f7ff" : "#ffddb3");
+    sun.intensity = mix(1.8, 1.95, phaseBlend);
+    ambient.intensity = mix(0.86, 0.95, phaseBlend) * (scene.environment ? 0.55 : 1);
     scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
     scene.background.copy(scene.fog.color);
+    if (sky.material.uniforms.uFog) sky.material.uniforms.uFog.value.copy(scene.fog.color);
   }
   function interact() {
     if (!started || paused) return;
@@ -3188,13 +3262,15 @@
       new T.Vector3(clamp(P.vx * 0.26, -3.2, 3.2), 0, clamp(P.vz * 0.26, -3.2, 3.2)),
       1 - Math.exp(-dt * 2.4),
     );
+    const F = camFrame();
     /* borrokan kamera hurbilago (itzalak eta erasoak irakurgarri) */
-    CAM.zoom = mix(CAM.zoom ?? 1, ARENA.state === "fight" ? 0.74 : 1, 1 - Math.exp(-dt * 2.5));
+    CAM.zoom = mix(CAM.zoom ?? 1, ARENA.state === "fight" ? F.fight : 1, 1 - Math.exp(-dt * 2.5));
     /* Orratzean: kamera baxuagoa eta gorantz begira (hurrengo harriak ikusteko) */
     CAM.asc = mix(CAM.asc ?? 0, ASC.inZone ? 1 : 0, 1 - Math.exp(-dt * 1.8));
     const look = new T.Vector3(P.x, P.y + 1 + CAM.asc * 2.6, P.z).add(CAM.look),
-      offset = new T.Vector3(mix(15.5, 13.5, CAM.asc), mix(18, 10, CAM.asc), mix(23, 22, CAM.asc)).multiplyScalar(CAM.zoom);
-    if (mobile && innerHeight > innerWidth) offset.multiplyScalar(1.04);
+      offset = new T.Vector3(mix(15.5, 13.5, CAM.asc), mix(F.h, 10, CAM.asc), mix(23, 22, CAM.asc)).multiplyScalar(CAM.zoom * F.k);
+    /* jokalaria pantailaren erdialdetik gora (behean botoiak daude): begirada kamerarantz lerratu */
+    if (F.lift) look.add(new T.Vector3(offset.x, 0, offset.z).normalize().multiplyScalar(F.lift * CAM_LEVELS[camLevel]));
     const target = look.clone().add(offset);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) CAM.pos = camera.position.clone();
     CAM.pos.lerp(target, 1 - Math.exp(-dt * 7));
@@ -3207,7 +3283,7 @@
       camera.position.z += Math.sin(q * 1.3 + 2) * sh * 0.9;
     }
     camera.lookAt(look);
-    const fov = CAM.baseFov + CAM.fovKick;
+    const fov = F.fov + CAM.fovKick;
     if (Math.abs(camera.fov - fov) > 0.02) {
       camera.fov = fov;
       camera.updateProjectionMatrix();
@@ -3437,6 +3513,15 @@
       SND.setMuted(muted);
     };
     $("quality").textContent = quality ? "HD" : "ECO";
+    $("camBtn").onclick = () => {
+      camLevel = (camLevel + 1) % 3;
+      try {
+        localStorage.setItem("oihartzun-cam", camLevel);
+      } catch {}
+      $("camBtn").textContent = "⤢" + (camLevel + 1);
+      notify(...[["KAMERA · HURBIL", "CÁMARA · CERCA"], ["KAMERA · ERTAINA", "CÁMARA · MEDIA"], ["KAMERA · URRUN", "CÁMARA · LEJOS"]][camLevel], 1.6);
+    };
+    $("camBtn").textContent = "⤢" + (camLevel + 1);
     $("quality").onclick = () => {
       quality = 1 - quality;
       renderer.setPixelRatio(Math.min(devicePixelRatio, quality ? 1.5 : 1));
@@ -4125,7 +4210,8 @@
       I = ISLANDS[c.i] || ISLANDS[Math.max(0, currentStage)];
     const look = new T.Vector3(sh[3], (sh[5] ?? I.y) + 1.4, sh[4]),
       a = c.n % 2 ? -0.35 : 0.3;
-    const pos = look.clone().add(new T.Vector3(12 * Math.cos(a + c.t * 0.035), 9, 17));
+    const pk = innerHeight > innerWidth ? 1.55 : 1,
+      pos = look.clone().add(new T.Vector3(12 * Math.cos(a + c.t * 0.035), 9, 17).multiplyScalar(pk));
     camera.position.lerp(pos, 1 - Math.exp(-dt * 2));
     camera.lookAt(look);
     if (mixer) mixer.update(dt);
@@ -4776,7 +4862,7 @@
     if (window.__EG_LANG === "es" || window.__EG_LANG === "eu") language = window.__EG_LANG;
     controls();
     translate();
-    const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "night"], 8000) : Promise.resolve();
+    const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "day"], 8000) : Promise.resolve();
     const names = Object.keys(ASSETS);
     let done = 0;
     await Promise.all(

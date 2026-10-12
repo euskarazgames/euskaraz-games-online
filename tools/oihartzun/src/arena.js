@@ -1,6 +1,7 @@
   /* ==================================================================
      KAIOLAK ETA ERRONKAK · uharte bakoitza Gauekoren kaiola da
-     · Ertzetik ezin da erori: horma ikusezina (irteteko norabidean soilik).
+     · Ertzetik ezin da erori: horma ikusezina (irteteko norabidean soilik); ukitzean
+       txinparta batzuk. Mundu irekiaren itxura: zutoinak borrokan bakarrik altxatzen dira.
      · Ateak zubien parean. Uhartearen erronka (borroka edo eraikuntza)
        gainditu arte, irteerak itxita daude; borrokan kaiola osoa altxatzen da.
      · Zubitik erortzean, azken lur seguruan berragertzen zara (bizitza bat).
@@ -90,13 +91,7 @@
     for (const C of CAGES) {
       C.ropes = [];
       C.curtains = [];
-      for (const arc of C.segs) {
-        const curve = new T.CatmullRomCurve3(arc.map((p) => p.clone().setY(C.y + C.h)));
-        const rope = new T.Mesh(new T.TubeGeometry(curve, Math.max(8, arc.length * 4), 0.035, 5, false), CAGE.ropeMat);
-        scene.add(rope);
-        C.ropes.push(rope);
-        C.curtains.push(curtainStrip(arc, C.y, 4.2));
-      }
+      for (const arc of C.segs) C.curtains.push(curtainStrip(arc, C.y, 4.2));
       for (const g of C.gates) {
         /* ate-zutabeak eta zigilua (irteera itxita dagoenean) */
         for (const s of [-1, 1]) {
@@ -116,7 +111,7 @@
     }
     cageVisual(0);
   }
-  const CAGE = { posts: null, caps: null, postPos: [], ropeMat: null, curtainMat: null };
+  const CAGE = { posts: null, caps: null, postPos: [], ropeMat: null, curtainMat: null, touchT: 0 };
   function curtainStrip(pts, y, h, own) {
     const pos = [],
       uv = [],
@@ -155,19 +150,16 @@
       const target = C.lock ? 1 : 0;
       C.lockT = clamp(C.lockT + (target ? dt * 2.4 : -dt * 1.6), 0, 1);
       const k = C.lockT * C.lockT * (3 - 2 * C.lockT);
-      C.h = mix(1.15, 4.4, k);
+      /* borrokan bakarrik: zutoinak lurretik altxatzen dira (bestela uhartea irekita ikusten da) */
+      C.h = 4.4 * k;
       curtainA = Math.max(curtainA, k);
-      for (const r of C.ropes) {
-        r.visible = k < 0.98;
-        r.position.y = (C.h - 1.15) * 0.5;
-      }
       for (const cu of C.curtains) cu.visible = k > 0.02;
       for (const id of C.posts) {
         const b = CAGE.postPos[id];
-        sc.set(1 + k * 0.4, C.h, 1 + k * 0.4);
+        sc.set(1 + k * 0.4, Math.max(0.001, C.h), 1 + k * 0.4);
         mt.compose(p.set(b.x, b.y, b.z), q, sc);
         CAGE.posts.setMatrixAt(id, mt);
-        sc.setScalar(1 + k * 0.5);
+        sc.setScalar(Math.max(0.001, k * 1.5));
         mt.compose(p.set(b.x, b.y + C.h + 0.08, b.z), q, sc);
         CAGE.caps.setMatrixAt(id, mt);
       }
@@ -199,6 +191,11 @@
       nx = C.x + Math.cos(a) * C.rx * C.k * 0.999;
       nz = C.z + Math.sin(a) * C.rz * C.k * 0.999;
       P.wallGrace = 0;
+      /* horma ikusezina: ukitzean txinparta batzuk (ez dago hesirik ikusgai) */
+      if (!C.lock && time - CAGE.touchT > 0.14) {
+        CAGE.touchT = time;
+        fxBurst(nx + Math.cos(a) * 0.35, py + 0.4 + Math.random() * 0.9, nz + Math.sin(a) * 0.35, { n: 3, speed: 0.8, up: 1.4, life: 0.55, size: 0.24, color: eraCol(), grav: -1, drag: 2 });
+      }
     }
     return [nx, nz];
   }
