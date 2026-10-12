@@ -18,6 +18,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
 
 ## Konbentzioak
 - Interfazeko testuak euskaraz. Commit mezuak ere euskaraz (historiaren estiloan).
+- Dena euskara hutsean: ez dago hizkuntza-hautatzailerik. Atariak beti `__EG_LANG="eu"` pasatzen du eta
+  jokoek ez dute gaztelaniarik edo ingelesik erakusten (OIHARTZUN-en `L(eu, es)` euskarazkoa da beti).
 - Diseinua: `DESIGN.md` (koloreak, tipografia, osagaiak, EGFX arauak).
 - Grafikoak hobetzeko: `.claude/skills/euskaraz-gfx/SKILL.md` (lan-fluxua eta egiaztapena).
 - Jokoen RNG-a ez ukitu (mailak hazi finkoarekin sortzen dira).
