@@ -6,11 +6,9 @@
     mix = (a, b, t) => a + (b - a) * t,
     dist = (a, b) => Math.hypot(a.x - b.x, a.z - b.z),
     mobile = matchMedia("(pointer:coarse)").matches;
-  let language = "eu";
-  try {
-    language = localStorage.getItem("oihartzun-language") || "eu";
-  } catch {}
-  const L = (a, b) => (language === "eu" ? a : b);
+  /* euskara hutsean: L(eu, es) beti euskarazko testua da (gaztelaniazkoak iturburuan bakarrik geratzen dira) */
+  const language = "eu";
+  const L = (eu) => eu;
   /* teklatuaren letrak: mugikorrean ez dute zentzurik */
   const kb = (s) => (mobile ? "" : s);
   let saved = { stage: 0, memories: [], ending: null, deaths: 0, assist: false, cleared: [], boons: [] };
@@ -120,7 +118,7 @@
       rz: 12,
       name: ["Uraren Memoria", "La Memoria del Agua"],
       hint: [
-        "Jauzi bikoitza eta DASH. Ehundu: hurrengo zubia bi garaietan sendoa.",
+        "Jauzi bikoitza eta BULTZADA. Ehundu: hurrengo zubia bi garaietan sendoa.",
         "Salta dos veces y usa DASH. Tejer vuelve sólido el próximo puente en ambas épocas.",
       ],
     },
@@ -132,7 +130,7 @@
       rz: 12,
       name: ["Lo Dagoen Artxiboa", "El Archivo Dormido"],
       hint: [
-        "Airean garaia aldatzean, DASH behin berreskuratzen da.",
+        "Airean garaia aldatzean, BULTZADA behin berreskuratzen da.",
         "Cambiar de época en el aire recupera el DASH una vez por salto.",
       ],
     },
@@ -156,7 +154,7 @@
       rz: 12,
       name: ["Itzultzen Ez Den Ahotsa", "La Voz que No Vuelve"],
       hint: [
-        "Dorrearen kanpaia entzuten da. Lotu jauzia, DASH eta garaia.",
+        "Dorrearen kanpaia entzuten da. Lotu jauzia, BULTZADA eta garaia.",
         "Ya se oye la campana de la torre. Encadena salto, DASH y cambio de época.",
       ],
     },
@@ -168,7 +166,7 @@
       rz: 19,
       name: ["Gauekoren Erlojua", "El Reloj de Gaueko"],
       hint: [
-        "Uhina: beste garaira aldatu. Nukleoa irekita: SORGINKERIA edo DASH.",
+        "Uhina: beste garaira aldatu. Nukleoa irekita: SORGINKERIA edo BULTZADA.",
         "Onda: cambia a la otra época. Núcleo abierto: HECHIZO o DASH.",
       ],
     },
@@ -508,7 +506,7 @@
 
   /* ==================================================================
      JOKO-SENTSAZIOA · partikulak, kamera, squash & stretch, hit-stop
-     Gertaera bakoitzak (jauzi, lurreratzea, DASH, garai-aldaketa…) FB.*
+     Gertaera bakoitzak (jauzi, lurreratzea, bultzada, garai-aldaketa…) FB.*
      deitzen du; hemen ikusmena eta soinua batzen dira.
      ================================================================== */
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -663,7 +661,7 @@
       FX.col[i * 3 + 2] = c.b;
     }
   }
-  /* Uhin-eraztuna (garai-aldaketa, DASH bikoitza…) */
+  /* Uhin-eraztuna (garai-aldaketa, bultzada bikoitza…) */
   function fxRing(x, y, z, color, maxR = 6, dur = 0.55) {
     let r = FX.rings.find((r) => r.t >= r.dur);
     if (!r) {
@@ -1406,11 +1404,11 @@
       (fight &&
         COACH.seen.has("charge") &&
         ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 3.2) &&
-        coach("spin", "F+J", "DASH eta SORGINKERIA: biraka-kolpea", "DASH y HECHIZO: golpe giratorio", "dashBtn", "DASH eta SORGINKERIA: biraka-kolpea", "DASH y HECHIZO: golpe giratorio")) ||
+        coach("spin", "F+J", "BULTZADA eta SORGINKERIA: biraka-kolpea", "DASH y HECHIZO: golpe giratorio", "dashBtn", "BULTZADA eta SORGINKERIA: biraka-kolpea", "DASH y HECHIZO: golpe giratorio")) ||
       (fight &&
         COACH.seen.has("attack") &&
         ENEMIES.some((e) => e.state === "wind" && Math.hypot(e.x - P.x, e.z - P.z) < 4) &&
-        coach("dodge", "F", "DASH bitartean ukiezina zara: saihestu erasoa!", "Durante el DASH eres invulnerable: ¡esquiva!", "dashBtn", "DASH bitartean ukiezina zara: saihestu erasoa!", "Durante el DASH eres invulnerable: ¡esquiva!")) ||
+        coach("dodge", "F", "BULTZADA bitartean ukiezina zara: saihestu erasoa!", "Durante el DASH eres invulnerable: ¡esquiva!", "dashBtn", "BULTZADA bitartean ukiezina zara: saihestu erasoa!", "Durante el DASH eres invulnerable: ¡esquiva!")) ||
       (!fight && zoneHere() && !isCleared(currentStage) && !CRAFT.on &&
         coach("craft", "G", "ESKU MAGIKOA: egin klik kaxa batean eta arrastatu", "MANO MÁGICA: haz clic en una caja y arrástrala", "useBtn", "ESKUA: ukitu kaxa bat eta arrastatu", "MANO: toca una caja y arrástrala")) ||
       (st === 0 && P.travel < 4 && coach("move", "WASD", "Mugitu: WASD edo geziak · Shift: korrika", "Muévete: WASD o flechas · Shift: correr", "stick", "Mugitu: arrastatu makila · ertzeraino, korrika", "Muévete: arrastra la palanca · hasta el borde, corres")) ||
@@ -1420,10 +1418,10 @@
         coach("power", "", "", "", "useBtn", "Botere-botoia: une bakoitzean behar duzun boterea agertzen da", "Botón de poder: aparece el poder que necesitas en cada momento")) ||
       (st === 0 && !fight && phase === 1 && Math.hypot(P.x, P.z - 0.5) < 9 && coach("shift", "Q", "Zubia iraganean dago · ALDATU GARAIA", "El puente existe en el pasado · CAMBIA DE ÉPOCA", "phaseBtn", "Zubia iraganean dago · sakatu ALDATU", "El puente existe en el pasado · pulsa CAMBIAR")) ||
       (st === 0 && phase === 0 && P.z < -6 && P.z > -14 && coach("jump", "␣ ×2", "JAUZI · airean berriro sakatu: jauzi bikoitza", "SALTA · pulsa otra vez en el aire: doble salto", "jumpBtn")) ||
-      (st === 1 && isCleared(1) && P.x > 3 && P.z < -26 && coach("dash", "F", "DASH · bultzada luzea, lurrean edo airean", "DASH · impulso largo, en el suelo o en el aire", "dashBtn")) ||
+      (st === 1 && isCleared(1) && P.x > 3 && P.z < -26 && coach("dash", "F", "BULTZADA · aurrera ziztu bizian, lurrean edo airean", "DASH · impulso largo, en el suelo o en el aire", "dashBtn")) ||
       (st === 1 && isCleared(1) && Math.hypot(P.x - 12, P.z + 37) < 11 && magic.weaveCooldown <= 0 &&
         coach("weave", "C", "EHUNDU · zubia bi garaietan sendo, 12 segundoz", "TEJER · el puente sólido en ambas épocas, 12 s", "useBtn", "Sakatu EHUNDU: zubia bi garaietan sendo, 12 s", "Pulsa TEJER: el puente sólido en ambas épocas, 12 s")) ||
-      (st === 2 && !fight && !P.grounded && P.vy < 2 && coach("airshift", "Q", "Airean garaia aldatu: DASH berri bat", "Cambia de época en el aire: un DASH nuevo", "phaseBtn", "Airean ALDATU: DASH berri bat", "CAMBIAR en el aire: un DASH nuevo")) ||
+      (st === 2 && !fight && !P.grounded && P.vy < 2 && coach("airshift", "Q", "Airean garaia aldatu: BULTZADA berri bat", "Cambia de época en el aire: un DASH nuevo", "phaseBtn", "Airean ALDATU: BULTZADA berri bat", "CAMBIAR en el aire: un DASH nuevo")) ||
       (st === 3 && isCleared(3) && Math.hypot(P.x + 9, P.z + 108) < 10 && coach("beam", "Q", "Argi gorriak iraganean bakarrik egiten du min", "La luz roja solo daña en el pasado", "phaseBtn"));
   }
 
@@ -2879,7 +2877,7 @@
         P.vz = mix(P.vz, d.z * speed, t);
       }
       P.vy -= 25 * dt;
-      /* Orratzeko haize-korrontea: gora eraman eta jauzi bikoitza/DASH berritu */
+      /* Orratzeko haize-korrontea: gora eraman eta jauzi bikoitza/bultzada berritu */
       const lift = ascLift(P.x, P.z, P.y);
       if (lift > 0) {
         P.vy = Math.min(P.vy + lift * dt, 9);
@@ -3018,7 +3016,7 @@
         "IRATI: «Cuando me veas, no me sigas.»\nPuedes tejer el puente entre las dos épocas.",
       ],
       [
-        "Liburuan zure izena dago. Duela ehun urte idatzita.\nAirean garaia aldatzeak DASH berreskuratzen du.",
+        "Liburuan zure izena dago. Duela ehun urte idatzita.\nAirean garaia aldatzeak BULTZADA berreskuratzen du.",
         "Tu nombre está en el libro. Escrito hace cien años.\nCambiar de época en el aire recupera DASH.",
       ],
       [
@@ -3104,7 +3102,7 @@
         boss.pips = 3;
         for (const w of boss.waves) w.visible = false;
         boss.core.material = material("#fff1b3", 1.8);
-        notify("ORAIN! SORGINKERIA edo DASH nukleora.", "¡AHORA! HECHIZO o DASH al núcleo.", 2.5);
+        notify("ORAIN! SORGINKERIA edo BULTZADA nukleora.", "¡AHORA! HECHIZO o DASH al núcleo.", 2.5);
       }
     } else if (boss.state === "open") {
       if (dist(P, bpos) < 3.4 && P.dashT > 0 && boss.hitLock <= 0) bossStrike();
@@ -3142,7 +3140,7 @@
     }
     SND.shot();
   }
-  /* nukleoa jo (DASH edo makila-kolpea) */
+  /* nukleoa jo (bultzada edo makila-kolpea) */
   function bossStrike() {
     boss.hits++;
     boss.hitLock = 1;
@@ -3410,7 +3408,7 @@
       "OIHARTZUN",
       "Bi garaien artean.",
       "Entre dos épocas.",
-      "Uharte bakoitza Gauekoren kaiola da: ezin zara erori, eta irteera erronka gainditzean irekitzen da. Uharteak txandaka: BORROKA eta ERAIKUNTZA.\n\nMUGITU: WASD edo makila (ertzeraino: korrika). JAUZI: Espazioa, bi aldiz airean. DASH (F): bultzada; bitartean ukiezina zara.\n\nSORGINKERIA: J, saguaren klika edo SORGINKERIA botoia. Izpiak bakarrik bilatzen du helburua (18 m); segidako hirugarrenak hiru izpi jaurtitzen ditu. Mantendu: INDARRA kargatu; askatu: izpi handia eta eztanda. DASH bitartean sakatu: biraka-kolpea. Izpiek itzalen proiektilak suntsitzen dituzte eta errunak pizten.\n\nGAUEKOREN ORRATZA: harriz harri igo. Kristal berdeek DASH berritzen dute, haizeak gora darama, harri arreak erori egiten dira eta kanpaiek zure azken urratsa gogoratzen dute (erortzean ez duzu bizitzarik galtzen). Airean, jauzia mantenduz gero, gorago iristen zara.\n\nGARAIA (Q): URREA iragana da, URDINA oraina. Zubi bakoitza bere garaian bakarrik da sendoa. Itzalek begien koloreko garaian bakarrik hartzen dute kalte: beste garaian ezkutua dute. Garaia aldatzean, inguruko itzalak bultzatzen dituzu.\n\nESKU MAGIKOA (G edo ESKU): ukitu kaxa bat eta arrastatu; ukitu laburrak biratu egiten du. Kaxa bat beste baten gainean utziz gero, pilatu egiten dira; ondoan utziz gero, itsatsi. Errunara iristeko eskailerak eraiki.\n\nZubitik erortzean, azken lur seguruan berragertzen zara (bizitza bat). EHUNDU (C), ATZERA (V), IGO (X) eta GELDITU (Z): botereen menuan (H).",
+      "Uharte bakoitza Gauekoren kaiola da: ezin zara erori, eta irteera erronka gainditzean irekitzen da. Uharteak txandaka: BORROKA eta ERAIKUNTZA.\n\nMUGITU: WASD edo makila (ertzeraino: korrika). JAUZI: Espazioa, bi aldiz airean. BULTZADA (F): aurrera ziztu bizian; bitartean ukiezina zara.\n\nSORGINKERIA: J, saguaren klika edo SORGINKERIA botoia. Izpiak bakarrik bilatzen du helburua (18 m); segidako hirugarrenak hiru izpi jaurtitzen ditu. Mantendu: INDARRA kargatu; askatu: izpi handia eta eztanda. BULTZADA bitartean sakatu: biraka-kolpea. Izpiek itzalen proiektilak suntsitzen dituzte eta errunak pizten.\n\nGAUEKOREN ORRATZA: harriz harri igo. Kristal berdeek BULTZADA berritzen dute, haizeak gora darama, harri arreak erori egiten dira eta kanpaiek zure azken urratsa gogoratzen dute (erortzean ez duzu bizitzarik galtzen). Airean, jauzia mantenduz gero, gorago iristen zara.\n\nGARAIA (Q): URREA iragana da, URDINA oraina. Zubi bakoitza bere garaian bakarrik da sendoa. Itzalek begien koloreko garaian bakarrik hartzen dute kalte: beste garaian ezkutua dute. Garaia aldatzean, inguruko itzalak bultzatzen dituzu.\n\nESKU MAGIKOA (G edo ESKUA botoia): ukitu kaxa bat eta arrastatu; ukitu laburrak biratu egiten du. Kaxa bat beste baten gainean utziz gero, pilatu egiten dira; ondoan utziz gero, itsatsi. Errunara iristeko eskailerak eraiki.\n\nZubitik erortzean, azken lur seguruan berragertzen zara (bizitza bat). EHUNDU (C), ATZERA (V), IGO (X) eta GELDITU (Z): botereen menuan (H).",
       "Cada isla es una jaula de Gaueko: no puedes caerte, y la salida se abre al superar su reto. Las islas se alternan: COMBATE y CONSTRUCCIÓN.\n\nMOVER: WASD o palanca (al máximo: correr). SALTAR: Espacio, dos veces en el aire. DASH (F): impulso; durante el DASH eres invulnerable.\n\nHECHIZO: J, clic o el botón HECHIZO. El rayo busca solo a su objetivo (18 m); el tercero seguido lanza tres rayos. Mantén: carga INDARRA; suelta: rayo grande con explosión. Pulsa durante el DASH: golpe giratorio. Los rayos destruyen los proyectiles de las sombras y encienden runas.\n\nLA AGUJA DE GAUEKO: sube de piedra en piedra. Los cristales verdes renuevan el DASH, el viento te eleva, las piedras marrones se derrumban y las campanas recuerdan tu último paso (al caer no pierdes vida). En el aire, mantener el salto te lleva más alto.\n\nÉPOCA (Q): el ORO es el pasado, el AZUL el presente. Cada puente solo es sólido en su época. Las sombras solo reciben daño en la época del color de sus ojos: en la otra tienen escudo. Al cambiar de época empujas a las sombras cercanas.\n\nMANO MÁGICA (G o MANO): toca una caja y arrástrala; un toque corto la gira. Si la sueltas sobre otra, se apilan; si la dejas al lado, se unen. Construye escaleras para llegar a la runa.\n\nSi caes de un puente, reapareces en el último suelo seguro (pierdes una vida). TEJER (C), RETORNO (V), ASCENDER (X) y ESTASIS (Z): en el menú de poderes (H).",
     );
   }
@@ -3427,11 +3425,11 @@
         [L("JARRAITU", "CONTINUAR"), () => {}],
         [L("KONTROLAK", "CONTROLES"), help],
         [
-          L("LAGUNTZA: ", "AYUDA: ") + (saved.assist ? "ON" : "OFF"),
+          L("LAGUNTZA: ", "AYUDA: ") + (saved.assist ? "BAI" : "EZ"),
           () => {
             saved.assist = !saved.assist;
             persist();
-            notify("Laguntza: denbora motelago eta DASH luzeago.", "Ayuda: tiempo más lento y DASH más largo.", 4);
+            notify("Laguntza: denbora motelago eta BULTZADA luzeago.", "Ayuda: tiempo más lento y DASH más largo.", 4);
           },
         ],
         [L("AZKEN UHARTERA", "ÚLTIMA ISLA"), returnCheckpoint],
@@ -3451,7 +3449,6 @@
   }
   function translate() {
     document.documentElement.lang = language;
-    $("lang").textContent = language === "eu" ? "ES" : "EU";
     $("premise").textContent = L(
       "Uharte bakoitzak bi bizitza ditu.\nBatek bidea ezkutatzen du. Besteak, egia.\nZu Amaiur zara, sorgina. Irratiak zure izena daki.",
       "Cada isla tiene dos vidas.\nUna esconde el camino. La otra, la verdad.\nEres Amaiur, la bruja. La radio sabe tu nombre.",
@@ -3475,14 +3472,10 @@
     $("cineSkip").textContent = L("SALTATU →", "OMITIR →");
     $("cineNext").textContent = L("JARRAITU →", "SIGUIENTE →");
     $("heartLab").textContent = L("ARNASA", "ALIENTO");
-    $("dashLab").textContent = L("IMPULTSUA", "IMPULSO");
+    $("dashLab").textContent = L("BULTZADA", "IMPULSO");
     $("secretLab").textContent = L("OROITZAPENAK", "RECUERDOS");
     $("echoLab").textContent = L("OIHARTZUNAK", "ECOS");
-    $("keys").innerHTML = (
-      language === "eu"
-        ? [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria (mantendu: INDARRA)"], ["F", "DASH"], ["Q", "garaia"], ["E", "ekin"], ["G", "esku magikoa"], ["R", "biratu"], ["H", "botereak"]]
-        : [["WASD", "mover"], ["Shift", "correr"], ["␣ ×2", "salto"], ["J / clic", "hechizo (mantén: INDARRA)"], ["F", "DASH"], ["Q", "época"], ["E", "actuar"], ["G", "mano mágica"], ["R", "girar"], ["H", "poderes"]]
-    )
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria (mantendu: INDARRA)"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["G", "esku magikoa"], ["R", "biratu"], ["H", "botereak"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
     if (ready) {
@@ -3587,20 +3580,13 @@
     $("play").onclick = start;
     $("helpBtn").onclick = help;
     $("pause").onclick = pause;
-    $("lang").onclick = () => {
-      language = language === "eu" ? "es" : "eu";
-      try {
-        localStorage.setItem("oihartzun-language", language);
-      } catch {}
-      translate();
-    };
     $("audio").onclick = () => {
       muted = !muted;
       $("audio").textContent = muted ? "♪ ×" : "♫";
       if (!muted) audioStart();
       SND.setMuted(muted);
     };
-    $("quality").textContent = quality ? "HD" : "ECO";
+    $("quality").textContent = quality ? "HD" : "ARIN";
     /* ⤢: distantzia aurrezarriak (hurbil · ertaina · urrun) eta kamera zentratu */
     $("camBtn").onclick = () => {
       camLevel = (camLevel + 1) % 3;
@@ -3618,7 +3604,7 @@
         sun.shadow.map.dispose();
         sun.shadow.map = null;
       }
-      $("quality").textContent = quality ? "HD" : "ECO";
+      $("quality").textContent = quality ? "HD" : "ARIN";
     };
     $("reset").onclick = () =>
       dialog(
@@ -3791,7 +3777,7 @@
     if (respawnTimer > 0) {
       respawnTimer -= dt;
       if (respawnTimer <= 0) {
-        /* zero zehatza: balio negatibo txiki batek "egia" emango luke eta DASH, garaia… blokeatuko lituzke */
+        /* zero zehatza: balio negatibo txiki batek "egia" emango luke eta bultzada, garaia… blokeatuko lituzke */
         respawnTimer = 0;
         hardFall ? returnCheckpoint() : softRespawn();
       }
@@ -3936,12 +3922,12 @@
     if (saved.stage === 5)
       return saved.bossDone
         ? L("Hurbildu erlojura. EKIN: azken erabakia.", "Acércate al reloj. ACTUAR: decisión final.")
-        : L("Uhina: ALDATU garaia. Nukleo zuria: SORGINKERIA edo DASH.", "Onda: CAMBIAR época. Núcleo blanco: HECHIZO o DASH.");
+        : L("Uhina: ALDATU garaia. Nukleo zuria: SORGINKERIA edo BULTZADA.", "Onda: CAMBIAR época. Núcleo blanco: HECHIZO o DASH.");
     const p = targetPoint(),
       d = Math.round(Math.hypot(P.x - p[0], P.z - p[1]));
     if (ASC.inZone)
       return L(
-        "ORRATZA · igo hodeietaraino. Kristal berdeek DASH berritzen dute; haizeak gora darama; erruna: SORGINKERIA.",
+        "ORRATZA · igo hodeietaraino. Kristal berdeek BULTZADA berritzen dute; haizeak gora darama; erruna: SORGINKERIA.",
         "LA AGUJA · sube hasta las nubes. Los cristales verdes renuevan el DASH; el viento te eleva; la runa: HECHIZO.",
       );
     if (routeStep === 0)
@@ -3966,8 +3952,8 @@
       );
     return (
       (mobile
-        ? L("Korrika (makila ertzera) + JAUZI ×2 + DASH. Botere-botoia behar denean agertzen da.", "Corre (palanca al máximo) + SALTAR ×2 + DASH. El botón de poder aparece cuando hace falta.")
-        : L("Korrika (makila ertzera / Shift) + JAUZI ×2 + DASH. G / BOTEREAK: eraiki.", "Corre (palanca al máximo / Shift) + SALTAR ×2 + DASH. G / PODERES: construir.")) +
+        ? L("Korrika (makila ertzera) + JAUZI ×2 + BULTZADA. Botere-botoia behar denean agertzen da.", "Corre (palanca al máximo) + SALTAR ×2 + DASH. El botón de poder aparece cuando hace falta.")
+        : L("Korrika (makila ertzera / Shift) + JAUZI ×2 + BULTZADA. G / BOTEREAK: eraiki.", "Corre (palanca al máximo / Shift) + SALTAR ×2 + DASH. G / PODERES: construir.")) +
       " · " +
       d +
       " m"
@@ -4158,7 +4144,7 @@
       ],
       [
         "IRATI · 140.85",
-        "Ez entzun. Aldatu garaia airean: beste DASH bat izango duzu. Elizara iritsi behar dugu.",
+        "Ez entzun. Aldatu garaia airean: beste BULTZADA bat izango duzu. Elizara iritsi behar dugu.",
         "No escuches. Cambia de época en el aire: tendrás otro DASH. Tenemos que llegar a la iglesia.",
         11,
         -79,
@@ -4216,7 +4202,7 @@
       ["GAUEKO · 000.00", "Jo nire nukleoa lau aldiz, eta zeuk kenduko didazu.", "Golpea mi núcleo cuatro veces y me la quitarás tú misma.", 0, -179],
       [
         "IRATI · 140.85",
-        "Uhina datorrenean, ALDATU garaia. Nukleoa zuri dagoenean: SORGINKERIA edo DASH. Zurekin nago.",
+        "Uhina datorrenean, ALDATU garaia. Nukleoa zuri dagoenean: SORGINKERIA edo BULTZADA. Zurekin nago.",
         "Cuando venga la onda, CAMBIA de época. Cuando el núcleo esté blanco: HECHIZO o DASH. Estoy contigo.",
         0,
         -179,
@@ -4987,7 +4973,6 @@
   async function boot() {
     /* atariaren barruan (iframe): goiko erdiko "itzuli" botoiari lekua utzi */
     if (window.__EG_GAME) document.body.classList.add("eg-embed");
-    if (window.__EG_LANG === "es" || window.__EG_LANG === "eu") language = window.__EG_LANG;
     controls();
     translate();
     const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "day"], 8000) : Promise.resolve();

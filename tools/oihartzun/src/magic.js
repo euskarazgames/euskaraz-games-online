@@ -4,7 +4,7 @@
        hirugarrenak hiru izpi jaurtitzen ditu, haizatuta.
      · Mantendu: INDARRA kargatu; askatu: izpi handia, zeharkatzailea,
        eztanda batekin.
-     · DASH bitartean sakatu: biraka-kolpea (inguruko denak bultzatu).
+     · bultzada bitartean sakatu: biraka-kolpea (inguruko denak bultzatu).
      · Izpiek itzalen proiektilak suntsitzen dituzte eta errunak pizten.
      ================================================================== */
   const BOLTS = [],
@@ -317,7 +317,7 @@
     haptic(full ? 30 : 16);
     coachDone("charge");
   }
-  /* --------------------------- biraka-kolpea (DASH + sorginkeria) --------------------------- */
+  /* --------------------------- biraka-kolpea (bultzada + sorginkeria) --------------------------- */
   function spinStrike() {
     if (MAG.spinT < 0.42) return;
     MAG.spinT = 0;

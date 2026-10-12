@@ -202,12 +202,12 @@ const EG_NAMES={pilota:"HERRI PILOTA",zesta:"ZESTA PUNTA",artzain:"ARTZAIN TXAKU
 function egInviteUrl(game,room,lang){
  const u=new URL(location.href);u.search='';u.hash='';
  u.searchParams.set('game',game);u.searchParams.set('room',room);
- if(lang)u.searchParams.set('lang',lang);
  return u.toString();
 }
 window.egInviteUrl=egInviteUrl;
 
-/* Jokoak public/games/<key>.html fitxategietan daude eta behar direnean bakarrik kargatzen dira. */
+/* Jokoak public/games/<key>.html fitxategietan daude eta behar direnean bakarrik kargatzen dira.
+   Atari osoa euskaraz dago: jokoek beti euskara jasotzen dute (__EG_LANG="eu"). */
 const egGameCache={};
 function egFetchGame(key){
  if(!egGameCache[key]){
@@ -221,7 +221,7 @@ function egGameHtml(html,key,room,lang){
  const boot='<scr'+'ipt>'
   +'window.__EG_GAME='+JSON.stringify(key)+';'
   +'window.__EG_ROOM='+JSON.stringify('')+';'
-  +'window.__EG_LANG='+JSON.stringify(lang||'')+';'
+  +'window.__EG_LANG="eu";'
   +'</scr'+'ipt>';
  return html.replace(/<head([^>]*)>/i,m=>m+boot);
 }
@@ -271,8 +271,8 @@ const splash=document.getElementById('splash');
 const hide=()=>{splash.classList.add('hide');document.body.classList.add('ready');};
 splash.onclick=hide;
 const __egQ=new URLSearchParams(location.search);
-const __egGame=__egQ.get('game'),__egLang=__egQ.get('lang')||'';
+const __egGame=__egQ.get('game');
 if(EG_GAMES.includes(__egGame)){
- hide();setTimeout(()=>launch(__egGame,'',__egLang),120);
+ hide();setTimeout(()=>launch(__egGame,''),120);
 }else setTimeout(hide,1250);
 </script></body></html>

@@ -329,7 +329,7 @@
     e.vx *= 0.3;
     e.vz *= 0.3;
     enAnim(e, "Death_C_Skeletons", 1.7, true, 0.08);
-    /* hiltzeak DASH berritzen du (erasoa saritu: mugimendu bizia) */
+    /* hiltzeak bultzada berritzen du (erasoa saritu: mugimendu bizia) */
     P.dashReady = true;
     P.dashes = Math.max(P.dashes, 1);
     if (e.shine) e.shine.visible = false;
@@ -710,7 +710,7 @@
       }
     }
   }
-  /* jokalaria zauritua (DASH bitartean ukiezina) */
+  /* jokalaria zauritua (bultzada bitartean ukiezina) */
   function playerHit(dmg, fx, fz) {
     if (damageTime > 0 || respawnTimer || P.dashT > 0 || MAG.spinT < 0.3 || ENDING.on) return;
     P.hp -= dmg;
@@ -769,7 +769,7 @@
     ["heart", "ARNASA SAKONA", "ALIENTO PROFUNDO", "+1 bizitza gehienez.", "+1 de vida máxima."],
     ["sharp", "MAKILA ZORROTZA", "VARA AFILADA", "Izpi hirukoitzek eta INDARRAk +1 kalte egiten dute.", "Los rayos triples y la INDARRA hacen +1 de daño."],
     ["wave", "GARAI-UHIN HANDIA", "GRAN ONDA DE ÉPOCA", "Garaia aldatzean uhin zabalagoa eta indartsuagoa.", "Al cambiar de época, la onda es más amplia y fuerte."],
-    ["dash", "AIRE-DASH BIKOITZA", "DOBLE DASH AÉREO", "Bi DASH airean, lurrera jaitsi gabe.", "Dos DASH en el aire sin tocar el suelo."],
+    ["dash", "AIREKO BULTZADA BIKOITZA", "DOBLE DASH AÉREO", "Bi BULTZADA airean, lurrera jaitsi gabe.", "Dos DASH en el aire sin tocar el suelo."],
   ];
   function offerBoon(i) {
     if (!started || ENDING.on) return;

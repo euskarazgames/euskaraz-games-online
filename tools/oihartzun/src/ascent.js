@@ -2,7 +2,7 @@
      ORRATZA · Gauekoren erlojurako igoera (Celeste-ren estiloan)
      Laugarren uhartetik (y 11) erlojuraino (y 42), hodeien gainera.
      · Basaltozko harri hegalariak, garai bakoitzeko kristal-harriak,
-       DASH kristal berdeak, harri erorkorrak eta haize-korronte bat.
+       bultzada-kristal berdeak, harri erorkorrak eta haize-korronte bat.
      · Errun bat: sorginkeriaz jo, eta espiritu-harriak agertzen dira
        hamar segundoz.
      · Hiru kanpai (gordetze-puntuak): erortzean azken kanpaian
