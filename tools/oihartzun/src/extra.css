@@ -104,3 +104,18 @@ body.crafting #touchActions #rotateBtn{right:150px;bottom:126px;width:60px;heigh
 #touchActions #attackBtn{white-space:pre-line;line-height:1.15;font-size:11px}
 @media(pointer:coarse){#katea{top:76px;font-size:22px}#ascHud{top:128px;right:18px;font-size:16px}}
 @media(pointer:coarse) and (orientation:portrait){#ascHud{top:150px;left:20px;right:auto;text-align:left}}
+/* Botere-botoia (testuingurukoa): kolorea boterearen arabera; ⋯ menu osoa; ESKUA/IGO botoi finkorik ez */
+#touchActions #craftBtn,#touchActions #recallBtn{display:none!important}
+#touchActions #useBtn{right:158px;bottom:80px;width:62px;height:62px;font:900 10px/1.05 system-ui;letter-spacing:.03em;background:#2c4a86e6;border:2px solid #b8cdff;color:#eef3ff;animation:ctxGlow 1.6s ease-in-out infinite}
+#touchActions #useBtn[data-kind=green]{background:#245b45ee;border-color:#9dffc4;color:#dfffee}
+#touchActions #useBtn[data-kind=violet]{background:#4b2f7aee;border-color:#d5b8ff;color:#f3e9ff}
+#touchActions #useBtn[data-kind=cyan]{background:#1f5f6eee;border-color:#9ff3ff;color:#e6fbff}
+#touchActions #useBtn[data-kind=gold]{background:#7a5a22ee;border-color:#ffe2a3;color:#fff6e0}
+#touchActions #useBtn.pop{animation:ctxPop .3s ease-out,ctxGlow 1.6s ease-in-out .3s infinite}
+@keyframes ctxPop{0%{transform:scale(.7);opacity:.55}100%{transform:scale(1);opacity:1}}
+@keyframes ctxGlow{50%{box-shadow:0 0 18px currentColor}}
+#touchActions #weaveBtn{right:170px;bottom:156px;width:40px;height:40px;font:900 18px/1 system-ui;letter-spacing:0;opacity:.85}
+body.crafting #touchActions #useBtn{display:grid!important}
+body.crafting #touchActions #rotateBtn{right:14px;bottom:170px;width:60px;height:60px}
+@media(max-width:600px){#touchActions #useBtn{right:150px;bottom:76px;width:58px;height:58px}#touchActions #weaveBtn{right:160px;bottom:146px;width:38px;height:38px}}
+@media(max-height:520px){#touchActions #useBtn{right:146px;bottom:64px;width:54px;height:54px}#touchActions #weaveBtn{right:150px;bottom:124px;width:34px;height:34px;font-size:16px}body.crafting #touchActions #rotateBtn{right:12px;bottom:144px;width:52px;height:52px}}

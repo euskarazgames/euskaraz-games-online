@@ -518,14 +518,84 @@
      estua da: kamera askoz urrunago, FOV zabalagoa eta jokalaria ukipen-botoien gainetik. */
   const CAM_LEVELS = [0.8, 1, 1.3];
   let camLevel = 1;
+  /* erabiltzailearen kamera: hatz eskuinaz biratu (yaw) eta hurbildu/urrundu (user) */
+  CAM.yaw = 0;
+  CAM.yawS = 0; /* leundua: kamerak eta kontrolek hau erabiltzen dute */
+  CAM.user = 1;
   try {
     const v = localStorage.getItem("oihartzun-cam");
-    if (v !== null) camLevel = clamp(Math.round(+v), 0, 2) || 0;
+    if (v !== null) {
+      const f = +v;
+      /* lehengo formatua: 0/1/2 mailak */
+      if (Number.isInteger(f) && f >= 0 && f <= 2) camLevel = f;
+      CAM.user = Number.isInteger(f) && f >= 0 && f <= 2 ? CAM_LEVELS[f] : clamp(f || 1, 0.55, 1.8);
+    }
   } catch {}
+  function camSave() {
+    try {
+      localStorage.setItem("oihartzun-cam", CAM.user.toFixed(3));
+    } catch {}
+  }
+  function camZoom(f) {
+    CAM.user = clamp(CAM.user * f, 0.55, 1.8);
+    camSave();
+  }
+  function camReset() {
+    /* biraketa osoen multiplo hurbilena: bide laburrena */
+    CAM.yaw = Math.round(CAM.yawS / TAU) * TAU;
+    notify("Kamera zentratuta", "Cámara centrada", 1.2);
+  }
+  /* keinuak pantailan (ez botoietan): hatz batek biratu (ezker-eskuin) eta hurbildu (gora-behera);
+     bi hatzek atximurka hurbildu; bi ukitu azkar: zentratu. Saguan: eskuineko botoia + gurpila. */
+  const CAMG = { ptrs: new Map(), pinch: 0, lastTap: 0 };
+  /* gertaeraren berezko denbora (ez kudeatzailearena): fotograma motelekin ere ukitu azkarrak ondo */
+  const evTime = (e) => (e.timeStamp > 0 ? e.timeStamp : performance.now());
+  function camGestureDown(e) {
+    if (CRAFT.on) return; /* eraikitzean, ukitzeak piezentzat */
+    const now = evTime(e);
+    CAMG.ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t: now });
+    if (CAMG.ptrs.size === 2) {
+      const [a, b] = [...CAMG.ptrs.values()];
+      CAMG.pinch = Math.hypot(a.x - b.x, a.y - b.y);
+    }
+  }
+  function camGestureMove(e) {
+    const q = CAMG.ptrs.get(e.pointerId);
+    if (!q) return false;
+    const dx = e.clientX - q.x,
+      dy = e.clientY - q.y;
+    q.x = e.clientX;
+    q.y = e.clientY;
+    if (CAMG.ptrs.size >= 2) {
+      const [a, b] = [...CAMG.ptrs.values()],
+        d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (CAMG.pinch > 0 && d > 0) camZoom(CAMG.pinch / d);
+      CAMG.pinch = d;
+    } else {
+      CAM.yaw -= dx * 0.0085;
+      if (Math.abs(dy) > Math.abs(dx) * 0.6) camZoom(Math.exp(dy * 0.0045));
+    }
+    if (Math.hypot(e.clientX - q.x0, e.clientY - q.y0) > 14) coachDone("camera");
+    return true;
+  }
+  function camGestureUp(e) {
+    const q = CAMG.ptrs.get(e.pointerId);
+    if (!q) return false;
+    CAMG.ptrs.delete(e.pointerId);
+    if (CAMG.ptrs.size < 2) CAMG.pinch = 0;
+    const now = evTime(e);
+    if (now - q.t < 260 && Math.hypot(e.clientX - q.x0, e.clientY - q.y0) < 12) {
+      if (now - CAMG.lastTap < 340) {
+        camReset();
+        CAMG.lastTap = 0;
+      } else CAMG.lastTap = now;
+    }
+    return true;
+  }
   function camFrame() {
     const portrait = innerHeight > innerWidth;
     return {
-      k: (portrait ? 1.95 : mobile ? 1.12 : 1) * CAM_LEVELS[camLevel],
+      k: (portrait ? 1.95 : mobile ? 1.12 : 1) * CAM.user,
       fov: portrait ? 50 : 44,
       lift: portrait ? 5.5 : mobile ? 1.2 : 0,
       fight: portrait ? 0.86 : 0.74,
@@ -533,7 +603,8 @@
       h: portrait ? 12 : 13.5,
     };
   }
-  const SQ = { y: 1, v: 0 };
+  const SQ = { y: 1, v: 0 },
+    UP_AXIS = new T.Vector3(0, 1, 0);
   let hitStop = 0;
   function fxInit() {
     const N = (FX.N = mobile ? 320 : 600);
@@ -1341,13 +1412,17 @@
         ENEMIES.some((e) => e.state === "wind" && Math.hypot(e.x - P.x, e.z - P.z) < 4) &&
         coach("dodge", "F", "DASH bitartean ukiezina zara: saihestu erasoa!", "Durante el DASH eres invulnerable: ¡esquiva!", "dashBtn", "DASH bitartean ukiezina zara: saihestu erasoa!", "Durante el DASH eres invulnerable: ¡esquiva!")) ||
       (!fight && zoneHere() && !isCleared(currentStage) && !CRAFT.on &&
-        coach("craft", "G", "ESKU MAGIKOA: egin klik kaxa batean eta arrastatu", "MANO MÁGICA: haz clic en una caja y arrástrala", "craftBtn", "ESKU MAGIKOA: ukitu kaxa bat eta arrastatu", "MANO MÁGICA: toca una caja y arrástrala")) ||
+        coach("craft", "G", "ESKU MAGIKOA: egin klik kaxa batean eta arrastatu", "MANO MÁGICA: haz clic en una caja y arrástrala", "useBtn", "ESKUA: ukitu kaxa bat eta arrastatu", "MANO: toca una caja y arrástrala")) ||
       (st === 0 && P.travel < 4 && coach("move", "WASD", "Mugitu: WASD edo geziak · Shift: korrika", "Muévete: WASD o flechas · Shift: correr", "stick", "Mugitu: arrastatu makila · ertzeraino, korrika", "Muévete: arrastra la palanca · hasta el borde, corres")) ||
+      (!fight && COACH.seen.has("move") && P.travel > 25 &&
+        coach("camera", "⇄", "Kamera: saguaren eskuineko botoia + arrastatu · gurpila: hurbildu", "Cámara: botón derecho del ratón + arrastrar · rueda: acercar", null, "Kamera: arrastatu hatza pantailan (biratu eta hurbildu) · bi ukitu: zentratu", "Cámara: arrastra el dedo por la pantalla (girar y acercar) · dos toques: centrar")) ||
+      (mobile && !fight && CTX.cur && !CRAFT.on &&
+        coach("power", "", "", "", "useBtn", "Botere-botoia: une bakoitzean behar duzun boterea agertzen da", "Botón de poder: aparece el poder que necesitas en cada momento")) ||
       (st === 0 && !fight && phase === 1 && Math.hypot(P.x, P.z - 0.5) < 9 && coach("shift", "Q", "Zubia iraganean dago · ALDATU GARAIA", "El puente existe en el pasado · CAMBIA DE ÉPOCA", "phaseBtn", "Zubia iraganean dago · sakatu ALDATU", "El puente existe en el pasado · pulsa CAMBIAR")) ||
       (st === 0 && phase === 0 && P.z < -6 && P.z > -14 && coach("jump", "␣ ×2", "JAUZI · airean berriro sakatu: jauzi bikoitza", "SALTA · pulsa otra vez en el aire: doble salto", "jumpBtn")) ||
       (st === 1 && isCleared(1) && P.x > 3 && P.z < -26 && coach("dash", "F", "DASH · bultzada luzea, lurrean edo airean", "DASH · impulso largo, en el suelo o en el aire", "dashBtn")) ||
       (st === 1 && isCleared(1) && Math.hypot(P.x - 12, P.z + 37) < 11 && magic.weaveCooldown <= 0 &&
-        coach("weave", "C", "EHUNDU · zubia bi garaietan sendo, 12 segundoz", "TEJER · el puente sólido en ambas épocas, 12 s", "weaveBtn", "BOTEREAK → EHUNDU · zubia bi garaietan sendo, 12 s", "PODERES → TEJER · el puente sólido en ambas épocas, 12 s")) ||
+        coach("weave", "C", "EHUNDU · zubia bi garaietan sendo, 12 segundoz", "TEJER · el puente sólido en ambas épocas, 12 s", "useBtn", "Sakatu EHUNDU: zubia bi garaietan sendo, 12 s", "Pulsa TEJER: el puente sólido en ambas épocas, 12 s")) ||
       (st === 2 && !fight && !P.grounded && P.vy < 2 && coach("airshift", "Q", "Airean garaia aldatu: DASH berri bat", "Cambia de época en el aire: un DASH nuevo", "phaseBtn", "Airean ALDATU: DASH berri bat", "CAMBIAR en el aire: un DASH nuevo")) ||
       (st === 3 && isCleared(3) && Math.hypot(P.x + 9, P.z + 108) < 10 && coach("beam", "Q", "Argi gorriak iraganean bakarrik egiten du min", "La luz roja solo daña en el pasado", "phaseBtn"));
   }
@@ -2727,7 +2802,13 @@
       x /= n;
       z /= n;
     }
-    return { x: x * 0.83 + z * 0.557, z: -x * 0.557 + z * 0.83 };
+    /* makila → mundua, kameraren biraketaren arabera ("gora" = kameratik urrun) */
+    const wx = x * 0.83 + z * 0.557,
+      wz = -x * 0.557 + z * 0.83;
+    if (!CAM.yawS) return { x: wx, z: wz };
+    const c = Math.cos(CAM.yawS),
+      sn = Math.sin(CAM.yawS);
+    return { x: wx * c + wz * sn, z: -wx * sn + wz * c };
   }
   function spawnTrail() {
     const m = obj(
@@ -3270,7 +3351,11 @@
     const look = new T.Vector3(P.x, P.y + 1 + CAM.asc * 2.6, P.z).add(CAM.look),
       offset = new T.Vector3(mix(15.5, 13.5, CAM.asc), mix(F.h, 10, CAM.asc), mix(23, 22, CAM.asc)).multiplyScalar(CAM.zoom * F.k);
     /* jokalaria pantailaren erdialdetik gora (behean botoiak daude): begirada kamerarantz lerratu */
-    if (F.lift) look.add(new T.Vector3(offset.x, 0, offset.z).normalize().multiplyScalar(F.lift * CAM_LEVELS[camLevel]));
+    /* hatzaz biratutako kamera (yaw, leundua): desplazamendua jokalariaren inguruan */
+    CAM.yawS += (CAM.yaw - CAM.yawS) * (1 - Math.exp(-dt * 12));
+    if (Math.abs(CAM.yaw - CAM.yawS) < 1e-4) CAM.yawS = CAM.yaw;
+    if (CAM.yawS) offset.applyAxisAngle(UP_AXIS, CAM.yawS);
+    if (F.lift) look.add(new T.Vector3(offset.x, 0, offset.z).normalize().multiplyScalar(F.lift * CAM.user));
     const target = look.clone().add(offset);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) CAM.pos = camera.position.clone();
     CAM.pos.lerp(target, 1 - Math.exp(-dt * 7));
@@ -3382,7 +3467,10 @@
       if (p) craftRotate(p);
     };
     $("useBtn").textContent = L("EKIN", "ACTUAR");
-    $("weaveBtn").textContent = L("BOTEREAK", "PODERES");
+    $("useBtn").hidden = true;
+    CTX.cur = null;
+    $("weaveBtn").textContent = "⋯";
+    $("weaveBtn").setAttribute("aria-label", L("BOTEREAK", "PODERES"));
     $("recallBtn").textContent = L("IGO", "ASCENDER");
     $("cineSkip").textContent = L("SALTATU →", "OMITIR →");
     $("cineNext").textContent = L("JARRAITU →", "SIGUIENTE →");
@@ -3460,7 +3548,7 @@
     $("phaseBtn").onclick = switchPhase;
     $("dashBtn").onclick = dash;
     $("jumpBtn").onclick = jump;
-    $("useBtn").onclick = interact;
+    $("useBtn").onclick = null;
     bindActionTouches();
     bindWorkshop();
     const stick = $("stick"),
@@ -3513,15 +3601,15 @@
       SND.setMuted(muted);
     };
     $("quality").textContent = quality ? "HD" : "ECO";
+    /* ⤢: distantzia aurrezarriak (hurbil · ertaina · urrun) eta kamera zentratu */
     $("camBtn").onclick = () => {
       camLevel = (camLevel + 1) % 3;
-      try {
-        localStorage.setItem("oihartzun-cam", camLevel);
-      } catch {}
-      $("camBtn").textContent = "⤢" + (camLevel + 1);
+      CAM.user = CAM_LEVELS[camLevel];
+      CAM.yaw = Math.round(CAM.yawS / TAU) * TAU;
+      camSave();
       notify(...[["KAMERA · HURBIL", "CÁMARA · CERCA"], ["KAMERA · ERTAINA", "CÁMARA · MEDIA"], ["KAMERA · URRUN", "CÁMARA · LEJOS"]][camLevel], 1.6);
     };
-    $("camBtn").textContent = "⤢" + (camLevel + 1);
+    $("camBtn").textContent = "⤢";
     $("quality").onclick = () => {
       quality = 1 - quality;
       renderer.setPixelRatio(Math.min(devicePixelRatio, quality ? 1.5 : 1));
@@ -3597,8 +3685,8 @@
     $("echoBox").hidden = !saved.echoes.length;
     $("echoes").textContent = saved.echoes.length + "/3";
     $("hearts").textContent = "● ".repeat(Math.max(0, P.hp)) + "○ ".repeat(Math.max(0, P.maxHp - P.hp));
-    $("craftBtn").hidden = !CRAFT.on && !zoneHere();
-    $("craftBtn").textContent = CRAFT.on ? L("EGINDA", "LISTO") : L("ESKU", "MANO");
+    /* mugikorrean ESKUA/LISTO botere-botoian dago (ctxUpdate) */
+    $("craftBtn").hidden = true;
     $("dashDot").textContent = P.dashReady ? "◆" : "◇";
     $("dashDot").style.opacity = P.dashReady ? 1 : 0.5;
     $("secrets").textContent = saved.memories.length + "/5";
@@ -3727,6 +3815,7 @@
     shiftFlash = Math.max(0, shiftFlash - dt * 2.8);
     $("phaseFlash").style.opacity = shiftFlash * 0.35;
     if (frame % 8 === 0) hud();
+    if (frame % 6 === 0) ctxUpdate();
     /* bizitza bakarra: binjeta gorria taupadaka eta bihotz-soinua */
     const low = P.hp === 1 && started && !ENDING.on;
     lowBeat = low ? lowBeat + dt : 0;
@@ -3876,10 +3965,9 @@
         " m"
       );
     return (
-      L(
-        "Korrika (makila ertzera / Shift) + JAUZI ×2 + DASH. G / BOTEREAK: eraiki.",
-        "Corre (palanca al máximo / Shift) + SALTAR ×2 + DASH. G / PODERES: construir.",
-      ) +
+      (mobile
+        ? L("Korrika (makila ertzera) + JAUZI ×2 + DASH. Botere-botoia behar denean agertzen da.", "Corre (palanca al máximo) + SALTAR ×2 + DASH. El botón de poder aparece cuando hace falta.")
+        : L("Korrika (makila ertzera / Shift) + JAUZI ×2 + DASH. G / BOTEREAK: eraiki.", "Corre (palanca al máximo / Shift) + SALTAR ×2 + DASH. G / PODERES: construir.")) +
       " · " +
       d +
       " m"
@@ -4256,6 +4344,7 @@
       ["recallBtn", ascend],
       ["attackBtn", attack],
       ["craftBtn", craftToggle],
+      ["useBtn", () => CTX.fn && CTX.fn()],
     ]) {
       const el = $(id);
       el.onclick = null;
@@ -4277,14 +4366,53 @@
           };
     }
   }
+  /* ==================================================================
+     BOTERE-BOTOIA (mugikorra) · une bakoitzean behar den botere bakarra
+     Eraikitzeko eremuan ESKUA, plataforma baten azpian IGO, zubi mugikor
+     edo arrisku baten ondoan GELDITU, beste garaiko zubi baten ertzean
+     EHUNDU, erlojuaren aurrean EKIN. Bestela ezkutatuta. ⋯ = menu osoa.
+     ================================================================== */
+  const CTX = { cur: null, fn: null }; /* null: hurrengo eguneraketak beti aplikatzen du (ezkutatu barne) */
+  function ascendRoof() {
+    if (ascent || ascendCooldown > 0 || ascZone()) return null;
+    return platforms.find((s) => (s.phase === -1 || s.phase === phase) && s.y > P.y + 1.7 && s.y < P.y + 13 && contains(s, P.x, P.z, -0.1)) || null;
+  }
+  function ctxPower() {
+    if (CRAFT.on) return ["craft", L("EGINDA", "LISTO"), "green", craftToggle];
+    if (near === "ending") return ["end", L("EKIN", "ACTUAR"), "gold", interact];
+    if (zoneHere() && !isCleared(currentStage)) return ["craft", L("ESKUA", "MANO"), "green", craftToggle];
+    if (P.grounded && ascendRoof()) return ["ascend", L("IGO", "SUBIR"), "violet", ascend];
+    const dd = (o) => Math.hypot(o.x - P.x, o.z - P.z);
+    if (stasisCooldown <= 0 && !stasisActive() && (phaseObjects.some((o) => o.moving && dd(o) < 12) || hazards.some((h) => h.phase === phase && dd(h) < 12)))
+      return ["stasis", L("GELDITU", "PARAR"), "cyan", stasis];
+    if (magic.weaveCooldown <= 0 && phaseObjects.some((o) => o.phase !== -1 && o.phase !== phase && !o.asc && dd(o) < 9))
+      return ["weave", L("EHUNDU", "TEJER"), "blue", weave];
+    return null;
+  }
+  function ctxUpdate() {
+    const c = started && !paused && !cinematic && !ENDING.on ? ctxPower() : null,
+      key = c ? c[0] + c[1] : "",
+      el = $("useBtn");
+    if (key === CTX.cur) return;
+    CTX.cur = key;
+    CTX.fn = c ? c[3] : null;
+    el.hidden = !c;
+    if (c) {
+      el.textContent = c[1];
+      el.dataset.kind = c[2];
+      el.classList.remove("pop");
+      void el.offsetWidth;
+      el.classList.add("pop");
+    }
+  }
   function powerMenu() {
     if (!started || paused || ascent) return;
     dialog(
       L("SORGINAREN BOTEREAK", "PODERES DE LA BRUJA"),
       L("Bidea zure esku dago.", "El camino está en tus manos."),
       L("Bidea zure esku dago.", "El camino está en tus manos."),
-      "Korrika: Shift edo makila ertzera. Jauzi luzea: mantendu JAUZI; laburra: askatu. Bigarren jauzia airean. Horman beste jauzi bat egin dezakezu.\n\nESKU MAGIKOA: oholak mugitu, biratu eta lotu. IGO: gaineko plataforma zeharkatu. GELDITU: plataformak eta arriskuak izoztu.",
-      "Correr: Shift o palanca al máximo. Salto alto: mantén SALTAR; corto: suelta. Segundo salto en el aire. Puedes rebotar de una pared.\n\nMANO MÁGICA: mueve, gira y une tablones. ASCENDER: atraviesa una plataforma encima de ti. ESTASIS: detén plataformas y peligros.",
+      "Mugikorrean ez duzu menu hau behar: BOTERE-BOTOIA bakarrik agertzen da behar denean (ESKUA, IGO, GELDITU, EHUNDU, EKIN).\n\nESKU MAGIKOA: kaxak mugitu, biratu eta pilatu. IGO: gaineko plataforma zeharkatu. GELDITU: plataformak eta arriskuak izoztu. EHUNDU: zubia bi garaietan sendo. ATZERA: denbora pixka bat atzera.",
+      "En el móvil no necesitas este menú: el BOTÓN DE PODER aparece solo cuando hace falta (MANO, SUBIR, PARAR, TEJER, ACTUAR).\n\nMANO MÁGICA: mueve, gira y apila cajas. SUBIR: atraviesa la plataforma encima de ti. PARAR: detén plataformas y peligros. TEJER: el puente sólido en ambas épocas. RETORNO: el tiempo retrocede un poco.",
       [
         [L("ESKU MAGIKOA", "MANO MÁGICA") + kb(" · G"), craftToggle],
         [L("IGO", "ASCENDER") + kb(" · X"), ascend],
@@ -4944,6 +5072,13 @@
         ASC,
         STORY,
         RUNE_PUZ,
+        CAM,
+        CAMG,
+        camGesture: { down: camGestureDown, move: camGestureMove, up: camGestureUp },
+        CTX,
+        ctxPower,
+        ctxUpdate,
+        direction,
         ascRespawn,
         ascZone,
         magicReset,

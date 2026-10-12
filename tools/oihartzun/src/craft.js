@@ -379,6 +379,12 @@
     const view = $("view");
     view.addEventListener("pointerdown", (e) => {
       if (!started || paused || cinematic || ENDING.on) return;
+      /* saguaren eskuineko botoia: kamera biratu */
+      if (e.pointerType === "mouse" && e.button === 2) {
+        camGestureDown(e);
+        view.setPointerCapture(e.pointerId);
+        return;
+      }
       if (e.pointerType === "mouse" && e.button !== 0) return;
       const p = zoneHere() ? pickPiece(e.clientX, e.clientY) : null;
       if (p) {
@@ -388,12 +394,19 @@
         return;
       }
       /* pieza ez bada: sagu-klika = erasoa (mahaigainean) */
-      if (e.pointerType === "mouse" && !CRAFT.on) {
-        ATK.hold = true;
-        attack();
+      if (e.pointerType === "mouse") {
+        if (!CRAFT.on) {
+          ATK.hold = true;
+          attack();
+        }
+        return;
       }
+      /* ukipena pantailan (botoietatik kanpo): kamera biratu eta hurbildu */
+      camGestureDown(e);
+      view.setPointerCapture(e.pointerId);
     });
     view.addEventListener("pointermove", (e) => {
+      if (camGestureMove(e)) return;
       const d = CRAFT.down;
       if (!d || d.id !== e.pointerId) return;
       if (!d.dragging && Math.hypot(e.clientX - d.x, e.clientY - d.y) > 9) {
@@ -403,6 +416,7 @@
       if (d.dragging) craftDrag(e.clientX, e.clientY);
     });
     const up = (e) => {
+      if (camGestureUp(e)) return;
       const d = CRAFT.down;
       if (!d || d.id !== e.pointerId) return;
       CRAFT.down = null;
@@ -416,9 +430,9 @@
     view.addEventListener("pointerup", up);
     view.addEventListener("pointercancel", up);
     view.addEventListener("wheel", (e) => {
-      if (CRAFT.held) {
-        craftRotate();
-        e.preventDefault();
-      }
+      if (CRAFT.held) craftRotate();
+      else camZoom(Math.exp(clamp(e.deltaY, -120, 120) * 0.0015));
+      e.preventDefault();
     }, { passive: false });
+    view.addEventListener("contextmenu", (e) => e.preventDefault());
   }

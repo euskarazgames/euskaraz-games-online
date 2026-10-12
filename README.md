@@ -44,7 +44,12 @@ cámara lenta en la última baja y oleadas cada vez más frenéticas.
   atardecer con el mar vivo; en el horizonte hay islas con pueblos y faros, y veleros que navegan en el
   pasado y quedan atrapados en el hielo en el presente. Las jaulas de las islas son invisibles (solo
   chispas al tocar el borde) y sus postes se levantan únicamente cuando se cierra una arena.
-- Cámara: en vertical se aleja sola (más campo de visión); botón ⤢ con tres distancias (se recuerda).
+- Cámara: en vertical se aleja sola (más campo de visión). Con el dedo por la pantalla se gira
+  (izquierda/derecha) y se acerca o aleja (arriba/abajo); pellizco para zoom y doble toque para
+  centrar. En ordenador: botón derecho del ratón y rueda. Botón ⤢: tres distancias y centrar.
+- Poderes sencillos en el móvil: un único BOTÓN DE PODER que aparece solo cuando sirve (MANO en las
+  zonas de construcción, SUBIR bajo una plataforma, PARAR junto a puentes móviles o rayos, TEJER al
+  borde de un puente de otra época, ACTUAR ante el reloj). «⋯» abre el menú completo.
 - Jefe final con cuatro fases, escudo de tres luces en el núcleo, coronas de proyectiles y refuerzos.
   Cuatro finales, tres campanas y cuatro páginas opcionales. Música épica sintetizada por capas.
 - Código fuente legible: `tools/oihartzun/src/` (`game.js`, `combat.js`, `magic.js`, `ascent.js`,
