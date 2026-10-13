@@ -11,6 +11,8 @@
   const RHYTHMS = {
     esnatu: { seq: ["L", "L", "R"], name: "ESNATU", desc: "Jentil-harriak esnatzen ditu: eskailerak altxatu eta ate zaharrak ireki." },
     entzun: { seq: ["R", "L", "R", "R"], name: "ENTZUN", desc: "Oihartzun-uhin bat: ezkutuko bideak eta altxorrak une batez agerian." },
+    eguzkilore: { seq: ["R", "R", "L", "L"], name: "EGUZKILORE", desc: "Eguzkiari dei: gauez egunsentia, egunez ilunabarra. Leizean, itzalak zorabiatzen ditu." },
+    pottoka: { seq: ["L", "R", "L", "L"], name: "POTTOKA", desc: "Beltxari dei: haranean, Joanesen pottoka lauhazka etortzen da." },
   };
   const seqText = (seq) => seq.map((s) => (s === "L" ? "◀" : "▶")).join(" ");
   /* plazako txalaparta: bi asto, hiru ohol luze eta lau makila (diseinu propioa) */
@@ -234,6 +236,8 @@
       const n = (ZONE.cur === "ibarra" ? wakeStones(24) : 0) + (DGS[ZONE.cur] ? dungeonWake() : 0);
       if (!n) notify(L("Harriek lo jarraitzen dute. Ez dago ezer esnatzeko hemen."), "", 2.6);
     } else if (k === "entzun") echoPulse();
+    else if (k === "eguzkilore") eguzkiloreEffect();
+    else if (k === "pottoka") pottokaCall();
     hud();
   }
   /* ENTZUN: oihartzun-uhina — ezkutuko plataformak (s.hidden) eta kutxak agerian */

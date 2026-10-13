@@ -10,7 +10,7 @@ R = pathlib.Path(__file__).resolve().parents[2] / 'public'
 out = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else 'LEIZEEN_DEIA.html')
 html = (R / 'games/leizeak.html').read_text(encoding='utf-8')
 need = ['tex/%s_%s.jpg' % (k, m) for k, ms in [('grass', 'cnr'), ('snow', 'cn'), ('cliff', 'cnr'), ('planks', 'cnr')] for m in ms]
-need += ['tex/water_n.jpg', 'sky/dusk.jpg', 'sky/day.jpg']
+need += ['tex/water_n.jpg', 'sky/dusk.jpg', 'sky/day.jpg', 'sky/night.jpg']
 inline = {p: 'data:image/jpeg;base64,' + base64.b64encode((R / 'assets' / p).read_bytes()).decode() for p in need}
 egfx = (R / 'assets/egfx.js').read_text(encoding='utf-8')
 tag = '<script src="/assets/egfx.js"></script>'

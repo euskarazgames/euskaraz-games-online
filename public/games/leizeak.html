@@ -3855,13 +3855,14 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   const kb = (s) => (mobile ? "" : s);
   /* gordetako partida (LEIZEEN DEIA): istorio-banderak, erritmoak, tresnak, giltzak, txanponak... */
   const SAVE_KEY = "leizeak-v1";
-  const FRESH = () => ({ v: 1, zone: "ibarra", cp: null, deaths: 0, assist: false, flags: [], rhythms: [], items: [], keys: 0, keyz: {}, coins: 0, pieces: [], hearts: 0, potions: 0, chests: [], doors: [], cleared: [], visited: [], sheep: [], boons: [], echoes: [], herbs: [], ores: [], playTime: 0 });
+  const FRESH = () => ({ v: 1, zone: "ibarra", cp: null, deaths: 0, assist: false, flags: [], rhythms: [], items: [], keys: 0, keyz: {}, coins: 0, pieces: [], hearts: 0, potions: 0, chests: [], doors: [], cleared: [], visited: [], sheep: [], boons: [], echoes: [], herbs: [], ores: [], arimak: [], tod: 0.35, playTime: 0 });
   let saved = FRESH();
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY));
     if (s && s.v === 1) {
       saved = { ...saved, ...s };
-      for (const k of ["flags", "rhythms", "items", "pieces", "chests", "doors", "cleared", "visited", "sheep", "boons", "echoes", "herbs", "ores"]) if (!Array.isArray(saved[k])) saved[k] = [];
+      for (const k of ["flags", "rhythms", "items", "pieces", "chests", "doors", "cleared", "visited", "sheep", "boons", "echoes", "herbs", "ores", "arimak"]) if (!Array.isArray(saved[k])) saved[k] = [];
+      if (!Number.isFinite(saved.tod)) saved.tod = 0.35;
       /* giltza txikiak leize bakoitzeko (lehengo partidetan zenbaki bakarra) */
       if (!saved.keyz || typeof saved.keyz !== "object") saved.keyz = { leizea: saved.keys || 0 };
     }
@@ -3952,7 +3953,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
      EGFX (/assets/egfx.js) ez badago, lehengo gradienteak erabiltzen dira.
      ================================================================== */
   const EG = window.EGFX && EGFX.enabled ? EGFX : null;
-  const ATMO = { skyPast: null, skyNow: null, envPast: null, envNow: null, terrain: undefined, rockMat: null, dust: null,
+  const ATMO = { skyPast: null, skyNow: null, skyNight: null, envPast: null, envNow: null, envNight: null, terrain: undefined, rockMat: null, dust: null,
     fogPast: new T.Color("#5a829d"), fogNow: new T.Color("#a9c6de"), envOn: null, falls: [] };
   function rawTex(id, srgb) {
     const img = EG && EG.image(id);
@@ -4148,7 +4149,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       f.material.opacity = mix(0.62, 0.9, b);
     }
     if (EG && EG.tier === 0 && ZONES[ZONE.cur].outdoor) {
-      const want = b < 0.5 ? ATMO.envPast : ATMO.envNow;
+      const want = DAY.k > 0.55 && ATMO.envNight ? ATMO.envNight : b < 0.5 ? ATMO.envPast : ATMO.envNow;
       if (want && scene.environment !== want) scene.environment = want;
     }
   }
@@ -4216,15 +4217,19 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         tCrack: { value: crackTexture() },
         useWater: { value: tWater ? 1 : 0 },
         falls: { value: falls },
+        tNight: { value: ATMO.skyNight },
+        useNight: { value: ATMO.skyNight ? 1 : 0 },
+        uNight: { value: 0 },
       },
       vertexShader:
         "varying vec3 wp;void main(){vec4 w=modelMatrix*vec4(position,1.);wp=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}",
       fragmentShader: [
-        "uniform float clock,blend,useSky,useWater;uniform vec3 camPos;uniform sampler2D tPast,tNow,tWater,tCrack;uniform vec3 falls[5];varying vec3 wp;",
+        "uniform float clock,blend,useSky,useWater,uNight,useNight;uniform vec3 camPos;uniform sampler2D tPast,tNow,tWater,tCrack,tNight;uniform vec3 falls[5];varying vec3 wp;",
         "vec2 eq(vec3 d){return vec2(atan(d.z,d.x)*.15915494+.5,asin(clamp(d.y,-1.,1.))*.31830989+.5);}",
-        "vec3 skyCol(vec3 d){",
-        "  if(useSky>.5){vec2 uv=eq(d);return mix(texture2D(tPast,uv).rgb,texture2D(tNow,uv).rgb,blend);}",
-        "  float t=pow(max(d.y,0.),.6);vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 night=mix(vec3(.74,.85,.94),vec3(.27,.53,.86),t);return mix(day,night,blend);}",
+        "vec3 skyCol(vec3 d){vec3 s;",
+        "  if(useSky>.5){vec2 uv=eq(d);s=mix(texture2D(tPast,uv).rgb,texture2D(tNow,uv).rgb,blend);}",
+        "  else{float t=pow(max(d.y,0.),.6);vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 ice=mix(vec3(.74,.85,.94),vec3(.27,.53,.86),t);s=mix(day,ice,blend);}",
+        "  vec3 nn=useNight>.5?texture2D(tNight,eq(d)).rgb:vec3(.02,.03,.06);return mix(s,nn,uNight);}",
         "void main(){",
         "  float fr=smoothstep(0.,1.,blend);",
         "  float tt=clock*(1.-fr*.995);",
@@ -4241,7 +4246,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         "  vec3 deep=mix(vec3(.04,.22,.26),vec3(.34,.48,.6),fr);",
         "  vec3 shal=mix(vec3(.12,.44,.45),vec3(.64,.77,.87),fr);",
         "  float wv=sin(q.x*.19+q.y*.27+tt*.9)*sin(q.x*.43-q.y*.18-tt*.6);",
-        "  vec3 col=mix(deep,shal,.35+wv*.15*(1.-fr));",
+        "  vec3 col=mix(deep,shal,.35+wv*.15*(1.-fr))*mix(1.,.2,uNight);",
         "  vec3 rc=skyCol(r);",
         "  col=mix(col,rc,clamp(f*mix(.85,.45,fr)+mix(.08,.1,fr),0.,1.));",
         "  if(fr>.01){",
@@ -4255,7 +4260,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         "    foam+=(1.-smoothstep(1.5,5.5,d))*(.55+.45*sin(d*3.-tt*4.));}",
         "  col+=clamp(foam,0.,1.)*mix(vec3(.55,.68,.68),vec3(.75,.85,.9),fr)*.5;",
         "  vec3 sd=normalize(vec3(-.45,.32,-.83));",
-        "  col+=pow(max(dot(r,sd),0.),70.)*(1.-fr)*vec3(1.,.82,.55)*.45+pow(max(dot(r,sd),0.),18.)*fr*vec3(.9,.95,1.)*.22;",
+        "  col+=(pow(max(dot(r,sd),0.),70.)*(1.-fr)*vec3(1.,.82,.55)*.45+pow(max(dot(r,sd),0.),18.)*fr*vec3(.9,.95,1.)*.22)*(1.-uNight);",
         "  float far=smoothstep(140.,520.,length(wp.xz-camPos.xz));",
         "  col=mix(col,skyCol(normalize(vec3(v.x,.015,v.z))),far);",
         "  gl_FragColor=vec4(col,1.);}",
@@ -5236,8 +5241,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       if (!MZ.L) mzBuild();
       const lv = musicLevel();
       if (lv !== MZ.level) mzLevel(lv, t0);
-      /* garaia eta zona: oraina hotza (iragazkia), leizea itxia (are ilunagoa) */
-      const caveK = ZONES[ZONE.cur].outdoor ? 1 : 0.55,
+      /* garaia eta zona: oraina hotza (iragazkia), gaua leunagoa, leizea itxia (are ilunagoa) */
+      const caveK = ZONES[ZONE.cur].outdoor ? (DAY.k > 0.5 ? 0.72 : 1) : 0.55,
         eraKey = phase + caveK * 10;
       if (MZ.eraOn !== eraKey) {
         MZ.eraOn = eraKey;
@@ -5501,6 +5506,55 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           f = 2600 + Math.random() * 1600,
           n = 2 + Math.floor(Math.random() * 4);
         for (let i = 0; i < n; i++) tone("sine", f, t + i * 0.085, 0.004, 0.06, 0.012, amb, f * (1.3 + Math.random() * 0.4));
+      },
+      /* pottoka: apatxen hotsa eta irrintzia */
+      hoof(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 120 + Math.random() * 30, t, 0.002, 0.07, 0.05 * v, sfx, 70);
+        hiss(t, 0.05, 0.03 * v, "bandpass", 900, 600, 2);
+      },
+      neigh(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          o = ctx.createOscillator(),
+          bp = ctx.createBiquadFilter(),
+          g = ctx.createGain(),
+          lfo = ctx.createOscillator(),
+          lg = ctx.createGain();
+        o.type = "sawtooth";
+        o.frequency.setValueAtTime(820, t);
+        o.frequency.linearRampToValueAtTime(980, t + 0.18);
+        o.frequency.exponentialRampToValueAtTime(380, t + 1.1);
+        lfo.frequency.value = 22;
+        lg.gain.value = 40;
+        lfo.connect(lg);
+        lg.connect(o.frequency);
+        bp.type = "bandpass";
+        bp.frequency.value = 1400;
+        bp.Q.value = 2.5;
+        env(g, t, 0.06, 0.045 * v, 1.1);
+        o.connect(bp);
+        bp.connect(g);
+        g.connect(sfx);
+        o.start(t);
+        lfo.start(t);
+        o.stop(t + 1.25);
+        lfo.stop(t + 1.25);
+      },
+      /* gaua: kilkerrak (uda) eta hontza */
+      cricket() {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          f = 4300 + Math.random() * 600;
+        for (let r = 0; r < 2; r++) for (let i = 0; i < 4; i++) tone("square", f, t + r * 0.22 + i * 0.028, 0.002, 0.016, 0.005, amb);
+      },
+      owl() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 360, t, 0.06, 0.35, 0.03, amb, 330);
+        tone("sine", 350, t + 0.55, 0.05, 0.25, 0.022, amb, 320);
+        tone("sine", 355, t + 0.85, 0.08, 0.55, 0.028, amb, 300);
       },
       crow() {
         if (!ok()) return;
@@ -6240,7 +6294,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯" };
+  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "giltza" || icon === "giltzanagusia") {
@@ -6277,6 +6331,11 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         t.position.set(-0.27 + i * 0.09, -0.12, 0);
         g.add(t);
       }
+    } else if (icon === "eguzkilore") {
+      const e = eguzkiloreMesh();
+      e.rotation.x = PI / 2.4;
+      e.scale.setScalar(0.62);
+      g.add(e);
     } else if (icon === "sugarra") {
       const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));
       rod.rotation.z = 0.4;
@@ -6805,6 +6864,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           nz = o.z + (oz / od) * (o.r + e.D.r);
         }
       }
+      /* haranean (gaueko itzalak): lurraren gainean, ez ibaian ez herrian */
+      if (e.terrain) [nx, nz] = terrainStep(e, nx, nz);
       /* gelaren barruan (hormaren kontra jo: zezena zorabiatuta) */
       if (I) {
         let out = false;
@@ -8068,6 +8129,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     coachDone("craft-drag");
   }
   function craftToggle() {
+    if (P.riding) return;
     if (CRAFT.on) craftExit();
     else if (!craftEnter())
       notify(L("ESKU MAGIKOA: kaxak dauden geletan bakarrik."), "", 3);
@@ -8391,6 +8453,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* gunez aldatu (leizera sartu / irten): pantaila beltzean */
   function enterZone(id, spawn, instant) {
     const go = () => {
+      ponyDismount(true);
       clearEnemies();
       if (CRAFT.on) craftExit();
       LOCK.target = null;
@@ -10380,6 +10443,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     return "zelaiak";
   }
   function hubUpdate(dt) {
+    dayClock(dt);
+    secretsUpdate();
     stonesUpdate(dt);
     watersUpdate(dt);
     for (const [i, c] of CLOUDS.entries()) c.position.x += dt * (0.6 + (i % 3) * 0.3) * (1 - phaseBlend * 0.85);
@@ -10742,10 +10807,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const river = clamp(1 - riverW(P.x, P.z) / 24, 0, 1),
       falls = Math.max(clamp(1 - (Math.hypot(P.x - 99, P.z + 28.5) - 10) / 30, 0, 1), clamp(1 - (Math.hypot(P.x - PIT.x, P.z - PIT.z) - 8) / 26, 0, 1));
     SND.riverLevel(river * past * 0.9 + falls * past * 0.5);
-    if (P.y > -2 && due("bird", 2.5, 7)) past > 0.5 ? SND.chirp() : SND.crow();
+    if (P.y > -2 && DAY.k < 0.5 && due("bird", 2.5, 7)) past > 0.5 ? SND.chirp() : SND.crow();
     if (phaseBlend > 0.5 && river > 0.3 && due("creak", 6, 14)) SND.creak();
     const forge = Math.hypot(P.x - 23, P.z - 41);
-    if (forge < 26 && due("forge", 1.1, 1.6)) {
+    if (forge < 26 && DAY.k < 0.55 && due("forge", 1.1, 1.6)) {
       SND.clang(clamp(1 - forge / 26, 0.1, 1) * 0.6);
       const M = NPCS.find((n) => n.id === "maddi");
       if (M && Math.hypot(P.x - M.x, P.z - M.z) > 4) {
@@ -11016,8 +11081,12 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       case "peio":
         return !saved.rhythms.includes("esnatu") || (!f("erronka") && f("intro")) ? "!" : null;
       case "joanes":
-        return !f("ardiak") ? "!" : saved.sheep.length >= 3 && !f("ardiak-saria") ? "?" : null;
+        return !f("ardiak") || (f("ardiak-saria") && !saved.rhythms.includes("pottoka")) ? "!" : saved.sheep.length >= 3 && !f("ardiak-saria") ? "?" : null;
       case "kattalin":
+        if (f("gaua") && !saved.rhythms.includes("eguzkilore")) return f("eguzkilorea") ? "?" : !f("eguzkilore-bila") ? "!" : null;
+        if ((saved.arimak || []).length >= 3 && !f("arimak3")) return "?";
+        if ((saved.arimak || []).length >= 6 && !f("arimak6")) return "?";
+        if ((saved.arimak || []).length >= 10 && !f("arimak10")) return "?";
         return !f("kattalin") || !f("kattalin-belar") ? "!" : saved.herbs.length >= 3 && !f("belarrak-ok") ? "?" : null;
       case "maddi":
         return f("basajaun") && !f("maddi-burdina") ? "!" : saved.ores.length >= 5 && !f("burdina-ok") ? "?" : null;
@@ -11142,6 +11211,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     else side.push(line(false, L("Arrantzalea kaian"), "", L("Portuko eskaileratik behera, kaian norbait zain.")));
     if (f("maddi-burdina")) side.push(line(f("burdina-ok"), L("Maddiren burdin-harriak"), saved.ores.length + "/5", L("Harri ilunak zain laranjekin: arroila (izotza), lepoa eta leizeak.")));
     side.push(line(f("andere"), L("Oihartzun-harriak"), saved.echoes.length + "/7", L("Harri urdin distiratsuak haran osoan: jo ENTZUN haien ondoan.")));
+    if (f("gaua")) side.push(line(saved.rhythms.includes("eguzkilore"), L("Kattalinen eguzkilorea"), f("eguzkilorea") ? L("eskuan") : "", L("Harrespilako larrean: IRAGANEAN (uda) eta EGUNEZ bakarrik loratzen da.")));
+    if (f("arimak") || (saved.arimak || []).length) side.push(line(f("arimak10"), L("Arima-argiak"), (saved.arimak || []).length + "/10", L("GAUEZ bakarrik, haran osoan barreiatuta. Kattalinek elizako argizaiolak pizten ditu.")));
+    side.push(...secretsLog(line));
     const pieces = saved.pieces.length;
     dialog(
       L("EGUNKARIA"),
@@ -11415,6 +11487,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   const RHYTHMS = {
     esnatu: { seq: ["L", "L", "R"], name: "ESNATU", desc: "Jentil-harriak esnatzen ditu: eskailerak altxatu eta ate zaharrak ireki." },
     entzun: { seq: ["R", "L", "R", "R"], name: "ENTZUN", desc: "Oihartzun-uhin bat: ezkutuko bideak eta altxorrak une batez agerian." },
+    eguzkilore: { seq: ["R", "R", "L", "L"], name: "EGUZKILORE", desc: "Eguzkiari dei: gauez egunsentia, egunez ilunabarra. Leizean, itzalak zorabiatzen ditu." },
+    pottoka: { seq: ["L", "R", "L", "L"], name: "POTTOKA", desc: "Beltxari dei: haranean, Joanesen pottoka lauhazka etortzen da." },
   };
   const seqText = (seq) => seq.map((s) => (s === "L" ? "◀" : "▶")).join(" ");
   /* plazako txalaparta: bi asto, hiru ohol luze eta lau makila (diseinu propioa) */
@@ -11638,6 +11712,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       const n = (ZONE.cur === "ibarra" ? wakeStones(24) : 0) + (DGS[ZONE.cur] ? dungeonWake() : 0);
       if (!n) notify(L("Harriek lo jarraitzen dute. Ez dago ezer esnatzeko hemen."), "", 2.6);
     } else if (k === "entzun") echoPulse();
+    else if (k === "eguzkilore") eguzkiloreEffect();
+    else if (k === "pottoka") pottokaCall();
     hud();
   }
   /* ENTZUN: oihartzun-uhina — ezkutuko plataformak (s.hidden) eta kutxak agerian */
@@ -11873,6 +11949,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function chainFire() {
     if (!started || paused || !hasChain() || CHAIN.state !== "idle" || TXALA.on || CRAFT.on || respawnTimer) return;
+    if (P.riding) return notify(L("Jaitsi pottokatik katea erabiltzeko."), "", 2);
     const t = chainCandidates()[0];
     if (!t) {
       notify(L("Ez dago suge-eraztunik irismenean."), "", 1.6);
@@ -12121,6 +12198,11 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (ZONE.cur !== "ibarra") return;
     for (const N of NPCS) {
       const d = Math.hypot(P.x - N.x, P.z - N.z);
+      /* gauez etxera (eta goizean itzuli): egutegia jokalariaren urruntasunetik aparte */
+      if (npcNight(N, dt)) {
+        if (d < 70 && N.g.visible) N.mixer.update(dt);
+        continue;
+      }
       if (d > 70) continue;
       N.t += dt;
       N.mixer.update(dt);
@@ -12189,6 +12271,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     let best = null,
       bd = 3.4;
     for (const N of NPCS) {
+      if (N.away) continue;
       const d = Math.hypot(P.x - N.x, P.z - N.z);
       if (d < (N.stone ? 5 : bd) && Math.abs(P.y - N.y) < 2.5) {
         best = N;
@@ -12353,15 +12436,19 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ],
         () => flagSet("ardiak"),
       );
+    if (f("ardiak-saria")) {
+      if (joanesPony(N, f)) return;
+      return talk(N, [["JOANES", ponyTamed() ? "Beltxak zu ezagutzen zaitu orain. Jo POTTOKA, eta etorriko da." : "Ardiak lasai daude orain. Basajaun bizirik balego bezala."]]);
+    }
     if (home < 3) return talk(N, [["JOANES", home ? home + " ardi etxean. Beste " + (3 - home) + " falta dira." : "Hesira ekarri, zure atzetik etorriko dira."]]);
     if (!f("ardiak-saria"))
       return talk(N, [["JOANES", "Hirurak etxean! Eskerrik asko, Amaiur. Hartu hau: nire amonak gordetzen zuen."]], () => {
         flagSet("ardiak-saria");
         pieceGet("ardiak");
       });
-    return talk(N, [["JOANES", "Ardiak lasai daude orain. Basajaun bizirik balego bezala."]]);
   }
   function talkKattalin(N, f) {
+    if (kattalinNight(N, f)) return;
     if (!f("kattalin"))
       return talk(
         N,
@@ -16021,6 +16108,982 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (!f("tartalo")) return saved.doors.includes("tD-n") ? ["Tartalo. Ilunpean dena ikusten du… argiak itsutzen du.", [R.T7.x, R.T7.z + 10, 0]] : ["Sutegiko iparreko ate handia: giltza nagusia.", [R.T4.x, -90, 0]];
     return ["Irten kobatik hegoaldeko arkutik.", [DGT.exitArch.x, DGT.exitArch.z, 0]];
   };
+  /* ==================================================================
+     EGUNA ETA GAUA · "Gaua gauekoentzat, eguna egunekoentzat"
+     · Haranean denbora ibiltzen da Basajaun askatu ondoren (Gauekok txalaparta entzun du):
+       eguna ~5 min, gaua ~2.5 min. Leizeetan ez: han ez dago eguzkirik.
+     · Gauez: izarrak eta ilargia, leihoetako eta faroletako argiak, Amaiurren kriseilua;
+       herritarrak etxera (Irati, Kattalin eta Txomin ez); plazako txalapartak bakarrik jotzen du.
+     · Gauekoren itzalak zelaietan (herrira ez dira sartzen); egunsentian hautsi egiten dira.
+     · ARIMA-ARGIAK: gauez bakarrik, haranean barreiatuta; Kattalinek argizaiolak pizten ditu.
+     · EGUZKILORE erritmoa (Kattalinek irakatsia, eguzkilorea ekarri ondoren): hurrengo
+       egunsentira edo ilunabarrera; leizean, inguruko itzalak zorabiatzen ditu.
+     ================================================================== */
+  const DAY = { k: 0, tw: 0, skip: -1, night: false, freeze: false, foeT: 5, ghostT: 0, ghostI: 0, ghostSeq: 0, halo: null, glass: null, flower: null, wisps: [], amb: {} };
+  const DAY_RATE = [1 / 600, 1 / 300]; /* [eguna, gaua]: tod unitateak segundoko */
+  const isDayT = (t) => t > 0.25 && t < 0.75;
+  function nightOf(t) {
+    if (t < 0.5) return 1 - smooth01(clamp((t - 0.205) / 0.09, 0, 1));
+    return smooth01(clamp((t - 0.705) / 0.09, 0, 1));
+  }
+  const clockRuns = () => saved.flags.includes("cliff") && !DAY.freeze;
+  const MOON_COL = new T.Color("#8ea6dc"),
+    DUSK_COL = new T.Color("#ff9a62"),
+    FOG_NIGHT = new T.Color("#0d1422"),
+    FOG_DUSK = new T.Color("#c07a66"),
+    AMB_DAY = new T.Color("#c8dfe8"),
+    AMB_NIGHT = new T.Color("#4b5f94"),
+    GND_DAY = new T.Color("#3a4960"),
+    GND_NIGHT = new T.Color("#121827");
+  /* herritarren etxeak (gauez hara joaten dira) */
+  const NIGHT_HOME = { pello: [14.4, 24.6], peio: [15.6, 25.4], maddi: [23.4, 41.8], joanes: [-36.2, 19.2], maite: [-10.2, 52.2], mikel: [-24, 48.4] };
+  /* haraneko farolak (gauez piztuta) */
+  const LAMPS = [[-8.2, 33.2], [8.4, 33.6], [-9.6, 44.6], [9.8, 45.2], [3.6, 18.5], [-1.6, 4.5], [2.6, -9], [-4.4, 59.6], [-15.6, 25.8], [19.2, 37.4]];
+  /* arima-argiak: gauez bakarrik (hamar) */
+  const WISP_DEFS = [
+    { id: "harrespila", x: 52, z: -70 },
+    { id: "basoa", x: -20, z: -104 },
+    { id: "basoa2", x: 4, z: -118 },
+    { id: "arroila", x: 70, z: -20 },
+    { id: "urjauzia", x: 88, z: -20 },
+    { id: "zuloa", x: -86, z: -18 },
+    { id: "mendebaldea", x: -60, z: 10 },
+    { id: "ekialdea", x: 60, z: 15 },
+    { id: "kaia", x: 8, z: 82 },
+    { id: "lepoa", x: -76, z: -118 },
+  ];
+  const EGUZKILORE_AT = { x: 40, z: -56 };
+  /* lurraren gainazala (plataformak barne) */
+  function nightGround(x, z, yRef) {
+    const s = support(x, z, yRef + 1.2);
+    return s ? topY(s, x, z) : gy(x, z);
+  }
+  /* herritik eta portutik kanpo: Gaueko ez da txalapartak jotzen duen tokira sartzen */
+  const nightWild = (x, z) => Math.hypot(x, z - 38) > 40 && z < 58;
+
+  /* ------------------------------ eraikitzea ------------------------------ */
+  function gauaInit() {
+    zoneBuild("ibarra");
+    if (typeof saved.tod !== "number") saved.tod = 0.35;
+    if (!saved.arimak) saved.arimak = [];
+    DAY.k = nightOf(saved.tod);
+    DAY.night = DAY.k > 0.5;
+    nightWindows();
+    nightLamps();
+    /* eguzkilorea: harrespilan, iraganean eta egunez */
+    const fy = nightGround(EGUZKILORE_AT.x, EGUZKILORE_AT.z, 20);
+    DAY.flower = eguzkiloreMesh();
+    DAY.flower.position.set(EGUZKILORE_AT.x, fy + 0.05, EGUZKILORE_AT.z);
+    DAY.flower.visible = false;
+    BP.add(DAY.flower);
+    DAY.flowerY = fy;
+    /* arima-argiak */
+    for (const D of WISP_DEFS) {
+      const y = nightGround(D.x, D.z, 30),
+        g = new T.Group(),
+        halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#9fd8ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0, fog: false })),
+        core = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffffff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0, fog: false }));
+      halo.scale.setScalar(2.6);
+      core.scale.setScalar(0.7);
+      g.add(halo, core);
+      g.visible = false;
+      BP.add(g);
+      DAY.wisps.push({ ...D, y, g, halo, core, ox: D.x, oz: D.z, a: Math.random() * TAU, got: saved.arimak.includes(D.id) });
+    }
+  }
+  /* eguzkilorea (Carlina acaulis): lurrean zabaldutako eguzki zilarra */
+  function eguzkiloreMesh() {
+    const g = new T.Group(),
+      parts = [[at(new T.CylinderGeometry(0.2, 0.22, 0.08, 16), 0, 0.12, 0), "#d9a441"]];
+    for (let i = 0; i < 18; i++) {
+      const a = (i / 18) * TAU;
+      parts.push([at(new T.BoxGeometry(0.06, 0.02, 0.32), Math.sin(a) * 0.32, 0.11, Math.cos(a) * 0.32, -0.12, a, 0), "#efe9d8"]);
+    }
+    for (let i = 0; i < 7; i++) {
+      const a = (i / 7) * TAU + 0.2;
+      parts.push([at(new T.ConeGeometry(0.09, 0.62, 4), Math.sin(a) * 0.48, 0.04, Math.cos(a) * 0.48, PI / 2, 0, -a), "#5f7a4a"]);
+    }
+    g.add(new T.Mesh(mergeColored(parts), new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.7, emissive: new T.Color("#3a3220"), emissiveIntensity: 0.4 })));
+    const glowS = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffe9a8", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.55 }));
+    glowS.scale.setScalar(2.2);
+    glowS.position.y = 0.4;
+    g.add(glowS);
+    g.scale.setScalar(1.4);
+    return g;
+  }
+  /* leihoetako argiak: etxe bakoitzaren fatxadetan (kaxa biratuaren arabera), argi-hodei epelak */
+  function nightWindows() {
+    const halos = [],
+      dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    for (const H of HOUSES) {
+      if (!H.m || H === HUB.andere) continue;
+      const rot = H.m.rotation.y;
+      H.m.rotation.y = 0;
+      H.m.updateMatrixWorld(true);
+      const bb = new T.Box3().setFromObject(H.m);
+      H.m.rotation.y = rot;
+      H.m.updateMatrixWorld(true);
+      const cx = H.m.position.x,
+        cz = H.m.position.z,
+        hw = ((bb.max.x - bb.min.x) / 2) * 0.86,
+        hd = ((bb.max.z - bb.min.z) / 2) * 0.86,
+        h = bb.max.y - bb.min.y,
+        ox = (bb.min.x + bb.max.x) / 2 - cx,
+        oz = (bb.min.z + bb.max.z) / 2 - cz,
+        c = Math.cos(rot),
+        s = Math.sin(rot);
+      for (const [k, [dx, dz]] of dirs.entries())
+        for (const off of [-0.3, 0.3]) {
+          if ((k * 2 + (off > 0 ? 1 : 0) + Math.round(cx * 3)) % 3 === 0) continue; /* ez leiho guztiak piztuta */
+          const lx = ox + (dz ? off * 2 * hw : dx * (hw + 0.35)),
+            lz = oz + (dx ? off * 2 * hd : dz * (hd + 0.35));
+          halos.push(cx + lx * c + lz * s, bb.min.y + h * 0.3, cz - lx * s + lz * c);
+        }
+    }
+    if (halos.length) DAY.halo = haloPoints(halos, 3.4);
+  }
+  /* argi-hodei bigunak (Points bakarra) */
+  function haloPoints(arr, size) {
+    const g = new T.BufferGeometry();
+    g.setAttribute("position", new T.Float32BufferAttribute(arr, 3));
+    const p = new T.Points(g, new T.PointsMaterial({ map: glowTexture, color: "#ffc27a", size, sizeAttenuation: true, transparent: true, opacity: 0, depthWrite: false, blending: T.AdditiveBlending, fog: false }));
+    p.visible = false;
+    p.frustumCulled = false;
+    BP.add(p);
+    return p;
+  }
+  /* farolak: burdinazko zutoina eta beira (gauez distiratsu) */
+  function nightLamps() {
+    const posts = [],
+      glass = [],
+      halos = [];
+    for (const [x, z] of LAMPS) {
+      const y = nightGround(x, z, 20);
+      posts.push(at(new T.CylinderGeometry(0.07, 0.09, 2.8, 6), x, y + 1.4, z));
+      posts.push(at(new T.BoxGeometry(0.5, 0.06, 0.06), x + 0.2, y + 2.75, z));
+      posts.push(at(new T.ConeGeometry(0.26, 0.2, 4), x + 0.42, y + 2.8, z, 0, PI / 4));
+      glass.push(at(new T.BoxGeometry(0.26, 0.34, 0.26), x + 0.42, y + 2.52, z));
+      halos.push(x + 0.42, y + 2.5, z);
+      solids.push({ x, z, r: 0.22, h: 3, y, pillar: true });
+    }
+    const pm = new T.Mesh(mergeGeos(posts), material("#2c2a28", 0.05));
+    pm.castShadow = true;
+    BP.add(pm);
+    DAY.glass = new T.Mesh(mergeGeos(glass), new T.MeshStandardMaterial({ color: "#4a3a22", emissive: new T.Color("#ffbf66"), emissiveIntensity: 0.05, roughness: 0.4 }));
+    BP.add(DAY.glass);
+    DAY.lampHalo = haloPoints(halos, 5.2);
+  }
+
+  /* ------------------------------ ikusmena ------------------------------ */
+  /* eraVisuals-etik (kanpoan): argia, lainoa, zerua eta itsasoa gauerako */
+  function dayVisuals() {
+    const k = DAY.k,
+      tw = DAY.tw;
+    sun.color.lerp(DUSK_COL, tw * 0.55).lerp(MOON_COL, k);
+    sun.intensity *= mix(1, 0.16, k) * (1 - tw * 0.2);
+    ambient.intensity *= mix(1, 0.3, k);
+    ambient.color.copy(AMB_DAY).lerp(AMB_NIGHT, k);
+    ambient.groundColor.copy(GND_DAY).lerp(GND_NIGHT, k);
+    scene.fog.color.lerp(FOG_DUSK, tw * 0.3).lerp(FOG_NIGHT, k);
+    scene.fog.near = mix(130, 60, k);
+    scene.fog.far = mix(560, 400, k);
+    const su = sky.material.uniforms;
+    if (su.uNight) {
+      su.uNight.value = k;
+      su.uTw.value = tw;
+    }
+    if (sea.material.uniforms.uNight) sea.material.uniforms.uNight.value = k;
+    playerLight.intensity = 2.1 * smooth01(clamp((k - 0.3) / 0.45, 0, 1));
+    for (const b of birds) b.visible = k < 0.6;
+    const lit = smooth01(clamp((k - 0.25) / 0.5, 0, 1));
+    if (DAY.halo) {
+      DAY.halo.visible = lit > 0.01;
+      DAY.halo.material.opacity = lit * 0.7;
+    }
+    if (DAY.glass) {
+      DAY.glass.material.emissiveIntensity = 0.05 + lit * 2.4;
+      DAY.lampHalo.visible = lit > 0.01;
+      DAY.lampHalo.material.opacity = lit * (0.75 + Math.sin(time * 7) * 0.04);
+    }
+  }
+  function phaseLabel() {
+    const night = ZONES[ZONE.cur] && ZONES[ZONE.cur].outdoor && DAY.k > 0.5;
+    $("phaseName").textContent = (night ? "☾ " : "") + (phase ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + kb(" · Q");
+  }
+
+  /* ------------------------------ erlojua ------------------------------ */
+  /* hubUpdate-tik (haranean bakarrik) */
+  function dayClock(dt) {
+    if (typeof saved.tod !== "number") saved.tod = 0.35;
+    if (DAY.skip >= 0) {
+      const rem = (DAY.skip - saved.tod + 1) % 1,
+        step = Math.min(rem, dt * 0.24);
+      saved.tod = (saved.tod + step) % 1;
+      if (rem - step < 1e-4) {
+        saved.tod = DAY.skip;
+        DAY.skip = -1;
+        persist();
+      }
+    } else if (clockRuns() && started && !paused && !TXALA.on && !GET.on) saved.tod = (saved.tod + dt * DAY_RATE[isDayT(saved.tod) ? 0 : 1]) % 1;
+    DAY.k = nightOf(saved.tod);
+    DAY.tw = 4 * DAY.k * (1 - DAY.k);
+    const night = DAY.k > 0.5;
+    if (night !== DAY.night) {
+      DAY.night = night;
+      phaseLabel();
+      if (night) onNightfall();
+      else onDawn();
+    }
+    nightFoes(dt);
+    wispsUpdate(dt);
+    flowerUpdate(dt);
+    ghostTxala(dt);
+    nightAmbience(dt);
+  }
+  function onNightfall() {
+    if (!clockRuns()) return;
+    if (!saved.flags.includes("gaua")) {
+      flagSet("gaua");
+      title("GAUA", "");
+      notify(L("Gaua iritsi da Ibarrara. Gauekoren itzalak zelaietan dabiltza… Kattalin atarian zain dago, kriseiluarekin."), "", 7);
+    } else notify(L("Gaua. Gaua gauekoentzat… herritarrak etxera doaz."), "", 3);
+    SND.owl();
+  }
+  function onDawn() {
+    let n = 0;
+    for (const e of ENEMIES)
+      if (e.night && e.state !== "dead") {
+        e.dawn = true;
+        killEnemy(e);
+        n++;
+      }
+    if (clockRuns()) notify(n ? L("Egunsentia: itzalak hauts bihurtu dira.") : L("Egunsentia Ibarran."), "", 2.6);
+  }
+  /* EGUZKILORE erritmoa (txalaparta.js-ko rhythmEffect-etik) */
+  function eguzkiloreEffect() {
+    fxRing(P.x, P.y + 0.3, P.z, "#ffe9a8", 12, 0.9);
+    fxBurst(P.x, P.y + 1.4, P.z, { n: 40, speed: 5, up: 2, life: 0.9, size: 0.35, color: "#ffe2a0", grav: -1 });
+    SND.wake();
+    let n = 0;
+    for (const e of ENEMIES) {
+      if (e.state === "dead" || e.state === "spawn" || Math.hypot(e.x - P.x, e.z - P.z) > 12) continue;
+      e.stun = Math.max(e.stun, 2.6);
+      n++;
+      if (e.night) hitEnemy(e, 2, (e.x - P.x) / 12, (e.z - P.z) / 12);
+    }
+    if (ZONE.cur !== "ibarra") return notify(n ? L("Eguzkiloreak itzalak zorabiatu ditu!") : L("Leizean ez dago eguzkirik… baina eguzkiloreak itzalak uxatzen ditu."), "", 3);
+    if (!clockRuns()) return notify(L("Eguzkia bere bidean dago oraindik."), "", 2.5);
+    const toDawn = DAY.k > 0.5;
+    DAY.skip = toDawn ? 0.3 : 0.8;
+    title(toDawn ? "EGUNSENTIA" : "ILUNABARRA", "");
+    notify(toDawn ? L("Eguzkilorea: gaua igaro da.") : L("Eguzkilorea: eguzkia sartu da. Gaua dator."), "", 3);
+  }
+
+  /* ------------------------------ herritarrak gauez ------------------------------ */
+  /* npcsUpdate-tik: true → NPCa hemen kudeatuta (etxera bidean edo etxean) */
+  function npcNight(N, dt) {
+    const H = NIGHT_HOME[N.id];
+    if (!H) return false;
+    if (DAY.k > 0.55 && clockRuns()) {
+      if (N.away) return true;
+      return npcWalkTo(N, H[0], H[1], dt, () => {
+        N.away = true;
+        N.g.visible = false;
+        if (N.solid) N.solid.r = 0;
+      });
+    }
+    if (N.away) {
+      N.away = false;
+      N.back = true;
+      N.g.visible = true;
+      if (N.solid) N.solid.r = 0.6;
+      Object.assign(N, { x: H[0], z: H[1], walking: false, wait: 1 });
+      N.y = gy(N.x, N.z);
+      N.g.position.set(N.x, N.y, N.z);
+    }
+    if (N.back) return npcWalkTo(N, N.hx, N.hz, dt, () => (N.back = false));
+    return false;
+  }
+  function npcWalkTo(N, tx, tz, dt, done) {
+    const dx = tx - N.x,
+      dz = tz - N.z,
+      dd = Math.hypot(dx, dz);
+    if (dd < 0.3) {
+      npcAnim(N, "Idle");
+      N.walking = false;
+      done();
+      return true;
+    }
+    const sp = 2.1;
+    N.x += (dx / dd) * Math.min(dd, sp * dt);
+    N.z += (dz / dd) * Math.min(dd, sp * dt);
+    N.y = gy(N.x, N.z);
+    N.g.position.set(N.x, N.y, N.z);
+    N.a = Math.atan2(dx, dz);
+    N.g.rotation.y += Math.atan2(Math.sin(N.a - N.g.rotation.y), Math.cos(N.a - N.g.rotation.y)) * Math.min(1, dt * 8);
+    if (!N.walking) npcAnim(N, "Walking_A");
+    N.walking = true;
+    if (N.solid) {
+      N.solid.x = N.x;
+      N.solid.z = N.z;
+    }
+    return true;
+  }
+  /* partida gauez kargatzean: herritarrak zuzenean etxean */
+  function npcsNightStart() {
+    if (!(DAY.k > 0.55 && clockRuns())) return;
+    for (const N of NPCS) {
+      const H = NIGHT_HOME[N.id];
+      if (!H) continue;
+      Object.assign(N, { x: H[0], z: H[1], away: true });
+      N.g.visible = false;
+      if (N.solid) N.solid.r = 0;
+    }
+  }
+  /* plazako txalaparta: gauez, bikiak etxean daudela, bakarrik jotzen du (oihartzun urdinak) */
+  const GHOST_SEQ = [["L", "L", "R"], ["R", "L", "R", "R"], ["L", "R", "L", "R", "R"]];
+  function ghostTxala(dt) {
+    const sp = TXALA.spots[0];
+    if (!sp) return;
+    for (const pl of sp.planks) pl.position.y = mix(pl.position.y, 1.33, 1 - Math.exp(-dt * 10));
+    if (!(DAY.k > 0.6 && clockRuns()) || TXALA.on) return;
+    DAY.ghostT -= dt;
+    if (DAY.ghostT > 0) return;
+    const seq = GHOST_SEQ[DAY.ghostSeq % GHOST_SEQ.length];
+    if (DAY.ghostI >= seq.length) {
+      DAY.ghostI = 0;
+      DAY.ghostSeq++;
+      DAY.ghostT = 2.6;
+      return;
+    }
+    const s = seq[DAY.ghostI++];
+    DAY.ghostT = 0.42;
+    const pl = sp.planks[s === "L" ? 0 : 2];
+    pl.position.y = 1.25;
+    const d = Math.hypot(P.x - sp.x, P.z - sp.z);
+    fxBurst(sp.x + (s === "L" ? -1.2 : 1.2), 1.5, sp.z, { n: 6, speed: 1.2, up: 1.5, life: 0.8, size: 0.2, color: "#9fd8ff", grav: -0.5 });
+    if (d < 32 && !cinematic) SND.tok(s, true, clamp(1 - d / 32, 0, 1) * 0.5);
+  }
+
+  /* ------------------------------ Gauekoren itzalak ------------------------------ */
+  function nightFoes(dt) {
+    for (const e of ENEMIES) {
+      if (!e.night) continue;
+      if (e.state === "dead") {
+        if (!e.looted) {
+          e.looted = true;
+          if (!e.dawn) dropLoot(e.x, e.y, e.z, 2);
+        }
+        continue;
+      }
+      /* urrunegi: desagertu (ez dira betiko atzetik ibiltzen) */
+      if (Math.hypot(e.x - P.x, e.z - P.z) > 48) {
+        e.state = "dead";
+        e.looted = e.dawn = true;
+        e.t = 9;
+        e.g.visible = e.aura.visible = e.bar.visible = false;
+      }
+    }
+    if (!(DAY.k > 0.72 && clockRuns()) || cinematic || !started || paused || ZONE.pending || DAY.skip >= 0) return;
+    DAY.foeT -= dt;
+    if (DAY.foeT > 0) return;
+    DAY.foeT = 6 + Math.random() * 5;
+    if (!nightWild(P.x, P.z) || P.y < -4 || ENEMIES.filter((e) => e.night && e.state !== "dead").length >= 3) return;
+    for (let tries = 0; tries < 14; tries++) {
+      const a = Math.random() * TAU,
+        r = 10 + Math.random() * 6,
+        x = P.x + Math.cos(a) * r,
+        z = P.z + Math.sin(a) * r;
+      if (!nightWild(x, z) || walkSD(x, z) < 2 || riverW(x, z) < 1.5) continue;
+      const y = nightGround(x, z, P.y);
+      if (Math.abs(y - P.y) > 3) continue;
+      const e = spawnEnemy(Math.random() < 0.25 ? "eye" : "grunt", -1, x, z, y);
+      Object.assign(e, { night: true, terrain: true, K: 0.9 });
+      notifyOnce("gaueko-itzalak", L("Gauekoren itzalak! Gauez zelaietan ibiltzen dira; herrian ez dira sartzen."), "");
+      return;
+    }
+  }
+  /* combat.js-ko enemyUpdate-tik: haranean lurraren gainean ibili (ez ibaian, ez herrian) */
+  function terrainStep(e, nx, nz) {
+    const ty = nightGround(nx, nz, e.y);
+    if (walkSD(nx, nz) < 0.6 || riverW(nx, nz) < 0.8 || ty - e.y > 0.6 || !nightWild(nx, nz)) return [e.x, e.z];
+    e.y = ty;
+    return [nx, nz];
+  }
+
+  /* ------------------------------ arima-argiak ------------------------------ */
+  function wispsUpdate(dt) {
+    const on = DAY.k > 0.6;
+    for (const W of DAY.wisps) {
+      W.g.visible = on && !W.got;
+      if (!W.g.visible) continue;
+      /* astiro ibili aingura inguruan; Amaiur hurbil → apur bat ihes */
+      W.a += dt * 0.5;
+      const dp = Math.hypot(P.x - W.x, P.z - W.z);
+      let tx = W.ox + Math.cos(W.a) * 1.6,
+        tz = W.oz + Math.sin(W.a * 1.3) * 1.6;
+      if (dp < 4.5 && dp > 0.01) {
+        tx = W.x + ((W.x - P.x) / dp) * 2;
+        tz = W.z + ((W.z - P.z) / dp) * 2;
+        const ax = tx - W.ox,
+          az = tz - W.oz,
+          al = Math.hypot(ax, az);
+        if (al > 3) {
+          tx = W.ox + (ax / al) * 3;
+          tz = W.oz + (az / al) * 3;
+        }
+      }
+      W.x = mix(W.x, tx, 1 - Math.exp(-dt * 1.2));
+      W.z = mix(W.z, tz, 1 - Math.exp(-dt * 1.2));
+      const fade = smooth01(clamp((DAY.k - 0.6) / 0.3, 0, 1));
+      W.g.position.set(W.x, W.y + 1.3 + Math.sin(time * 2 + W.ox) * 0.25, W.z);
+      W.halo.material.opacity = fade * (0.55 + Math.sin(time * 3 + W.oz) * 0.15);
+      W.core.material.opacity = fade * 0.9;
+      if (Math.random() < dt * 4) fxBurst(W.x, W.g.position.y, W.z, { n: 1, speed: 0.3, up: 0.4, life: 1, size: 0.16, color: "#bfe6ff", grav: -0.3, jitter: 0.3 });
+      if (dp < 1.6 && Math.abs(P.y + 1 - W.g.position.y) < 2.2 && fade > 0.5) {
+        W.got = true;
+        if (!saved.arimak.includes(W.id)) saved.arimak.push(W.id);
+        persist();
+        SND.memory();
+        fxBurst(W.x, W.g.position.y, W.z, { n: 30, speed: 3, up: 2, life: 1, size: 0.3, color: "#bfe6ff", grav: -1 });
+        fxRing(W.x, W.y + 0.2, W.z, "#9fd8ff", 4, 0.7);
+        notify(L("ARIMA-ARGIA ") + saved.arimak.length + " / " + WISP_DEFS.length + (saved.flags.includes("arimak") ? L(" · Kattalinek argizaiola bat piztuko du") : L(" · Kattalinek jakingo du zer den")), "", 3.5);
+        hud();
+      }
+    }
+  }
+  /* ------------------------------ eguzkilorea ------------------------------ */
+  function flowerUpdate(dt) {
+    const F = DAY.flower;
+    if (!F) return;
+    const want = saved.flags.includes("eguzkilore-bila") && !saved.flags.includes("eguzkilorea");
+    F.visible = want && phaseBlend < 0.5 && DAY.k < 0.35;
+    if (!F.visible) return;
+    F.rotation.y += dt * 0.3;
+    if (phase === 0 && Math.hypot(P.x - EGUZKILORE_AT.x, P.z - EGUZKILORE_AT.z) < 1.5 && Math.abs(P.y - DAY.flowerY) < 2) {
+      flagSet("eguzkilorea");
+      SND.heal();
+      fxBurst(EGUZKILORE_AT.x, DAY.flowerY + 0.6, EGUZKILORE_AT.z, { n: 30, speed: 2.5, up: 2.5, life: 1, size: 0.28, color: "#ffe9a8", grav: -0.6 });
+      itemGet("eguzkilore", L("EGUZKILOREA"), L("Eguzkiaren lorea. Ateetan jartzen da, gaueko izakiak urrun egon daitezen. Eraman Kattalini."));
+    }
+  }
+  /* ------------------------------ giro-hotsak gauez ------------------------------ */
+  function nightAmbience(dt) {
+    if (DAY.k < 0.5 || P.y < -4) return;
+    const A = DAY.amb,
+      due = (k, min, max) => {
+        A[k] = (A[k] ?? Math.random() * max) - dt;
+        if (A[k] > 0) return false;
+        A[k] = min + Math.random() * (max - min);
+        return true;
+      };
+    if (phaseBlend < 0.5 && due("cricket", 0.6, 1.8)) SND.cricket();
+    if (due("owl", 9, 18)) SND.owl();
+    /* lamiak askatuta: ibaian kantatzen dute gauez */
+    if (saved.flags.includes("lamia") && riverW(P.x, P.z) < 18 && due("sing", 12, 22)) SND.sing && SND.sing(0.35);
+  }
+
+  /* ------------------------------ Kattalin gauez ------------------------------ */
+  /* talkKattalin-etik: true → hemen kudeatuta */
+  function kattalinNight(N, f) {
+    if (f("gaua") && !saved.rhythms.includes("eguzkilore")) {
+      if (f("eguzkilorea")) {
+        talk(
+          N,
+          [
+            ["KATTALIN", "Eguzkilorea! Usaina… eguzkiarena. Amonak gure atean iltzatzen zuen, udazkenero."],
+            ["KATTALIN", "Gaueko ez da eguzkilorea dagoen atetik sartzen: eguzkia dela uste du, eta beldur da."],
+            ["KATTALIN", "Entzun orain erritmo hau. Andererena zen. Eguzkiari deitzen dio… edo bidaltzen du."],
+          ],
+          () => txalaLearn("eguzkilore", "KATTALIN", () => {
+            flagSet("arimak");
+            notify(L("EGUZKILORE: gauez, egunsentia dakar; egunez, ilunabarra. Leizean, itzalak zorabiatzen ditu."), "", 6);
+          }),
+        );
+        return true;
+      }
+      if (!f("eguzkilore-bila")) {
+        talk(
+          N,
+          [
+            ["KATTALIN", "Gaua, alaba. Gaua gauekoentzat, eguna egunekoentzat… Gauekoren itzalak zelaietan dabiltza berriro."],
+            ["KATTALIN", "Gure atean eguzkilore bat zegoen. Negu honek zimeldu du, eta etxea babesik gabe dago."],
+            ["KATTALIN", "Harrespilako larrean hazten da, lurrean, eguzki txiki bat bezala. Baina udan bakarrik loratzen da… eta egunez."],
+            ["KATTALIN", "Ekarri bat, eta erakutsiko dizut Andereren erritmoa."],
+          ],
+          () => flagSet("eguzkilore-bila"),
+        );
+        return true;
+      }
+      talk(N, [["KATTALIN", "Eguzkilorea harrespilan dago, lurrean. IRAGANEAN (uda) eta EGUNEZ bakarrik ikusten da."]]);
+      return true;
+    }
+    /* arima-argiak: argizaiolak piztu */
+    const n = saved.arimak.length,
+      give = (flag, lines, fn) => {
+        talk(N, lines, () => {
+          flagSet(flag);
+          fn();
+        });
+        return true;
+      };
+    if (f("arimak") || n) {
+      if (!f("arimak")) flagSet("arimak");
+      if (n >= 3 && !f("arimak3"))
+        return give("arimak3", [["KATTALIN", "Hiru arima-argi! Elizako argizaiolak piztu ditut, bakoitzari bere izena esanez. Hartu: amonaren botila."]], () => {
+          saved.potions = (saved.potions || 0) + 1;
+          persist();
+          itemGet("botila", L("SENDABELAR-BOTILA"), L("Bizitzak amaitzean, berez erabiltzen da."));
+        });
+      if (n >= 6 && !f("arimak6")) return give("arimak6", [["KATTALIN", "Sei argizaiola piztuta. Herriko zaharrek lasaiago egiten dute lo. Hau zuretzat: argizaiolaren bihotza."]], () => pieceGet("arimak6"));
+      if (n >= WISP_DEFS.length && !f("arimak10"))
+        return give(
+          "arimak10",
+          [
+            ["KATTALIN", "Hamar! Eta azkenak… Andereren izena zuen. Nire amona. Bere argia ere bidean galduta zegoen."],
+            ["KATTALIN", "Esan du: «Anboton, Mariren etxean, zazpigarren atea. Erritmoa eraman, eta ez beldurtu ilunpeaz.»"],
+          ],
+          () => pieceGet("arimak10"),
+        );
+      if (n < WISP_DEFS.length && DAY.k > 0.5) {
+        talk(N, [["KATTALIN", "Arima-argiak gauez ibiltzen dira: gure aurrekoen argiak, bidea galduta. " + n + " / " + WISP_DEFS.length + ". Ekarri, eta argizaiolak piztuko ditut."]]);
+        return true;
+      }
+    }
+    return false;
+  }
+  /* ==================================================================
+     POTTOKA · Beltxa, Joanesen pottoka (diseinu propioa, prozedurala)
+     · Hasieran basati dabil ipar-larreetan: hurbiltzean ihes egiten du.
+     · Joanesek POTTOKA erritmoa irakasten du ardiak itzuli ondoren (◀ ▶ ◀ ◀):
+       haranean jotzean, Beltxa lauhazka etortzen da.
+     · E: igo / jaitsi. Zaldiz: azkarrago (Shift: lauhazka), jauzi luzea (hesiak),
+       sorginkeria jaurti daiteke; ez bultzadarik ez katerik. Leizeetara ez da sartzen.
+     ================================================================== */
+  const POTT = { g: null, legs: [], neck: null, tail: null, x: 20, z: -40, y: 0, a: 0, state: "wild", ph: 0, sp: 0, t: 0, graze: 0, hoof: 0, wantX: 20, wantZ: -40, solid: null, bob: 0 };
+  const PONY_HOME = { x: 20, z: -40 }; /* ipar-larreak */
+  const PONY_S = 1.32,
+    SADDLE = 1.05 * PONY_S;
+  const ponyTamed = () => saved.rhythms.includes("pottoka");
+  function buildPottoka() {
+    zoneBuild("ibarra");
+    const COAT = "#3b2a22",
+      DARK = "#16110e",
+      MUZZLE = "#5a4636",
+      mat = new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.85 }),
+      mesh = (parts, parent) => {
+        const m = new T.Mesh(mergeColored(parts), mat);
+        m.castShadow = true;
+        parent.add(m);
+        return m;
+      },
+      g = new T.Group();
+    /* gorputza (hiru elipsoide), zela gorria eta oihal zuria: marrazketa-dei bakarra */
+    mesh(
+      [
+        [at(new T.SphereGeometry(0.5, 14, 10), 0, 1.0, 0, 0, 0, 0, 0.86, 0.76, 1.5), COAT],
+        [at(new T.SphereGeometry(0.43, 12, 9), 0, 1.04, 0.56), COAT],
+        [at(new T.SphereGeometry(0.45, 12, 9), 0, 1.06, -0.6), COAT],
+        [at(new T.BoxGeometry(0.62, 0.1, 0.62), 0, 1.42, 0.02), "#a8332a"],
+        [at(new T.BoxGeometry(0.8, 0.03, 0.82), 0, 1.36, 0.02), "#efe6d2"],
+      ],
+      g,
+    );
+    /* lepoa, zurda eta burua (lepoarekin batera mugitzen dira) */
+    const neck = new T.Group();
+    neck.position.set(0, 1.28, 0.78);
+    g.add(neck);
+    const np = [[at(new T.CylinderGeometry(0.17, 0.25, 0.85, 10), 0, 0.36, 0.12, 0.62), COAT]];
+    for (let i = 0; i < 6; i++) np.push([at(new T.BoxGeometry(0.07, 0.2, 0.16), 0, 0.18 + i * 0.12, -0.1 + i * 0.07, 0.62), DARK]);
+    np.push([at(new T.BoxGeometry(0.26, 0.3, 0.56), 0, 0.74, 0.6, 0.55), COAT], [at(new T.BoxGeometry(0.22, 0.2, 0.2), 0, 0.58, 0.84, 0.55), MUZZLE], [at(new T.BoxGeometry(0.05, 0.16, 0.12), 0, 0.9, 0.46), DARK]);
+    for (const s of [-1, 1]) np.push([at(new T.ConeGeometry(0.05, 0.16, 5), s * 0.09, 0.94, 0.38, 0, 0, -s * 0.2), COAT], [at(new T.SphereGeometry(0.035, 6, 5), s * 0.12, 0.78, 0.58), DARK]);
+    mesh(np, neck);
+    /* isatsa */
+    const tail = new T.Group();
+    tail.position.set(0, 1.18, -1.02);
+    g.add(tail);
+    mesh([0, 1, 2].map((i) => [at(new T.ConeGeometry(0.09 - i * 0.015, 0.7, 6), (i - 1) * 0.04, -0.32, -0.05, Math.PI + 0.25), DARK]), tail);
+    /* hankak: aldaka → belauna → apatxa (bi zati hanka bakoitzeko) */
+    const legs = [];
+    for (const [lx, lz, front] of [[-0.24, 0.55, 1], [0.24, 0.55, 1], [-0.24, -0.6, 0], [0.24, -0.6, 0]]) {
+      const hip = new T.Group();
+      hip.position.set(lx, 0.98, lz);
+      g.add(hip);
+      mesh([[at(new T.CylinderGeometry(0.1, 0.08, 0.5, 7), 0, -0.25, 0), COAT]], hip);
+      const knee = new T.Group();
+      knee.position.y = -0.5;
+      hip.add(knee);
+      mesh([[at(new T.CylinderGeometry(0.065, 0.06, 0.42, 6), 0, -0.21, 0), COAT], [at(new T.CylinderGeometry(0.08, 0.09, 0.08, 7), 0, -0.44, 0.01), DARK]], knee);
+      legs.push({ hip, knee, front, off: front ? (lx < 0 ? 0 : 0.35) : lx < 0 ? Math.PI : Math.PI + 0.35 });
+    }
+    g.scale.setScalar(PONY_S);
+    BP.add(g);
+    POTT.g = g;
+    Object.assign(POTT, { legs, neck, tail });
+    const at0 = saved.ponyAt || PONY_HOME;
+    POTT.x = at0.x;
+    POTT.z = at0.z;
+    POTT.y = nightGround(POTT.x, POTT.z, 30);
+    POTT.state = ponyTamed() ? "idle" : "wild";
+    POTT.solid = { x: POTT.x, z: POTT.z, r: 0.85, h: 1.9, y: POTT.y, pillar: true };
+    solids.push(POTT.solid);
+    ponyPlace();
+  }
+  function ponyPlace() {
+    POTT.g.position.set(POTT.x, POTT.y + POTT.bob, POTT.z);
+    POTT.g.rotation.y = POTT.a;
+    POTT.solid.x = POTT.x;
+    POTT.solid.z = POTT.z;
+    POTT.solid.y = POTT.y;
+    /* zaldiz edo etortzen: talka-gorputzik ez (r < 0: inoiz ez du bultzatzen) */
+    POTT.solid.r = P.riding || POTT.state === "come" ? -1 : 0.85;
+  }
+  /* lurraren gainean (ez ibaian; herrian bai) */
+  function ponyStep(nx, nz) {
+    const ty = nightGround(nx, nz, POTT.y);
+    if (walkSD(nx, nz) < 0.8 || riverW(nx, nz) < 0.8 || ty - POTT.y > 0.7) return false;
+    POTT.x = nx;
+    POTT.z = nz;
+    POTT.y = ty;
+    return true;
+  }
+  /* hanken animazioa: sp (m/s) → urratsak */
+  function ponyAnim(dt, sp) {
+    const gal = clamp(sp / 10, 0, 1),
+      walk = clamp(sp / 2.5, 0, 1);
+    POTT.ph += dt * (1.6 + sp * 1.05);
+    for (const L0 of POTT.legs) {
+      const s = Math.sin(POTT.ph + L0.off);
+      L0.hip.rotation.x = s * mix(0.28, 0.75, gal) * walk;
+      L0.knee.rotation.x = (L0.front ? -1 : 1) * Math.max(0, L0.front ? s : -s) * mix(0.4, 1.1, gal) * walk;
+    }
+    POTT.bob = Math.abs(Math.sin(POTT.ph)) * 0.09 * gal;
+    POTT.neck.rotation.x = Math.sin(POTT.ph * 2) * 0.06 * gal + (POTT.graze > 0 ? 0.9 * Math.min(1, POTT.graze) : 0);
+    POTT.tail.rotation.x = 0.3 * gal + Math.sin(time * 1.3) * 0.08;
+    POTT.tail.rotation.z = Math.sin(time * 0.9) * 0.15;
+    /* lauhazkaren hotsa */
+    if (gal > 0.2 && ZONE.cur === "ibarra") {
+      POTT.hoof += dt * (1.6 + sp * 1.05);
+      if (POTT.hoof > PI) {
+        POTT.hoof -= PI;
+        const d = Math.hypot(P.x - POTT.x, P.z - POTT.z);
+        if (d < 30) SND.hoof(clamp(1 - d / 30, 0.1, 1));
+      }
+    }
+  }
+  /* tick-etik (haranean) */
+  function pottokaUpdate(dt) {
+    if (!POTT.g) return;
+    POTT.g.visible = ZONE.cur === "ibarra";
+    if (ZONE.cur !== "ibarra") return;
+    POTT.t += dt;
+    if (P.riding) {
+      POTT.x = P.x;
+      POTT.z = P.z;
+      POTT.y = P.y;
+      POTT.a = P.angle;
+      POTT.graze = 0;
+      ponyAnim(dt, P.grounded ? Math.hypot(P.vx, P.vz) : 4);
+      ponyPlace();
+      return;
+    }
+    const dp = Math.hypot(P.x - POTT.x, P.z - POTT.z);
+    let sp = 0,
+      tx = POTT.wantX,
+      tz = POTT.wantZ;
+    if (POTT.state === "wild") {
+      /* basati: larrean ibili, Amaiur hurbiltzean ihes */
+      if (dp < 7 && !cinematic) {
+        tx = POTT.x + ((POTT.x - P.x) / (dp || 1)) * 8;
+        tz = POTT.z + ((POTT.z - P.z) / (dp || 1)) * 8;
+        sp = 7.5;
+        if (!POTT.fled) {
+          POTT.fled = true;
+          SND.neigh(0.6);
+          notifyOnce("pottoka-basati", L("Pottoka beltz bat! Ez du inor hurbiltzen uzten… norbaitek ezagutuko du."), "");
+        }
+      } else {
+        POTT.fled = false;
+        if (Math.hypot(tx - POTT.x, tz - POTT.z) < 0.5 || POTT.t > 9) {
+          POTT.t = 0;
+          const a = Math.random() * TAU,
+            r = Math.random() * 9;
+          POTT.wantX = PONY_HOME.x + Math.cos(a) * r;
+          POTT.wantZ = PONY_HOME.z + Math.sin(a) * r;
+          POTT.graze = Math.random() < 0.6 ? 3 : 0;
+        }
+        sp = POTT.graze > 0 ? 0 : 1.6;
+      }
+    } else if (POTT.state === "come") {
+      tx = P.x;
+      tz = P.z;
+      sp = dp > 6 ? 11 : 4;
+      if (dp < 2.6) {
+        POTT.state = "idle";
+        POTT.wantX = POTT.x;
+        POTT.wantZ = POTT.z;
+        SND.neigh(0.8);
+      }
+    } else {
+      /* zain: bazka, noizean behin pauso batzuk */
+      if (POTT.t > 7) {
+        POTT.t = 0;
+        POTT.graze = Math.random() < 0.7 ? 3.5 : 0;
+        if (!POTT.graze) {
+          const a = Math.random() * TAU;
+          POTT.wantX = POTT.x + Math.cos(a) * 2.5;
+          POTT.wantZ = POTT.z + Math.sin(a) * 2.5;
+        }
+      }
+      sp = POTT.graze > 0 ? 0 : 1.2;
+    }
+    POTT.graze = Math.max(0, POTT.graze - dt);
+    const dx = tx - POTT.x,
+      dz = tz - POTT.z,
+      dd = Math.hypot(dx, dz);
+    let moved = 0;
+    if (sp > 0 && dd > 0.3) {
+      const want = Math.atan2(dx, dz);
+      POTT.a += Math.atan2(Math.sin(want - POTT.a), Math.cos(want - POTT.a)) * Math.min(1, dt * 5);
+      const st = Math.min(dd, sp * dt),
+        nx = POTT.x + Math.sin(POTT.a) * st,
+        nz = POTT.z + Math.cos(POTT.a) * st;
+      if (ponyStep(nx, nz)) moved = st / dt;
+      else if (POTT.state === "come" && dp > 40) {
+        /* bidea itxita eta urrun: atzetik agertu */
+        ponyArrive(18);
+      } else {
+        POTT.wantX = POTT.x;
+        POTT.wantZ = POTT.z;
+      }
+    }
+    POTT.sp = mix(POTT.sp, moved, 1 - Math.exp(-dt * 8));
+    ponyAnim(dt, POTT.sp);
+    ponyPlace();
+  }
+  /* Amaiurren atzean agertu (urrun badago) */
+  function ponyArrive(r) {
+    for (let k = 0; k < 16; k++) {
+      const a = P.angle + PI + (k % 2 ? 1 : -1) * Math.floor(k / 2) * 0.4,
+        x = P.x + Math.sin(a) * r,
+        z = P.z + Math.cos(a) * r;
+      if (walkSD(x, z) < 2 || riverW(x, z) < 1.5) continue;
+      const y = nightGround(x, z, P.y + 2);
+      if (Math.abs(y - P.y) > 3) continue;
+      Object.assign(POTT, { x, z, y, a: Math.atan2(P.x - x, P.z - z) });
+      return true;
+    }
+    return false;
+  }
+  /* POTTOKA erritmoa (txalaparta.js-ko rhythmEffect-etik) */
+  function pottokaCall() {
+    if (ZONE.cur !== "ibarra") return notify(L("Leizean ez dago pottokarentzat lekurik."), "", 2.6);
+    if (P.riding) return notify(L("Beltxa zure azpian dago!"), "", 2);
+    const d = Math.hypot(P.x - POTT.x, P.z - POTT.z);
+    if (d > 45) ponyArrive(24);
+    POTT.state = "come";
+    POTT.graze = 0;
+    SND.neigh(1);
+    fxRing(P.x, P.y + 0.2, P.z, "#c98a5a", 10, 0.8);
+    notify(L("Beltxa lauhazka dator!"), "", 2.4);
+  }
+  const ponyNear = () => !P.riding && ponyTamed() && POTT.g && ZONE.cur === "ibarra" && POTT.state !== "come" && Math.hypot(P.x - POTT.x, P.z - POTT.z) < 2.8 && Math.abs(P.y - POTT.y) < 1.6;
+  function ponyMount() {
+    if (P.riding || CRAFT.on || CHAIN.state !== "idle") return;
+    P.riding = true;
+    P.x = POTT.x;
+    P.z = POTT.z;
+    P.angle = POTT.a;
+    P.vx = P.vz = 0;
+    P.dashT = 0;
+    SND.neigh(0.9);
+    fxBurst(P.x, P.y + 1.2, P.z, { n: 14, speed: 2, up: 2, life: 0.6, size: 0.25, color: "#e8d3b0", grav: 3 });
+    notifyOnce("pottoka-igo", mobile ? L("BELTXA · makila ertzeraino: lauhazka · JAUZI: jauzi luzea · JAITSI botoia") : L("BELTXA · Shift: lauhazka · ␣: jauzi luzea · E: jaitsi"), "");
+    coachDone("pottoka");
+    hud();
+  }
+  function ponyDismount(quiet) {
+    if (!P.riding) return;
+    P.riding = false;
+    POTT.state = "idle";
+    POTT.t = 0;
+    Object.assign(POTT, { x: P.x, z: P.z, y: P.y, a: P.angle, wantX: P.x, wantZ: P.z });
+    /* Amaiur alboan jaitsi */
+    const sx = P.x + Math.cos(P.angle) * 1.3,
+      sz = P.z - Math.sin(P.angle) * 1.3;
+    if (walkSD(sx, sz) > 0.6 && riverW(sx, sz) > 0.6) {
+      P.x = sx;
+      P.z = sz;
+    }
+    saved.ponyAt = { x: +POTT.x.toFixed(1), z: +POTT.z.toFixed(1) };
+    persist();
+    ponyPlace();
+    if (!quiet) SND.thud();
+    hud();
+  }
+  /* move()-tik: zalditik jarlekuaren altuera (Amaiur gora) */
+  const riderY = () => (P.riding ? SADDLE + POTT.bob * PONY_S : 0);
+  /* Joanes: ardiak itzuli ondoren, Beltxaren erritmoa */
+  function joanesPony(N, f) {
+    if (!f("ardiak-saria") || ponyTamed()) return false;
+    talk(
+      N,
+      [
+        ["JOANES", "Ardiak etxean… baina Beltxa, nire pottoka, oraindik basati dabil ipar-larreetan."],
+        ["JOANES", "Basajaun isildu zenetik ez dio inori kasurik egiten. Nire aitonaren erritmoa bakarrik ezagutzen du."],
+        ["JOANES", "Entzun ondo. Jo ezazu haranean, eta etorriko zaizu. Zaindu: zure laguna izango da."],
+      ],
+      () =>
+        txalaLearn("pottoka", "JOANES", () => {
+          POTT.state = "idle";
+          notify(L("POTTOKA: jo haranean, eta Beltxa lauhazka etorriko da.") + (mobile ? L(" IGO / JAITSI botoiarekin.") : L(" E: igo / jaitsi.")), "", 6);
+        }),
+    );
+    return true;
+  }
+  /* ==================================================================
+     HARANEKO MISTERIOAK · leizeetako tresnekin itzultzeko sekretuak
+     · SASI-HABIA (ipar-mendebaldeko larreak): sasi itxien barruan kutxa bat
+       distiraka. Egurra bezala, sasiak ere SUAk erretzen ditu.
+     · HARRI-ZUTABEA (arroila): ibaiaren erdian, gailurrean suge-eraztun bat:
+       KATEAz igo.
+     · ERROTA ZAHARRA (ekialdeko zelaiak): haize-errota geldia; HAIZE-ADARRAz
+       biratuta, lurreko ate-tranpa irekitzen da.
+     Bakoitza egunkarian agertzen da ikusten denean (pista batekin).
+     ================================================================== */
+  const SECRETS = [];
+  function secretsInit() {
+    zoneBuild("ibarra");
+    /* --- SASI-HABIA (SUA) --- */
+    {
+      const x = -62,
+        z = -76,
+        y = nightGround(x, z, 20),
+        id = "s-sasia",
+        g = new T.Group(),
+        parts = [],
+        cols = ["#2f3d22", "#46532c", "#5a4630"];
+      g.position.set(x, y, z);
+      for (let i = 0; i < 16; i++) {
+        const a = (i / 16) * TAU,
+          r = i % 2 ? 2.1 : 1.6,
+          bx = Math.cos(a) * r,
+          by = 0.6 + (i % 3) * 0.35,
+          bz = Math.sin(a) * r;
+        parts.push([at(new T.IcosahedronGeometry(0.85 + (i % 3) * 0.2, 0), bx, by, bz, i, i * 2, 0, 1, 0.85, 1), cols[i % 3]]);
+        for (let k = 0; k < 3; k++) parts.push([at(new T.ConeGeometry(0.06, 0.4, 4), bx * 1.25 + Math.sin(i + k) * 0.3, by + 0.3 + k * 0.2, bz * 1.25 + Math.cos(i * 2 + k) * 0.3, Math.sin(i + k), 0, Math.cos(i * k)), "#3f4a2a"]);
+      }
+      /* goiko sasi-kupula (gainetik ere ezin) */
+      parts.push([at(new T.IcosahedronGeometry(1.7, 1), 0, 1.9, 0, 0, 0, 0, 1.25, 0.55, 1.25), cols[0]]);
+      const bush = new T.Mesh(mergeColored(parts), new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, flatShading: true }));
+      bush.castShadow = true;
+      g.add(bush);
+      BP.add(g);
+      const done = isCleared(id),
+        solid = { x, z, r: done ? -1 : 2.7, h: 3.2, y, pillar: true };
+      solids.push(solid);
+      g.visible = !done;
+      const C = chest("h-sasia", x, y, z, 2.4, { t: "piece", id: "sasia" });
+      const B = {
+        kind: "sasia",
+        x,
+        y,
+        z,
+        m: g,
+        r: 2.8,
+        broken: done,
+        buildZone: BP,
+        fireOnly: true,
+        hint: L("Sasi lodiak, arantzaz beteak. Sorginkeria arruntak ez ditu erretzen… SUA behar da."),
+        solid: { r: 0 },
+        hitTest: (bx, by, bz, r) => by < y + 3.4 && Math.hypot(bx - x, bz - z) < 2.8 + r,
+        custom: () => {
+          g.visible = false;
+          solid.r = -1;
+          if (!saved.cleared.includes(id)) saved.cleared.push(id);
+          persist();
+          SND.flame();
+          for (let i = 0; i < 8; i++) fxBurst(x + Math.cos(i) * 1.8, y + 1 + (i % 3) * 0.5, z + Math.sin(i) * 1.8, { n: 14, speed: 3, up: 4, life: 1.1, size: 0.42, color: i % 2 ? "#ff7a2a" : "#ffd166", grav: -2 });
+          notify(L("Sasiak erre dira! Barruan, kutxa bat."), "", 3);
+        },
+      };
+      BREAKABLES.push(B);
+      SECRETS.push({ id: "sasia", x, z, y, r: 12, name: L("Sasi-habia"), hint: L("Sasien barruan zerbait distiratzen du. SUA behar da (Tartaloren koban)."), see: L("Sasi itxien barruan, distira bat… Egurra bezala, sasiak ere erretzen dira."), done: () => saved.chests.includes("h-sasia"), chest: C });
+    }
+    /* --- HARRI-ZUTABEA (KATEA) --- */
+    {
+      const x = 75,
+        z = -24,
+        top = 7,
+        g = new T.Group(),
+        col = new T.Mesh(new T.CylinderGeometry(1.35, 1.75, top + 4, 9, 4), stackMaterial());
+      col.position.y = (top - 4) / 2;
+      col.castShadow = col.receiveShadow = true;
+      g.add(col);
+      const cap = new T.Mesh(new T.CylinderGeometry(1.45, 1.35, 0.4, 9), rockMaterial());
+      cap.position.y = top - 0.2;
+      g.add(cap);
+      g.position.set(x, 0, z);
+      BP.add(g);
+      solids.push({ x, z, r: 1.6, h: top + 4, y: -4, pillar: true });
+      platforms.push({ x, z, y: top, bottom: top - 0.5, w: 2.8, d: 2.8, phase: -1, safe: true });
+      serpentRing(x, top + 2.6, z + 0.5, 0);
+      const C = chest("h-zutabea", x, top, z - 0.75, PI, { t: "piece", id: "zutabea" });
+      SECRETS.push({ id: "zutabea", x, z, y: 0, r: 16, name: L("Harri-zutabea"), hint: L("Ibaiaren erdiko zutabean kutxa bat. Gainean suge-eraztuna: KATEA."), see: L("Harri-zutabe bat ibaiaren erdian, eta goian… suge-eraztun bat."), done: () => saved.chests.includes("h-zutabea"), chest: C });
+    }
+    /* --- ERROTA ZAHARRA (HAIZE-ADARRA) --- */
+    {
+      const x = 62,
+        z = 12,
+        y = nightGround(x, z, 20),
+        id = "s-errota",
+        tower = new T.Mesh(new T.CylinderGeometry(1.25, 1.55, 5, 10), material("#cfc6b4")),
+        roof = new T.Mesh(new T.ConeGeometry(1.7, 1.6, 10), material("#7a3b2a"));
+      tower.position.set(x, y + 2.5, z);
+      roof.position.set(x, y + 5.8, z);
+      for (const m of [tower, roof]) {
+        m.castShadow = true;
+        BP.add(m);
+      }
+      solids.push({ x, z, r: 1.55, h: 6.5, y, pillar: true });
+      /* ate-tranpa lurrean (errotaren aurrean) */
+      const hatch = new T.Mesh(new T.BoxGeometry(1.6, 0.14, 1.6), material("#5a3c26"));
+      hatch.position.set(x, y + 0.07, z + 3.4);
+      BP.add(hatch);
+      const C = chest("h-errota", x, y, z + 3.4, PI, { t: "piece", id: "errota" }, { hidden: !isCleared(id) });
+      if (isCleared(id)) hatch.visible = false;
+      fan(x, y + 3.6, z + 1.35, 0, {
+        range: 16,
+        onSpin: (on) => {
+          if (!on || isCleared(id)) return;
+          saved.cleared.push(id);
+          persist();
+          hatch.visible = false;
+          revealChest(C);
+          SND.wake();
+          shake(0.2);
+          notify(L("Errotak biraka: lurreko ate-tranpa ireki da!"), "", 3);
+        },
+      });
+      SECRETS.push({ id: "errota", x, z, y, r: 12, name: L("Errota zaharra"), hint: L("Errota zahar geldia ekialdeko zelaietan. Haizeak ahaztu du: HAIZE-ADARRA."), see: L("Errota zahar bat, geldi. Haizeak ahaztu du…"), done: () => saved.chests.includes("h-errota"), chest: C });
+    }
+  }
+  /* hubUpdate-tik: hurbiltzean pista (eta egunkarian sartu) */
+  function secretsUpdate() {
+    for (const S of SECRETS) {
+      if (S.done() || Math.hypot(P.x - S.x, P.z - S.z) > S.r) continue;
+      const k = "m-" + S.id;
+      if (!saved.flags.includes(k)) {
+        saved.flags.push(k);
+        persist();
+        notify(S.see, "", 4.5);
+      }
+    }
+  }
+  /* egunkarirako lerroak */
+  function secretsLog(line) {
+    return SECRETS.filter((S) => saved.flags.includes("m-" + S.id) || S.done()).map((S) => line(S.done(), S.name, "", S.hint));
+  }
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -16341,6 +17404,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     textures();
     ATMO.skyPast = skyTex("sky_dusk");
     ATMO.skyNow = skyTex("sky_day");
+    ATMO.skyNight = skyTex("sky_night");
     const skyMat = new T.ShaderMaterial({
       side: T.BackSide,
       depthWrite: false,
@@ -16351,15 +17415,22 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         tNow: { value: ATMO.skyNow },
         useTex: { value: ATMO.skyPast && ATMO.skyNow ? 1 : 0 },
         uFog: { value: new T.Color("#9fb9cc") },
+        tNight: { value: ATMO.skyNight },
+        useNight: { value: ATMO.skyNight ? 1 : 0 },
+        uNight: { value: 0 },
+        uTw: { value: 0 },
       },
       vertexShader: "varying vec3 p;void main(){p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",
       fragmentShader: [
-        "varying vec3 p;uniform float blend,useTex;uniform sampler2D tPast,tNow;uniform vec3 uFog;",
+        "varying vec3 p;uniform float blend,useTex,uNight,useNight,uTw;uniform sampler2D tPast,tNow,tNight;uniform vec3 uFog;",
         "vec2 eq(vec3 d){return vec2(atan(d.z,d.x)*.15915494+.5,asin(clamp(d.y,-1.,1.))*.31830989+.5);}",
         "void main(){vec3 d=normalize(p);float t=pow(max(d.y,0.),.6);",
         "vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 night=mix(vec3(.74,.85,.94),vec3(.27,.53,.86),t);",
         "vec3 c=mix(day,night,blend);",
         "if(useTex>.5){vec2 uv=eq(d);c=mix(texture2D(tPast,uv).rgb,texture2D(tNow,uv).rgb,smoothstep(0.,1.,blend));}",
+        "c=mix(c,c*vec3(1.2,.8,.7)+vec3(.07,.015,0.),uTw*(1.-t)*.75);",
+        "vec3 nc=useNight>.5?texture2D(tNight,eq(d)).rgb*1.35:mix(vec3(.012,.02,.05),vec3(.03,.05,.11),t);",
+        "c=mix(c,nc,uNight);",
         "c=mix(c,uFog,smoothstep(.035,-.015,d.y));",
         "gl_FragColor=vec4(c,1.);}",
       ].join("\n"),
@@ -16373,6 +17444,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       ATMO.fogNow.copy(EG.horizon("day", 0.45)).lerp(new T.Color("#b9d3ea"), 0.3);
       ATMO.envPast = EG.environment(renderer, scene, "dusk");
       ATMO.envNow = EG.environment(renderer, scene, "day");
+      if (ATMO.skyNight) ATMO.envNight = EG.environment(renderer, scene, "night");
       scene.environment = ATMO.envNow;
     }
     sea = obj(new T.PlaneGeometry(3000, 3000, 1, 1), seaMaterial(), scene);
@@ -16420,6 +17492,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     buildNpcs();
     lifeInit();
     questsInit();
+    gauaInit();
+    npcsNightStart();
+    buildPottoka();
+    secretsInit();
     buildCraft("ibarra");
     buildRunePuzzles("ibarra");
     buildDungeon();
@@ -16512,6 +17588,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   /* bizitzak amaituta: zonaren azken kontrol-puntura (herria edo leizearen sarrera) */
   function returnCheckpoint() {
+    ponyDismount(true);
     magicReset();
     if (CRAFT.held) craftRelease();
     craftExit();
@@ -16530,6 +17607,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   let hardFall = false;
   function fall(hard) {
     if (respawnTimer > 0) return;
+    ponyDismount(true);
     hardFall = !!hard;
     respawnTimer = hard ? 0.6 : 0.38;
     P.vx = P.vz = 0;
@@ -16539,7 +17617,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     jumpBuffer = 0.18;
   }
   function dash() {
-    if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer) return;
+    if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer || P.riding) return;
     let d = direction();
     if (Math.hypot(d.x, d.z) < 0.1) d = { x: Math.sin(P.angle), z: Math.cos(P.angle) };
     const n = Math.hypot(d.x, d.z) || 1;
@@ -16588,7 +17666,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       s.ghost.visible = s.phase !== -1 && s.phase !== phase;
     }
     for (const h of hazards) h.beam.visible = h.phase === phase;
-    $("phaseName").textContent = (phase ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + kb(" · Q");
+    phaseLabel();
     $("phaseMark").style.background = phase ? "#9ae3e555" : "#f1c58166";
     if (immediate) phaseBlend = phase;
   }
@@ -16638,7 +17716,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       d = { x: 0, z: 0 };
       len = 0;
     }
-    const groundSpeed = surf ? 12.8 : 7.7;
+    const groundSpeed = P.riding ? (surf ? 19 : 12.5) : surf ? 12.8 : 7.7;
     /* sorginkeria kargatzean edo biraka: mugimendu motelagoa */
     const atkSlow = MAG.charging ? 0.58 : MAG.spinT < 0.3 ? 0.45 : 1;
     const speed = (P.grounded ? groundSpeed : Math.max(groundSpeed, P.airSpeed)) * atkSlow;
@@ -16648,8 +17726,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       P.x += P.platform.dx;
       P.z += P.platform.dz;
     }
-    if (jumpBuffer > 0 && (P.grounded || groundGrace > 0 || P.jumps < 2 || P.wallGrace > 0)) {
-      const wallKick = !P.grounded && groundGrace <= 0 && P.jumps >= 2 && P.wallGrace > 0;
+    if (jumpBuffer > 0 && (P.riding ? P.grounded || groundGrace > 0 : P.grounded || groundGrace > 0 || P.jumps < 2 || P.wallGrace > 0)) {
+      const wallKick = !P.riding && !P.grounded && groundGrace <= 0 && P.jumps >= 2 && P.wallGrace > 0;
       if (wallKick) {
         P.vx = P.wallX * 12;
         P.vz = P.wallZ * 12;
@@ -16657,8 +17735,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         P.jumps = 1;
         spawnTrail();
       } else P.jumps = P.grounded || groundGrace > 0 ? 1 : P.jumps + 1;
-      P.airSpeed = Math.min(14, Math.max(speed, Math.hypot(P.vx, P.vz)));
-      P.vy = P.jumps === 2 ? 11.4 : 10.6;
+      P.airSpeed = Math.min(P.riding ? 20 : 14, Math.max(speed, Math.hypot(P.vx, P.vz)));
+      P.vy = P.riding ? 11.6 : P.jumps === 2 ? 11.4 : 10.6;
+      if (P.riding) P.jumps = 2;
       P.dashT = 0;
       if (P.jumps === 2) spawnTrail();
       P.grounded = false;
@@ -16683,7 +17762,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     } else {
       /* izotzean: marruskadura txikia (irristatu) */
       const t = 1 - Math.exp(-dt * (P.grounded ? (P.platform && P.platform.ice ? 2.4 : 22) : len > 0.1 ? 6.5 : 3));
-      if (P.wallLock <= 0) {
+      if (P.riding) {
+        /* POTTOKA: inertzia eta biratze mugatua (zaldi baten sentsazioa) */
+        const want = len > 0.12 ? Math.atan2(d.x, d.z) : P.angle;
+        if (P.grounded) P.angle += Math.atan2(Math.sin(want - P.angle), Math.cos(want - P.angle)) * Math.min(1, dt * 4.2);
+        const sp = P.grounded ? speed * Math.min(1, len) : Math.hypot(P.vx, P.vz),
+          k = 1 - Math.exp(-dt * (P.grounded ? (P.platform && P.platform.ice ? 1.2 : 2.8) : 0.4));
+        P.vx = mix(P.vx, Math.sin(P.angle) * sp, k);
+        P.vz = mix(P.vz, Math.cos(P.angle) * sp, k);
+      } else if (P.wallLock <= 0) {
         P.vx = mix(P.vx, d.x * speed, t);
         P.vz = mix(P.vz, d.z * speed, t);
       }
@@ -16781,15 +17868,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     /* sorginkeria jaurtitzean, helburuari begira (hankak korrika jarraitzen dute);
        helburua finkatuta: beti hari begira (alboetara mugitzen da) */
-    const lockT = LOCK.target && P.dashT <= 0 && CHAIN.state === "idle" ? lockPos(LOCK.target) : null;
+    const lockT = LOCK.target && !P.riding && P.dashT <= 0 && CHAIN.state === "idle" ? lockPos(LOCK.target) : null;
     if (lockT) {
       const a = Math.atan2(lockT.x - P.x, lockT.z - P.z);
       P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 14);
-    } else if (len > 0.12 && P.dashT <= 0 && MAG.aimT <= 0) {
+    } else if (len > 0.12 && !P.riding && P.dashT <= 0 && MAG.aimT <= 0) {
       const a = Math.atan2(d.x, d.z);
       P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 18);
     }
-    hero.position.set(P.x, P.y, P.z);
+    hero.position.set(P.x, P.y + riderY(), P.z);
     hero.rotation.y = mix(hero.rotation.y, hero.rotation.y + Math.atan2(Math.sin(P.angle - hero.rotation.y), Math.cos(P.angle - hero.rotation.y)), Math.min(1, dt * 30));
     hero.visible = damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0;
     /* finkatuta eta mugitzen: alboetara (strafe) edo atzeraka */
@@ -16803,7 +17890,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       if (!models.mage.actions[run]) run = "Running_A";
     }
     animate(
-      CRAFT.held
+      P.riding
+        ? "Idle"
+        : CRAFT.held
         ? "Spellcast_Raise"
         : CHAIN.state === "pull"
           ? "Jump_Idle"
@@ -16918,6 +18007,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       sun.intensity = mix(1.8, 1.95, phaseBlend);
       ambient.intensity = mix(0.86, 0.95, phaseBlend) * (scene.environment ? 0.55 : 1);
       scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
+      dayVisuals();
     } else {
       sun.color.set(phaseBlend > 0.5 ? "#8fa9cc" : "#c08c5c");
       sun.intensity = 0.38;
@@ -16939,6 +18029,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (C) return { kind: "chest", label: L("IREKI"), fn: () => openChest(C) };
     const LC = lockedChestNear();
     if (LC) return { kind: "locked", label: L("ITXITA"), fn: () => notify(LC.lockedHint || L("Ezin da ireki… oraingoz."), "", 3.5) };
+    if (ponyNear()) return { kind: "pony", label: L("IGO"), fn: ponyMount };
     const D = doorNear();
     if (D) return { kind: "door", label: D.kind === "boss" ? L("ATE HANDIA") : L("ATEA"), fn: () => tryDoor(D) };
     if (drumNear()) return { kind: "drum", label: L("ENTZUN"), fn: drumTalk };
@@ -16946,6 +18037,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (E) return { kind: "drum", label: L("ENTZUN"), fn: () => echoListen(E) };
     if (andereDoorNear()) return { kind: "door", label: L("ATEA"), fn: andereDoor };
     if (ZONE.cur === "ibarra") {
+      if (P.riding) return { kind: "pony", label: L("JAITSI"), fn: () => ponyDismount() };
       const sp = TXALA.spots.find((s) => s.group === ZONES.ibarra.group && Math.hypot(s.x - P.x, s.z - P.z) < 3.4);
       if (sp && txalaKnown().length) return { kind: "txala", label: L("TXALAPARTA"), fn: txalaOpen };
       const S = HUB.stones.find((s) => !s.awake && Math.hypot(s.x - P.x, s.z - P.z) < (s.gate ? 9 : 4.5));
@@ -16995,8 +18087,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     CAM.zoom = mix(CAM.zoom ?? 1, ROOM.fight || BOSS.on ? (BOSS.on ? 1 : F.fight) : 1, 1 - Math.exp(-dt * 2.5));
     /* leizean: kamera garaiagoa eta maldatsuagoa (hormek ez dezaten Amaiur estali) */
     CAM.inside = mix(CAM.inside ?? 0, ZONES[ZONE.cur].outdoor ? 0 : 1, 1 - Math.exp(-dt * 6));
-    const look = new T.Vector3(P.x, P.y + 1, P.z).add(CAM.look),
-      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? 1.25 : 1));
+    const look = new T.Vector3(P.x, P.y + (P.riding ? 1.7 : 1), P.z).add(CAM.look),
+      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? 1.25 : 1) * (P.riding ? 1.16 : 1));
     lockCamera(dt, look);
     /* etsai nagusia: biak enkoadratu (finkatu gabe ere) */
     CAM.bossK = mix(CAM.bossK || 0, BOSS.on && !LOCK.target ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -17399,6 +18491,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       for (const N of NPCS) dot(N.x, N.z, 3, N.ghost ? "#bfe6ff" : "#ffe4a2");
       for (const S of HUB.sheep) if (!S.home && saved.flags.includes("ardiak")) dot(S.x, S.z, 3, "#ffffff");
       dot(HUB.cave.x, HUB.cave.z, 4.5, HUB.gate.p.off ? "#9dffc4" : "#ff9d6a");
+      if (ponyTamed() && !P.riding) dot(POTT.x, POTT.z, 3.5, "#c98a5a");
     } else {
       for (const R of ROOMS) {
         if (R.zone !== ZONE.cur || (!saved.visited.includes(R.id) && ROOM.cur !== R)) continue;
@@ -17468,6 +18561,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         hubUpdate(dt);
         npcsUpdate(dt);
         mariUpdate(dt);
+        pottokaUpdate(dt);
       } else {
         dungeonUpdate(dt);
         bossUpdate(dt);
@@ -17778,7 +18872,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (window.__EG_GAME) document.body.classList.add("eg-embed");
     controls();
     translate();
-    const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "day"], 8000) : Promise.resolve();
+    const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "day", "night"], 8000) : Promise.resolve();
     const glb = (b64) => {
       const binary = atob(b64),
         bytes = new Uint8Array(binary.length);
@@ -17918,6 +19012,17 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         DGT,
         TART,
         EYE,
+        DAY,
+        WISP_DEFS,
+        NIGHT_HOME,
+        dayClock,
+        eguzkiloreEffect,
+        npcsNightStart,
+        POTT,
+        ponyMount,
+        ponyDismount,
+        pottokaCall,
+        SECRETS,
         HERD,
         eyeRay,
         eyeOccluders,

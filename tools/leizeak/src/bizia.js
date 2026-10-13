@@ -309,10 +309,10 @@
     const river = clamp(1 - riverW(P.x, P.z) / 24, 0, 1),
       falls = Math.max(clamp(1 - (Math.hypot(P.x - 99, P.z + 28.5) - 10) / 30, 0, 1), clamp(1 - (Math.hypot(P.x - PIT.x, P.z - PIT.z) - 8) / 26, 0, 1));
     SND.riverLevel(river * past * 0.9 + falls * past * 0.5);
-    if (P.y > -2 && due("bird", 2.5, 7)) past > 0.5 ? SND.chirp() : SND.crow();
+    if (P.y > -2 && DAY.k < 0.5 && due("bird", 2.5, 7)) past > 0.5 ? SND.chirp() : SND.crow();
     if (phaseBlend > 0.5 && river > 0.3 && due("creak", 6, 14)) SND.creak();
     const forge = Math.hypot(P.x - 23, P.z - 41);
-    if (forge < 26 && due("forge", 1.1, 1.6)) {
+    if (forge < 26 && DAY.k < 0.55 && due("forge", 1.1, 1.6)) {
       SND.clang(clamp(1 - forge / 26, 0.1, 1) * 0.6);
       const M = NPCS.find((n) => n.id === "maddi");
       if (M && Math.hypot(P.x - M.x, P.z - M.z) > 4) {

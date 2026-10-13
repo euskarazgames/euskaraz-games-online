@@ -90,6 +90,11 @@
     if (ZONE.cur !== "ibarra") return;
     for (const N of NPCS) {
       const d = Math.hypot(P.x - N.x, P.z - N.z);
+      /* gauez etxera (eta goizean itzuli): egutegia jokalariaren urruntasunetik aparte */
+      if (npcNight(N, dt)) {
+        if (d < 70 && N.g.visible) N.mixer.update(dt);
+        continue;
+      }
       if (d > 70) continue;
       N.t += dt;
       N.mixer.update(dt);
@@ -158,6 +163,7 @@
     let best = null,
       bd = 3.4;
     for (const N of NPCS) {
+      if (N.away) continue;
       const d = Math.hypot(P.x - N.x, P.z - N.z);
       if (d < (N.stone ? 5 : bd) && Math.abs(P.y - N.y) < 2.5) {
         best = N;
@@ -322,15 +328,19 @@
         ],
         () => flagSet("ardiak"),
       );
+    if (f("ardiak-saria")) {
+      if (joanesPony(N, f)) return;
+      return talk(N, [["JOANES", ponyTamed() ? "Beltxak zu ezagutzen zaitu orain. Jo POTTOKA, eta etorriko da." : "Ardiak lasai daude orain. Basajaun bizirik balego bezala."]]);
+    }
     if (home < 3) return talk(N, [["JOANES", home ? home + " ardi etxean. Beste " + (3 - home) + " falta dira." : "Hesira ekarri, zure atzetik etorriko dira."]]);
     if (!f("ardiak-saria"))
       return talk(N, [["JOANES", "Hirurak etxean! Eskerrik asko, Amaiur. Hartu hau: nire amonak gordetzen zuen."]], () => {
         flagSet("ardiak-saria");
         pieceGet("ardiak");
       });
-    return talk(N, [["JOANES", "Ardiak lasai daude orain. Basajaun bizirik balego bezala."]]);
   }
   function talkKattalin(N, f) {
+    if (kattalinNight(N, f)) return;
     if (!f("kattalin"))
       return talk(
         N,

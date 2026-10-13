@@ -103,6 +103,18 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   **Tartalo**: lau galdarak piztu → argiak itsutzen du → begia jo (edo bere harkaitza itzuli).
 - Istorioa: hiru zaindari askatu ondoren, Irati eta azken eszena (zazpi argi Anboto gainean:
   hiru berde, lau gorri) → JARRAITZEKO…
+- **EGUNA ETA GAUA** ("gaua gauekoentzat, eguna egunekoentzat"): Basajaun askatu ondoren haranean
+  denbora ibiltzen da. Gauez: izarrak eta ilargia, leiho eta farolak, Amaiurren kriseilua; herritarrak
+  etxera doaz eta plazako txalapartak bakarrik jotzen du; **Gauekoren itzalak** zelaietan (herrira ez
+  dira sartzen; egunsentian hautsi) eta **arima-argiak** (hamar, gauez bakarrik: Kattalinek elizako
+  argizaiolak pizten ditu → sariak). Kattalinek **EGUZKILORE** erritmoa irakasten du (▶ ▶ ◀ ◀),
+  eguzkilorea harrespilan bildu ondoren (iraganean eta egunez): hurrengo egunsentira edo
+  ilunabarrera; leizean, itzalak zorabiatzen ditu.
+- **POTTOKA**: Beltxa, Joanesen pottoka (basati ipar-larreetan). Ardiak itzuli ondoren, Joanesek
+  **POTTOKA** erritmoa irakasten du (◀ ▶ ◀ ◀): haranean jotzean lauhazka dator. E: igo / jaitsi; zaldiz
+  azkarrago (Shift: lauhazka), jauzi luzea; leizeetara ez da sartzen.
+- **HARANEKO MISTERIOAK**: leizeetako tresnekin itzultzeko sekretuak — sasi-habia (SUA), ibaiko
+  harri-zutabea (KATEA) eta errota zaharra (HAIZE-ADARRA). Egunkarian agertzen dira ikusten direnean.
 - Borroka: **FINKATU** (T edo ◎: helburua finkatu, kamerak biak enkoadratzen ditu, Amaiur alboka
   mugitzen da) eta **EZKUTUA** (INDARRA kargatzean aurretik datozen proiektilak itzultzen dira; Basajauni
   bere harkaitza itzuliz gero, zorabiatuta geratzen da).
@@ -110,16 +122,18 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   gardendu egiten dira; leizean argia zuziek eta Amaiurren kriseiluak ematen dute.
 - Iturburua: `tools/leizeak/src/` (`game.js`, `world.js`, `haran.js`, `ibarra.js`, `bizia.js`,
   `quests.js`, `npc.js`, `txalaparta.js`, `dungeon.js`, `rooms.js`, `boss.js`, `lamia.js`, `tartalo.js`,
-  `adarra.js`, `chain.js`, `lockon.js`, `story.js`, `combat.js`, `magic.js`, `craft.js`, `runes.js`,
-  `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
+  `adarra.js`, `gaua.js`, `pottoka.js`, `sekretuak.js`, `chain.js`, `lockon.js`, `story.js`, `combat.js`,
+  `magic.js`, `craft.js`, `runes.js`, `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
   ateratzen da; modeloak `tools/leizeak/models/*.glb`-tik, `build_models.mjs`-ek KayKit-etik sortuak).
 - Fitxategi bakarreko bertsioa: `python3 tools/leizeak/standalone.py /tmp/LEIZEEN_DEIA.html`
 - Probak: `tools/test/leizeak_route.js` (bide osoa hasieratik lehen leizearen amaierako eszenaraino),
   `tools/test/leizeak_combat.js` (FINKATU, EZKUTUA, garaien ezkutuak, sendabelarra),
   `tools/test/leizeak_valley.js` (haranaren fisika: maldak, ibaia, zubiak, lepoa),
   `tools/test/leizeak_quests.js` (misterioak eta eginkizunak), `tools/test/leizeak_lamia.js`
-  (bigarren leizea osoa) eta `tools/test/leizeak_tartalo.js` (hirugarren leizea osoa, ezkutuka eta
-  Tartalo barne, eta azken eszena). Proba-kakoa: `?test` → `window.__game`.
+  (bigarren leizea osoa), `tools/test/leizeak_tartalo.js` (hirugarren leizea osoa, ezkutuka eta
+  Tartalo barne, eta azken eszena), `tools/test/leizeak_gaua.js` (eguna/gaua, EGUZKILORE, itzalak,
+  arima-argiak), `tools/test/leizeak_pottoka.js` (Beltxa: deitu, igo, lauhazka, jaitsi) eta
+  `tools/test/leizeak_sekretuak.js` (haraneko hiru misterioak). Proba-kakoa: `?test` → `window.__game`.
 
 ## Cloudflare
 - Worker-aren izena: `euskaraz-games-online`

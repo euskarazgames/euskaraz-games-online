@@ -781,6 +781,8 @@
     return "zelaiak";
   }
   function hubUpdate(dt) {
+    dayClock(dt);
+    secretsUpdate();
     stonesUpdate(dt);
     watersUpdate(dt);
     for (const [i, c] of CLOUDS.entries()) c.position.x += dt * (0.6 + (i % 3) * 0.3) * (1 - phaseBlend * 0.85);

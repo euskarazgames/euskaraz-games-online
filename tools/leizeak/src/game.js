@@ -14,13 +14,14 @@
   const kb = (s) => (mobile ? "" : s);
   /* gordetako partida (LEIZEEN DEIA): istorio-banderak, erritmoak, tresnak, giltzak, txanponak... */
   const SAVE_KEY = "leizeak-v1";
-  const FRESH = () => ({ v: 1, zone: "ibarra", cp: null, deaths: 0, assist: false, flags: [], rhythms: [], items: [], keys: 0, keyz: {}, coins: 0, pieces: [], hearts: 0, potions: 0, chests: [], doors: [], cleared: [], visited: [], sheep: [], boons: [], echoes: [], herbs: [], ores: [], playTime: 0 });
+  const FRESH = () => ({ v: 1, zone: "ibarra", cp: null, deaths: 0, assist: false, flags: [], rhythms: [], items: [], keys: 0, keyz: {}, coins: 0, pieces: [], hearts: 0, potions: 0, chests: [], doors: [], cleared: [], visited: [], sheep: [], boons: [], echoes: [], herbs: [], ores: [], arimak: [], tod: 0.35, playTime: 0 });
   let saved = FRESH();
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY));
     if (s && s.v === 1) {
       saved = { ...saved, ...s };
-      for (const k of ["flags", "rhythms", "items", "pieces", "chests", "doors", "cleared", "visited", "sheep", "boons", "echoes", "herbs", "ores"]) if (!Array.isArray(saved[k])) saved[k] = [];
+      for (const k of ["flags", "rhythms", "items", "pieces", "chests", "doors", "cleared", "visited", "sheep", "boons", "echoes", "herbs", "ores", "arimak"]) if (!Array.isArray(saved[k])) saved[k] = [];
+      if (!Number.isFinite(saved.tod)) saved.tod = 0.35;
       /* giltza txikiak leize bakoitzeko (lehengo partidetan zenbaki bakarra) */
       if (!saved.keyz || typeof saved.keyz !== "object") saved.keyz = { leizea: saved.keys || 0 };
     }
@@ -111,7 +112,7 @@
      EGFX (/assets/egfx.js) ez badago, lehengo gradienteak erabiltzen dira.
      ================================================================== */
   const EG = window.EGFX && EGFX.enabled ? EGFX : null;
-  const ATMO = { skyPast: null, skyNow: null, envPast: null, envNow: null, terrain: undefined, rockMat: null, dust: null,
+  const ATMO = { skyPast: null, skyNow: null, skyNight: null, envPast: null, envNow: null, envNight: null, terrain: undefined, rockMat: null, dust: null,
     fogPast: new T.Color("#5a829d"), fogNow: new T.Color("#a9c6de"), envOn: null, falls: [] };
   function rawTex(id, srgb) {
     const img = EG && EG.image(id);
@@ -307,7 +308,7 @@
       f.material.opacity = mix(0.62, 0.9, b);
     }
     if (EG && EG.tier === 0 && ZONES[ZONE.cur].outdoor) {
-      const want = b < 0.5 ? ATMO.envPast : ATMO.envNow;
+      const want = DAY.k > 0.55 && ATMO.envNight ? ATMO.envNight : b < 0.5 ? ATMO.envPast : ATMO.envNow;
       if (want && scene.environment !== want) scene.environment = want;
     }
   }
@@ -375,15 +376,19 @@
         tCrack: { value: crackTexture() },
         useWater: { value: tWater ? 1 : 0 },
         falls: { value: falls },
+        tNight: { value: ATMO.skyNight },
+        useNight: { value: ATMO.skyNight ? 1 : 0 },
+        uNight: { value: 0 },
       },
       vertexShader:
         "varying vec3 wp;void main(){vec4 w=modelMatrix*vec4(position,1.);wp=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}",
       fragmentShader: [
-        "uniform float clock,blend,useSky,useWater;uniform vec3 camPos;uniform sampler2D tPast,tNow,tWater,tCrack;uniform vec3 falls[5];varying vec3 wp;",
+        "uniform float clock,blend,useSky,useWater,uNight,useNight;uniform vec3 camPos;uniform sampler2D tPast,tNow,tWater,tCrack,tNight;uniform vec3 falls[5];varying vec3 wp;",
         "vec2 eq(vec3 d){return vec2(atan(d.z,d.x)*.15915494+.5,asin(clamp(d.y,-1.,1.))*.31830989+.5);}",
-        "vec3 skyCol(vec3 d){",
-        "  if(useSky>.5){vec2 uv=eq(d);return mix(texture2D(tPast,uv).rgb,texture2D(tNow,uv).rgb,blend);}",
-        "  float t=pow(max(d.y,0.),.6);vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 night=mix(vec3(.74,.85,.94),vec3(.27,.53,.86),t);return mix(day,night,blend);}",
+        "vec3 skyCol(vec3 d){vec3 s;",
+        "  if(useSky>.5){vec2 uv=eq(d);s=mix(texture2D(tPast,uv).rgb,texture2D(tNow,uv).rgb,blend);}",
+        "  else{float t=pow(max(d.y,0.),.6);vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 ice=mix(vec3(.74,.85,.94),vec3(.27,.53,.86),t);s=mix(day,ice,blend);}",
+        "  vec3 nn=useNight>.5?texture2D(tNight,eq(d)).rgb:vec3(.02,.03,.06);return mix(s,nn,uNight);}",
         "void main(){",
         "  float fr=smoothstep(0.,1.,blend);",
         "  float tt=clock*(1.-fr*.995);",
@@ -400,7 +405,7 @@
         "  vec3 deep=mix(vec3(.04,.22,.26),vec3(.34,.48,.6),fr);",
         "  vec3 shal=mix(vec3(.12,.44,.45),vec3(.64,.77,.87),fr);",
         "  float wv=sin(q.x*.19+q.y*.27+tt*.9)*sin(q.x*.43-q.y*.18-tt*.6);",
-        "  vec3 col=mix(deep,shal,.35+wv*.15*(1.-fr));",
+        "  vec3 col=mix(deep,shal,.35+wv*.15*(1.-fr))*mix(1.,.2,uNight);",
         "  vec3 rc=skyCol(r);",
         "  col=mix(col,rc,clamp(f*mix(.85,.45,fr)+mix(.08,.1,fr),0.,1.));",
         "  if(fr>.01){",
@@ -414,7 +419,7 @@
         "    foam+=(1.-smoothstep(1.5,5.5,d))*(.55+.45*sin(d*3.-tt*4.));}",
         "  col+=clamp(foam,0.,1.)*mix(vec3(.55,.68,.68),vec3(.75,.85,.9),fr)*.5;",
         "  vec3 sd=normalize(vec3(-.45,.32,-.83));",
-        "  col+=pow(max(dot(r,sd),0.),70.)*(1.-fr)*vec3(1.,.82,.55)*.45+pow(max(dot(r,sd),0.),18.)*fr*vec3(.9,.95,1.)*.22;",
+        "  col+=(pow(max(dot(r,sd),0.),70.)*(1.-fr)*vec3(1.,.82,.55)*.45+pow(max(dot(r,sd),0.),18.)*fr*vec3(.9,.95,1.)*.22)*(1.-uNight);",
         "  float far=smoothstep(140.,520.,length(wp.xz-camPos.xz));",
         "  col=mix(col,skyCol(normalize(vec3(v.x,.015,v.z))),far);",
         "  gl_FragColor=vec4(col,1.);}",
@@ -1193,6 +1198,55 @@
           n = 2 + Math.floor(Math.random() * 4);
         for (let i = 0; i < n; i++) tone("sine", f, t + i * 0.085, 0.004, 0.06, 0.012, amb, f * (1.3 + Math.random() * 0.4));
       },
+      /* pottoka: apatxen hotsa eta irrintzia */
+      hoof(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 120 + Math.random() * 30, t, 0.002, 0.07, 0.05 * v, sfx, 70);
+        hiss(t, 0.05, 0.03 * v, "bandpass", 900, 600, 2);
+      },
+      neigh(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          o = ctx.createOscillator(),
+          bp = ctx.createBiquadFilter(),
+          g = ctx.createGain(),
+          lfo = ctx.createOscillator(),
+          lg = ctx.createGain();
+        o.type = "sawtooth";
+        o.frequency.setValueAtTime(820, t);
+        o.frequency.linearRampToValueAtTime(980, t + 0.18);
+        o.frequency.exponentialRampToValueAtTime(380, t + 1.1);
+        lfo.frequency.value = 22;
+        lg.gain.value = 40;
+        lfo.connect(lg);
+        lg.connect(o.frequency);
+        bp.type = "bandpass";
+        bp.frequency.value = 1400;
+        bp.Q.value = 2.5;
+        env(g, t, 0.06, 0.045 * v, 1.1);
+        o.connect(bp);
+        bp.connect(g);
+        g.connect(sfx);
+        o.start(t);
+        lfo.start(t);
+        o.stop(t + 1.25);
+        lfo.stop(t + 1.25);
+      },
+      /* gaua: kilkerrak (uda) eta hontza */
+      cricket() {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          f = 4300 + Math.random() * 600;
+        for (let r = 0; r < 2; r++) for (let i = 0; i < 4; i++) tone("square", f, t + r * 0.22 + i * 0.028, 0.002, 0.016, 0.005, amb);
+      },
+      owl() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 360, t, 0.06, 0.35, 0.03, amb, 330);
+        tone("sine", 350, t + 0.55, 0.05, 0.25, 0.022, amb, 320);
+        tone("sine", 355, t + 0.85, 0.08, 0.55, 0.028, amb, 300);
+      },
       crow() {
         if (!ok()) return;
         const t = ctx.currentTime;
@@ -1543,6 +1597,9 @@
   /* @include story.js */
   /* @include lamia.js */
   /* @include tartalo.js */
+  /* @include gaua.js */
+  /* @include pottoka.js */
+  /* @include sekretuak.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -1863,6 +1920,7 @@
     textures();
     ATMO.skyPast = skyTex("sky_dusk");
     ATMO.skyNow = skyTex("sky_day");
+    ATMO.skyNight = skyTex("sky_night");
     const skyMat = new T.ShaderMaterial({
       side: T.BackSide,
       depthWrite: false,
@@ -1873,15 +1931,22 @@
         tNow: { value: ATMO.skyNow },
         useTex: { value: ATMO.skyPast && ATMO.skyNow ? 1 : 0 },
         uFog: { value: new T.Color("#9fb9cc") },
+        tNight: { value: ATMO.skyNight },
+        useNight: { value: ATMO.skyNight ? 1 : 0 },
+        uNight: { value: 0 },
+        uTw: { value: 0 },
       },
       vertexShader: "varying vec3 p;void main(){p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}",
       fragmentShader: [
-        "varying vec3 p;uniform float blend,useTex;uniform sampler2D tPast,tNow;uniform vec3 uFog;",
+        "varying vec3 p;uniform float blend,useTex,uNight,useNight,uTw;uniform sampler2D tPast,tNow,tNight;uniform vec3 uFog;",
         "vec2 eq(vec3 d){return vec2(atan(d.z,d.x)*.15915494+.5,asin(clamp(d.y,-1.,1.))*.31830989+.5);}",
         "void main(){vec3 d=normalize(p);float t=pow(max(d.y,0.),.6);",
         "vec3 day=mix(vec3(.82,.71,.55),vec3(.23,.47,.59),t);vec3 night=mix(vec3(.74,.85,.94),vec3(.27,.53,.86),t);",
         "vec3 c=mix(day,night,blend);",
         "if(useTex>.5){vec2 uv=eq(d);c=mix(texture2D(tPast,uv).rgb,texture2D(tNow,uv).rgb,smoothstep(0.,1.,blend));}",
+        "c=mix(c,c*vec3(1.2,.8,.7)+vec3(.07,.015,0.),uTw*(1.-t)*.75);",
+        "vec3 nc=useNight>.5?texture2D(tNight,eq(d)).rgb*1.35:mix(vec3(.012,.02,.05),vec3(.03,.05,.11),t);",
+        "c=mix(c,nc,uNight);",
         "c=mix(c,uFog,smoothstep(.035,-.015,d.y));",
         "gl_FragColor=vec4(c,1.);}",
       ].join("\n"),
@@ -1895,6 +1960,7 @@
       ATMO.fogNow.copy(EG.horizon("day", 0.45)).lerp(new T.Color("#b9d3ea"), 0.3);
       ATMO.envPast = EG.environment(renderer, scene, "dusk");
       ATMO.envNow = EG.environment(renderer, scene, "day");
+      if (ATMO.skyNight) ATMO.envNight = EG.environment(renderer, scene, "night");
       scene.environment = ATMO.envNow;
     }
     sea = obj(new T.PlaneGeometry(3000, 3000, 1, 1), seaMaterial(), scene);
@@ -1942,6 +2008,10 @@
     buildNpcs();
     lifeInit();
     questsInit();
+    gauaInit();
+    npcsNightStart();
+    buildPottoka();
+    secretsInit();
     buildCraft("ibarra");
     buildRunePuzzles("ibarra");
     buildDungeon();
@@ -2034,6 +2104,7 @@
   }
   /* bizitzak amaituta: zonaren azken kontrol-puntura (herria edo leizearen sarrera) */
   function returnCheckpoint() {
+    ponyDismount(true);
     magicReset();
     if (CRAFT.held) craftRelease();
     craftExit();
@@ -2052,6 +2123,7 @@
   let hardFall = false;
   function fall(hard) {
     if (respawnTimer > 0) return;
+    ponyDismount(true);
     hardFall = !!hard;
     respawnTimer = hard ? 0.6 : 0.38;
     P.vx = P.vz = 0;
@@ -2061,7 +2133,7 @@
     jumpBuffer = 0.18;
   }
   function dash() {
-    if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer) return;
+    if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer || P.riding) return;
     let d = direction();
     if (Math.hypot(d.x, d.z) < 0.1) d = { x: Math.sin(P.angle), z: Math.cos(P.angle) };
     const n = Math.hypot(d.x, d.z) || 1;
@@ -2110,7 +2182,7 @@
       s.ghost.visible = s.phase !== -1 && s.phase !== phase;
     }
     for (const h of hazards) h.beam.visible = h.phase === phase;
-    $("phaseName").textContent = (phase ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + kb(" · Q");
+    phaseLabel();
     $("phaseMark").style.background = phase ? "#9ae3e555" : "#f1c58166";
     if (immediate) phaseBlend = phase;
   }
@@ -2160,7 +2232,7 @@
       d = { x: 0, z: 0 };
       len = 0;
     }
-    const groundSpeed = surf ? 12.8 : 7.7;
+    const groundSpeed = P.riding ? (surf ? 19 : 12.5) : surf ? 12.8 : 7.7;
     /* sorginkeria kargatzean edo biraka: mugimendu motelagoa */
     const atkSlow = MAG.charging ? 0.58 : MAG.spinT < 0.3 ? 0.45 : 1;
     const speed = (P.grounded ? groundSpeed : Math.max(groundSpeed, P.airSpeed)) * atkSlow;
@@ -2170,8 +2242,8 @@
       P.x += P.platform.dx;
       P.z += P.platform.dz;
     }
-    if (jumpBuffer > 0 && (P.grounded || groundGrace > 0 || P.jumps < 2 || P.wallGrace > 0)) {
-      const wallKick = !P.grounded && groundGrace <= 0 && P.jumps >= 2 && P.wallGrace > 0;
+    if (jumpBuffer > 0 && (P.riding ? P.grounded || groundGrace > 0 : P.grounded || groundGrace > 0 || P.jumps < 2 || P.wallGrace > 0)) {
+      const wallKick = !P.riding && !P.grounded && groundGrace <= 0 && P.jumps >= 2 && P.wallGrace > 0;
       if (wallKick) {
         P.vx = P.wallX * 12;
         P.vz = P.wallZ * 12;
@@ -2179,8 +2251,9 @@
         P.jumps = 1;
         spawnTrail();
       } else P.jumps = P.grounded || groundGrace > 0 ? 1 : P.jumps + 1;
-      P.airSpeed = Math.min(14, Math.max(speed, Math.hypot(P.vx, P.vz)));
-      P.vy = P.jumps === 2 ? 11.4 : 10.6;
+      P.airSpeed = Math.min(P.riding ? 20 : 14, Math.max(speed, Math.hypot(P.vx, P.vz)));
+      P.vy = P.riding ? 11.6 : P.jumps === 2 ? 11.4 : 10.6;
+      if (P.riding) P.jumps = 2;
       P.dashT = 0;
       if (P.jumps === 2) spawnTrail();
       P.grounded = false;
@@ -2205,7 +2278,15 @@
     } else {
       /* izotzean: marruskadura txikia (irristatu) */
       const t = 1 - Math.exp(-dt * (P.grounded ? (P.platform && P.platform.ice ? 2.4 : 22) : len > 0.1 ? 6.5 : 3));
-      if (P.wallLock <= 0) {
+      if (P.riding) {
+        /* POTTOKA: inertzia eta biratze mugatua (zaldi baten sentsazioa) */
+        const want = len > 0.12 ? Math.atan2(d.x, d.z) : P.angle;
+        if (P.grounded) P.angle += Math.atan2(Math.sin(want - P.angle), Math.cos(want - P.angle)) * Math.min(1, dt * 4.2);
+        const sp = P.grounded ? speed * Math.min(1, len) : Math.hypot(P.vx, P.vz),
+          k = 1 - Math.exp(-dt * (P.grounded ? (P.platform && P.platform.ice ? 1.2 : 2.8) : 0.4));
+        P.vx = mix(P.vx, Math.sin(P.angle) * sp, k);
+        P.vz = mix(P.vz, Math.cos(P.angle) * sp, k);
+      } else if (P.wallLock <= 0) {
         P.vx = mix(P.vx, d.x * speed, t);
         P.vz = mix(P.vz, d.z * speed, t);
       }
@@ -2303,15 +2384,15 @@
     }
     /* sorginkeria jaurtitzean, helburuari begira (hankak korrika jarraitzen dute);
        helburua finkatuta: beti hari begira (alboetara mugitzen da) */
-    const lockT = LOCK.target && P.dashT <= 0 && CHAIN.state === "idle" ? lockPos(LOCK.target) : null;
+    const lockT = LOCK.target && !P.riding && P.dashT <= 0 && CHAIN.state === "idle" ? lockPos(LOCK.target) : null;
     if (lockT) {
       const a = Math.atan2(lockT.x - P.x, lockT.z - P.z);
       P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 14);
-    } else if (len > 0.12 && P.dashT <= 0 && MAG.aimT <= 0) {
+    } else if (len > 0.12 && !P.riding && P.dashT <= 0 && MAG.aimT <= 0) {
       const a = Math.atan2(d.x, d.z);
       P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 18);
     }
-    hero.position.set(P.x, P.y, P.z);
+    hero.position.set(P.x, P.y + riderY(), P.z);
     hero.rotation.y = mix(hero.rotation.y, hero.rotation.y + Math.atan2(Math.sin(P.angle - hero.rotation.y), Math.cos(P.angle - hero.rotation.y)), Math.min(1, dt * 30));
     hero.visible = damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0;
     /* finkatuta eta mugitzen: alboetara (strafe) edo atzeraka */
@@ -2325,7 +2406,9 @@
       if (!models.mage.actions[run]) run = "Running_A";
     }
     animate(
-      CRAFT.held
+      P.riding
+        ? "Idle"
+        : CRAFT.held
         ? "Spellcast_Raise"
         : CHAIN.state === "pull"
           ? "Jump_Idle"
@@ -2440,6 +2523,7 @@
       sun.intensity = mix(1.8, 1.95, phaseBlend);
       ambient.intensity = mix(0.86, 0.95, phaseBlend) * (scene.environment ? 0.55 : 1);
       scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
+      dayVisuals();
     } else {
       sun.color.set(phaseBlend > 0.5 ? "#8fa9cc" : "#c08c5c");
       sun.intensity = 0.38;
@@ -2461,6 +2545,7 @@
     if (C) return { kind: "chest", label: L("IREKI"), fn: () => openChest(C) };
     const LC = lockedChestNear();
     if (LC) return { kind: "locked", label: L("ITXITA"), fn: () => notify(LC.lockedHint || L("Ezin da ireki… oraingoz."), "", 3.5) };
+    if (ponyNear()) return { kind: "pony", label: L("IGO"), fn: ponyMount };
     const D = doorNear();
     if (D) return { kind: "door", label: D.kind === "boss" ? L("ATE HANDIA") : L("ATEA"), fn: () => tryDoor(D) };
     if (drumNear()) return { kind: "drum", label: L("ENTZUN"), fn: drumTalk };
@@ -2468,6 +2553,7 @@
     if (E) return { kind: "drum", label: L("ENTZUN"), fn: () => echoListen(E) };
     if (andereDoorNear()) return { kind: "door", label: L("ATEA"), fn: andereDoor };
     if (ZONE.cur === "ibarra") {
+      if (P.riding) return { kind: "pony", label: L("JAITSI"), fn: () => ponyDismount() };
       const sp = TXALA.spots.find((s) => s.group === ZONES.ibarra.group && Math.hypot(s.x - P.x, s.z - P.z) < 3.4);
       if (sp && txalaKnown().length) return { kind: "txala", label: L("TXALAPARTA"), fn: txalaOpen };
       const S = HUB.stones.find((s) => !s.awake && Math.hypot(s.x - P.x, s.z - P.z) < (s.gate ? 9 : 4.5));
@@ -2517,8 +2603,8 @@
     CAM.zoom = mix(CAM.zoom ?? 1, ROOM.fight || BOSS.on ? (BOSS.on ? 1 : F.fight) : 1, 1 - Math.exp(-dt * 2.5));
     /* leizean: kamera garaiagoa eta maldatsuagoa (hormek ez dezaten Amaiur estali) */
     CAM.inside = mix(CAM.inside ?? 0, ZONES[ZONE.cur].outdoor ? 0 : 1, 1 - Math.exp(-dt * 6));
-    const look = new T.Vector3(P.x, P.y + 1, P.z).add(CAM.look),
-      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? 1.25 : 1));
+    const look = new T.Vector3(P.x, P.y + (P.riding ? 1.7 : 1), P.z).add(CAM.look),
+      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? 1.25 : 1) * (P.riding ? 1.16 : 1));
     lockCamera(dt, look);
     /* etsai nagusia: biak enkoadratu (finkatu gabe ere) */
     CAM.bossK = mix(CAM.bossK || 0, BOSS.on && !LOCK.target ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -2921,6 +3007,7 @@
       for (const N of NPCS) dot(N.x, N.z, 3, N.ghost ? "#bfe6ff" : "#ffe4a2");
       for (const S of HUB.sheep) if (!S.home && saved.flags.includes("ardiak")) dot(S.x, S.z, 3, "#ffffff");
       dot(HUB.cave.x, HUB.cave.z, 4.5, HUB.gate.p.off ? "#9dffc4" : "#ff9d6a");
+      if (ponyTamed() && !P.riding) dot(POTT.x, POTT.z, 3.5, "#c98a5a");
     } else {
       for (const R of ROOMS) {
         if (R.zone !== ZONE.cur || (!saved.visited.includes(R.id) && ROOM.cur !== R)) continue;
@@ -2990,6 +3077,7 @@
         hubUpdate(dt);
         npcsUpdate(dt);
         mariUpdate(dt);
+        pottokaUpdate(dt);
       } else {
         dungeonUpdate(dt);
         bossUpdate(dt);
@@ -3300,7 +3388,7 @@
     if (window.__EG_GAME) document.body.classList.add("eg-embed");
     controls();
     translate();
-    const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "day"], 8000) : Promise.resolve();
+    const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "day", "night"], 8000) : Promise.resolve();
     const glb = (b64) => {
       const binary = atob(b64),
         bytes = new Uint8Array(binary.length);
@@ -3440,6 +3528,17 @@
         DGT,
         TART,
         EYE,
+        DAY,
+        WISP_DEFS,
+        NIGHT_HOME,
+        dayClock,
+        eguzkiloreEffect,
+        npcsNightStart,
+        POTT,
+        ponyMount,
+        ponyDismount,
+        pottokaCall,
+        SECRETS,
         HERD,
         eyeRay,
         eyeOccluders,

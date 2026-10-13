@@ -259,8 +259,12 @@
       case "peio":
         return !saved.rhythms.includes("esnatu") || (!f("erronka") && f("intro")) ? "!" : null;
       case "joanes":
-        return !f("ardiak") ? "!" : saved.sheep.length >= 3 && !f("ardiak-saria") ? "?" : null;
+        return !f("ardiak") || (f("ardiak-saria") && !saved.rhythms.includes("pottoka")) ? "!" : saved.sheep.length >= 3 && !f("ardiak-saria") ? "?" : null;
       case "kattalin":
+        if (f("gaua") && !saved.rhythms.includes("eguzkilore")) return f("eguzkilorea") ? "?" : !f("eguzkilore-bila") ? "!" : null;
+        if ((saved.arimak || []).length >= 3 && !f("arimak3")) return "?";
+        if ((saved.arimak || []).length >= 6 && !f("arimak6")) return "?";
+        if ((saved.arimak || []).length >= 10 && !f("arimak10")) return "?";
         return !f("kattalin") || !f("kattalin-belar") ? "!" : saved.herbs.length >= 3 && !f("belarrak-ok") ? "?" : null;
       case "maddi":
         return f("basajaun") && !f("maddi-burdina") ? "!" : saved.ores.length >= 5 && !f("burdina-ok") ? "?" : null;
@@ -385,6 +389,9 @@
     else side.push(line(false, L("Arrantzalea kaian"), "", L("Portuko eskaileratik behera, kaian norbait zain.")));
     if (f("maddi-burdina")) side.push(line(f("burdina-ok"), L("Maddiren burdin-harriak"), saved.ores.length + "/5", L("Harri ilunak zain laranjekin: arroila (izotza), lepoa eta leizeak.")));
     side.push(line(f("andere"), L("Oihartzun-harriak"), saved.echoes.length + "/7", L("Harri urdin distiratsuak haran osoan: jo ENTZUN haien ondoan.")));
+    if (f("gaua")) side.push(line(saved.rhythms.includes("eguzkilore"), L("Kattalinen eguzkilorea"), f("eguzkilorea") ? L("eskuan") : "", L("Harrespilako larrean: IRAGANEAN (uda) eta EGUNEZ bakarrik loratzen da.")));
+    if (f("arimak") || (saved.arimak || []).length) side.push(line(f("arimak10"), L("Arima-argiak"), (saved.arimak || []).length + "/10", L("GAUEZ bakarrik, haran osoan barreiatuta. Kattalinek elizako argizaiolak pizten ditu.")));
+    side.push(...secretsLog(line));
     const pieces = saved.pieces.length;
     dialog(
       L("EGUNKARIA"),

@@ -60,6 +60,7 @@
   /* gunez aldatu (leizera sartu / irten): pantaila beltzean */
   function enterZone(id, spawn, instant) {
     const go = () => {
+      ponyDismount(true);
       clearEnemies();
       if (CRAFT.on) craftExit();
       LOCK.target = null;

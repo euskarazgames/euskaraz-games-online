@@ -14,7 +14,7 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   exekutatu (three.js handik ateratzen du; sorgina eta hezurdurak `tools/oihartzun/models/*.glb`-tik).
 - LEIZEEN DEIA: iturburua `tools/leizeak/src/` (game.js, world.js, npc.js, txalaparta.js, dungeon.js,
   rooms.js, boss.js, chain.js, lockon.js, story.js, haran.js, ibarra.js, quests.js, adarra.js, lamia.js,
-  tartalo.js…). Ez editatu `public/games/leizeak.html` zuzenean:
+  tartalo.js, gaua.js (eguna/gaua), pottoka.js, sekretuak.js…). Ez editatu `public/games/leizeak.html` zuzenean:
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
@@ -45,4 +45,7 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_valley.js http://127.0.0.1:8091
 NODE_PATH=$(npm root -g) node tools/test/leizeak_quests.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_lamia.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_tartalo.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_gaua.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_pottoka.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_sekretuak.js http://127.0.0.1:8091/games/leizeak.html
 ```

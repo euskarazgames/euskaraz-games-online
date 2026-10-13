@@ -443,8 +443,8 @@
       if (!MZ.L) mzBuild();
       const lv = musicLevel();
       if (lv !== MZ.level) mzLevel(lv, t0);
-      /* garaia eta zona: oraina hotza (iragazkia), leizea itxia (are ilunagoa) */
-      const caveK = ZONES[ZONE.cur].outdoor ? 1 : 0.55,
+      /* garaia eta zona: oraina hotza (iragazkia), gaua leunagoa, leizea itxia (are ilunagoa) */
+      const caveK = ZONES[ZONE.cur].outdoor ? (DAY.k > 0.5 ? 0.72 : 1) : 0.55,
         eraKey = phase + caveK * 10;
       if (MZ.eraOn !== eraKey) {
         MZ.eraOn = eraKey;

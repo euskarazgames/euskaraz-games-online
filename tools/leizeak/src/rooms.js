@@ -406,7 +406,7 @@
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯" };
+  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "giltza" || icon === "giltzanagusia") {
@@ -443,6 +443,11 @@
         t.position.set(-0.27 + i * 0.09, -0.12, 0);
         g.add(t);
       }
+    } else if (icon === "eguzkilore") {
+      const e = eguzkiloreMesh();
+      e.rotation.x = PI / 2.4;
+      e.scale.setScalar(0.62);
+      g.add(e);
     } else if (icon === "sugarra") {
       const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));
       rod.rotation.z = 0.4;

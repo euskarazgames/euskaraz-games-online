@@ -512,6 +512,8 @@
           nz = o.z + (oz / od) * (o.r + e.D.r);
         }
       }
+      /* haranean (gaueko itzalak): lurraren gainean, ez ibaian ez herrian */
+      if (e.terrain) [nx, nz] = terrainStep(e, nx, nz);
       /* gelaren barruan (hormaren kontra jo: zezena zorabiatuta) */
       if (I) {
         let out = false;

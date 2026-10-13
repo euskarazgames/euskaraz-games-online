@@ -116,6 +116,18 @@ nagusiaren aurka. Ateak, giltzak eta itzulerak gela-zentral baten inguruan (bide
 - Mitologia: Tartalo ilunpean ikusten duen begi bakarreko artzain erraldoia (argiak itsutzen du),
   lamiak eta urrezko orrazia, Gaueko gauaren espiritua, Mari Anboton. Istorioa eta gelak originalak.
 
+## 5c. Generoaren ideia orokorrak (gure eran)
+3D abentura klasikoen konbentzio orokorrak hartzen dira (mekanika-ideiak, ez edukia: ez maparik, ez
+pertsonaiarik, ez musikarik, ez koderik), eta euskal mitologiatik berregiten dira:
+- **Eguna eta gaua** → "gaua gauekoentzat": gauez herritarrak etxean, Gauekoren itzalak zelaietan,
+  plazako txalaparta bakarrik. Erritmo batek ordua aldatzen du: **EGUZKILORE** (eguzkiloreak atean
+  gaueko izakiak uxatzen dituen sinesmena), Kattalinen eskutik.
+- **Montura** → **pottoka** (euskal zaldi txiki autoktonoa): artzainaren erritmoarekin deitzen da.
+- **Gaueko bildumak** → **arima-argiak** eta argizaiolak (hildakoen argien ohitura): Kattalinek
+  elizako argizaiolak pizten ditu, eta sariak ematen ditu.
+- **Mundu irekiko sekretuak leizeetako tresnekin** → sasiak SUAz, zutabeko eraztuna KATEAz, errota
+  zaharra HAIZE-ADARRAz. Bakoitza egunkarian, ikusten denean (pista batekin).
+
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da
 neurgarriak diren helburuekin: errore 0 kargan eta ibilbide osoan (bot-probak), 60 fps
