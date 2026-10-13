@@ -23,11 +23,12 @@ const ADV = path.join(KK, 'KayKit-Character-Pack-Adventures-1.0/addons/kaykit_ch
 const PROPS = [
   ...['building_home_A_red', 'building_home_B_red', 'building_blacksmith_red', 'building_tavern_red', 'building_well_red', 'building_church_red',
     'building_watermill_red'].map((n) => ['buildings/red', n]),
-  ...['fence_wood_straight', 'fence_wood_straight_gate', 'fence_stone_straight', 'building_bridge_A', 'building_destroyed', 'wall_straight'].map((n) => ['buildings/neutral', n]),
+  ...['fence_wood_straight', 'fence_wood_straight_gate', 'fence_stone_straight', 'fence_stone_straight_gate', 'building_bridge_A', 'building_destroyed', 'wall_straight', 'building_grain', 'building_stage_A'].map((n) => ['buildings/neutral', n]),
   ...['hills_A_trees', 'hills_B_trees', 'hill_single_A', 'mountain_A_grass_trees', 'mountain_B_grass', 'mountain_C_grass_trees', 'rock_single_A', 'rock_single_B',
     'rock_single_C', 'rock_single_D', 'rock_single_E', 'tree_single_A', 'tree_single_B', 'trees_A_large', 'trees_A_medium', 'trees_B_large', 'trees_B_medium',
-    'waterplant_A', 'waterlily_A', 'cloud_big', 'cloud_small'].map((n) => ['decoration/nature', n]),
-  ...['barrel', 'crate_A_big', 'crate_B_small', 'sack', 'wheelbarrow', 'flag_red', 'tent', 'ladder', 'bucket_water', 'resource_lumber', 'weaponrack'].map((n) => ['decoration/props', n]),
+    'trees_A_small', 'trees_B_small', 'tree_single_A_cut', 'waterplant_A', 'waterplant_B', 'waterlily_A', 'waterlily_B', 'cloud_big', 'cloud_small'].map((n) => ['decoration/nature', n]),
+  ...['barrel', 'crate_A_big', 'crate_B_small', 'crate_open', 'pallet', 'sack', 'wheelbarrow', 'flag_red', 'flag_yellow', 'flag_green', 'tent', 'ladder', 'bucket_water', 'bucket_empty', 'resource_lumber',
+    'resource_stone', 'weaponrack', 'target'].map((n) => ['decoration/props', n]),
 ];
 const NPCS = [['npc_barbarian', 'Barbarian.glb'], ['npc_knight', 'Knight.glb'], ['npc_rogue', 'Rogue.glb'], ['npc_hooded', 'Rogue_Hooded.glb']];
 

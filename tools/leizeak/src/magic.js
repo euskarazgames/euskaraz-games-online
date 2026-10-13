@@ -141,7 +141,9 @@
     ATK.t = 0;
     ATK.dir = dir;
     const o = muzzle();
-    spawnBolt(o, dir, tgt, { dmg: 1 });
+    /* BURDINAZKO MAKILA (Maddi): kalte bikoitza */
+    const iron = saved.boons?.includes("burdina") ? 1 : 0;
+    spawnBolt(o, dir, tgt, { dmg: 1 + iron });
     if (triple) {
       /* MAKILA ZORROTZA (saria): hiru izpiek +1 kalte */
       const sharp = saved.boons?.includes("sharp") ? 1 : 0,
@@ -150,8 +152,8 @@
       if (a) skip.add(a);
       const b = pickTarget(BOLT_RANGE, skip);
       BOLTS[BOLTS.length - 1].dmg += sharp;
-      spawnBolt(o, dir - 0.3, a || tgt, { dmg: 1 + sharp });
-      spawnBolt(o, dir + 0.3, b || a || tgt, { dmg: 1 + sharp });
+      spawnBolt(o, dir - 0.3, a || tgt, { dmg: 1 + sharp + iron });
+      spawnBolt(o, dir + 0.3, b || a || tgt, { dmg: 1 + sharp + iron });
     }
     MAG.cd = 0.13;
     castAnim("Spellcast_Shoot", 2.7, 6);
@@ -328,7 +330,7 @@
     P.angle = dir;
     MAG.aimT = 0.35;
     ATK.n++;
-    spawnBolt(muzzle(), dir, tgt, { big: true, full, dmg: (full ? 4 : 2 + Math.round(MAG.charge)) + (saved.boons?.includes("sharp") ? 1 : 0) });
+    spawnBolt(muzzle(), dir, tgt, { big: true, full, dmg: (full ? 4 : 2 + Math.round(MAG.charge)) + (saved.boons?.includes("sharp") ? 1 : 0) + (saved.boons?.includes("burdina") ? 2 : 0) });
     castAnim("Spellcast_Shoot", 2.2, 8);
     MAG.charge = 0;
     P.vx -= Math.sin(dir) * 5;

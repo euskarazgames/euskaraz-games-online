@@ -13,6 +13,11 @@
     return d > PI ? TAU - d : d;
   };
   function roomCollide(px, pz, nx, nz, py) {
+    if (ZONE.cur === "ibarra") {
+      /* haranaren ingerada eta portua (haran.js); iraganean ibaian ezin da sakonera sartu */
+      [nx, nz] = hubBounds(px, pz, nx, nz);
+      [nx, nz] = riverBank(px, pz, py, nx, nz);
+    }
     if (ZONE.cur === "ibarra")
       for (const B of BOUNDS) {
         const e0 = Math.hypot((px - B.x) / B.rx, (pz - B.z) / B.rz);
@@ -21,7 +26,8 @@
           fz = (nz - B.z) / B.rz;
         if (Math.hypot(fx, fz) <= B.k) continue;
         const a = Math.atan2(fz, fx);
-        if (B.gaps.some(([ga, gw]) => angDiff(a, ga) < gw)) continue;
+        /* hutsuneak (zubia, kaia...); hirugarren balioa: garai horretan bakarrik (izotza orainean) */
+        if (B.gaps.some(([ga, gw, gp]) => (gp === undefined || gp === phase) && angDiff(a, ga) < gw)) continue;
         nx = B.x + Math.cos(a) * B.rx * B.k * 0.999;
         nz = B.z + Math.sin(a) * B.rz * B.k * 0.999;
         P.wallGrace = 0;
@@ -42,6 +48,7 @@
     if (SAFE.t < 0.2 || !P.grounded || !P.platform) return;
     const s = P.platform;
     if (s.phase !== -1 || s.moving || s.piece || !s.safe || s.wall) return;
+    if (ZONE.cur === "ibarra" && !hubSafeSpot(P.x, P.z, P.y)) return;
     SAFE.t = 0;
     Object.assign(SAFE, { x: P.x, y: P.y, z: P.z, phase });
   }

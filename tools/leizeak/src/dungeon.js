@@ -13,6 +13,8 @@
   const DX = 600,
     DS = 1.5;
   const DUNGEON = { entry: { x: DX, y: 0, z: 8.5, a: PI }, exitArch: { x: DX, z: 12.2 }, lights: [], torches: [], drum: null, rooms: {} };
+  /* leize guztien erregistroa (zona → datuak) */
+  const DGS = { leizea: DUNGEON };
   const DOORDEF = {};
   /* ---- piezen sortak (instantziak) ----
      Hormak alde bakoitzeko sorta batean (material propioarekin): kamera eta Amaiurren artean

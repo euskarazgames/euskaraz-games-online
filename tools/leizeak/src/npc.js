@@ -11,8 +11,11 @@
     { id: "peio", name: "PEIO", model: "npc_rogue", tint: "#d58b74", x: 1.9, z: 28.4, a: 0, area: "herria", hit: true },
     { id: "irati", name: "IRATI", model: "npc_hooded", ghost: true, x: 0, z: 41, a: PI, area: "herria" },
     { id: "maddi", name: "MADDI", model: "npc_knight", tint: "#e0b48a", noHelmet: true, x: 21, z: 40.5, a: -2.2, area: "herria" },
-    { id: "joanes", name: "JOANES", model: "npc_barbarian", tint: "#9fbf86", x: -31, z: 1, a: 0.3, area: "zelaiak" },
+    { id: "joanes", name: "JOANES", model: "npc_barbarian", tint: "#9fbf86", x: -31, z: 1, a: 0.3, area: "zelaiak", route: [[-31, 1], [-27, -3], [-34, -8], [-36, -1]], pause: 4 },
     { id: "kattalin", name: "KATTALIN", model: "npc_hooded", tint: "#8a7f9a", x: -15.5, z: 28.5, a: 2.2, area: "herria" },
+    { id: "maite", name: "MAITE", model: "npc_hooded", tint: "#c97b6a", x: 6, z: 41, a: 0, area: "herria", route: [[6, 41], [8.5, 37.5], [3, 51], [-6, 45], [-8.5, 36], [-2, 31]], pause: 3 },
+    { id: "mikel", name: "MIKEL", model: "npc_rogue", tint: "#8fc0e0", scale: 0.72, x: -24, z: 35, a: -PI / 2, area: "herria", route: [[-24, 35], [-22, 40.5], [-25.5, 42.5], [-23, 32]], run: true, pause: 1.6 },
+    { id: "txomin", name: "TXOMIN", model: "npc_barbarian", tint: "#8a9bb0", x: 8.2, z: 78, y: -7.2, a: PI, area: "kaia" },
     { id: "jentil", name: "JENTIL ZAHARRA", model: "npc_barbarian", stone: true, scale: 2.1, x: 46, z: -64, a: -PI / 2, area: "harrespila", y: 9 },
   ];
   const WEAPON_RE = /Axe|Shield|Sword|Crossbow|Knife|Throwable|Mug|Spellbook|Staff|Wand|Hat/;
@@ -55,17 +58,19 @@
       if (!root) continue;
       const g = new T.Group();
       g.add(root);
-      g.position.set(D.x, D.y || 0, D.z);
+      const ny = D.y ?? gy(D.x, D.z);
+      g.position.set(D.x, ny, D.z);
       g.rotation.y = D.a;
       BP.add(g);
       const mixer = new T.AnimationMixer(root),
         acts = {};
       for (const c of models.mage.animations) acts[c.name] = mixer.clipAction(c);
       if (models.skel_minion) for (const c of models.skel_minion.animations) if (/Chop|Taunt/.test(c.name)) acts[c.name] = mixer.clipAction(c);
-      const N = { ...D, g, root, mixer, acts, cur: "", t: Math.random() * 3, y: D.y || 0 };
+      const N = { ...D, g, root, mixer, acts, cur: "", t: Math.random() * 3, y: ny, hx: D.x, hz: D.z };
       npcAnim(N, D.stone ? "Idle" : "Idle");
       if (D.stone) mixer.timeScale = 0.25;
-      solids.push({ x: D.x, z: D.z, r: D.stone ? 1.6 : 0.6, h: 2, y: N.y, pillar: true });
+      N.solid = { x: D.x, z: D.z, r: D.stone ? 1.6 : 0.6, h: 2, y: N.y, pillar: true };
+      solids.push(N.solid);
       if (D.ghost) N.halo = glow(D.x, 1.3, D.z, "#9fd8ff", 4.5);
       NPCS.push(N);
     }
@@ -88,6 +93,42 @@
       if (d > 70) continue;
       N.t += dt;
       N.mixer.update(dt);
+      /* ibilbidea: puntuz puntu, geldialdiekin; Amaiur hurbil → gelditu eta begiratu */
+      if (N.route && started) {
+        if (d < 3.6 || cinematic) {
+          if (N.walking) npcAnim(N, "Idle");
+          N.walking = false;
+        } else {
+          N.wait = (N.wait ?? 1) - dt;
+          if (N.wait <= 0) {
+            const [tx, tz] = N.route[(N.leg = N.leg ?? 1) % N.route.length],
+              dx = tx - N.x,
+              dz = tz - N.z,
+              dd = Math.hypot(dx, dz),
+              sp = N.run ? 3.4 : 1.5;
+            if (dd < 0.2) {
+              N.leg++;
+              N.wait = N.pause || 2;
+              N.walking = false;
+              npcAnim(N, "Idle");
+            } else {
+              N.x += (dx / dd) * Math.min(dd, sp * dt);
+              N.z += (dz / dd) * Math.min(dd, sp * dt);
+              N.y = N.ny ?? gy(N.x, N.z);
+              N.g.position.set(N.x, N.y, N.z);
+              N.a = Math.atan2(dx, dz);
+              N.g.rotation.y += Math.atan2(Math.sin(N.a - N.g.rotation.y), Math.cos(N.a - N.g.rotation.y)) * Math.min(1, dt * 8);
+              if (!N.walking) npcAnim(N, N.run ? "Running_A" : "Walking_A");
+              N.walking = true;
+              if (N.solid) {
+                N.solid.x = N.x;
+                N.solid.z = N.z;
+              }
+            }
+          }
+        }
+        if (N.walking) continue;
+      }
       /* hurbil bazaude, zuri begira */
       if (d < 7 && !N.stone) {
         const want = Math.atan2(P.x - N.x, P.z - N.z),
@@ -140,6 +181,9 @@
     if (N.id === "joanes") return talkJoanes(N, f);
     if (N.id === "kattalin") return talkKattalin(N, f);
     if (N.id === "jentil") return talkJentil(N, f);
+    if (N.id === "mikel") return talkMikel(N, f);
+    if (N.id === "txomin") return talkTxomin(N, f);
+    if (N.id === "maite") return talkMaite(N, f);
   }
   function talkTwins(N, f) {
     if (!saved.rhythms.includes("esnatu"))
@@ -202,7 +246,23 @@
     if (!saved.rhythms.includes("esnatu")) return talk(N, [["IRATI", "Plazako bikiek erritmo zaharrak dakizkite. Hitz egin haiekin."]]);
     return talk(N, [["IRATI", "Basoa iparraldean dago, ibaiaz bestaldean. Atea jentil-harri bat da: ESNATU."]]);
   }
-  function talkMaddi(N) {
+  function talkMaddi(N, f) {
+    if (f("basajaun") && !f("maddi-burdina"))
+      return talk(
+        N,
+        [
+          ["MADDI", "Basajaun askatu duzula diote. Sorgin indartsua zara… baina zure makila egurrezkoa da oraindik."],
+          ["MADDI", "Ekarri bost BURDIN-HARRI (harri ilunak, zain laranjekin; sorginkeriaz hautsi). Ikusi ditut arroilan, lepoan eta leizeetan."],
+        ],
+        () => flagSet("maddi-burdina"),
+      );
+    if (saved.ores.length >= 5 && !f("burdina-ok"))
+      return talk(N, [["MADDI", "Bost harriak! Su honek ez du ehun urtean horrelako burdinarik ikusi. Zure makila… orain burdinazkoa da."]], () => {
+        flagSet("burdina-ok");
+        if (!saved.boons.includes("burdina")) saved.boons.push("burdina");
+        persist();
+        itemGet("izpia", L("BURDINAZKO MAKILA"), L("Izpi guztiek kalte bikoitza egiten dute."));
+      });
     const potions = saved.potions || 0;
     const items = [
       ["botila", L("SENDABELAR-BOTILA"), 30, L("Erortzen zarenean, bizirik itzultzen zaitu. (Gehienez 2)"), () => potions < 2, () => (saved.potions = potions + 1)],
@@ -267,7 +327,24 @@
         ],
         () => flagSet("kattalin"),
       );
-    return talk(N, [["KATTALIN", ["Harrespilan jentil zahar bat bizi da, harrizkoa. Galdetu iezaiozu Mariri buruz.", "Ostirala da gaur? Ez dakit. Denborak ez du lehengo itxurarik.", "Gure aitonek esaten zuten: izena duen guztia bada."][Math.floor(time) % 3]]]);
+    if (!f("kattalin-belar"))
+      return talk(
+        N,
+        [
+          ["KATTALIN", "Sendabelarrak egin nahi nituzke, baina sorgin-belarrak negu honetan ez dira hazten."],
+          ["KATTALIN", "Iraganean, ordea… lore urdinak basoan, harrespilan eta ibaiaz bestaldeko larreetan. Ekarri hiru, eta botilak egingo dizkizut."],
+        ],
+        () => flagSet("kattalin-belar"),
+      );
+    if (saved.herbs.length >= 3 && !f("belarrak-ok"))
+      return talk(N, [["KATTALIN", "Hiru belarrak! Usain honek nire amona gogorarazten dit… Andere. Hartu botilak, eta hau ere."]], () => {
+        flagSet("belarrak-ok");
+        saved.potions = 2;
+        persist();
+        pieceGet("belarrak");
+      });
+    if (!f("belarrak-ok")) return talk(N, [["KATTALIN", "Lore urdinak iraganean bakarrik ikusten dira (ALDATU garaia). " + saved.herbs.length + " / 3."]]);
+    return talk(N, [["KATTALIN", ["Harrespilan jentil zahar bat bizi da, harrizkoa. Galdetu iezaiozu Mariri buruz.", "Andere… nire amona. Sorgina zen, zu bezala. Ehun urte dira desagertu zela.", "Gure aitonek esaten zuten: izena duen guztia bada."][Math.floor(time) % 3]]]);
   }
   function talkJentil(N, f) {
     if (!f("jentil"))

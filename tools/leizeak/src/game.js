@@ -14,13 +14,15 @@
   const kb = (s) => (mobile ? "" : s);
   /* gordetako partida (LEIZEEN DEIA): istorio-banderak, erritmoak, tresnak, giltzak, txanponak... */
   const SAVE_KEY = "leizeak-v1";
-  const FRESH = () => ({ v: 1, zone: "ibarra", cp: null, deaths: 0, assist: false, flags: [], rhythms: [], items: [], keys: 0, coins: 0, pieces: [], hearts: 0, potions: 0, chests: [], doors: [], cleared: [], visited: [], sheep: [], boons: [], playTime: 0 });
+  const FRESH = () => ({ v: 1, zone: "ibarra", cp: null, deaths: 0, assist: false, flags: [], rhythms: [], items: [], keys: 0, keyz: {}, coins: 0, pieces: [], hearts: 0, potions: 0, chests: [], doors: [], cleared: [], visited: [], sheep: [], boons: [], echoes: [], herbs: [], ores: [], playTime: 0 });
   let saved = FRESH();
   try {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY));
     if (s && s.v === 1) {
       saved = { ...saved, ...s };
-      for (const k of ["flags", "rhythms", "items", "pieces", "chests", "doors", "cleared", "visited", "sheep", "boons"]) if (!Array.isArray(saved[k])) saved[k] = [];
+      for (const k of ["flags", "rhythms", "items", "pieces", "chests", "doors", "cleared", "visited", "sheep", "boons", "echoes", "herbs", "ores"]) if (!Array.isArray(saved[k])) saved[k] = [];
+      /* giltza txikiak leize bakoitzeko (lehengo partidetan zenbaki bakarra) */
+      if (!saved.keyz || typeof saved.keyz !== "object") saved.keyz = { leizea: saved.keys || 0 };
     }
   } catch {}
   let started = false,
@@ -720,7 +722,7 @@
      Gaueko: txalaparta-erritmoa eta drone baxua.
      ================================================================== */
   const SND = (() => {
-    let ctx = null, master, comp, sfx, mus, amb, verbIn, noise = null, nextBeat = 0, beatN = 0, pads = [], ambNodes = null, lastPhase = -1;
+    let ctx = null, master, comp, sfx, mus, amb, verbIn, noise = null, nextBeat = 0, beatN = 0, pads = [], ambNodes = null, lastPhase = -1, RIV = null;
     const BEAT = 0.42;
     const HARM = {
       past: [
@@ -1033,12 +1035,12 @@
         tone("sine", 190, t, 0.002, 0.12, 0.14 + d * 0.04, sfx, 70);
         tone("square", 2400, t, 0.001, 0.02, 0.02, sfx, 1800);
       },
-      clang() {
+      clang(v = 1) {
         if (!ok()) return;
         const t = ctx.currentTime;
-        tone("sine", 1830, t, 0.001, 0.35, 0.05, sfx, 1790);
-        tone("sine", 2710, t, 0.001, 0.25, 0.035, sfx, 2650);
-        hiss(t, 0.06, 0.08, "highpass", 5000, 3000, 0.7);
+        tone("sine", 1830, t, 0.001, 0.35, 0.05 * v, sfx, 1790);
+        tone("sine", 2710, t, 0.001, 0.25, 0.035 * v, sfx, 2650);
+        hiss(t, 0.06, 0.08 * v, "highpass", 5000, 3000, 0.7);
       },
       kill() {
         if (!ok()) return;
@@ -1158,6 +1160,79 @@
         const t = ctx.currentTime;
         for (let i = 0; i < 7; i++) tone("square", 2400 + Math.random() * 900, t + i * 0.035, 0.001, 0.02, 0.012, sfx);
         hiss(t, 0.3, 0.05, "bandpass", 2600, 5200, 2);
+      },
+      /* haraneko giroa */
+      cluck() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        for (let i = 0; i < 3; i++) tone("square", 760 + Math.random() * 120, t + i * 0.09, 0.004, 0.05, 0.012, amb, 520);
+      },
+      moo(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          o = ctx.createOscillator(),
+          lp = ctx.createBiquadFilter(),
+          g = ctx.createGain();
+        o.type = "sawtooth";
+        o.frequency.setValueAtTime(118, t);
+        o.frequency.linearRampToValueAtTime(96, t + 1.1);
+        lp.type = "lowpass";
+        lp.frequency.setValueAtTime(380, t);
+        lp.frequency.linearRampToValueAtTime(700, t + 0.5);
+        env(g, t, 0.15, 0.05 * v, 1.0);
+        o.connect(lp);
+        lp.connect(g);
+        g.connect(amb);
+        o.start(t);
+        o.stop(t + 1.3);
+      },
+      chirp() {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          f = 2600 + Math.random() * 1600,
+          n = 2 + Math.floor(Math.random() * 4);
+        for (let i = 0; i < n; i++) tone("sine", f, t + i * 0.085, 0.004, 0.06, 0.012, amb, f * (1.3 + Math.random() * 0.4));
+      },
+      crow() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        for (let i = 0; i < 2; i++) {
+          tone("sawtooth", 520, t + i * 0.32, 0.01, 0.2, 0.012, amb, 380);
+          hiss(t + i * 0.32, 0.18, 0.012, "bandpass", 1200, 900, 3, amb);
+        }
+      },
+      creak() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 140 + Math.random() * 60, t, 0.02, 0.9, 0.03, amb, 60);
+        hiss(t, 0.5, 0.02, "bandpass", 2400, 600, 6, amb);
+      },
+      drip() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 900, t, 0.002, 0.12, 0.04, sfx, 1600);
+        hiss(t + 0.02, 0.25, 0.04, "lowpass", 1800, 400, 0.8);
+      },
+      /* ibaiaren hotsa: iturri bakarra, bolumena distantziaren arabera */
+      riverLevel(v) {
+        if (!ok()) return;
+        if (!RIV) {
+          const s = ctx.createBufferSource(),
+            f = ctx.createBiquadFilter(),
+            g = ctx.createGain();
+          s.buffer = noise;
+          s.loop = true;
+          f.type = "bandpass";
+          f.frequency.value = 900;
+          f.Q.value = 0.6;
+          g.gain.value = 0;
+          s.connect(f);
+          f.connect(g);
+          g.connect(amb);
+          s.start();
+          RIV = g;
+        }
+        RIV.gain.setTargetAtTime(v * 0.5, ctx.currentTime, 0.4);
       },
       /* probetarako: musika-maila bat fitxategira errendatu (OfflineAudioContext) */
       async render(level, bars, era, only) {
@@ -1419,6 +1494,10 @@
   /* @include runes.js */
   /* @include craft.js */
   /* @include world.js */
+  /* @include haran.js */
+  /* @include ibarra.js */
+  /* @include bizia.js */
+  /* @include quests.js */
   /* @include txalaparta.js */
   /* @include lockon.js */
   /* @include chain.js */
@@ -1823,6 +1902,8 @@
     /* zonak: harana eta lehen leizea (bakoitza bere taldean) */
     buildIbarra();
     buildNpcs();
+    lifeInit();
+    questsInit();
     buildCraft("ibarra");
     buildRunePuzzles("ibarra");
     buildDungeon();
@@ -1865,11 +1946,12 @@
     return [dx * c - dz * n, dx * n + dz * c];
   }
   function contains(s, x, z, margin = 0) {
-    if (s.rx) return ((x - s.x) / (s.rx + margin)) ** 2 + ((z - s.z) / (s.rz + margin)) ** 2 <= 1;
+    if (s.rx) return ((x - s.x) / (s.rx + margin)) ** 2 + ((z - s.z) / (s.rz + margin)) ** 2 <= 1 && (!s.mask || s.mask(x, z));
     const [lx, lz] = local(s, x, z);
-    return Math.abs(lx) <= s.w / 2 + margin && Math.abs(lz) <= s.d / 2 + margin;
+    return Math.abs(lx) <= s.w / 2 + margin && Math.abs(lz) <= s.d / 2 + margin && (!s.mask || s.mask(x, z));
   }
   function topY(s, x, z) {
+    if (s.hf) return s.hf(x, z);
     if (!s.ramp) return s.y;
     const lz = local(s, x, z)[1];
     return mix(s.ramp[0], s.ramp[1], clamp(lz / s.d + 0.5, 0, 1));
@@ -1890,6 +1972,9 @@
   function teleport(x, z, y) {
     jumpBuffer = 0;
     groundGrace = 0;
+    /* lur irregularra: azpiko lurrera (edo gaineko gainazalera, gehienez 2.5 m) itsatsi */
+    const g = support(x, z, y + 2.5);
+    if (g) y = Math.max(y, topY(g, x, z));
     P.x = x;
     P.z = z;
     P.y = y;
@@ -2075,7 +2160,8 @@
       P.vy = 0;
       if (frame % 3 === 0) spawnTrail();
     } else {
-      const t = 1 - Math.exp(-dt * (P.grounded ? 22 : len > 0.1 ? 6.5 : 3));
+      /* izotzean: marruskadura txikia (irristatu) */
+      const t = 1 - Math.exp(-dt * (P.grounded ? (P.platform && P.platform.ice ? 2.4 : 22) : len > 0.1 ? 6.5 : 3));
       if (P.wallLock <= 0) {
         P.vx = mix(P.vx, d.x * speed, t);
         P.vz = mix(P.vz, d.z * speed, t);
@@ -2090,6 +2176,8 @@
       ny = P.y + P.vy * dt;
     /* gelak itxita (borroka) edo zonaren mugak */
     [nx, nz] = roomCollide(px, pz, nx, nz, py);
+    /* haranean: malda handiegiak horma dira */
+    if (ZONE.cur === "ibarra") [nx, nz] = terrainCollide(px, pz, py, nx, nz);
     // Raised platforms have sides. Falling through an absent platform is intentional.
     for (const o of solids) {
       const top = o.y + (phase === 0 || o.pillar ? o.h : o.h * 0.19);
@@ -2331,6 +2419,9 @@
     const D = doorNear();
     if (D) return { kind: "door", label: D.kind === "boss" ? L("ATE HANDIA") : L("ATEA"), fn: () => tryDoor(D) };
     if (drumNear()) return { kind: "drum", label: L("ENTZUN"), fn: drumTalk };
+    const E = echoNear();
+    if (E) return { kind: "drum", label: L("ENTZUN"), fn: () => echoListen(E) };
+    if (andereDoorNear()) return { kind: "door", label: L("ATEA"), fn: andereDoor };
     if (ZONE.cur === "ibarra") {
       const sp = TXALA.spots.find((s) => s.group === ZONES.ibarra.group && Math.hypot(s.x - P.x, s.z - P.z) < 3.4);
       if (sp && txalaKnown().length) return { kind: "txala", label: L("TXALAPARTA"), fn: txalaOpen };
@@ -2398,6 +2489,8 @@
     if (CAM.yawS) offset.applyAxisAngle(UP_AXIS, CAM.yawS);
     if (F.lift) look.add(new T.Vector3(offset.x, 0, offset.z).normalize().multiplyScalar(F.lift * CAM.user));
     const target = look.clone().add(offset);
+    /* haranean: muinoek eta mendi-hegalek ez dezatela Amaiur estali */
+    if (ZONE.cur === "ibarra") camTerrainLift(look, target);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) CAM.pos = camera.position.clone();
     CAM.pos.lerp(target, 1 - Math.exp(-dt * 7));
     camera.position.copy(CAM.pos);
@@ -2480,6 +2573,7 @@
       "",
       [
         [L("JARRAITU"), () => {}],
+        [L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)],
         [L("KONTROLAK"), help],
         [
           L("LAGUNTZA: ") + (saved.assist ? "BAI" : "EZ"),
@@ -2531,7 +2625,7 @@
     $("dashLab").textContent = "BULTZADA";
     $("coinLab").textContent = "TXANPONAK";
     $("keyLab").textContent = "GILTZAK";
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ["G", "esku magikoa"]]
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ["L", "egunkaria"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
     if (ready) {
@@ -2552,6 +2646,7 @@
       KeyJ: attack,
       KeyK: attack,
       KeyH: powerMenu,
+      KeyL: questLog,
       KeyE: interact,
       Escape: pause,
     };
@@ -2713,7 +2808,11 @@
       A = AREA.cur ? AREAS[AREA.cur] || ROOMS_AREA[AREA.cur] : null;
     $("chapter").textContent = ZONE.cur === "leizea" ? "01 · " + Z.name : "LEIZEEN DEIA";
     $("placeName").textContent = A ? A[0] : Z.name;
-    $("goal").textContent = ROOM.fight && !ROOM.fight.boss ? L("Garaitu itzalak") + " · " + enemiesAlive() : objective()[0];
+    $("goal").textContent = QST.mikel
+      ? L("Jomugak: ") + QST.mikel.hits + " / " + QST.mikel.need + " · " + Math.max(0, Math.ceil(QST.mikel.t)) + " s"
+      : ROOM.fight && !ROOM.fight.boss
+        ? L("Garaitu itzalak") + " · " + enemiesAlive()
+        : objective()[0];
     $("hearts").textContent = "● ".repeat(Math.max(0, P.hp)) + "○ ".repeat(Math.max(0, P.maxHp - P.hp));
     $("craftBtn").hidden = true;
     $("dashDot").textContent = P.dashReady ? "◆" : "◇";
@@ -2907,8 +3006,10 @@
   /* kamera eta helburuaren artean dauden hormak, etxeak eta zuhaitzak gardendu */
   function occlusionUpdate(dt) {
     const t = cinematic && CAM.cineLook ? CAM.cineLook : { x: P.x, y: P.y + 1, z: P.z };
-    if (ZONE.cur === "ibarra") hubOcclusion(dt, t.x, t.y, t.z);
-    else wallsFade(dt, t.x, t.z);
+    if (ZONE.cur === "ibarra") {
+      hubOcclusion(dt, t.x, t.y, t.z);
+      cutUpdate(t.x, t.y, t.z);
+    } else wallsFade(dt, t.x, t.z);
   }
   /* elkarrizketak eta eszenak (say() bidez gehitzen dira) */
   const scenes = [];
@@ -2927,9 +3028,10 @@
       guideBeacon.castShadow = false;
     }
     guideBeacon.visible = true;
-    guideBeacon.position.set(o[0], o[2] + 0.12, o[1]);
+    const oy = ZONE.cur === "ibarra" && o[2] < 1 ? Math.max(o[2], gy(o[0], o[1])) : o[2];
+    guideBeacon.position.set(o[0], oy + 0.12, o[1]);
     guideBeacon.scale.setScalar(1 + Math.sin(time * 3) * 0.15);
-    const v = new T.Vector3(o[0], o[2] + 2.6, o[1]).project(camera);
+    const v = new T.Vector3(o[0], oy + 2.6, o[1]).project(camera);
     const x = (v.x * 0.5 + 0.5) * innerWidth,
       y = (-v.y * 0.5 + 0.5) * innerHeight;
     const el = $("waypoint");
@@ -3100,6 +3202,7 @@
     if (saved.rhythms.length) opts.push([L("TXALAPARTA") + kb(" · B"), txalaOpen]);
     if (hasChain()) opts.push([L("SUGAARREN KATEA") + kb(" · C"), chainFire]);
     opts.push([L("FINKATU") + kb(" · T"), lockToggle]);
+    opts.push([L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)]);
     const Z = zoneHere();
     if (Z && !Z.solved) opts.push([L("ESKU MAGIKOA") + kb(" · G"), craftToggle]);
     opts.push([L("JARRAITU"), () => {}]);
@@ -3245,6 +3348,15 @@
         support,
         contains,
         topY,
+        gy,
+        riverW,
+        walkSD,
+        ECHOES,
+        HERBS,
+        QST,
+        mikelStart,
+        questLog,
+        pitUpdate,
         ctxPower,
         ctxUpdate,
         powerMenu,

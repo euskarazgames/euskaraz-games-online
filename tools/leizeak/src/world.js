@@ -21,6 +21,13 @@
     harrespila: ["HARRESPILA", "Jentilen harriak. Lo daude, ez hilda."],
     basoa: ["BASOA", "Basajaunen lurra. Zuhaitzek isilik begiratzen dute."],
     ataria: ["LEIZEAREN ATARIA", "Harri handi batek ixten du sarrera."],
+    ibaia: ["IBAIA", "Mari isildu zenetik ibaia izoztuta dago. Iraganean, ura bizi zen."],
+    arroila: ["HARRI-ARROILA", "Ur-jauziaren isiltasuna. Izotzak hemen ere hitz egiten du."],
+    urjauzia: ["UR-JAUZIA", "Izotz-gortinaren atzean, ilunpe bat. Iraganean ura erortzen zen…"],
+    lepoa: ["ARTZAINEN LEPOA", "Hemendik aurrera, Tartaloren lurrak. Ardi-hezurrak bidean."],
+    kaia: ["KAIA", "Txalupa izotzean harrapatuta dago."],
+    badia: ["BADIA IZOZTUA", "Itsasoak ere eutsi dio arnasari."],
+    zuloa: ["LEIZE-ZULOA", "Ibaia lurrak irensten du hemen. Hondotik, norbaitek kantatzen duela dirudi."],
   };
   /* zona baterako eraikitzen: taldea eta zerrendak "globalak" bihurtu */
   function zoneBuild(id) {
@@ -261,14 +268,18 @@
         x = cx + Math.cos(a) * d,
         z = cz + Math.sin(a) * d;
       if (keepOut.some(([kx, kz, kr]) => Math.hypot(x - kx, z - kz) < kr)) continue;
+      /* haranean: ez itsaslabarrean, ez ibaian */
+      if (y === null && !treeSpot(x, z)) continue;
       const k = kinds[i % kinds.length],
-        single = k.startsWith("tree_single");
+        single = k.startsWith("tree_single"),
+        ty = y === null ? gy(x, z) : y;
       const th = single ? 5 + wr() * 2.5 : 7 + wr() * 4,
-        m = model(k, x, y, z, th, wr() * TAU);
+        m = model(k, x, ty, z, th, wr() * TAU);
       plants.push(m);
-      occluder(m, x, y, z, single ? 1 : 2.4, th);
-      if (single) solids.push({ x, z, r: 0.45, h: 6, y, pillar: true });
-      else solids.push({ x, z, r: 1.9, h: 6, y, pillar: true });
+      SWAY.push({ m, ph: wr() * TAU, k: single ? 1 : 0.6 });
+      occluder(m, x, ty, z, single ? 1 : 2.4, th);
+      if (single) solids.push({ x, z, r: 0.45, h: 6, y: ty, pillar: true });
+      else solids.push({ x, z, r: 1.9, h: 6, y: ty, pillar: true });
     }
   }
   /* ardi bat (prozedurala): artilezko gorputza, aurpegi iluna eta lau hanka */
@@ -361,196 +372,6 @@
         m.depthWrite = o.k < 0.3;
       }
     }
-  }
-  /* haraneko guneak kokapenaren arabera (HUDaren izena eta deskribapena) */
-  function hubArea(x, z, y) {
-    if (Math.hypot(x - HUB.cave.x, z - HUB.cave.z) < 14 && y > 3) return "ataria";
-    if (y > 7.5 && Math.hypot(x - 46, z + 64) < 17) return "harrespila";
-    if (y > 3.5 && ((x + 6) / 43) ** 2 + ((z + 112) / 31) ** 2 < 1) return "basoa";
-    if (z < -30) return "iparra";
-    if (z > 63) return "portua";
-    if (z > 10 && Math.abs(x) < 46) return "herria";
-    return "zelaiak";
-  }
-
-  /* ------------------------------ IBARRA ------------------------------ */
-  /* Haran zabala bi lautadatan (hegoa: herria eta zelaiak · iparra: larreak, harrespila eta basoa),
-     ibaiak bereizita eta zubi batek lotuta. Terrazak lautaden gainean. */
-  const HUB = { gate: null, stairs: [], stones: [], sheep: [], pen: { x: -31, z: -6 }, cave: { x: -6, z: -139, y: 5 }, barrels: [] };
-  /* arrapala A→B eta lurreratzeko xafla B-tik haratago (terrazaren ertza altuera osoan gurutzatzeko) */
-  function rampUp(ax, az, ay, bx, bz, by, w, area, land = 4) {
-    ramp(ax, az, ay, bx, bz, by, w, area);
-    const len = Math.hypot(bx - ax, bz - az),
-      ux = (bx - ax) / len,
-      uz = (bz - az) / len;
-    slab({ x: bx + (ux * land) / 2, z: bz + (uz * land) / 2, y: by, w, d: land, rot: Math.atan2(ux, uz), h: 0.6, mat: "path", area });
-  }
-  function buildIbarra() {
-    zoneBuild("ibarra");
-    /* lautadak eta terrazak */
-    plateau({ x: 0, z: 22, y: 0, rx: 80, rz: 44, area: "herria" });
-    plateau({ x: 0, z: -95, y: 0, rx: 95, rz: 60, area: "iparra" });
-    plateau({ x: 46, z: -64, y: 9, rx: 15, rz: 15, area: "harrespila" });
-    plateau({ x: -6, z: -112, y: 5, rx: 42, rz: 30, area: "basoa" });
-    /* mugak: lautadetatik ezin da itsasora erori (portuko kaian izan ezik) */
-    BOUNDS.push({ x: 0, z: 22, rx: 80, rz: 44, k: 0.96, gaps: [[PI / 2, 0.03], [-PI / 2, 0.035]] }, { x: 0, z: -95, rx: 95, rz: 60, k: 0.96, gaps: [[PI / 2, 0.035]] });
-    /* ibaia eta zubia (arku leuna) */
-    waterSheet(0, -28.5, 260, 16, -1.2);
-    ramp(0, -19, 0, 0, -28.5, 1.1, 5, "herria", material("#8a6a48"));
-    ramp(0, -28.5, 1.1, 0, -38, 0, 5, "iparra", material("#8a6a48"));
-    for (const s of [-1, 1]) {
-      for (let k = 0; k < 7; k++) box(s * 2.45, 1.0 + Math.sin((k / 6) * PI) * 1.1, -20 - k * 2.8, 0.18, 0.9, 0.18, "#5d4632");
-      wallBlock(s * 2.6, -28.5, 0.3, 19, 0, 0, 2.2);
-    }
-    /* ur-jauzia ekialdeko mendixkatik ibaira */
-    const ft = fallTexture();
-    ft.repeat.set(2, 1.4);
-    const fall = obj(new T.PlaneGeometry(10, 16), new T.MeshBasicMaterial({ map: ft, color: "#cdeef5", transparent: true, opacity: 0.7, depthWrite: false, side: T.DoubleSide }));
-    fall.position.set(101, 6.5, -28.5);
-    fall.rotation.y = -PI / 2;
-    fall.castShadow = false;
-    ATMO.falls.push(fall);
-    mountain(114, -28, 24, 36, 1.2, 0.8);
-
-    /* ---- HERRIA ---- */
-    const plaza = obj(new T.CircleGeometry(10, 40), new T.MeshStandardMaterial({ color: "#d9d2bc", map: pathTexture, roughness: 0.92 }));
-    plaza.rotation.x = -PI / 2;
-    plaza.position.set(0, 0.03, 36);
-    plaza.castShadow = false;
-    walkway(0, 46, 0, 62, 0, 3.4);
-    walkway(0, 26, 0, -19, 0, 3.2);
-    walkway(-9, 36, -24, 36, 0, 3);
-    walkway(9, 38, 24, 42, 0, 3);
-    /* eliza eta frontoia (euskal herri baten bihotza) */
-    model("building_church_red", -20, 0, 22, 14, 0.6);
-    /* frontoia: horma zuria, harrizko oinarria eta goiko erlaitza, txapa gorria eta bi pilastra */
-    box(-32, 4.6, 37, 1.4, 9.2, 15, material("#ece6d6"));
-    box(-32, 0.6, 37, 1.6, 1.2, 15.2, material("#8c877a"));
-    box(-32, 9.35, 37, 1.8, 0.5, 15.6, material("#6d6b62"));
-    box(-31.27, 1.55, 37, 0.06, 0.2, 15, material("#a8332a", 0.2));
-    for (const pz of [29.3, 44.7]) box(-32, 4.8, pz, 1.9, 9.6, 0.7, material("#d9d2c0"));
-    wallBlock(-32, 37, 1.4, 15, 0, 0, 10);
-    const court = obj(new T.PlaneGeometry(11, 15), material("#5d8a6a"));
-    court.rotation.x = -PI / 2;
-    court.position.set(-26, 0.04, 37);
-    court.castShadow = false;
-    for (const zz of [31, 37, 43]) box(-31.2, 0.06, zz, 0.12, 0.02, 0.6, "#ffffff");
-    /* etxeak (zuria eta gorria) */
-    for (const [hx, hz, hh, ha, k] of [
-      [17, 22, 7, -0.6, "A"], [28, 31, 8, -1.3, "B"], [14, 56, 7, 2.7, "A"], [-12, 55, 8, 3.0, "B"], [-27, 50, 7, 2.3, "A"],
-      [33, 47, 6.5, -2.2, "A"], [-38, 22, 7.5, 1.2, "B"], [40, 18, 7, -1.0, "B"],
-    ])
-      model("building_home_" + k + "_red", hx, 0, hz, hh, ha);
-    model("building_blacksmith_red", 25, 0, 43, 7.5, -1.9);
-    model("building_tavern_red", 2, 0, 58, 9, PI);
-    model("building_well_red", 9, 0, 35, 3.2, 0.3);
-    model("building_watermill_red", 60, -1.2, -17, 9, -1.5);
-    /* txalaparta plazan (Pello eta Peio) */
-    TXALA.spots.push(txalapartaMesh(0, 0, 30.5, 0, "herria"));
-    /* merkatua eta apaingarriak */
-    model("tent", -10, 0, 28, 3.4, 0.4);
-    model("tent", 13, 0, 29, 3, -0.3);
-    for (const [bx, bz] of [[-12, 31], [-11, 32.6], [15, 32], [21, 40], [-20, 41], [30, 38], [-28, 44], [24, 25]]) HUB.barrels.push(breakable("barrel", bx, 0, bz));
-    for (const [bx, bz] of [[-13.6, 29.5], [15.2, 30.2], [22.6, 39.4], [-20, 30]]) HUB.barrels.push(breakable("crate_A_big", bx, 0, bz));
-    model("flag_red", 4, 0, 25, 4.2, 0.2);
-    model("wheelbarrow", 19, 0, 36, 1.5, 0.8);
-    model("sack", 12, 0, 27, 0.8, 0.5);
-    /* PORTUA: kaia egurrezkoa eta txalupa */
-    slab({ x: 0, z: 72, y: 0.3, w: 4, d: 16, h: 0.5, mat: "wood", area: "portua" });
-    for (const s of [-1, 1]) for (let k = 0; k < 4; k++) box(s * 2.1, -3.8, 66 + k * 4.3, 0.35, 8, 0.35, "#5d4632");
-    for (const s of [-1, 1]) wallBlock(s * 2.2, 72, 0.25, 16, 0, 0.3, 1.2);
-    wallBlock(0, 80.2, 4.4, 0.4, 0, 0.3, 1.2);
-    harborBoat(6.5, 76);
-    /* ---- ZELAIAK ---- */
-    for (let i = 0; i < 6; i++) model("fence_wood_straight", HUB.pen.x - 6 + i * 2.3, 0, HUB.pen.z + 5, 1.3, PI / 2);
-    for (let i = 0; i < 4; i++) model("fence_wood_straight", HUB.pen.x - 7.2, 0, HUB.pen.z + 4 - i * 2.3, 1.3, 0);
-    for (let i = 0; i < 4; i++) model("fence_wood_straight", HUB.pen.x + 7.2, 0, HUB.pen.z + 4 - i * 2.3, 1.3, 0);
-    model("resource_lumber", 22, 0, 2, 1.4, 0.4);
-    model("resource_lumber", 27, 0, -7, 1.4, 1.2);
-    model("tent", 24, 0, -2, 2.6, 0.9);
-    trees(36, 4, 0, 14, 10, undefined, [[0, 0, 7]]);
-    trees(-48, 10, 0, 12, 8);
-    trees(52, 40, 0, 12, 7);
-    trees(-56, 44, 0, 10, 6);
-    /* ---- IPAR-LARREAK ---- */
-    walkway(0, -38, -20, -70, 0, 3);
-    walkway(4, -40, 30, -64, 0, 3);
-    trees(-46, -56, 0, 14, 9);
-    trees(10, -78, 0, 8, 4, undefined, [[-6, -84, 6]]);
-    trees(70, -96, 0, 14, 9);
-    /* harrespilaren eskailera: jentil-harriak (ESNATU erritmoarekin altxatzen dira) */
-    for (let i = 0; i < 5; i++) HUB.stairs.push(jentilStone(15 + i * 3.1, -64, 0, (i + 1) * 1.72, 2.6, 2.8, "iparra"));
-    /* harrespila: zutarri biribila */
-    for (let i = 0; i < 9; i++) {
-      const a = (i / 9) * TAU,
-        x = 46 + Math.cos(a) * 9,
-        z = -64 + Math.sin(a) * 9;
-      const m = box(x, 9 + 1.6, z, 1.1, 3.2 + (i % 3) * 0.6, 0.8, rockMaterial());
-      m.rotation.y = a;
-      m.rotation.z = (i % 2 ? 1 : -1) * 0.05;
-      solids.push({ x, z, r: 0.75, h: 4, y: 9, pillar: true });
-    }
-    /* ---- BASOA ---- */
-    rampUp(-26, -72, 0, -26, -84.5, 5, 6, "iparra");
-    trees(-6, -112, 38, 44, undefined, [[-6, -112, 7], [-26, -88, 6], [-6, -134, 7], [-14, -100, 4], [-6, -122, 4]]);
-    walkway(-26, -88, -6, -134, 5, 3);
-    /* leizearen ataria: harkaitz-horma, arkua eta jentil-atea */
-    /* harkaitz-hormak (harri-zutabe zakarrak) eta mendia atzean; horma ikusezina talkarako */
-    mountain(-6, -182, 38, 70, 0.3, 0.55);
-    solids.push({ x: -6, z: -182, r: 34, h: 80, y: -9, pillar: true });
-    wallBlock(-6, -143, 60, 4, 0, 5, 30, false);
-    for (const [sx, sz, sh, seed] of [[-31, -147, 20, 2], [-24, -149, 27, 5], [-17, -146, 24, 7], [5, -146, 23, 1], [12, -149, 28, 4], [19, -146, 19, 8], [-6, -151, 30, 3], [-14, -153, 34, 6], [2, -153, 32, 9]]) {
-      seaStack(sx, sz, sh, seed);
-      solids.push({ x: sx, z: sz, r: 4.2, h: sh + 12, y: -9, pillar: true });
-    }
-    box(-10.5, 5 + 4, -140, 2.2, 8, 2.6, material("#56544c"));
-    box(-1.5, 5 + 4, -140, 2.2, 8, 2.6, material("#56544c"));
-    box(-6, 5 + 8.6, -140, 11.2, 1.6, 2.6, material("#4c4a43"));
-    solids.push({ x: -10.5, z: -140, r: 1.4, h: 9, y: 5, pillar: true }, { x: -1.5, z: -140, r: 1.4, h: 9, y: 5, pillar: true });
-    const mouth = obj(new T.PlaneGeometry(7, 8), new T.MeshBasicMaterial({ color: "#05080a" }));
-    mouth.position.set(-6, 9, -141.2);
-    mouth.castShadow = false;
-    HUB.gate = jentilStone(-6, -138.4, 5, 5, 6.6, 1.6, "ataria", true);
-    /* ---- atzeko planoa: mendiak, Anboto eta hodeiak ---- */
-    for (const [mx, mz, mh, mr, sl] of [
-      [-175, -140, 85, 70, 0.6], [-120, -245, 115, 90, 0.55], [-30, -335, 175, 120, 0.5], [70, -270, 120, 95, 0.55], [165, -175, 95, 75, 0.6],
-      [205, -45, 70, 60, 0.66], [-205, -25, 62, 55, 0.7], [-150, 40, 34, 45, 2], [140, 45, 30, 40, 2], [-60, -230, 70, 55, 0.62], [120, -215, 80, 60, 0.6],
-    ])
-      mountain(mx, mz, mr, mh, mx * 0.013 + mz * 0.007, sl);
-    for (let i = 0; i < 9; i++) {
-      const c = model(i % 2 ? "cloud_big" : "cloud_small", -200 + i * 52, 70 + (i % 3) * 12, -240 + (i % 4) * 40, 14 + (i % 3) * 5, i);
-      c.traverse((n) => n.isMesh && ((n.castShadow = false), (n.material = n.material.clone()), (n.material.transparent = true), (n.material.opacity = 0.85)));
-      CLOUDS.push(c);
-    }
-    /* ardiak (Joanesen misioa) */
-    for (const [i, [sx, sy, sz]] of [[40, 0, -12], [-62, 0, -74], [-22, 5, -122]].entries()) {
-      const home = saved.sheep.includes(i);
-      const m = sheepMesh(home ? HUB.pen.x - 3 + i * 3 : sx, home ? 0 : sy, home ? HUB.pen.z : sz, i);
-      HUB.sheep.push({ i, m, x: m.position.x, z: m.position.z, y: m.position.y, home, follow: false, t: i });
-    }
-    ZONES.ibarra.spawn = { x: -6, y: 0, z: 44 };
-  }
-  const CLOUDS = [];
-  /* txalupa portuan (OIHARTZUN-eko belaontzien antzekoa, geldirik) */
-  function harborBoat(x, z) {
-    const hull = new T.Shape();
-    hull.moveTo(-2.7, 0.9);
-    hull.lineTo(2.9, 0.9);
-    hull.lineTo(2.1, -0.4);
-    hull.lineTo(-2.2, -0.4);
-    hull.closePath();
-    const g = new T.Group();
-    const hg = new T.ExtrudeGeometry(hull, { depth: 1.7, bevelEnabled: false });
-    hg.translate(0, 0, -0.85);
-    g.add(new T.Mesh(hg, material("#7a4f32")));
-    const mast = new T.Mesh(new T.CylinderGeometry(0.07, 0.09, 5, 5), material("#5a3c26"));
-    mast.position.set(0, 3.2, 0);
-    g.add(mast);
-    g.scale.setScalar(1.3);
-    g.position.set(x, -8.3, z);
-    g.rotation.y = PI / 2;
-    (BP || scene).add(g);
-    HUB.boat = g;
   }
   /* jentilen erruna (kanbas): zirkulua eta lau besoko ikurra (lauburu-kutsua, diseinu propioa) */
   let RUNE_TEX = null;
@@ -665,29 +486,17 @@
   }
   function breakAt(x, y, z, r) {
     for (const B of BREAKABLES) {
-      if (B.broken || B.buildZone !== ZONES[ZONE.cur].group) continue;
+      if (B.broken || B.buildZone !== ZONES[ZONE.cur].group || (B.phase !== undefined && B.phase !== phase)) continue;
       if (Math.hypot(B.x - x, B.z - z) < r + B.r && Math.abs(y - (B.y + 0.8)) < 2) {
         B.broken = true;
         B.m.visible = false;
         B.solid.r = 0;
         fxBurst(B.x, B.y + 0.8, B.z, { n: 18, speed: 4, up: 3, life: 0.7, size: 0.28, color: "#b8956a", grav: 9 });
         SND.crumble();
-        dropLoot(B.x, B.y, B.z, B.kind === "barrel" ? 3 : 2);
+        if (B.onBreak) B.onBreak();
+        else dropLoot(B.x, B.y, B.z, B.kind === "barrel" ? 3 : 2);
         return true;
       }
     }
     return false;
-  }
-  function hubUpdate(dt) {
-    stonesUpdate(dt);
-    watersUpdate(dt);
-    for (const [i, c] of CLOUDS.entries()) c.position.x += dt * (0.6 + (i % 3) * 0.3) * (1 - phaseBlend * 0.85);
-    if (HUB.boat) {
-      HUB.boat.position.y = -8.3 + Math.sin(time * 1.1) * 0.12 * (1 - phaseBlend);
-      HUB.boat.rotation.z = Math.sin(time * 0.8) * 0.04 * (1 - phaseBlend);
-    }
-    sheepUpdate(dt);
-    /* leizearen ahoa: atea irekita badago, sartu */
-    if (ZONE.cur === "ibarra" && HUB.gate && HUB.gate.p.off && !ZONE.pending && Math.hypot(P.x - HUB.cave.x, P.z - HUB.cave.z) < 2.4 && P.y > 4)
-      enterZone("leizea", { ...DUNGEON.entry, cp: true });
   }
