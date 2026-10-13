@@ -41,3 +41,16 @@ Poly Haven: https://polyhaven.com/license · ambientCG: https://ambientcg.com/li
 
 `tools/oihartzun/models/build_models.mjs` scriptak murrizten ditu (behar diren animazioak, sare kuantizatuak,
 hezurduren animazio partekatuak). KayKit: https://kaylousberg.com · lizentzia CC0.
+
+## LEIZEEN DEIA (OIHARTZUN II) · modeloak (CC0)
+
+| Modeloa | Iturria | Jatorrizko materiala |
+|---|---|---|
+| Sorgina eta hezurdurak (OIHARTZUN-ekoak, goian) | Kay Lousberg / KayKit | Adventurers · Skeletons |
+| Herritarrak: `Barbarian`, `Knight`, `Rogue`, `Rogue_Hooded` (kolore propioekin; Basajaun `Barbarian`-etik) | Kay Lousberg / KayKit | [KayKit Character Pack: Adventurers](https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0) |
+| Herria eta natura: etxeak, eliza, errementaria, taberna, putzua, errota, hesiak, zuhaitzak, hodeiak, upelak, kaxak… | Kay Lousberg / KayKit | [KayKit Medieval Hexagon Pack](https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0) |
+| Leizeko piezak: hormak, zoruak, zutabeak, zuziak, kutxak, giltzak, banderak… | Kay Lousberg / KayKit | [KayKit Dungeon Remastered](https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0) |
+
+`tools/leizeak/models/build_models.mjs` scriptak eszena bakarrean biltzen ditu (`props.glb`, testurak
+deduplikatuta eta sareak kuantizatuta). Mendiak, ardiak, txalaparta, suge-eraztunak, erretratuak, musika
+eta soinu guztiak joko honetarako sortu dira (prozeduralak).

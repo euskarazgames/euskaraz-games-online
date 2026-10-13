@@ -193,12 +193,19 @@ footer a{color:var(--muted);text-underline-offset:3px}
   <p class="desc">Amaiur sorgina zara: jaurti magia Gauekoren hezurdurei, aldatu garaia airean, igo Orratza hodeietaraino eta deskubritu nork aldatzen duen irratiko ahotsa.</p>
   <span class="cta">JOKATU <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
  </button>
+ <button class="panel play wide reveal" style="--i:5" data-game="leizeak">
+  <div class="art"><img src="assets/covers/leizeak.jpg" alt="" width="1600" height="900" loading="lazy"></div>
+  <h2 class="title">LEIZEEN DEIA</h2>
+  <div class="meta">Oihartzun II · abentura · txalaparta</div>
+  <p class="desc">Ibarrako txalapartak bakarrik jotzen hasi dira. Ikasi erritmo zaharrak, esnatu jentil-harriak eta jaitsi Basajaunen leizera Sugaarren katearen bila.</p>
+  <span class="cta">JOKATU <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+ </button>
 </main>
 <div id="player" role="dialog" aria-modal="true" aria-label="Jokoa"><iframe id="gameFrame" title="Jokoa" allow="autoplay; fullscreen; gamepad; clipboard-write"></iframe><div id="gameLoading" role="status"><div class="gl-title"></div><div class="gl-bar"><i></i></div><b>KARGATZEN</b></div><button id="exitGame" aria-label="Itzuli atarira"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>EUSKARAZ GAMES</button></div>
 <footer><span>EUSKARAZ GAMES · © 2026</span><span>Testurak eta zeruak: Poly Haven eta ambientCG (CC0) · <a href="assets/CREDITS.md">kredituak</a></span></footer>
 <script>
-const EG_GAMES=["pilota","zesta","artzain","basoa","itsas","oihartzun"];
-const EG_NAMES={pilota:"HERRI PILOTA",zesta:"ZESTA PUNTA",artzain:"ARTZAIN TXAKURRAK",basoa:"BASOA SOLID",itsas:"ITSAS DORREA",oihartzun:"OIHARTZUN"};
+const EG_GAMES=["pilota","zesta","artzain","basoa","itsas","oihartzun","leizeak"];
+const EG_NAMES={pilota:"HERRI PILOTA",zesta:"ZESTA PUNTA",artzain:"ARTZAIN TXAKURRAK",basoa:"BASOA SOLID",itsas:"ITSAS DORREA",oihartzun:"OIHARTZUN",leizeak:"LEIZEEN DEIA"};
 function egInviteUrl(game,room,lang){
  const u=new URL(location.href);u.search='';u.hash='';
  u.searchParams.set('game',game);u.searchParams.set('room',room);

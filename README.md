@@ -8,7 +8,7 @@ beti euskara pasatzen die jokoei (`window.__EG_LANG = "eu"`). Gordetako hizkuntz
 
 ## Egitura
 - `public/index.html`: ataria (arina; joko bakoitza irekitzen denean bakarrik kargatzen du).
-- `public/games/<jokoa>.html`: joko bakoitza bere fitxategian (`pilota`, `zesta`, `artzain`, `basoa`, `itsas`, `oihartzun`).
+- `public/games/<jokoa>.html`: joko bakoitza bere fitxategian (`pilota`, `zesta`, `artzain`, `basoa`, `itsas`, `oihartzun`, `leizeak`).
   `elur.html` OIHARTZUN-en aurreko bertsioa da (ELUR JOKOA), haren hasierako pantailatik irekitzen dena.
 - `public/assets/egfx.js`: jokoen grafiko-modulu partekatua (benetako testurak, zeruak, ura, mendiak).
 - `public/assets/tex`, `sky`, `covers`: CC0 testurak, zeruak eta atariko azalak. Kredituak: `public/assets/CREDITS.md`.
@@ -69,6 +69,38 @@ hilketan eta gero eta biziagoak diren etsai-olatuak.
 - Probak: `tools/test/oihartzun_routes.js` (ibilbideak, puzzleak, Orratz osoa eta errunak benetako
   fisikarekin), `tools/test/oihartzun_combat.js` (bot batek arenak urrunetik gainditzen ditu),
   `tools/test/oihartzun_boss.js` (azken etsai osoa eta azken bihurgunea), `tools/test/errcheck.js`.
+
+## LEIZEEN DEIA (OIHARTZUN II)
+OIHARTZUN-en unibertsoko abentura berria eta originala (`public/games/leizeak.html`): ez du beste
+jokoen edukirik erabiltzen; istorioa, pertsonaiak, mailak, mekanikak eta musika joko honetarako
+sortu dira, euskal mitologiatik abiatuta (Mari, Basajaun, jentilak, Gaueko, Sugaar). Diseinu-analisia
+eta bide-orria: `tools/leizeak/DISEINUA.md`.
+- **IBARRA**, haran irekia (hub-a): herria plaza, eliza, frontoia, errementaria eta portuarekin; ibaia
+  eta zubia; ipar-zelaiak, harrespila muinoan eta basoa leizearen atariarekin. Herritarrak (Pello eta
+  Peio txalapartariak, Iratiren oihartzuna, Maddi errementaria eta denda, Joanes artzaina, Kattalin,
+  jentil zaharra), eginkizunak (hiru ardi, txalapartarien erronka), arnasa-zatiak eta txanponak.
+- **TXALAPARTA**, mekanika sinatua: espiritu batek erritmo bat jotzen du eta Amaiurrek errepikatu egiten
+  du (EZKERRA / ESKUINA). Ikasitako erritmoak edonon jo daitezke: **ESNATU** (◀ ◀ ▶) jentil-harriak
+  altxatzen ditu (eskailerak, leizearen atea) eta **ENTZUN** (▶ ◀ ▶ ▶) ezkutuko plataformak eta kutxak
+  agerian uzten ditu. Musikak ere txalaparta-geruza du haranean.
+- **BASAJAUNEN LEIZEA**, lehen leizea: zortzi gela (sutegiak, garai-zubiak, kaxen puzzlea, borroka,
+  oihartzunen gela iluna, zaindaria, katearen putzua eta etsai nagusia), giltza txikiak, giltza nagusia,
+  mapa txikia eta tresna berria: **SUGAARREN KATEA** (suge-eraztunetara tiratu, kaxak erakarri, etsaiak
+  zorabiatu). Etsai nagusia, **Basajaun Iluna**: uhinak, harkaitzak, laguntzaileak eta bizkarreko
+  eraztuna (katea) → bihotza (sorginkeria), hiru plakatan.
+- Borroka: **FINKATU** (T edo ◎: helburua finkatu, kamerak biak enkoadratzen ditu, Amaiur alboka
+  mugitzen da) eta **EZKUTUA** (INDARRA kargatzean aurretik datozen proiektilak itzultzen dira; Basajauni
+  bere harkaitza itzuliz gero, zorabiatuta geratzen da).
+- Kamera eta irakurgarritasuna: Amaiur eta kameraren artean dauden hormak, etxeak eta zuhaitzak
+  gardendu egiten dira; leizean argia zuziek eta Amaiurren kriseiluak ematen dute.
+- Iturburua: `tools/leizeak/src/` (`game.js`, `world.js`, `npc.js`, `txalaparta.js`, `dungeon.js`,
+  `rooms.js`, `boss.js`, `chain.js`, `lockon.js`, `story.js`, `combat.js`, `magic.js`, `craft.js`,
+  `runes.js`, `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
+  ateratzen da; modeloak `tools/leizeak/models/*.glb`-tik, `build_models.mjs`-ek KayKit-etik sortuak).
+- Fitxategi bakarreko bertsioa: `python3 tools/leizeak/standalone.py /tmp/LEIZEEN_DEIA.html`
+- Probak: `tools/test/leizeak_route.js` (bide osoa hasieratik amaierako eszenaraino: elkarrizketak,
+  txalaparta, atea, leizeko gela guztiak eta Basajaun) eta `tools/test/leizeak_combat.js` (FINKATU,
+  EZKUTUA, garaien ezkutuak, sendabelarra). Proba-kakoa: `?test` → `window.__game`.
 
 ## Cloudflare
 - Worker-aren izena: `euskaraz-games-online`
