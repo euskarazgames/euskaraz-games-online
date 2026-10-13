@@ -90,12 +90,31 @@ ardiak, txalapartarien erronka.
 7. Kalitatea: bot-probak (ibilbide osoa), erroreen egiaztapena, mugikorreko kontrolak eta errendimendua.
 
 ## 5. Bide-orria (hurrengo entregak)
-- 2. leizea: Lamien ibaia (ura eta korronteak). 3. leizea: Tartaloren koba (sua eta harria).
-  4. leizea: Jentilen zerua (haizea). Azken leizea: Mariren koba (Anboto).
+- ✔ 2. leizea: LAMIEN LEIZEA (ura/izotza, HAIZE-ADARRA, Lamia Iluna). ✔ 3. leizea: TARTALOREN KOBA
+  (sua eta harria, SUGAR-IZPIA, Tartalo). Hurrengoak: Jentilen zerua (Anboto bidean) eta, azkenik,
+  Mariren koba (Anboto). Zazpi zaindari guztira: hiru askatuta.
 - Egun/gau zikloa ("gaua gauekoentzat, eguna egunekoentzat"): gauez beste etsai eta gertaera batzuk.
 - Mapa osoa, eskuliburua eta bildumen menua.
 - Iraupena: 6-8 ordu. Bigarren mailako misio gehiago, minijokoak eta amaiera osoa.
 - Playtest-ak benetako jokalariekin eta haien datuekin doikuntzak.
+
+## 5b. Leizeen diseinua (entregatuak)
+Leize bakoitzak tresna bat ematen du erdian, eta tresna hori lau aldiz erabiltzen da, gero eta
+zailago: lehenik bakarrik, gero beste mekanika batekin, gero denbora-mugarekin, azkenik etsai
+nagusiaren aurka. Ateak, giltzak eta itzulerak gela-zentral baten inguruan (bideak ez dira lerro bat).
+- **BASAJAUNEN LEIZEA** (SUGAARREN KATEA): sutegiak → garai-zubiak → kaxak (giltza) → borroka →
+  oihartzunen gela (ENTZUN) → zaindaria (katea) → katea eraztunetara (giltza nagusia) → Basajaun.
+- **LAMIEN LEIZEA** (HAIZE-ADARRA): ur-jauzia iraganean → ubidea orainean (izotza) → errota bi
+  garaietan → korua (giltza) → herensugea (azaleratu iraganean, izoztu orainean) → adarra:
+  haize-errotak, balsa ur-jauziraino (giltza nagusia), lainoak (kutxak) → Lamia Iluna.
+- **TARTALOREN KOBA** (SUGAR-IZPIA): sutegiak → ardi-korta (borroka; izotzean kutxa bat ikusten da,
+  baina oraindik ezin) → **begiaren gela**: ezkutuka (begiradaren konoa lurrean marraztuta dago eta
+  harriek eta ardiek itzala egiten dute; ikusten bazaitu, sarrerara) → giltza → burruntziaren sutegia
+  (zaindaria) → SUGAR-IZPIA: hesia erre → Gauekoren izotz-horma urtu → galdara garaia urrutitik (barrak)
+  → lau galdara garai denbora-mugarekin (giltza nagusia) → itzuli izotzeko kutxara (arnasa-zatia) →
+  Tartalo: lau galdarak piztu borrokan → argiak itsutzen du → begia (edo harkaitza itzuli: zorabiatu).
+- Mitologia: Tartalo ilunpean ikusten duen begi bakarreko artzain erraldoia (argiak itsutzen du),
+  lamiak eta urrezko orrazia, Gaueko gauaren espiritua, Mari Anboton. Istorioa eta gelak originalak.
 
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da

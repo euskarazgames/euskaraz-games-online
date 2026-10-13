@@ -486,10 +486,21 @@
     BREAKABLES.push(B);
     return B;
   }
-  function breakAt(x, y, z, r) {
+  function breakAt(x, y, z, r, fire) {
     for (const B of BREAKABLES) {
       if (B.broken || B.buildZone !== ZONES[ZONE.cur].group || (B.phase !== undefined && B.phase !== phase)) continue;
-      if (Math.hypot(B.x - x, B.z - z) < r + B.r && Math.abs(y - (B.y + 0.8)) < 2) {
+      if (B.hitTest ? B.hitTest(x, y, z, r) : Math.hypot(B.x - x, B.z - z) < r + B.r && Math.abs(y - (B.y + 0.8)) < 2) {
+        /* egurrezko hesiak eta Gauekoren izotza: SUA bakarrik */
+        if (B.fireOnly && !fire) {
+          if (B.hint) notifyOnce("fire-" + B.kind, B.hint, "");
+          fxBurst(x, y, z, { n: 6, speed: 2, life: 0.3, size: 0.2, color: "#ffffff", grav: 4 });
+          return B;
+        }
+        if (B.custom) {
+          B.broken = true;
+          B.custom();
+          return B;
+        }
         B.broken = true;
         B.m.visible = false;
         B.solid.r = 0;

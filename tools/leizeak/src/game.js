@@ -1953,6 +1953,7 @@
     buildLamia();
     buildRunePuzzles("lamia");
     buildTartalo();
+    buildRunePuzzles("tartalo");
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -2458,6 +2459,8 @@
     if (N) return { kind: "talk", label: L("HITZ EGIN"), fn: () => talkTo(N) };
     const C = chestNear();
     if (C) return { kind: "chest", label: L("IREKI"), fn: () => openChest(C) };
+    const LC = lockedChestNear();
+    if (LC) return { kind: "locked", label: L("ITXITA"), fn: () => notify(LC.lockedHint || L("Ezin da ireki… oraingoz."), "", 3.5) };
     const D = doorNear();
     if (D) return { kind: "door", label: D.kind === "boss" ? L("ATE HANDIA") : L("ATEA"), fn: () => tryDoor(D) };
     if (drumNear()) return { kind: "drum", label: L("ENTZUN"), fn: drumTalk };
@@ -3434,6 +3437,17 @@
         FANS,
         MISTS,
         WIND,
+        DGT,
+        TART,
+        EYE,
+        HERD,
+        eyeRay,
+        eyeOccluders,
+        RUNES,
+        chargeStart,
+        chargeRelease,
+        hasFire,
+        breakAt,
         hornBlow,
         windable,
         keysHere,

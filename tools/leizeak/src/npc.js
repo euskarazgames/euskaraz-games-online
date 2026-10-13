@@ -236,10 +236,24 @@
         () => flagSet("irati1"),
       );
     if (f("basajaun") && !f("cliff")) return mariCliff();
+    if (f("tartalo") && !f("irati-tartalo")) return iratiFinale();
+    if (f("lamia") && !f("irati-lamia"))
+      return talk(
+        N,
+        [
+          ["IRATI", "Ibaian kantuak entzun ditut berriro, lamien kantuak. Urte askoan lehen aldiz. Zuk askatu dituzu!"],
+          ["AMAIUR", "Lamiak esan zidan: Tartalo esnatu da. Artzainen lepoan, haize-errota geldirik dago."],
+          ["IRATI", "Errota hori Gauekoren negutik dago geldi. Zure adarrak berriro biraraziko du."],
+          ["IRATI", "Eta gogoratu amonaren ipuina: Tartalok ilunpean dena ikusten du… baina argiak itsutzen du."],
+        ],
+        () => flagSet("irati-lamia"),
+      );
+    if (f("tartalo")) return talk(N, [["IRATI", "Anboto… Mariren etxea. Zazpi argietatik lau gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
+    if (f("lamia")) return talk(N, [["IRATI", f("lepoa") ? "Tartaloren koba lepoaren goian dago. Argia eraman, Amaiur." : "Artzainen lepoa: haize-errotari putz egin adarrarekin."]]);
     if (saved.flags.includes("basajaun"))
       return talk(N, [
         ["IRATI", "Basajaun aske dago. Baina Mariren suzko bola… nork darama? Zerua ere isilik dago."],
-        ["IRATI", "Gelditu herrian nahi adina. Beste leizeak itxita jarraitzen dute… oraingoz."],
+        ["IRATI", "Ekialdeko ur-jauzian lamiak kantatzen zuten lehen. Orain isilik daude. Izotzaren gainetik joan… eta han, IRAGANERA."],
       ]);
     if (saved.zone === "leizea" || f("leizea"))
       return talk(N, [["IRATI", "Leizeak oihartzun asko ditu. Entzun ondo: batzuek bidea erakusten dute, beste batzuek tranpa."]]);

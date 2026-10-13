@@ -11,7 +11,29 @@
   function runeMesh(x, y, z, col, kind) {
     const g = new T.Group();
     let stone;
-    if (kind === "fire") {
+    if (kind === "galdara") {
+      /* Tartaloren galdara: burdinazko ontzi handia hiru hankatan */
+      const iron = material("#2c2622", 0.05),
+        bowl = new T.Mesh(new T.CylinderGeometry(1.15, 0.8, 0.9, 14, 1, true), iron);
+      bowl.position.y = -0.15;
+      bowl.material = bowl.material.clone();
+      bowl.material.side = T.DoubleSide;
+      g.add(bowl);
+      const rim = new T.Mesh(new T.TorusGeometry(1.15, 0.09, 6, 20), iron);
+      rim.rotation.x = PI / 2;
+      rim.position.y = 0.3;
+      g.add(rim);
+      for (let i = 0; i < 3; i++) {
+        const leg = new T.Mesh(new T.CylinderGeometry(0.09, 0.12, 1.9, 6), iron),
+          a = (i / 3) * TAU;
+        leg.position.set(Math.cos(a) * 0.7, -1.3, Math.sin(a) * 0.7);
+        leg.rotation.z = Math.cos(a) * 0.2;
+        leg.rotation.x = -Math.sin(a) * 0.2;
+        g.add(leg);
+      }
+      stone = new T.Mesh(new T.ConeGeometry(0.75, 1.8, 9), new T.MeshStandardMaterial({ color: "#3a2a20", emissive: new T.Color(col), emissiveIntensity: 0.3, roughness: 0.6, transparent: true, opacity: 0.95 }));
+      stone.position.y = 0.95;
+    } else if (kind === "fire") {
       const bowl = new T.Mesh(new T.CylinderGeometry(0.85, 0.55, 0.7, 12), rockMaterial());
       bowl.position.y = -0.2;
       g.add(bowl);
@@ -26,11 +48,12 @@
     }
     g.add(stone);
     const halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.7 }));
-    halo.scale.setScalar(3.2);
+    halo.scale.setScalar(kind === "galdara" ? 4.6 : 3.2);
     if (kind === "fire") halo.position.y = 0.7;
+    if (kind === "galdara") halo.position.y = 1.1;
     g.add(halo);
     const timer = new T.Mesh(new T.RingGeometry(1.05, 1.22, 48, 1, 0, TAU), new T.MeshBasicMaterial({ color: "#f3e6ff", transparent: true, opacity: 0, side: T.DoubleSide, depthWrite: false }));
-    if (kind === "fire") timer.position.y = 1.6;
+    if (kind === "fire" || kind === "galdara") timer.position.y = kind === "galdara" ? 2.3 : 1.6;
     g.add(timer);
     const ghost = new T.Mesh(stone.geometry, new T.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: 0.25 }));
     ghost.scale.copy(stone.scale);
@@ -54,14 +77,16 @@
     for (const D of RUNE_SETS.filter((d) => d.zone === zone)) {
       const set = { D, solved: saved.cleared.includes(D.id), list: [], group: BP };
       for (const [x, y, z, era] of D.runes) {
-        const v = runeMesh(x, y, z, D.kind === "fire" ? "#ff9d4a" : era < 0 ? "#c9a8ff" : ERA_COL[era], D.kind);
+        const hot = D.kind === "fire" || D.kind === "galdara",
+          v = runeMesh(x, y, z, hot ? "#ff9d4a" : era < 0 ? "#c9a8ff" : ERA_COL[era], D.kind);
         const R = {
           rune: true,
           x,
-          y: D.kind === "fire" ? y + 0.6 : y,
+          y: hot ? y + 0.6 : y,
           z,
-          r: D.kind === "fire" ? 1.1 : 0.9,
+          r: D.kind === "galdara" ? 1.4 : D.kind === "fire" ? 1.1 : 0.9,
           era,
+          needFire: !!D.needFire,
           lit: false,
           t: 0,
           ...v,
@@ -79,10 +104,11 @@
     R.lit = true;
     R.t = set.D.time;
     SND.rune(true);
-    fxBurst(R.x, R.y, R.z, { n: 18, speed: 3, up: 1, life: 0.6, size: 0.3, color: set.D.kind === "fire" ? "#ffb35c" : R.era < 0 ? "#d9c2ff" : ERA_COL[R.era], grav: -1 });
+    const hot = set.D.kind === "fire" || set.D.kind === "galdara";
+    fxBurst(R.x, R.y, R.z, { n: 18, speed: 3, up: 1, life: 0.6, size: 0.3, color: hot ? "#ffb35c" : R.era < 0 ? "#d9c2ff" : ERA_COL[R.era], grav: -1 });
     const n = set.list.filter((r) => r.lit).length;
     if (n < set.list.length) {
-      notify((set.D.kind === "fire" ? L("SUTEGIA ") : L("ERRUNA ")) + n + " / " + set.list.length + L(" · azkar, besteak!"), "", 2);
+      notify((set.D.kind === "galdara" ? L("GALDARA ") : set.D.kind === "fire" ? L("SUTEGIA ") : L("ERRUNA ")) + n + " / " + set.list.length + L(" · azkar, besteak!"), "", 2);
       return;
     }
     /* denak batera */
@@ -98,7 +124,7 @@
   function runePuzzlesUpdate(dt) {
     for (const set of RUNE_PUZ) {
       if (set.group !== ZONES[ZONE.cur].group) continue;
-      const fire = set.D.kind === "fire",
+      const fire = set.D.kind === "fire" || set.D.kind === "galdara",
         near = set.list.some((r) => Math.hypot(r.x - P.x, r.z - P.z) < 16),
         here = !set.solved && near;
       for (const R of set.list) {

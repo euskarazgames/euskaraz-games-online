@@ -402,9 +402,11 @@
     if (DG.exitGlow) DG.exitGlow.material.opacity = 0.25 + Math.sin(time * 2) * 0.1;
     /* gelaren lainoa (gela ilunak) */
     const R = ROOM.cur && ROOM.cur.zone === DG.id ? ROOM.cur : null,
-      f = R && R.fog ? R.fog : DG.fog;
-    scene.fog.near = mix(scene.fog.near, f[0], 1 - Math.exp(-dt * 2));
-    scene.fog.far = mix(scene.fog.far, f[1], 1 - Math.exp(-dt * 2));
+      f = R && R.fog ? R.fog : DG.fog,
+      /* kamera urrunago badago (bertikalean, etsai nagusiarekin): lainoa ere urrunago, Amaiurren ingurua ikus dadin */
+      far = Math.max(0, camera.position.distanceTo(hero.position) - 26);
+    scene.fog.near = mix(scene.fog.near, f[0] + far, 1 - Math.exp(-dt * 2));
+    scene.fog.far = mix(scene.fog.far, f[1] + far, 1 - Math.exp(-dt * 2));
     if (DG.update) DG.update(dt);
     /* irteera: hegoko arkua → haranera */
     if (!ZONE.pending && Math.hypot(P.x - DG.exitArch.x, P.z - (DG.exitArch.z + 3.6)) < 2.2) enterZone("ibarra", DG.exitTo());

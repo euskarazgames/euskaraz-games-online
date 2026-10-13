@@ -163,9 +163,11 @@
     haptic(triple ? 10 : 5);
     coachDone("attack");
   }
-  function boltColor(big) {
-    return big ? "#d9b8ff" : phase ? "#4fdcff" : "#ffad42";
+  function boltColor(big, fire) {
+    return fire ? "#ff6a2a" : big ? "#d9b8ff" : phase ? "#4fdcff" : "#ffad42";
   }
+  /* SUGAR-IZPIA (BURRUNTZI GORIA): INDARRAren izpi handiak sua dira */
+  const hasFire = () => saved.items.includes("sugarra");
   function spawnBolt(o, dir, target, opt) {
     const sp = opt.big ? 27 : 31;
     let vx = Math.sin(dir) * sp,
@@ -182,7 +184,7 @@
       vx = Math.sin(dir) * h;
       vz = Math.cos(dir) * h;
     }
-    const col = boltColor(opt.big);
+    const col = boltColor(opt.big, opt.fire);
     const s = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, blending: T.AdditiveBlending, depthWrite: false }));
     s.scale.setScalar(opt.big ? 3.2 : 1.9);
     s.renderOrder = 8;
@@ -193,7 +195,8 @@
     core.scale.divideScalar(s.scale.x);
     s.position.set(o.x, o.y, o.z);
     scene.add(s);
-    BOLTS.push({ x: o.x, y: o.y, z: o.z, vx, vy, vz, sp, target, t: 0, life: opt.big ? 1.15 : 0.85, dmg: opt.dmg, big: !!opt.big, full: !!opt.full, pierce: opt.big ? 5 : 0, hits: new Set(), s, col });
+    BOLTS.push({ x: o.x, y: o.y, z: o.z, vx, vy, vz, sp, target, t: 0, life: opt.big ? 1.15 : 0.85, dmg: opt.dmg, big: !!opt.big, full: !!opt.full, fire: !!opt.fire, pierce: opt.big ? 5 : 0, hits: new Set(), s, col });
+    if (opt.fire) SND.flame();
   }
   function boltsUpdate(dt) {
     for (let i = BOLTS.length - 1; i >= 0; i--) {
@@ -248,9 +251,15 @@
       for (const r of RUNES) {
         if (gone || !r.live || !r.live() || r.lit) continue;
         if (Math.hypot(r.x - b.x, r.y - b.y, r.z - b.z) < (r.r || 0.9) + 0.35) {
-          r.hit(b);
           boltImpact(b, b.x, b.y, b.z, false);
           gone = true;
+          /* sutegi handiak (Tartalorenak): SUA bakarrik */
+          if (r.needFire && !b.fire) {
+            SND.clang(0.5);
+            notifyOnce("need-fire", L("Burdinazko galdara hau ez da sorginkeria arruntaz pizten… SUA behar da."), "");
+            continue;
+          }
+          r.hit(b);
         }
       }
       /* etsai nagusiaren puntu ahula */
@@ -261,9 +270,11 @@
         gone = true;
       }
       /* upelak eta kaxak: hautsi (txanponak) */
-      if (!gone && breakAt(b.x, b.y, b.z, 0.35)) {
+      /* hesiek eta izotzak izpia geldiarazten dute (INDARRA ere bai: ez du hurrengo gela erretzen) */
+      const hitB = !gone && breakAt(b.x, b.y, b.z, 0.35, b.fire);
+      if (hitB) {
         boltImpact(b, b.x, b.y, b.z, false);
-        if (!b.big) gone = true;
+        if (!b.big || hitB.fireOnly) gone = true;
       }
       /* itzalen proiektilak: izpiak suntsitzen ditu */
       for (let j = SHOTS.length - 1; j >= 0 && !gone; j--) {
@@ -330,7 +341,7 @@
     P.angle = dir;
     MAG.aimT = 0.35;
     ATK.n++;
-    spawnBolt(muzzle(), dir, tgt, { big: true, full, dmg: (full ? 4 : 2 + Math.round(MAG.charge)) + (saved.boons?.includes("sharp") ? 1 : 0) + (saved.boons?.includes("burdina") ? 2 : 0) });
+    spawnBolt(muzzle(), dir, tgt, { big: true, full, fire: hasFire(), dmg: (full ? 4 : 2 + Math.round(MAG.charge)) + (saved.boons?.includes("sharp") ? 1 : 0) + (saved.boons?.includes("burdina") ? 2 : 0) });
     castAnim("Spellcast_Shoot", 2.2, 8);
     MAG.charge = 0;
     P.vx -= Math.sin(dir) * 5;
@@ -339,6 +350,7 @@
     hitStop = Math.max(hitStop, full ? 0.05 : 0.03);
     haptic(full ? 30 : 16);
     coachDone("charge");
+    if (hasFire()) coachDone("fire");
   }
   /* --------------------------- biraka-kolpea (bultzada + sorginkeria) --------------------------- */
   function spinStrike() {

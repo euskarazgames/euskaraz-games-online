@@ -83,24 +83,43 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   du (EZKERRA / ESKUINA). Ikasitako erritmoak edonon jo daitezke: **ESNATU** (◀ ◀ ▶) jentil-harriak
   altxatzen ditu (eskailerak, leizearen atea) eta **ENTZUN** (▶ ◀ ▶ ▶) ezkutuko plataformak eta kutxak
   agerian uzten ditu. Musikak ere txalaparta-geruza du haranean.
+- Harana organikoa da: erliebe jarraitua (muinoak, malkarrak, arroila, sakonunea), bide kurbatuak,
+  ibaia zubiekin, portua eta Artzainen lepoa (Tartaloren kobara). Bizirik dago: herritarrak ibilian,
+  animaliak, kea, txinpartak, giro-hotsak; eta misterioz beteta: harri-oihartzunak, egunkaria (L),
+  sendabelarrak, burdin-harriak (Maddiren makila), hosto-pilen azpiko kutxak, erronkak.
 - **BASAJAUNEN LEIZEA**, lehen leizea: zortzi gela (sutegiak, garai-zubiak, kaxen puzzlea, borroka,
   oihartzunen gela iluna, zaindaria, katearen putzua eta etsai nagusia), giltza txikiak, giltza nagusia,
   mapa txikia eta tresna berria: **SUGAARREN KATEA** (suge-eraztunetara tiratu, kaxak erakarri, etsaiak
   zorabiatu). Etsai nagusia, **Basajaun Iluna**: uhinak, harkaitzak, laguntzaileak eta bizkarreko
   eraztuna (katea) → bihotza (sorginkeria), hiru plakatan.
+- **LAMIEN LEIZEA**, bigarren leizea (ekialdeko ur-jauziaren atzean): ura iraganean, izotza orainean;
+  errota, korua, herensugea (zaindaria) eta tresna berria: **HAIZE-ADARRA** (V: haize-errotak biratu,
+  balsak bultzatu, laino lamiarra uxatu, hosto-pilak hegan bidali, proiektilak desbideratu). Etsai
+  nagusia, **Lamia Iluna**: kantua eta lainoa → adarra → igerian → ORAINERA (izoztuta) → orrazia jo.
+- **TARTALOREN KOBA**, hirugarren leizea (Artzainen lepoaren goian): ardi-korta, **begiaren gela**
+  (Tartaloren begiak zirrikitutik zaintzen du: harrien eta ardien atzean ezkutatu), burruntziaren
+  sutegia (zaindaria) eta tresna berria: **SUGAR-IZPIA** (INDARRA kargatuta, izpia sua da: egurrezko
+  hesiak erre, Gauekoren izotza urtu, burdinazko galdarak urrutitik piztu). Etsai nagusia,
+  **Tartalo**: lau galdarak piztu → argiak itsutzen du → begia jo (edo bere harkaitza itzuli).
+- Istorioa: hiru zaindari askatu ondoren, Irati eta azken eszena (zazpi argi Anboto gainean:
+  hiru berde, lau gorri) → JARRAITZEKO…
 - Borroka: **FINKATU** (T edo ◎: helburua finkatu, kamerak biak enkoadratzen ditu, Amaiur alboka
   mugitzen da) eta **EZKUTUA** (INDARRA kargatzean aurretik datozen proiektilak itzultzen dira; Basajauni
   bere harkaitza itzuliz gero, zorabiatuta geratzen da).
 - Kamera eta irakurgarritasuna: Amaiur eta kameraren artean dauden hormak, etxeak eta zuhaitzak
   gardendu egiten dira; leizean argia zuziek eta Amaiurren kriseiluak ematen dute.
-- Iturburua: `tools/leizeak/src/` (`game.js`, `world.js`, `npc.js`, `txalaparta.js`, `dungeon.js`,
-  `rooms.js`, `boss.js`, `chain.js`, `lockon.js`, `story.js`, `combat.js`, `magic.js`, `craft.js`,
-  `runes.js`, `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
+- Iturburua: `tools/leizeak/src/` (`game.js`, `world.js`, `haran.js`, `ibarra.js`, `bizia.js`,
+  `quests.js`, `npc.js`, `txalaparta.js`, `dungeon.js`, `rooms.js`, `boss.js`, `lamia.js`, `tartalo.js`,
+  `adarra.js`, `chain.js`, `lockon.js`, `story.js`, `combat.js`, `magic.js`, `craft.js`, `runes.js`,
+  `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
   ateratzen da; modeloak `tools/leizeak/models/*.glb`-tik, `build_models.mjs`-ek KayKit-etik sortuak).
 - Fitxategi bakarreko bertsioa: `python3 tools/leizeak/standalone.py /tmp/LEIZEEN_DEIA.html`
-- Probak: `tools/test/leizeak_route.js` (bide osoa hasieratik amaierako eszenaraino: elkarrizketak,
-  txalaparta, atea, leizeko gela guztiak eta Basajaun) eta `tools/test/leizeak_combat.js` (FINKATU,
-  EZKUTUA, garaien ezkutuak, sendabelarra). Proba-kakoa: `?test` → `window.__game`.
+- Probak: `tools/test/leizeak_route.js` (bide osoa hasieratik lehen leizearen amaierako eszenaraino),
+  `tools/test/leizeak_combat.js` (FINKATU, EZKUTUA, garaien ezkutuak, sendabelarra),
+  `tools/test/leizeak_valley.js` (haranaren fisika: maldak, ibaia, zubiak, lepoa),
+  `tools/test/leizeak_quests.js` (misterioak eta eginkizunak), `tools/test/leizeak_lamia.js`
+  (bigarren leizea osoa) eta `tools/test/leizeak_tartalo.js` (hirugarren leizea osoa, ezkutuka eta
+  Tartalo barne, eta azken eszena). Proba-kakoa: `?test` → `window.__game`.
 
 ## Cloudflare
 - Worker-aren izena: `euskaraz-games-online`

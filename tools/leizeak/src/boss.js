@@ -33,33 +33,43 @@
     },
   };
   /* ------------------------------ zaindaria ------------------------------ */
-  const MINI = { e: null, flipDmg: 0 };
-  function miniStart() {
-    const R = DUNGEON.rooms.F;
-    if (saved.cleared.includes("dF-boss") || ROOM.fight) return;
+  const MINI = { e: null, flipDmg: 0, def: null };
+  /* zaindari ertaina (hezurdura erraldoia, ezkutua garaiz aldatzen du): leize bakoitzak bere def-a
+     def: { name, clearId, hp, scale, add, hint, onDead } */
+  function miniBegin(R, def, x, z) {
+    if (saved.cleared.includes(def.clearId) || ROOM.fight) return;
     ROOM.fight = Object.assign(R, { boss: true });
     clearEnemies();
-    const e = spawnEnemy("brute", 0, R.x, R.z - 7, 0);
+    const e = spawnEnemy("brute", 0, x, z, R.y || 0);
     e.room = R;
     e.mini = true;
-    e.K = 1.12;
-    e.hp = e.max = 26;
-    e.g.scale.multiplyScalar(1.45);
+    e.K = def.K || 1.12;
+    e.hp = e.max = def.hp || 26;
+    e.g.scale.multiplyScalar(def.scale || 1.45);
     e.D = { ...e.D, r: 1.9, mass: 4.5 };
+    if (def.tint) e.body.color.set(def.tint);
     MINI.e = e;
+    MINI.def = def;
     MINI.flipDmg = 0;
     MINI.adds = 0;
     SND.stinger(false);
     shake(0.4);
-    title("BASOKO ZAINDARIA", "");
-    notify(L("Haren ezkutuak garaia aldatzen du. Begiratu begien koloreari!"), "", 4);
-    bossBar("BASOKO ZAINDARIA", 1);
+    title(def.name, "");
+    notify(def.hint || L("Haren ezkutuak garaia aldatzen du. Begiratu begien koloreari!"), "", 4);
+    bossBar(def.name, 1);
+  }
+  function miniStart() {
+    const R = DUNGEON.rooms.F;
+    miniBegin(R, { name: "BASOKO ZAINDARIA", clearId: "dF-boss", onDead: () => {
+      revealChest(DUNGEON.chainChest);
+      notify(L("Kutxa bat agertu da gelaren erdian."), "", 4);
+    } }, R.x, R.z - 7);
   }
   /* hitEnemy-ren ondoren (combat.js): ezkutua garaiz aldatu eta barra */
   function miniDamaged(e, dmg) {
     if (!e.mini) return;
     MINI.flipDmg += dmg;
-    bossBar("BASOKO ZAINDARIA", Math.max(0, e.hp / e.max));
+    bossBar(MINI.def ? MINI.def.name : "BASOKO ZAINDARIA", Math.max(0, e.hp / e.max));
     if (MINI.flipDmg >= 7 && e.hp > 0) {
       MINI.flipDmg = 0;
       e.era = 1 - e.era;
@@ -71,7 +81,7 @@
       /* laguntzaileak */
       if (MINI.adds < 2) {
         MINI.adds++;
-        spawnWave([["grunt", -1, 2]], e.room);
+        spawnWave((MINI.def && MINI.def.add) || [["grunt", -1, 2]], e.room);
       }
     }
   }
@@ -81,18 +91,18 @@
     if (e.state === "dead" && !MINI.done) {
       MINI.done = true;
       for (const o of ENEMIES) if (o !== e && o.state !== "dead") killEnemy(o);
+      const def = MINI.def;
       setTimeout(() => {
         ROOM.fight = null;
         MINI.e = null;
         MINI.done = false;
-        if (!saved.cleared.includes("dF-boss")) saved.cleared.push("dF-boss");
+        if (def && !saved.cleared.includes(def.clearId)) saved.cleared.push(def.clearId);
         persist();
         bossBar(null);
         SND.stinger(true);
         slowmo = 0.8;
         title("ZAINDARIA GARAITUTA", "");
-        revealChest(DUNGEON.chainChest);
-        notify(L("Kutxa bat agertu da gelaren erdian."), "", 4);
+        if (def && def.onDead) def.onDead();
       }, 900);
     }
   }

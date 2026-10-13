@@ -21,6 +21,18 @@
         );
       },
     },
+    sugarra: {
+      get() {
+        if (!saved.items.includes("sugarra")) saved.items.push("sugarra");
+        persist();
+        itemGet(
+          "sugarra",
+          L("BURRUNTZI GORIA"),
+          L("SUGAR-IZPIA: INDARRA kargatuta askatzean, izpia sua da. Egurra erretzen du, Gauekoren izotza urtzen eta burdinazko galdarak pizten. ") + (mobile ? L("Eutsi SORGINKERIA botoiari eta askatu.") : L("Eutsi J (edo klika) eta askatu.")),
+          () => coach("fire", "J", "Mantendu J eta askatu: SUGAR-IZPIA (sua)", "", "attackBtn", "Mantendu SORGINKERIA eta askatu: SUGAR-IZPIA", ""),
+        );
+      },
+    },
     katea: {
       get() {
         if (!saved.items.includes("katea")) saved.items.push("katea");
@@ -80,6 +92,7 @@
     if (!flag("lamia")) return ["Ekialdeko ur-jauzia: LAMIEN LEIZEA. Izotzaren gainetik joan; han, IRAGANERA (" + d(93, -28.5) + " m).", [93, -28.5, -0.9]];
     if (!flag("lepoa")) return ["Artzainen lepoa: haize-errotari putz HAIZE-ADARRAz (" + d(-74.6, -99) + " m).", [-74.6, -99, 9.4]];
     if (!flag("tartalo")) return ["Lepoaren goian: TARTALOREN KOBA (" + d(-70, -128) + " m).", [-70, -127, 12]];
+    if (!flag("irati-tartalo")) return ["Itzuli herrira: Iratiri Tartaloren berri eman.", [0, 41, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {
@@ -133,7 +146,90 @@
       },
     );
   }
+  /* zati honen amaiera: zazpi argi zeruan, Anboto aldean — hiru askatuta (berdeak), lau falta (gorriak) */
+  const ZAZPI = { g: null, t: -1, armed: false, lights: [], storm: null };
+  function zazpiBuild() {
+    const g = new T.Group();
+    g.position.set(20, 125, -170);
+    /* ekaitz-hodeia: erdian iluna, ertzetan garden (kanbasean marraztua) */
+    const cv = document.createElement("canvas");
+    cv.width = 256;
+    cv.height = 128;
+    const c2 = cv.getContext("2d");
+    for (let k = 0; k < 14; k++) {
+      const x = 40 + ((k * 73) % 176),
+        y = 40 + ((k * 37) % 48),
+        r = 34 + ((k * 19) % 30),
+        gr = c2.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, "rgba(22,16,30,0.75)");
+      gr.addColorStop(1, "rgba(22,16,30,0)");
+      c2.fillStyle = gr;
+      c2.fillRect(0, 0, 256, 128);
+    }
+    const storm = new T.Mesh(new T.PlaneGeometry(260, 130), new T.MeshBasicMaterial({ map: new T.CanvasTexture(cv), transparent: true, opacity: 0, depthWrite: false, fog: false }));
+    storm.position.set(0, -6, -30);
+    g.add(storm);
+    for (let i = 0; i < 7; i++) {
+      const a = (i / 7) * TAU - PI / 2,
+        col = i < 3 ? "#3dff8a" : "#ff2a1a",
+        halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, depthWrite: false, opacity: 0, fog: false })),
+        core = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0, fog: false }));
+      halo.position.set(Math.cos(a) * 24, Math.sin(a) * 24, 0);
+      core.position.copy(halo.position);
+      halo.scale.setScalar(20);
+      core.scale.setScalar(6);
+      g.add(halo, core);
+      ZAZPI.lights.push({ halo, core, i });
+    }
+    g.visible = false;
+    ZONES.ibarra.group.add(g);
+    g.lookAt(0, 30, 40);
+    ZAZPI.g = g;
+    ZAZPI.storm = storm;
+  }
+  function zazpiUpdate(dt) {
+    if (!ZAZPI.g) return;
+    if (ZAZPI.armed && cinematic && cinematic.n >= 2) {
+      ZAZPI.armed = false;
+      ZAZPI.t = 0;
+      ZAZPI.g.visible = true;
+    }
+    if (ZAZPI.t < 0) return;
+    const t = (ZAZPI.t += dt);
+    ZAZPI.storm.material.opacity = clamp(t * 0.6, 0, 1);
+    for (const L0 of ZAZPI.lights) {
+      const k = clamp((t - 0.8 - L0.i * 0.45) * 2, 0, 1),
+        beat = L0.i < 3 ? 1 : 0.7 + Math.sin(time * 5 + L0.i) * 0.3;
+      L0.halo.material.opacity = k * 0.85 * beat;
+      L0.core.material.opacity = k * beat;
+    }
+  }
+  function iratiFinale() {
+    if (flag("irati-tartalo") || ZONE.cur !== "ibarra") return;
+    if (!ZAZPI.g) zazpiBuild();
+    ZAZPI.armed = true;
+    say(
+      [
+        ["IRATI", "Amaiur! Lepotik ardi-zintzarriak entzun ditugu, eta Tartaloren orroa… baina kantu bat zirudien.", "", 0, 41, 0],
+        ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala. Eta izen bat esan zuen: Anboto.", "", P.x, P.z, 0],
+        ["· · ·", "Une horretan, Anboto aldetik, hodei beltz bat jaitsi da harana estaltzera. Haren barruan, zazpi argi.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Hiru argi berde: Basajaun, Lamia, Tartalo. Beste lauak gorri, taupaka, bihotz gaiztotuak bezala.", "", 20, -170, 120, [0, 30, 40]],
+        ["GAUEKO", "Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean, ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan.", "", P.x, P.z, 0],
+        ["IRATI", "Ez entzun. Beldur da: herriak berriro jotzen du gauez, eta erritmoa indartzen ari da.", "", 0, 41, 0],
+        ["AMAIUR", "Orrazia, adarra, sua… eta zuek. Anbotora noa.", "", P.x, P.z, 0],
+      ],
+      () => {
+        flagSet("irati-tartalo");
+        ZAZPI.t = -1;
+        if (ZAZPI.g) ZAZPI.g.visible = false;
+        title("JARRAITZEKO…", "");
+        notify(L("Hiru leize amaituta. Harana zurea da: arnasa-zatiak, ardiak, burdin-harriak, erronkak… Anboto laster."), "", 8);
+        hud();
+      },
+    );
+  }
   function mariUpdate(dt) {
+    zazpiUpdate(dt);
     /* bigarren planoan hasi (zerua begiratzen denean) */
     if (MARI.armed && cinematic && cinematic.n >= 1) {
       MARI.armed = false;

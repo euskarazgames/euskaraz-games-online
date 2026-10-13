@@ -234,7 +234,7 @@
   /* edukia: { t: "key" | "bigkey" | "item" | "coins" | "piece", id, n } */
   function chest(id, x, y, z, rot, content, opts = {}) {
     const m = model("chest", x, y, z, 1.35, rot);
-    const C = { id, x, y, z, rot, m, content, opened: saved.chests.includes(id), hidden: !!opts.hidden, room: opts.room, zoneGroup: BP };
+    const C = { id, x, y, z, rot, m, content, opened: saved.chests.includes(id), hidden: !!opts.hidden, room: opts.room, zoneGroup: BP, locked: opts.locked || null, lockedHint: opts.lockedHint || "" };
     if (C.opened) m.scale.multiplyScalar(0.92);
     m.visible = !C.hidden || C.opened;
     solids.push((C.solid = { x, z, r: 0.9, h: 1.3, y }));
@@ -245,7 +245,11 @@
     return C;
   }
   function chestNear() {
-    return CHESTS.find((C) => !C.opened && C.m.visible && C.zoneGroup === ZONES[ZONE.cur].group && Math.hypot(P.x - C.x, P.z - C.z) < 2.6 && Math.abs(P.y - C.y) < 1.6);
+    return CHESTS.find((C) => !C.opened && C.m.visible && !(C.locked && C.locked()) && C.zoneGroup === ZONES[ZONE.cur].group && Math.hypot(P.x - C.x, P.z - C.z) < 2.6 && Math.abs(P.y - C.y) < 1.6);
+  }
+  /* kutxa itxi bat hurbil (adib. izotzean harrapatuta): pista bat erakusteko */
+  function lockedChestNear() {
+    return CHESTS.find((C) => !C.opened && C.m.visible && C.locked && C.locked() && C.zoneGroup === ZONES[ZONE.cur].group && Math.hypot(P.x - C.x, P.z - C.z) < 4.2 && Math.abs(P.y - C.y) < 1.6);
   }
   function revealChest(C) {
     if (C.m.visible) return;
