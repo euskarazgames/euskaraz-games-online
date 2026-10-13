@@ -693,7 +693,7 @@
   function reflectShot(s) {
     s.back = true;
     s.t = 0;
-    const src = s.from && s.from.state !== "dead" ? s.from : s.rock && BOSS.on ? { x: BJ.x, z: BJ.z } : null;
+    const src = s.from && s.from.state !== "dead" ? s.from : s.rock && BOSS.on ? BOSS.center() : null;
     let ux = Math.sin(P.angle),
       uz = Math.cos(P.angle);
     if (src) {
@@ -731,9 +731,12 @@
         return true;
       }
     }
-    if (s.rock && BOSS.on && BJ.g && Math.hypot(BJ.x - s.x, BJ.z - s.z) < 2.6 && s.y < 7) {
-      bossStagger();
-      return true;
+    if (s.rock && BOSS.canStagger()) {
+      const c = BOSS.center();
+      if (Math.hypot(c.x - s.x, c.z - s.z) < (c.r || 2.6) && s.y < (c.h || 7)) {
+        BOSS.stagger();
+        return true;
+      }
     }
     return false;
   }

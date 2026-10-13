@@ -231,7 +231,7 @@
     if (k === "esnatu") {
       fxRing(P.x, P.y + 0.2, P.z, "#ffd38a", 14, 0.9);
       SND.wake();
-      const n = (ZONE.cur === "ibarra" ? wakeStones(24) : 0) + (ZONE.cur === "leizea" ? dungeonWake() : 0);
+      const n = (ZONE.cur === "ibarra" ? wakeStones(24) : 0) + (DGS[ZONE.cur] ? dungeonWake() : 0);
       if (!n) notify(L("Harriek lo jarraitzen dute. Ez dago ezer esnatzeko hemen."), "", 2.6);
     } else if (k === "entzun") echoPulse();
     hud();

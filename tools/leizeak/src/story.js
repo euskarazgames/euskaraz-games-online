@@ -8,6 +8,19 @@
      · Amaiera (zati honetakoa): Mariren suzko bola zeruan… nork darama?
      ================================================================== */
   const ITEMS = {
+    adarra: {
+      get() {
+        if (!saved.items.includes("adarra")) saved.items.push("adarra");
+        persist();
+        translate();
+        itemGet(
+          "adarra",
+          L("HAIZE-ADARRA"),
+          L("Putz egin: haize-bolada aurrera. Haize-errotak biratzen ditu, balsak bultzatzen, lainoa uxatzen. ") + (mobile ? L("ADARRA botoia agertzen da behar denean.") : L("V tekla.")),
+          () => coach("horn", "V", "V: HAIZE-ADARRA · putz egin aurrera", "", "useBtn", "ADARRA: putz egin aurrera", ""),
+        );
+      },
+    },
     katea: {
       get() {
         if (!saved.items.includes("katea")) saved.items.push("katea");
@@ -43,11 +56,13 @@
   /* --------------------------- helburuak --------------------------- */
   function objective() {
     const d = (x, z) => Math.round(Math.hypot(P.x - x, P.z - z));
+    const DG = DGS[ZONE.cur];
+    if (DG && DG.objective) return DG.objective();
     if (ZONE.cur === "leizea") {
       const R = DUNGEON.rooms,
         inE = ROOM.cur === R.E;
       if (!isCleared("dA-fire")) return ["Piztu bi sutegiak SORGINKERIArekin, elkarren segidan.", [R.A.x, -5, 0]];
-      if (!saved.doors.includes("dB-n") && !saved.keys) return ["Giltza bat behar da. Mendebaldeko gelan, ertz garai baten gainean…", [R.C.x, R.C.z + 4, 0]];
+      if (!saved.doors.includes("dB-n") && !saved.keyz.leizea) return ["Giltza bat behar da. Mendebaldeko gelan, ertz garai baten gainean…", [R.C.x, R.C.z + 4, 0]];
       if (!saved.doors.includes("dB-n")) return ["Ireki iparreko atea giltza txikiarekin.", [R.B.x, R.B.z - 15, 0]];
       if (!isCleared("D")) return ["Itzalen gelan sartu eta garbitu.", [R.D.x, R.D.z, 0]];
       if (!saved.rhythms.includes("entzun")) return ["Ekialdeko gelan harri-danbor bat dago. Entzun zer dioen.", [DUNGEON.drum.x, DUNGEON.drum.z - 2.6, 0]];
@@ -62,6 +77,9 @@
     if (!flag("atea")) return ["Iparrera, ibaiaz bestaldean, basoko leizea. Atea: jo ESNATU (" + d(HUB.cave.x, HUB.cave.z) + " m).", [HUB.cave.x, HUB.cave.z + 4, 5]];
     if (!flag("basajaun")) return ["Basajaunen leizea zabalik dago. Sartu.", [HUB.cave.x, HUB.cave.z, 5]];
     if (!flag("cliff")) return ["Itzuli herrira. Iratiri kontatu.", [0, 41, 0]];
+    if (!flag("lamia")) return ["Ekialdeko ur-jauzia: LAMIEN LEIZEA. Izotzaren gainetik joan; han, IRAGANERA (" + d(93, -28.5) + " m).", [93, -28.5, -0.9]];
+    if (!flag("lepoa")) return ["Artzainen lepoa: haize-errotari putz HAIZE-ADARRAz (" + d(-74.6, -99) + " m).", [-74.6, -99, 9.4]];
+    if (!flag("tartalo")) return ["Lepoaren goian: TARTALOREN KOBA (" + d(-70, -128) + " m).", [-70, -127, 12]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {

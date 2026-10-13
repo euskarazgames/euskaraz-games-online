@@ -675,6 +675,13 @@
     wg.add(sails);
     HUB.windGate = { g: wg, gate: gateMesh, sails, t: saved.flags.includes("lepoa") ? 1 : 0, spin: 0, x: -74.6, z: -101.4, y: 9.4, p: wallBlock(-74.6, -101.4, 4.8, 0.8, 0, 9.4, 7.5) };
     HUB.windGate.p.off = saved.flags.includes("lepoa");
+    /* HAIZE-ADARRA: besoei putz egitean, errota biraka eta atea gora */
+    windable({ x: -71.4, y: 15.6, z: -101, r: 2.6, dy: 9, range: 16, live: () => !saved.flags.includes("lepoa"), gust: () => (HUB.windGate.spin = 1) });
+    /* hosto-pilak: zerbait ezkutatzen dute (adarraz) */
+    const leafC1 = chest("h-hostoak", 15, 5, -129, -0.6, { t: "piece", id: "hostoak" }, { hidden: true });
+    if (!leafC1.opened) leafPile(15, 5, -129, () => revealChest(leafC1));
+    const leafC2 = chest("h-hostoak2", -45, gy(-45, -22), -22, 0.8, { t: "coins", n: 25 }, { hidden: true });
+    if (!leafC2.opened) leafPile(-45, gy(-45, -22), -22, () => revealChest(leafC2));
     /* lepoaren hegoaldeko ertza: arrapalatik bakarrik igo daiteke (atea saihestu ezin) */
     wallBlock(-82, -104.4, 9.6, 0.6, 0, 0, 17);
     wallBlock(-64.4, -104.4, 15, 0.6, 0, 0, 17);

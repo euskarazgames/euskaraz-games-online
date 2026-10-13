@@ -10,6 +10,8 @@
   const ZONES = {
     ibarra: { name: "IBARRA", outdoor: true, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     leizea: { name: "BASAJAUNEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    lamia: { name: "LAMIEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    tartalo: { name: "TARTALOREN KOBA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
   };
   const ZONE = { cur: "ibarra", fadeT: 0, pending: null };
   const AREA = { cur: "", seen: new Set() };

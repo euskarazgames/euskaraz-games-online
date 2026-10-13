@@ -1369,6 +1369,41 @@
         hiss(t, 0.9, 0.07, "lowpass", 1600, 260, 0.8);
         hiss(t + 0.12, 0.6, 0.03, "bandpass", 3200, 900, 1.2);
       },
+      /* HAIZE-ADARRA: adar-hots baxua eta arnasa */
+      horn() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sawtooth", 196, t, 0.05, 0.55, 0.045, sfx, 188);
+        tone("triangle", 293.66, t + 0.03, 0.06, 0.5, 0.05, sfx, 290);
+        tone("sine", 98, t, 0.05, 0.6, 0.06, sfx, 96);
+        hiss(t, 0.7, 0.07, "bandpass", 900, 2600, 0.9);
+      },
+      whoosh() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.55, 0.06, "bandpass", 500, 2400, 1.4);
+      },
+      /* lamiaren kantua: glisando garbia eta oihartzuna */
+      sing(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 659.25, t, 0.25, 1.4, 0.03 * v, mus, 587.33);
+        tone("sine", 987.77, t + 0.5, 0.25, 1.2, 0.018 * v, mus, 880);
+        bell(1318.5, t + 0.9, 0.01 * v, mus);
+      },
+      /* sua izotzaren kontra / sua pizten */
+      sizzle() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.7, 0.08, "highpass", 2400, 5200, 0.8);
+        tone("sine", 180, t, 0.01, 0.4, 0.04, sfx, 90);
+      },
+      flame() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.5, 0.09, "lowpass", 700, 2200, 0.9);
+        tone("sine", 140, t, 0.02, 0.35, 0.06, sfx, 220);
+      },
       ending(which) {
         if (!ok()) return;
         const t = ctx.currentTime,
@@ -1498,6 +1533,7 @@
   /* @include ibarra.js */
   /* @include bizia.js */
   /* @include quests.js */
+  /* @include adarra.js */
   /* @include txalaparta.js */
   /* @include lockon.js */
   /* @include chain.js */
@@ -1505,9 +1541,11 @@
   /* @include dungeon.js */
   /* @include boss.js */
   /* @include story.js */
+  /* @include lamia.js */
+  /* @include tartalo.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
-    if (BOSS.on || MINI.e) return 3;
+    if (BOSS.on || MINI.e || MINI.other) return 3;
     return typeof combatLevel === "function" ? combatLevel() : 1;
   }
   let stepAcc = 0;
@@ -1911,8 +1949,12 @@
     buildRunePuzzles("leizea");
     zoneBuild("leizea");
     basajaunBuild();
+    /* bigarren eta hirugarren leizeak */
+    buildLamia();
+    buildRunePuzzles("lamia");
+    buildTartalo();
     BP = null;
-    zoneActivate(saved.zone === "leizea" ? "leizea" : "ibarra");
+    zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
     teleport(sp.x, sp.z, sp.y);
     phase = 1;
@@ -1925,7 +1967,7 @@
   function spawnPoint() {
     const c = saved.cp;
     if (c && c.zone === ZONE.cur) return c;
-    return ZONE.cur === "leizea" ? DUNGEON.entry : ZONES.ibarra.spawn;
+    return DGS[ZONE.cur] ? DGS[ZONE.cur].entry : ZONES.ibarra.spawn;
   }
   function animate(name) {
     if (activeAnimation === name || !models.mage.actions[name]) return;
@@ -2520,7 +2562,7 @@
     $("pause").hidden = false;
     $("touch").classList.add("play");
     audioStart();
-    zoneActivate(saved.zone === "leizea" ? "leizea" : "ibarra");
+    zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
     teleport(sp.x, sp.z, sp.y);
     if (sp.a !== undefined) P.angle = sp.a;
@@ -2625,7 +2667,7 @@
     $("dashLab").textContent = "BULTZADA";
     $("coinLab").textContent = "TXANPONAK";
     $("keyLab").textContent = "GILTZAK";
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ["L", "egunkaria"]]
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ["L", "egunkaria"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
     if (ready) {
@@ -2639,6 +2681,7 @@
       KeyQ: switchPhase,
       KeyF: dash,
       KeyC: chainFire,
+      KeyV: hornBlow,
       KeyB: txalaOpen,
       KeyT: lockToggle,
       Tab: lockToggle,
@@ -2806,7 +2849,8 @@
     if (!ready) return;
     const Z = ZONES[ZONE.cur],
       A = AREA.cur ? AREAS[AREA.cur] || ROOMS_AREA[AREA.cur] : null;
-    $("chapter").textContent = ZONE.cur === "leizea" ? "01 · " + Z.name : "LEIZEEN DEIA";
+    const DG = DGS[ZONE.cur];
+    $("chapter").textContent = DG ? DG.num + " · " + Z.name : "LEIZEEN DEIA";
     $("placeName").textContent = A ? A[0] : Z.name;
     $("goal").textContent = QST.mikel
       ? L("Jomugak: ") + QST.mikel.hits + " / " + QST.mikel.need + " · " + Math.max(0, Math.ceil(QST.mikel.t)) + " s"
@@ -2818,8 +2862,8 @@
     $("dashDot").textContent = P.dashReady ? "◆" : "◇";
     $("dashDot").style.opacity = P.dashReady ? 1 : 0.5;
     $("coins").textContent = saved.coins;
-    $("keyBox").hidden = ZONE.cur !== "leizea";
-    $("keyN").textContent = saved.keys + (saved.items.includes("giltzanagusia") && !saved.doors.includes("dD-n") ? " ◆" : "");
+    $("keyBox").hidden = !DG;
+    if (DG) $("keyN").textContent = (saved.keyz[ZONE.cur] || 0) + (saved.items.includes(DG.bigKey) && !saved.doors.includes(DG.bossDoor) ? " ◆" : "");
     $("route").textContent = Z.name;
     map();
   }
@@ -2827,9 +2871,10 @@
   function map() {
     const c = $("map").getContext("2d");
     c.clearRect(0, 0, 240, 240);
-    c.fillStyle = ZONE.cur === "leizea" ? "#0d1418" : "#102c40";
+    const inDg = !!DGS[ZONE.cur];
+    c.fillStyle = inDg ? "#0d1418" : "#102c40";
     c.fillRect(0, 0, 240, 240);
-    const sc = ZONE.cur === "leizea" ? 1.7 : 1.05,
+    const sc = inDg ? 1.7 : 1.05,
       xx = (x) => 120 + (x - P.x) * sc,
       zz = (z) => 120 + (z - P.z) * sc,
       dot = (x, z, r, col) => {
@@ -2839,15 +2884,35 @@
         c.fill();
       };
     if (ZONE.cur === "ibarra") {
+      /* harana (ingerada), terrazak, ibaia, zubia eta leize-zuloa */
+      if (VAL) {
+        c.fillStyle = "#5f8579";
+        c.beginPath();
+        VAL.forEach(([x, z], i) => (i ? c.lineTo(xx(x), zz(z)) : c.moveTo(xx(x), zz(z))));
+        c.closePath();
+        c.fill();
+      }
       for (const s of platforms)
-        if (s.rx) {
-          c.fillStyle = s.y > 6 ? "#7c9a86" : s.y > 3 ? "#6f9184" : "#5f8579";
+        if (s.rx && !s.mask && s.y > 1) {
+          c.fillStyle = s.y > 6 ? "#86a690" : "#759a8a";
           c.beginPath();
           c.ellipse(xx(s.x), zz(s.z), s.rx * sc, s.rz * sc, 0, 0, TAU);
           c.fill();
         }
-      c.fillStyle = "#2c6a86";
-      c.fillRect(0, zz(-36.5), 240, 15 * sc);
+      if (RIV) {
+        c.strokeStyle = phase ? "#9fc3d2" : "#2c6a86";
+        c.lineCap = "round";
+        for (let i = 0; i < RIV.length - 1; i += 2) {
+          const a = RIV[i],
+            b = RIV[Math.min(RIV.length - 1, i + 2)];
+          c.lineWidth = a[2] * 2 * sc;
+          c.beginPath();
+          c.moveTo(xx(a[0]), zz(a[1]));
+          c.lineTo(xx(b[0]), zz(b[1]));
+          c.stroke();
+        }
+        dot(PIT.x, PIT.z, PIT.r * sc, "#05080a");
+      }
       c.fillStyle = "#d9cfae";
       c.fillRect(xx(-2.5), zz(-38), 5 * sc, 19 * sc);
       for (const N of NPCS) dot(N.x, N.z, 3, N.ghost ? "#bfe6ff" : "#ffe4a2");
@@ -2855,14 +2920,14 @@
       dot(HUB.cave.x, HUB.cave.z, 4.5, HUB.gate.p.off ? "#9dffc4" : "#ff9d6a");
     } else {
       for (const R of ROOMS) {
-        if (!saved.visited.includes(R.id) && ROOM.cur !== R) continue;
+        if (R.zone !== ZONE.cur || (!saved.visited.includes(R.id) && ROOM.cur !== R)) continue;
         c.fillStyle = ROOM.cur === R ? "#3d6475" : "#26404b";
         c.fillRect(xx(R.x - R.w / 2), zz(R.z - R.d / 2), R.w * sc, R.d * sc);
         c.strokeStyle = "#7fb9c4";
         c.strokeRect(xx(R.x - R.w / 2), zz(R.z - R.d / 2), R.w * sc, R.d * sc);
       }
-      for (const D of DOORS) if (!D.open) dot(D.x, D.z, 3, D.kind === "boss" ? "#ff9d4a" : D.kind === "key" ? "#e8c27a" : "#8a96a0");
-      for (const C of CHESTS) if (!C.opened && C.m.visible && C.zoneGroup === ZONES.leizea.group) dot(C.x, C.z, 3, "#ffe4a2");
+      for (const D of DOORS) if (!D.open && D.g.parent === ZONES[ZONE.cur].group) dot(D.x, D.z, 3, D.kind === "boss" ? "#ff9d4a" : D.kind === "key" ? "#e8c27a" : "#8a96a0");
+      for (const C of CHESTS) if (!C.opened && C.m.visible && C.zoneGroup === ZONES[ZONE.cur].group) dot(C.x, C.z, 3, "#ffe4a2");
     }
     for (const e of ENEMIES) if (e.state !== "dead") dot(e.x, e.z, e.type === "brute" ? 4 : 3, "#ff5a6e");
     const o = objective()[1];
@@ -2915,6 +2980,9 @@
       doorsUpdate(dt);
       lootUpdate(dt);
       craftUpdate(dt);
+      hornUpdate(dt);
+      fansUpdate(dt);
+      mistsUpdate(dt);
       if (ZONE.cur === "ibarra") {
         hubUpdate(dt);
         npcsUpdate(dt);
@@ -3176,6 +3244,9 @@
     const Z = zoneHere();
     if (Z && !Z.solved) return ["craft", L("ESKUA"), "green", craftToggle];
     if (hasChain() && CHAIN.state === "idle" && chainCandidates().some((t) => t.kind === "ring" || t.kind === "boss" || t.kind === "crate")) return ["chain", L("KATEA"), "cyan", chainFire];
+    /* HAIZE-ADARRA: haize-errota, balsa, lainoa edo hosto-pila hurbil */
+    if (hasHorn() && WIND.list.some((W) => W.group === ZONES[ZONE.cur].group && (!W.live || W.live()) && Math.hypot(W.x - P.x, W.z - P.z) < (W.range || 14) - 1 && (W.y === undefined || Math.abs(W.y - P.y) < (W.dy || 6))))
+      return ["wind", L("ADARRA"), "cyan", hornBlow];
     /* ENTZUN behar den lekuan (ezkutuko harriak) */
     if (saved.rhythms.includes("entzun") && TXALA.reveal <= 0 && platforms.some((s) => s.hidden && Math.hypot(s.x - P.x, s.z - P.z) < 18)) return ["txala", L("TXALAPARTA"), "violet", txalaOpen];
     return null;
@@ -3201,6 +3272,7 @@
     const opts = [];
     if (saved.rhythms.length) opts.push([L("TXALAPARTA") + kb(" · B"), txalaOpen]);
     if (hasChain()) opts.push([L("SUGAARREN KATEA") + kb(" · C"), chainFire]);
+    if (hasHorn()) opts.push([L("HAIZE-ADARRA") + kb(" · V"), hornBlow]);
     opts.push([L("FINKATU") + kb(" · T"), lockToggle]);
     opts.push([L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)]);
     const Z = zoneHere();
@@ -3213,6 +3285,7 @@
       (saved.rhythms.length ? L("Erritmoak: ") + txalaKnown().map((k) => RHYTHMS[k].name + " " + seqText(RHYTHMS[k].seq)).join(" · ") : L("Oraindik ez dakizu erritmorik: Pello eta Peio plazan daude.")) +
         "\n\n" +
         (hasChain() ? L("KATEA: suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.") + "\n\n" : "") +
+        (hasHorn() ? L("ADARRA: haize-bolada aurrera — errotak, balsak, lainoa, hostoak.") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",
@@ -3353,6 +3426,19 @@
         walkSD,
         ECHOES,
         HERBS,
+        DGS,
+        DGL,
+        SERP,
+        LAM,
+        RAFT,
+        FANS,
+        MISTS,
+        WIND,
+        hornBlow,
+        windable,
+        keysHere,
+        zoneFadeUpdate,
+        bossBar,
         QST,
         mikelStart,
         questLog,

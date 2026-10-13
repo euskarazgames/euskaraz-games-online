@@ -115,14 +115,14 @@ const { launch } = require('./_browser');
   await ev(() => __game.interact());
   await wait(200);
   await closeGet();
-  ok((await ev(() => __game.saved.keys)) === 1, 'giltza txikia');
+  ok((await ev(() => __game.saved.keyz.leizea)) === 1, 'giltza txikia');
 
   /* 8 · B iparreko atea */
   await tp(600, 0, -50.5, Math.PI);
   await wait(300);
   ok((await ev(() => __game.actionHere() && __game.actionHere().label)) === 'ATEA', 'B: atea');
   await ev(() => __game.interact());
-  ok(await until(() => __game.saved.doors.includes('dB-n') && __game.saved.keys === 0 && __game.DOORS.find((d) => d.id === 'dB-n').p.off), 'atea giltzarekin irekita');
+  ok(await until(() => __game.saved.doors.includes('dB-n') && __game.saved.keyz.leizea === 0 && __game.DOORS.find((d) => d.id === 'dB-n').p.off), 'atea giltzarekin irekita');
 
   /* 9 · D: borroka */
   await tp(600, 0, -70, Math.PI);

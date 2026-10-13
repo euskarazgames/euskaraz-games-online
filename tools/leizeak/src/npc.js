@@ -408,6 +408,28 @@
   }
   /* ---- erretratu berriak (SVG, diseinu propioak) ---- */
   Object.assign(PORTRAITS, {
+    /* lamia: ile luzea eta urrezko orrazia (askatuta: argia; itzalarekin: iluna) */
+    lamia:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><path class="p3" d="M22 52c-8 26-6 48 4 68h48c10-20 12-42 4-68q-28-20-56 0z"/>' +
+      '<path class="p2" d="M15 120c4-17 15-25 35-26 20 1 31 9 35 26z"/>' +
+      '<ellipse class="p1" cx="50" cy="66" rx="15.5" ry="19.5"/>' +
+      '<path class="p3" d="M33 61c2-17 10-23 17-23s15 6 17 23c-5-9-10-13-17-13s-12 4-17 13z"/>' +
+      '<path class="p5" d="M36 41q14-9 28 0" fill="none" stroke-width="3"/><path class="p5" d="M40 39v-4M45 36.5v-4M50 35.5v-4M55 36.5v-4M60 39v-4" fill="none" stroke-width="1.4"/>' +
+      '<g class="eyes"><ellipse class="p4" cx="43.5" cy="65" rx="2.1" ry="2.6"/><ellipse class="p4" cx="56.5" cy="65" rx="2.1" ry="2.6"/></g>' +
+      '<path class="mouth p4" d="M46 77q4 2 8 0q-4 1-8 0z"/><path class="p5" d="M29 96q5-6 9 0M62 96q5-6 9 0" fill="none" stroke-width="1.4"/></svg>',
+    lamiailuna:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><path class="g1" d="M20 50c-10 28-8 50 4 70h52c12-20 14-42 4-70q-30-22-60 0z"/>' +
+      '<path class="g1" d="M15 120c4-17 15-25 35-26 20 1 31 9 35 26z"/>' +
+      '<path class="g1" d="M33 61c2-17 10-23 17-23s15 6 17 23c-5-9-10-13-17-13s-12 4-17 13z"/>' +
+      '<path class="g2" d="M36 41q14-9 28 0" fill="none" stroke="#ffcf7a" stroke-width="3"/>' +
+      '<g class="eyes"><ellipse class="g2" cx="43" cy="64" rx="3.2" ry="1.5"/><ellipse class="g2" cx="57" cy="64" rx="3.2" ry="1.5"/></g></svg>',
+    /* Tartalo: begi bakar handia */
+    tartalo:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><path class="p2" d="M6 120c5-24 19-36 44-37 25 1 39 13 44 37z"/>' +
+      '<ellipse class="p1" cx="50" cy="62" rx="24" ry="27"/>' +
+      '<path class="p3" d="M27 50q23-14 46 0l-2 6q-21-11-42 0z"/>' +
+      '<g class="eyes"><ellipse class="p5" cx="50" cy="62" rx="9.5" ry="8"/><circle class="p4" cx="50" cy="62" r="4"/></g>' +
+      '<path class="mouth p4" d="M38 80q12 6 24 0q-12 3-24 0z"/><path class="p3" d="M41 81v3M47 82v3M53 82v3M59 81v3" stroke-width="1.6" stroke="#2f6f66"/></svg>',
     aitona:
       '<svg viewBox="0 0 100 120" aria-hidden="true"><path class="p2" d="M12 120c4-18 17-27 38-28 21 1 34 10 38 28z"/>' +
       '<ellipse class="p1" cx="50" cy="68" rx="17" ry="20"/>' +
@@ -457,4 +479,4 @@
       '<ellipse class="p5" cx="50" cy="44" rx="34" ry="12"/><path class="g2" d="M30 60l10 20M50 58v24M70 60l-10 20" stroke-width="2.4" fill="none"/>' +
       '<g class="eyes"><circle class="g2" cx="40" cy="44" r="2.4"/><circle class="g2" cx="60" cy="44" r="2.4"/></g></svg>',
   });
-  const PORTRAIT_OF = { PELLO: "aitona", PEIO: "aitona", "PELLO ETA PEIO": "aitona", MADDI: "errementari", JOANES: "artzain", KATTALIN: "amona", "JENTIL ZAHARRA": "jentil", BASAJAUN: "basajaun", MARI: "mari", "HARRI-DANBORRA": "danbor", IRATI: "radio" };
+  const PORTRAIT_OF = { LAMIA: "lamia", "LAMIA ILUNA": "lamiailuna", TARTALO: "tartalo", "TARTALO ILUNA": "tartalo", PELLO: "aitona", PEIO: "aitona", "PELLO ETA PEIO": "aitona", MADDI: "errementari", JOANES: "artzain", KATTALIN: "amona", "JENTIL ZAHARRA": "jentil", BASAJAUN: "basajaun", MARI: "mari", "HARRI-DANBORRA": "danbor", IRATI: "radio" };

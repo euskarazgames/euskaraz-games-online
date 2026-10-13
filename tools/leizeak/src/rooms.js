@@ -79,9 +79,9 @@
   const ROOMS_AREA = {};
   const isCleared = (id) => saved.cleared.includes(id);
   function roomsUpdate(dt) {
-    if (ZONE.cur !== "leizea") return;
+    if (!DGS[ZONE.cur]) return;
     /* zein gelatan nago? */
-    const R = ROOMS.find((r) => Math.abs(P.x - r.x) < r.w / 2 && Math.abs(P.z - r.z) < r.d / 2);
+    const R = ROOMS.find((r) => r.zone === ZONE.cur && Math.abs(P.x - r.x) < r.w / 2 && Math.abs(P.z - r.z) < r.d / 2);
     if (R && R !== ROOM.cur) {
       ROOM.cur = R;
       if (!saved.visited.includes(R.id)) {
@@ -210,15 +210,18 @@
   function doorNear() {
     return DOORS.find((D) => !D.open && (D.kind === "key" || D.kind === "boss") && D.g.parent === ZONES[ZONE.cur].group && Math.hypot(P.x - D.x, P.z - D.z) < 3.6);
   }
+  /* giltza txikiak leize bakoitzarenak dira */
+  const keysHere = () => saved.keyz[ZONE.cur] || 0;
   function tryDoor(D) {
+    const DG = DGS[ZONE.cur];
     if (D.kind === "key") {
-      if (saved.keys > 0) {
-        saved.keys--;
+      if (keysHere() > 0) {
+        saved.keyz[ZONE.cur]--;
         openDoor(D);
         notify(L("Giltza txikiak atea ireki du."), "", 2.4);
       } else notify(L("Itxita. Giltza txiki bat behar da."), "", 2.4);
     } else if (D.kind === "boss") {
-      if (saved.items.includes("giltzanagusia")) {
+      if (DG && saved.items.includes(DG.bigKey)) {
         openDoor(D);
         notify(L("Giltza nagusia biraka… atea astiro zabaltzen da."), "", 3);
       } else notify(L("Ate handia. Sarraila bitxia du: giltza nagusia behar da."), "", 3);
@@ -262,11 +265,12 @@
     fxBurst(C.x, C.y + 1.2, C.z, { n: 36, speed: 3.5, up: 3.5, life: 1.1, size: 0.3, color: "#ffe2a6", grav: -1 });
     const c = C.content;
     if (c.t === "key") {
-      saved.keys++;
+      saved.keyz[ZONE.cur] = keysHere() + 1;
       itemGet("giltza", L("GILTZA TXIKIA"), L("Leize honetako ate itxi bat irekitzen du."));
     } else if (c.t === "bigkey") {
-      saved.items.push("giltzanagusia");
-      itemGet("giltzanagusia", L("GILTZA NAGUSIA"), L("Basajaunen bihotzera daraman ate handia irekitzen du."));
+      const DG = DGS[ZONE.cur];
+      if (!saved.items.includes(DG.bigKey)) saved.items.push(DG.bigKey);
+      itemGet("giltzanagusia", L("GILTZA NAGUSIA"), DG.bigKeyText || L("Basajaunen bihotzera daraman ate handia irekitzen du."));
     } else if (c.t === "coins") {
       saved.coins += c.n;
       itemGet("txanponak", c.n + " " + L("TXANPON"), L("Maddik dendan zerbait salduko dizu."));
@@ -398,7 +402,7 @@
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦" };
+  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "giltza" || icon === "giltzanagusia") {
@@ -418,6 +422,30 @@
       const head = new T.Mesh(new T.ConeGeometry(0.16, 0.36, 6), material("#7fe3c0", 0.6));
       head.position.y = 0.72;
       g.add(head);
+    } else if (icon === "adarra") {
+      /* adarra: kono kurbatua zatika (bolizkoa, brontzezko ahoarekin) */
+      for (let i = 0; i < 6; i++) {
+        const a = -0.9 + i * 0.32,
+          seg = new T.Mesh(new T.CylinderGeometry(0.06 + i * 0.035, 0.05 + i * 0.03, 0.3, 10), material(i === 5 ? "#c08a3e" : "#efe4cc", i === 5 ? 0.4 : 0.15));
+        seg.position.set(Math.sin(a) * 0.55, Math.cos(a) * 0.55 - 0.3, 0);
+        seg.rotation.z = -a;
+        g.add(seg);
+      }
+    } else if (icon === "orrazia") {
+      const c = new T.Mesh(new T.TorusGeometry(0.34, 0.07, 6, 16, PI), material("#ffd36a", 0.9));
+      g.add(c);
+      for (let i = 0; i < 7; i++) {
+        const t = new T.Mesh(new T.BoxGeometry(0.035, 0.26, 0.035), material("#ffd36a", 0.9));
+        t.position.set(-0.27 + i * 0.09, -0.12, 0);
+        g.add(t);
+      }
+    } else if (icon === "sugarra") {
+      const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));
+      rod.rotation.z = 0.4;
+      const tip = new T.Mesh(new T.ConeGeometry(0.09, 0.34, 8), material("#ff7a2a", 2));
+      tip.position.set(-0.27, 0.62, 0);
+      tip.rotation.z = 0.4;
+      g.add(rod, tip);
     } else {
       const o = new T.Mesh(new T.IcosahedronGeometry(0.34, 0), material("#ffd36a", 0.8));
       g.add(o);

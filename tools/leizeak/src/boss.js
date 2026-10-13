@@ -10,18 +10,27 @@
        KATEArekin tiratu → azala apurtu → bihotza agerian → SORGINKERIA.
        Hiru azal-plaka. Amaieran Basajaun askatzen da.
      ================================================================== */
+  /* etsai nagusi bakoitzak bere inplementazioa (BOSSK[kind]); BOSS-ek aktiboarengana bideratzen du */
+  const BOSSK = {};
+  const bk = () => BOSSK[BOSS.kind] || null;
   const BOSS = {
     on: false,
     dead: false,
     kind: null,
     lockable: { boss: true, x: 0, y: 0, z: 0, H: 2 },
-    ring: null,
     weakR: 1.6,
-    vulnerable: () => false,
-    weak: () => null,
-    center: () => ({ x: 0, y: 0, z: 0, h: 3 }),
-    hit() {},
-    chained() {},
+    vulnerable: () => BOSS.on && !BOSS.dead && !!bk() && bk().vulnerable(),
+    weak: () => (bk() ? bk().weak() : null),
+    center: () => (bk() ? bk().center() : { x: 0, y: 0, z: 0, h: 3 }),
+    hit: (n, b) => bk() && bk().hit(n, b),
+    chained: () => bk() && bk().chained && bk().chained(),
+    /* itzulitako harkaitza: etsai nagusia zorabiatu (baldin badaki) */
+    stagger: () => bk() && bk().stagger && bk().stagger(),
+    canStagger: () => BOSS.on && !!bk() && !!bk().stagger,
+    ring: {
+      live: () => BOSS.on && !!bk() && !!bk().ring && bk().ring.live(),
+      pos: () => bk().ring.pos(),
+    },
   };
   /* ------------------------------ zaindaria ------------------------------ */
   const MINI = { e: null, flipDmg: 0 };
@@ -180,6 +189,7 @@
     BOSS.on = true;
     BOSS.dead = false;
     BOSS.kind = "basajaun";
+    BOSS.weakR = 1.6;
     Object.assign(BJ, { state: "intro", t: 0, plates: 3, hp: PLATE_HP, ringOn: false, step: 0 });
     const fight = () => {
       BJ.state = "idle";
@@ -204,6 +214,8 @@
   }
   /* jokalaria erori da borrokan: etsai nagusiak hasierara */
   function bossReset() {
+    lamiaReset();
+    tartaloReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;
@@ -223,14 +235,17 @@
     bjAnim("Idle");
     bossBar(null);
   }
-  BOSS.vulnerable = () => BOSS.on && BOSS.kind === "basajaun" && BJ.state === "open";
-  BOSS.weak = () => {
+  BOSSK.basajaun = {
+    vulnerable: () => BJ.state === "open",
+    stagger: () => bossStagger(),
+  };
+  BOSSK.basajaun.weak = () => {
     const v = new T.Vector3();
     BJ.heart.getWorldPosition(v);
     return { x: v.x, y: v.y, z: v.z };
   };
-  BOSS.center = () => ({ x: BJ.x, y: BJ.y, z: BJ.z, h: 7 });
-  BOSS.hit = (n) => {
+  BOSSK.basajaun.center = () => ({ x: BJ.x, y: BJ.y, z: BJ.z, h: 7 });
+  BOSSK.basajaun.hit = (n) => {
     if (!BOSS.vulnerable()) return;
     BJ.heart.scale.setScalar(1.35);
     BJ.hitFlash = 0.15;
@@ -253,15 +268,15 @@
       bossBar("BASAJAUN ILUNA", BJ.plates / 3);
     }
   };
-  BOSS.ring = {
-    live: () => BOSS.on && BJ.state === "tired",
+  BOSSK.basajaun.ring = {
+    live: () => BJ.state === "tired",
     pos: () => {
       const v = new T.Vector3();
       BJ.ringG.getWorldPosition(v);
       return { x: v.x, y: v.y, z: v.z };
     },
   };
-  BOSS.chained = () => {
+  BOSSK.basajaun.chained = () => {
     if (BJ.state !== "tired") return;
     BJ.state = "open";
     BJ.t = 0;
@@ -287,6 +302,8 @@
     title("ZORABIATUTA!", "");
   }
   function bossUpdate(dt) {
+    lamiaUpdate(dt);
+    tartaloUpdate(dt);
     miniUpdate(dt);
     /* zaindariaren gelan sartzean: borroka */
     const F = DUNGEON.rooms.F;

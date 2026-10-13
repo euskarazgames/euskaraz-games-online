@@ -12,9 +12,42 @@
      ================================================================== */
   const DX = 600,
     DS = 1.5;
-  const DUNGEON = { entry: { x: DX, y: 0, z: 8.5, a: PI }, exitArch: { x: DX, z: 12.2 }, lights: [], torches: [], drum: null, rooms: {} };
-  /* leize guztien erregistroa (zona → datuak) */
+  const DUNGEON = {
+    id: "leizea",
+    num: "01",
+    entry: { x: DX, y: 0, z: 8.5, a: PI },
+    exitArch: { x: DX, z: 12.2 },
+    exitTo: () => ({ x: HUB.cave.x, y: 5, z: HUB.cave.z + 5, a: 0, cp: true }),
+    bigKey: "giltzanagusia",
+    bossDoor: "dD-n",
+    lights: [],
+    torches: [],
+    drum: null,
+    rooms: {},
+    torchCol: ["#ffb36b", "#a9d8ff"],
+    fog: [10, 62],
+  };
+  /* leize guztien erregistroa (zona → datuak); BDG: eraikitzen ari den leizea */
   const DGS = { leizea: DUNGEON };
+  let BDG = DUNGEON;
+  function dungeonBegin(DG) {
+    DGS[DG.id] = DG;
+    BDG = DG;
+    zoneBuild(DG.id);
+  }
+  /* sortak bildu, argi mugikorrak eta lehendik irekitako ateak */
+  function dungeonEnd(DG) {
+    batchFlush();
+    for (let i = 0; i < 2; i++) {
+      const l = new T.PointLight(DG.torchCol[0], 0, 22, 1.6);
+      BP.add(l);
+      DG.lights.push(l);
+    }
+    for (const id of saved.doors) {
+      const D = DOORS.find((d) => d.id === id);
+      if (D) openDoor(D, true);
+    }
+  }
   const DOORDEF = {};
   /* ---- piezen sortak (instantziak) ----
      Hormak alde bakoitzeko sorta batean (material propioarekin): kamera eta Amaiurren artean
@@ -45,9 +78,10 @@
       base.traverse((n) => {
         if (!n.isMesh) return;
         const local = new T.Matrix4().multiplyMatrices(inv, n.matrixWorld),
-          mat = own ? n.material.clone() : n.material,
+          mat = own || BDG.tint ? n.material.clone() : n.material,
           im = new T.InstancedMesh(n.geometry, mat, list.length),
           t = new T.Matrix4();
+        if (BDG.tint) mat.color.multiply(new T.Color(BDG.tint));
         if (own) own.push(mat);
         list.forEach((M, i) => im.setMatrixAt(i, t.multiplyMatrices(M, local)));
         im.castShadow = false;
@@ -91,9 +125,9 @@
   /* doors: { n|s|e|w: offset (gelaren erditik, metroetan) } — hutsunea 6 m */
   function room(id, x, z, w, d, opts = {}) {
     const y = opts.y || 0;
-    const R = { id, x, z, w, d, y, area: opts.area, waves: opts.waves, diff: opts.diff, hpK: opts.hpK, fightText: opts.fightText, fog: opts.fog, onWin: opts.onWin, sides: {} };
+    const R = { id, x, z, w, d, y, zone: BDG.id, area: opts.area, waves: opts.waves, diff: opts.diff, hpK: opts.hpK, fightText: opts.fightText, fog: opts.fog, onWin: opts.onWin, sides: {} };
     ROOMS.push(R);
-    DUNGEON.rooms[id] = R;
+    BDG.rooms[id] = R;
     if (opts.area) ROOMS_AREA[opts.area] = [opts.name, opts.desc || ""];
     /* zorua: zatika (amildegiak utzi) */
     for (const f of opts.floors || [[x, z, w, d]]) {
@@ -150,8 +184,8 @@
     WALLS.cur = prev;
     const fx = x + Math.sin(rot) * 0.55,
       fz = z + Math.cos(rot) * 0.55;
-    const fl = glow(fx, y + 0.35, fz, "#ffb35c", 2.4);
-    DUNGEON.torches.push({ x: fx, y: y + 0.35, z: fz, fl, ph: Math.random() * 10, side });
+    const fl = glow(fx, y + 0.35, fz, BDG.torchCol[0], 2.4);
+    BDG.torches.push({ x: fx, y: y + 0.35, z: fz, fl, ph: Math.random() * 10, side });
   }
   /* korridorea: zorua eta bi horma (bakoitza bere sortan) */
   function corridor(x, z, w, d, axis) {
@@ -195,7 +229,7 @@
   }
 
   function buildDungeon() {
-    zoneBuild("leizea");
+    dungeonBegin(DUNGEON);
     const E = (x) => DX + x;
     /* ---- A: Sarrera ---- */
     room("A", E(0), 0, 24, 24, { area: "dA", name: "LEIZEAREN SARRERA", desc: "Bi sutegi itzalita. Iparreko barrak itxita.", doors: { n: 0, s: 0 } });
@@ -342,47 +376,40 @@
     solids.push({ x: E(0), z: -140.5, r: 5.5, h: 12, y: 0, pillar: true });
     for (let i = 0; i < 10; i++) bprop("rubble_half", E(-16 + (i % 5) * 8), 0, i < 5 ? -110 : -142, DS * 0.45, i);
     DUNGEON.bossRoom = DUNGEON.rooms.I;
-    batchFlush();
-    /* argiak: bi argi mugikor gertuko zuzietan (mugikorrentzat merkea) */
-    for (let i = 0; i < 2; i++) {
-      const l = new T.PointLight("#ffb36b", 0, 22, 1.6);
-      BP.add(l);
-      DUNGEON.lights.push(l);
-    }
-    for (const id of saved.doors) {
-      const D = DOORS.find((d) => d.id === id);
-      if (D) openDoor(D, true);
-    }
+    dungeonEnd(DUNGEON);
   }
-  /* leizean ESNATU: oraingoz ez dago ezer esnatzeko */
+  /* leizean ESNATU: leize bakoitzak bere erantzuna (bestela ezer ez) */
   function dungeonWake() {
-    return 0;
+    const DG = DGS[ZONE.cur];
+    return DG && DG.wake ? DG.wake() : 0;
   }
   function dungeonUpdate(dt) {
-    if (ZONE.cur !== "leizea") return;
+    const DG = DGS[ZONE.cur];
+    if (!DG) return;
     /* zuziak dir-dir, eta gertuko bi zuziek argi errealak */
-    let near = DUNGEON.torches.map((t) => [Math.hypot(t.x - P.x, t.z - P.z), t]).sort((a, b) => a[0] - b[0]);
-    for (const [i, l] of DUNGEON.lights.entries()) {
+    let near = DG.torches.map((t) => [Math.hypot(t.x - P.x, t.z - P.z), t]).sort((a, b) => a[0] - b[0]);
+    for (const [i, l] of DG.lights.entries()) {
       const t = near[i] && near[i][1];
       if (!t) continue;
       l.position.set(t.x, t.y, t.z);
       l.intensity = (1.5 + Math.sin(time * 9 + t.ph) * 0.18 + Math.sin(time * 23 + t.ph) * 0.1) * (phaseBlend > 0.5 ? 0.75 : 1.05);
-      l.color.set(phaseBlend > 0.5 ? "#a9d8ff" : "#ffb36b");
+      l.color.set(phaseBlend > 0.5 ? DG.torchCol[1] : DG.torchCol[0]);
     }
-    for (const t of DUNGEON.torches) {
+    for (const t of DG.torches) {
       t.fl.material.opacity = 0.55 + Math.sin(time * 11 + t.ph) * 0.12;
       t.fl.visible = !t.side || t.side.k < 0.5;
     }
-    DUNGEON.exitGlow.material.opacity = 0.25 + Math.sin(time * 2) * 0.1;
-    /* gelaren lainoa (E iluna) */
-    const R = ROOM.cur,
-      f = R && R.fog ? R.fog : [10, 62];
+    if (DG.exitGlow) DG.exitGlow.material.opacity = 0.25 + Math.sin(time * 2) * 0.1;
+    /* gelaren lainoa (gela ilunak) */
+    const R = ROOM.cur && ROOM.cur.zone === DG.id ? ROOM.cur : null,
+      f = R && R.fog ? R.fog : DG.fog;
     scene.fog.near = mix(scene.fog.near, f[0], 1 - Math.exp(-dt * 2));
     scene.fog.far = mix(scene.fog.far, f[1], 1 - Math.exp(-dt * 2));
+    if (DG.update) DG.update(dt);
     /* irteera: hegoko arkua → haranera */
-    if (!ZONE.pending && Math.hypot(P.x - DUNGEON.exitArch.x, P.z - (DUNGEON.exitArch.z + 3.6)) < 2.2) enterZone("ibarra", { x: HUB.cave.x, y: 5, z: HUB.cave.z + 5, a: 0, cp: true });
+    if (!ZONE.pending && Math.hypot(P.x - DG.exitArch.x, P.z - (DG.exitArch.z + 3.6)) < 2.2) enterZone("ibarra", DG.exitTo());
     /* harri-danborra: hurbil eta ENTZUN ez badaki → deia */
-    if (DUNGEON.drumSkin) DUNGEON.drumSkin.position.y = 1.62 + Math.max(0, Math.sin(time * 4.8)) * 0.04;
+    if (DG === DUNGEON && DUNGEON.drumSkin) DUNGEON.drumSkin.position.y = 1.62 + Math.max(0, Math.sin(time * 4.8)) * 0.04;
   }
   function drumNear() {
     return ZONE.cur === "leizea" && DUNGEON.drum && Math.hypot(P.x - DUNGEON.drum.x, P.z - DUNGEON.drum.z) < 3.6;

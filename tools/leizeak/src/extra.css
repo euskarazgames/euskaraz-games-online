@@ -176,3 +176,4 @@ body:has(#bossHud:not([hidden])) #phaseHud{top:86px}
 @media(max-width:600px){#touchActions #recallBtn{right:94px;bottom:142px;width:42px;height:42px}}
 @media(max-height:520px){#touchActions #recallBtn{right:92px;bottom:128px;width:40px;height:40px;font-size:17px}}
 @media(pointer:coarse) and (orientation:landscape){#map{bottom:auto;top:58px;right:14px;width:72px;height:72px}#route{display:none}}
+#portrait.lamiailuna{background:radial-gradient(ellipse at 50% 40%,#0e2c33,#020a0c 70%)}#portrait.lamia{background:radial-gradient(ellipse at 50% 35%,#1f5560,#061719 75%)}#portrait.tartalo{background:radial-gradient(ellipse at 50% 35%,#4a3424,#140b06 75%)}
