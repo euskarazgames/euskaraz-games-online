@@ -142,8 +142,9 @@
         }
     }
     /* hormak: alde bakoitza bere sortan (gardentzeko) eta talka-blokeak hutsuneen bi aldeetan */
+    /* wallH: talka-hormen altuera (ertz garaiak dituzten geletan, gainetik ibiltzerik ez) */
     const doors = opts.doors || {},
-      wallH = 7;
+      wallH = opts.wallH || 7;
     const SIDES = {
       n: { len: w, at: (o) => [x + o, z - d / 2], rot: 0, seg: [x - w / 2, z - d / 2, x + w / 2, z - d / 2], col: (a, b) => wallBlock(x + (a + b) / 2, z - d / 2, b - a, 1.6, 0, y, wallH) },
       s: { len: w, at: (o) => [x + o, z + d / 2], rot: PI, seg: [x - w / 2, z + d / 2, x + w / 2, z + d / 2], col: (a, b) => wallBlock(x + (a + b) / 2, z + d / 2, b - a, 1.6, 0, y, wallH) },

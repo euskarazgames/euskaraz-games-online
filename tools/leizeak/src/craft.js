@@ -181,7 +181,7 @@
     coachDone("craft-drag");
   }
   function craftToggle() {
-    if (P.riding) return;
+    if (P.riding || P.climb) return;
     if (CRAFT.on) craftExit();
     else if (!craftEnter())
       notify(L("ESKU MAGIKOA: kaxak dauden geletan bakarrik."), "", 3);

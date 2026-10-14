@@ -24,6 +24,9 @@
     center: () => (bk() ? bk().center() : { x: 0, y: 0, z: 0, h: 3 }),
     hit: (n, b) => bk() && bk().hit(n, b),
     chained: () => bk() && bk().chained && bk().chained(),
+    /* TXIMISTARRIA: etsai nagusiak badaki (eztanda bat hurbil) eta jaurtiketaren helburua */
+    bomb: (x, y, z, r) => bk() && bk().bomb && bk().bomb(x, y, z, r),
+    bombAim: () => (bk() && bk().bombAim ? bk().bombAim() : null),
     /* itzulitako harkaitza: etsai nagusia zorabiatu (baldin badaki) */
     stagger: () => bk() && bk().stagger && bk().stagger(),
     canStagger: () => BOSS.on && !!bk() && !!bk().stagger,
@@ -226,6 +229,7 @@
   function bossReset() {
     lamiaReset();
     tartaloReset();
+    jentilReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;
@@ -314,6 +318,7 @@
   function bossUpdate(dt) {
     lamiaUpdate(dt);
     tartaloUpdate(dt);
+    jentilBossUpdate(dt);
     miniUpdate(dt);
     /* zaindariaren gelan sartzean: borroka */
     const F = DUNGEON.rooms.F;

@@ -406,7 +406,7 @@
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺" };
+  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "giltza" || icon === "giltzanagusia") {
@@ -448,6 +448,15 @@
       e.rotation.x = PI / 2.4;
       e.scale.setScalar(0.62);
       g.add(e);
+    } else if (icon === "tximista") {
+      const st = new T.Mesh(new T.DodecahedronGeometry(0.3, 0), new T.MeshStandardMaterial({ color: "#3b4250", roughness: 0.5, metalness: 0.3, emissive: new T.Color("#7fc8ff"), emissiveIntensity: 1.6, flatShading: true }));
+      g.add(st);
+      for (let i = 0; i < 3; i++) {
+        const bolt = new T.Mesh(new T.ConeGeometry(0.05, 0.5, 4), material("#dff3ff", 2));
+        bolt.position.set(Math.cos(i * 2.1) * 0.42, 0.1, Math.sin(i * 2.1) * 0.42);
+        bolt.rotation.z = Math.cos(i * 2.1) * 0.6;
+        g.add(bolt);
+      }
     } else if (icon === "sugarra") {
       const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));
       rod.rotation.z = 0.4;

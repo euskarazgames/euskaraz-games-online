@@ -115,8 +115,10 @@
     return best;
   }
   /* --------------------------- jaurtiketak --------------------------- */
-  function attack() {
-    if (!started || paused || respawnTimer || CRAFT.on || TXALA.on || CHAIN.state !== "idle") return;
+  /* buffered: aurreko sakatze goiztiar bat (ez da sakatze berria ALDARATUrako) */
+  function attack(buffered) {
+    if (!started || paused || respawnTimer || CRAFT.on || TXALA.on || CHAIN.state !== "idle" || P.climb) return;
+    if (buffered !== true) guardPress();
     if (P.dashT > 0 || MAG.dashEnd < 0.14) return spinStrike();
     if (MAG.cd > 0) {
       MAG.buf = 0.2; /* sakatze goiztiarra gorde */
@@ -274,7 +276,7 @@
       const hitB = !gone && breakAt(b.x, b.y, b.z, 0.35, b.fire);
       if (hitB) {
         boltImpact(b, b.x, b.y, b.z, false);
-        if (!b.big || hitB.fireOnly) gone = true;
+        if (!b.big || hitB.fireOnly || hitB.bombOnly) gone = true;
       }
       /* itzalen proiektilak: izpiak suntsitzen ditu */
       for (let j = SHOTS.length - 1; j >= 0 && !gone; j--) {
@@ -455,6 +457,7 @@
   }
   /* --------------------------- eguneratzea (tick bakoitzean) --------------------------- */
   function magicUpdate(dt) {
+    guardUpdate(dt);
     ATK.t += dt;
     ATK.waveCd = Math.max(0, ATK.waveCd - dt);
     MAG.cd = Math.max(0, MAG.cd - dt);
@@ -465,13 +468,13 @@
       MAG.buf -= dt;
       if (MAG.cd <= 0) {
         MAG.buf = 0;
-        attack();
+        attack(true);
       }
     }
     /* mantendu → kargatu; askatu → INDARRA */
     if (ATK.hold && started && !paused && !CRAFT.on && !respawnTimer) {
       MAG.holdT += dt;
-      if (!MAG.charging && MAG.holdT > 0.3 && MAG.spinT > 0.45 && P.dashT <= 0) chargeStart();
+      if (!MAG.charging && MAG.holdT > 0.3 && MAG.spinT > 0.45 && P.dashT <= 0 && !P.climb) chargeStart();
     } else {
       if (MAG.charging) chargeRelease();
       MAG.holdT = 0;

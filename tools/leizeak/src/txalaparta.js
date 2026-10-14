@@ -67,7 +67,7 @@
   }
   /* ---------------------------- ireki / itxi ---------------------------- */
   function txalaOpen() {
-    if (!started || paused || cinematic || TXALA.on || CRAFT.on || GET.on) return;
+    if (!started || paused || cinematic || TXALA.on || CRAFT.on || GET.on || P.climb) return;
     if (!txalaKnown().length) {
       notify(L("Oraindik ez dakizu erritmorik. Pello eta Peiok irakatsiko dizute plazan."), "", 3.5);
       return;
@@ -233,7 +233,7 @@
     if (k === "esnatu") {
       fxRing(P.x, P.y + 0.2, P.z, "#ffd38a", 14, 0.9);
       SND.wake();
-      const n = (ZONE.cur === "ibarra" ? wakeStones(24) : 0) + (DGS[ZONE.cur] ? dungeonWake() : 0);
+      const n = (ZONE.cur === "ibarra" ? wakeStones(24) + dolmenWake() : 0) + (DGS[ZONE.cur] ? dungeonWake() : 0);
       if (!n) notify(L("Harriek lo jarraitzen dute. Ez dago ezer esnatzeko hemen."), "", 2.6);
     } else if (k === "entzun") echoPulse();
     else if (k === "eguzkilore") eguzkiloreEffect();

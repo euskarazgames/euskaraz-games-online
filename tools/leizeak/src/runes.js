@@ -42,23 +42,47 @@
       g.add(ped);
       stone = new T.Mesh(new T.ConeGeometry(0.5, 1.3, 8), new T.MeshStandardMaterial({ color: "#3a2a20", emissive: new T.Color(col), emissiveIntensity: 0.3, roughness: 0.6, transparent: true, opacity: 0.95 }));
       stone.position.y = 0.6;
+    } else if (kind === "kanpaia") {
+      /* jentil-kanpaia: harrizko arkua eta brontzezko kanpaia zintzilik (kulunka egiten du) */
+      const sm = rockMaterial();
+      for (const s of [-1, 1]) {
+        const post = new T.Mesh(new T.BoxGeometry(0.45, 3.7, 0.45), sm);
+        post.position.set(s * 1.25, -1.6, 0);
+        post.castShadow = true;
+        g.add(post);
+      }
+      const lintel = new T.Mesh(new T.BoxGeometry(3.1, 0.45, 0.6), sm);
+      lintel.position.y = 0.42;
+      g.add(lintel);
+      const pivot = new T.Group();
+      pivot.position.y = 0.18;
+      g.add(pivot);
+      const prof = [[0.04, 0], [0.3, -0.05], [0.41, -0.24], [0.45, -0.58], [0.53, -0.92], [0.7, -1.12], [0.73, -1.2], [0.64, -1.18]].map(([r, y]) => new T.Vector2(r, y));
+      stone = new T.Mesh(new T.LatheGeometry(prof, 18), new T.MeshStandardMaterial({ color: "#b4823c", metalness: 0.75, roughness: 0.34, emissive: new T.Color(col), emissiveIntensity: 0.2, side: T.DoubleSide }));
+      stone.castShadow = true;
+      pivot.add(stone);
+      const clap = new T.Mesh(new T.SphereGeometry(0.13, 8, 6), material("#3a2a1a"));
+      clap.position.y = -1.02;
+      pivot.add(clap);
     } else {
       stone = new T.Mesh(new T.OctahedronGeometry(0.62, 0), new T.MeshStandardMaterial({ color: "#5d5070", emissive: new T.Color(col), emissiveIntensity: 0.6, roughness: 0.3, flatShading: true }));
       stone.scale.y = 1.4;
     }
-    g.add(stone);
+    if (!stone.parent) g.add(stone);
     const halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.7 }));
     halo.scale.setScalar(kind === "galdara" ? 4.6 : 3.2);
     if (kind === "fire") halo.position.y = 0.7;
     if (kind === "galdara") halo.position.y = 1.1;
+    if (kind === "kanpaia") halo.position.y = -0.6;
     g.add(halo);
     const timer = new T.Mesh(new T.RingGeometry(1.05, 1.22, 48, 1, 0, TAU), new T.MeshBasicMaterial({ color: "#f3e6ff", transparent: true, opacity: 0, side: T.DoubleSide, depthWrite: false }));
     if (kind === "fire" || kind === "galdara") timer.position.y = kind === "galdara" ? 2.3 : 1.6;
+    if (kind === "kanpaia") timer.position.y = 1.35;
     g.add(timer);
     const ghost = new T.Mesh(stone.geometry, new T.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: 0.25 }));
     ghost.scale.copy(stone.scale);
     ghost.position.copy(stone.position);
-    g.add(ghost);
+    (kind === "kanpaia" ? stone.parent : g).add(ghost);
     g.position.set(x, y, z);
     (BP || scene).add(g);
     return { g, stone, halo, timer, ghost };
@@ -78,13 +102,14 @@
       const set = { D, solved: saved.cleared.includes(D.id), list: [], group: BP };
       for (const [x, y, z, era] of D.runes) {
         const hot = D.kind === "fire" || D.kind === "galdara",
-          v = runeMesh(x, y, z, hot ? "#ff9d4a" : era < 0 ? "#c9a8ff" : ERA_COL[era], D.kind);
+          v = runeMesh(x, y, z, hot ? "#ff9d4a" : D.kind === "kanpaia" && era < 0 ? "#ffcf7a" : era < 0 ? "#c9a8ff" : ERA_COL[era], D.kind);
         const R = {
           rune: true,
           x,
-          y: hot ? y + 0.6 : y,
+          y: hot ? y + 0.6 : D.kind === "kanpaia" ? y - 0.55 : y,
           z,
-          r: D.kind === "galdara" ? 1.4 : D.kind === "fire" ? 1.1 : 0.9,
+          r: D.kind === "galdara" ? 1.4 : D.kind === "fire" ? 1.1 : D.kind === "kanpaia" ? 1.1 : 0.9,
+          idx: set.list.length,
           era,
           needFire: !!D.needFire,
           lit: false,
@@ -103,12 +128,15 @@
   function runeSetHit(set, R) {
     R.lit = true;
     R.t = set.D.time;
-    SND.rune(true);
+    if (set.D.kind === "kanpaia") {
+      R.swv = (R.swv || 0) + 3.4;
+      SND.kanpaia(R.idx);
+    } else SND.rune(true);
     const hot = set.D.kind === "fire" || set.D.kind === "galdara";
     fxBurst(R.x, R.y, R.z, { n: 18, speed: 3, up: 1, life: 0.6, size: 0.3, color: hot ? "#ffb35c" : R.era < 0 ? "#d9c2ff" : ERA_COL[R.era], grav: -1 });
     const n = set.list.filter((r) => r.lit).length;
     if (n < set.list.length) {
-      notify((set.D.kind === "galdara" ? L("GALDARA ") : set.D.kind === "fire" ? L("SUTEGIA ") : L("ERRUNA ")) + n + " / " + set.list.length + L(" · azkar, besteak!"), "", 2);
+      notify((set.D.kind === "galdara" ? L("GALDARA ") : set.D.kind === "fire" ? L("SUTEGIA ") : set.D.kind === "kanpaia" ? L("KANPAIA ") : L("ERRUNA ")) + n + " / " + set.list.length + L(" · azkar, besteak!"), "", 2);
       return;
     }
     /* denak batera */
@@ -137,6 +165,13 @@
           R.stone.material.emissiveIntensity = on ? 2.2 : 0.15;
           R.stone.material.color.set(on ? "#ff7a2a" : "#2a2420");
           R.halo.material.opacity = on ? 0.9 : 0.12;
+        } else if (set.D.kind === "kanpaia") {
+          /* kulunka: malguki moteldua */
+          R.swv = ((R.swv || 0) - (R.sw || 0) * 28 * dt) * Math.exp(-dt * 1.1);
+          R.sw = (R.sw || 0) + R.swv * dt;
+          R.stone.parent.rotation.x = R.sw;
+          R.stone.material.emissiveIntensity = set.solved ? 0.8 : R.lit ? 1.7 : 0.12 + (here ? 0.18 + 0.12 * Math.sin(time * 4 + R.x) : 0);
+          R.halo.material.opacity = set.solved ? 0.3 : R.lit ? 0.9 : here ? 0.32 : 0.1;
         } else {
           R.g.rotation.y += dt * (R.lit ? 3 : 0.8);
           R.g.position.y = R.y + Math.sin(time * 2 + R.x) * 0.15;

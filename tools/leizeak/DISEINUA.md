@@ -91,8 +91,9 @@ ardiak, txalapartarien erronka.
 
 ## 5. Bide-orria (hurrengo entregak)
 - ✔ 2. leizea: LAMIEN LEIZEA (ura/izotza, HAIZE-ADARRA, Lamia Iluna). ✔ 3. leizea: TARTALOREN KOBA
-  (sua eta harria, SUGAR-IZPIA, Tartalo). Hurrengoak: Jentilen zerua (Anboto bidean) eta, azkenik,
-  Mariren koba (Anboto). Zazpi zaindari guztira: hiru askatuta.
+  (sua eta harria, SUGAR-IZPIA, Tartalo). ✔ 4. leizea: JENTILBARATZA (jentilen hiri lurperatua,
+  TXIMISTARRIA, Errolan). Hurrengoak: Jentilen zerua (Anboto, hodeien gainean) eta, azkenik, Mariren
+  koba (Anboto). Zazpi zaindari guztira: lau askatuta.
 - Egun/gau zikloa ("gaua gauekoentzat, eguna egunekoentzat"): gauez beste etsai eta gertaera batzuk.
 - Mapa osoa, eskuliburua eta bildumen menua.
 - Iraupena: 6-8 ordu. Bigarren mailako misio gehiago, minijokoak eta amaiera osoa.
@@ -113,6 +114,13 @@ nagusiaren aurka. Ateak, giltzak eta itzulerak gela-zentral baten inguruan (bide
   (zaindaria) → SUGAR-IZPIA: hesia erre → Gauekoren izotz-horma urtu → galdara garaia urrutitik (barrak)
   → lau galdara garai denbora-mugarekin (giltza nagusia) → itzuli izotzeko kutxara (arnasa-zatia) →
   Tartalo: lau galdarak piztu borrokan → argiak itsutzen du → begia (edo harkaitza itzuli: zorabiatu).
+- **JENTILBARATZA** (TXIMISTARRIA): ataria (sutondoa, heura iraganean, ertz garaia) → kanpaien aretoa
+  (hiru kanpaia sarearen atzean, bat orainean) → harresia (borroka, ALDARATU, giltza) → harri-zaina
+  (zaindaria) → TXIMISTARRIA: harresiko arrakala (jauzia atalasera: lasterbidea) → atalaseko arrakala →
+  dorrea (zutabea heuraz igo; goitik, arrakala bat apurtu eta lau kanpaia → giltza nagusia) →
+  biltegia (bigarren sutondoa; atarira lasterbidea, alde horretatik bakarrik) → Errolan: harkaitza
+  altxatuta duela TXIMISTARRIA oinetara, eskukada aldaratu edo harkaitza itzuli → belauniko → bularreko
+  ekaitz-harria. Gelak elkarri lotuta daude: tresna berri bakoitzak lehengo geletara bide laburrak irekitzen ditu.
 - Mitologia: Tartalo ilunpean ikusten duen begi bakarreko artzain erraldoia (argiak itsutzen du),
   lamiak eta urrezko orrazia, Gaueko gauaren espiritua, Mari Anboton. Istorioa eta gelak originalak.
 
@@ -127,6 +135,21 @@ pertsonaiarik, ez musikarik, ez koderik), eta euskal mitologiatik berregiten dir
   elizako argizaiolak pizten ditu, eta sariak ematen ditu.
 - **Mundu irekiko sekretuak leizeetako tresnekin** → sasiak SUAz, zutabeko eraztuna KATEAz, errota
   zaharra HAIZE-ADARRAz. Bakoitza egunkarian, ikusten denean (pista batekin).
+
+## 5d. Beste abentura batzuen ideia orokorrak (gure eran, II)
+Erabiltzaileak partekatutako bideo batetik (3D "metroidvania" bat), mekanika-ideia orokorrak bakarrik
+hartu dira — ez pertsonaiarik, ez maparik, ez istoriorik, ez arterik, ez koderik — eta gure munduan
+berregin dira:
+- **Babesa une zehatzean** → **ALDARATU**: kolpea iristean sorginkeria behin sakatu; etsaia zorabiatuta.
+  EZKUTUAk ere gorputz-kolpeak geldiarazten ditu (karga galduta).
+- **Hormak igo** → **HEURA**: heura iraganean bizirik dago, orainean izoztuta: bi garaien mekanika sinatuari
+  lotuta (igotzen ari zarela garaia aldatuz gero, erori).
+- **Urrutitik aktibatzen diren etengailuak** → **jentil-kanpaiak**, sorginkeriaz jota (sareen atzean ere).
+- **Bonbak eta bide berriak** → **TXIMISTARRIA**: herri-sinesmeneko tximista-harria; trumoiak harri
+  arrakalatuak apurtzen ditu.
+- **Gela konektatuak, lasterbideak eta atseden-lekuak** → **SUTONDOAK** (etxeko sutondoa, babesgune) eta
+  alde batetik bakarrik irekitzen diren **LASTERBIDEAK**.
+- **Norbera baino askoz handiagoak diren izakiak** → **Errolan**, kondairetako harri-jaurtitzaile jentila.
 
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da

@@ -1040,6 +1040,16 @@
         tone("sine", 190, t, 0.002, 0.12, 0.14 + d * 0.04, sfx, 70);
         tone("square", 2400, t, 0.001, 0.02, 0.02, sfx, 1800);
       },
+      /* ALDARATU: burdin-hots distiratsua eta akorde laburra */
+      parry() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 2350, t, 0.001, 0.5, 0.07, sfx, 2300);
+        tone("sine", 3520, t, 0.001, 0.35, 0.04, sfx, 3480);
+        tone("triangle", 587.33, t + 0.02, 0.004, 0.45, 0.05, sfx);
+        tone("triangle", 880, t + 0.05, 0.004, 0.5, 0.04, sfx);
+        hiss(t, 0.08, 0.1, "highpass", 6000, 3200, 0.7);
+      },
       clang(v = 1) {
         if (!ok()) return;
         const t = ctx.currentTime;
@@ -1060,11 +1070,37 @@
         tone("sawtooth", 96, t, 0.02, 0.6, 0.07, sfx, 58);
         hiss(t, 0.5, 0.06, "lowpass", 700, 200, 1.2);
       },
-      thud() {
+      thud(v = 1) {
         if (!ok()) return;
         const t = ctx.currentTime;
-        tone("sine", 82, t, 0.002, 0.3, 0.16, sfx, 40);
-        hiss(t, 0.18, 0.08, "lowpass", 900, 150, 0.7);
+        tone("sine", 82, t, 0.002, 0.3, 0.16 * v, sfx, 40);
+        hiss(t, 0.18, 0.08 * v, "lowpass", 900, 150, 0.7);
+      },
+      /* jentil-kanpaiak (bakoitzak bere nota) */
+      kanpaia(i = 0) {
+        if (!ok()) return;
+        toll([392, 523.25, 659.25, 783.99, 587.33][i % 5], ctx.currentTime, 0.05, 3.4);
+      },
+      /* TXIMISTARRIA: jaurtiketa, metxa (txinpartak) eta trumoia */
+      throwStone() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.22, 0.07, "bandpass", 600, 2400, 1.4);
+        tone("sine", 300, t, 0.004, 0.15, 0.03, sfx, 520);
+      },
+      crackle(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        for (let i = 0; i < 3; i++) hiss(t + i * 0.025, 0.02, 0.05 * v, "highpass", 5000 + Math.random() * 2000, 3000, 1.5);
+      },
+      thunder() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.05, 0.22, "highpass", 7000, 3000, 0.7);
+        tone("sawtooth", 1400, t, 0.001, 0.08, 0.05, sfx, 300);
+        tone("sine", 120, t, 0.003, 0.9, 0.24, sfx, 32);
+        hiss(t + 0.02, 1.4, 0.16, "lowpass", 2200, 90, 0.8);
+        hiss(t + 0.35, 1.2, 0.08, "lowpass", 600, 70, 0.6);
       },
       shot() {
         if (!ok()) return;
@@ -1232,6 +1268,13 @@
         lfo.start(t);
         o.stop(t + 1.25);
         lfo.stop(t + 1.25);
+      },
+      /* heura: hostoen karraska */
+      leaves(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.18, 0.05 * v, "bandpass", 2400, 900, 1.6);
+        hiss(t + 0.06, 0.12, 0.03 * v, "highpass", 4200, 2600, 1);
       },
       /* gaua: kilkerrak (uda) eta hontza */
       cricket() {
@@ -1563,6 +1606,12 @@
         COACH.seen.has("attack") &&
         ENEMIES.some((e) => e.state === "wind" && Math.hypot(e.x - P.x, e.z - P.z) < 4) &&
         coach("dodge", "F", "BULTZADA bitartean ukiezina zara: saihestu erasoa!", "", "dashBtn", "BULTZADA bitartean ukiezina zara: saihestu erasoa!", "")) ||
+      (fight &&
+        COACH.seen.has("dodge") &&
+        ENEMIES.some((e) => e.state === "wind" && e.type !== "eye" && Math.hypot(e.x - P.x, e.z - P.z) < 5) &&
+        coach("parry", "J", "Kolpea iristean sakatu J (behin): ALDARATU — etsaia zorabiatuta", "", "attackBtn", "Kolpea iristean sakatu SORGINKERIA (behin): ALDARATU", "")) ||
+      (!fight && !P.climb && ivyNear(2.5) && ivyLive(ivyNear(2.5)) &&
+        coach("climb", "W", "HEURA: bultzatu hormaren kontra eta igo", "", "stick", "HEURA: makila hormarantz, igotzeko", "")) ||
       (!fight && zoneHere() && !CRAFT.on && !zoneHere().solved &&
         coach("craft", "G", "ESKU MAGIKOA: egin klik kaxa batean eta arrastatu", "", "useBtn", "ESKUA: ukitu kaxa bat eta arrastatu", "")) ||
       (P.travel < 4 && coach("move", "WASD", "Mugitu: WASD edo geziak · Shift: korrika", "", "stick", "Mugitu: arrastatu makila · ertzeraino, korrika", "")) ||
@@ -1600,6 +1649,9 @@
   /* @include gaua.js */
   /* @include pottoka.js */
   /* @include sekretuak.js */
+  /* @include heura.js */
+  /* @include tximista.js */
+  /* @include jentilak.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -1998,6 +2050,7 @@
     playerLight.position.set(0.4, 2.3, 0.6);
     hero.add(playerLight);
     magicInit();
+    heuraInit();
     orb(0.5, 1, 0, 0.12, "#ffd3a0", hero);
     glow(0, 1, 0, "#f0ca8f", 1.2).userData.player = true;
     fxInit();
@@ -2024,6 +2077,10 @@
     buildRunePuzzles("lamia");
     buildTartalo();
     buildRunePuzzles("tartalo");
+    /* laugarren leizea: JENTILBARATZA (eta haraneko trikuharria) */
+    buildJentil();
+    buildRunePuzzles("jentil");
+    dolmenBuild();
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -2083,6 +2140,7 @@
     return best;
   }
   function teleport(x, z, y) {
+    climbDrop();
     jumpBuffer = 0;
     groundGrace = 0;
     /* lur irregularra: azpiko lurrera (edo gaineko gainazalera, gehienez 2.5 m) itsatsi */
@@ -2124,6 +2182,7 @@
   function fall(hard) {
     if (respawnTimer > 0) return;
     ponyDismount(true);
+    climbDrop();
     hardFall = !!hard;
     respawnTimer = hard ? 0.6 : 0.38;
     P.vx = P.vz = 0;
@@ -2133,7 +2192,7 @@
     jumpBuffer = 0.18;
   }
   function dash() {
-    if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer || P.riding) return;
+    if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer || P.riding || P.climb) return;
     let d = direction();
     if (Math.hypot(d.x, d.z) < 0.1) d = { x: Math.sin(P.angle), z: Math.cos(P.angle) };
     const n = Math.hypot(d.x, d.z) || 1;
@@ -2223,6 +2282,9 @@
   function move(dt) {
     groundGrace = P.grounded ? 0.14 : Math.max(0, groundGrace - dt);
     jumpBuffer = Math.max(0, jumpBuffer - dt);
+    heuraTick(dt);
+    /* HEURA: hormari helduta (heura.js arduratzen da) */
+    if (P.climb && climbUpdate(dt)) return;
     let d = direction(),
       len = Math.hypot(d.x, d.z),
       surf = !!(input.keys.ShiftLeft || input.keys.ShiftRight) || (mobile && Math.hypot(input.x, input.z) > 0.88);
@@ -2422,6 +2484,7 @@
                   ? run
                   : "Idle",
     );
+    if (!P.climb) climbTry(d, len);
     trackSafe(dt);
     if (P.y < ZONES[ZONE.cur].fallY) fall();
     /* gunea (herria, zelaiak, leizeko gela...): HUDaren izena eta helburuak */
@@ -2538,7 +2601,7 @@
      hitz egin, kutxa ireki, atea, harri-danborra, txalaparta, jentil-harria.
      ================================================================== */
   function actionHere() {
-    if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer) return null;
+    if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer || P.climb) return null;
     const N = npcNear();
     if (N) return { kind: "talk", label: L("HITZ EGIN"), fn: () => talkTo(N) };
     const C = chestNear();
@@ -2546,6 +2609,10 @@
     const LC = lockedChestNear();
     if (LC) return { kind: "locked", label: L("ITXITA"), fn: () => notify(LC.lockedHint || L("Ezin da ireki… oraingoz."), "", 3.5) };
     if (ponyNear()) return { kind: "pony", label: L("IGO"), fn: ponyMount };
+    const HN = hearthNear();
+    if (HN) return { kind: "hearth", label: L("ATSEDEN"), fn: () => hearthRest(HN) };
+    const SC = shortcutNear();
+    if (SC) return SC;
     const D = doorNear();
     if (D) return { kind: "door", label: D.kind === "boss" ? L("ATE HANDIA") : L("ATEA"), fn: () => tryDoor(D) };
     if (drumNear()) return { kind: "drum", label: L("ENTZUN"), fn: drumTalk };
@@ -2604,7 +2671,9 @@
     /* leizean: kamera garaiagoa eta maldatsuagoa (hormek ez dezaten Amaiur estali) */
     CAM.inside = mix(CAM.inside ?? 0, ZONES[ZONE.cur].outdoor ? 0 : 1, 1 - Math.exp(-dt * 6));
     const look = new T.Vector3(P.x, P.y + (P.riding ? 1.7 : 1), P.z).add(CAM.look),
-      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? 1.25 : 1) * (P.riding ? 1.16 : 1));
+      /* Errolan (erraldoia): kamera urrunago eta begirada gorago */
+      tall = BOSS.on && BOSS.kind === "errolan",
+      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : 1.25) : 1) * (P.riding ? 1.16 : 1));
     lockCamera(dt, look);
     /* etsai nagusia: biak enkoadratu (finkatu gabe ere) */
     CAM.bossK = mix(CAM.bossK || 0, BOSS.on && !LOCK.target ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -2612,6 +2681,13 @@
       const c = BOSS.center();
       look.x = mix(look.x, (look.x + c.x) / 2, 0.55 * CAM.bossK);
       look.z = mix(look.z, (look.z + c.z) / 2, 0.55 * CAM.bossK);
+      if (tall) {
+        /* harkaitza altxatzean: kamera gorago eta urrunago (harria ikusteko) */
+        CAM.liftK = mix(CAM.liftK || 0, ERR.state === "lift" || ERR.state === "throw" ? 1 : 0, 1 - Math.exp(-dt * 3));
+        look.y += (4.2 + 4 * CAM.liftK) * CAM.bossK;
+        offset.y *= 1 - 0.3 * CAM.bossK;
+        offset.multiplyScalar(1 + 0.18 * CAM.liftK * CAM.bossK);
+      }
     }
     /* jokalaria pantailaren erdialdetik gora (behean botoiak daude): begirada kamerarantz lerratu */
     /* hatzaz biratutako kamera (yaw, leundua): desplazamendua jokalariaren inguruan */
@@ -2756,7 +2832,8 @@
     $("dashLab").textContent = "BULTZADA";
     $("coinLab").textContent = "TXANPONAK";
     $("keyLab").textContent = "GILTZAK";
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ["L", "egunkaria"]]
+    $("bombLab").textContent = "TXIMISTA";
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ...(saved.items.includes("tximistarria") ? [["X", "tximistarria"]] : []), ["L", "egunkaria"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
     if (ready) {
@@ -2771,6 +2848,7 @@
       KeyF: dash,
       KeyC: chainFire,
       KeyV: hornBlow,
+      KeyX: bombThrow,
       KeyB: txalaOpen,
       KeyT: lockToggle,
       Tab: lockToggle,
@@ -2952,6 +3030,8 @@
     $("dashDot").style.opacity = P.dashReady ? 1 : 0.5;
     $("coins").textContent = saved.coins;
     $("keyBox").hidden = !DG;
+    $("bombBox").hidden = !hasBomb();
+    if (hasBomb()) $("bombN").textContent = "●".repeat(TXB.n) + "○".repeat(Math.max(0, TXB.max - TXB.n));
     if (DG) $("keyN").textContent = (saved.keyz[ZONE.cur] || 0) + (saved.items.includes(DG.bigKey) && !saved.doors.includes(DG.bossDoor) ? " ◆" : "");
     $("route").textContent = Z.name;
     map();
@@ -3061,6 +3141,7 @@
       updateWorld(dt);
       if (!TXALA.on) move(dt);
       magicUpdate(dt);
+      bombsUpdate(dt);
       chainUpdate(dt);
       lockUpdate(dt);
       txalaUpdate(dt);
@@ -3328,7 +3409,7 @@
      ATEA, ENTZUN, TXALAPARTA, ESKUA, KATEA… Bestela ezkutatuta. ⋯ = menu osoa.
      ================================================================== */
   const CTX = { cur: null, fn: null };
-  const CTX_COL = { talk: "gold", chest: "gold", door: "gold", drum: "violet", txala: "violet", stone: "violet", craft: "green", chain: "cyan" };
+  const CTX_COL = { talk: "gold", chest: "gold", door: "gold", hearth: "gold", drum: "violet", txala: "violet", stone: "violet", craft: "green", chain: "cyan" };
   function ctxPower() {
     if (CRAFT.on) return ["craft", L("EGINDA"), "green", craftToggle];
     if (near) return [near.kind, near.label, CTX_COL[near.kind] || "blue", near.fn];
@@ -3338,6 +3419,8 @@
     /* HAIZE-ADARRA: haize-errota, balsa, lainoa edo hosto-pila hurbil */
     if (hasHorn() && WIND.list.some((W) => W.group === ZONES[ZONE.cur].group && (!W.live || W.live()) && Math.hypot(W.x - P.x, W.z - P.z) < (W.range || 14) - 1 && (W.y === undefined || Math.abs(W.y - P.y) < (W.dy || 6))))
       return ["wind", L("ADARRA"), "cyan", hornBlow];
+    /* TXIMISTARRIA: harri arrakalatu bat hurbil (edo etsai nagusiak eskatzen duenean) */
+    if (hasBomb() && TXB.n > 0 && (crackNear(11) || (BOSS.on && BOSS.bombAim && BOSS.bombAim()))) return ["bomb", L("TXIMISTA"), "cyan", bombThrow];
     /* ENTZUN behar den lekuan (ezkutuko harriak) */
     if (saved.rhythms.includes("entzun") && TXALA.reveal <= 0 && platforms.some((s) => s.hidden && Math.hypot(s.x - P.x, s.z - P.z) < 18)) return ["txala", L("TXALAPARTA"), "violet", txalaOpen];
     return null;
@@ -3364,6 +3447,7 @@
     if (saved.rhythms.length) opts.push([L("TXALAPARTA") + kb(" · B"), txalaOpen]);
     if (hasChain()) opts.push([L("SUGAARREN KATEA") + kb(" · C"), chainFire]);
     if (hasHorn()) opts.push([L("HAIZE-ADARRA") + kb(" · V"), hornBlow]);
+    if (hasBomb()) opts.push([L("TXIMISTARRIA") + kb(" · X"), bombThrow]);
     opts.push([L("FINKATU") + kb(" · T"), lockToggle]);
     opts.push([L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)]);
     const Z = zoneHere();
@@ -3377,6 +3461,7 @@
         "\n\n" +
         (hasChain() ? L("KATEA: suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.") + "\n\n" : "") +
         (hasHorn() ? L("ADARRA: haize-bolada aurrera — errotak, balsak, lainoa, hostoak.") + "\n\n" : "") +
+        (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",
@@ -3495,6 +3580,7 @@
         spawnEnemy,
         spawnWave,
         playerHit,
+        hitEnemy,
         killEnemy,
         bossStart,
         miniStart,
@@ -3539,6 +3625,35 @@
         ponyDismount,
         pottokaCall,
         SECRETS,
+        GUARD,
+        guardPress,
+        IVY,
+        CLIMB,
+        TXB,
+        bombThrow,
+        bombExplode,
+        bombsBlow,
+        crackWall,
+        crackRock,
+        BREAKABLES,
+        RUNE_SETS,
+        buildRunePuzzles,
+        DGJ,
+        ERR,
+        ZAZPI,
+        HEARTHS,
+        SHORTCUTS,
+        DOL,
+        dolmenWake,
+        hearthRest,
+        shortcutNear,
+        errolanStart,
+        ivyWall,
+        ivySide,
+        slab,
+        zoneBuild,
+        climbDrop,
+        meleeHit,
         HERD,
         eyeRay,
         eyeOccluders,

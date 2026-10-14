@@ -19,7 +19,7 @@ const { launch } = require('./_browser');
     const s = __game.saved;
     s.flags.push('intro', 'irati1', 'atea', 'leizea', 'basajaun', 'cliff');
     s.rhythms.push('esnatu', 'entzun');
-    s.items.push('katea', 'giltzanagusia', 'adarra');
+    s.items.push('katea', 'giltzanagusia', 'adarra', 'tximistarria');
     s.tod = 0.4;
   });
   await ev(() => { __game.renderer.setPixelRatio(0.25); __game.renderer.shadowMap.enabled = false; });
@@ -82,9 +82,50 @@ const { launch } = require('./_browser');
   await tpFace(62, 17.4, 62, 15.4);
   ok((await open()) === 'chest' && (await piece('errota')), 'ate-tranpako kutxa: ARNASA-ZATIA');
 
-  /* 4 · egunkaria */
+  /* 4 · DORRE ZAHARRA: orainean heura izoztuta; iraganean igo → gailurrean kutxa */
+  const era = (want) => ev((want) => { const g = __game; for (let k = 0; k < 3 && g.phase() !== want; k++) { for (let i = 0; i < 240 && g.state().phaseCooldown > 0; i++) g.tick(1 / 120); g.switchPhase(); for (let i = 0; i < 30; i++) g.tick(1 / 120); } return g.phase(); }, want);
+  const climbN = () => ev(() => {
+    const g = __game;
+    g.input.x = 0.557; g.input.z = -0.83;
+    let i = 0;
+    for (; i < 60 && !g.P.climb; i++) g.tick(1 / 120);
+    const grabbed = !!g.P.climb;
+    g.input.x = 0; g.input.z = -1;
+    for (; i < 1200 && g.P.climb; i++) g.tick(1 / 120);
+    g.input.z = 0;
+    for (let k = 0; k < 60; k++) g.tick(1 / 120);
+    return { grabbed, y: +g.P.y.toFixed(2), gr: g.P.grounded };
+  });
+  await tpFace(80, -68.2, 80, -72);
+  await T(30);
+  ok(await flag('m-dorrea'), 'dorre zaharra ikusita');
+  ok((await era(1)) === 1, 'ORAINA');
+  await tpFace(80, -68.2, 80, -72);
+  let c = await climbN();
+  ok(!c.grabbed, 'orainean heura izoztuta: ezin igo', S(c));
+  ok((await era(0)) === 0, 'IRAGANA');
+  await tpFace(80, -68.2, 80, -72);
+  c = await climbN();
+  const topY = await ev(() => __game.CHESTS.find((C) => C.id === 'h-dorrea').y);
+  ok(c.grabbed && Math.abs(c.y - topY) < 0.15, 'dorrearen gailurrera igo (heura)', S({ c, topY }));
+  await ev(([y]) => { const g = __game; g.teleport(80, -70.6, y); g.P.angle = Math.PI; for (let i = 0; i < 6; i++) g.tick(1 / 120); }, [topY]);
+  ok((await open()) === 'chest' && (await piece('dorrea')), 'dorrearen gailurreko kutxa: ARNASA-ZATIA');
+
+  /* 5 · JENTIL-HARRIA: sorginkeriak ez, TXIMISTARRIAk bai → azpian kutxa */
+  await tpFace(-50, 1.5, -50, -6);
+  await T(30);
+  ok(await flag('m-harkaitza'), 'jentil-harria ikusita');
+  await fire();
+  ok(!(await cleared('s-harkaitza')), 'INDARRAk ez du apurtzen');
+  await ev(() => { __game.TXB.n = 3; __game.bombThrow(); });
+  await T(240);
+  ok(await cleared('s-harkaitza'), 'TXIMISTARRIA: jentil-harria apurtuta');
+  await tpFace(-50, -4.1, -50, -6);
+  ok((await open()) === 'chest' && (await piece('harkaitza')), 'harriaren azpiko kutxa: ARNASA-ZATIA');
+
+  /* 6 · egunkaria */
   const log = await ev(() => __game.SECRETS.filter((s) => s.done()).length);
-  ok(log === 3, 'hiru misterioak eginda', log);
+  ok(log === 5, 'bost misterioak eginda', log);
 
   console.log(errs.length ? errs.join('\n') : 'ERRORERIK EZ');
   console.log(fails ? `${fails} HUTS` : 'DENA ONDO');

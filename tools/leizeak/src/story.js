@@ -33,6 +33,20 @@
         );
       },
     },
+    tximistarria: {
+      get() {
+        if (!saved.items.includes("tximistarria")) saved.items.push("tximistarria");
+        TXB.n = TXB.max;
+        persist();
+        translate();
+        itemGet(
+          "tximista",
+          L("TXIMISTARRIA"),
+          L("Tximistak lurrera botatako harria. Jaurti: trumoiak harri arrakalatuak apurtzen ditu eta itzalak zorabiatzen. Urrun egon! Hiru harri; berez betetzen dira. ") + (mobile ? L("TXIMISTA botoia agertzen da arrakala bat hurbil dagoenean (eta ⋯ menuan).") : L("X tekla.")),
+          () => coach("bomb", "X", "X: TXIMISTARRIA · jaurti eta urrundu", "", "useBtn", "TXIMISTA: jaurti eta urrundu", ""),
+        );
+      },
+    },
     katea: {
       get() {
         if (!saved.items.includes("katea")) saved.items.push("katea");
@@ -93,6 +107,9 @@
     if (!flag("lepoa")) return ["Artzainen lepoa: haize-errotari putz HAIZE-ADARRAz (" + d(-74.6, -99) + " m).", [-74.6, -99, 9.4]];
     if (!flag("tartalo")) return ["Lepoaren goian: TARTALOREN KOBA (" + d(-70, -128) + " m).", [-70, -127, 12]];
     if (!flag("irati-tartalo")) return ["Itzuli herrira: Iratiri Tartaloren berri eman.", [0, 41, 0]];
+    if (!flag("jentilatea")) return ["Harrespilako trikuharria: jentilen atea. Jo ESNATU haren ondoan (" + d(45, -69.5) + " m).", [45, -67, 9]];
+    if (!flag("errolan")) return ["JENTILBARATZA: trikuharriaren azpian, jentilen hiria (" + d(45, -69.5) + " m).", [45, -69.4, 9]];
+    if (!flag("irati-errolan")) return ["Itzuli herrira: Iratiri Errolanen berri eman.", [0, 41, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {
@@ -147,7 +164,16 @@
     );
   }
   /* zati honen amaiera: zazpi argi zeruan, Anboto aldean — hiru askatuta (berdeak), lau falta (gorriak) */
-  const ZAZPI = { g: null, t: -1, armed: false, lights: [], storm: null };
+  const ZAZPI = { g: null, t: -1, armed: false, lights: [], storm: null, green: 3 };
+  /* argien koloreak: askatutako zaindariak berde, besteak gorri */
+  function zazpiColors(green) {
+    ZAZPI.green = green;
+    for (const L0 of ZAZPI.lights) {
+      const c = L0.i < green ? "#3dff8a" : "#ff2a1a";
+      L0.halo.material.color.set(c);
+      L0.core.material.color.set(c);
+    }
+  }
   function zazpiBuild() {
     const g = new T.Group();
     g.position.set(20, 125, -170);
@@ -196,10 +222,15 @@
     }
     if (ZAZPI.t < 0) return;
     const t = (ZAZPI.t += dt);
+    /* laugarren argia: gorritik berdera (Errolan aske) */
+    if (ZAZPI.turn && ZAZPI.green < 4 && t > 4.2) {
+      zazpiColors(4);
+      SND.stinger(true);
+    }
     ZAZPI.storm.material.opacity = clamp(t * 0.6, 0, 1);
     for (const L0 of ZAZPI.lights) {
       const k = clamp((t - 0.8 - L0.i * 0.45) * 2, 0, 1),
-        beat = L0.i < 3 ? 1 : 0.7 + Math.sin(time * 5 + L0.i) * 0.3;
+        beat = L0.i < ZAZPI.green ? 1 : 0.7 + Math.sin(time * 5 + L0.i) * 0.3;
       L0.halo.material.opacity = k * 0.85 * beat;
       L0.core.material.opacity = k * beat;
     }
@@ -223,7 +254,34 @@
         ZAZPI.t = -1;
         if (ZAZPI.g) ZAZPI.g.visible = false;
         title("JARRAITZEKO…", "");
-        notify(L("Hiru leize amaituta. Harana zurea da: arnasa-zatiak, ardiak, burdin-harriak, erronkak… Anboto laster."), "", 8);
+        notify(L("Hiru leize amaituta. Harrespilako trikuharriak dardara egiten du: jo ESNATU haren ondoan."), "", 8);
+        hud();
+      },
+    );
+  }
+  /* laugarren zatiaren amaiera: Errolan aske → laugarren argia berde */
+  function iratiJentil() {
+    if (flag("irati-errolan") || ZONE.cur !== "ibarra") return;
+    if (!ZAZPI.g) zazpiBuild();
+    zazpiColors(3);
+    ZAZPI.armed = true;
+    ZAZPI.turn = true;
+    say(
+      [
+        ["IRATI", "Amaiur! Gau osoan harrespilako harriek dardara egin dute… eta gero, trumoi bat, zerua garbi zegoen arren.", "", 0, 41, 0],
+        ["AMAIUR", "Errolan, jentilen azkena. Aske dago. Ekaitz bat zeraman bularrean.", "", P.x, P.z, 0],
+        ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Laugarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["GAUEKO", "Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan, nire hiru zaindari gogorrenak zain daude.", "", P.x, P.z, 0],
+        ["IRATI", "Ez gaude bakarrik: herriak berriro jotzen du txalaparta, gauez eta egunez.", "", 0, 41, 0],
+        ["AMAIUR", "Jentilen zerura, beraz. Hodeien gainera.", "", P.x, P.z, 0],
+      ],
+      () => {
+        flagSet("irati-errolan");
+        ZAZPI.t = -1;
+        ZAZPI.turn = false;
+        if (ZAZPI.g) ZAZPI.g.visible = false;
+        title("JARRAITZEKO…", "");
+        notify(L("Lau leize amaituta. Harana zurea da: arnasa-zatiak, misterioak, erronkak… Jentilen zerua laster."), "", 8);
         hud();
       },
     );

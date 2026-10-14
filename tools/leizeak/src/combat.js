@@ -206,6 +206,10 @@
     e.eye.dispose();
     if (e.rigid) e.rigid.dispose();
     if (e.shine) e.shine.material.dispose();
+    if (e.dizzy) {
+      scene.remove(e.dizzy);
+      e.dizzy.material.dispose();
+    }
     e.shield.material.dispose();
     e.aura.material.dispose();
     for (const c of e.aura.children) c.material.dispose();
@@ -258,8 +262,9 @@
         }
       }
   }
-  function hitEnemy(e, dmg, nx, nz) {
-    if (e.era !== -1 && e.era !== phase) {
+  /* force: garaiaren ezkutua gorabehera (TXIMISTARRIA) */
+  function hitEnemy(e, dmg, nx, nz, force) {
+    if (!force && e.era !== -1 && e.era !== phase) {
       /* ezkutua: beste garaian dago */
       e.shield.material.opacity = 1.6;
       fxBurst(e.x, e.y + 0.9, e.z, { n: 10, speed: 5, life: 0.3, size: 0.22, color: ERA_COL[e.era], grav: 3 });
@@ -279,7 +284,7 @@
       }
       return;
     }
-    const mult = e.state === "stun" ? 2 : 1;
+    const mult = e.state === "stun" || e.parried > 0 ? 2 : 1;
     e.hp -= dmg * mult;
     e.flash = 0.1;
     e.hitT = 0.3;
@@ -379,6 +384,7 @@
       e.t += dt;
       e.flash = Math.max(0, e.flash - dt);
       e.stun = Math.max(0, e.stun - dt);
+      if (e.parried > 0) parriedUpdate(e, dt);
       const dx = P.x - e.x,
         dz = P.z - e.z,
         d = Math.hypot(dx, dz) || 1,
@@ -420,14 +426,14 @@
           wx = ux;
           wz = uz;
           e.dir = Math.atan2(ux, uz);
-          if (d < 2.6 && e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz);
+          if (d < 2.6 && e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), (e.atk0 = time);
         } else if (e.state === "wind") {
           e.dir = Math.atan2(e.lx, e.lz);
           if (e.t > 0.46 / Math.sqrt(K)) (e.state = "lunge"), (e.t = 0);
         } else if (e.state === "lunge") {
           e.vx = e.lx * 10.5;
           e.vz = e.lz * 10.5;
-          if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) playerHit(e.D.dmg, e.x, e.z);
+          if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) meleeHit(e, e.D.dmg);
           if (e.t > 0.22) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "recover" && e.t > 0.6) (e.state = "chase"), (e.t = 0);
       } else if (e.type === "eye") {
@@ -463,16 +469,16 @@
           wz = uz;
           e.dir = Math.atan2(ux, uz);
           e.cd -= dt * K;
-          if (e.cd <= 0 && d > 3 && d < 12) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), telegraph(e);
-          else if (d < 2.2 && e.t > 0.5) (e.state = "wind"), (e.t = 0.4), (e.lx = ux), (e.lz = uz), telegraph(e);
+          if (e.cd <= 0 && d > 3 && d < 12) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), (e.atk0 = time), telegraph(e);
+          else if (d < 2.2 && e.t > 0.5) (e.state = "wind"), (e.t = 0.4), (e.lx = ux), (e.lz = uz), (e.atk0 = time), telegraph(e);
         } else if (e.state === "wind") {
           if (e.t > 0.9) (e.state = "charge"), (e.t = 0), SND.roar();
         } else if (e.state === "charge") {
           e.vx = e.lx * 14;
           e.vz = e.lz * 14;
           if (d < e.D.r + 0.6 && Math.abs(P.y - e.y) < 1.6) {
-            playerHit(e.D.dmg, e.x, e.z);
-            (e.state = "recover"), (e.t = 0);
+            meleeHit(e, e.D.dmg);
+            if (e.state === "charge") (e.state = "recover"), (e.t = 0);
           }
           if (e.t > 1.1) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "stun") {
@@ -810,6 +816,7 @@
   /* jokalaria zauritua (bultzada bitartean ukiezina) */
   function playerHit(dmg, fx, fz) {
     if (damageTime > 0 || respawnTimer || P.dashT > 0 || MAG.spinT < 0.3 || GET.on) return;
+    climbDrop();
     P.hp -= dmg;
     comboBreak();
     damageTime = 1.05;
@@ -825,7 +832,108 @@
     hud();
     if (P.hp <= 0 && !potionSave()) fall(true);
   }
-  function damageNumber(e, n) {
+  /* ==================================================================
+     ALDARATU · etsaiaren kolpea desbideratu (une zehatzean)
+     Kolpea iristen den unean SORGINKERIA sakatu, etsaiari begira: kolpea
+     desbideratzen da, etsaia zorabiatuta geratzen da eta une batez kalte
+     bikoitza jasotzen du. Segidan sakatzeak (zalaparta) ez du balio.
+     EZKUTUA altxatuta (INDARRA kargatzen): kolpea geldiarazten du, baina
+     karga galtzen da eta Amaiur atzera bultzatuta.
+     ================================================================== */
+  const GUARD = { since: 9, win: 0, safe: 0, n: 0, blocks: 0, pressT: -9 };
+  const PARRY_WIN = 0.24,
+    PARRY_SPAM = 0.6;
+  /* sakatze fisiko bakoitzean (ez buffer-ak): leihoa ireki, aurreko sakatzea urrun badago */
+  function guardPress() {
+    GUARD.win = GUARD.since > PARRY_SPAM ? PARRY_WIN : 0;
+    GUARD.since = 0;
+    GUARD.pressT = time;
+  }
+  function guardUpdate(dt) {
+    GUARD.since += dt;
+    GUARD.win = Math.max(0, GUARD.win - dt);
+    GUARD.safe = Math.max(0, GUARD.safe - dt);
+  }
+  function facing(x, z, lim) {
+    const a = Math.atan2(x - P.x, z - P.z);
+    return Math.abs(Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle))) < lim;
+  }
+  /* etsaiaren gorputz-kolpea (ezpata, oldarraldia): aldaratu, blokeatu edo zauria */
+  function meleeHit(e, dmg) {
+    if (GUARD.safe > 0 || damageTime > 0 || respawnTimer || P.dashT > 0 || MAG.spinT < 0.3 || GET.on) return;
+    /* sakatzea etsaiaren erasoa hasi ondoren izan behar da (erreakzioa, ez zorizko tiroa) */
+    const front = facing(e.x, e.z, 1.75);
+    if (front && GUARD.win > 0 && GUARD.pressT >= (e.atk0 ?? -1e9)) return parry(e);
+    if (front && MAG.charging && MAG.charge > 0.12) return guardBlock(e, dmg);
+    playerHit(dmg, e.x, e.z);
+  }
+  function parry(e) {
+    GUARD.win = 0;
+    GUARD.safe = 0.4;
+    GUARD.n++;
+    const dx = e.x - P.x,
+      dz = e.z - P.z,
+      d = Math.hypot(dx, dz) || 1,
+      cx = P.x + (dx / d) * 0.9,
+      cy = P.y + 1.2,
+      cz = P.z + (dz / d) * 0.9;
+    if (e.type === "brute") (e.state = "stun"), (e.t = 0);
+    else (e.state = "recover"), (e.t = -1);
+    e.stun = Math.max(e.stun, 1.6);
+    e.parried = 2.4;
+    e.vx = (dx / d) * (9 / e.D.mass);
+    e.vz = (dz / d) * (9 / e.D.mass);
+    P.vx = -(dx / d) * 2.5;
+    P.vz = -(dz / d) * 2.5;
+    P.dashReady = true;
+    P.dashes = Math.max(P.dashes, 1);
+    hitStop = Math.max(hitStop, 0.13);
+    slowmo = Math.max(slowmo, 0.3);
+    shake(0.16);
+    haptic(35);
+    SND.parry();
+    MAG.shieldMat.opacity = 0.95;
+    MAG.shieldFlash = 0.8;
+    fxRing(cx, cy, cz, "#fff1a8", 2.6, 0.35);
+    fxBurst(cx, cy, cz, { n: 26, speed: 6, up: 1, life: 0.4, size: 0.28, color: "#fff1a8", grav: 2 });
+    damageNumber(e, L("ALDARATUA!"), "#fff1a8");
+    coachDone("parry");
+    notifyOnce("aldaratu", L("ALDARATUA! Etsaia zorabiatuta: orain kalte bikoitza jasotzen du."), "");
+  }
+  function guardBlock(e, dmg) {
+    GUARD.safe = 0.35;
+    GUARD.blocks++;
+    const dx = e.x - P.x,
+      dz = e.z - P.z,
+      d = Math.hypot(dx, dz) || 1;
+    if (e.state === "lunge" || e.state === "charge") (e.state = "recover"), (e.t = 0);
+    e.vx = (dx / d) * (5 / e.D.mass);
+    e.vz = (dz / d) * (5 / e.D.mass);
+    P.vx = -(dx / d) * (dmg >= 2 ? 10 : 7);
+    P.vz = -(dz / d) * (dmg >= 2 ? 10 : 7);
+    MAG.charge = 0;
+    MAG.shieldFlash = 0.6;
+    SND.clang(1.2);
+    shake(0.12);
+    haptic(25);
+    hitStop = Math.max(hitStop, 0.05);
+    fxBurst(P.x + (dx / d) * 0.9, P.y + 1.2, P.z + (dz / d) * 0.9, { n: 16, speed: 4, life: 0.3, size: 0.24, color: "#ffffff", grav: 2 });
+    notifyOnce("blokeatu", L("EZKUTUA: kolpea geldiarazi duzu (karga galduta). Une zehatzean sakatuz gero: ALDARATU!"), "");
+  }
+  /* zorabiatuta: izar-distira buruaren gainean */
+  function parriedUpdate(e, dt) {
+    e.parried = Math.max(0, e.parried - dt);
+    if (!e.dizzy) {
+      e.dizzy = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#fff1a8", transparent: true, blending: T.AdditiveBlending, depthWrite: false }));
+      e.dizzy.scale.setScalar(0.7);
+      scene.add(e.dizzy);
+    }
+    const a = time * 7;
+    e.dizzy.visible = e.parried > 0 && e.state !== "dead";
+    e.dizzy.position.set(e.x + Math.cos(a) * 0.45, e.y + (e.H || 1.1) * 2 + 0.35, e.z + Math.sin(a) * 0.45);
+    e.dizzy.material.opacity = Math.min(1, e.parried * 2) * (0.7 + 0.3 * Math.sin(time * 20));
+  }
+  function damageNumber(e, n, col) {
     let el = NUMS.find((x) => x.t > 0.7);
     if (!el) {
       if (NUMS.length > 10) return;
@@ -840,7 +948,7 @@
     el.y = e.y + e.H * 2 + 0.3;
     el.z = e.z;
     el.d.textContent = n;
-    el.d.style.color = n >= 3 ? "#fff1a8" : "#ffffff";
+    el.d.style.color = col || (n >= 3 ? "#fff1a8" : "#ffffff");
   }
   function numbersUpdate(dt) {
     const v = new T.Vector3();

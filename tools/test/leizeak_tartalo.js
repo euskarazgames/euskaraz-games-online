@@ -279,7 +279,7 @@ const { launch } = require('./_browser');
   await T(60);
   ok(cine && (await flag('irati-tartalo')), 'Irati: amaierako eszena (JARRAITZEKO…)');
   const obj2 = await ev(() => __game.objective());
-  ok(/Harana zurea/.test(obj2[0]), 'helburua: harana libre', obj2[0]);
+  ok(/trikuharria/.test(obj2[0]), 'helburua: Harrespilako trikuharria (laugarren leizea)', obj2[0]);
 
   console.log(errs.length ? errs.join('\n') : 'ERRORERIK EZ');
   console.log(fails ? `${fails} HUTS` : 'DENA ONDO');

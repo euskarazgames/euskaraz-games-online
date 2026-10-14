@@ -26,12 +26,13 @@
     return along > -1 && along < range + r && side < 2.2 + Math.max(0, along) * 0.45 + r;
   }
   function hornBlow() {
-    if (!hasHorn() || !started || paused || TXALA.on || cinematic || WIND.cd > 0 || respawnTimer || GET.on) return;
+    if (!hasHorn() || !started || paused || TXALA.on || cinematic || WIND.cd > 0 || respawnTimer || GET.on || P.climb) return;
     WIND.cd = 0.85;
     const a = hornDir(),
       dx = Math.sin(a),
       dz = Math.cos(a);
     P.angle = a;
+    bombsBlow(dx, dz);
     hero.rotation.y = a;
     MAG.aimT = 0.35;
     castAnim("Spellcast_Shoot", 1.5, 6);

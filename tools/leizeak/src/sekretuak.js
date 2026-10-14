@@ -6,6 +6,8 @@
        KATEAz igo.
      · ERROTA ZAHARRA (ekialdeko zelaiak): haize-errota geldia; HAIZE-ADARRAz
        biratuta, lurreko ate-tranpa irekitzen da.
+     · DORRE ZAHARRA (ekialdeko larreak): hegoaldeko horma heuraz; IRAGANEAN igo.
+     · JENTIL-HARRIA (mendebaldea): harri arrakalatua; TXIMISTARRIAz apurtu.
      Bakoitza egunkarian agertzen da ikusten denean (pista batekin).
      ================================================================== */
   const SECRETS = [];
@@ -123,6 +125,44 @@
         },
       });
       SECRETS.push({ id: "errota", x, z, y, r: 12, name: L("Errota zaharra"), hint: L("Errota zahar geldia ekialdeko zelaietan. Haizeak ahaztu du: HAIZE-ADARRA."), see: L("Errota zahar bat, geldi. Haizeak ahaztu du…"), done: () => saved.chests.includes("h-errota"), chest: C });
+    }
+    /* --- DORRE ZAHARRA (HEURA: iraganean igo) --- */
+    {
+      const x = 80,
+        z = -72,
+        y0 = nightGround(x, z, 20),
+        top = y0 + 10,
+        t = slab({ x, z, y: top, w: 5, d: 5, h: top + 1 });
+      t.slick = true;
+      t.m.material = stackMaterial();
+      const merl = [];
+      for (let i = 0; i < 4; i++)
+        for (const s of [-1, 1]) {
+          const o = -1.9 + i * 1.27;
+          merl.push([at(new T.BoxGeometry(0.75, 0.9, 0.75), o, 0.45, s * 2.15), "#8c877c"]);
+          merl.push([at(new T.BoxGeometry(0.75, 0.9, 0.75), s * 2.15, 0.45, o), "#8c877c"]);
+        }
+      const crown = new T.Mesh(mergeColored(merl), new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, flatShading: true }));
+      crown.position.set(x, top, z);
+      crown.castShadow = true;
+      BP.add(crown);
+      ivySide(t, "s", y0, { phase: 0, id: "dorrea-heura" });
+      const C = chest("h-dorrea", x, top, z - 0.6, PI, { t: "piece", id: "dorrea" });
+      SECRETS.push({ id: "dorrea", x, z, y: y0, r: 15, name: L("Dorre zaharra"), hint: L("Dorre zaharra heuraz jantzita: IRAGANEAN, heura bizirik dagoenean, igo daiteke. Goian, kutxa bat."), see: L("Dorre zahar bat, heuraz jantzita… goian zerbaitek distira egiten du."), done: () => saved.chests.includes("h-dorrea"), chest: C });
+    }
+    /* --- JENTIL-HARRIA (TXIMISTARRIA) --- */
+    {
+      const x = -50,
+        z = -6,
+        y = nightGround(x, z, 20),
+        C = chest("h-harkaitza", x, y, z, 0.3, { t: "piece", id: "harkaitza" }, { hidden: !isCleared("s-harkaitza") });
+      crackRock("s-harkaitza", x, y, z, 2.2, {
+        onBreak: () => {
+          revealChest(C);
+          notify(L("Jentil-harria apurtu da: azpian, kutxa bat!"), "", 3);
+        },
+      });
+      SECRETS.push({ id: "harkaitza", x, z, y, r: 13, name: L("Jentil-harria"), hint: L("Jentil batek jaurtitako harri arrakalatua: TXIMISTA batek apurtuko luke (Jentilbaratzan)."), see: L("Harri erraldoi bat, arrakalatua. Kondairak dio jentil batek jaurti zuela mendi batetik…"), done: () => saved.chests.includes("h-harkaitza"), chest: C });
     }
   }
   /* hubUpdate-tik: hurbiltzean pista (eta egunkarian sartu) */

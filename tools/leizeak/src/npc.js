@@ -243,6 +243,9 @@
       );
     if (f("basajaun") && !f("cliff")) return mariCliff();
     if (f("tartalo") && !f("irati-tartalo")) return iratiFinale();
+    if (f("errolan") && !f("irati-errolan")) return iratiJentil();
+    if (f("irati-tartalo") && !f("errolan"))
+      return talk(N, [["IRATI", "Harrespilako trikuharria… amonak esaten zuen jentilak haren azpian ezkutatu zirela, zeruan argi bitxi bat ikusi zutenean. Jo ESNATU haren ondoan."]]);
     if (f("lamia") && !f("irati-lamia"))
       return talk(
         N,
@@ -254,6 +257,7 @@
         ],
         () => flagSet("irati-lamia"),
       );
+    if (f("irati-errolan")) return talk(N, [["IRATI", "Jentilen zerua… hodeien gainean. Zazpi argietatik hiru gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
     if (f("tartalo")) return talk(N, [["IRATI", "Anboto… Mariren etxea. Zazpi argietatik lau gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
     if (f("lamia")) return talk(N, [["IRATI", f("lepoa") ? "Tartaloren koba lepoaren goian dago. Argia eraman, Amaiur." : "Artzainen lepoa: haize-errotari putz egin adarrarekin."]]);
     if (saved.flags.includes("basajaun"))
@@ -386,6 +390,12 @@
           else go();
         },
       );
+    if (f("errolan")) return talk(N, [["JENTIL ZAHARRA", "Errolan aske… Mende askoan lehen aldiz, jentilen hiriak lo egiten du lasai. Eskerrik asko, sorgin txikia."]]);
+    if (f("irati-tartalo"))
+      return talk(N, [
+        ["JENTIL ZAHARRA", "Trikuharria… gure atea. Errolan, gure artean handiena, azpian lo dago, baina ekaitz bat entzuten dut haren bularrean."],
+        ["JENTIL ZAHARRA", "Jo ESNATU harriaren ondoan. Barruan, harri arrakalatuak: tximista batek bakarrik apurtzen ditu."],
+      ]);
     return talk(N, [["JENTIL ZAHARRA", "Basajaunek basoa zaintzen zuen. Orain itzalak zaintzen du bera. Askatu ezazu."]]);
   }
   /* ardiak: aurkitutakoan Amaiurri jarraitzen diote hesiraino */

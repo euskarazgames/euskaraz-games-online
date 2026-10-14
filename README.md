@@ -101,8 +101,16 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   sutegia (zaindaria) eta tresna berria: **SUGAR-IZPIA** (INDARRA kargatuta, izpia sua da: egurrezko
   hesiak erre, Gauekoren izotza urtu, burdinazko galdarak urrutitik piztu). Etsai nagusia,
   **Tartalo**: lau galdarak piztu → argiak itsutzen du → begia jo (edo bere harkaitza itzuli).
+- **JENTILBARATZA**, laugarren leizea (harrespilako trikuharriaren azpian, ESNATU jota): jentilen hiri
+  lurperatua, gela konektatuekin eta itzulerekin. **SUTONDOAK** (atseden-lekuak: arnasa bete eta
+  kontrol-puntua), **LASTERBIDEAK** (alde batetik bakarrik irekitzen diren barrak; arrakala bat apurtuta,
+  jauzi atalasera), heura (iraganean), kanpaiak sareen atzean (urrutitik jo; bat orainean bakarrik),
+  harresia (borroka), harri-zaina (zaindaria) eta tresna berria: **TXIMISTARRIA**. Dorrean, zutabea
+  heuraz igo eta goitik lau kanpaia (bat harri arrakalatu baten barruan). Etsai nagusia, **Errolan**,
+  jentil erraldoia: harkaitza altxatzen duenean TXIMISTARRIA oinetara (harria buruan erortzen zaio),
+  eskukada ALDARATU, harkaitzak EZKUTUAz itzuli → belauniko, bularreko ekaitz-harria agerian.
 - Istorioa: hiru zaindari askatu ondoren, Irati eta azken eszena (zazpi argi Anboto gainean:
-  hiru berde, lau gorri) → JARRAITZEKO…
+  hiru berde, lau gorri); Errolan askatu ondoren, laugarren argia berde bihurtzen da → JARRAITZEKO…
 - **EGUNA ETA GAUA** ("gaua gauekoentzat, eguna egunekoentzat"): Basajaun askatu ondoren haranean
   denbora ibiltzen da. Gauez: izarrak eta ilargia, leiho eta farolak, Amaiurren kriseilua; herritarrak
   etxera doaz eta plazako txalapartak bakarrik jotzen du; **Gauekoren itzalak** zelaietan (herrira ez
@@ -114,15 +122,27 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   **POTTOKA** erritmoa irakasten du (◀ ▶ ◀ ◀): haranean jotzean lauhazka dator. E: igo / jaitsi; zaldiz
   azkarrago (Shift: lauhazka), jauzi luzea; leizeetara ez da sartzen.
 - **HARANEKO MISTERIOAK**: leizeetako tresnekin itzultzeko sekretuak — sasi-habia (SUA), ibaiko
-  harri-zutabea (KATEA) eta errota zaharra (HAIZE-ADARRA). Egunkarian agertzen dira ikusten direnean.
+  harri-zutabea (KATEA), errota zaharra (HAIZE-ADARRA), dorre zaharra (HEURA, iraganean) eta
+  jentil-harria (TXIMISTARRIA). Egunkarian agertzen dira ikusten direnean.
+- **HEURA**: heuraz estalitako hormak igo daitezke (hormaren kontra bultzatu; gora/behera/alboetara;
+  JAUZI: gora edo atzera; goian ertzera igotzen da). Heura iraganean dago bizirik; orainean izoztuta,
+  eta garaia aldatuz gero, erori egiten zara.
+- **TXIMISTARRIA** (X edo TXIMISTA botoia): tximista-harria jaurti; 1.7 s-ra trumoia: harri
+  arrakalatuak apurtu, itzalak zorabiatu (garaiaren ezkutua gorabehera), kanpaiak jo. Hiru harri,
+  berez betetzen dira; HAIZE-ADARRAk bultzatzen ditu. Kontuz: hurbilegi, Amaiur ere zauritzen du.
+- **KANPAIAK**: jentilen kanpaiak, SORGINKERIAz urrutitik jotzen dira (sareen atzean ere); denak
+  batera, denbora-mugarekin.
 - Borroka: **FINKATU** (T edo ◎: helburua finkatu, kamerak biak enkoadratzen ditu, Amaiur alboka
-  mugitzen da) eta **EZKUTUA** (INDARRA kargatzean aurretik datozen proiektilak itzultzen dira; Basajauni
-  bere harkaitza itzuliz gero, zorabiatuta geratzen da).
+  mugitzen da), **EZKUTUA** (INDARRA kargatzean aurretik datozen proiektilak itzultzen dira eta
+  gorputz-kolpeak geldiarazten, karga galduta; Basajauni bere harkaitza itzuliz gero, zorabiatuta geratzen
+  da) eta **ALDARATU** (kolpea iristen den unean SORGINKERIA sakatu, behin: kolpea desbideratzen da,
+  etsaia zorabiatuta geratzen da eta kalte bikoitza jasotzen du; segidan sakatzeak ez du balio).
 - Kamera eta irakurgarritasuna: Amaiur eta kameraren artean dauden hormak, etxeak eta zuhaitzak
   gardendu egiten dira; leizean argia zuziek eta Amaiurren kriseiluak ematen dute.
 - Iturburua: `tools/leizeak/src/` (`game.js`, `world.js`, `haran.js`, `ibarra.js`, `bizia.js`,
   `quests.js`, `npc.js`, `txalaparta.js`, `dungeon.js`, `rooms.js`, `boss.js`, `lamia.js`, `tartalo.js`,
-  `adarra.js`, `gaua.js`, `pottoka.js`, `sekretuak.js`, `chain.js`, `lockon.js`, `story.js`, `combat.js`,
+  `adarra.js`, `gaua.js`, `pottoka.js`, `sekretuak.js`, `heura.js`, `tximista.js`, `jentilak.js`,
+  `chain.js`, `lockon.js`, `story.js`, `combat.js`,
   `magic.js`, `craft.js`, `runes.js`, `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
   ateratzen da; modeloak `tools/leizeak/models/*.glb`-tik, `build_models.mjs`-ek KayKit-etik sortuak).
 - Fitxategi bakarreko bertsioa: `python3 tools/leizeak/standalone.py /tmp/LEIZEEN_DEIA.html`
@@ -132,8 +152,10 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   `tools/test/leizeak_quests.js` (misterioak eta eginkizunak), `tools/test/leizeak_lamia.js`
   (bigarren leizea osoa), `tools/test/leizeak_tartalo.js` (hirugarren leizea osoa, ezkutuka eta
   Tartalo barne, eta azken eszena), `tools/test/leizeak_gaua.js` (eguna/gaua, EGUZKILORE, itzalak,
-  arima-argiak), `tools/test/leizeak_pottoka.js` (Beltxa: deitu, igo, lauhazka, jaitsi) eta
-  `tools/test/leizeak_sekretuak.js` (haraneko hiru misterioak). Proba-kakoa: `?test` → `window.__game`.
+  arima-argiak), `tools/test/leizeak_pottoka.js` (Beltxa: deitu, igo, lauhazka, jaitsi),
+  `tools/test/leizeak_sekretuak.js` (haraneko bost misterioak), `tools/test/leizeak_trebetasunak.js`
+  (ALDARATU, EZKUTUA, HEURA, TXIMISTARRIA, kanpaiak) eta `tools/test/leizeak_jentilak.js` (laugarren
+  leizea osoa: trikuharria, sutondoa, lasterbideak, Errolan eta azken eszena). Proba-kakoa: `?test` → `window.__game`.
 
 ## Cloudflare
 - Worker-aren izena: `euskaraz-games-online`

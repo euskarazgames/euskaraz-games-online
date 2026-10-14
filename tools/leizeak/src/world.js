@@ -12,6 +12,7 @@
     leizea: { name: "BASAJAUNEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     lamia: { name: "LAMIEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     tartalo: { name: "TARTALOREN KOBA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    jentil: { name: "JENTILBARATZA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
   };
   const ZONE = { cur: "ibarra", fadeT: 0, pending: null };
   const AREA = { cur: "", seen: new Set() };
@@ -487,30 +488,39 @@
     BREAKABLES.push(B);
     return B;
   }
+  const breakHere = (B) => !B.broken && B.buildZone === ZONES[ZONE.cur].group && (B.phase === undefined || B.phase === phase);
+  const breakHit = (B, x, y, z, r) => (B.hitTest ? B.hitTest(x, y, z, r) : Math.hypot(B.x - x, B.z - z) < r + B.r && Math.abs(y - (B.y + 0.8)) < 2);
+  function breakOne(B) {
+    B.broken = true;
+    if (B.custom) return B.custom();
+    B.m.visible = false;
+    B.solid.r = 0;
+    fxBurst(B.x, B.y + 0.8, B.z, { n: 18, speed: 4, up: 3, life: 0.7, size: 0.28, color: "#b8956a", grav: 9 });
+    SND.crumble();
+    if (B.onBreak) B.onBreak();
+    else dropLoot(B.x, B.y, B.z, B.kind === "barrel" ? 3 : 2);
+  }
   function breakAt(x, y, z, r, fire) {
     for (const B of BREAKABLES) {
-      if (B.broken || B.buildZone !== ZONES[ZONE.cur].group || (B.phase !== undefined && B.phase !== phase)) continue;
-      if (B.hitTest ? B.hitTest(x, y, z, r) : Math.hypot(B.x - x, B.z - z) < r + B.r && Math.abs(y - (B.y + 0.8)) < 2) {
-        /* egurrezko hesiak eta Gauekoren izotza: SUA bakarrik */
-        if (B.fireOnly && !fire) {
-          if (B.hint) notifyOnce("fire-" + B.kind, B.hint, "");
-          fxBurst(x, y, z, { n: 6, speed: 2, life: 0.3, size: 0.2, color: "#ffffff", grav: 4 });
-          return B;
-        }
-        if (B.custom) {
-          B.broken = true;
-          B.custom();
-          return B;
-        }
-        B.broken = true;
-        B.m.visible = false;
-        B.solid.r = 0;
-        fxBurst(B.x, B.y + 0.8, B.z, { n: 18, speed: 4, up: 3, life: 0.7, size: 0.28, color: "#b8956a", grav: 9 });
-        SND.crumble();
-        if (B.onBreak) B.onBreak();
-        else dropLoot(B.x, B.y, B.z, B.kind === "barrel" ? 3 : 2);
-        return true;
+      if (!breakHere(B) || !breakHit(B, x, y, z, r)) continue;
+      /* egurrezko hesiak eta Gauekoren izotza: SUA bakarrik; harri arrakalatuak: TXIMISTARRIA bakarrik */
+      if ((B.fireOnly && !fire) || B.bombOnly) {
+        if (B.hint) notifyOnce((B.bombOnly ? "bomb-" : "fire-") + B.kind, B.hint, "");
+        fxBurst(x, y, z, { n: 6, speed: 2, life: 0.3, size: 0.2, color: "#ffffff", grav: 4 });
+        return B;
       }
+      breakOne(B);
+      return B.custom ? B : true;
     }
     return false;
+  }
+  /* TXIMISTARRIAren eztanda: eremuko guztiak (sua behar dutenak izan ezik) */
+  function bombBreak(x, y, z, r) {
+    let n = 0;
+    for (const B of BREAKABLES) {
+      if (!breakHere(B) || B.fireOnly || !breakHit(B, x, y, z, r)) continue;
+      breakOne(B);
+      n++;
+    }
+    return n;
   }

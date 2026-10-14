@@ -196,7 +196,7 @@ body:has(#bossHud:not([hidden])) #phaseHud{top:86px}
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>LEIZEEN DEIA<small id="loadLabel">Txalapartak gauez jotzen du…</small><i><b id="loadBar"></b></i></div></div>
 <section id="start"><div class="eyebrow">EUSKARAZ GAMES · OIHARTZUN II</div><h1>LEIZEEN<span>DEIA</span></h1><p id="premise"></p><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>01 · BASAJAUNEN LEIZEA</span><div><button id="credits">KREDITUAK</button> <button id="reset">↺</button></div></div></section>
 <div id="top"><button id="camBtn" aria-label="Kamera">⤢</button><button id="audio">♫</button><button id="quality" aria-label="Kalitatea">HD</button><button id="pause" hidden>Ⅱ</button></div>
-<div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="coins">0</b><small id="coinLab"></small></div><div id="keyBox" hidden><b id="keyN">0</b><small id="keyLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
+<div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="coins">0</b><small id="coinLab"></small></div><div id="keyBox" hidden><b id="keyN">0</b><small id="keyLab"></small></div><div id="bombBox" hidden><b id="bombN">●●●</b><small id="bombLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
 <div id="touch"><div id="stick"><i id="knob"></i></div><div id="touchActions"><button id="weaveBtn"></button><button id="recallBtn" aria-label="Finkatu"></button><button id="phaseBtn"></button><button id="dashBtn">BULTZADA</button><button id="jumpBtn"></button><button id="useBtn"></button><button id="attackBtn"></button><button id="craftBtn"></button><button id="rotateBtn" aria-label="Biratu"></button></div></div>
 <section id="cinema" hidden><div id="cineTop"><span>LEIZEEN DEIA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="katea" hidden></div><div id="shieldHint" hidden></div><div id="zoneFade"></div><div id="itemGet" hidden role="dialog" aria-live="polite"><div class="ig"><div id="getIcon"></div><h2 id="getName"></h2><p id="getText"></p><small id="getMore">JARRAITU ›</small></div></div><div id="txala" hidden><div class="tx"><header><b id="txTitle"></b><button id="txClose" aria-label="Itxi">✕</button></header><div id="txSeq"></div><p id="txMsg"></p><div id="txPads"><button id="txL"><span>◀</span>EZKERRA<small>← · J</small></button><button id="txR"><span>▶</span>ESKUINA<small>→ · K</small></button></div><div id="txKnown"></div></div></div><div id="fatal" hidden></div>
 <script>/**
@@ -5349,6 +5349,16 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         tone("sine", 190, t, 0.002, 0.12, 0.14 + d * 0.04, sfx, 70);
         tone("square", 2400, t, 0.001, 0.02, 0.02, sfx, 1800);
       },
+      /* ALDARATU: burdin-hots distiratsua eta akorde laburra */
+      parry() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        tone("sine", 2350, t, 0.001, 0.5, 0.07, sfx, 2300);
+        tone("sine", 3520, t, 0.001, 0.35, 0.04, sfx, 3480);
+        tone("triangle", 587.33, t + 0.02, 0.004, 0.45, 0.05, sfx);
+        tone("triangle", 880, t + 0.05, 0.004, 0.5, 0.04, sfx);
+        hiss(t, 0.08, 0.1, "highpass", 6000, 3200, 0.7);
+      },
       clang(v = 1) {
         if (!ok()) return;
         const t = ctx.currentTime;
@@ -5369,11 +5379,37 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         tone("sawtooth", 96, t, 0.02, 0.6, 0.07, sfx, 58);
         hiss(t, 0.5, 0.06, "lowpass", 700, 200, 1.2);
       },
-      thud() {
+      thud(v = 1) {
         if (!ok()) return;
         const t = ctx.currentTime;
-        tone("sine", 82, t, 0.002, 0.3, 0.16, sfx, 40);
-        hiss(t, 0.18, 0.08, "lowpass", 900, 150, 0.7);
+        tone("sine", 82, t, 0.002, 0.3, 0.16 * v, sfx, 40);
+        hiss(t, 0.18, 0.08 * v, "lowpass", 900, 150, 0.7);
+      },
+      /* jentil-kanpaiak (bakoitzak bere nota) */
+      kanpaia(i = 0) {
+        if (!ok()) return;
+        toll([392, 523.25, 659.25, 783.99, 587.33][i % 5], ctx.currentTime, 0.05, 3.4);
+      },
+      /* TXIMISTARRIA: jaurtiketa, metxa (txinpartak) eta trumoia */
+      throwStone() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.22, 0.07, "bandpass", 600, 2400, 1.4);
+        tone("sine", 300, t, 0.004, 0.15, 0.03, sfx, 520);
+      },
+      crackle(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        for (let i = 0; i < 3; i++) hiss(t + i * 0.025, 0.02, 0.05 * v, "highpass", 5000 + Math.random() * 2000, 3000, 1.5);
+      },
+      thunder() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.05, 0.22, "highpass", 7000, 3000, 0.7);
+        tone("sawtooth", 1400, t, 0.001, 0.08, 0.05, sfx, 300);
+        tone("sine", 120, t, 0.003, 0.9, 0.24, sfx, 32);
+        hiss(t + 0.02, 1.4, 0.16, "lowpass", 2200, 90, 0.8);
+        hiss(t + 0.35, 1.2, 0.08, "lowpass", 600, 70, 0.6);
       },
       shot() {
         if (!ok()) return;
@@ -5541,6 +5577,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         lfo.start(t);
         o.stop(t + 1.25);
         lfo.stop(t + 1.25);
+      },
+      /* heura: hostoen karraska */
+      leaves(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.18, 0.05 * v, "bandpass", 2400, 900, 1.6);
+        hiss(t + 0.06, 0.12, 0.03 * v, "highpass", 4200, 2600, 1);
       },
       /* gaua: kilkerrak (uda) eta hontza */
       cricket() {
@@ -5872,6 +5915,12 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         COACH.seen.has("attack") &&
         ENEMIES.some((e) => e.state === "wind" && Math.hypot(e.x - P.x, e.z - P.z) < 4) &&
         coach("dodge", "F", "BULTZADA bitartean ukiezina zara: saihestu erasoa!", "", "dashBtn", "BULTZADA bitartean ukiezina zara: saihestu erasoa!", "")) ||
+      (fight &&
+        COACH.seen.has("dodge") &&
+        ENEMIES.some((e) => e.state === "wind" && e.type !== "eye" && Math.hypot(e.x - P.x, e.z - P.z) < 5) &&
+        coach("parry", "J", "Kolpea iristean sakatu J (behin): ALDARATU — etsaia zorabiatuta", "", "attackBtn", "Kolpea iristean sakatu SORGINKERIA (behin): ALDARATU", "")) ||
+      (!fight && !P.climb && ivyNear(2.5) && ivyLive(ivyNear(2.5)) &&
+        coach("climb", "W", "HEURA: bultzatu hormaren kontra eta igo", "", "stick", "HEURA: makila hormarantz, igotzeko", "")) ||
       (!fight && zoneHere() && !CRAFT.on && !zoneHere().solved &&
         coach("craft", "G", "ESKU MAGIKOA: egin klik kaxa batean eta arrastatu", "", "useBtn", "ESKUA: ukitu kaxa bat eta arrastatu", "")) ||
       (P.travel < 4 && coach("move", "WASD", "Mugitu: WASD edo geziak · Shift: korrika", "", "stick", "Mugitu: arrastatu makila · ertzeraino, korrika", "")) ||
@@ -6294,7 +6343,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺" };
+  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "giltza" || icon === "giltzanagusia") {
@@ -6336,6 +6385,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       e.rotation.x = PI / 2.4;
       e.scale.setScalar(0.62);
       g.add(e);
+    } else if (icon === "tximista") {
+      const st = new T.Mesh(new T.DodecahedronGeometry(0.3, 0), new T.MeshStandardMaterial({ color: "#3b4250", roughness: 0.5, metalness: 0.3, emissive: new T.Color("#7fc8ff"), emissiveIntensity: 1.6, flatShading: true }));
+      g.add(st);
+      for (let i = 0; i < 3; i++) {
+        const bolt = new T.Mesh(new T.ConeGeometry(0.05, 0.5, 4), material("#dff3ff", 2));
+        bolt.position.set(Math.cos(i * 2.1) * 0.42, 0.1, Math.sin(i * 2.1) * 0.42);
+        bolt.rotation.z = Math.cos(i * 2.1) * 0.6;
+        g.add(bolt);
+      }
     } else if (icon === "sugarra") {
       const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));
       rod.rotation.z = 0.4;
@@ -6558,6 +6616,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     e.eye.dispose();
     if (e.rigid) e.rigid.dispose();
     if (e.shine) e.shine.material.dispose();
+    if (e.dizzy) {
+      scene.remove(e.dizzy);
+      e.dizzy.material.dispose();
+    }
     e.shield.material.dispose();
     e.aura.material.dispose();
     for (const c of e.aura.children) c.material.dispose();
@@ -6610,8 +6672,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         }
       }
   }
-  function hitEnemy(e, dmg, nx, nz) {
-    if (e.era !== -1 && e.era !== phase) {
+  /* force: garaiaren ezkutua gorabehera (TXIMISTARRIA) */
+  function hitEnemy(e, dmg, nx, nz, force) {
+    if (!force && e.era !== -1 && e.era !== phase) {
       /* ezkutua: beste garaian dago */
       e.shield.material.opacity = 1.6;
       fxBurst(e.x, e.y + 0.9, e.z, { n: 10, speed: 5, life: 0.3, size: 0.22, color: ERA_COL[e.era], grav: 3 });
@@ -6631,7 +6694,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       }
       return;
     }
-    const mult = e.state === "stun" ? 2 : 1;
+    const mult = e.state === "stun" || e.parried > 0 ? 2 : 1;
     e.hp -= dmg * mult;
     e.flash = 0.1;
     e.hitT = 0.3;
@@ -6731,6 +6794,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       e.t += dt;
       e.flash = Math.max(0, e.flash - dt);
       e.stun = Math.max(0, e.stun - dt);
+      if (e.parried > 0) parriedUpdate(e, dt);
       const dx = P.x - e.x,
         dz = P.z - e.z,
         d = Math.hypot(dx, dz) || 1,
@@ -6772,14 +6836,14 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           wx = ux;
           wz = uz;
           e.dir = Math.atan2(ux, uz);
-          if (d < 2.6 && e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz);
+          if (d < 2.6 && e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), (e.atk0 = time);
         } else if (e.state === "wind") {
           e.dir = Math.atan2(e.lx, e.lz);
           if (e.t > 0.46 / Math.sqrt(K)) (e.state = "lunge"), (e.t = 0);
         } else if (e.state === "lunge") {
           e.vx = e.lx * 10.5;
           e.vz = e.lz * 10.5;
-          if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) playerHit(e.D.dmg, e.x, e.z);
+          if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) meleeHit(e, e.D.dmg);
           if (e.t > 0.22) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "recover" && e.t > 0.6) (e.state = "chase"), (e.t = 0);
       } else if (e.type === "eye") {
@@ -6815,16 +6879,16 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           wz = uz;
           e.dir = Math.atan2(ux, uz);
           e.cd -= dt * K;
-          if (e.cd <= 0 && d > 3 && d < 12) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), telegraph(e);
-          else if (d < 2.2 && e.t > 0.5) (e.state = "wind"), (e.t = 0.4), (e.lx = ux), (e.lz = uz), telegraph(e);
+          if (e.cd <= 0 && d > 3 && d < 12) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), (e.atk0 = time), telegraph(e);
+          else if (d < 2.2 && e.t > 0.5) (e.state = "wind"), (e.t = 0.4), (e.lx = ux), (e.lz = uz), (e.atk0 = time), telegraph(e);
         } else if (e.state === "wind") {
           if (e.t > 0.9) (e.state = "charge"), (e.t = 0), SND.roar();
         } else if (e.state === "charge") {
           e.vx = e.lx * 14;
           e.vz = e.lz * 14;
           if (d < e.D.r + 0.6 && Math.abs(P.y - e.y) < 1.6) {
-            playerHit(e.D.dmg, e.x, e.z);
-            (e.state = "recover"), (e.t = 0);
+            meleeHit(e, e.D.dmg);
+            if (e.state === "charge") (e.state = "recover"), (e.t = 0);
           }
           if (e.t > 1.1) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "stun") {
@@ -7162,6 +7226,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* jokalaria zauritua (bultzada bitartean ukiezina) */
   function playerHit(dmg, fx, fz) {
     if (damageTime > 0 || respawnTimer || P.dashT > 0 || MAG.spinT < 0.3 || GET.on) return;
+    climbDrop();
     P.hp -= dmg;
     comboBreak();
     damageTime = 1.05;
@@ -7177,7 +7242,108 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     hud();
     if (P.hp <= 0 && !potionSave()) fall(true);
   }
-  function damageNumber(e, n) {
+  /* ==================================================================
+     ALDARATU · etsaiaren kolpea desbideratu (une zehatzean)
+     Kolpea iristen den unean SORGINKERIA sakatu, etsaiari begira: kolpea
+     desbideratzen da, etsaia zorabiatuta geratzen da eta une batez kalte
+     bikoitza jasotzen du. Segidan sakatzeak (zalaparta) ez du balio.
+     EZKUTUA altxatuta (INDARRA kargatzen): kolpea geldiarazten du, baina
+     karga galtzen da eta Amaiur atzera bultzatuta.
+     ================================================================== */
+  const GUARD = { since: 9, win: 0, safe: 0, n: 0, blocks: 0, pressT: -9 };
+  const PARRY_WIN = 0.24,
+    PARRY_SPAM = 0.6;
+  /* sakatze fisiko bakoitzean (ez buffer-ak): leihoa ireki, aurreko sakatzea urrun badago */
+  function guardPress() {
+    GUARD.win = GUARD.since > PARRY_SPAM ? PARRY_WIN : 0;
+    GUARD.since = 0;
+    GUARD.pressT = time;
+  }
+  function guardUpdate(dt) {
+    GUARD.since += dt;
+    GUARD.win = Math.max(0, GUARD.win - dt);
+    GUARD.safe = Math.max(0, GUARD.safe - dt);
+  }
+  function facing(x, z, lim) {
+    const a = Math.atan2(x - P.x, z - P.z);
+    return Math.abs(Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle))) < lim;
+  }
+  /* etsaiaren gorputz-kolpea (ezpata, oldarraldia): aldaratu, blokeatu edo zauria */
+  function meleeHit(e, dmg) {
+    if (GUARD.safe > 0 || damageTime > 0 || respawnTimer || P.dashT > 0 || MAG.spinT < 0.3 || GET.on) return;
+    /* sakatzea etsaiaren erasoa hasi ondoren izan behar da (erreakzioa, ez zorizko tiroa) */
+    const front = facing(e.x, e.z, 1.75);
+    if (front && GUARD.win > 0 && GUARD.pressT >= (e.atk0 ?? -1e9)) return parry(e);
+    if (front && MAG.charging && MAG.charge > 0.12) return guardBlock(e, dmg);
+    playerHit(dmg, e.x, e.z);
+  }
+  function parry(e) {
+    GUARD.win = 0;
+    GUARD.safe = 0.4;
+    GUARD.n++;
+    const dx = e.x - P.x,
+      dz = e.z - P.z,
+      d = Math.hypot(dx, dz) || 1,
+      cx = P.x + (dx / d) * 0.9,
+      cy = P.y + 1.2,
+      cz = P.z + (dz / d) * 0.9;
+    if (e.type === "brute") (e.state = "stun"), (e.t = 0);
+    else (e.state = "recover"), (e.t = -1);
+    e.stun = Math.max(e.stun, 1.6);
+    e.parried = 2.4;
+    e.vx = (dx / d) * (9 / e.D.mass);
+    e.vz = (dz / d) * (9 / e.D.mass);
+    P.vx = -(dx / d) * 2.5;
+    P.vz = -(dz / d) * 2.5;
+    P.dashReady = true;
+    P.dashes = Math.max(P.dashes, 1);
+    hitStop = Math.max(hitStop, 0.13);
+    slowmo = Math.max(slowmo, 0.3);
+    shake(0.16);
+    haptic(35);
+    SND.parry();
+    MAG.shieldMat.opacity = 0.95;
+    MAG.shieldFlash = 0.8;
+    fxRing(cx, cy, cz, "#fff1a8", 2.6, 0.35);
+    fxBurst(cx, cy, cz, { n: 26, speed: 6, up: 1, life: 0.4, size: 0.28, color: "#fff1a8", grav: 2 });
+    damageNumber(e, L("ALDARATUA!"), "#fff1a8");
+    coachDone("parry");
+    notifyOnce("aldaratu", L("ALDARATUA! Etsaia zorabiatuta: orain kalte bikoitza jasotzen du."), "");
+  }
+  function guardBlock(e, dmg) {
+    GUARD.safe = 0.35;
+    GUARD.blocks++;
+    const dx = e.x - P.x,
+      dz = e.z - P.z,
+      d = Math.hypot(dx, dz) || 1;
+    if (e.state === "lunge" || e.state === "charge") (e.state = "recover"), (e.t = 0);
+    e.vx = (dx / d) * (5 / e.D.mass);
+    e.vz = (dz / d) * (5 / e.D.mass);
+    P.vx = -(dx / d) * (dmg >= 2 ? 10 : 7);
+    P.vz = -(dz / d) * (dmg >= 2 ? 10 : 7);
+    MAG.charge = 0;
+    MAG.shieldFlash = 0.6;
+    SND.clang(1.2);
+    shake(0.12);
+    haptic(25);
+    hitStop = Math.max(hitStop, 0.05);
+    fxBurst(P.x + (dx / d) * 0.9, P.y + 1.2, P.z + (dz / d) * 0.9, { n: 16, speed: 4, life: 0.3, size: 0.24, color: "#ffffff", grav: 2 });
+    notifyOnce("blokeatu", L("EZKUTUA: kolpea geldiarazi duzu (karga galduta). Une zehatzean sakatuz gero: ALDARATU!"), "");
+  }
+  /* zorabiatuta: izar-distira buruaren gainean */
+  function parriedUpdate(e, dt) {
+    e.parried = Math.max(0, e.parried - dt);
+    if (!e.dizzy) {
+      e.dizzy = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#fff1a8", transparent: true, blending: T.AdditiveBlending, depthWrite: false }));
+      e.dizzy.scale.setScalar(0.7);
+      scene.add(e.dizzy);
+    }
+    const a = time * 7;
+    e.dizzy.visible = e.parried > 0 && e.state !== "dead";
+    e.dizzy.position.set(e.x + Math.cos(a) * 0.45, e.y + (e.H || 1.1) * 2 + 0.35, e.z + Math.sin(a) * 0.45);
+    e.dizzy.material.opacity = Math.min(1, e.parried * 2) * (0.7 + 0.3 * Math.sin(time * 20));
+  }
+  function damageNumber(e, n, col) {
     let el = NUMS.find((x) => x.t > 0.7);
     if (!el) {
       if (NUMS.length > 10) return;
@@ -7192,7 +7358,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     el.y = e.y + e.H * 2 + 0.3;
     el.z = e.z;
     el.d.textContent = n;
-    el.d.style.color = n >= 3 ? "#fff1a8" : "#ffffff";
+    el.d.style.color = col || (n >= 3 ? "#fff1a8" : "#ffffff");
   }
   function numbersUpdate(dt) {
     const v = new T.Vector3();
@@ -7361,8 +7527,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     return best;
   }
   /* --------------------------- jaurtiketak --------------------------- */
-  function attack() {
-    if (!started || paused || respawnTimer || CRAFT.on || TXALA.on || CHAIN.state !== "idle") return;
+  /* buffered: aurreko sakatze goiztiar bat (ez da sakatze berria ALDARATUrako) */
+  function attack(buffered) {
+    if (!started || paused || respawnTimer || CRAFT.on || TXALA.on || CHAIN.state !== "idle" || P.climb) return;
+    if (buffered !== true) guardPress();
     if (P.dashT > 0 || MAG.dashEnd < 0.14) return spinStrike();
     if (MAG.cd > 0) {
       MAG.buf = 0.2; /* sakatze goiztiarra gorde */
@@ -7520,7 +7688,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       const hitB = !gone && breakAt(b.x, b.y, b.z, 0.35, b.fire);
       if (hitB) {
         boltImpact(b, b.x, b.y, b.z, false);
-        if (!b.big || hitB.fireOnly) gone = true;
+        if (!b.big || hitB.fireOnly || hitB.bombOnly) gone = true;
       }
       /* itzalen proiektilak: izpiak suntsitzen ditu */
       for (let j = SHOTS.length - 1; j >= 0 && !gone; j--) {
@@ -7701,6 +7869,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   /* --------------------------- eguneratzea (tick bakoitzean) --------------------------- */
   function magicUpdate(dt) {
+    guardUpdate(dt);
     ATK.t += dt;
     ATK.waveCd = Math.max(0, ATK.waveCd - dt);
     MAG.cd = Math.max(0, MAG.cd - dt);
@@ -7711,13 +7880,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       MAG.buf -= dt;
       if (MAG.cd <= 0) {
         MAG.buf = 0;
-        attack();
+        attack(true);
       }
     }
     /* mantendu → kargatu; askatu → INDARRA */
     if (ATK.hold && started && !paused && !CRAFT.on && !respawnTimer) {
       MAG.holdT += dt;
-      if (!MAG.charging && MAG.holdT > 0.3 && MAG.spinT > 0.45 && P.dashT <= 0) chargeStart();
+      if (!MAG.charging && MAG.holdT > 0.3 && MAG.spinT > 0.45 && P.dashT <= 0 && !P.climb) chargeStart();
     } else {
       if (MAG.charging) chargeRelease();
       MAG.holdT = 0;
@@ -7832,23 +8001,47 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       g.add(ped);
       stone = new T.Mesh(new T.ConeGeometry(0.5, 1.3, 8), new T.MeshStandardMaterial({ color: "#3a2a20", emissive: new T.Color(col), emissiveIntensity: 0.3, roughness: 0.6, transparent: true, opacity: 0.95 }));
       stone.position.y = 0.6;
+    } else if (kind === "kanpaia") {
+      /* jentil-kanpaia: harrizko arkua eta brontzezko kanpaia zintzilik (kulunka egiten du) */
+      const sm = rockMaterial();
+      for (const s of [-1, 1]) {
+        const post = new T.Mesh(new T.BoxGeometry(0.45, 3.7, 0.45), sm);
+        post.position.set(s * 1.25, -1.6, 0);
+        post.castShadow = true;
+        g.add(post);
+      }
+      const lintel = new T.Mesh(new T.BoxGeometry(3.1, 0.45, 0.6), sm);
+      lintel.position.y = 0.42;
+      g.add(lintel);
+      const pivot = new T.Group();
+      pivot.position.y = 0.18;
+      g.add(pivot);
+      const prof = [[0.04, 0], [0.3, -0.05], [0.41, -0.24], [0.45, -0.58], [0.53, -0.92], [0.7, -1.12], [0.73, -1.2], [0.64, -1.18]].map(([r, y]) => new T.Vector2(r, y));
+      stone = new T.Mesh(new T.LatheGeometry(prof, 18), new T.MeshStandardMaterial({ color: "#b4823c", metalness: 0.75, roughness: 0.34, emissive: new T.Color(col), emissiveIntensity: 0.2, side: T.DoubleSide }));
+      stone.castShadow = true;
+      pivot.add(stone);
+      const clap = new T.Mesh(new T.SphereGeometry(0.13, 8, 6), material("#3a2a1a"));
+      clap.position.y = -1.02;
+      pivot.add(clap);
     } else {
       stone = new T.Mesh(new T.OctahedronGeometry(0.62, 0), new T.MeshStandardMaterial({ color: "#5d5070", emissive: new T.Color(col), emissiveIntensity: 0.6, roughness: 0.3, flatShading: true }));
       stone.scale.y = 1.4;
     }
-    g.add(stone);
+    if (!stone.parent) g.add(stone);
     const halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.7 }));
     halo.scale.setScalar(kind === "galdara" ? 4.6 : 3.2);
     if (kind === "fire") halo.position.y = 0.7;
     if (kind === "galdara") halo.position.y = 1.1;
+    if (kind === "kanpaia") halo.position.y = -0.6;
     g.add(halo);
     const timer = new T.Mesh(new T.RingGeometry(1.05, 1.22, 48, 1, 0, TAU), new T.MeshBasicMaterial({ color: "#f3e6ff", transparent: true, opacity: 0, side: T.DoubleSide, depthWrite: false }));
     if (kind === "fire" || kind === "galdara") timer.position.y = kind === "galdara" ? 2.3 : 1.6;
+    if (kind === "kanpaia") timer.position.y = 1.35;
     g.add(timer);
     const ghost = new T.Mesh(stone.geometry, new T.MeshBasicMaterial({ color: col, wireframe: true, transparent: true, opacity: 0.25 }));
     ghost.scale.copy(stone.scale);
     ghost.position.copy(stone.position);
-    g.add(ghost);
+    (kind === "kanpaia" ? stone.parent : g).add(ghost);
     g.position.set(x, y, z);
     (BP || scene).add(g);
     return { g, stone, halo, timer, ghost };
@@ -7868,13 +8061,14 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       const set = { D, solved: saved.cleared.includes(D.id), list: [], group: BP };
       for (const [x, y, z, era] of D.runes) {
         const hot = D.kind === "fire" || D.kind === "galdara",
-          v = runeMesh(x, y, z, hot ? "#ff9d4a" : era < 0 ? "#c9a8ff" : ERA_COL[era], D.kind);
+          v = runeMesh(x, y, z, hot ? "#ff9d4a" : D.kind === "kanpaia" && era < 0 ? "#ffcf7a" : era < 0 ? "#c9a8ff" : ERA_COL[era], D.kind);
         const R = {
           rune: true,
           x,
-          y: hot ? y + 0.6 : y,
+          y: hot ? y + 0.6 : D.kind === "kanpaia" ? y - 0.55 : y,
           z,
-          r: D.kind === "galdara" ? 1.4 : D.kind === "fire" ? 1.1 : 0.9,
+          r: D.kind === "galdara" ? 1.4 : D.kind === "fire" ? 1.1 : D.kind === "kanpaia" ? 1.1 : 0.9,
+          idx: set.list.length,
           era,
           needFire: !!D.needFire,
           lit: false,
@@ -7893,12 +8087,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function runeSetHit(set, R) {
     R.lit = true;
     R.t = set.D.time;
-    SND.rune(true);
+    if (set.D.kind === "kanpaia") {
+      R.swv = (R.swv || 0) + 3.4;
+      SND.kanpaia(R.idx);
+    } else SND.rune(true);
     const hot = set.D.kind === "fire" || set.D.kind === "galdara";
     fxBurst(R.x, R.y, R.z, { n: 18, speed: 3, up: 1, life: 0.6, size: 0.3, color: hot ? "#ffb35c" : R.era < 0 ? "#d9c2ff" : ERA_COL[R.era], grav: -1 });
     const n = set.list.filter((r) => r.lit).length;
     if (n < set.list.length) {
-      notify((set.D.kind === "galdara" ? L("GALDARA ") : set.D.kind === "fire" ? L("SUTEGIA ") : L("ERRUNA ")) + n + " / " + set.list.length + L(" · azkar, besteak!"), "", 2);
+      notify((set.D.kind === "galdara" ? L("GALDARA ") : set.D.kind === "fire" ? L("SUTEGIA ") : set.D.kind === "kanpaia" ? L("KANPAIA ") : L("ERRUNA ")) + n + " / " + set.list.length + L(" · azkar, besteak!"), "", 2);
       return;
     }
     /* denak batera */
@@ -7927,6 +8124,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           R.stone.material.emissiveIntensity = on ? 2.2 : 0.15;
           R.stone.material.color.set(on ? "#ff7a2a" : "#2a2420");
           R.halo.material.opacity = on ? 0.9 : 0.12;
+        } else if (set.D.kind === "kanpaia") {
+          /* kulunka: malguki moteldua */
+          R.swv = ((R.swv || 0) - (R.sw || 0) * 28 * dt) * Math.exp(-dt * 1.1);
+          R.sw = (R.sw || 0) + R.swv * dt;
+          R.stone.parent.rotation.x = R.sw;
+          R.stone.material.emissiveIntensity = set.solved ? 0.8 : R.lit ? 1.7 : 0.12 + (here ? 0.18 + 0.12 * Math.sin(time * 4 + R.x) : 0);
+          R.halo.material.opacity = set.solved ? 0.3 : R.lit ? 0.9 : here ? 0.32 : 0.1;
         } else {
           R.g.rotation.y += dt * (R.lit ? 3 : 0.8);
           R.g.position.y = R.y + Math.sin(time * 2 + R.x) * 0.15;
@@ -8129,7 +8333,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     coachDone("craft-drag");
   }
   function craftToggle() {
-    if (P.riding) return;
+    if (P.riding || P.climb) return;
     if (CRAFT.on) craftExit();
     else if (!craftEnter())
       notify(L("ESKU MAGIKOA: kaxak dauden geletan bakarrik."), "", 3);
@@ -8405,6 +8609,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     leizea: { name: "BASAJAUNEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     lamia: { name: "LAMIEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     tartalo: { name: "TARTALOREN KOBA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    jentil: { name: "JENTILBARATZA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
   };
   const ZONE = { cur: "ibarra", fadeT: 0, pending: null };
   const AREA = { cur: "", seen: new Set() };
@@ -8880,32 +9085,41 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     BREAKABLES.push(B);
     return B;
   }
+  const breakHere = (B) => !B.broken && B.buildZone === ZONES[ZONE.cur].group && (B.phase === undefined || B.phase === phase);
+  const breakHit = (B, x, y, z, r) => (B.hitTest ? B.hitTest(x, y, z, r) : Math.hypot(B.x - x, B.z - z) < r + B.r && Math.abs(y - (B.y + 0.8)) < 2);
+  function breakOne(B) {
+    B.broken = true;
+    if (B.custom) return B.custom();
+    B.m.visible = false;
+    B.solid.r = 0;
+    fxBurst(B.x, B.y + 0.8, B.z, { n: 18, speed: 4, up: 3, life: 0.7, size: 0.28, color: "#b8956a", grav: 9 });
+    SND.crumble();
+    if (B.onBreak) B.onBreak();
+    else dropLoot(B.x, B.y, B.z, B.kind === "barrel" ? 3 : 2);
+  }
   function breakAt(x, y, z, r, fire) {
     for (const B of BREAKABLES) {
-      if (B.broken || B.buildZone !== ZONES[ZONE.cur].group || (B.phase !== undefined && B.phase !== phase)) continue;
-      if (B.hitTest ? B.hitTest(x, y, z, r) : Math.hypot(B.x - x, B.z - z) < r + B.r && Math.abs(y - (B.y + 0.8)) < 2) {
-        /* egurrezko hesiak eta Gauekoren izotza: SUA bakarrik */
-        if (B.fireOnly && !fire) {
-          if (B.hint) notifyOnce("fire-" + B.kind, B.hint, "");
-          fxBurst(x, y, z, { n: 6, speed: 2, life: 0.3, size: 0.2, color: "#ffffff", grav: 4 });
-          return B;
-        }
-        if (B.custom) {
-          B.broken = true;
-          B.custom();
-          return B;
-        }
-        B.broken = true;
-        B.m.visible = false;
-        B.solid.r = 0;
-        fxBurst(B.x, B.y + 0.8, B.z, { n: 18, speed: 4, up: 3, life: 0.7, size: 0.28, color: "#b8956a", grav: 9 });
-        SND.crumble();
-        if (B.onBreak) B.onBreak();
-        else dropLoot(B.x, B.y, B.z, B.kind === "barrel" ? 3 : 2);
-        return true;
+      if (!breakHere(B) || !breakHit(B, x, y, z, r)) continue;
+      /* egurrezko hesiak eta Gauekoren izotza: SUA bakarrik; harri arrakalatuak: TXIMISTARRIA bakarrik */
+      if ((B.fireOnly && !fire) || B.bombOnly) {
+        if (B.hint) notifyOnce((B.bombOnly ? "bomb-" : "fire-") + B.kind, B.hint, "");
+        fxBurst(x, y, z, { n: 6, speed: 2, life: 0.3, size: 0.2, color: "#ffffff", grav: 4 });
+        return B;
       }
+      breakOne(B);
+      return B.custom ? B : true;
     }
     return false;
+  }
+  /* TXIMISTARRIAren eztanda: eremuko guztiak (sua behar dutenak izan ezik) */
+  function bombBreak(x, y, z, r) {
+    let n = 0;
+    for (const B of BREAKABLES) {
+      if (!breakHere(B) || B.fireOnly || !breakHit(B, x, y, z, r)) continue;
+      breakOne(B);
+      n++;
+    }
+    return n;
   }
   /* ==================================================================
      HARANA · Ibarraren lurra (altuera-sare bakarra)
@@ -10445,6 +10659,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function hubUpdate(dt) {
     dayClock(dt);
     secretsUpdate();
+    dolmenUpdate(dt);
     stonesUpdate(dt);
     watersUpdate(dt);
     for (const [i, c] of CLOUDS.entries()) c.position.x += dt * (0.6 + (i % 3) * 0.3) * (1 - phaseBlend * 0.85);
@@ -11252,12 +11467,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     return along > -1 && along < range + r && side < 2.2 + Math.max(0, along) * 0.45 + r;
   }
   function hornBlow() {
-    if (!hasHorn() || !started || paused || TXALA.on || cinematic || WIND.cd > 0 || respawnTimer || GET.on) return;
+    if (!hasHorn() || !started || paused || TXALA.on || cinematic || WIND.cd > 0 || respawnTimer || GET.on || P.climb) return;
     WIND.cd = 0.85;
     const a = hornDir(),
       dx = Math.sin(a),
       dz = Math.cos(a);
     P.angle = a;
+    bombsBlow(dx, dz);
     hero.rotation.y = a;
     MAG.aimT = 0.35;
     castAnim("Spellcast_Shoot", 1.5, 6);
@@ -11543,7 +11759,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   /* ---------------------------- ireki / itxi ---------------------------- */
   function txalaOpen() {
-    if (!started || paused || cinematic || TXALA.on || CRAFT.on || GET.on) return;
+    if (!started || paused || cinematic || TXALA.on || CRAFT.on || GET.on || P.climb) return;
     if (!txalaKnown().length) {
       notify(L("Oraindik ez dakizu erritmorik. Pello eta Peiok irakatsiko dizute plazan."), "", 3.5);
       return;
@@ -11709,7 +11925,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (k === "esnatu") {
       fxRing(P.x, P.y + 0.2, P.z, "#ffd38a", 14, 0.9);
       SND.wake();
-      const n = (ZONE.cur === "ibarra" ? wakeStones(24) : 0) + (DGS[ZONE.cur] ? dungeonWake() : 0);
+      const n = (ZONE.cur === "ibarra" ? wakeStones(24) + dolmenWake() : 0) + (DGS[ZONE.cur] ? dungeonWake() : 0);
       if (!n) notify(L("Harriek lo jarraitzen dute. Ez dago ezer esnatzeko hemen."), "", 2.6);
     } else if (k === "entzun") echoPulse();
     else if (k === "eguzkilore") eguzkiloreEffect();
@@ -11950,6 +12166,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function chainFire() {
     if (!started || paused || !hasChain() || CHAIN.state !== "idle" || TXALA.on || CRAFT.on || respawnTimer) return;
     if (P.riding) return notify(L("Jaitsi pottokatik katea erabiltzeko."), "", 2);
+    if (P.climb) return;
     const t = chainCandidates()[0];
     if (!t) {
       notify(L("Ez dago suge-eraztunik irismenean."), "", 1.6);
@@ -12351,6 +12568,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       );
     if (f("basajaun") && !f("cliff")) return mariCliff();
     if (f("tartalo") && !f("irati-tartalo")) return iratiFinale();
+    if (f("errolan") && !f("irati-errolan")) return iratiJentil();
+    if (f("irati-tartalo") && !f("errolan"))
+      return talk(N, [["IRATI", "Harrespilako trikuharria… amonak esaten zuen jentilak haren azpian ezkutatu zirela, zeruan argi bitxi bat ikusi zutenean. Jo ESNATU haren ondoan."]]);
     if (f("lamia") && !f("irati-lamia"))
       return talk(
         N,
@@ -12362,6 +12582,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ],
         () => flagSet("irati-lamia"),
       );
+    if (f("irati-errolan")) return talk(N, [["IRATI", "Jentilen zerua… hodeien gainean. Zazpi argietatik hiru gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
     if (f("tartalo")) return talk(N, [["IRATI", "Anboto… Mariren etxea. Zazpi argietatik lau gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
     if (f("lamia")) return talk(N, [["IRATI", f("lepoa") ? "Tartaloren koba lepoaren goian dago. Argia eraman, Amaiur." : "Artzainen lepoa: haize-errotari putz egin adarrarekin."]]);
     if (saved.flags.includes("basajaun"))
@@ -12494,6 +12715,12 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           else go();
         },
       );
+    if (f("errolan")) return talk(N, [["JENTIL ZAHARRA", "Errolan aske… Mende askoan lehen aldiz, jentilen hiriak lo egiten du lasai. Eskerrik asko, sorgin txikia."]]);
+    if (f("irati-tartalo"))
+      return talk(N, [
+        ["JENTIL ZAHARRA", "Trikuharria… gure atea. Errolan, gure artean handiena, azpian lo dago, baina ekaitz bat entzuten dut haren bularrean."],
+        ["JENTIL ZAHARRA", "Jo ESNATU harriaren ondoan. Barruan, harri arrakalatuak: tximista batek bakarrik apurtzen ditu."],
+      ]);
     return talk(N, [["JENTIL ZAHARRA", "Basajaunek basoa zaintzen zuen. Orain itzalak zaintzen du bera. Askatu ezazu."]]);
   }
   /* ardiak: aurkitutakoan Amaiurri jarraitzen diote hesiraino */
@@ -12756,8 +12983,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         }
     }
     /* hormak: alde bakoitza bere sortan (gardentzeko) eta talka-blokeak hutsuneen bi aldeetan */
+    /* wallH: talka-hormen altuera (ertz garaiak dituzten geletan, gainetik ibiltzerik ez) */
     const doors = opts.doors || {},
-      wallH = 7;
+      wallH = opts.wallH || 7;
     const SIDES = {
       n: { len: w, at: (o) => [x + o, z - d / 2], rot: 0, seg: [x - w / 2, z - d / 2, x + w / 2, z - d / 2], col: (a, b) => wallBlock(x + (a + b) / 2, z - d / 2, b - a, 1.6, 0, y, wallH) },
       s: { len: w, at: (o) => [x + o, z + d / 2], rot: PI, seg: [x - w / 2, z + d / 2, x + w / 2, z + d / 2], col: (a, b) => wallBlock(x + (a + b) / 2, z + d / 2, b - a, 1.6, 0, y, wallH) },
@@ -13067,6 +13295,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     center: () => (bk() ? bk().center() : { x: 0, y: 0, z: 0, h: 3 }),
     hit: (n, b) => bk() && bk().hit(n, b),
     chained: () => bk() && bk().chained && bk().chained(),
+    /* TXIMISTARRIA: etsai nagusiak badaki (eztanda bat hurbil) eta jaurtiketaren helburua */
+    bomb: (x, y, z, r) => bk() && bk().bomb && bk().bomb(x, y, z, r),
+    bombAim: () => (bk() && bk().bombAim ? bk().bombAim() : null),
     /* itzulitako harkaitza: etsai nagusia zorabiatu (baldin badaki) */
     stagger: () => bk() && bk().stagger && bk().stagger(),
     canStagger: () => BOSS.on && !!bk() && !!bk().stagger,
@@ -13269,6 +13500,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function bossReset() {
     lamiaReset();
     tartaloReset();
+    jentilReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;
@@ -13357,6 +13589,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function bossUpdate(dt) {
     lamiaUpdate(dt);
     tartaloUpdate(dt);
+    jentilBossUpdate(dt);
     miniUpdate(dt);
     /* zaindariaren gelan sartzean: borroka */
     const F = DUNGEON.rooms.F;
@@ -13626,6 +13859,20 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         );
       },
     },
+    tximistarria: {
+      get() {
+        if (!saved.items.includes("tximistarria")) saved.items.push("tximistarria");
+        TXB.n = TXB.max;
+        persist();
+        translate();
+        itemGet(
+          "tximista",
+          L("TXIMISTARRIA"),
+          L("Tximistak lurrera botatako harria. Jaurti: trumoiak harri arrakalatuak apurtzen ditu eta itzalak zorabiatzen. Urrun egon! Hiru harri; berez betetzen dira. ") + (mobile ? L("TXIMISTA botoia agertzen da arrakala bat hurbil dagoenean (eta ⋯ menuan).") : L("X tekla.")),
+          () => coach("bomb", "X", "X: TXIMISTARRIA · jaurti eta urrundu", "", "useBtn", "TXIMISTA: jaurti eta urrundu", ""),
+        );
+      },
+    },
     katea: {
       get() {
         if (!saved.items.includes("katea")) saved.items.push("katea");
@@ -13686,6 +13933,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (!flag("lepoa")) return ["Artzainen lepoa: haize-errotari putz HAIZE-ADARRAz (" + d(-74.6, -99) + " m).", [-74.6, -99, 9.4]];
     if (!flag("tartalo")) return ["Lepoaren goian: TARTALOREN KOBA (" + d(-70, -128) + " m).", [-70, -127, 12]];
     if (!flag("irati-tartalo")) return ["Itzuli herrira: Iratiri Tartaloren berri eman.", [0, 41, 0]];
+    if (!flag("jentilatea")) return ["Harrespilako trikuharria: jentilen atea. Jo ESNATU haren ondoan (" + d(45, -69.5) + " m).", [45, -67, 9]];
+    if (!flag("errolan")) return ["JENTILBARATZA: trikuharriaren azpian, jentilen hiria (" + d(45, -69.5) + " m).", [45, -69.4, 9]];
+    if (!flag("irati-errolan")) return ["Itzuli herrira: Iratiri Errolanen berri eman.", [0, 41, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {
@@ -13740,7 +13990,16 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     );
   }
   /* zati honen amaiera: zazpi argi zeruan, Anboto aldean — hiru askatuta (berdeak), lau falta (gorriak) */
-  const ZAZPI = { g: null, t: -1, armed: false, lights: [], storm: null };
+  const ZAZPI = { g: null, t: -1, armed: false, lights: [], storm: null, green: 3 };
+  /* argien koloreak: askatutako zaindariak berde, besteak gorri */
+  function zazpiColors(green) {
+    ZAZPI.green = green;
+    for (const L0 of ZAZPI.lights) {
+      const c = L0.i < green ? "#3dff8a" : "#ff2a1a";
+      L0.halo.material.color.set(c);
+      L0.core.material.color.set(c);
+    }
+  }
   function zazpiBuild() {
     const g = new T.Group();
     g.position.set(20, 125, -170);
@@ -13789,10 +14048,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     if (ZAZPI.t < 0) return;
     const t = (ZAZPI.t += dt);
+    /* laugarren argia: gorritik berdera (Errolan aske) */
+    if (ZAZPI.turn && ZAZPI.green < 4 && t > 4.2) {
+      zazpiColors(4);
+      SND.stinger(true);
+    }
     ZAZPI.storm.material.opacity = clamp(t * 0.6, 0, 1);
     for (const L0 of ZAZPI.lights) {
       const k = clamp((t - 0.8 - L0.i * 0.45) * 2, 0, 1),
-        beat = L0.i < 3 ? 1 : 0.7 + Math.sin(time * 5 + L0.i) * 0.3;
+        beat = L0.i < ZAZPI.green ? 1 : 0.7 + Math.sin(time * 5 + L0.i) * 0.3;
       L0.halo.material.opacity = k * 0.85 * beat;
       L0.core.material.opacity = k * beat;
     }
@@ -13816,7 +14080,34 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ZAZPI.t = -1;
         if (ZAZPI.g) ZAZPI.g.visible = false;
         title("JARRAITZEKO…", "");
-        notify(L("Hiru leize amaituta. Harana zurea da: arnasa-zatiak, ardiak, burdin-harriak, erronkak… Anboto laster."), "", 8);
+        notify(L("Hiru leize amaituta. Harrespilako trikuharriak dardara egiten du: jo ESNATU haren ondoan."), "", 8);
+        hud();
+      },
+    );
+  }
+  /* laugarren zatiaren amaiera: Errolan aske → laugarren argia berde */
+  function iratiJentil() {
+    if (flag("irati-errolan") || ZONE.cur !== "ibarra") return;
+    if (!ZAZPI.g) zazpiBuild();
+    zazpiColors(3);
+    ZAZPI.armed = true;
+    ZAZPI.turn = true;
+    say(
+      [
+        ["IRATI", "Amaiur! Gau osoan harrespilako harriek dardara egin dute… eta gero, trumoi bat, zerua garbi zegoen arren.", "", 0, 41, 0],
+        ["AMAIUR", "Errolan, jentilen azkena. Aske dago. Ekaitz bat zeraman bularrean.", "", P.x, P.z, 0],
+        ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Laugarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["GAUEKO", "Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan, nire hiru zaindari gogorrenak zain daude.", "", P.x, P.z, 0],
+        ["IRATI", "Ez gaude bakarrik: herriak berriro jotzen du txalaparta, gauez eta egunez.", "", 0, 41, 0],
+        ["AMAIUR", "Jentilen zerura, beraz. Hodeien gainera.", "", P.x, P.z, 0],
+      ],
+      () => {
+        flagSet("irati-errolan");
+        ZAZPI.t = -1;
+        ZAZPI.turn = false;
+        if (ZAZPI.g) ZAZPI.g.visible = false;
+        title("JARRAITZEKO…", "");
+        notify(L("Lau leize amaituta. Harana zurea da: arnasa-zatiak, misterioak, erronkak… Jentilen zerua laster."), "", 8);
         hud();
       },
     );
@@ -16949,6 +17240,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
        KATEAz igo.
      · ERROTA ZAHARRA (ekialdeko zelaiak): haize-errota geldia; HAIZE-ADARRAz
        biratuta, lurreko ate-tranpa irekitzen da.
+     · DORRE ZAHARRA (ekialdeko larreak): hegoaldeko horma heuraz; IRAGANEAN igo.
+     · JENTIL-HARRIA (mendebaldea): harri arrakalatua; TXIMISTARRIAz apurtu.
      Bakoitza egunkarian agertzen da ikusten denean (pista batekin).
      ================================================================== */
   const SECRETS = [];
@@ -17067,6 +17360,44 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       });
       SECRETS.push({ id: "errota", x, z, y, r: 12, name: L("Errota zaharra"), hint: L("Errota zahar geldia ekialdeko zelaietan. Haizeak ahaztu du: HAIZE-ADARRA."), see: L("Errota zahar bat, geldi. Haizeak ahaztu du…"), done: () => saved.chests.includes("h-errota"), chest: C });
     }
+    /* --- DORRE ZAHARRA (HEURA: iraganean igo) --- */
+    {
+      const x = 80,
+        z = -72,
+        y0 = nightGround(x, z, 20),
+        top = y0 + 10,
+        t = slab({ x, z, y: top, w: 5, d: 5, h: top + 1 });
+      t.slick = true;
+      t.m.material = stackMaterial();
+      const merl = [];
+      for (let i = 0; i < 4; i++)
+        for (const s of [-1, 1]) {
+          const o = -1.9 + i * 1.27;
+          merl.push([at(new T.BoxGeometry(0.75, 0.9, 0.75), o, 0.45, s * 2.15), "#8c877c"]);
+          merl.push([at(new T.BoxGeometry(0.75, 0.9, 0.75), s * 2.15, 0.45, o), "#8c877c"]);
+        }
+      const crown = new T.Mesh(mergeColored(merl), new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, flatShading: true }));
+      crown.position.set(x, top, z);
+      crown.castShadow = true;
+      BP.add(crown);
+      ivySide(t, "s", y0, { phase: 0, id: "dorrea-heura" });
+      const C = chest("h-dorrea", x, top, z - 0.6, PI, { t: "piece", id: "dorrea" });
+      SECRETS.push({ id: "dorrea", x, z, y: y0, r: 15, name: L("Dorre zaharra"), hint: L("Dorre zaharra heuraz jantzita: IRAGANEAN, heura bizirik dagoenean, igo daiteke. Goian, kutxa bat."), see: L("Dorre zahar bat, heuraz jantzita… goian zerbaitek distira egiten du."), done: () => saved.chests.includes("h-dorrea"), chest: C });
+    }
+    /* --- JENTIL-HARRIA (TXIMISTARRIA) --- */
+    {
+      const x = -50,
+        z = -6,
+        y = nightGround(x, z, 20),
+        C = chest("h-harkaitza", x, y, z, 0.3, { t: "piece", id: "harkaitza" }, { hidden: !isCleared("s-harkaitza") });
+      crackRock("s-harkaitza", x, y, z, 2.2, {
+        onBreak: () => {
+          revealChest(C);
+          notify(L("Jentil-harria apurtu da: azpian, kutxa bat!"), "", 3);
+        },
+      });
+      SECRETS.push({ id: "harkaitza", x, z, y, r: 13, name: L("Jentil-harria"), hint: L("Jentil batek jaurtitako harri arrakalatua: TXIMISTA batek apurtuko luke (Jentilbaratzan)."), see: L("Harri erraldoi bat, arrakalatua. Kondairak dio jentil batek jaurti zuela mendi batetik…"), done: () => saved.chests.includes("h-harkaitza"), chest: C });
+    }
   }
   /* hubUpdate-tik: hurbiltzean pista (eta egunkarian sartu) */
   function secretsUpdate() {
@@ -17083,6 +17414,1734 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* egunkarirako lerroak */
   function secretsLog(line) {
     return SECRETS.filter((S) => saved.flags.includes("m-" + S.id) || S.done()).map((S) => line(S.done(), S.name, "", S.hint));
+  }
+  /* ==================================================================
+     HEURA · horma heuratsuak igo daitezke
+     · Hormaren kontra bultzatu (oinez edo airean) → heldu.
+     · Makila/teklak: gora eta behera (pantailan bezala), alboetara.
+     · JAUZI: gora begira bazaude, jauzi bat gora (hormatik askatu gabe);
+       bestela, hormatik atzera jauzi. Goian, ertzera igotzen da.
+     · Heura bizirik IRAGANEAN dago (uda); ORAINEAN izoztuta: ezin da heldu.
+       (phase: -1 → bi garaietan.) Garaia aldatzean, heura izoztu → erori.
+     ================================================================== */
+  const IVY = [];
+  const CLIMB = { along: 0, regrab: 0, raise: null, sp: 0, step: 0, hop: 0 };
+  const CLIMB_UP = 3.4,
+    CLIMB_SIDE = 2.9,
+    CLIMB_GAP = 0.42;
+  const IVY_GREEN = new T.Color("#ffffff"),
+    IVY_FROST = new T.Color("#9fb0c6");
+  let IVY_TEX = null,
+    IVY_FROST_TEX = null,
+    IVY_MAT = null,
+    IVY_EVER = null;
+  /* heura-testura (kanbasean): zurtoinak eta hiru-bost hostoko orriak, ertzetan errepikagarria.
+     frost: hosto lehor eta izoztuak (orainerako), ausazkotasun berberarekin */
+  function ivyTexture(frost) {
+    if (!frost && IVY_TEX) return IVY_TEX;
+    if (frost && IVY_FROST_TEX) return IVY_FROST_TEX;
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const x = c.getContext("2d");
+    let sd = 11;
+    const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    x.lineCap = "round";
+    for (let k = 0; k < 7; k++) {
+      let px = 18 + k * 36 + rnd() * 10,
+        py = 260;
+      x.strokeStyle = frost ? "#4a3f36" : "#3a4522";
+      x.lineWidth = 3;
+      x.beginPath();
+      x.moveTo(px, py);
+      while (py > -4) {
+        py -= 16;
+        px += (rnd() - 0.5) * 14;
+        x.lineTo(px, py);
+      }
+      x.stroke();
+    }
+    const leaf = (lx, ly, r, a, col) => {
+      x.fillStyle = col;
+      x.beginPath();
+      for (let j = 0; j <= 12; j++) {
+        const t = (j / 12) * TAU,
+          rr = r * (0.62 + 0.38 * Math.abs(Math.cos(t * 2.5)));
+        const px = lx + Math.cos(t + a) * rr,
+          py = ly + Math.sin(t + a) * rr;
+        j ? x.lineTo(px, py) : x.moveTo(px, py);
+      }
+      x.fill();
+      x.strokeStyle = frost ? "rgba(240,248,255,0.7)" : "rgba(210,235,160,0.28)";
+      x.lineWidth = frost ? 1.6 : 1;
+      x.beginPath();
+      x.moveTo(lx, ly);
+      x.lineTo(lx + Math.cos(a) * r * 0.8, ly + Math.sin(a) * r * 0.8);
+      x.stroke();
+    };
+    for (let i = 0; i < 300; i++) {
+      const lx = rnd() * 256,
+        ly = rnd() * 256,
+        r = 7 + rnd() * 9,
+        a = rnd() * TAU,
+        g = (85 + rnd() * 95) | 0,
+        k1 = rnd(),
+        k2 = rnd(),
+        col = frost ? `rgb(${(96 + g * 0.35) | 0},${(88 + g * 0.3) | 0},${(84 + k2 * 40) | 0})` : `rgb(${(28 + k1 * 34) | 0},${g},${(26 + k2 * 30) | 0})`;
+      /* orainean: hostoen erdiak eroriak */
+      if (frost && k1 > 0.55) continue;
+      /* ertzetan: beste aldean ere marraztu (errepikapena jarraitua) */
+      for (const ox of [-256, 0, 256]) for (const oy of [-256, 0, 256]) if (lx + ox > -20 && lx + ox < 276 && ly + oy > -20 && ly + oy < 276) leaf(lx + ox, ly + oy, r, a, col);
+    }
+    const tex = new T.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = T.RepeatWrapping;
+    tex.encoding = T.sRGBEncoding;
+    if (frost) IVY_FROST_TEX = tex;
+    else IVY_TEX = tex;
+    return tex;
+  }
+  function ivyMaterials() {
+    if (IVY_MAT) return;
+    const base = { map: ivyTexture(), alphaTest: 0.45, roughness: 0.82, side: T.DoubleSide };
+    IVY_MAT = new T.MeshStandardMaterial(base);
+    IVY_EVER = new T.MeshStandardMaterial(base);
+  }
+  /* heura-horma: oinarriaren erdia (cx, cz), kanpo-normala (nx, nz), zabalera w, y0 → y1 (ertza) */
+  function ivyWall(o) {
+    ivyMaterials();
+    const { cx, cz, nx, nz, w, y0, y1 } = o,
+      ph = o.phase ?? 0,
+      h = y1 - y0 + 0.35,
+      geo = new T.PlaneGeometry(w, h),
+      uv = geo.attributes.uv;
+    for (let i = 0; i < uv.count; i++) uv.setXY(i, (uv.getX(i) * w) / 2.6, (uv.getY(i) * h) / 2.6 + cx * 0.13);
+    const m = new T.Mesh(geo, ph === -1 ? IVY_EVER : IVY_MAT);
+    m.position.set(cx + nx * 0.06, y0 + h / 2 - 0.05, cz + nz * 0.06);
+    m.rotation.y = Math.atan2(nx, nz);
+    m.receiveShadow = true;
+    (BP || scene).add(m);
+    /* goiko ertzean hosto-mataza (bolumena) */
+    const tuft = new T.Mesh(new T.PlaneGeometry(w * 0.96, 0.9), m.material);
+    tuft.geometry.attributes.uv.array.forEach((v, i, a) => (a[i] = i % 2 ? v * 0.35 : (v * w) / 2.6));
+    tuft.position.set(cx + nx * 0.3, y1 + 0.05, cz + nz * 0.3);
+    tuft.rotation.set(-0.9, Math.atan2(nx, nz), 0, "YXZ");
+    (BP || scene).add(tuft);
+    const F = { id: o.id || "ivy" + IVY.length, cx, cz, nx, nz, tx: -nz, tz: nx, w, y0, y1, phase: ph, group: BP, m, tuft };
+    IVY.push(F);
+    return F;
+  }
+  /* kaxa-plataforma baten aldea (n, s, e, w — tokiko ardatzetan) heuraz estali */
+  function ivySide(p, side, y0, opts = {}) {
+    const c = Math.cos(p.rot || 0),
+      s = Math.sin(p.rot || 0),
+      L0 = { n: [0, -p.d / 2, 0, -1, p.w], s: [0, p.d / 2, 0, 1, p.w], e: [p.w / 2, 0, 1, 0, p.d], w: [-p.w / 2, 0, -1, 0, p.d] }[side],
+      [lx, lz, lnx, lnz, len] = L0;
+    return ivyWall({ ...opts, cx: p.x + lx * c + lz * s, cz: p.z - lx * s + lz * c, nx: lnx * c + lnz * s, nz: -lnx * s + lnz * c, w: opts.w || len - 0.4, y0, y1: p.y });
+  }
+  const ivyLive = (F) => F.phase === -1 || F.phase === phase;
+  /* sarrera gordina (pantailako ardatzak): x eskuina, z behera */
+  function stickRaw() {
+    let x = (input.keys.KeyD || input.keys.ArrowRight ? 1 : 0) - (input.keys.KeyA || input.keys.ArrowLeft ? 1 : 0) + input.x,
+      z = (input.keys.KeyS || input.keys.ArrowDown ? 1 : 0) - (input.keys.KeyW || input.keys.ArrowUp ? 1 : 0) + input.z;
+    const n = Math.hypot(x, z);
+    if (n > 1) (x /= n), (z /= n);
+    return { x, z };
+  }
+  /* pantailaren "eskuina" munduan (kameraren biraketa) */
+  function camRight() {
+    const wx = 0.83,
+      wz = -0.557,
+      c = Math.cos(CAM.yawS || 0),
+      sn = Math.sin(CAM.yawS || 0);
+    return { x: wx * c + wz * sn, z: -wx * sn + wz * c };
+  }
+  function heuraInit() {
+    const UPPER = /^(spine|chest|upperarm|lowerarm|wrist|hand|head)/,
+      c = models.mage.animations.find((a) => a.name === "Spellcast_Raise");
+    if (c) CLIMB.raise = mixer.clipAction(new T.AnimationClip("Raise_goia", c.duration, c.tracks.filter((t) => UPPER.test(t.name))));
+  }
+  function ivyNear(r) {
+    const grp = ZONES[ZONE.cur].group;
+    return IVY.find((F) => F.group === grp && Math.abs((P.x - F.cx) * F.nx + (P.z - F.cz) * F.nz) < r && Math.abs((P.x - F.cx) * F.tx + (P.z - F.cz) * F.tz) < F.w / 2 + 1 && P.y > F.y0 - 1 && P.y < F.y1);
+  }
+  /* move()-en amaieran: hormaren kontra bultzatzen badu, heldu */
+  function climbTry(d, len) {
+    if (P.climb || CLIMB.regrab > 0 || P.riding || P.dashT > 0 || CHAIN.state !== "idle" || CRAFT.held || len < 0.3 || respawnTimer) return false;
+    const grp = ZONES[ZONE.cur].group;
+    for (const F of IVY) {
+      if (F.group !== grp) continue;
+      const rx = P.x - F.cx,
+        rz = P.z - F.cz,
+        dist = rx * F.nx + rz * F.nz,
+        along = rx * F.tx + rz * F.tz;
+      if (dist < -0.2 || dist > 0.8 || Math.abs(along) > F.w / 2 - 0.25) continue;
+      if (P.y < F.y0 - 0.6 || P.y > F.y1 - 0.75) continue;
+      if (-(d.x * F.nx + d.z * F.nz) / len < 0.55) continue;
+      if (!ivyLive(F)) {
+        notifyOnce("heura-izotza", L("Heura izoztuta dago: ezin zara heldu. IRAGANEAN, udan, bizirik zegoen…"), "");
+        continue;
+      }
+      climbStart(F, along);
+      return true;
+    }
+    return false;
+  }
+  function climbStart(F, along) {
+    P.climb = F;
+    CLIMB.along = clamp(along, -F.w / 2 + 0.35, F.w / 2 - 0.35);
+    CLIMB.hop = 0;
+    P.vx = P.vz = P.vy = 0;
+    P.grounded = false;
+    P.platform = null;
+    P.dashT = 0;
+    P.angle = Math.atan2(-F.nx, -F.nz);
+    if (MAG.charging) {
+      MAG.charging = false;
+      MAG.charge = 0;
+      castStop();
+    }
+    SND.leaves();
+    coachDone("climb");
+    notifyOnce("heura", mobile ? L("HEURA: makila gora eta behera, alboetara. JAUZI: gora (edo atzera, makila hormatik urrun).") : L("HEURA: W/S gora eta behera, A/D alboetara. ␣: jauzi gora (S-rekin: atzera)."), "");
+  }
+  function climbDrop() {
+    if (!P.climb) return;
+    P.climb = null;
+    CLIMB.regrab = 0.35;
+    CLIMB.sp = 0;
+    const w = models.mage.actions.Walking_A;
+    if (w) w.timeScale = 1;
+    if (CLIMB.raise && CLIMB.raise.isRunning()) CLIMB.raise.fadeOut(0.15);
+  }
+  /* goian: ertzera igo (jauzi txiki bat barrurantz) */
+  function climbMantle(F) {
+    climbDrop();
+    CLIMB.regrab = 0.6;
+    P.x = F.cx + F.tx * CLIMB.along - F.nx * 0.8;
+    P.z = F.cz + F.tz * CLIMB.along - F.nz * 0.8;
+    P.y = F.y1 + 0.05;
+    P.vx = -F.nx * 1.5;
+    P.vz = -F.nz * 1.5;
+    P.vy = 3.2;
+    P.jumps = 1;
+    P.dashReady = true;
+    FB.jump(1);
+    hero.position.set(P.x, P.y, P.z);
+  }
+  /* move()-en hasieran: eskalatzen ari bada, bera arduratzen da (true → move() amaitu) */
+  function climbUpdate(dt) {
+    const F = P.climb;
+    if (!ivyLive(F)) {
+      /* garaia aldatuta: heura izoztu da */
+      climbDrop();
+      fxBurst(P.x + F.nx * 0.3, P.y + 1.2, P.z + F.nz * 0.3, { n: 12, speed: 2, life: 0.6, size: 0.25, color: "#dff4ff", grav: 3 });
+      notifyOnce("heura-erori", L("Heura izoztu da eta erori zara! IRAGANEAN bakarrik heltzen zaio."), "");
+      return false;
+    }
+    const st = stickRaw(),
+      r = camRight(),
+      up = -st.z,
+      side = st.x * (r.x * F.tx + r.z * F.tz);
+    if (jumpBuffer > 0) {
+      jumpBuffer = 0;
+      if (up > -0.3 && P.y < F.y1 - 2.2) {
+        /* jauzia gora, hormari helduta */
+        CLIMB.hop = 0.28;
+        FB.jump(1);
+        SND.leaves();
+      } else {
+        /* hormatik atzera */
+        climbDrop();
+        P.vx = F.nx * 7.5;
+        P.vz = F.nz * 7.5;
+        P.vy = 9.6;
+        P.jumps = 1;
+        P.airSpeed = 8;
+        P.angle = Math.atan2(F.nx, F.nz);
+        FB.jump(1);
+        return false;
+      }
+    }
+    CLIMB.hop = Math.max(0, CLIMB.hop - dt);
+    const vy = CLIMB.hop > 0 ? 8 : Math.abs(up) > 0.15 ? up * CLIMB_UP : 0,
+      va = Math.abs(side) > 0.15 ? side * CLIMB_SIDE : 0;
+    CLIMB.along = clamp(CLIMB.along + va * dt, -F.w / 2 + 0.35, F.w / 2 - 0.35);
+    const y = P.y + vy * dt;
+    if (y >= F.y1 - 0.3 && vy > 0) {
+      climbMantle(F);
+      return true;
+    }
+    if (y <= F.y0 + 0.01 && vy < 0) {
+      /* behean: askatu */
+      P.y = F.y0;
+      climbDrop();
+      return false;
+    }
+    P.y = Math.max(F.y0, y);
+    P.x = F.cx + F.tx * CLIMB.along + F.nx * CLIMB_GAP;
+    P.z = F.cz + F.tz * CLIMB.along + F.nz * CLIMB_GAP;
+    P.vx = P.vz = P.vy = 0;
+    P.grounded = false;
+    P.angle = Math.atan2(-F.nx, -F.nz);
+    CLIMB.sp = Math.hypot(vy, va);
+    CLIMB.step += dt * CLIMB.sp * 2.2;
+    if (CLIMB.sp > 0.3 && Math.sin(CLIMB.step) * Math.sin(CLIMB.step - dt * CLIMB.sp * 2.2) < 0) SND.leaves(0.5);
+    /* animazioa: hankak (oinez, abiaduraren arabera) + besoak gora (goiko gorputza) */
+    animate("Walking_A");
+    const w = models.mage.actions.Walking_A;
+    if (w) w.timeScale = CLIMB.sp > 0.3 ? 1.6 : 0.0001;
+    if (CLIMB.raise && !CLIMB.raise.isRunning()) {
+      CLIMB.raise.reset();
+      CLIMB.raise.setLoop(T.LoopPingPong, Infinity);
+      CLIMB.raise.setEffectiveWeight(6);
+      CLIMB.raise.fadeIn(0.12).play();
+    }
+    if (CLIMB.raise) CLIMB.raise.timeScale = CLIMB.sp > 0.3 ? 1.4 : 0.0001;
+    hero.position.set(P.x, P.y + Math.sin(CLIMB.step) * 0.04, P.z);
+    hero.rotation.y = P.angle;
+    footRing.visible = false;
+    return true;
+  }
+  /* tick bakoitzean (move()-en hasieran) */
+  function heuraTick(dt) {
+    CLIMB.regrab = Math.max(0, CLIMB.regrab - dt);
+    if (IVY_MAT) {
+      const fr = phaseBlend > 0.5;
+      if (fr !== IVY.frost) {
+        IVY.frost = fr;
+        IVY_MAT.map = ivyTexture(fr);
+        IVY_MAT.needsUpdate = true;
+      }
+      IVY_MAT.color.copy(IVY_GREEN).lerp(IVY_FROST, fr ? 0.35 : 0);
+    }
+  }
+  /* ==================================================================
+     TXIMISTARRIA · tximista-harria (Jentilbaratzako tresna)
+     Herri-sinesmenean, tximistak lurrera botatako harria; etxeetan gordetzen
+     zen ekaitzetatik babesteko. Hemen: X (edo TXIMISTARRIA botoia) → harria
+     jaurti; 1.7 s-ra lehertzen da, trumoi batekin:
+     · harri arrakalatuak eta hormak apurtzen ditu (sorginkeriak ez);
+     · itzalak zorabiatu eta zauritzen ditu, garaiaren ezkutua gorabehera;
+     · kanpaiak jotzen ditu; beste tximistarriak ere lehertzen ditu;
+     · Amaiur ere zauritzen du, hurbilegi badago!
+     Hiru karga, berez betetzen dira. HAIZE-ADARRAk lurreko harriak bultzatzen ditu.
+     ================================================================== */
+  const TXB = { list: [], n: 3, max: 3, t: 0, light: null, flash: 0, geo: null, mat: null, thrown: 0, fx: [] };
+  const hasBomb = () => saved.items.includes("tximistarria");
+  const BOMB_FUSE = 1.7,
+    BOMB_R = 3.4,
+    BOMB_RECHARGE = 3,
+    BOMB_G = 22;
+  /* jaurtitzeko helburua: aurrean dagoen arrakala hurbilena (edo etsai nagusiaren puntua), bestela aurrera */
+  function bombTarget(fa) {
+    const fx = Math.sin(fa),
+      fz = Math.cos(fa),
+      grp = ZONES[ZONE.cur].group;
+    let best = null,
+      bs = 1e9;
+    for (const B of BREAKABLES) {
+      if (!B.bombOnly || B.broken || B.buildZone !== grp) continue;
+      const dx = B.x - P.x,
+        dz = B.z - P.z,
+        d = Math.hypot(dx, dz);
+      if (d > 13 || d < 1.5 || (dx * fx + dz * fz) / d < 0.55) continue;
+      if (d < bs) (bs = d), (best = { x: B.x - (dx / d) * Math.min(1.4, (B.r || 1) * 0.6), y: B.y, z: B.z - (dz / d) * Math.min(1.4, (B.r || 1) * 0.6) });
+    }
+    if (!best && BOSS.on && BOSS.bombAim) best = BOSS.bombAim();
+    if (best) return best;
+    const g = support(P.x + fx * 6.5, P.z + fz * 6.5, P.y + 3);
+    return { x: P.x + fx * 6.5, y: g ? topY(g, P.x + fx * 6.5, P.z + fz * 6.5) : P.y, z: P.z + fz * 6.5 };
+  }
+  function bombThrow() {
+    if (!hasBomb() || !started || paused || TXALA.on || CRAFT.on || cinematic || respawnTimer || GET.on || P.climb || P.riding || CHAIN.state !== "idle") return;
+    if (TXB.n < 1) {
+      notify(L("Tximistarririk ez: itxaron pixka bat (berez betetzen dira)."), "", 1.6);
+      return;
+    }
+    TXB.n--;
+    TXB.thrown++;
+    const fa = faceDir(),
+      tg = bombTarget(fa),
+      a = Math.atan2(tg.x - P.x, tg.z - P.z),
+      o = { x: P.x + Math.sin(a) * 0.6, y: P.y + 1.5, z: P.z + Math.cos(a) * 0.6 },
+      dx = tg.x - o.x,
+      dz = tg.z - o.z,
+      d = Math.hypot(dx, dz),
+      T0 = clamp(d / 9, 0.42, 1.05);
+    P.angle = a;
+    MAG.aimT = 0.3;
+    if (!TXB.geo) {
+      TXB.geo = new T.DodecahedronGeometry(0.3, 0);
+      TXB.mat = new T.MeshStandardMaterial({ color: "#3b4250", roughness: 0.5, metalness: 0.3, emissive: new T.Color("#7fc8ff"), emissiveIntensity: 0.6, flatShading: true });
+    }
+    const m = new T.Mesh(TXB.geo, TXB.mat.clone());
+    m.castShadow = true;
+    const spark = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#bfe6ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false }));
+    spark.scale.setScalar(0.9);
+    m.add(spark);
+    m.position.set(o.x, o.y, o.z);
+    ZONES[ZONE.cur].group.add(m);
+    TXB.list.push({ m, spark, x: o.x, y: o.y, z: o.z, vx: dx / T0, vz: dz / T0, vy: (tg.y + 0.3 - o.y + 0.5 * BOMB_G * T0 * T0) / T0, t: 0, ck: 0, grp: ZONES[ZONE.cur].group });
+    castAnim("Spellcast_Shoot", 2.2, 6);
+    SND.throwStone();
+    coachDone("bomb");
+    hud();
+  }
+  /* HAIZE-ADARRA: aurreko konoan dauden harriak bultzatu */
+  function bombsBlow(dx, dz) {
+    let n = 0;
+    for (const b of TXB.list) {
+      const rx = b.x - P.x,
+        rz = b.z - P.z,
+        d = Math.hypot(rx, rz);
+      if (d > 12 || (rx * dx + rz * dz) / (d || 1) < 0.6) continue;
+      b.vx += dx * 10;
+      b.vz += dz * 10;
+      b.vy = Math.max(b.vy, 1.5);
+      n++;
+    }
+    return n;
+  }
+  function bombsUpdate(dt) {
+    if (hasBomb() && TXB.n < TXB.max) {
+      TXB.t += dt;
+      if (TXB.t >= BOMB_RECHARGE) {
+        TXB.t = 0;
+        TXB.n++;
+        hud();
+      }
+    } else TXB.t = 0;
+    if (TXB.light) {
+      TXB.flash = Math.max(0, TXB.flash - dt * 5);
+      TXB.light.intensity = TXB.flash * 9;
+      TXB.light.visible = TXB.flash > 0.01;
+    }
+    /* tximista-izpiak, distirak eta erre-orbanak itzaltzen */
+    for (let i = TXB.fx.length - 1; i >= 0; i--) {
+      const f = TXB.fx[i];
+      f.t += dt;
+      const k = 1 - f.t / f.life;
+      if (k <= 0) {
+        f.m.parent && f.m.parent.remove(f.m);
+        f.m.traverse((n) => n.material && n.material.dispose());
+        TXB.fx.splice(i, 1);
+        continue;
+      }
+      if (f.kind === "bolt") f.m.traverse((n) => n.material && (n.material.opacity = k * (Math.sin(f.t * 90) > -0.3 ? 1 : 0.3)));
+      else if (f.kind === "glow") {
+        f.m.material.opacity = k * k;
+        f.m.scale.setScalar(f.s * (1 + (1 - k) * 0.6));
+      } else f.m.material.opacity = 0.62 * Math.min(1, k * 3);
+    }
+    for (let i = TXB.list.length - 1; i >= 0; i--) {
+      const b = TXB.list[i];
+      if (b.grp !== ZONES[ZONE.cur].group) {
+        bombRemove(b, i);
+        continue;
+      }
+      b.t += dt;
+      b.vy -= BOMB_G * dt;
+      let nx = b.x + b.vx * dt,
+        nz = b.z + b.vz * dt,
+        ny = b.y + b.vy * dt;
+      /* hormak eta plataformen alboak: errebotatu */
+      for (const s of platforms) {
+        if (s.off || (s.phase !== -1 && s.phase !== phase)) continue;
+        const sy = topY(s, nx, nz);
+        if (contains(s, nx, nz, 0.15) && !contains(s, b.x, b.z, 0.15) && b.y < sy - 0.2 && b.y > (s.bottom ?? sy - 0.5) - 0.3) {
+          b.vx *= -0.45;
+          b.vz *= -0.45;
+          nx = b.x;
+          nz = b.z;
+        }
+      }
+      for (const o of solids) {
+        if (!(o.r > 0)) continue;
+        const ox = nx - o.x,
+          oz = nz - o.z,
+          od = Math.hypot(ox, oz);
+        if (od < o.r + 0.3 && b.y < (o.y || 0) + o.h && od > 0.001) {
+          nx = o.x + (ox / od) * (o.r + 0.3);
+          nz = o.z + (oz / od) * (o.r + 0.3);
+          const vn = (b.vx * ox + b.vz * oz) / od;
+          if (vn < 0) {
+            b.vx -= ((1.5 * vn * ox) / od);
+            b.vz -= ((1.5 * vn * oz) / od);
+          }
+        }
+      }
+      /* lurra: errebote txikiak eta marruskadura */
+      const g = support(nx, nz, Math.max(b.y, ny) + 0.3),
+        fy = g ? topY(g, nx, nz) : -1e9;
+      if (ny <= fy + 0.3 && b.vy <= 0) {
+        ny = fy + 0.3;
+        if (b.vy < -3.5) {
+          b.vy *= -0.32;
+          b.vx *= 0.75;
+          b.vz *= 0.75;
+          SND.thud(0.35);
+        } else b.vy = 0;
+        const k = Math.exp(-dt * 2.6);
+        b.vx *= k;
+        b.vz *= k;
+      }
+      b.x = nx;
+      b.y = ny;
+      b.z = nz;
+      b.m.position.set(b.x, b.y, b.z);
+      b.m.rotation.x += Math.hypot(b.vx, b.vz) * dt * 2.2;
+      b.m.rotation.y += dt * 2;
+      /* metxa: gero eta azkarrago dir-dir */
+      const left = BOMB_FUSE - b.t,
+        rate = left < 0.5 ? 26 : left < 1 ? 14 : 7,
+        on = Math.sin(b.t * rate) > 0;
+      b.m.material.emissiveIntensity = on ? 2.4 : 0.5;
+      b.spark.material.opacity = on ? 1 : 0.35;
+      b.spark.scale.setScalar(on ? 1.2 : 0.7);
+      b.ck -= dt;
+      if (b.ck <= 0) {
+        b.ck = left < 0.6 ? 0.11 : 0.24;
+        SND.crackle(left < 0.6 ? 1.2 : 0.7);
+        fxBurst(b.x, b.y + 0.35, b.z, { n: 2, speed: 2.4, up: 2, life: 0.25, size: 0.18, color: "#d8f0ff", grav: 2 });
+      }
+      if (b.y < ZONES[ZONE.cur].fallY - 2) {
+        bombRemove(b, i);
+        continue;
+      }
+      if (b.t >= BOMB_FUSE) {
+        bombRemove(b, i);
+        bombExplode(b.x, b.y, b.z);
+      }
+    }
+  }
+  function bombRemove(b, i) {
+    b.m.parent && b.m.parent.remove(b.m);
+    b.m.material.dispose();
+    b.spark.material.dispose();
+    TXB.list.splice(i, 1);
+  }
+  /* trumoia: apurtu, zorabiatu, zauritu, kanpaiak jo */
+  function bombExplode(x, y, z) {
+    if (!TXB.light) {
+      TXB.light = new T.PointLight("#cfe6ff", 0, 26, 1.6);
+      scene.add(TXB.light);
+    }
+    TXB.light.position.set(x, y + 1.6, z);
+    TXB.flash = 1;
+    fxRing(x, y + 0.15, z, "#d6ecff", BOMB_R + 1.4, 0.45);
+    lightningFx(x, y, z);
+    fxBurst(x, y + 0.6, z, { n: 42, speed: 9, up: 3, life: 0.55, size: 0.45, color: "#e8f4ff", grav: 3 });
+    fxBurst(x, y + 0.4, z, { n: 26, speed: 5, up: 4, life: 0.95, size: 0.55, color: "#56627a", grav: 6, drag: 1.5 });
+    shake(0.36);
+    haptic(45);
+    hitStop = Math.max(hitStop, 0.04);
+    SND.thunder();
+    bombBreak(x, y, z, BOMB_R);
+    for (const e of ENEMIES) {
+      if (e.state === "dead" || e.state === "spawn") continue;
+      const dx = e.x - x,
+        dz = e.z - z,
+        d = Math.hypot(dx, dz);
+      if (d > BOMB_R + e.D.r || Math.abs(e.y - y) > 3) continue;
+      e.stun = Math.max(e.stun, 1.4);
+      if (e.state === "wind" || e.state === "charge" || e.state === "lunge") (e.state = "recover"), (e.t = 0);
+      hitEnemy(e, 3, dx / (d || 1), dz / (d || 1), true);
+      e.vx += (dx / (d || 1)) * (8 / e.D.mass);
+      e.vz += (dz / (d || 1)) * (8 / e.D.mass);
+    }
+    for (const R of RUNES) if (R.live && R.live() && !R.lit && Math.hypot(R.x - x, R.y - y, R.z - z) < BOMB_R + 1 && !R.needFire) R.hit(null);
+    if (BOSS.on && BOSS.bomb) BOSS.bomb(x, y, z, BOMB_R);
+    /* beste harriak: kate-erreakzioa */
+    for (const b of TXB.list) if (Math.hypot(b.x - x, b.z - z) < BOMB_R && b.t < BOMB_FUSE - 0.1) b.t = BOMB_FUSE - 0.1;
+    const pd = Math.hypot(P.x - x, P.z - z);
+    if (pd < 2.5 && Math.abs(P.y - y) < 2.2) {
+      if (saved.assist) {
+        P.vx += ((P.x - x) / (pd || 1)) * 8;
+        P.vz += ((P.z - z) / (pd || 1)) * 8;
+      } else playerHit(1, x, z);
+      notifyOnce("bomb-self", L("Kontuz! Tximistarria hurbilegi lehertu da."), "");
+    }
+  }
+  /* tximista zerutik (zigi-zaga), distira handia eta lurrean erre-orbana */
+  function lightningFx(x, y, z) {
+    const grp = ZONES[ZONE.cur].group,
+      g = new T.Group(),
+      mat = () => new T.MeshBasicMaterial({ color: "#e6f4ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, fog: false });
+    let px = x + (Math.random() - 0.5) * 2,
+      py = y + 14,
+      pz = z + (Math.random() - 0.5) * 2;
+    for (let i = 0; i < 9; i++) {
+      const k = (i + 1) / 9,
+        nx = i === 8 ? x : x + (Math.random() - 0.5) * 2.4 * (1 - k),
+        ny = y + 14 * (1 - k),
+        nz = i === 8 ? z : z + (Math.random() - 0.5) * 2.4 * (1 - k),
+        len = Math.hypot(nx - px, ny - py, nz - pz),
+        seg = new T.Mesh(new T.CylinderGeometry(0.09, 0.09, len, 4, 1, true), mat());
+      seg.position.set((px + nx) / 2, (py + ny) / 2, (pz + nz) / 2);
+      seg.lookAt(nx, ny, nz);
+      seg.rotateX(PI / 2);
+      g.add(seg);
+      [px, py, pz] = [nx, ny, nz];
+    }
+    grp.add(g);
+    TXB.fx.push({ kind: "bolt", m: g, t: 0, life: 0.22 });
+    const glowS = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#d9eeff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, fog: false }));
+    glowS.position.set(x, y + 1, z);
+    glowS.scale.setScalar(9);
+    grp.add(glowS);
+    TXB.fx.push({ kind: "glow", m: glowS, t: 0, life: 0.35, s: 9 });
+    const scorch = new T.Mesh(new T.PlaneGeometry(4.2, 4.2), new T.MeshBasicMaterial({ map: glowTexture, color: "#000000", transparent: true, opacity: 0.6, depthWrite: false }));
+    scorch.rotation.x = -PI / 2;
+    scorch.position.set(x, y - 0.27, z);
+    scorch.renderOrder = 2;
+    grp.add(scorch);
+    TXB.fx.push({ kind: "scorch", m: scorch, t: 0, life: 5 });
+  }
+  /* --------------------------- harri arrakalatuak --------------------------- */
+  let CRACK_MAT = null;
+  function crackMaterial() {
+    if (CRACK_MAT) return CRACK_MAT;
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const x = c.getContext("2d");
+    let sd = 5;
+    const rnd = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    const branch = (px, py, a, len, w, depth) => {
+      x.lineWidth = w;
+      x.beginPath();
+      x.moveTo(px, py);
+      let cx = px,
+        cy = py;
+      const n = 6;
+      for (let i = 0; i < n; i++) {
+        a += (rnd() - 0.5) * 0.9;
+        cx += Math.cos(a) * (len / n);
+        cy += Math.sin(a) * (len / n);
+        x.lineTo(cx, cy);
+        if (depth > 0 && rnd() < 0.35) {
+          x.stroke();
+          branch(cx, cy, a + (rnd() > 0.5 ? 0.8 : -0.8), len * 0.45, w * 0.6, depth - 1);
+          x.lineWidth = w;
+          x.beginPath();
+          x.moveTo(cx, cy);
+        }
+      }
+      x.stroke();
+    };
+    x.lineCap = x.lineJoin = "round";
+    /* argi-ertza lehenik (zabalagoa), gero pitzadura iluna */
+    for (const [col, k] of [["rgba(190,220,255,0.55)", 1.9], ["#140f0c", 1]]) {
+      sd = 5;
+      x.strokeStyle = col;
+      for (let i = 0; i < 8; i++) branch(128, 128, (i / 8) * TAU + rnd() * 0.4, 70 + rnd() * 50, (5 - i * 0.3) * k, 2);
+    }
+    const tex = new T.CanvasTexture(c);
+    tex.encoding = T.sRGBEncoding;
+    CRACK_MAT = new T.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 });
+    return CRACK_MAT;
+  }
+  /* harri-horma arrakalatua (TXIMISTARRIAk bakarrik apurtzen du) */
+  function crackWall(id, x, z, w, d, h, opts = {}) {
+    const y0 = opts.y || 0,
+      g = new T.Group();
+    g.position.set(x, y0, z);
+    BP.add(g);
+    const wall = new T.Mesh(new T.BoxGeometry(w, h, d), opts.mat || rockMaterial());
+    wall.position.y = h / 2;
+    wall.castShadow = wall.receiveShadow = true;
+    g.add(wall);
+    const along = w >= d,
+      size = Math.min((along ? w : d) * 0.95, h * 1.25);
+    for (const s of [-1, 1]) {
+      const pl = new T.Mesh(new T.PlaneGeometry(size, size), crackMaterial());
+      if (along) pl.position.set(0, h * 0.48, s * (d / 2 + 0.02));
+      else pl.position.set(s * (w / 2 + 0.02), h * 0.48, 0);
+      pl.rotation.y = along ? (s > 0 ? 0 : PI) : s > 0 ? PI / 2 : -PI / 2;
+      g.add(pl);
+    }
+    /* oinean harri-koskorrak */
+    for (let i = 0; i < 4; i++) {
+      const r = new T.Mesh(new T.DodecahedronGeometry(0.25 + (i % 2) * 0.15, 0), rockMaterial());
+      r.position.set(along ? (i - 1.5) * (w / 4) : (i % 2 ? 1 : -1) * (w / 2 + 0.3), 0.2, along ? (i % 2 ? 1 : -1) * (d / 2 + 0.3) : (i - 1.5) * (d / 4));
+      g.add(r);
+    }
+    const p = wallBlock(x, z, w, d, 0, y0, h + (opts.extra ?? 2));
+    const done = isCleared(id);
+    g.visible = !done;
+    p.off = done;
+    const B = {
+      kind: "arrakala",
+      id,
+      x,
+      y: y0,
+      z,
+      m: g,
+      r: Math.max(w, d) / 2,
+      broken: done,
+      buildZone: BP,
+      bombOnly: true,
+      hint: L("Harri arrakalatua: sorginkeriak ez du apurtzen… TXIMISTA batek bai."),
+      solid: { r: 0 },
+      hitTest: (bx, by, bz, r) => by < y0 + h + 1 && Math.abs(bx - x) < w / 2 + r && Math.abs(bz - z) < d / 2 + r,
+      custom: () => {
+        g.visible = false;
+        p.off = true;
+        if (!saved.cleared.includes(id)) saved.cleared.push(id);
+        persist();
+        SND.crumble();
+        for (let i = 0; i < 6; i++) fxBurst(x + (along ? (i - 2.5) * (w / 6) : 0), y0 + 1 + (i % 3) * (h / 4), z + (along ? 0 : (i - 2.5) * (d / 6)), { n: 14, speed: 4, up: 3, life: 0.9, size: 0.4, color: "#8d8577", grav: 9 });
+        if (opts.onBreak) opts.onBreak();
+        else notifyOnce("crack-" + id, L("Harria apurtu da!"), "");
+      },
+    };
+    BREAKABLES.push(B);
+    return B;
+  }
+  /* harkaitz arrakalatua (haranean: zuloak eta sekretuak ixten ditu) */
+  function crackRock(id, x, y, z, r, opts = {}) {
+    const g = new T.Group();
+    g.position.set(x, y, z);
+    BP.add(g);
+    const geo = new T.DodecahedronGeometry(r, 1),
+      pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const k = 1 + 0.12 * Math.sin(pos.getX(i) * 3.1 + pos.getZ(i) * 2.3);
+      pos.setXYZ(i, pos.getX(i) * k, Math.max(-r * 0.2, pos.getY(i)) * 0.85, pos.getZ(i) * k);
+    }
+    geo.computeVertexNormals();
+    const rock = new T.Mesh(geo, rockMaterial());
+    rock.position.y = r * 0.55;
+    rock.castShadow = rock.receiveShadow = true;
+    g.add(rock);
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * TAU + 0.4,
+        pl = new T.Mesh(new T.PlaneGeometry(r * 1.4, r * 1.4), crackMaterial());
+      pl.position.set(Math.sin(a) * r * 0.93, r * 0.62, Math.cos(a) * r * 0.93);
+      pl.rotation.y = a;
+      g.add(pl);
+    }
+    const solid = { x, z, r: r * 0.95, h: r * 1.6, y, pillar: true };
+    solids.push(solid);
+    const done = isCleared(id);
+    g.visible = !done;
+    if (done) solid.r = -1;
+    const B = {
+      kind: "arrakala",
+      id,
+      x,
+      y,
+      z,
+      m: g,
+      r,
+      broken: done,
+      buildZone: BP,
+      bombOnly: true,
+      hint: L("Harkaitz arrakalatua: sorginkeriak ez du apurtzen… TXIMISTA batek bai."),
+      solid: { r: 0 },
+      hitTest: (bx, by, bz, rr) => by < y + r * 1.7 && Math.hypot(bx - x, bz - z) < r + rr,
+      custom: () => {
+        g.visible = false;
+        solid.r = -1;
+        if (!saved.cleared.includes(id)) saved.cleared.push(id);
+        persist();
+        SND.crumble();
+        for (let i = 0; i < 5; i++) fxBurst(x + Math.cos(i) * r * 0.6, y + 0.8 + (i % 2), z + Math.sin(i) * r * 0.6, { n: 14, speed: 4, up: 3, life: 0.9, size: 0.42, color: "#8d8577", grav: 9 });
+        if (opts.onBreak) opts.onBreak();
+      },
+    };
+    BREAKABLES.push(B);
+    return B;
+  }
+  function crackNear(r) {
+    const grp = ZONES[ZONE.cur].group;
+    return BREAKABLES.find((B) => B.bombOnly && !B.broken && B.buildZone === grp && Math.hypot(B.x - P.x, B.z - P.z) < r + (B.r || 0));
+  }
+  /* ==================================================================
+     JENTILBARATZA · laugarren leizea (diseinu propioa) — jentilen hiri lurperatua
+     Kondairak dioenez, jentilek zeruan argi bitxi bat ikusi zutenean, harri handi
+     baten azpian ezkutatu ziren. Harrespilako trikuharriaren azpian, haien hiria lo dago.
+       J1 Jentilen ataria ...... SUTONDOA (atseden-lekua); ekialdean ertz garaia HEURAz
+                                 (iraganean); iparrean atalasea; mendebaldean lasterbidea
+       J2 Kanpaien aretoa ...... hiru kanpaia sarearen atzean: urrutitik jo, denak batera
+                                 (bat ORAINEAN bakarrik ikusten da) → sarea zabaldu
+       J3 Harresia ............. borroka (zezenen oldarrak: ALDARATU!) → GILTZA TXIKIA;
+                                 mendebaldean harri arrakalatua (gero: jauzi atalasera)
+       J4 Harri-zainaren gela .. etsai ertaina → TXIMISTARRIA
+       J0 Atalasea ............. ate handia; ekialdetik jauzi (lasterbidea); mendebaldean
+                                 arrakala → dorrea
+       J6 Jentilen dorrea ...... zutabe garaia HEURAz igo; inguruan lau kanpaia (bat harri
+                                 arrakalatu baten barruan, bat ORAINEAN) → GILTZA NAGUSIA
+       J5 Biltegia ............. bigarren SUTONDOA; ekialdean, atarira lasterbidea
+       J7 Errolanen aretoa ..... ERROLAN, jentil iluna (beherago)
+     Leize bakoitzak bezala, lasterbideek eta arrakalek bideak lotzen dituzte: "metroidvania"
+     estiloko itzulerak, tresna berri bakoitzarekin.
+     ================================================================== */
+  const JX = 1500;
+  const DGJ = {
+    id: "jentil",
+    num: "04",
+    entry: { x: JX, y: 0, z: 11.5, a: PI },
+    exitArch: { x: JX, z: 15.2 },
+    exitTo: () => ({ x: 43, y: 9, z: -66.2, a: 0, cp: true }),
+    bigKey: "giltzanagusia-jentil",
+    bigKeyText: "Errolanen aretora daraman ate handia irekitzen du.",
+    bossDoor: "jD-n",
+    lights: [],
+    torches: [],
+    rooms: {},
+    torchCol: ["#ffc27a", "#cfe3ff"],
+    tint: "#cbbfa8",
+    fog: [11, 64],
+  };
+  /* ------------------------------ eraikigaiak ------------------------------ */
+  /* korridore garaia (y): zorua bloke trinkoa da, hormak y-tik gora */
+  function hallway(x, z, w, d, axis, y = 0) {
+    const fl = slab({ x, z, y, w, d, h: y + 1.2, mat: "dark", area: null });
+    fl.m.position.y -= 0.12;
+    /* behetik: horma-jauzirik ez */
+    if (y > 0) fl.slick = true;
+    if (axis === "z") {
+      const n = Math.round(d / 6);
+      for (let i = 0; i < n; i++) bprop("floor_dirt_large", x, y - 0.075, z - d / 2 + 3 + i * 6, DS, 0);
+      for (const s of [-1, 1]) {
+        sideBegin(x + (s * w) / 2, z - d / 2, x + (s * w) / 2, z + d / 2);
+        for (let i = 0; i < n; i++) bprop("wall", x + (s * w) / 2, y, z - d / 2 + 3 + i * 6, DS, (s * -PI) / 2);
+        sideEnd();
+        wallBlock(x + (s * w) / 2, z, 1.6, d, 0, y, 7);
+      }
+    } else {
+      const n = Math.round(w / 6);
+      for (let i = 0; i < n; i++) bprop("floor_dirt_large", x - w / 2 + 3 + i * 6, y - 0.075, z, DS, 0);
+      for (const s of [-1, 1]) {
+        sideBegin(x - w / 2, z + (s * d) / 2, x + w / 2, z + (s * d) / 2);
+        for (let i = 0; i < n; i++) bprop("wall", x - w / 2 + 3 + i * 6, y, z + (s * d) / 2, DS, s < 0 ? 0 : PI);
+        sideEnd();
+        wallBlock(x, z + (s * d) / 2, w, 1.6, 0, y, 7);
+      }
+    }
+  }
+  /* jentil-irudia: harrizko erraldoi bizardun bat (sare bakarra) */
+  function jentilStatue(x, z, rot, s = 1, y = 0) {
+    const st = "#8f8a7d",
+      dk = "#6c675d",
+      moss = "#56663a",
+      parts = [
+        [at(new T.BoxGeometry(2.6, 0.8, 2.4), 0, 0.4, 0), dk],
+        [at(new T.BoxGeometry(1.8, 3.2, 1.2), 0, 2.4, 0), st],
+        [at(new T.BoxGeometry(2.5, 0.95, 1.3), 0, 4.0, 0), st],
+        [at(new T.BoxGeometry(1.05, 1.15, 1.05), 0, 5.05, 0.05), st],
+        [at(new T.ConeGeometry(0.6, 1.5, 6), 0, 4.15, 0.62, PI), dk],
+        [at(new T.BoxGeometry(1.15, 0.3, 0.4), 0, 5.35, 0.5), dk],
+        [at(new T.BoxGeometry(2.0, 0.35, 1.3), 0, 1.4, 0), moss],
+      ];
+    for (const sx of [-1, 1]) {
+      parts.push([at(new T.BoxGeometry(0.55, 2.7, 0.65), sx * 1.45, 2.65, 0.1, 0, 0, sx * 0.07), st]);
+      parts.push([at(new T.BoxGeometry(0.7, 0.55, 0.75), sx * 1.5, 1.15, 0.15), dk]);
+    }
+    const m = new T.Mesh(mergeColored(parts), new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.92, flatShading: true }));
+    m.position.set(x, y, z);
+    m.rotation.y = rot;
+    m.scale.setScalar(s);
+    m.castShadow = m.receiveShadow = true;
+    BP.add(m);
+    solids.push({ x, z, r: 1.35 * s, h: 5.8 * s, y, pillar: true });
+    return m;
+  }
+  /* ---------------- SUTONDOA: atseden-lekua (arnasa bete, kontrol-puntua) ---------------- */
+  const HEARTHS = [];
+  function sutondoa(id, x, y, z, ox = 1.8, oz = 1.8) {
+    const g = new T.Group(),
+      parts = [];
+    g.position.set(x, y, z);
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * TAU;
+      parts.push([at(new T.DodecahedronGeometry(0.34, 0), Math.cos(a) * 1.1, 0.22, Math.sin(a) * 1.1, i, i * 2, 0, 1.2, 0.75, 1), i % 2 ? "#77736a" : "#8d877c"]);
+    }
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * TAU + 0.4;
+      parts.push([at(new T.CylinderGeometry(0.09, 0.12, 1.25, 6), Math.cos(a) * 0.32, 0.42, Math.sin(a) * 0.32, 0.75, a, 0), "#4a3322"]);
+    }
+    const base = new T.Mesh(mergeColored(parts), new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.9, flatShading: true }));
+    base.castShadow = true;
+    g.add(base);
+    const flame = new T.Mesh(new T.ConeGeometry(0.42, 1.2, 7), new T.MeshBasicMaterial({ color: "#ffb347", transparent: true, opacity: 0.85, blending: T.AdditiveBlending, depthWrite: false }));
+    flame.position.y = 0.95;
+    g.add(flame);
+    const core = new T.Mesh(new T.ConeGeometry(0.22, 0.7, 6), new T.MeshBasicMaterial({ color: "#fff1c4", transparent: true, opacity: 0.9, blending: T.AdditiveBlending, depthWrite: false }));
+    core.position.y = 0.75;
+    g.add(core);
+    const fl = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ff9a3a", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.8 }));
+    fl.scale.setScalar(4.2);
+    fl.position.y = 1;
+    g.add(fl);
+    BP.add(g);
+    solids.push({ x, z, r: 1.15, h: 1.2, y, pillar: true });
+    const H = { id, x, y, z, ox, oz, g, flame, core, fl, grp: BP, ph: x * 0.7 };
+    HEARTHS.push(H);
+    /* leizean: zuzi bezala (argi errealak hurbil daudenean) */
+    if (BDG && ZONES[BDG.id] && BP === ZONES[BDG.id].group) BDG.torches.push({ x, y: y + 1.1, z, fl, ph: H.ph, side: null });
+    return H;
+  }
+  function hearthNear() {
+    return HEARTHS.find((H) => H.grp === ZONES[ZONE.cur].group && Math.hypot(P.x - H.x, P.z - H.z) < 3 && Math.abs(P.y - H.y) < 1.6);
+  }
+  function hearthRest(H) {
+    P.hp = P.maxHp;
+    TXB.n = TXB.max;
+    saved.cp = { zone: ZONE.cur, x: H.x + H.ox, y: H.y, z: H.z + H.oz };
+    persist();
+    SND.heal();
+    SND.memory();
+    fxBurst(H.x, H.y + 1, H.z, { n: 30, speed: 2.5, up: 3, life: 1.1, size: 0.3, color: "#ffc27a", grav: -1.5 });
+    fxRing(P.x, P.y + 0.2, P.z, "#ffd9a0", 5, 0.8);
+    haptic(30);
+    if (!saved.flags.includes("sutondoa")) {
+      flagSet("sutondoa");
+      title("SUTONDOA", "");
+      notify(L("Sutondoan atseden: arnasa beteta, tximistarriak ere bai. Erortzen bazara, hemendik jarraituko duzu."), "", 6);
+    } else notify(L("Atseden hartuta. Arnasa beteta; hemendik jarraituko duzu."), "", 2.6);
+    hud();
+  }
+  function hearthsUpdate(dt) {
+    for (const H of HEARTHS) {
+      if (H.grp !== ZONES[ZONE.cur].group) continue;
+      const f = 1 + Math.sin(time * 13 + H.ph) * 0.1 + Math.sin(time * 29 + H.ph) * 0.06;
+      H.flame.scale.set(1, f, 1);
+      H.core.scale.set(1, 2 - f, 1);
+      H.fl.material.opacity = 0.62 + Math.sin(time * 11 + H.ph) * 0.12;
+      if (Math.random() < dt * 5 && Math.hypot(P.x - H.x, P.z - H.z) < 30) fxBurst(H.x, H.y + 1.3, H.z, { n: 1, speed: 0.5, up: 2.4, life: 1.2, size: 0.12, color: "#ffb35c", grav: -1, drag: 1 });
+    }
+  }
+  /* ---------------- LASTERBIDEAK: alde batetik bakarrik irekitzen diren barrak ---------------- */
+  const SHORTCUTS = [];
+  function shortcutDoor(id, x, z, rot, y, nx, nz, text) {
+    const D = door(id, x, z, rot, y, "bars");
+    D.oneWay = { nx, nz, text };
+    /* palanka (irekitzeko aldean) */
+    const lever = new T.Group(),
+      post = new T.Mesh(new T.BoxGeometry(0.5, 1.3, 0.5), rockMaterial()),
+      handle = new T.Mesh(new T.CylinderGeometry(0.07, 0.07, 1.1, 6), material("#5a4128"));
+    post.position.y = 0.65;
+    handle.position.y = 1.5;
+    handle.rotation.z = 0.5;
+    lever.add(post, handle);
+    const tx = Math.cos(rot) * 2,
+      tz = -Math.sin(rot) * 2;
+    lever.position.set(x + nx * 1.6 + tx, y, z + nz * 1.6 + tz);
+    lever.rotation.y = rot;
+    BP.add(lever);
+    D.lever = handle;
+    if (D.open) handle.rotation.z = -0.5;
+    SHORTCUTS.push(D);
+    return D;
+  }
+  function shortcutNear() {
+    const D = SHORTCUTS.find((D) => !D.open && D.g.parent === ZONES[ZONE.cur].group && Math.hypot(P.x - D.x, P.z - D.z) < 4.4 && Math.abs(P.y - D.y) < 2);
+    if (!D) return null;
+    const side = (P.x - D.x) * D.oneWay.nx + (P.z - D.z) * D.oneWay.nz;
+    if (side > 0)
+      return {
+        kind: "door",
+        label: L("LASTERBIDEA"),
+        fn: () => {
+          openDoor(D);
+          D.lever.rotation.z = -0.5;
+          SND.wake();
+          title("LASTERBIDEA", "");
+          notify(D.oneWay.text || L("Lasterbidea irekita!"), "", 4.5);
+          hud();
+        },
+      };
+    return { kind: "locked", label: L("ITXITA"), fn: () => notify(L("Barrek ez dute sarrailarik alde honetan. Beste aldetik irekiko dira…"), "", 3) };
+  }
+  /* burdin-sarea (gelaren erdian): ateak erdian; hormak alboetan (z ardatzean luzea) */
+  function grate(x, z, len, y, gateId) {
+    const parts = [];
+    for (let o = -len / 2 + 0.4; o <= len / 2 - 0.3; o += 0.75) if (Math.abs(o) > 2.9) parts.push([at(new T.CylinderGeometry(0.09, 0.09, 7.2, 5), 0, 3.6, o), "#3a4046"]);
+    for (const hy of [1.2, 6.6]) parts.push([at(new T.BoxGeometry(0.2, 0.16, len), 0, hy, 0), "#2b2f33"]);
+    const m = new T.Mesh(mergeColored(parts), new T.MeshStandardMaterial({ vertexColors: true, metalness: 0.6, roughness: 0.5 }));
+    m.position.set(x, y, z);
+    BP.add(m);
+    const half = len / 2;
+    wallBlock(x, z - (half + 3) / 2, 0.6, half - 3, 0, y, 7.5);
+    wallBlock(x, z + (half + 3) / 2, 0.6, half - 3, 0, y, 7.5);
+    return door(gateId, x, z, PI / 2, y, "bars");
+  }
+
+  /* ================================ GELAK ================================ */
+  function buildJentil() {
+    dungeonBegin(DGJ);
+    const E = (x) => JX + x;
+    /* ---- J1: Jentilen ataria ---- */
+    room("J1", E(0), 0, 30, 30, { area: "jA", name: "JENTILEN ATARIA", desc: "Jentilen harri handiak. Lo daude, ez hilda.", doors: { s: 0, n: 0, e: -6, w: 0 }, wallH: 20 });
+    slab({ x: E(0), z: 18, y: 0, w: 6, d: 6, h: 1.2, mat: "dark" });
+    wallBlock(E(-3.4), 18, 0.8, 6, 0, 0, 7);
+    wallBlock(E(3.4), 18, 0.8, 6, 0, 0, 7);
+    wallBlock(E(0), 21.2, 6, 0.8, 0, 0, 7);
+    const arch = obj(new T.PlaneGeometry(5, 5.6), new T.MeshBasicMaterial({ color: "#ffe9c0", transparent: true, opacity: 0.35, depthWrite: false, blending: T.AdditiveBlending }));
+    arch.position.set(E(0), 2.8, 20.6);
+    DGJ.exitGlow = arch;
+    /* ekialdeko ertza (6 m): hegoaldeko aldea heuraz (iraganean bizirik; kamerak ikusten du) */
+    const ledge = slab({ x: E(10), z: -6, y: 6, w: 10, d: 18, h: 6, area: "jA" });
+    ledge.slick = true;
+    DGJ.ivyA = ivySide(ledge, "s", 0, { phase: 0, id: "jA-heura" });
+    for (const [rx, rz] of [[E(6.5), -12.5], [E(13), -13]]) bprop("rubble_half", rx, 6, rz, DS * 0.5, rx);
+    hallway(E(18), -6, 6, 6, "x", 6);
+    /* atalasera (iparra) eta biltegiko lasterbidea (mendebaldea) */
+    corridor(E(0), -18, 6, 6, "z");
+    DOORDEF.jAw = shortcutDoor("jA-w", E(-15), 0, PI / 2, 0, -1, 0, L("Lasterbidea irekita: biltegitik atarira, bide laburra."));
+    corridor(E(-21), 0, 12, 6, "x");
+    DGJ.hearthA = sutondoa("jA-su", E(-9), 0, 8.5, 1.9, -1.2);
+    jentilStatue(E(-10), -11.5, 0.15, 1.1);
+    jentilStatue(E(4), -12, -0.1, 0.9);
+    for (const [bx, bz] of [[E(-12.5), 12.5], [E(12.5), 12.5], [E(-12.5), -3]]) breakable("barrel", bx, 0, bz);
+    bprop("rubble_large", E(-4.5), 0, -7, DS * 0.6, 0.5);
+    bprop("banner_patternB_red", E(-6), 0, -14.2, DS * 0.8, 0);
+    /* ---- J2: Kanpaien aretoa (y 6) ---- */
+    room("J2", E(36), 0, 30, 30, { y: 6, area: "jB", name: "KANPAIEN ARETOA", desc: "Jentilen kanpaiak sarearen atzean. Urrutitik jo behar…", doors: { w: -6, n: 12, e: 12 } });
+    DOORDEF.jBg = grate(E(40), 0, 30, 6, "jB-g");
+    RUNE_SETS.push({
+      id: "jB-bells",
+      zone: "jentil",
+      kind: "kanpaia",
+      time: 7,
+      runes: [[E(46), 9.6, -9, -1], [E(48), 9.6, 0, 1], [E(46), 9.6, 9, -1]],
+      hint: "Hiru kanpaia sarearen atzean. Jo denak SORGINKERIAz, elkarren segidan — bat ORAINEAN bakarrik ikusten da!",
+      onSolve: () => {
+        openDoor(DOORDEF.jBg);
+        title("SAREA ZABALDU DA", "");
+      },
+    });
+    /* ekialdeko hutsunea: harri arrakalatuaren atzean, kutxa (TXIMISTARRIArekin itzuli) */
+    crackWall("jB-crack", E(51.4), 12, 1.4, 5.9, 5.2, { y: 6 });
+    slab({ x: E(54), z: 12, y: 6, w: 4.6, d: 6.2, h: 1.2, mat: "dark" });
+    wallBlock(E(56.7), 12, 0.8, 6.2, 0, 6, 7, true);
+    wallBlock(E(54), 8.6, 4.6, 0.8, 0, 6, 7, true);
+    wallBlock(E(54), 15.4, 4.6, 0.8, 0, 6, 7, true);
+    chest("jB-piece", E(54.4), 6, 12, -PI / 2, { t: "piece", id: "jentilbaratza" });
+    for (const [px, pz] of [[E(26), -12], [E(26), 12]]) jentilStatue(px, pz, PI / 2, 0.75, 6);
+    bprop("banner_patternA_green", E(30), 6, -14.2, DS * 0.8, 0);
+    bprop("rubble_half", E(32), 6, 10, DS * 0.6, 0.8);
+    breakable("barrel", E(24), 6, 2);
+    hallway(E(48), -18, 6, 6, "z", 6);
+    /* ---- J3: Harresia (borroka, y 6) ---- */
+    room("J3", E(36), -36, 30, 30, {
+      y: 6,
+      area: "jC",
+      name: "HARRESIA",
+      desc: "Jentilen harresia. Hezurrezko zaindariak txandaka.",
+      doors: { s: 12, w: 0, e: 0 },
+      waves: [[["grunt", -1, 3]], [["brute", -1, 1], ["grunt", 0, 2]], [["brute", 1, 1], ["eye", -1, 1], ["grunt", 1, 1]]],
+      diff: 1.2,
+      hpK: 1.35,
+      fightText: "Zaindariak! Kolpea iristean sakatu SORGINKERIA: ALDARATU.",
+      onWin: () => {
+        revealChest(DGJ.keyChest);
+        notify(L("Kutxa bat agertu da harresiaren erdian."), "", 4);
+      },
+    });
+    DGJ.keyChest = chest("jC-key", E(36), 6, -36, 0, { t: "key" }, { hidden: !isCleared("J3") });
+    DOORDEF.jCe = door("jC-e", E(51), -36, PI / 2, 6, "key", "J3");
+    hallway(E(54), -36, 6, 6, "x", 6);
+    /* mendebaldea: arrakala → jauzi atalasera (lasterbidea) */
+    crackWall("jC-crack", E(20.2), -36, 1.4, 5.9, 5.6, { y: 6, onBreak: () => notify(L("Harria apurtu da! Beherago, atalasea: jauzi, eta bide laburra izango duzu."), "", 4.5) });
+    hallway(E(18), -36, 6, 6, "x", 6);
+    for (const [px, pz] of [[E(28), -44], [E(44), -44], [E(28), -28], [E(44), -28]]) {
+      bprop("pillar_decorated", px, 6, pz, DS * 0.9, 0);
+      solids.push({ x: px, z: pz, r: 1.3, h: 6, y: 6, pillar: true });
+    }
+    bprop("banner_patternB_red", E(36), 6, -50.2, DS * 0.8, 0);
+    /* ---- J4: Harri-zainaren gela (y 6) ---- */
+    room("J4", E(72), -36, 30, 30, { y: 6, area: "jD", name: "HARRI-ZAINAREN GELA", desc: "Harrizko zaindari bat lo dago… ala ez?", doors: { w: 0 } });
+    DGJ.bombChest = chest("jD-tximista", E(72), 6, -30, PI, { t: "item", id: "tximistarria" }, { hidden: !isCleared("jD-mini") });
+    for (const [px, pz, r] of [[E(62), -46, 0.4], [E(82), -26, 2.6]]) jentilStatue(px, pz, r, 0.8, 6);
+    for (let i = 0; i < 6; i++) {
+      const st = obj(new T.DodecahedronGeometry(0.28, 0), new T.MeshStandardMaterial({ color: "#3b4250", emissive: new T.Color("#7fc8ff"), emissiveIntensity: 0.5, roughness: 0.5, flatShading: true }));
+      st.position.set(E(64 + (i % 3) * 7), 6.25, -48 + Math.floor(i / 3) * 1.2);
+    }
+    bprop("rubble_large", E(84), 6, -48, DS * 0.6, 1.2);
+    /* ---- J0: Atalasea ---- */
+    room("J0", E(0), -36, 30, 30, { area: "jE", name: "ATALASEA", desc: "Ate handi bat, jentilen neurrikoa. Goian, ekaitz bat zizelkatuta.", doors: { s: 0, n: 0, e: 0, w: 0 }, wallH: 20 });
+    DOORDEF.jDn = door("jD-n", E(0), -51, 0, 0, "boss");
+    corridor(E(0), -54, 6, 6, "z");
+    jentilStatue(E(-7.5), -47, 0, 1.25);
+    jentilStatue(E(7.5), -47, 0, 1.25);
+    crackWall("jE-crack", E(-15.2), -36, 1.4, 5.9, 5.6, { onBreak: () => notify(L("Harria apurtu da: mendebaldean, dorre bat."), "", 3.5) });
+    corridor(E(-18), -36, 6, 6, "x");
+    /* ---- J6: Jentilen dorrea ---- */
+    room("J6", E(-36), -36, 30, 30, { area: "jF", name: "JENTILEN DORREA", desc: "Zutabe erraldoi bat, heuraz estalia. Inguruan, lau kanpaia.", doors: { e: 0, s: 0 }, fog: [12, 80], wallH: 20 });
+    const pil = slab({ x: E(-36), z: -36, y: 12, w: 8, d: 8, h: 12, area: "jF" });
+    pil.slick = true;
+    DGJ.ivyF = ivySide(pil, "s", 0, { phase: 0, id: "jF-heura" });
+    DGJ.bigChest = chest("jF-bigkey", E(-36), 12, -37.5, 0, { t: "bigkey" }, { hidden: !isCleared("jF-bells") });
+    /* lau zutabe (8 m) kanpaiekin; bat harri arrakalatu baten barruan */
+    const cols = [[-44.5, -44.5, -1], [-27.5, -44.5, -1], [-44.5, -27.5, 1], [-27.5, -27.5, -1]];
+    for (const [cx, cz] of cols) {
+      const c = obj(new T.CylinderGeometry(1.5, 1.8, 8, 10), stackMaterial());
+      c.position.set(E(cx), 4, cz);
+      c.castShadow = c.receiveShadow = true;
+      solids.push({ x: E(cx), z: cz, r: 1.8, h: 8, y: 0, pillar: true });
+      platforms.push({ x: E(cx), z: cz, y: 8, bottom: 0, rx: 1.6, rz: 1.6, phase: -1, safe: false, slick: true });
+    }
+    crackWall("jF-crack", E(-27.5), -27.5, 3.1, 3.1, 4.6, { y: 8, extra: 0.4, onBreak: () => notify(L("Harria apurtu da: barruan, laugarren kanpaia!"), "", 3.5) });
+    RUNE_SETS.push({
+      id: "jF-bells",
+      zone: "jentil",
+      kind: "kanpaia",
+      time: 10,
+      runes: cols.map(([cx, cz, era]) => [E(cx), 11.6, cz, era]),
+      hint: "Lau kanpaia zutabeen gainean. Jo denak, elkarren segidan: goitik hobeto…",
+      onSolve: () => {
+        revealChest(DGJ.bigChest);
+        title("KANPAIAK BATERA", "");
+        notify(L("Zutabearen gainean, kutxa bat agertu da!"), "", 4);
+      },
+    });
+    corridor(E(-36), -15, 6, 12, "z");
+    /* ---- J5: Biltegia ---- */
+    room("J5", E(-36), 0, 18, 18, { area: "jG", name: "BILTEGIA", desc: "Jentilen biltegia: gari-zakuak, kutxak… eta su bat.", doors: { n: 0, e: 0 } });
+    DGJ.hearthG = sutondoa("jG-su", E(-40), 0, 3.5, 1.9, -1.4);
+    bprop("crate_A_big", E(-42.5), 0, -6, DS * 0.9, 0.3);
+    bprop("crate_B_small", E(-30), 0, 6.5, DS * 0.9, 1);
+    bprop("barrel_large", E(-42.5), 0, 6.5, DS * 0.85, 0.2);
+    breakable("barrel", E(-30), 0, -6);
+    breakable("crate_A_big", E(-31.5), 0, -3.5);
+    /* ---- J7: Errolanen aretoa ---- */
+    room("J7", E(0), -78, 42, 42, { area: "jH", name: "ERROLANEN ARETOA", desc: "", doors: { s: 0 }, wallH: 20 });
+    /* izkinetako zutabeak heurarekin (iraganean): uhinetatik babesteko */
+    for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
+      const p = slab({ x: E(sx * 14), z: -78 + sz * 14, y: 7, w: 3.2, d: 3.2, h: 7, area: "jH" });
+      p.slick = true;
+      ivySide(p, "s", 0, { phase: 0 });
+    }
+    for (let i = 0; i < 8; i++) bprop("rubble_half", E(-16 + (i % 4) * 10.5), 0, i < 4 ? -60 : -96, DS * 0.5, i);
+    DGJ.bossRoom = DGJ.rooms.J7;
+    errolanBuild();
+    dungeonEnd(DGJ);
+  }
+  DGJ.update = (dt) => {
+    hearthsUpdate(dt);
+    /* harri-zainaren gela: sartzean, zaindaria esnatzen da */
+    const R4 = DGJ.rooms.J4;
+    if (R4 && !MINI.e && !ROOM.fight && !cinematic && ROOM.cur === R4 && !isCleared("jD-mini") && P.grounded && P.y > 5 && Math.abs(P.x - R4.x) < R4.w / 2 - 3 && Math.abs(P.z - R4.z) < R4.d / 2 - 3)
+      miniBegin(
+        R4,
+        {
+          name: "HARRI-ZAINA",
+          clearId: "jD-mini",
+          hp: 34,
+          scale: 1.7,
+          K: 1.25,
+          tint: "#b9b2a2",
+          add: [["grunt", -1, 2]],
+          hint: "Harrizko zaindaria! Oldarka datorrenean, kolpea iristean SORGINKERIA: ALDARATU — zorabiatuta, kalte bikoitza.",
+          onDead: () => {
+            revealChest(DGJ.bombChest);
+            notify(L("Kutxa bat agertu da gelaren hegoaldean."), "", 4);
+          },
+        },
+        R4.x,
+        R4.z - 6,
+      );
+  };
+
+  /* ================================ ERROLAN (J7) ================================
+     Jentilen azkena, Gauekoren ekaitz batek gaiztotua. Erasoak:
+     · HARKAITZA: buru gainean altxatu (une hori: TXIMISTARRIA oinetara → harkaitza
+       buruan erori → belauniko) eta gero jaurti (EZKUTUAz itzuli → belauniko);
+     · UKABILKADA: lurra jo → uhinak (salto, edo heura duten zutabeetara igo);
+     · ESKUKADA: aurrean, erdi-zirkuluan (une zehatzean ALDARATU → belauniko).
+     Belauniko dagoenean, bularreko ekaitz-harria agerian: SORGINKERIA. Hiru txanda. */
+  const ERR = { g: null, root: null, mixer: null, acts: {}, cur: "", x: 0, z: 0, a: 0, state: "sleep", t: 0, downT: 3, hp: 8, rounds: 3, step: 0, n: 0, waves: [], rock: null, core: null, coreGlow: null, eyes: [], light: null, cone: null, seenIntro: false, slam: false, swung: false, thrown: false, stats: { bomb: 0, parry: 0, reflect: 0 } };
+  const ERR_HP = 8,
+    ERR_SC = 5.2,
+    EV = new T.Vector3();
+  function errolanBuild() {
+    const R = DGJ.bossRoom,
+      src = models.npc_knight;
+    ERR.x = R.x;
+    ERR.z = R.z - 9;
+    const rock = new T.Mesh(new T.DodecahedronGeometry(2, 0), rockMaterial());
+    rock.castShadow = true;
+    rock.visible = false;
+    BP.add(rock);
+    ERR.rock = rock;
+    /* eskukadaren abisua: konoa lurrean */
+    const cone = new T.Mesh(new T.CircleGeometry(7.5, 28, -1.5, 3), new T.MeshBasicMaterial({ color: "#ff4d6d", transparent: true, opacity: 0, depthWrite: false }));
+    cone.rotation.x = -PI / 2;
+    cone.renderOrder = 3;
+    BP.add(cone);
+    ERR.cone = cone;
+    if (!src) return;
+    const root = cloneSkinned(src.scene);
+    root.scale.setScalar(ERR_SC);
+    root.traverse((n) => {
+      if (!n.isMesh) return;
+      if (/Sword|Shield|Helmet|Cape/.test(n.name)) n.visible = false;
+      /* harrizko erraldoia: testurarik gabe, harri-kolore laua */
+      const m = new T.MeshStandardMaterial({ color: "#9a958a", roughness: 0.95, metalness: 0, flatShading: true, emissive: new T.Color("#0e0a16"), emissiveIntensity: 0.5 });
+      m.skinning = !!n.isSkinnedMesh;
+      n.material = m;
+      n.castShadow = true;
+      n.frustumCulled = false;
+    });
+    /* bizar luzea eta ile harritsua (buruari lotuta), begi moreak */
+    const head = root.getObjectByName("head"),
+      hp = [];
+    hp.push([at(new T.IcosahedronGeometry(0.36, 1), 0, 0.12, 0.2, 0, 0, 0, 1.05, 1.15, 0.75), "#8f8a7f"]);
+    hp.push([at(new T.ConeGeometry(0.3, 0.55, 8), 0, -0.22, 0.2, PI), "#8a857a"]);
+    for (const s of [-1, 1]) hp.push([at(new T.ConeGeometry(0.14, 0.5, 6), s * 0.24, 0.02, 0.18, PI, 0, s * 0.3), "#969185"]);
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * TAU;
+      hp.push([at(new T.IcosahedronGeometry(0.17 + (i % 3) * 0.04, 0), Math.sin(a) * 0.36, 0.78 + Math.cos(a * 2) * 0.05, Math.cos(a) * 0.3 - 0.06, i, i * 2, 0), "#6f6a60"]);
+    }
+    const hair = new T.Mesh(mergeColored(hp), new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, flatShading: true }));
+    hair.castShadow = true;
+    const eyeMat = new T.MeshBasicMaterial({ color: "#c98bff" });
+    for (const s of [-1, 1]) {
+      const e = new T.Mesh(new T.SphereGeometry(0.055, 8, 6), eyeMat);
+      e.position.set(s * 0.13, 0.5, 0.42);
+      ERR.eyes.push(e);
+    }
+    if (head) head.add(hair, ...ERR.eyes);
+    /* bularreko ekaitz-harria (puntu ahula) */
+    const chestB = root.getObjectByName("chest") || root.getObjectByName("spine") || root;
+    const core = new T.Mesh(new T.OctahedronGeometry(0.2, 0), new T.MeshStandardMaterial({ color: "#3a2050", emissive: new T.Color("#b46bff"), emissiveIntensity: 0.4, roughness: 0.3, flatShading: true }));
+    core.position.set(0, chestB === root ? 1.25 : 0.25, chestB === root ? 0.35 : 0.33);
+    const coreGlow = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#c98bff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.2 }));
+    coreGlow.scale.setScalar(1.2);
+    core.add(coreGlow);
+    chestB.add(core);
+    const g = new T.Group();
+    g.add(root);
+    BP.add(g);
+    root.updateMatrixWorld(true);
+    /* altuera: ikusgai dauden sareekin bakarrik (ezkutatutako armak eta kaskoa kanpoan) */
+    const hb = new T.Box3();
+    root.traverse((n) => {
+      if (n.isMesh && n.visible) hb.expandByObject(n);
+    });
+    ERR.h = hb.isEmpty() ? 9 : hb.max.y;
+    /* puntu ahula: beti ikusten den distira (agerian dagoenean) */
+    const weak = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#d9a8ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, depthTest: false, opacity: 0 }));
+    weak.scale.setScalar(3.4);
+    weak.renderOrder = 12;
+    BP.add(weak);
+    ERR.weakGlow = weak;
+    const light = new T.PointLight("#c9a8ff", 1.1, 22, 1.6);
+    light.position.set(0, 12, 4);
+    g.add(light);
+    const mixer = new T.AnimationMixer(root),
+      acts = {};
+    for (const c of models.mage.animations) acts[c.name] = mixer.clipAction(c);
+    if (models.skel_minion) for (const c of models.skel_minion.animations) acts[c.name] = mixer.clipAction(c);
+    Object.assign(ERR, { g, root, mixer, acts, core, coreGlow, light, eyeMat });
+    g.position.set(ERR.x, 0, ERR.z);
+    errAnim("Idle");
+    if (saved.flags.includes("errolan")) errFreed(true);
+  }
+  function errAnim(name, once, ts = 1) {
+    const a = ERR.acts[name];
+    if (!a || (ERR.cur === name && !once)) return;
+    const old = ERR.acts[ERR.cur];
+    a.reset();
+    a.setLoop(once ? T.LoopOnce : T.LoopRepeat);
+    a.clampWhenFinished = !!once;
+    a.timeScale = ts;
+    a.fadeIn(0.2).play();
+    if (old && old !== a) old.fadeOut(0.2);
+    ERR.cur = name;
+  }
+  function errWaveMesh() {
+    const m = new T.Mesh(new T.TorusGeometry(1, 0.15, 6, 64), new T.MeshBasicMaterial({ color: "#b8ab8f", transparent: true, opacity: 0.9, depthWrite: false }));
+    m.rotation.x = -PI / 2;
+    ZONES.jentil.group.add(m);
+    return m;
+  }
+  function errolanStart() {
+    if (BOSS.on || saved.flags.includes("errolan") || !ERR.g) return;
+    const R = DGJ.bossRoom;
+    ROOM.fight = Object.assign(R, { boss: true });
+    clearEnemies();
+    BOSS.on = true;
+    BOSS.dead = false;
+    BOSS.kind = "errolan";
+    BOSS.weakR = 1.7;
+    Object.assign(ERR, { state: "intro", t: 0, hp: ERR_HP, rounds: 3, step: 0, x: R.x, z: R.z - 9 });
+    const fight = () => {
+      ERR.state = "idle";
+      ERR.t = 0;
+      title("ERROLAN", "");
+      SND.roar();
+      shake(0.6);
+      bossBar("ERROLAN", 1);
+      notify(L("Harkaitza buru gainean duenean: TXIMISTARRIA oinetara! Eskukada: ALDARATU. Harkaitzak: EZKUTUA."), "", 7);
+    };
+    if (ERR.seenIntro) return fight();
+    ERR.seenIntro = true;
+    say(
+      [
+        ["ERROLAN", "Nork esnatzen ditu jentilak? Zeruan argi bitxi bat ikusi genuen, eta harri honen azpian sartu ginen… mende askoan.", "", ERR.x, ERR.z, 9],
+        ["AMAIUR", "Ez naiz zure etsaia, Errolan. Itzal bat daramazu bularrean.", "", P.x, P.z, 0],
+        ["ERROLAN", "ITZALIK EZ, SORGIN: EKAITZA! HARRIAK HEGAN, MENDIAK DARDARKA. ZAPALDUKO ZAITUT!", "", ERR.x, ERR.z, 9],
+      ],
+      fight,
+    );
+  }
+  /* belauniko: bihotza (ekaitz-harria) agerian */
+  function errDown(t, msg, why) {
+    if (why) ERR.stats[why]++;
+    ERR.state = "down";
+    ERR.t = 0;
+    ERR.downT = t;
+    ERR.rock.visible = false;
+    ERR.cone.material.opacity = 0;
+    errAnim("Hit_A", true, 0.5);
+    SND.roar();
+    shake(0.45);
+    title("BELAUNIKO!", "");
+    if (msg) notify(msg, "", 3.5);
+  }
+  /* eskukada: aldaratu, ezkutuz geldiarazi edo zauria */
+  function errSweepHit() {
+    if (GUARD.safe > 0 || damageTime > 0 || respawnTimer || P.dashT > 0 || MAG.spinT < 0.3) return;
+    const front = facing(ERR.x, ERR.z, 1.75);
+    if (front && GUARD.win > 0 && GUARD.pressT >= (ERR.atk0 || 0)) {
+      GUARD.win = 0;
+      GUARD.n++;
+      GUARD.safe = 0.6;
+      hitStop = Math.max(hitStop, 0.15);
+      slowmo = Math.max(slowmo, 0.45);
+      SND.parry();
+      haptic(40);
+      fxRing(P.x, P.y + 1.2, P.z, "#fff1a8", 3.4, 0.4);
+      fxBurst(P.x, P.y + 1.4, P.z, { n: 30, speed: 7, up: 1, life: 0.45, size: 0.32, color: "#fff1a8", grav: 2 });
+      damageNumber({ x: ERR.x, y: 6.5, z: ERR.z, H: 0.5 }, L("ALDARATUA!"), "#fff1a8");
+      coachDone("parry");
+      errDown(3.4, L("ALDARATUA! Errolan belauniko: bihotza agerian!"), "parry");
+      return;
+    }
+    if (front && MAG.charging && MAG.charge > 0.12) {
+      GUARD.safe = 0.5;
+      MAG.charge = 0;
+      const dx = P.x - ERR.x,
+        dz = P.z - ERR.z,
+        d = Math.hypot(dx, dz) || 1;
+      P.vx = (dx / d) * 13;
+      P.vz = (dz / d) * 13;
+      SND.clang(1.4);
+      shake(0.25);
+      notifyOnce("err-block", L("EZKUTUAk eutsi dio… baina une zehatzean sakatuz gero, ALDARATU!"), "");
+      return;
+    }
+    playerHit(2, ERR.x, ERR.z);
+  }
+  function errolanUpdateBoss(dt) {
+    if (ZONE.cur !== "jentil" || !ERR.g) return;
+    ERR.mixer.update(dt);
+    const R = DGJ.bossRoom,
+      vul = ERR.state === "down" && ERR.t > 0.45;
+    ERR.coreGlow.material.opacity = vul ? 0.8 + Math.sin(time * 10) * 0.2 : ERR.state === "freed" ? 0 : 0.18;
+    ERR.core.material.emissiveIntensity = vul ? 2.8 : 0.4;
+    ERR.core.scale.setScalar(vul ? 1.6 + Math.sin(time * 10) * 0.15 : 1);
+    if (ERR.weakGlow) {
+      ERR.weakGlow.visible = vul;
+      if (vul) {
+        ERR.core.getWorldPosition(EV);
+        ERR.weakGlow.position.copy(EV);
+        ERR.weakGlow.material.opacity = 0.55 + Math.sin(time * 10) * 0.25;
+      }
+    }
+    if (ERR.state === "freed") {
+      const fa = Math.atan2(P.x - ERR.x, P.z - ERR.z);
+      ERR.g.rotation.y += Math.atan2(Math.sin(fa - ERR.g.rotation.y), Math.cos(fa - ERR.g.rotation.y)) * Math.min(1, dt * 2);
+      return;
+    }
+    if (ERR.state === "sleep") {
+      if (ROOM.cur === R && P.grounded && !cinematic && Math.abs(P.z - R.z) < R.d / 2 - 5 && Math.abs(P.x - R.x) < R.w / 2 - 3) errolanStart();
+      return;
+    }
+    if (!BOSS.on || cinematic) return;
+    ERR.t += dt;
+    const dx = P.x - ERR.x,
+      dz = P.z - ERR.z,
+      d = Math.hypot(dx, dz) || 1,
+      face = Math.atan2(dx, dz),
+      rage = 3 - ERR.rounds;
+    const turn = (k = 3) => (ERR.a += Math.atan2(Math.sin(face - ERR.a), Math.cos(face - ERR.a)) * Math.min(1, dt * k));
+    /* gorputzaren kontra: bultzatu */
+    if (d < 3.6 && P.y < 4 && ERR.state !== "down") {
+      P.vx += (dx / d) * 110 * dt;
+      P.vz += (dz / d) * 110 * dt;
+    }
+    switch (ERR.state) {
+      case "idle": {
+        turn();
+        if (d > 9) {
+          errAnim("Walking_A");
+          const sp = 2.2 + rage * 0.5;
+          ERR.x += (dx / d) * sp * dt;
+          ERR.z += (dz / d) * sp * dt;
+        } else errAnim("Idle");
+        if (ERR.t > 1.6 - rage * 0.25) {
+          ERR.step++;
+          const seq = d < 8.5 ? ["sweep", "slam", "lift"] : ["lift", "slam", "lift", "sweep"];
+          ERR.state = seq[ERR.step % seq.length];
+          ERR.t = 0;
+          ERR.atk0 = time;
+          ERR.n = 0;
+          ERR.slam = ERR.swung = ERR.thrown = false;
+          if (ERR.state === "lift") {
+            ERR.rock.visible = true;
+            errAnim("Spellcast_Raise", true, 0.8);
+            SND.crumble();
+            notifyOnce("err-lift", L("Harkaitza altxatu du! TXIMISTARRIA haren oinetara, orain!"), "");
+          }
+        }
+        break;
+      }
+      case "lift": {
+        turn(1.2);
+        const k = Math.min(1, ERR.t / 0.6);
+        ERR.rock.position.set(ERR.x + Math.sin(ERR.a) * 0.8, mix(3.5, (ERR.h || 9) + 0.6, k) + Math.sin(time * 6) * 0.08, ERR.z + Math.cos(ERR.a) * 0.8);
+        ERR.rock.rotation.y += dt;
+        /* TXIMISTARRIAren metxak 1.7 s irauten du: leihoa nahikoa luzea */
+        if (ERR.t > 3.2 - rage * 0.2) {
+          ERR.state = "throw";
+          ERR.t = 0;
+          errAnim("Spellcast_Shoot", true, 0.9);
+        }
+        break;
+      }
+      case "throw": {
+        turn(4);
+        if (ERR.t > 0.35 && !ERR.thrown) {
+          ERR.thrown = true;
+          ERR.rock.visible = false;
+          const o = ERR.rock.position,
+            m = new T.Mesh(new T.DodecahedronGeometry(1.3, 0), rockMaterial());
+          m.castShadow = true;
+          m.position.copy(o);
+          scene.add(m);
+          const tx = P.x - o.x,
+            tz = P.z - o.z,
+            td = Math.hypot(tx, tz) || 1,
+            T0 = clamp(td / 14, 0.75, 1.3);
+          SHOTS.push({ m, x: o.x, z: o.z, y: o.y, vx: tx / T0, vz: tz / T0, sp: td / T0, t: 0, era: 2, rock: true, vy: (P.y + 1 - o.y + 0.5 * 16 * T0 * T0) / T0 });
+          SND.shot();
+          shake(0.2);
+          notifyOnce("err-throw", L("Harkaitza dator! Mantendu SORGINKERIA aurrean (EZKUTUA): itzuli egingo diozu."), "");
+        }
+        if (ERR.t > 1.3) {
+          ERR.state = "idle";
+          ERR.t = 0;
+        }
+        break;
+      }
+      case "slam": {
+        turn(1.5);
+        const reps = 2 + (rage > 0 ? 1 : 0),
+          cyc = 1.25 - rage * 0.12,
+          k = Math.floor(ERR.t / cyc);
+        if (k >= reps) {
+          ERR.state = "idle";
+          ERR.t = 0;
+          break;
+        }
+        if (k >= ERR.n) {
+          ERR.n = k + 1;
+          ERR.slam = false;
+          errAnim("2H_Melee_Attack_Chop", true, 0.95);
+        }
+        if (ERR.t - k * cyc > cyc * 0.6 && !ERR.slam) {
+          ERR.slam = true;
+          const fx = ERR.x + Math.sin(ERR.a) * 3.5,
+            fz = ERR.z + Math.cos(ERR.a) * 3.5;
+          shake(0.45);
+          SND.thud();
+          SND.crumble();
+          fxBurst(fx, 0.4, fz, { n: 26, speed: 6, up: 3, life: 0.6, size: 0.4, color: "#9a917f", grav: 9 });
+          ERR.waves.push({ x: fx, z: fz, r: 1.5, sp: 12 + rage * 2, m: errWaveMesh() });
+          if (Math.hypot(P.x - fx, P.z - fz) < 2.6 && P.y < 1.5) playerHit(2, fx, fz);
+        }
+        break;
+      }
+      case "sweep": {
+        if (ERR.t < 0.9) turn(2.2);
+        if (ERR.t < 0.05) errAnim("Spellcast_Raise", true, 1.3);
+        /* abisua lurrean (konoa) */
+        ERR.cone.position.set(ERR.x, 0.07, ERR.z);
+        ERR.cone.rotation.z = ERR.a - PI / 2;
+        ERR.cone.material.opacity = ERR.t < 0.9 ? 0.18 + 0.22 * Math.abs(Math.sin(time * 14)) : 0;
+        if (ERR.t > 0.9 && !ERR.swung) {
+          ERR.swung = true;
+          errAnim("2H_Melee_Attack_Spin", true, 1.3);
+          SND.swing(3);
+          fxBurst(ERR.x + Math.sin(ERR.a) * 4, 1.2, ERR.z + Math.cos(ERR.a) * 4, { n: 24, speed: 6, life: 0.4, size: 0.35, color: "#b8ab8f", grav: 6 });
+          const fa = Math.atan2(Math.sin(face - ERR.a), Math.cos(face - ERR.a));
+          if (d < 7.5 && Math.abs(fa) < 1.5 && P.y < 3) errSweepHit();
+        }
+        if (ERR.t > 1.7 && ERR.state === "sweep") {
+          ERR.state = "idle";
+          ERR.t = 0;
+        }
+        break;
+      }
+      case "down": {
+        ERR.g.position.y = -1.7 * Math.min(1, ERR.t * 3);
+        if (ERR.t > ERR.downT) {
+          ERR.g.position.y = 0;
+          ERR.state = "rise";
+          ERR.t = 0;
+          errAnim("Idle");
+        }
+        break;
+      }
+      case "rise":
+      case "roar": {
+        ERR.g.position.y = 0;
+        if (ERR.t > (ERR.state === "roar" ? 1.8 : 0.6)) {
+          ERR.state = "idle";
+          ERR.t = 0;
+        }
+        break;
+      }
+    }
+    if (ERR.state !== "sweep") ERR.cone.material.opacity = 0;
+    ERR.x = clamp(ERR.x, R.x - 15, R.x + 15);
+    ERR.z = clamp(ERR.z, R.z - 15, R.z + 15);
+    ERR.g.position.x = ERR.x;
+    ERR.g.position.z = ERR.z;
+    ERR.g.rotation.y = ERR.a;
+    BOSS.lockable.x = ERR.x;
+    BOSS.lockable.z = ERR.z;
+    BOSS.lockable.y = 0;
+    for (let i = ERR.waves.length - 1; i >= 0; i--) {
+      const W = ERR.waves[i];
+      W.r += W.sp * dt;
+      W.m.scale.setScalar(W.r);
+      W.m.position.set(W.x, 0.15, W.z);
+      W.m.material.opacity = clamp(1 - W.r / 30, 0, 0.9);
+      const pd = Math.hypot(P.x - W.x, P.z - W.z);
+      if (Math.abs(pd - W.r) < 0.7 && P.y < 0.9 && P.dashT <= 0 && !P.climb) playerHit(1, W.x, W.z);
+      if (W.r > 30) {
+        W.m.parent && W.m.parent.remove(W.m);
+        ERR.waves.splice(i, 1);
+      }
+    }
+  }
+  BOSSK.errolan = {
+    vulnerable: () => ERR.state === "down" && ERR.t > 0.45,
+    weak: () => {
+      ERR.core.getWorldPosition(EV);
+      return { x: EV.x, y: EV.y, z: EV.z };
+    },
+    center: () => ({ x: ERR.x, y: 0, z: ERR.z, h: 12, r: 3.4 }),
+    /* itzulitako harkaitza */
+    stagger: () => {
+      if (["idle", "lift", "throw", "slam", "sweep"].includes(ERR.state)) errDown(3.8, L("Harkaitza itzuli diozu! Belauniko: bihotza agerian!"), "reflect");
+    },
+    /* TXIMISTARRIA: harkaitza altxatuta duela, oinetan → harkaitza buruan */
+    bomb: (x, y, z) => {
+      const dd = Math.hypot(x - ERR.x, z - ERR.z);
+      if (ERR.state === "lift" && dd < 6.5) {
+        fxBurst(ERR.rock.position.x, ERR.rock.position.y, ERR.rock.position.z, { n: 50, speed: 7, up: 2, life: 1.1, size: 0.55, color: "#9a917f", grav: 10 });
+        SND.crumble();
+        shake(0.6);
+        errDown(4.6, L("Trumoia! Harkaitza buruan erori zaio: bihotza agerian!"), "bomb");
+      } else if (dd < 6 && ERR.state !== "down") notifyOnce("err-bomb-early", L("Trumoiak ez dio minik egiten… harkaitza altxatzen duenean, bai!"), "");
+    },
+    bombAim: () => {
+      if (ERR.state !== "lift") return null;
+      const dx = P.x - ERR.x,
+        dz = P.z - ERR.z,
+        d = Math.max(1, Math.hypot(dx, dz));
+      return { x: ERR.x + (dx / d) * 2.4, y: 0, z: ERR.z + (dz / d) * 2.4 };
+    },
+    hit: (n) => {
+      if (!BOSS.vulnerable()) return;
+      ERR.hp -= n;
+      const w = BOSS.weak();
+      FB.bossHit(w.x, w.y, w.z);
+      damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.4 }, n);
+      bossBar("ERROLAN", (ERR.rounds - 1 + Math.max(0, ERR.hp) / ERR_HP) / 3);
+      if (ERR.hp <= 0) {
+        ERR.rounds--;
+        ERR.hp = ERR_HP;
+        if (ERR.rounds <= 0) return errDefeat();
+        ERR.state = "roar";
+        ERR.t = 0;
+        ERR.g.position.y = 0;
+        SND.roar();
+        shake(0.7);
+        slowmo = 0.5;
+        errAnim("Taunt", true, 0.8);
+        ERR.waves.push({ x: ERR.x, z: ERR.z, r: 2, sp: 14, m: errWaveMesh() });
+        spawnWave([["grunt", -1, ERR.rounds === 2 ? 2 : 3]], DGJ.bossRoom);
+        notify(ERR.rounds === 2 ? L("Haserre dago! Itzalak deitu ditu…") : L("Azken aldia! Ekaitza bera dirudi!"), "", 3);
+      }
+    },
+  };
+  function errDefeat() {
+    BOSS.dead = true;
+    ERR.state = "freed";
+    for (const W of ERR.waves) W.m.parent && W.m.parent.remove(W.m);
+    ERR.waves.length = 0;
+    for (const e of ENEMIES) if (e.state !== "dead") killEnemy(e);
+    ROOM.fight = null;
+    bossBar(null);
+    SND.stinger(true);
+    slowmo = 1.2;
+    ERR.g.position.y = 0;
+    ERR.rock.visible = false;
+    ERR.cone.material.opacity = 0;
+    say(
+      [
+        ["· · ·", "Bularretik itzal bat atera zaio, ekaitz-hodei txiki bat bezala, eta harrien artean desagertu da.", "", ERR.x, ERR.z, 8],
+        ["ERROLAN", "…Isiltasuna. Mende askoan lehen aldiz, ez dago trumoirik nire buruan.", "", ERR.x, ERR.z, 9],
+        ["ERROLAN", "Gauekok ekaitz bat sartu zidan bularrean. Jentilen indarra bere alde nahi zuen: harriak jaurti, mendiak astindu…", "", ERR.x, ERR.z, 9],
+        ["AMAIUR", "Lau zaindari askatuta. Hiru falta dira. Non daude?", "", P.x, P.z, 0],
+        ["ERROLAN", "Anboton, hodeien gainean: jentilen zeruan. Haizeak eta trumoiak han dute etxea, eta Mariren sua ere hara eraman zuten.", "", ERR.x, ERR.z, 9],
+        ["ERROLAN", "Gorde tximista-harria, sorgin txikia. Ekaitzak zure alde jo dezala.", "", ERR.x, ERR.z, 9],
+      ],
+      () => {
+        errFreed();
+        saved.hearts = Math.max(saved.hearts, 4);
+        updateMaxHp();
+        P.hp = P.maxHp;
+        flagSet("errolan");
+        persist();
+        itemGet("bihotza", L("ERROLANEN BIHOTZA"), L("Arnasa bat gehiago. Jentilen hiriak lo egin dezake berriro, lasai."), () => {
+          title("ERROLAN ASKE", "");
+          notify(L("Irten hegoaldeko arkutik. Herrian, Irati zain."), "", 6);
+          hud();
+        });
+      },
+    );
+  }
+  function errFreed(instant) {
+    BOSS.on = false;
+    ERR.state = "freed";
+    if (!ERR.g) return;
+    ERR.g.position.y = 0;
+    ERR.root.traverse((n) => {
+      if (n.isMesh && n.material.emissive && n.material !== ERR.core.material) {
+        n.material.color.set("#b9ae98");
+        n.material.emissive.set("#000000");
+      }
+    });
+    ERR.eyeMat.color.set("#ffd27a");
+    ERR.core.visible = false;
+    ERR.light.color.set("#ffe2b0");
+    errAnim("Idle");
+    if (!instant) fxRing(ERR.x, 0.2, ERR.z, "#9dffc4", 18, 1.4);
+  }
+  /* bossUpdate eta bossReset-etik */
+  function jentilBossUpdate(dt) {
+    errolanUpdateBoss(dt);
+  }
+  function jentilReset() {
+    if (BOSS.on && BOSS.kind === "errolan" && !BOSS.dead) {
+      BOSS.on = false;
+      for (const W of ERR.waves) W.m.parent && W.m.parent.remove(W.m);
+      ERR.waves.length = 0;
+      ERR.rock.visible = false;
+      ERR.cone.material.opacity = 0;
+      const R = DGJ.bossRoom;
+      Object.assign(ERR, { state: "sleep", t: 0, x: R.x, z: R.z - 9, a: 0 });
+      if (ERR.g) {
+        ERR.g.position.set(ERR.x, 0, ERR.z);
+        ERR.g.rotation.y = 0;
+      }
+      errAnim("Idle");
+      bossBar(null);
+    }
+  }
+  /* leizeko helburuak (HUD + markatzailea) */
+  DGJ.objective = () => {
+    const R = DGJ.rooms,
+      it = (k) => saved.items.includes(k);
+    if (!isCleared("jB-bells"))
+      return ROOM.cur === R.J2 ? ["Hiru kanpaia sarearen atzean: jo denak elkarren segidan (bat ORAINEAN bakarrik ikusten da).", [R.J2.x + 11, 0, 9.6]] : ["Ekialdeko ertz garaia: HEURA, IRAGANEAN bizirik. Igo eta ekialdera.", [R.J1.x + 10, 3.6, 0]];
+    if (!isCleared("J3")) return ["Harresia: jentilen zaindariak. Kolpea iristean, ALDARATU.", [R.J3.x, R.J3.z, 6]];
+    if (!saved.doors.includes("jC-e") && !(saved.keyz.jentil > 0)) return ["Kutxa: harresiaren erdian.", [R.J3.x, R.J3.z, 6]];
+    if (!saved.doors.includes("jC-e")) return ["Harresiaren ekialdeko atea: giltza txikia.", [R.J3.x + 13, R.J3.z, 6]];
+    if (!isCleared("jD-mini")) return ["Harri-zainaren gela. Zaindaria esnatuko da.", [R.J4.x, R.J4.z, 6]];
+    if (!it("tximistarria")) return ["Kutxa ireki: gelaren hegoaldean.", [R.J4.x, -30, 6]];
+    if (!it(DGJ.bigKey)) {
+      if (!isCleared("jE-crack")) {
+        if (!isCleared("jC-crack") && ROOM.cur !== R.J0) return ["Harresiaren mendebaldeko harri arrakalatua: TXIMISTARRIA (urrun egon!). Beherago, atalasea.", [R.J3.x - 13, R.J3.z, 6]];
+        return ["Atalaseko mendebaldeko harri arrakalatua: TXIMISTARRIA.", [R.J0.x - 13, R.J0.z, 0]];
+      }
+      if (!isCleared("jF-crack")) return ["Dorrea: igo zutabea HEURAz (iraganean); goitik, harri arrakalatua TXIMISTAz.", [R.J6.x, R.J6.z + 4.4, 0]];
+      return ["Lau kanpaiak batera, zutabearen gainetik (bat ORAINEAN).", [R.J6.x, R.J6.z, 12]];
+    }
+    if (!saved.flags.includes("errolan")) return saved.doors.includes("jD-n") ? ["Errolan, jentil iluna. Harkaitza altxatzen duenean: TXIMISTARRIA!", [R.J7.x, R.J7.z + 14, 0]] : ["Atalaseko ate handia: giltza nagusia.", [R.J0.x, R.J0.z - 13, 0]];
+    return ["Irten hegoaldeko arkutik.", [DGJ.exitArch.x, DGJ.exitArch.z, 0]];
+  };
+
+  /* ---------------- HARRESPILAKO TRIKUHARRIA: jentilen atea (haranean) ---------------- */
+  const DOL = { g: null, cap: null, hole: null, glow: null, t: 0, x: 45, z: -69.5, y: 9 };
+  function dolmenBuild() {
+    zoneBuild("ibarra");
+    const { x, y, z } = DOL,
+      g = new T.Group(),
+      st = stackMaterial();
+    g.position.set(x, y, z);
+    BP.add(g);
+    for (const [px, pz, w, d] of [[-1.6, 0.1, 0.55, 3.3], [1.6, 0.1, 0.55, 3.3], [0, -1.6, 3.7, 0.55]]) {
+      const s = new T.Mesh(new T.BoxGeometry(w, 2.9, d), st);
+      s.position.set(px, 1.45, pz);
+      s.rotation.z = px * 0.015;
+      s.castShadow = s.receiveShadow = true;
+      g.add(s);
+    }
+    const cap = new T.Mesh(new T.BoxGeometry(4.8, 0.7, 4.4), st);
+    cap.castShadow = true;
+    g.add(cap);
+    const hole = new T.Mesh(new T.PlaneGeometry(2.3, 2.6), new T.MeshBasicMaterial({ color: "#04060a" }));
+    hole.rotation.x = -PI / 2;
+    hole.position.set(0, 0.05, 0.1);
+    g.add(hole);
+    const glowS = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffc27a", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0 }));
+    glowS.scale.setScalar(3.2);
+    glowS.position.set(0, 0.6, 0.1);
+    g.add(glowS);
+    for (const [sx, sz] of [[-1.6, -1], [-1.6, 1.2], [1.6, -1], [1.6, 1.2], [-1, -1.6], [1, -1.6]]) solids.push({ x: x + sx, z: z + sz, r: 0.5, h: 3, y, pillar: true });
+    Object.assign(DOL, { g, cap, hole, glow: glowS });
+    DOL.t = saved.flags.includes("jentilatea") ? 1 : 0;
+    dolmenPose(DOL.t);
+  }
+  function dolmenPose(k) {
+    DOL.cap.position.set(0, 3.25 + k * 0.25, 0.15 - k * 2.7);
+    DOL.cap.rotation.set(0.05 - k * 0.32, 0.1, -0.04);
+    DOL.hole.visible = k > 0.3;
+    DOL.glow.material.opacity = k * 0.55;
+  }
+  /* ESNATU trikuharriaren ondoan */
+  function dolmenWake() {
+    if (ZONE.cur !== "ibarra" || !DOL.g || Math.hypot(P.x - DOL.x, P.z - DOL.z) > 11 || P.y < 7) return 0;
+    if (saved.flags.includes("jentilatea")) return 0;
+    if (!saved.flags.includes("irati-tartalo")) {
+      notify(L("Trikuharriak dardara egin du… baina lo jarraitzen du. Oraindik ez da bere garaia."), "", 4);
+      return 1;
+    }
+    flagSet("jentilatea");
+    DOL.t = 0.0001;
+    SND.wake();
+    shake(0.45);
+    title("JENTILEN ATEA", "");
+    notify(L("Trikuharriaren harria mugitu da: azpian, eskailerak. JENTILBARATZA."), "", 5);
+    return 1;
+  }
+  function dolmenUpdate(dt) {
+    if (!DOL.g) return;
+    if (DOL.t > 0 && DOL.t < 1) {
+      DOL.t = Math.min(1, DOL.t + dt * 0.45);
+      dolmenPose(smooth01(DOL.t));
+      if (Math.random() < dt * 18) fxBurst(DOL.x + (Math.random() - 0.5) * 4, DOL.y + 3, DOL.z - 1, { n: 2, speed: 1.5, up: 1, life: 0.8, size: 0.3, color: "#a89c86", grav: 6 });
+      return;
+    }
+    if (DOL.t >= 1 && !ZONE.pending && !cinematic && Math.hypot(P.x - DOL.x, P.z - (DOL.z + 0.1)) < 1.6 && P.y > 8) enterZone("jentil", { ...DGJ.entry, cp: true });
   }
   function musicLevel() {
     if (!started || cinematic) return 0;
@@ -17482,6 +19541,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     playerLight.position.set(0.4, 2.3, 0.6);
     hero.add(playerLight);
     magicInit();
+    heuraInit();
     orb(0.5, 1, 0, 0.12, "#ffd3a0", hero);
     glow(0, 1, 0, "#f0ca8f", 1.2).userData.player = true;
     fxInit();
@@ -17508,6 +19568,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     buildRunePuzzles("lamia");
     buildTartalo();
     buildRunePuzzles("tartalo");
+    /* laugarren leizea: JENTILBARATZA (eta haraneko trikuharria) */
+    buildJentil();
+    buildRunePuzzles("jentil");
+    dolmenBuild();
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -17567,6 +19631,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     return best;
   }
   function teleport(x, z, y) {
+    climbDrop();
     jumpBuffer = 0;
     groundGrace = 0;
     /* lur irregularra: azpiko lurrera (edo gaineko gainazalera, gehienez 2.5 m) itsatsi */
@@ -17608,6 +19673,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function fall(hard) {
     if (respawnTimer > 0) return;
     ponyDismount(true);
+    climbDrop();
     hardFall = !!hard;
     respawnTimer = hard ? 0.6 : 0.38;
     P.vx = P.vz = 0;
@@ -17617,7 +19683,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     jumpBuffer = 0.18;
   }
   function dash() {
-    if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer || P.riding) return;
+    if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer || P.riding || P.climb) return;
     let d = direction();
     if (Math.hypot(d.x, d.z) < 0.1) d = { x: Math.sin(P.angle), z: Math.cos(P.angle) };
     const n = Math.hypot(d.x, d.z) || 1;
@@ -17707,6 +19773,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function move(dt) {
     groundGrace = P.grounded ? 0.14 : Math.max(0, groundGrace - dt);
     jumpBuffer = Math.max(0, jumpBuffer - dt);
+    heuraTick(dt);
+    /* HEURA: hormari helduta (heura.js arduratzen da) */
+    if (P.climb && climbUpdate(dt)) return;
     let d = direction(),
       len = Math.hypot(d.x, d.z),
       surf = !!(input.keys.ShiftLeft || input.keys.ShiftRight) || (mobile && Math.hypot(input.x, input.z) > 0.88);
@@ -17906,6 +19975,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
                   ? run
                   : "Idle",
     );
+    if (!P.climb) climbTry(d, len);
     trackSafe(dt);
     if (P.y < ZONES[ZONE.cur].fallY) fall();
     /* gunea (herria, zelaiak, leizeko gela...): HUDaren izena eta helburuak */
@@ -18022,7 +20092,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
      hitz egin, kutxa ireki, atea, harri-danborra, txalaparta, jentil-harria.
      ================================================================== */
   function actionHere() {
-    if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer) return null;
+    if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer || P.climb) return null;
     const N = npcNear();
     if (N) return { kind: "talk", label: L("HITZ EGIN"), fn: () => talkTo(N) };
     const C = chestNear();
@@ -18030,6 +20100,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const LC = lockedChestNear();
     if (LC) return { kind: "locked", label: L("ITXITA"), fn: () => notify(LC.lockedHint || L("Ezin da ireki… oraingoz."), "", 3.5) };
     if (ponyNear()) return { kind: "pony", label: L("IGO"), fn: ponyMount };
+    const HN = hearthNear();
+    if (HN) return { kind: "hearth", label: L("ATSEDEN"), fn: () => hearthRest(HN) };
+    const SC = shortcutNear();
+    if (SC) return SC;
     const D = doorNear();
     if (D) return { kind: "door", label: D.kind === "boss" ? L("ATE HANDIA") : L("ATEA"), fn: () => tryDoor(D) };
     if (drumNear()) return { kind: "drum", label: L("ENTZUN"), fn: drumTalk };
@@ -18088,7 +20162,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     /* leizean: kamera garaiagoa eta maldatsuagoa (hormek ez dezaten Amaiur estali) */
     CAM.inside = mix(CAM.inside ?? 0, ZONES[ZONE.cur].outdoor ? 0 : 1, 1 - Math.exp(-dt * 6));
     const look = new T.Vector3(P.x, P.y + (P.riding ? 1.7 : 1), P.z).add(CAM.look),
-      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? 1.25 : 1) * (P.riding ? 1.16 : 1));
+      /* Errolan (erraldoia): kamera urrunago eta begirada gorago */
+      tall = BOSS.on && BOSS.kind === "errolan",
+      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : 1.25) : 1) * (P.riding ? 1.16 : 1));
     lockCamera(dt, look);
     /* etsai nagusia: biak enkoadratu (finkatu gabe ere) */
     CAM.bossK = mix(CAM.bossK || 0, BOSS.on && !LOCK.target ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -18096,6 +20172,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       const c = BOSS.center();
       look.x = mix(look.x, (look.x + c.x) / 2, 0.55 * CAM.bossK);
       look.z = mix(look.z, (look.z + c.z) / 2, 0.55 * CAM.bossK);
+      if (tall) {
+        /* harkaitza altxatzean: kamera gorago eta urrunago (harria ikusteko) */
+        CAM.liftK = mix(CAM.liftK || 0, ERR.state === "lift" || ERR.state === "throw" ? 1 : 0, 1 - Math.exp(-dt * 3));
+        look.y += (4.2 + 4 * CAM.liftK) * CAM.bossK;
+        offset.y *= 1 - 0.3 * CAM.bossK;
+        offset.multiplyScalar(1 + 0.18 * CAM.liftK * CAM.bossK);
+      }
     }
     /* jokalaria pantailaren erdialdetik gora (behean botoiak daude): begirada kamerarantz lerratu */
     /* hatzaz biratutako kamera (yaw, leundua): desplazamendua jokalariaren inguruan */
@@ -18240,7 +20323,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     $("dashLab").textContent = "BULTZADA";
     $("coinLab").textContent = "TXANPONAK";
     $("keyLab").textContent = "GILTZAK";
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ["L", "egunkaria"]]
+    $("bombLab").textContent = "TXIMISTA";
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ...(saved.items.includes("tximistarria") ? [["X", "tximistarria"]] : []), ["L", "egunkaria"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
     if (ready) {
@@ -18255,6 +20339,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       KeyF: dash,
       KeyC: chainFire,
       KeyV: hornBlow,
+      KeyX: bombThrow,
       KeyB: txalaOpen,
       KeyT: lockToggle,
       Tab: lockToggle,
@@ -18436,6 +20521,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     $("dashDot").style.opacity = P.dashReady ? 1 : 0.5;
     $("coins").textContent = saved.coins;
     $("keyBox").hidden = !DG;
+    $("bombBox").hidden = !hasBomb();
+    if (hasBomb()) $("bombN").textContent = "●".repeat(TXB.n) + "○".repeat(Math.max(0, TXB.max - TXB.n));
     if (DG) $("keyN").textContent = (saved.keyz[ZONE.cur] || 0) + (saved.items.includes(DG.bigKey) && !saved.doors.includes(DG.bossDoor) ? " ◆" : "");
     $("route").textContent = Z.name;
     map();
@@ -18545,6 +20632,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       updateWorld(dt);
       if (!TXALA.on) move(dt);
       magicUpdate(dt);
+      bombsUpdate(dt);
       chainUpdate(dt);
       lockUpdate(dt);
       txalaUpdate(dt);
@@ -18812,7 +20900,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
      ATEA, ENTZUN, TXALAPARTA, ESKUA, KATEA… Bestela ezkutatuta. ⋯ = menu osoa.
      ================================================================== */
   const CTX = { cur: null, fn: null };
-  const CTX_COL = { talk: "gold", chest: "gold", door: "gold", drum: "violet", txala: "violet", stone: "violet", craft: "green", chain: "cyan" };
+  const CTX_COL = { talk: "gold", chest: "gold", door: "gold", hearth: "gold", drum: "violet", txala: "violet", stone: "violet", craft: "green", chain: "cyan" };
   function ctxPower() {
     if (CRAFT.on) return ["craft", L("EGINDA"), "green", craftToggle];
     if (near) return [near.kind, near.label, CTX_COL[near.kind] || "blue", near.fn];
@@ -18822,6 +20910,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     /* HAIZE-ADARRA: haize-errota, balsa, lainoa edo hosto-pila hurbil */
     if (hasHorn() && WIND.list.some((W) => W.group === ZONES[ZONE.cur].group && (!W.live || W.live()) && Math.hypot(W.x - P.x, W.z - P.z) < (W.range || 14) - 1 && (W.y === undefined || Math.abs(W.y - P.y) < (W.dy || 6))))
       return ["wind", L("ADARRA"), "cyan", hornBlow];
+    /* TXIMISTARRIA: harri arrakalatu bat hurbil (edo etsai nagusiak eskatzen duenean) */
+    if (hasBomb() && TXB.n > 0 && (crackNear(11) || (BOSS.on && BOSS.bombAim && BOSS.bombAim()))) return ["bomb", L("TXIMISTA"), "cyan", bombThrow];
     /* ENTZUN behar den lekuan (ezkutuko harriak) */
     if (saved.rhythms.includes("entzun") && TXALA.reveal <= 0 && platforms.some((s) => s.hidden && Math.hypot(s.x - P.x, s.z - P.z) < 18)) return ["txala", L("TXALAPARTA"), "violet", txalaOpen];
     return null;
@@ -18848,6 +20938,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (saved.rhythms.length) opts.push([L("TXALAPARTA") + kb(" · B"), txalaOpen]);
     if (hasChain()) opts.push([L("SUGAARREN KATEA") + kb(" · C"), chainFire]);
     if (hasHorn()) opts.push([L("HAIZE-ADARRA") + kb(" · V"), hornBlow]);
+    if (hasBomb()) opts.push([L("TXIMISTARRIA") + kb(" · X"), bombThrow]);
     opts.push([L("FINKATU") + kb(" · T"), lockToggle]);
     opts.push([L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)]);
     const Z = zoneHere();
@@ -18861,6 +20952,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         "\n\n" +
         (hasChain() ? L("KATEA: suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.") + "\n\n" : "") +
         (hasHorn() ? L("ADARRA: haize-bolada aurrera — errotak, balsak, lainoa, hostoak.") + "\n\n" : "") +
+        (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",
@@ -18979,6 +21071,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         spawnEnemy,
         spawnWave,
         playerHit,
+        hitEnemy,
         killEnemy,
         bossStart,
         miniStart,
@@ -19023,6 +21116,35 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ponyDismount,
         pottokaCall,
         SECRETS,
+        GUARD,
+        guardPress,
+        IVY,
+        CLIMB,
+        TXB,
+        bombThrow,
+        bombExplode,
+        bombsBlow,
+        crackWall,
+        crackRock,
+        BREAKABLES,
+        RUNE_SETS,
+        buildRunePuzzles,
+        DGJ,
+        ERR,
+        ZAZPI,
+        HEARTHS,
+        SHORTCUTS,
+        DOL,
+        dolmenWake,
+        hearthRest,
+        shortcutNear,
+        errolanStart,
+        ivyWall,
+        ivySide,
+        slab,
+        zoneBuild,
+        climbDrop,
+        meleeHit,
         HERD,
         eyeRay,
         eyeOccluders,

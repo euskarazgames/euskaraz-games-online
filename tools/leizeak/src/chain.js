@@ -89,6 +89,7 @@
   function chainFire() {
     if (!started || paused || !hasChain() || CHAIN.state !== "idle" || TXALA.on || CRAFT.on || respawnTimer) return;
     if (P.riding) return notify(L("Jaitsi pottokatik katea erabiltzeko."), "", 2);
+    if (P.climb) return;
     const t = chainCandidates()[0];
     if (!t) {
       notify(L("Ez dago suge-eraztunik irismenean."), "", 1.6);
