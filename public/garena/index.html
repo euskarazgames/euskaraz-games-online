@@ -212,6 +212,160 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
   .heroSectionBtn{flex:0 0 auto;min-width:112px;min-height:50px;border-radius:15px;scroll-snap-align:start}
 }
 
+
+/* Hero GARENA · composicion equilibrada */
+.heroMain{
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:54px clamp(24px,5vw,72px);
+}
+.heroCopy{
+  position:relative;
+  inset:auto;
+  width:min(920px,100%);
+  max-width:none;
+  margin:auto;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.heroCopy .kicker{margin:0 0 8px}
+.heroCopy h1{margin:4px 0 16px;max-width:none}
+.heroCopy .lead{max-width:760px;margin:0 auto 22px}
+.heroCopy .ctas{justify-content:center;margin-bottom:2px}
+.heroSections{
+  width:min(820px,100%);
+  max-width:none;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:22px auto 0;
+  padding:0;
+}
+.heroSectionBtn{
+  --c1:#1489db;
+  --c2:#0758a5;
+  position:relative;
+  display:grid;
+  grid-template-columns:42px 1fr 18px;
+  align-items:center;
+  gap:10px;
+  min-height:64px;
+  padding:10px 12px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.07));
+  color:#fff;
+  text-align:left;
+  box-shadow:0 12px 28px rgba(0,41,88,.18),inset 0 1px rgba(255,255,255,.12);
+  backdrop-filter:blur(14px);
+  transition:transform .18s ease,background .18s ease,border-color .18s ease;
+}
+.heroSectionBtn:before{
+  content:"";
+  position:relative;
+  inset:auto;
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  display:block;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.42),transparent 36%),
+    linear-gradient(145deg,var(--c1),var(--c2));
+  box-shadow:0 8px 18px color-mix(in srgb,var(--c1) 35%,transparent);
+}
+.heroSectionBtn:after{
+  content:"›";
+  position:relative;
+  inset:auto;
+  font-size:24px;
+  line-height:1;
+  font-weight:500;
+  color:rgba(255,255,255,.76);
+  transform:translateY(-1px);
+}
+.heroSectionBtn span{
+  z-index:1;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:-.01em;
+  line-height:1.1;
+}
+.heroSectionBtn:hover{
+  transform:translateY(-3px);
+  border-color:rgba(255,255,255,.48);
+  background:linear-gradient(145deg,rgba(255,255,255,.23),rgba(255,255,255,.1));
+  filter:none;
+}
+.heroSectionBtn.news{--c1:#ff7b59;--c2:#d53e29}
+.heroSectionBtn.live{--c1:#26b7ff;--c2:#0874cb}
+.heroSectionBtn.sports{--c1:#24cd89;--c2:#08784e}
+.heroSectionBtn.movies{--c1:#8b70ff;--c2:#5137c4}
+.heroSectionBtn.series{--c1:#5b94ff;--c2:#2856be}
+.heroSectionBtn.programs{--c1:#ff65b0;--c2:#bd2d72}
+.heroSectionBtn.docs{--c1:#a080ff;--c2:#5e3cc4}
+.heroSectionBtn.audio{--c1:#ffd55c;--c2:#c78b0a;color:#fff}
+.heroSectionBtn.kids{--c1:#33d9e9;--c2:#07839c}
+
+/* iconos minimalistas por contenido */
+.heroSectionBtn.news:before{content:"≡";color:#fff;font-size:23px;font-weight:950;text-align:center;line-height:42px}
+.heroSectionBtn.live:before{content:"▶";color:#fff;font-size:15px;text-align:center;line-height:42px;padding-left:2px}
+.heroSectionBtn.sports:before{content:"◆";color:#fff;font-size:17px;text-align:center;line-height:42px}
+.heroSectionBtn.movies:before{content:"●";color:#fff;font-size:19px;text-align:center;line-height:42px}
+.heroSectionBtn.series:before{content:"▦";color:#fff;font-size:20px;text-align:center;line-height:42px}
+.heroSectionBtn.programs:before{content:"✦";color:#fff;font-size:20px;text-align:center;line-height:42px}
+.heroSectionBtn.docs:before{content:"⌁";color:#fff;font-size:24px;text-align:center;line-height:40px}
+.heroSectionBtn.audio:before{content:"♫";color:#fff;font-size:21px;text-align:center;line-height:42px}
+.heroSectionBtn.kids:before{content:"★";color:#fff;font-size:19px;text-align:center;line-height:42px}
+
+@media(max-width:700px){
+  .hero{padding-top:24px}
+  .heroMain{
+    min-height:0;
+    padding:34px 18px 28px;
+    border-radius:26px;
+  }
+  .heroCopy{position:relative;inset:auto}
+  .heroCopy .kicker{font-size:10px;letter-spacing:.15em}
+  .heroCopy h1{font-size:clamp(54px,17vw,74px);margin:6px 0 14px}
+  .heroCopy .lead{font-size:17px;line-height:1.34;margin-bottom:18px;max-width:34ch}
+  .heroCopy .ctas{width:100%;justify-content:center}
+  .heroCopy .cta{padding:11px 14px;font-size:14px}
+  .heroSections{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    width:100%;
+    gap:8px;
+    margin-top:18px;
+    overflow:visible;
+    padding:0;
+  }
+  .heroSectionBtn{
+    grid-template-columns:1fr;
+    grid-template-rows:36px auto;
+    justify-items:center;
+    gap:6px;
+    min-width:0;
+    min-height:82px;
+    padding:9px 5px 8px;
+    border-radius:16px;
+    text-align:center;
+    scroll-snap-align:none;
+  }
+  .heroSectionBtn:before{
+    width:36px;
+    height:36px;
+    border-radius:11px;
+    line-height:36px!important;
+  }
+  .heroSectionBtn:after{display:none}
+  .heroSectionBtn span{font-size:10.5px;line-height:1.08}
+}
+
 </style>
 </head>
 <body>
@@ -245,15 +399,15 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
           <a class="cta secondary" href="#zuzenekoak" data-eu="Zuzenekoetara joan" data-es="Ir a los directos">Zuzenekoetara joan</a>
         </div>
         <div class="heroSections" id="heroSections" aria-label="GARENA kategoriak">
-          <button class="heroSectionBtn news" type="button" data-hero-cat="news"><span data-eu="Albisteak" data-es="Noticias">Albisteak</span></button>
-          <button class="heroSectionBtn live" type="button" data-hero-cat="live"><span data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</span></button>
-          <button class="heroSectionBtn sports" type="button" data-hero-cat="sports"><span data-eu="Kirolak" data-es="Deportes">Kirolak</span></button>
-          <button class="heroSectionBtn movies" type="button" data-hero-cat="series" data-hero-subtype="media"><span data-eu="Filmak" data-es="Películas">Filmak</span></button>
-          <button class="heroSectionBtn series" type="button" data-hero-cat="series" data-hero-subtype="series"><span data-eu="Telesailak" data-es="Series">Telesailak</span></button>
-          <button class="heroSectionBtn programs" type="button" data-hero-cat="entertainment"><span data-eu="Saioak" data-es="Programas">Saioak</span></button>
-          <button class="heroSectionBtn docs" type="button" data-hero-cat="docs"><span data-eu="Dokumentalak" data-es="Documentales">Dokumentalak</span></button>
-          <button class="heroSectionBtn audio" type="button" data-hero-cat="audio"><span data-eu="Podcastak" data-es="Podcasts">Podcastak</span></button>
-          <button class="heroSectionBtn kids" type="button" data-hero-cat="kids"><span data-eu="Haurrak" data-es="Infantil">Haurrak</span></button>
+          <button class="heroSectionBtn news" aria-label="Albisteak / Noticias" type="button" data-hero-cat="news"><span data-eu="Albisteak" data-es="Noticias">Albisteak</span></button>
+          <button class="heroSectionBtn live" aria-label="Zuzenekoak / Directos" type="button" data-hero-cat="live"><span data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</span></button>
+          <button class="heroSectionBtn sports" aria-label="Kirolak / Deportes" type="button" data-hero-cat="sports"><span data-eu="Kirolak" data-es="Deportes">Kirolak</span></button>
+          <button class="heroSectionBtn movies" aria-label="Filmak / Películas" type="button" data-hero-cat="series" data-hero-subtype="media"><span data-eu="Filmak" data-es="Películas">Filmak</span></button>
+          <button class="heroSectionBtn series" aria-label="Telesailak / Series" type="button" data-hero-cat="series" data-hero-subtype="series"><span data-eu="Telesailak" data-es="Series">Telesailak</span></button>
+          <button class="heroSectionBtn programs" aria-label="Saioak / Programas" type="button" data-hero-cat="entertainment"><span data-eu="Saioak" data-es="Programas">Saioak</span></button>
+          <button class="heroSectionBtn docs" aria-label="Dokumentalak / Documentales" type="button" data-hero-cat="docs"><span data-eu="Dokumentalak" data-es="Documentales">Dokumentalak</span></button>
+          <button class="heroSectionBtn audio" aria-label="Podcastak / Podcasts" type="button" data-hero-cat="audio"><span data-eu="Podcastak" data-es="Podcasts">Podcastak</span></button>
+          <button class="heroSectionBtn kids" aria-label="Haurrak / Infantil" type="button" data-hero-cat="kids"><span data-eu="Haurrak" data-es="Infantil">Haurrak</span></button>
         </div>
       </div>
     </article>
