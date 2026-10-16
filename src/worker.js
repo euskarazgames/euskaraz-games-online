@@ -1,4 +1,4 @@
-import { handleAtariaApi } from "./ataria.js";
+import { handleAtariaApi, handleSocialApi } from "./ataria.js";
 import { DurableObject } from "cloudflare:workers";
 
 function validRoom(v) {
@@ -23,6 +23,10 @@ export default {
 
     if (url.pathname === "/ataria/api/catalog" || url.pathname === "/garena/api/catalog") {
       return handleAtariaApi(request);
+    }
+
+    if (url.pathname === "/garena/api/social") {
+      return handleSocialApi(request);
     }
 
     if (["/ataria/api/click","/ataria/api/ranking","/garena/api/click","/garena/api/ranking"].includes(url.pathname)) {
