@@ -688,18 +688,20 @@ function diverseTop(pool,kind="news",limit=3){
   for(const row of ranked){if(out.length>=limit)break;if(!out.some(y=>y.url===row.x.url))out.push(row.x)}
   return out.slice(0,limit);
 }
-function relevantNewsToday(limit=3){
-  const news=uniqueByUrl(items.filter(x=>x.category==="news"));
+function relevantNewsToday(limit=3,exclude=[]){
+  const excluded=new Set(exclude.map(x=>x?.url).filter(Boolean));
+  const news=uniqueByUrl(items.filter(x=>x.category==="news"&&!excluded.has(x.url)));
   if(!news.length)return [];
   const today=new Date().toISOString().slice(0,10);
   let pool=news.filter(x=>newsDate(x)===today);
   if(pool.length<limit)pool=news.slice(0,Math.max(20,limit));
   return diverseTop(pool,"news",limit);
 }
-function topForShelf(def,limit=3){
-  let pool=uniqueByUrl(items.filter(def.pick));
-  if(def.key==="movies"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="series")]);
-  if(def.key==="series"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="media")]);
+function topForShelf(def,limit=3,exclude=[]){
+  const excluded=new Set(exclude.map(x=>x?.url).filter(Boolean));
+  let pool=uniqueByUrl(items.filter(x=>def.pick(x)&&!excluded.has(x.url)));
+  if(def.key==="movies"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="series"&&!excluded.has(x.url))]);
+  if(def.key==="series"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="media"&&!excluded.has(x.url))]);
   return diverseTop(pool,def.key,limit);
 }
 function trackedAttrs(x){
@@ -715,7 +717,7 @@ function moreButton(cat,subtype=""){
 function renderFeatured(){
   const root=$("#featuredShelves"); if(!root)return;
   const latest=latestNews(5);
-  const relevant=relevantNewsToday(3);
+  const relevant=relevantNewsToday(3,latest);
   const newsTopCards=relevant.map((x,i)=>featuredCardHtml(x,`TOP ${i+1}`)).join("");
   const newsHtml=`<div class="featuredShelf newsBlock">
     <div class="shelfHead"><h3>${lang==="eu"?"Albisteak":"Noticias"}</h3></div>
@@ -728,7 +730,7 @@ function renderFeatured(){
 
   const rest=FEATURE_SHELVES.map(def=>{
     const chosen=shelfItems(def,5);
-    const top=topForShelf(def,3);
+    const top=topForShelf(def,3,chosen);
     const cards=chosen.map(x=>featuredCardHtml(x,lang==="eu"?def.eu:def.es)).join("");
     const topCards=top.map((x,i)=>featuredCardHtml(x,`TOP ${i+1}`)).join("");
     return `<div class="featuredShelf">
