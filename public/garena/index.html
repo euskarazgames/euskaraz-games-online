@@ -410,6 +410,48 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
   .heroSectionBtn .heroLabel{font-size:10.5px}
 }
 
+
+/* Tik Tak Scroll · pantaila soziala */
+.tikTop{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.tikTop .tikClose{justify-self:end}
+.tikTabs{display:flex;align-items:center;gap:16px;font-size:13px;font-weight:900;text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.tikTabs span{opacity:.62;position:relative;padding:10px 0}
+.tikTabs .active{opacity:1}
+.tikTabs .active:after{content:"";position:absolute;left:50%;bottom:3px;width:24px;height:2px;border-radius:99px;background:#fff;transform:translateX(-50%)}
+.tikItem{isolation:isolate}
+.tikInfo{padding-right:82px}
+.tikInfo .tikTrend{display:inline-flex;align-items:center;gap:6px;margin-left:7px;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:10px;font-weight:950;letter-spacing:.07em}
+.tikActions{position:absolute;right:15px;bottom:94px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:15px}
+.tikAction{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-size:10px;font-weight:800;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.tikAction i{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(5,17,32,.34);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);font-style:normal;font-size:19px}
+.tikProgress{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.18);z-index:4}
+.tikProgress i{display:block;height:100%;background:#fff;border-radius:99px 99px 0 0}
+@media(max-width:700px){.tikTop{grid-template-columns:1fr auto 1fr}.tikBrand .garenaWord{display:none}.tikTabs{gap:13px;font-size:12px}.tikInfo{padding-right:76px}.tikActions{right:12px}}
+
+/* Sareak */
+.socialSection{padding-top:54px;padding-bottom:64px}
+.socialHead{display:flex;align-items:end;justify-content:space-between;gap:18px}
+.socialHead h2{font-size:clamp(38px,5vw,66px);letter-spacing:-.055em;margin:0}
+.socialLead{max-width:720px;color:rgba(255,255,255,.72);margin:12px 0 22px}
+.feedbackBtn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:12px 16px;background:#fff;color:#075eaa;font-weight:950;white-space:nowrap}
+.socialGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.socialCard{position:relative;overflow:hidden;min-height:220px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(0,48,99,.34));padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 18px 44px rgba(0,42,88,.2)}
+.socialCard:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 86% 7%,var(--sc),transparent 33%);opacity:.42;pointer-events:none}
+.socialCard>*{position:relative;z-index:1}
+.socialBrand{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.socialBrand strong{font-size:22px;letter-spacing:-.04em}
+.socialBrand span{font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.68)}
+.socialLatest{margin:22px 0 16px}
+.socialLatest small{display:block;color:rgba(255,255,255,.62);font-size:10px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+.socialLatest b{font-size:16px;line-height:1.14}
+.socialLinks{display:flex;flex-wrap:wrap;gap:7px}
+.socialLink{display:inline-flex;align-items:center;gap:6px;border-radius:999px;border:1px solid rgba(255,255,255,.22);padding:8px 10px;background:rgba(0,30,70,.22);font-size:11px;font-weight:900}
+.socialLink:hover{background:#fff;color:#0865b2}
+.socialNet{width:20px;height:20px;border-radius:7px;display:grid;place-items:center;background:rgba(255,255,255,.16);font-size:9px;font-weight:950}
+.socialNote{margin-top:15px;font-size:11px;color:rgba(255,255,255,.58)}
+@media(max-width:1000px){.socialGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.socialHead{align-items:flex-start;flex-direction:column}.socialGrid{display:flex;overflow-x:auto;gap:11px;padding-bottom:10px;scroll-snap-type:x mandatory}.socialGrid::-webkit-scrollbar{display:none}.socialCard{flex:0 0 78vw;scroll-snap-align:start;min-height:230px}}
+
 </style>
 </head>
 <body>
@@ -528,11 +570,24 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
   </div>
 </section>
 
+<section class="section socialSection" id="sareak">
+  <div class="socialHead">
+    <div>
+      <p class="kicker" data-eu="EITB · SAREETAN" data-es="EITB · EN REDES">EITB · SAREETAN</p>
+      <h2 data-eu="Sareak" data-es="Redes">Sareak</h2>
+    </div>
+    <a class="feedbackBtn" href="https://www.eitb.eus/es/contacto/" target="_blank" rel="noopener" data-eu="Iritzia eman ↗" data-es="Dar tu opinión ↗">Iritzia eman ↗</a>
+  </div>
+  <p class="socialLead" data-eu="EITB marken azken edukietara eta sare ofizialetara sarbide zuzena." data-es="Acceso directo al contenido reciente y a las redes oficiales de las marcas EITB.">EITB marken azken edukietara eta sare ofizialetara sarbide zuzena.</p>
+  <div class="socialGrid" id="socialGrid"></div>
+</section>
+
 </main>
 
 <div class="tikOverlay" id="tikOverlay" aria-hidden="true">
   <div class="tikTop">
     <div class="tikBrand"><span class="eitbWord">eitb</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></div>
+    <div class="tikTabs"><span class="active" data-eu="Zuretzat" data-es="Para ti">Zuretzat</span><span data-eu="Berria" data-es="Nuevo">Berria</span></div>
     <button class="tikClose" id="tikClose" type="button" aria-label="Cerrar">×</button>
   </div>
   <div class="tikFeed" id="tikFeed" tabindex="0"></div>
@@ -547,6 +602,60 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 <div class="toast" id="toast"></div>
 
 <script>
+
+const SOCIAL_BRANDS=[
+  {name:"EITB",color:"#258cff",pick:x=>x.category==="news"||x.category==="entertainment",links:[
+    ["IG","Instagram","https://www.instagram.com/eitb/"],
+    ["X","X","https://x.com/eitb"]
+  ]},
+  {name:"Gaztea",color:"#ff4fa3",pick:x=>x.source==="Gaztea"||x.source==="GUAU"&&/gaztea/i.test(x.title||""),links:[
+    ["IG","Instagram","https://www.instagram.com/gaztea_irratia/"],
+    ["X","X","https://x.com/gaztea"]
+  ]},
+  {name:"MAKUSI",color:"#23c7d9",pick:x=>x.source==="MAKUSI"||x.category==="kids",links:[
+    ["IG","Instagram","https://www.instagram.com/makusi_eus/"],
+    ["TT","TikTok","https://www.tiktok.com/@makusi_eus"],
+    ["YT","YouTube","https://www.youtube.com/@makusi_eus"]
+  ]},
+  {name:"ETBko Zuzenekoak",color:"#10a7ff",pick:x=>x.category==="live",links:[
+    ["IG","Instagram","https://www.instagram.com/etb_zuzenekoak/"],
+    ["TT","TikTok","https://www.tiktok.com/@etb_zuzenekoak"]
+  ]},
+  {name:"Euskadi Irratia",color:"#f0b91c",pick:x=>x.source==="GUAU"&&/euskadi irratia/i.test(x.title||""),links:[
+    ["IG","Instagram","https://www.instagram.com/euskadi_irratia/"],
+    ["X","X","https://x.com/euskadi_irratia"]
+  ]},
+  {name:"Radio Euskadi",color:"#ff754c",pick:x=>x.source==="GUAU"&&/radio euskadi/i.test(x.title||""),links:[
+    ["IG","Instagram","https://www.instagram.com/boulevard_radioeuskadi/"],
+    ["X","X","https://x.com/radioeuskadi"]
+  ]},
+  {name:"EITB Albisteak",color:"#ff6d4a",pick:x=>x.category==="news",links:[
+    ["X","X","https://x.com/eitbalbisteak"],
+    ["IG","Instagram","https://www.instagram.com/eitb/"]
+  ]},
+  {name:"EITB Kirolak",color:"#17b978",pick:x=>x.category==="sports",links:[
+    ["X","X","https://x.com/eitbkirolak"]
+  ]}
+];
+function latestForBrand(def){
+  return items.find(def.pick)||null;
+}
+function renderSocial(){
+  const root=$("#socialGrid"); if(!root)return;
+  root.innerHTML=SOCIAL_BRANDS.map(def=>{
+    const latest=latestForBrand(def);
+    const latestHtml=latest
+      ? `<div class="socialLatest"><small>${lang==="eu"?"Azken edukia":"Contenido reciente"}</small><b>${esc(latest.title)}</b></div>`
+      : `<div class="socialLatest"><small>${lang==="eu"?"Sare ofizialak":"Redes oficiales"}</small><b>${esc(def.name)}</b></div>`;
+    const links=def.links.map(([abbr,label,url])=>`<a class="socialLink" href="${url}" target="_blank" rel="noopener"><span class="socialNet">${abbr}</span>${label}</a>`).join("");
+    return `<article class="socialCard" style="--sc:${def.color}">
+      <div class="socialBrand"><strong>${esc(def.name)}</strong><span>${lang==="eu"?"JARRAITU":"SEGUIR"}</span></div>
+      ${latestHtml}
+      <div class="socialLinks">${links}</div>
+    </article>`;
+  }).join("");
+}
+
 const PLATFORMS=[
   ["ORAIN","https://orain.eus/eu/","https://orain.eus/es/","Albisteak eta aktualitatea","Noticias y actualidad","#ff754c"],
   ["PRIMERAN","https://primeran.eus/","https://primeran.eus/","Filmak, telesailak eta dokumentalak","Películas, series y documentales","#7656ff"],
@@ -637,7 +746,7 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderTik(); renderTikPreview(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderTik(); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -832,14 +941,38 @@ function updateLocalizedLinks(){
 
 
 function tikItems(){
-  const seen=new Set();
-  return items.filter(x=>x&&x.url&&x.title&&!seen.has(x.url)&&(seen.add(x.url),true));
+  const base=uniqueByUrl(items.filter(x=>x&&x.url&&x.title));
+  const rankMap=new Map(ranking.map((x,i)=>[x.url,{pos:i,count:Number(x.count||0)}]));
+  return base.map((x,i)=>{
+    const r=rankMap.get(x.url);
+    const freshness=Math.max(0,120-i*2.2);
+    const trending=r?Math.max(0,180-r.pos*18)+Math.log2(r.count+1)*8:0;
+    const visual=x.image?8:0;
+    return {...x,_tikScore:freshness+trending+visual,_tikTrend:Boolean(r),_tikRank:r?.pos??null};
+  }).sort((a,b)=>b._tikScore-a._tikScore);
 }
 function renderTik(){
   const root=$("#tikFeed"); if(!root)return;
-  root.innerHTML=tikItems().map((x,i)=>{
+  const feed=tikItems();
+  root.innerHTML=feed.map((x,i)=>{
     const desc=lang==="eu"?(x.eu||x.description||x.synopsis||"Ireki eduki ofiziala"):(x.es||x.description||x.synopsis||"Abrir contenido oficial");
-    return `<article class="tikItem"><div class="tikMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div><div class="tikInfo"><span class="tikSource">${esc(x.source)}</span><h2>${esc(x.title)}</h2><p>${esc(desc)}</p><a class="tikOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a></div><div class="tikHint">${lang==="eu"?"Irristatu gora":"Desliza arriba"} · ${i+1}/${tikItems().length}</div></article>`;
+    const badge=x._tikTrend?(lang==="eu"?"TRENDING":"TRENDING"):(lang==="eu"?"BERRIA":"NUEVO");
+    const progress=Math.max(4,Math.round(((i+1)/feed.length)*100));
+    return `<article class="tikItem">
+      <div class="tikMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>
+      <div class="tikInfo">
+        <span class="tikSource">${esc(x.source)}</span><span class="tikTrend">${badge}</span>
+        <h2>${esc(x.title)}</h2>
+        <p>${esc(desc)}</p>
+        <a class="tikOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a>
+      </div>
+      <div class="tikActions">
+        <span class="tikAction"><i>♥</i><b>${x._tikTrend?"TOP":"+"}</b></span>
+        <span class="tikAction"><i>↗</i><b>${lang==="eu"?"Partekatu":"Compartir"}</b></span>
+        <span class="tikAction"><i>☰</i><b>${i+1}/${feed.length}</b></span>
+      </div>
+      <div class="tikProgress"><i style="width:${progress}%"></i></div>
+    </article>`;
   }).join("");
 }
 function renderTikPreview(){
@@ -923,7 +1056,7 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderFeatured(); renderTik(); renderTikPreview(); renderCards();
+  renderFeatured(); renderTik(); renderTikPreview(); renderSocial(); renderCards();
 }
 document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
   btn.onclick=()=>{
