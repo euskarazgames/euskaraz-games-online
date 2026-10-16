@@ -389,18 +389,53 @@ function shelfItems(def,limit=5){
 function latestNews(limit=5){
   return uniqueByUrl(items.filter(x=>x.category==="news")).slice(0,limit);
 }
-let todayNewsRanking=[];
+function newsDate(x){
+  if(x.publishedAt)return String(x.publishedAt).slice(0,10);
+  const m=String(x.url||"").match(/\/(20\d{2})\/(\d{2})\/(\d{2})\//);
+  return m?`${m[1]}-${m[2]}-${m[3]}`:"";
+}
+function editorialAiScore(x,index=0){
+  const text=`${x.title||""} ${x.synopsis||""}`.toLowerCase();
+  let score=100-Math.min(index,40)*1.5;
+  const high=[
+    /gobern|jaurlarit|parlament|lege|ley|aurrekont|presupuest/,
+    /hautes|elecci|bozk|vot/,
+    /gerra|guerra|gatazka|conflict|eraso|ataque/,
+    /istripu|accident|sute|incend|uholde|inund|alerta|larriald/,
+    /etxebiz|vivienda|hipotek|alquiler|alokair/,
+    /osasun|salud|hospital|hezkunt|educaci/,
+    /lanpost|empleo|langabe|paro|econom|inflaci|prezio|precio/
+  ];
+  const medium=[
+    /euskadi|euskal herria|bizkaia|gipuzkoa|araba|navarra|nafar/,
+    /europa|espain|españa|frantzia|francia|mundu|mundo/,
+    /energia|garraio|transport|klima|clima|justizia|justicia/
+  ];
+  for(const re of high)if(re.test(text))score+=16;
+  for(const re of medium)if(re.test(text))score+=7;
+  if(/[0-9]{2,}%|milioi|millones?|miles?|ehunka|cientos?/.test(text))score+=5;
+  if(/azken ordu|última hora|zuzenean|directo|orain/.test(text))score+=5;
+  if((x.title||"").length>=45&&(x.title||"").length<=105)score+=3;
+  if(x.image)score+=2;
+  return score;
+}
 function relevantNewsToday(limit=3){
-  const news=items.filter(x=>x.category==="news");
-  const byUrl=new Map(news.map(x=>[x.url,x]));
-  const ranked=todayNewsRanking.map(r=>byUrl.get(r.url)).filter(Boolean);
-  const out=uniqueByUrl(ranked);
-  if(out.length<limit){
-    for(const x of news){
-      if(!out.some(y=>y.url===x.url))out.push(x);
-      if(out.length>=limit)break;
-    }
+  const news=uniqueByUrl(items.filter(x=>x.category==="news"));
+  if(!news.length)return [];
+  const today=new Date().toISOString().slice(0,10);
+  let pool=news.filter(x=>newsDate(x)===today);
+  if(pool.length<limit)pool=news.slice(0,Math.max(20,limit));
+  const ranked=pool.map((x,i)=>({x,score:editorialAiScore(x,i)})).sort((a,b)=>b.score-a.score);
+  const out=[];
+  const fingerprints=[];
+  for(const row of ranked){
+    const fp=(row.x.title||"").toLowerCase().replace(/[^a-záéíóúüñç0-9 ]/gi," ").split(/\s+/).filter(w=>w.length>4).slice(0,5);
+    const tooSimilar=fingerprints.some(prev=>fp.filter(w=>prev.includes(w)).length>=3);
+    if(tooSimilar)continue;
+    out.push(row.x); fingerprints.push(fp);
+    if(out.length>=limit)break;
   }
+  for(const x of pool){if(out.length>=limit)break;if(!out.some(y=>y.url===x.url))out.push(x)}
   return out.slice(0,limit);
 }
 function trackedAttrs(x){
@@ -421,7 +456,7 @@ function renderFeatured(){
     <div class="shelfHead"><h3>${lang==="eu"?"Albisteak":"Noticias"}</h3></div>
     <div class="newsSubhead"><h4>${lang==="eu"?"Azken 5 albisteak":"Últimas 5 noticias"}</h4></div>
     <div class="shelfGrid">${latest.map(x=>featuredCardHtml(x,lang==="eu"?"Azkena":"Última hora")).join("")}</div>
-    <div class="newsSubhead"><h4>${lang==="eu"?"Gaurko 3 nabarmenenak":"3 más relevantes de hoy"}</h4></div>
+    <div class="newsSubhead"><h4>${lang==="eu"?"IA hautaketa · gaurko 3 nabarmenenak":"Selección IA · 3 más relevantes de hoy"}</h4></div>
     <div class="shelfGrid three">${relevant.map(x=>featuredCardHtml(x,lang==="eu"?"Nabarmena":"Relevante")).join("")}</div>
     ${moreButton("news")}
   </div>`;
@@ -445,15 +480,11 @@ function renderFeatured(){
 let ranking=[];
 async function loadRanking(){
   try{
-    const [allRes,newsRes]=await Promise.all([
-      fetch("/garena/api/ranking",{cache:"no-store"}),
-      fetch("/garena/api/ranking?category=news&period=today",{cache:"no-store"})
-    ]);
-    const allJson=allRes.ok?await allRes.json():{ranking:[]};
-    const newsJson=newsRes.ok?await newsRes.json():{ranking:[]};
-    ranking=Array.isArray(allJson.ranking)?allJson.ranking:[];
-    todayNewsRanking=Array.isArray(newsJson.ranking)?newsJson.ranking:[];
-  }catch{ranking=[];todayNewsRanking=[]}
+    const r=await fetch("/garena/api/ranking",{cache:"no-store"});
+    if(!r.ok)throw 0;
+    const j=await r.json();
+    ranking=Array.isArray(j.ranking)?j.ranking:[];
+  }catch{ranking=[]}
   renderRanking();
   renderFeatured();
 }
