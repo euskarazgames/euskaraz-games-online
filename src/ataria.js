@@ -4,7 +4,7 @@ const SOURCES = [
   { id:'primeran-docs', name:'PRIMERAN · Dokumentalak', url:'https://primeran.eus/api/v1/pages/dokumentalak-p', origin:'https://primeran.eus', kind:'api', base:'docs' },
   { id:'etbon', name:'ETB ON', url:'https://etbon.eus/api/v1/home', origin:'https://etbon.eus', kind:'api', base:'entertainment' },
   { id:'guau', name:'GUAU', url:'https://guau.eus/api/v1/home', origin:'https://guau.eus', kind:'api', base:'audio' },
-  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/', origin:'https://orain.eus', kind:'html', base:'news' },
+  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/', origin:'https://orain.eus', kind:'html', base:'news', ttl:60 },
   { id:'kirolak', name:'KIROLAK EITB', url:'https://kirolakeitb.eus/eu/', origin:'https://kirolakeitb.eus', kind:'html', base:'sports' },
   { id:'makusi', name:'MAKUSI', url:'https://makusi.eus/', origin:'https://makusi.eus', kind:'makusi', base:'kids' },
   { id:'gaztea', name:'Gaztea', url:'https://www.gaztea.eus/', origin:'https://www.gaztea.eus', kind:'html', base:'audio' },
@@ -143,16 +143,17 @@ function parseHtml(html, source){
 }
 async function readSource(source, request){
   const origin=new URL(request.url).origin;
+  const ttl=Number(source.ttl||TTL);
   const cache=caches.default;
   const key=new Request(`${origin}/garena/__cache/${source.id}`);
   const hit=await cache.match(key);
   if(hit){
     const cached=await hit.json();
     const age=Date.now()-Date.parse(cached.fetchedAt||0);
-    if(age < TTL*1000) return {...cached,status:'cache'};
+    if(age < ttl*1000) return {...cached,status:'cache'};
   }
   try{
-    const res=await fetch(source.url,{headers:{accept:source.kind==='api'?'application/json':'text/html','user-agent':'GARENA/1.0 (+EITB public directory)'},cf:{cacheTtl:TTL,cacheEverything:true}});
+    const res=await fetch(source.url,{headers:{accept:source.kind==='api'?'application/json':'text/html','user-agent':'GARENA/1.0 (+EITB public directory)'},cf:{cacheTtl:ttl,cacheEverything:true}});
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const text=await res.text();
     const items=source.kind==='api'?parseApi(text,source):source.kind==='makusi'?parseMakusi(text,source):parseHtml(text,source);
@@ -175,6 +176,6 @@ function merge(parts){
 export async function handleAtariaApi(request){
   if(request.method!=='GET'&&request.method!=='HEAD') return new Response('Method Not Allowed',{status:405,headers:{allow:'GET, HEAD'}});
   const parts=await Promise.all(SOURCES.map(s=>readSource(s,request)));
-  const body={items:merge(parts),sources:parts.map(({items,...rest})=>({...rest,count:items.length})),checkedAt:new Date().toISOString(),refreshMinutes:15};
+  const body={items:merge(parts),sources:parts.map(({items,...rest})=>({...rest,count:items.length})),checkedAt:new Date().toISOString(),refreshMinutes:1,contentRefreshMinutes:15};
   return new Response(request.method==='HEAD'?null:JSON.stringify(body),{headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'}});
 }
