@@ -229,6 +229,25 @@ function socialPostsFromHtml(text, src){
   return out;
 }
 
+async function validateTikTokPosts(items){
+  const candidates=(items||[]).slice(0,6);
+  const checked=await Promise.allSettled(candidates.map(async x=>{
+    const endpoint="https://www.tiktok.com/oembed?url="+encodeURIComponent(x.url);
+    const r=await fetch(endpoint,{headers:{"accept":"application/json"},cf:{cacheTtl:300,cacheEverything:true}});
+    if(!r.ok)throw new Error("TikTok oEmbed "+r.status);
+    const j=await r.json();
+    if(!j||!j.html||!j.author_name)throw new Error("TikTok unavailable");
+    return {
+      ...x,
+      title:clean(j.title||x.title||"TikTok"),
+      account:j.author_name?("@"+String(j.author_name).replace(/^@/,"")):x.account,
+      image:typeof j.thumbnail_url==="string"?j.thumbnail_url:(x.image||null),
+      type:"social-video"
+    };
+  }));
+  return checked.filter(r=>r.status==="fulfilled").map(r=>r.value);
+}
+
 async function readSocialSource(src, request){
   const origin=new URL(request.url).origin;
   const cache=caches.default;
@@ -251,7 +270,8 @@ async function readSocialSource(src, request){
     });
     if(!res.ok)throw new Error("HTTP "+res.status);
     const text=await res.text();
-    const items=socialPostsFromHtml(text,src);
+    let items=socialPostsFromHtml(text,src);
+    if(src.kind==="tiktok")items=await validateTikTokPosts(items);
     const payload={id:src.id,items,fetchedAt:new Date().toISOString()};
     if(items.length)await cache.put(key,Response.json(payload,{headers:{"cache-control":"public,max-age=86400"}}));
     return items.length?payload:(cached||payload);
@@ -261,7 +281,6 @@ async function readSocialSource(src, request){
 }
 
 const SOCIAL_FALLBACK_POSTS=[
-  {platform:"TikTok",account:"@makusi_eus",title:"MAKUSI PLAY · bideo tutoriala",url:"https://www.tiktok.com/@makusi_eus/video/7374000525064375584",type:"social-video"},
   {platform:"X",account:"@eitbkirolak",title:"Sarah Pollerosek Lointek Gernika utzi du",url:"https://x.com/eitbkirolak/status/2026754072422891890",type:"social"},
   {platform:"X",account:"@orainnoticias",title:"Un grupo inversor vasco podría estar interesado en la compra de Elmubas Petfood Group",url:"https://x.com/orainnoticias/status/2026744576078156112",type:"social"},
   {platform:"X",account:"@euskaltelebista",title:"Irati Erauskin: Nire belaunaldiko gehiengoak presioa sentitu dugu sexuari dagokionean",url:"https://x.com/euskaltelebista/status/2026734027776966918",type:"social"},
