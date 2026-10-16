@@ -744,6 +744,15 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 <script>
 
 
+const SOCIAL_FALLBACK_POSTS=[
+  {platform:"X",account:"@eitbkirolak",title:"Sarah Pollerosek Lointek Gernika utzi du",url:"https://x.com/eitbkirolak/status/2026754072422891890"},
+  {platform:"X",account:"@orainnoticias",title:"Un grupo inversor vasco podría estar interesado en la compra de Elmubas Petfood Group",url:"https://x.com/orainnoticias/status/2026744576078156112"},
+  {platform:"X",account:"@euskaltelebista",title:"Irati Erauskin: Nire belaunaldiko gehiengoak presioa sentitu dugu sexuari dagokionean",url:"https://x.com/euskaltelebista/status/2026734027776966918"},
+  {platform:"X",account:"@euskadi_irratia",title:"Mikele Landa zinemagilearekin elkarrizketa",url:"https://x.com/euskadi_irratia/status/2026719969178702268"},
+  {platform:"X",account:"@radioeuskadi",title:"Dani Ezkerro eta euskal gastronomia",url:"https://x.com/radioeuskadi/status/2026734715835687008"},
+  {platform:"YouTube",account:"@eitb",title:"VS: Homo Bilbainum",url:"https://www.youtube.com/watch?v=Rggplwv0oE4",image:"https://i.ytimg.com/vi/Rggplwv0oE4/hqdefault.jpg"}
+];
+
 let socialPosts=[];
 function socialNetClass(x){return String(x.platform||"social").toLowerCase().replace(/[^a-z0-9]+/g,"")}
 function socialPostCard(x){
@@ -761,11 +770,8 @@ function socialPostCard(x){
 }
 function renderSocialPosts(){
   const root=$("#socialNativeGrid"); if(!root)return;
-  if(!socialPosts.length){
-    root.innerHTML=`<div class="socialLoading">${lang==="eu"?"Une honetan ezin dira sareetako post publikoak kargatu.":"Ahora mismo no se pueden cargar posts públicos de las redes."}</div>`;
-    return;
-  }
-  root.innerHTML=socialPosts.map(socialPostCard).join("");
+  const view=socialPosts.length?socialPosts:SOCIAL_FALLBACK_POSTS;
+  root.innerHTML=view.map(socialPostCard).join("");
 }
 async function loadSocialPosts(){
   try{
@@ -773,7 +779,8 @@ async function loadSocialPosts(){
     if(!r.ok)throw 0;
     const j=await r.json();
     socialPosts=Array.isArray(j.items)?j.items:[];
-  }catch{socialPosts=[]}
+  }catch{socialPosts=[...SOCIAL_FALLBACK_POSTS]}
+  if(!socialPosts.length)socialPosts=[...SOCIAL_FALLBACK_POSTS];
   renderSocialPosts();
 }
 
