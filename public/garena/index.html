@@ -155,6 +155,31 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 .tikHint{position:absolute;right:18px;bottom:28px;z-index:2;writing-mode:vertical-rl;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65)}
 @media(max-width:700px){.tikButton{height:32px;padding:0 9px;font-size:9px}.tikInfo{padding-left:18px;padding-right:18px}.tikInfo h2{font-size:42px}}
 
+
+/* Tik Tak Scroll showcase */
+.tikShowcase{padding-top:58px;padding-bottom:64px}
+.tikShowHead{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}
+.tikShowHead h2{margin:0;font-size:clamp(38px,5vw,68px);letter-spacing:-.055em}
+.tikShowHead p{margin:0;color:rgba(255,255,255,.72);max-width:42ch}
+.tikPreviewRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.tikPreviewCard{position:relative;min-height:610px;border-radius:38px;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:#062f59;box-shadow:0 28px 70px rgba(0,35,77,.32);cursor:pointer;isolation:isolate;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.tikPreviewCard:hover{transform:translateY(-7px) scale(1.012);box-shadow:0 34px 82px rgba(0,35,77,.42);border-color:rgba(255,255,255,.38)}
+.tikPreviewCard:before{content:"";position:absolute;z-index:5;top:12px;left:50%;transform:translateX(-50%);width:86px;height:20px;border-radius:999px;background:rgba(0,0,0,.5)}
+.tikPreviewMedia{position:absolute;inset:0;background-size:cover;background-position:center}
+.tikPreviewMedia:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.38) 46%,rgba(0,0,0,.09) 78%)}
+.tikPreviewInfo{position:absolute;z-index:3;left:18px;right:66px;bottom:18px}
+.tikPreviewSource{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(10px);font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.tikPreviewInfo h3{margin:11px 0 9px;font-size:clamp(27px,3vw,42px);line-height:.96;letter-spacing:-.05em}
+.tikPreviewInfo p{margin:0 0 14px;font-size:13px;line-height:1.38;color:rgba(255,255,255,.82);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tikPreviewCTA{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;background:#fff;color:#075eaa;font-size:11px;font-weight:950}
+.tikPreviewRail{position:absolute;right:13px;bottom:20px;z-index:3;display:flex;flex-direction:column;gap:10px}
+.tikPreviewBubble{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.16);backdrop-filter:blur(10px);font-weight:900}
+.tikShowFooter{display:flex;justify-content:center;margin-top:22px}
+.tikEnterAll{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:12px 18px;font-weight:950}
+.tikEnterAll:hover{background:#fff;color:#0865b2}
+@media(max-width:1000px){.tikPreviewRow{grid-template-columns:repeat(2,minmax(0,1fr))}.tikPreviewCard:last-child{display:none}}
+@media(max-width:700px){.tikShowcase{padding-top:42px}.tikShowHead{align-items:flex-start;flex-direction:column}.tikPreviewRow{display:flex;overflow-x:auto;gap:14px;padding:6px 18px 18px 4px;scroll-snap-type:x mandatory}.tikPreviewRow::-webkit-scrollbar{display:none}.tikPreviewCard{flex:0 0 82vw;min-height:72vh;scroll-snap-align:center}.tikPreviewCard:last-child{display:block}.tikPreviewInfo h3{font-size:32px}}
+
 </style>
 </head>
 <body>
@@ -247,6 +272,21 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
     <div class="wave">▂ ▅ ▃ ▇ ▅ ▂</div>
   </a>
 </section>
+
+<section class="section tikShowcase" id="tik-tak-scroll">
+  <div class="tikShowHead">
+    <div>
+      <p class="kicker" data-eu="BESTE MODU BATEAN IKUSI" data-es="VER DE OTRA MANERA">BESTE MODU BATEAN IKUSI</p>
+      <h2>Tik Tak Scroll</h2>
+    </div>
+    <p data-eu="Mugikorrean bezala: klik bat eta barrura. Irristatu gora GARENAko edukien artean." data-es="Como en el móvil: un clic y entras. Desliza hacia arriba entre los contenidos de GARENA.">Mugikorrean bezala: klik bat eta barrura. Irristatu gora GARENAko edukien artean.</p>
+  </div>
+  <div class="tikPreviewRow" id="tikPreviewRow"></div>
+  <div class="tikShowFooter">
+    <button class="tikEnterAll" id="tikEnterAll" type="button" data-eu="Tik Tak Scroll ireki ↗" data-es="Abrir Tik Tak Scroll ↗">Tik Tak Scroll ireki ↗</button>
+  </div>
+</section>
+
 </main>
 
 <div class="tikOverlay" id="tikOverlay" aria-hidden="true">
@@ -356,7 +396,7 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderTik(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderTik(); renderTikPreview(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -559,9 +599,41 @@ function renderTik(){
     return `<article class="tikItem"><div class="tikMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div><div class="tikInfo"><span class="tikSource">${esc(x.source)}</span><h2>${esc(x.title)}</h2><p>${esc(desc)}</p><a class="tikOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a></div><div class="tikHint">${lang==="eu"?"Irristatu gora":"Desliza arriba"} · ${i+1}/${tikItems().length}</div></article>`;
   }).join("");
 }
-function openTik(){
-  renderTik();$("#tikOverlay").classList.add("open");$("#tikOverlay").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";setTimeout(()=>$("#tikFeed")?.focus(),0);
+function renderTikPreview(){
+  const root=$("#tikPreviewRow"); if(!root)return;
+  const list=tikItems().slice(0,3);
+  root.innerHTML=list.map((x,i)=>{
+    const desc=lang==="eu"?(x.eu||x.description||x.synopsis||"Ireki edukia"):(x.es||x.description||x.synopsis||"Abrir contenido");
+    return `<article class="tikPreviewCard" role="button" tabindex="0" data-tik-index="${i}">
+      <div class="tikPreviewMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>
+      <div class="tikPreviewInfo">
+        <span class="tikPreviewSource">${esc(x.source)}</span>
+        <h3>${esc(x.title)}</h3>
+        <p>${esc(desc)}</p>
+        <span class="tikPreviewCTA">${lang==="eu"?"Sartu ↗":"Entrar ↗"}</span>
+      </div>
+      <div class="tikPreviewRail"><div class="tikPreviewBubble">▶</div><div class="tikPreviewBubble">♥</div><div class="tikPreviewBubble">↗</div></div>
+    </article>`;
+  }).join("");
+  root.querySelectorAll(".tikPreviewCard").forEach(card=>{
+    const go=()=>openTikAt(Number(card.dataset.tikIndex||0));
+    card.onclick=go;
+    card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}};
+  });
 }
+function openTikAt(index=0){
+  renderTik();
+  $("#tikOverlay").classList.add("open");
+  $("#tikOverlay").setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  requestAnimationFrame(()=>{
+    const feed=$("#tikFeed");
+    const card=feed?.children?.[index];
+    if(card)card.scrollIntoView({block:"start",behavior:"auto"});
+    feed?.focus();
+  });
+}
+function openTik(){openTikAt(0)}
 function closeTik(){
   $("#tikOverlay").classList.remove("open");$("#tikOverlay").setAttribute("aria-hidden","true");document.body.style.overflow="";
 }
@@ -608,9 +680,10 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderFeatured(); renderTik(); renderCards();
+  renderFeatured(); renderTik(); renderTikPreview(); renderCards();
 }
 $("#tikButton").onclick=openTik;
+$("#tikEnterAll").onclick=openTik;
 $("#tikClose").onclick=closeTik;
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#tikOverlay").classList.contains("open"))closeTik()});
 $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("ataria-lang",lang);applyLang()};
