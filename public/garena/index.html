@@ -766,13 +766,13 @@ function renderSocialTopics(){
   root.innerHTML=SOCIAL_TOPICS.map(def=>{
     const list=socialTopicItems(def,4);
     if(!list.length)return "";
-    return \`<section class="socialTopicBlock">
-      <div class="socialTopicTitle"><h4>\${lang==="eu"?def.eu:def.es}</h4><span>\${lang==="eu"?"Nabarmenduenak":"Más relevantes"}</span></div>
-      <div class="socialPostGrid">\${list.map(x=>\`<a class="socialPost" href="\${esc(x.url)}" target="_blank" rel="noopener" \${trackedAttrs(x)}>
-        <div class="socialPostBg\${coverClass(x)}" data-cover-title="\${esc(x.title)}" style="\${coverStyle(x)}"></div>
-        <div class="socialPostInfo"><small>\${esc(x.source||"GARENA")}</small><strong>\${esc(x.title)}</strong><span>\${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</span></div>
-      </a>\`).join("")}</div>
-    </section>\`;
+    return `<section class="socialTopicBlock">
+      <div class="socialTopicTitle"><h4>${lang==="eu"?def.eu:def.es}</h4><span>${lang==="eu"?"Nabarmenduenak":"Más relevantes"}</span></div>
+      <div class="socialPostGrid">${list.map(x=>`<a class="socialPost" href="${esc(x.url)}" target="_blank" rel="noopener" ${trackedAttrs(x)}>
+        <div class="socialPostBg${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>
+        <div class="socialPostInfo"><small>${esc(x.source||"GARENA")}</small><strong>${esc(x.title)}</strong><span>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</span></div>
+      </a>`).join("")}</div>
+    </section>`;
   }).join("");
 }
 
@@ -1215,18 +1215,18 @@ function youtubeEmbedUrl(value){
         if(m)id=m[1];
       }
     }
-    return id?\`https://www.youtube-nocookie.com/embed/\${encodeURIComponent(id)}?playsinline=1&rel=0\`:"";
+    return id?`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?playsinline=1&rel=0`:"";
   }catch{return ""}
 }
 function tikVideoHtml(x){
   const embed=x.embedUrl||x.embed||"";
   const direct=x.videoUrl||x.video||"";
   const yt=youtubeEmbedUrl(embed||direct||x.url||"");
-  if(yt)return \`<div class="tikMediaFrame"><iframe src="\${esc(yt)}" title="\${esc(x.title)}" loading="lazy" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div><span class="tikVideoBadge">▶ VIDEO</span>\`;
+  if(yt)return `<div class="tikMediaFrame"><iframe src="${esc(yt)}" title="${esc(x.title)}" loading="lazy" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div><span class="tikVideoBadge">▶ VIDEO</span>`;
   if(/^https:\/\//i.test(direct)&&/\.(mp4|webm|m4v)(?:\?|$)/i.test(direct)){
-    return \`<div class="tikMediaFrame"><video controls playsinline preload="metadata" \${x.image?\`poster="\${esc(x.image)}"\`:""} src="\${esc(direct)}"></video></div><span class="tikVideoBadge">▶ VIDEO</span>\`;
+    return `<div class="tikMediaFrame"><video controls playsinline preload="metadata" ${x.image?`poster="${esc(x.image)}"`:""} src="${esc(direct)}"></video></div><span class="tikVideoBadge">▶ VIDEO</span>`;
   }
-  return \`<div class="tikMediaFrame"><div class="tikMedia\${coverClass(x)}" data-cover-title="\${esc(x.title)}" style="\${coverStyle(x)}"></div></div>\`;
+  return `<div class="tikMediaFrame"><div class="tikMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div></div>`;
 }
 
 function tikCardHtml(x,position,totalHint){
