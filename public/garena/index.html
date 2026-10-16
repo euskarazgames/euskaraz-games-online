@@ -394,10 +394,11 @@ function newsDate(x){
   const m=String(x.url||"").match(/\/(20\d{2})\/(\d{2})\/(\d{2})\//);
   return m?`${m[1]}-${m[2]}-${m[3]}`:"";
 }
-function editorialAiScore(x,index=0){
-  const text=`${x.title||""} ${x.synopsis||""}`.toLowerCase();
-  let score=100-Math.min(index,40)*1.5;
-  const high=[
+function editorialScore(x,index=0,kind="news"){
+  const text=`${x.title||""} ${x.synopsis||""} ${x.description||""}`.toLowerCase();
+  let score=100-Math.min(index,50)*1.35;
+
+  const commonHigh=[
     /gobern|jaurlarit|parlament|lege|ley|aurrekont|presupuest/,
     /hautes|elecci|bozk|vot/,
     /gerra|guerra|gatazka|conflict|eraso|ataque/,
@@ -406,18 +407,49 @@ function editorialAiScore(x,index=0){
     /osasun|salud|hospital|hezkunt|educaci/,
     /lanpost|empleo|langabe|paro|econom|inflaci|prezio|precio/
   ];
-  const medium=[
+  const commonMedium=[
     /euskadi|euskal herria|bizkaia|gipuzkoa|araba|navarra|nafar/,
     /europa|espain|españa|frantzia|francia|mundu|mundo/,
     /energia|garraio|transport|klima|clima|justizia|justicia/
   ];
-  for(const re of high)if(re.test(text))score+=16;
-  for(const re of medium)if(re.test(text))score+=7;
+  const categorySignals={
+    sports:[/final|derbi|txapelketa|campeon|liga|kopa|copa|mundial|euro|partid|match|pilota|remo|trainer|futbol|basket|saski|athletic|real sociedad|osasuna|alaves/],
+    movies:[/estreinaldi|estreno|premio|sari|festival|film|película|zinema|cine|thriller|comedia|drama|aventura/],
+    series:[/temporada|season|final|estreinaldi|estreno|atal|episodio|serie|telesail/],
+    programs:[/berezi|especial|elkarrizketa|entrevista|lehiaketa|concurso|saio|programa|show|umore|humor/],
+    docs:[/ikerketa|investiga|historia|istorio|gizarte|sociedad|memoria|kultura|cultura|natura|naturaleza|dokument|documental/],
+    audio:[/elkarrizketa|entrevista|podcast|musika|música|aktualitate|actualidad|kultura|cultura|radio|irrati/],
+    kids:[/estreinaldi|estreno|abentura|aventura|familia|haur|infantil|gazte|joven|animazio|animación/]
+  };
+
+  if(kind==="news"){
+    for(const re of commonHigh)if(re.test(text))score+=16;
+    for(const re of commonMedium)if(re.test(text))score+=7;
+  }else{
+    for(const re of commonMedium)if(re.test(text))score+=4;
+    for(const re of categorySignals[kind]||[])if(re.test(text))score+=10;
+  }
+
   if(/[0-9]{2,}%|milioi|millones?|miles?|ehunka|cientos?/.test(text))score+=5;
-  if(/azken ordu|última hora|zuzenean|directo|orain/.test(text))score+=5;
-  if((x.title||"").length>=45&&(x.title||"").length<=105)score+=3;
-  if(x.image)score+=2;
+  if(/azken ordu|última hora|zuzenean|directo|orain|gaur|hoy|berri|nuevo|nueva|estreinaldi|estreno/.test(text))score+=6;
+  if((x.title||"").length>=35&&(x.title||"").length<=105)score+=3;
+  if(x.image)score+=3;
+  if((x.synopsis||"").length>80)score+=2;
+  if(x.source==="PRIMERAN"||x.source==="ETB ON"||x.source==="KIROLAK EITB"||x.source==="ORAIN")score+=1;
   return score;
+}
+function diverseTop(pool,kind="news",limit=3){
+  const ranked=uniqueByUrl(pool).map((x,i)=>({x,score:editorialScore(x,i,kind)})).sort((a,b)=>b.score-a.score);
+  const out=[],fingerprints=[];
+  for(const row of ranked){
+    const fp=(row.x.title||"").toLowerCase().replace(/[^a-záéíóúüñç0-9 ]/gi," ").split(/\s+/).filter(w=>w.length>4).slice(0,6);
+    const tooSimilar=fingerprints.some(prev=>fp.filter(w=>prev.includes(w)).length>=3);
+    if(tooSimilar)continue;
+    out.push(row.x);fingerprints.push(fp);
+    if(out.length>=limit)break;
+  }
+  for(const row of ranked){if(out.length>=limit)break;if(!out.some(y=>y.url===row.x.url))out.push(row.x)}
+  return out.slice(0,limit);
 }
 function relevantNewsToday(limit=3){
   const news=uniqueByUrl(items.filter(x=>x.category==="news"));
@@ -425,18 +457,13 @@ function relevantNewsToday(limit=3){
   const today=new Date().toISOString().slice(0,10);
   let pool=news.filter(x=>newsDate(x)===today);
   if(pool.length<limit)pool=news.slice(0,Math.max(20,limit));
-  const ranked=pool.map((x,i)=>({x,score:editorialAiScore(x,i)})).sort((a,b)=>b.score-a.score);
-  const out=[];
-  const fingerprints=[];
-  for(const row of ranked){
-    const fp=(row.x.title||"").toLowerCase().replace(/[^a-záéíóúüñç0-9 ]/gi," ").split(/\s+/).filter(w=>w.length>4).slice(0,5);
-    const tooSimilar=fingerprints.some(prev=>fp.filter(w=>prev.includes(w)).length>=3);
-    if(tooSimilar)continue;
-    out.push(row.x); fingerprints.push(fp);
-    if(out.length>=limit)break;
-  }
-  for(const x of pool){if(out.length>=limit)break;if(!out.some(y=>y.url===x.url))out.push(x)}
-  return out.slice(0,limit);
+  return diverseTop(pool,"news",limit);
+}
+function topForShelf(def,limit=3){
+  let pool=uniqueByUrl(items.filter(def.pick));
+  if(def.key==="movies"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="series")]);
+  if(def.key==="series"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="media")]);
+  return diverseTop(pool,def.key,limit);
 }
 function trackedAttrs(x){
   return `data-track="content" data-url="${esc(x.url)}" data-title="${esc(x.title)}" data-category="${esc(x.category||"")}" data-source="${esc(x.source||"")}"`;
@@ -452,19 +479,28 @@ function renderFeatured(){
   const root=$("#featuredShelves"); if(!root)return;
   const latest=latestNews(5);
   const relevant=relevantNewsToday(3);
+  const newsTopCards=relevant.map((x,i)=>featuredCardHtml(x,`TOP ${i+1}`)).join("");
   const newsHtml=`<div class="featuredShelf newsBlock">
     <div class="shelfHead"><h3>${lang==="eu"?"Albisteak":"Noticias"}</h3></div>
     <div class="newsSubhead"><h4>${lang==="eu"?"Azken 5 albisteak":"Últimas 5 noticias"}</h4></div>
     <div class="shelfGrid">${latest.map(x=>featuredCardHtml(x,lang==="eu"?"Azkena":"Última hora")).join("")}</div>
-    <div class="newsSubhead"><h4>${lang==="eu"?"IA hautaketa · gaurko 3 nabarmenenak":"Selección IA · 3 más relevantes de hoy"}</h4></div>
-    <div class="shelfGrid three">${relevant.map(x=>featuredCardHtml(x,lang==="eu"?"Nabarmena":"Relevante")).join("")}</div>
+    <div class="newsSubhead"><h4>TOP 3</h4></div>
+    <div class="shelfGrid three">${newsTopCards}</div>
     ${moreButton("news")}
   </div>`;
 
   const rest=FEATURE_SHELVES.map(def=>{
     const chosen=shelfItems(def,5);
+    const top=topForShelf(def,3);
     const cards=chosen.map(x=>featuredCardHtml(x,lang==="eu"?def.eu:def.es)).join("");
-    return `<div class="featuredShelf"><div class="shelfHead"><h3>${lang==="eu"?def.eu:def.es}</h3></div><div class="shelfGrid">${cards}</div>${moreButton(def.cat,def.subtype||"")}</div>`;
+    const topCards=top.map((x,i)=>featuredCardHtml(x,`TOP ${i+1}`)).join("");
+    return `<div class="featuredShelf">
+      <div class="shelfHead"><h3>${lang==="eu"?def.eu:def.es}</h3></div>
+      <div class="shelfGrid">${cards}</div>
+      <div class="newsSubhead"><h4>TOP 3</h4></div>
+      <div class="shelfGrid three">${topCards}</div>
+      ${moreButton(def.cat,def.subtype||"")}
+    </div>`;
   }).join("");
 
   root.innerHTML=newsHtml+rest;
