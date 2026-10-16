@@ -261,6 +261,7 @@ async function readSocialSource(src, request){
 }
 
 const SOCIAL_FALLBACK_POSTS=[
+  {platform:"TikTok",account:"@makusi_eus",title:"MAKUSI PLAY · bideo tutoriala",url:"https://www.tiktok.com/@makusi_eus/video/7374000525064375584",type:"social-video"},
   {platform:"X",account:"@eitbkirolak",title:"Sarah Pollerosek Lointek Gernika utzi du",url:"https://x.com/eitbkirolak/status/2026754072422891890",type:"social"},
   {platform:"X",account:"@orainnoticias",title:"Un grupo inversor vasco podría estar interesado en la compra de Elmubas Petfood Group",url:"https://x.com/orainnoticias/status/2026744576078156112",type:"social"},
   {platform:"X",account:"@euskaltelebista",title:"Irati Erauskin: Nire belaunaldiko gehiengoak presioa sentitu dugu sexuari dagokionean",url:"https://x.com/euskaltelebista/status/2026734027776966918",type:"social"},
