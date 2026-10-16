@@ -1120,67 +1120,74 @@ function tikVideoScore(x){
   return 0;
 }
 
+function tikContentKey(x){
+  return String(x.title||"").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g," ").trim();
+}
 function tikBase(){
-  const base=uniqueByUrl(items.filter(x=>x&&x.url&&x.title));
+  const raw=items.filter(x=>x&&x.url&&x.title);
+  const byTitle=new Map();
+  for(let i=0;i<raw.length;i++){
+    const x=raw[i],key=tikContentKey(x)||x.url;
+    const prev=byTitle.get(key);
+    if(!prev||tikTime(x,i)>tikTime(prev,prev._tikIndex||9999))byTitle.set(key,{...x,_tikIndex:i});
+  }
+  const base=[...byTitle.values()];
   const rankMap=new Map(ranking.map((x,i)=>[x.url,{pos:i,count:Number(x.count||0)}]));
   return base.map((x,i)=>{
     const r=rankMap.get(x.url);
-    const ageHours=Math.max(0,(Date.now()-tikTime(x,i))/3600000);
-    const freshness=Math.max(0,180-Math.min(ageHours,180));
-    const trending=r?Math.max(0,110-r.pos*12)+Math.log2(r.count+1)*7:0;
-    return {...x,_tikFresh:freshness,_tikVideoScore:tikVideoScore(x),_tikPlayable:tikPlayableVideo(x),_tikTrend:Boolean(r),_tikRank:r?.pos??null,_tikIndex:i};
+    const ageHours=Math.max(0,(Date.now()-tikTime(x,x._tikIndex??i))/3600000);
+    const freshness=Math.max(0,240-Math.min(ageHours,240));
+    const trending=r?Math.max(0,70-r.pos*7)+Math.log2(r.count+1)*4:0;
+    return {...x,_tikFresh:freshness,_tikVideoScore:tikVideoScore(x),_tikPlayable:tikPlayableVideo(x),_tikTrend:Boolean(r),_tikRank:r?.pos??null,_tikIndex:x._tikIndex??i};
   });
 }
-function tikItems(){
-  const base=tikBase();
-  const news=base.filter(x=>x.category==="news")
-    .sort((a,b)=>b._tikVideoScore-a._tikVideoScore||tikTime(b,b._tikIndex)-tikTime(a,a._tikIndex));
-  const nonNews=base.filter(x=>x.category!=="news");
-  const anchors=news.slice(0,20);
 
-  if(tikMode==="new"){
-    const related=nonNews
-      .map(x=>({...x,_related:tikRelatedScore(x,anchors)}))
-      .sort((a,b)=>b._tikVideoScore-a._tikVideoScore||b._related-a._related||b._tikFresh-a._tikFresh);
-    const out=[],used=new Set();
-    let ri=0;
-    for(let i=0;i<news.length;i++){
-      const n=news[i];
-      if(!used.has(n.url)){out.push(n);used.add(n.url)}
-      if((i+1)%3===0){
-        while(ri<related.length&&used.has(related[ri].url))ri++;
-        if(ri<related.length&&related[ri]._related>0){out.push(related[ri]);used.add(related[ri].url);ri++}
-      }
+let tikRecent=[];
+try{tikRecent=JSON.parse(localStorage.getItem("garena-tik-recent")||"[]")||[]}catch{tikRecent=[]}
+function saveTikRecent(url){
+  if(!url)return;
+  tikRecent=[url,...tikRecent.filter(x=>x!==url)].slice(0,180);
+  localStorage.setItem("garena-tik-recent",JSON.stringify(tikRecent));
+}
+function weightedRandomOrder(list){
+  const recent=new Set(tikRecent.slice(0,120));
+  return list.map((x,i)=>{
+    const fresh=1+x._tikFresh/28;
+    const video=1+x._tikVideoScore/180;
+    const personal=Math.max(.35,1+tikPreferenceScore(x)/90);
+    const novelty=recent.has(x.url)?.12:1;
+    const modeBoost=tikMode==="new"?(1+x._tikFresh/20):1;
+    const weight=Math.max(.05,fresh*video*personal*novelty*modeBoost);
+    return {x,key:-Math.log(Math.max(Math.random(),1e-9))/weight};
+  }).sort((a,b)=>a.key-b.key).map(o=>o.x);
+}
+function diversifyTikSources(list){
+  const remaining=[...list],out=[];
+  const recentSources=[];
+  while(remaining.length){
+    let pick=0;
+    for(let i=0;i<Math.min(remaining.length,18);i++){
+      const src=remaining[i].sourceId||remaining[i].source||"";
+      if(!recentSources.includes(src)){pick=i;break}
     }
-    for(const x of related)if(!used.has(x.url)){out.push(x);used.add(x.url)}
-    return out;
-  }
-
-  const preferredNews=news.map(x=>({
-      ...x,
-      _personal:160+x._tikFresh*.7+x._tikVideoScore*.9+(x._tikTrend?40:0)+tikPreferenceScore(x)
-    }))
-    .filter(x=>(tikFeedback[x.url]?.value||0)>=0)
-    .sort((a,b)=>b._personal-a._personal);
-
-  const related=nonNews.map(x=>({
-      ...x,
-      _related:tikRelatedScore(x,preferredNews),
-      _personal:tikRelatedScore(x,preferredNews)+x._tikVideoScore+tikPreferenceScore(x)+(x._tikTrend?22:0)+x._tikFresh*.25
-    }))
-    .filter(x=>(tikFeedback[x.url]?.value||0)>=0)
-    .sort((a,b)=>b._personal-a._personal);
-
-  const out=[],used=new Set();
-  let ni=0,ri=0;
-  while(ni<preferredNews.length||ri<related.length){
-    for(let k=0;k<3&&ni<preferredNews.length;k++,ni++){
-      const x=preferredNews[ni];if(!used.has(x.url)){out.push(x);used.add(x.url)}
-    }
-    while(ri<related.length&&used.has(related[ri].url))ri++;
-    if(ri<related.length){out.push(related[ri]);used.add(related[ri].url);ri++}
+    const [x]=remaining.splice(pick,1);
+    out.push(x);
+    const src=x.sourceId||x.source||"";
+    recentSources.unshift(src);
+    if(recentSources.length>2)recentSources.pop();
   }
   return out;
+}
+function tikItems(){
+  let base=tikBase().filter(x=>(tikFeedback[x.url]?.value||0)>=0);
+  if(!base.length)return [];
+
+  // Discovery is random across every source, but new items get a much higher chance.
+  // Recently shown URLs are heavily down-weighted, not permanently removed.
+  const ordered=weightedRandomOrder(base);
+  return diversifyTikSources(ordered);
 }
 
 let tikPool=[];
@@ -1221,8 +1228,8 @@ function tikCardHtml(x,position,totalHint){
   const badge=x._tikPlayable?"VIDEO":(x.category==="news"?(lang==="eu"?"ALBISTEA":"NOTICIA"):(x._tikTrend?"TRENDING":(lang==="eu"?"LOTUTA":"RELACIONADO")));
   const vote=Number(tikFeedback[x.url]?.value||0);
   const aiHint=tikMode==="foryou"
-    ?(lang==="eu"?"Bideoak eta zure gustuak lehenetsita":"Vídeos y tus gustos primero")
-    :(lang==="eu"?"Bideo berriak eta albisteak lehenengo":"Vídeos nuevos y noticias primero");
+    ?(lang==="eu"?"Nobedadeak, ausaz eta zure gustuekin":"Novedades, aleatorio y según tus gustos")
+    :(lang==="eu"?"Berriena, ausaz nahastuta":"Lo más nuevo, mezclado al azar");
   return `<article class="tikItem" data-tik-pos="${position}" data-url="${esc(x.url)}">
     ${tikVideoHtml(x)}
     <div class="tikInfo">
@@ -1244,9 +1251,7 @@ function tikCardHtml(x,position,totalHint){
 function refillTikPool(){
   const base=tikItems();
   if(!base.length){tikPool=[];return}
-  if(tikCycle===0){tikPool=base;return}
-  const shift=(tikCycle*7)%base.length;
-  tikPool=[...base.slice(shift),...base.slice(0,shift)];
+  tikPool=base;
 }
 function appendTikBatch(){
   const root=$("#tikFeed"); if(!root)return;
@@ -1262,6 +1267,7 @@ function appendTikBatch(){
     }
     const x=tikPool[tikCursor++];
     tikRenderedTotal++;
+    saveTikRecent(x.url);
     html+=tikCardHtml(x,tikRenderedTotal,tikPool.length);
   }
   root.insertAdjacentHTML("beforeend",html);
