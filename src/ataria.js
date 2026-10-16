@@ -133,7 +133,9 @@ function parseHtml(html, source){
     let img = body.match(/<img[^>]*\bsrc=["']([^"']+)/i)?.[1] || body.match(/data-cmp-src=["']([^"']+)/i)?.[1];
     img = img ? safeImage(img,source.origin) : null;
     seen.add(url.href);
-    out.push({id:`${source.id}-${url.pathname}`,title,source:source.name,sourceId:source.id,category:source.base,url:url.href,image:img,description:source.id==='orain'?'Irakurri ORAINen':source.id==='gaztea'?'Ikusi Gaztean':'Irakurri KIROLAK EITBn',type:'article'});
+    const dm=url.pathname.match(/\/(20\d{2})\/(\d{2})\/(\d{2})\//);
+    const publishedAt=dm?`${dm[1]}-${dm[2]}-${dm[3]}T12:00:00Z`:null;
+    out.push({id:`${source.id}-${url.pathname}`,title,source:source.name,sourceId:source.id,category:source.base,url:url.href,image:img,description:source.id==='orain'?'Irakurri ORAINen':source.id==='gaztea'?'Ikusi Gaztean':'Irakurri KIROLAK EITBn',type:'article',publishedAt});
     if(out.length>=40) break;
   }
   if(!out.length) throw new Error('Ez da albisterik aurkitu');
