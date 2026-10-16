@@ -179,3 +179,106 @@ export async function handleAtariaApi(request){
   const body={items:merge(parts),sources:parts.map(({items,...rest})=>({...rest,count:items.length})),checkedAt:new Date().toISOString(),refreshMinutes:1,contentRefreshMinutes:15};
   return new Response(request.method==='HEAD'?null:JSON.stringify(body),{headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'}});
 }
+
+
+const SOCIAL_SOURCES = [
+  {id:"ig-eitb",platform:"Instagram",user:"eitb",url:"https://www.instagram.com/eitb/",kind:"instagram"},
+  {id:"ig-gaztea",platform:"Instagram",user:"gaztea_irratia",url:"https://www.instagram.com/gaztea_irratia/",kind:"instagram"},
+  {id:"ig-makusi",platform:"Instagram",user:"makusi_eus",url:"https://www.instagram.com/makusi_eus/",kind:"instagram"},
+  {id:"tt-makusi",platform:"TikTok",user:"makusi_eus",url:"https://www.tiktok.com/@makusi_eus",kind:"tiktok"},
+  {id:"tt-etb",platform:"TikTok",user:"etb_zuzenekoak",url:"https://www.tiktok.com/@etb_zuzenekoak",kind:"tiktok"},
+  {id:"x-eitb",platform:"X",user:"eitb",url:"https://x.com/eitb",kind:"x"},
+  {id:"x-albisteak",platform:"X",user:"eitbalbisteak",url:"https://x.com/eitbalbisteak",kind:"x"},
+  {id:"x-kirolak",platform:"X",user:"eitbkirolak",url:"https://x.com/eitbkirolak",kind:"x"},
+  {id:"yt-eitb",platform:"YouTube",user:"eitb",url:"https://www.youtube.com/@eitb/videos",kind:"youtube"},
+  {id:"yt-makusi",platform:"YouTube",user:"makusi_eus",url:"https://www.youtube.com/@makusi_eus/videos",kind:"youtube"}
+];
+
+function socialPostsFromHtml(text, src){
+  const out=[], seen=new Set();
+  if(src.kind==="instagram"){
+    const re=/\/(p|reel)\/([A-Za-z0-9_-]{5,})\/?/g;
+    for(const m of text.matchAll(re)){
+      const key=m[1]+":"+m[2]; if(seen.has(key))continue; seen.add(key);
+      out.push({platform:"Instagram",account:"@"+src.user,title:"Instagram · @"+src.user,url:"https://www.instagram.com/"+m[1]+"/"+m[2]+"/",type:"social"});
+      if(out.length>=8)break;
+    }
+  } else if(src.kind==="tiktok"){
+    const ids=[];
+    for(const m of text.matchAll(/\/video\/(\d{12,24})/g))ids.push(m[1]);
+    for(const m of text.matchAll(/"id"\s*:\s*"(\d{15,24})"/g))ids.push(m[1]);
+    for(const id of ids){
+      if(seen.has(id))continue; seen.add(id);
+      out.push({platform:"TikTok",account:"@"+src.user,title:"TikTok · @"+src.user,url:"https://www.tiktok.com/@"+src.user+"/video/"+id,type:"social-video"});
+      if(out.length>=8)break;
+    }
+  } else if(src.kind==="x"){
+    const re=new RegExp("\\/"+src.user+"\\/status\\/(\\d{8,24})","gi");
+    for(const m of text.matchAll(re)){
+      const id=m[1]; if(seen.has(id))continue; seen.add(id);
+      out.push({platform:"X",account:"@"+src.user,title:"Post · @"+src.user,url:"https://x.com/"+src.user+"/status/"+id,type:"social"});
+      if(out.length>=8)break;
+    }
+  } else if(src.kind==="youtube"){
+    for(const m of text.matchAll(/"videoId":"([A-Za-z0-9_-]{11})"/g)){
+      const id=m[1]; if(seen.has(id))continue; seen.add(id);
+      out.push({platform:"YouTube",account:"@"+src.user,title:"YouTube · @"+src.user,url:"https://www.youtube.com/watch?v="+id,image:"https://i.ytimg.com/vi/"+id+"/hqdefault.jpg",videoUrl:"https://www.youtube.com/watch?v="+id,type:"social-video"});
+      if(out.length>=10)break;
+    }
+  }
+  return out;
+}
+
+async function readSocialSource(src, request){
+  const origin=new URL(request.url).origin;
+  const cache=caches.default;
+  const key=new Request(origin+"/garena/__social/"+src.id);
+  const hit=await cache.match(key);
+  if(hit){
+    const c=await hit.json();
+    if(Date.now()-Date.parse(c.fetchedAt||0)<300000)return c;
+  }
+  try{
+    const res=await fetch(src.url,{
+      headers:{
+        "accept":"text/html,application/xhtml+xml",
+        "accept-language":"eu-ES,es;q=0.9,en;q=0.7",
+        "user-agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1"
+      },
+      redirect:"follow",
+      cf:{cacheTtl:300,cacheEverything:true}
+    });
+    if(!res.ok)throw new Error("HTTP "+res.status);
+    const text=await res.text();
+    const items=socialPostsFromHtml(text,src);
+    const payload={id:src.id,items,fetchedAt:new Date().toISOString()};
+    if(items.length)await cache.put(key,Response.json(payload,{headers:{"cache-control":"public,max-age=86400"}}));
+    return payload;
+  }catch{
+    if(hit)return hit.json();
+    return {id:src.id,items:[],fetchedAt:null};
+  }
+}
+
+export async function handleSocialApi(request){
+  if(request.method!=="GET"&&request.method!=="HEAD")return new Response("Method Not Allowed",{status:405,headers:{allow:"GET, HEAD"}});
+  const parts=await Promise.all(SOCIAL_SOURCES.map(src=>readSocialSource(src,request)));
+  const groups=new Map(), seen=new Set();
+  for(const p of parts)for(const x of p.items||[]){
+    if(!x||!x.url||seen.has(x.url))continue;
+    seen.add(x.url);
+    if(!groups.has(x.platform))groups.set(x.platform,[]);
+    groups.get(x.platform).push(x);
+  }
+  const mixed=[];
+  let more=true;
+  while(more){
+    more=false;
+    for(const list of groups.values()){
+      const x=list.shift();
+      if(x){mixed.push(x);more=true}
+    }
+  }
+  const body={items:mixed.slice(0,48),checkedAt:new Date().toISOString()};
+  return new Response(request.method==="HEAD"?null:JSON.stringify(body),{headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
+}
