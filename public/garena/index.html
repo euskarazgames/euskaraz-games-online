@@ -909,7 +909,8 @@ $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background
 $("#search").addEventListener("input",renderCards);
 
 applyLang(); loadFeeds(); loadRanking();
-setInterval(()=>{if(!document.hidden){loadFeeds();loadRanking()}},15*60*1000);
+setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
+setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
 </script>
 </body>
