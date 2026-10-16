@@ -569,6 +569,15 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 @media(max-width:900px){.socialAccountGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.socialNetworkBlock{padding:14px}.socialAccountGrid{grid-template-columns:1fr}}
 
+/* Sareak · postak soilik */
+.socialPostWall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start;margin-top:22px}
+.socialEmbedCard{min-width:0;overflow:hidden;border-radius:22px;border:1px solid rgba(255,255,255,.15);background:rgba(0,25,58,.38);box-shadow:0 18px 44px rgba(0,32,70,.16);padding:8px}
+.socialEmbedCard>blockquote,.socialEmbedCard>iframe,.socialEmbedCard>.twitter-timeline{margin:0!important;width:100%!important;max-width:100%!important}
+.socialEmbedCard.xEmbed{min-height:620px}
+.socialEmbedCard.tikEmbed,.socialEmbedCard.igEmbed{min-height:360px}
+@media(max-width:1050px){.socialPostWall{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.socialPostWall{display:flex;overflow-x:auto;gap:12px;padding-bottom:10px;scroll-snap-type:x mandatory}.socialPostWall::-webkit-scrollbar{display:none}.socialEmbedCard{flex:0 0 88vw;scroll-snap-align:start}.socialEmbedCard.xEmbed{min-height:600px}}
+
 </style>
 </head>
 <body>
@@ -698,8 +707,46 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     </div>
     <a class="feedbackBtn" href="https://www.eitb.eus/es/contacto/" target="_blank" rel="noopener" data-eu="Iritzia eman ↗" data-es="Dar tu opinión ↗">Iritzia eman ↗</a>
   </div>
-  <p class="socialLead" data-eu="Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta." data-es="Instagram, TikTok, X y YouTube: las redes oficiales de las marcas ZEITB, organizadas por plataforma.">Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta.</p>
-  <div class="socialNetworks" id="socialNetworks"></div>
+  <p class="socialLead" data-eu="Argitalpenak zuzenean: X, TikTok eta Instagram. Ez marka-txartelik, edukia bakarrik." data-es="Publicaciones directamente: X, TikTok e Instagram. Sin tarjetas de marcas, solo contenido.">Argitalpenak zuzenean: X, TikTok eta Instagram. Ez marka-txartelik, edukia bakarrik.</p>
+
+  <div class="socialPostWall">
+    <div class="socialEmbedCard xEmbed">
+      <a class="twitter-timeline" data-theme="dark" data-height="620" data-chrome="noheader nofooter noborders transparent" href="https://x.com/orainnoticias">Posts</a>
+    </div>
+    <div class="socialEmbedCard xEmbed">
+      <a class="twitter-timeline" data-theme="dark" data-height="620" data-chrome="noheader nofooter noborders transparent" href="https://x.com/eitbkirolak">Posts</a>
+    </div>
+    <div class="socialEmbedCard xEmbed">
+      <a class="twitter-timeline" data-theme="dark" data-height="620" data-chrome="noheader nofooter noborders transparent" href="https://x.com/gaztea">Posts</a>
+    </div>
+
+    <div class="socialEmbedCard tikEmbed">
+      <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@makusi_eus" data-unique-id="makusi_eus" data-embed-type="creator" style="max-width:720px;min-width:288px">
+        <section><a target="_blank" rel="noopener" href="https://www.tiktok.com/@makusi_eus">TikTok posts ↗</a></section>
+      </blockquote>
+    </div>
+    <div class="socialEmbedCard tikEmbed">
+      <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@etb_zuzenekoak" data-unique-id="etb_zuzenekoak" data-embed-type="creator" style="max-width:720px;min-width:288px">
+        <section><a target="_blank" rel="noopener" href="https://www.tiktok.com/@etb_zuzenekoak">TikTok posts ↗</a></section>
+      </blockquote>
+    </div>
+
+    <div class="socialEmbedCard igEmbed">
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/eitb/" data-instgrm-version="14" style="background:#fff;border:0;margin:0;max-width:540px;min-width:280px;width:100%">
+        <a href="https://www.instagram.com/eitb/" target="_blank" rel="noopener">Instagram posts ↗</a>
+      </blockquote>
+    </div>
+    <div class="socialEmbedCard igEmbed">
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/gaztea_irratia/" data-instgrm-version="14" style="background:#fff;border:0;margin:0;max-width:540px;min-width:280px;width:100%">
+        <a href="https://www.instagram.com/gaztea_irratia/" target="_blank" rel="noopener">Instagram posts ↗</a>
+      </blockquote>
+    </div>
+    <div class="socialEmbedCard igEmbed">
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/makusi_eus/" data-instgrm-version="14" style="background:#fff;border:0;margin:0;max-width:540px;min-width:280px;width:100%">
+        <a href="https://www.instagram.com/makusi_eus/" target="_blank" rel="noopener">Instagram posts ↗</a>
+      </blockquote>
+    </div>
+  </div>
 </section>
 
 </main>
@@ -725,49 +772,6 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 <div class="toast" id="toast"></div>
 
 <script>
-
-const SOCIAL_NETWORKS=[
-  {key:"instagram",name:"Instagram",short:"IG",color:"#ff4fa3",accounts:[
-    ["ZEITB","https://www.instagram.com/eitb/"],
-    ["Gaztea","https://www.instagram.com/gaztea_irratia/"],
-    ["MAKUSI","https://www.instagram.com/makusi_eus/"],
-    ["ETBko Zuzenekoak","https://www.instagram.com/etb_zuzenekoak/"],
-    ["Euskadi Irratia","https://www.instagram.com/euskadi_irratia/"],
-    ["Radio Euskadi","https://www.instagram.com/boulevard_radioeuskadi/"]
-  ]},
-  {key:"tiktok",name:"TikTok",short:"TT",color:"#25d5e7",accounts:[
-    ["MAKUSI","https://www.tiktok.com/@makusi_eus"],
-    ["ETBko Zuzenekoak","https://www.tiktok.com/@etb_zuzenekoak"]
-  ]},
-  {key:"x",name:"X",short:"X",color:"#c7d2dc",accounts:[
-    ["ZEITB","https://x.com/eitb"],
-    ["Gaztea","https://x.com/gaztea"],
-    ["Euskadi Irratia","https://x.com/euskadi_irratia"],
-    ["Radio Euskadi","https://x.com/radioeuskadi"],
-    ["ZEITB Albisteak","https://x.com/eitbalbisteak"],
-    ["ZEITB Kirolak","https://x.com/eitbkirolak"]
-  ]},
-  {key:"youtube",name:"YouTube",short:"YT",color:"#ff3b30",accounts:[
-    ["ZEITB","https://www.youtube.com/@eitb"],
-    ["MAKUSI","https://www.youtube.com/@makusi_eus"]
-  ]}
-];
-function renderSocial(){
-  const root=$("#socialNetworks"); if(!root)return;
-  root.innerHTML=SOCIAL_NETWORKS.map(net=>`<section class="socialNetworkBlock" style="--net:${net.color}">
-    <div class="socialNetworkHead">
-      <div class="socialNetworkIcon">${net.short}</div>
-      <div><small>${lang==="eu"?"SARE OFIZIALA":"RED OFICIAL"}</small><h3>${net.name}</h3></div>
-    </div>
-    <div class="socialAccountGrid">
-      ${net.accounts.map(([name,url])=>`<a class="socialAccount" href="${url}" target="_blank" rel="noopener">
-        <span class="socialAvatar">${net.short}</span>
-        <span class="socialAccountText"><strong>${name}</strong><small>${lang==="eu"?"Azken argitalpenak ikusi":"Ver últimas publicaciones"}</small></span>
-        <span class="socialArrow">↗</span>
-      </a>`).join("")}
-    </div>
-  </section>`).join("");
-}
 
 const PLATFORMS=[
   ["ORAIN","https://orain.eus/eu/","https://orain.eus/es/","Albisteak eta aktualitatea","Noticias y actualidad","#ff754c"],
@@ -859,7 +863,7 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -1396,7 +1400,7 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderFeatured(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderCards();
+  renderFeatured(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderCards();
 }
 document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
   btn.onclick=()=>{
@@ -1449,5 +1453,10 @@ setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
 </script>
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script async src="https://www.tiktok.com/embed.js"></script>
+<script async src="https://www.instagram.com/embed.js"></script>
+
 </body>
 </html>
