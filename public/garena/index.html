@@ -52,7 +52,13 @@ h1{font-size:clamp(48px,7vw,96px);line-height:.92;letter-spacing:-.065em;margin:
 .shelfHead{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
 .shelfHead h3{margin:0;font-size:24px;letter-spacing:-.035em}
 .shelfHead span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:850}
-.shelfGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.shelfGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.shelfGrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.newsBlock{display:flex;flex-direction:column;gap:12px}
+.newsSubhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
+.newsSubhead h4{margin:0;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+.shelfMore{align-self:flex-start;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:10px 15px;font-weight:900;font-size:12px}
+.shelfMore:hover{background:#fff;color:#0865b2}
 .featuredCard{position:relative;min-height:245px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(145deg,#27272e,#111);box-shadow:0 14px 34px rgba(0,0,0,.24);transition:.2s;isolation:isolate}
 .featuredCard:nth-child(1){transform:rotate(-.6deg)}.featuredCard:nth-child(3){transform:rotate(.6deg)}
 .featuredCard:hover{transform:translateY(-4px) rotate(0);border-color:#666}
@@ -101,8 +107,8 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
 .audioBanner{border-radius:28px;background:var(--accent);color:#070708;padding:34px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}.audioBanner h2{margin:0;font-size:clamp(34px,5vw,64px);letter-spacing:-.05em}.audioBanner p{max-width:700px;font-size:18px}.wave{font-size:30px;letter-spacing:7px;font-weight:900}
 .footer{max-width:1440px;margin:auto;padding:34px 22px 70px;color:#8f8f96;font-size:13px;line-height:1.55}.footer .brand{color:#fff;margin-bottom:14px}
 .toast{position:fixed;right:18px;bottom:18px;z-index:90;padding:11px 14px;border-radius:12px;background:#fff;color:#111;font-weight:750;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
-@media(max-width:1100px){.platforms{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.featuredRail{grid-template-columns:repeat(3,minmax(0,1fr))}.liveGrid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:520px}.heroCopy{left:22px;right:22px;bottom:25px}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}.featuredIntro{margin-top:22px}.shelfGrid{display:flex;overflow-x:auto;gap:14px;padding:7px 20px 20px 6px;scroll-snap-type:x mandatory}.shelfGrid::-webkit-scrollbar{display:none}.featuredCard{flex:0 0 72vw;min-height:300px;scroll-snap-align:start}.featuredCard:nth-child(1){transform:rotate(-1.2deg)}.featuredCard:nth-child(3){transform:rotate(1.2deg)}.rankingGrid{display:flex;overflow-x:auto;gap:10px;padding-bottom:10px}.rankCard{flex:0 0 62vw}}
+@media(max-width:1100px){.platforms{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.shelfGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.liveGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:520px}.heroCopy{left:22px;right:22px;bottom:25px}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}.featuredIntro{margin-top:22px}.shelfGrid{display:flex;overflow-x:auto;gap:14px;padding:7px 20px 20px 6px;scroll-snap-type:x mandatory}.shelfGrid::-webkit-scrollbar{display:none}.shelfGrid.three{display:flex}.featuredCard{flex:0 0 72vw;min-height:300px;scroll-snap-align:start}.featuredCard:nth-child(1){transform:rotate(-1.2deg)}.featuredCard:nth-child(3){transform:rotate(1.2deg)}.rankingGrid{display:flex;overflow-x:auto;gap:10px;padding-bottom:10px}.rankCard{flex:0 0 62vw}}
 @media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.poster{aspect-ratio:1/1}.source{font-size:9px}.card p{display:none}.open{padding:9px 6px}}
 
 /* GARENA — EITB blue identity */
@@ -323,7 +329,7 @@ const CATS=[
 ];
 
 let lang=localStorage.getItem("ataria-lang")||"eu";
-let active="all", showFavs=false, items=[...SEED];
+let active="all", activeSubtype=null, showFavs=false, items=[...SEED];
 let favs=new Set(JSON.parse(localStorage.getItem("ataria-favs")||"[]"));
 
 const $=s=>document.querySelector(s);
@@ -357,51 +363,99 @@ function renderPlatforms(){
 }
 function renderChips(){
   $("#chips").innerHTML=CATS.map(c=>`<button class="chip ${active===c[0]?"active":""}" data-cat="${c[0]}">${lang==="eu"?c[1]:c[2]}</button>`).join("");
-  document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{active=b.dataset.cat;renderChips();renderCards()});
+  document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{active=b.dataset.cat;activeSubtype=null;renderChips();renderCards()});
 }
 const FEATURE_SHELVES=[
-  {key:"news",eu:"Albisteak",es:"Noticias",pick:x=>x.category==="news"},
-  {key:"sports",eu:"Kirolak",es:"Deportes",pick:x=>x.category==="sports"},
-  {key:"movies",eu:"Filmak",es:"Películas",pick:x=>x.category==="series"&&x.type==="media"},
-  {key:"series",eu:"Telesailak",es:"Series",pick:x=>x.category==="series"&&x.type==="series"},
-  {key:"programs",eu:"Saioak",es:"Programas",pick:x=>x.category==="entertainment"},
-  {key:"docs",eu:"Dokumentalak",es:"Documentales",pick:x=>x.category==="docs"},
-  {key:"audio",eu:"Podcastak eta audioa",es:"Podcasts y audio",pick:x=>x.category==="audio"},
-  {key:"kids",eu:"Haurrak",es:"Infantil",pick:x=>x.category==="kids"}
+  {key:"sports",eu:"Kirolak",es:"Deportes",cat:"sports",pick:x=>x.category==="sports"},
+  {key:"movies",eu:"Filmak",es:"Películas",cat:"series",subtype:"media",pick:x=>x.category==="series"&&x.type==="media"},
+  {key:"series",eu:"Telesailak",es:"Series",cat:"series",subtype:"series",pick:x=>x.category==="series"&&x.type==="series"},
+  {key:"programs",eu:"Saioak",es:"Programas",cat:"entertainment",pick:x=>x.category==="entertainment"},
+  {key:"docs",eu:"Dokumentalak",es:"Documentales",cat:"docs",pick:x=>x.category==="docs"},
+  {key:"audio",eu:"Podcastak eta audioa",es:"Podcasts y audio",cat:"audio",pick:x=>x.category==="audio"},
+  {key:"kids",eu:"Haurrak",es:"Infantil",cat:"kids",pick:x=>x.category==="kids"}
 ];
-function shelfItems(def){
-  let list=items.filter(def.pick);
-  if(def.key==="movies" && list.length<3) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="series")];
-  if(def.key==="series" && list.length<3) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="media")];
+function uniqueByUrl(list){
   const seen=new Set();
-  return list.filter(x=>x&&x.url&&!seen.has(x.url)&&(seen.add(x.url),true))
+  return list.filter(x=>x&&x.url&&!seen.has(x.url)&&(seen.add(x.url),true));
+}
+function shelfItems(def,limit=5){
+  let list=items.filter(def.pick);
+  if(def.key==="movies" && list.length<limit) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="series")];
+  if(def.key==="series" && list.length<limit) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="media")];
+  return uniqueByUrl(list)
     .sort((a,b)=>Number(Boolean(b.image))-Number(Boolean(a.image)))
-    .slice(0,3);
+    .slice(0,limit);
+}
+function latestNews(limit=5){
+  return uniqueByUrl(items.filter(x=>x.category==="news")).slice(0,limit);
+}
+let todayNewsRanking=[];
+function relevantNewsToday(limit=3){
+  const news=items.filter(x=>x.category==="news");
+  const byUrl=new Map(news.map(x=>[x.url,x]));
+  const ranked=todayNewsRanking.map(r=>byUrl.get(r.url)).filter(Boolean);
+  const out=uniqueByUrl(ranked);
+  if(out.length<limit){
+    for(const x of news){
+      if(!out.some(y=>y.url===x.url))out.push(x);
+      if(out.length>=limit)break;
+    }
+  }
+  return out.slice(0,limit);
 }
 function trackedAttrs(x){
   return `data-track="content" data-url="${esc(x.url)}" data-title="${esc(x.title)}" data-category="${esc(x.category||"")}" data-source="${esc(x.source||"")}"`;
 }
+function featuredCardHtml(x,label){
+  const bg=`<div class="bg${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>`;
+  return `<a class="featuredCard" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${bg}<div class="inside"><span class="kind">${esc(label)}</span><span class="featuredSource">${esc(x.source)}</span><h3>${esc(x.title)}</h3></div></a>`;
+}
+function moreButton(cat,subtype=""){
+  return `<button class="shelfMore" data-more-cat="${cat}" data-more-subtype="${subtype}">${lang==="eu"?"Dena ikusi":"Ver todo"} ↗</button>`;
+}
 function renderFeatured(){
   const root=$("#featuredShelves"); if(!root)return;
-  root.innerHTML=FEATURE_SHELVES.map(def=>{
-    const chosen=shelfItems(def);
-    const cards=chosen.map(x=>{
-      const bg=`<div class="bg${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>`;
-      return `<a class="featuredCard" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${bg}<div class="inside"><span class="kind">${lang==="eu"?def.eu:def.es}</span><span class="featuredSource">${esc(x.source)}</span><h3>${esc(x.title)}</h3></div></a>`;
-    }).join("");
-    const missing=Array.from({length:Math.max(0,3-chosen.length)},()=>`<div class="featuredCard"><div class="inside"><span class="kind">${lang==="eu"?def.eu:def.es}</span><h3>${lang==="eu"?"Eduki gehiago laster":"Más contenidos próximamente"}</h3></div></div>`).join("");
-    return `<div class="featuredShelf"><div class="shelfHead"><h3>${lang==="eu"?def.eu:def.es}</h3></div><div class="shelfGrid">${cards}${missing}</div></div>`;
+  const latest=latestNews(5);
+  const relevant=relevantNewsToday(3);
+  const newsHtml=`<div class="featuredShelf newsBlock">
+    <div class="shelfHead"><h3>${lang==="eu"?"Albisteak":"Noticias"}</h3></div>
+    <div class="newsSubhead"><h4>${lang==="eu"?"Azken 5 albisteak":"Últimas 5 noticias"}</h4></div>
+    <div class="shelfGrid">${latest.map(x=>featuredCardHtml(x,lang==="eu"?"Azkena":"Última hora")).join("")}</div>
+    <div class="newsSubhead"><h4>${lang==="eu"?"Gaurko 3 nabarmenenak":"3 más relevantes de hoy"}</h4></div>
+    <div class="shelfGrid three">${relevant.map(x=>featuredCardHtml(x,lang==="eu"?"Nabarmena":"Relevante")).join("")}</div>
+    ${moreButton("news")}
+  </div>`;
+
+  const rest=FEATURE_SHELVES.map(def=>{
+    const chosen=shelfItems(def,5);
+    const cards=chosen.map(x=>featuredCardHtml(x,lang==="eu"?def.eu:def.es)).join("");
+    return `<div class="featuredShelf"><div class="shelfHead"><h3>${lang==="eu"?def.eu:def.es}</h3></div><div class="shelfGrid">${cards}</div>${moreButton(def.cat,def.subtype||"")}</div>`;
   }).join("");
+
+  root.innerHTML=newsHtml+rest;
+  document.querySelectorAll(".shelfMore").forEach(b=>b.onclick=()=>{
+    active=b.dataset.moreCat||"all";
+    activeSubtype=b.dataset.moreSubtype||null;
+    showFavs=false;
+    renderChips();
+    renderCards();
+    document.querySelector("#edukiak")?.scrollIntoView({behavior:"smooth",block:"start"});
+  });
 }
 let ranking=[];
 async function loadRanking(){
   try{
-    const r=await fetch("/garena/api/ranking",{cache:"no-store"});
-    if(!r.ok)throw 0;
-    const j=await r.json();
-    ranking=Array.isArray(j.ranking)?j.ranking:[];
-  }catch{ranking=[]}
+    const [allRes,newsRes]=await Promise.all([
+      fetch("/garena/api/ranking",{cache:"no-store"}),
+      fetch("/garena/api/ranking?category=news&period=today",{cache:"no-store"})
+    ]);
+    const allJson=allRes.ok?await allRes.json():{ranking:[]};
+    const newsJson=newsRes.ok?await newsRes.json():{ranking:[]};
+    ranking=Array.isArray(allJson.ranking)?allJson.ranking:[];
+    todayNewsRanking=Array.isArray(newsJson.ranking)?newsJson.ranking:[];
+  }catch{ranking=[];todayNewsRanking=[]}
   renderRanking();
+  renderFeatured();
 }
 function renderRanking(){
   const root=$("#rankingGrid"); if(!root)return;
@@ -447,7 +501,7 @@ function closeTik(){
 
 function renderCards(){
   const q=$("#search").value.trim().toLowerCase();
-  let view=items.filter(x=>(active==="all"||x.category===active) && (!q || (x.title+" "+x.source+" "+(x.eu||"")+" "+(x.es||"")).toLowerCase().includes(q)));
+  let view=items.filter(x=>(active==="all"||x.category===active) && (!activeSubtype||x.type===activeSubtype) && (!q || (x.title+" "+x.source+" "+(x.eu||"")+" "+(x.es||"")).toLowerCase().includes(q)));
   if(showFavs)view=view.filter(x=>favs.has(x.title));
   $("#count").textContent=(lang==="eu"?`${view.length} eduki`:`${view.length} contenidos`);
   $("#favCount").textContent=favs.size;
