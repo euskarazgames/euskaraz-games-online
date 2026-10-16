@@ -234,9 +234,10 @@ async function readSocialSource(src, request){
   const cache=caches.default;
   const key=new Request(origin+"/garena/__social/"+src.id);
   const hit=await cache.match(key);
+  let cached=null;
   if(hit){
-    const c=await hit.json();
-    if(Date.now()-Date.parse(c.fetchedAt||0)<300000)return c;
+    try{cached=await hit.json()}catch{cached=null}
+    if(cached&&Date.now()-Date.parse(cached.fetchedAt||0)<300000)return cached;
   }
   try{
     const res=await fetch(src.url,{
@@ -253,16 +254,25 @@ async function readSocialSource(src, request){
     const items=socialPostsFromHtml(text,src);
     const payload={id:src.id,items,fetchedAt:new Date().toISOString()};
     if(items.length)await cache.put(key,Response.json(payload,{headers:{"cache-control":"public,max-age=86400"}}));
-    return payload;
+    return items.length?payload:(cached||payload);
   }catch{
-    if(hit)return hit.json();
-    return {id:src.id,items:[],fetchedAt:null};
+    return cached||{id:src.id,items:[],fetchedAt:null};
   }
 }
 
+const SOCIAL_FALLBACK_POSTS=[
+  {platform:"X",account:"@eitbkirolak",title:"Sarah Pollerosek Lointek Gernika utzi du",url:"https://x.com/eitbkirolak/status/2026754072422891890",type:"social"},
+  {platform:"X",account:"@orainnoticias",title:"Un grupo inversor vasco podría estar interesado en la compra de Elmubas Petfood Group",url:"https://x.com/orainnoticias/status/2026744576078156112",type:"social"},
+  {platform:"X",account:"@euskaltelebista",title:"Irati Erauskin: Nire belaunaldiko gehiengoak presioa sentitu dugu sexuari dagokionean",url:"https://x.com/euskaltelebista/status/2026734027776966918",type:"social"},
+  {platform:"X",account:"@euskadi_irratia",title:"Mikele Landa zinemagilearekin elkarrizketa",url:"https://x.com/euskadi_irratia/status/2026719969178702268",type:"social"},
+  {platform:"X",account:"@radioeuskadi",title:"Dani Ezkerro eta euskal gastronomia",url:"https://x.com/radioeuskadi/status/2026734715835687008",type:"social"},
+  {platform:"YouTube",account:"@eitb",title:"VS: Homo Bilbainum",url:"https://www.youtube.com/watch?v=Rggplwv0oE4",image:"https://i.ytimg.com/vi/Rggplwv0oE4/hqdefault.jpg",videoUrl:"https://www.youtube.com/watch?v=Rggplwv0oE4",type:"social-video"}
+];
+
 export async function handleSocialApi(request){
   if(request.method!=="GET"&&request.method!=="HEAD")return new Response("Method Not Allowed",{status:405,headers:{allow:"GET, HEAD"}});
-  const parts=await Promise.all(SOCIAL_SOURCES.map(src=>readSocialSource(src,request)));
+  const settled=await Promise.allSettled(SOCIAL_SOURCES.map(src=>readSocialSource(src,request)));
+  const parts=settled.map(r=>r.status==="fulfilled"?r.value:{items:[]});
   const groups=new Map(), seen=new Set();
   for(const p of parts)for(const x of p.items||[]){
     if(!x||!x.url||seen.has(x.url))continue;
@@ -279,6 +289,8 @@ export async function handleSocialApi(request){
       if(x){mixed.push(x);more=true}
     }
   }
-  const body={items:mixed.slice(0,48),checkedAt:new Date().toISOString()};
+  const combined=[...mixed];
+  for(const x of SOCIAL_FALLBACK_POSTS)if(!combined.some(y=>y.url===x.url))combined.push(x);
+  const body={items:combined.slice(0,48),checkedAt:new Date().toISOString()};
   return new Response(request.method==="HEAD"?null:JSON.stringify(body),{headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
 }
