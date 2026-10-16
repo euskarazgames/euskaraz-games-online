@@ -133,7 +133,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 @media(max-width:700px){.brand{gap:8px}.eitbWord{font-size:24px}.garenaWord{font-size:18px}.brandDivider{height:28px}}
 
 
-.tikButton{height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.11);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;white-space:nowrap}
+.tikButton{touch-action:manipulation;height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.11);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;white-space:nowrap}
 .tikButton:hover{background:#fff;color:#0865b2}
 .generatedCover{position:relative;overflow:hidden}
 .generatedCover:before{content:"";position:absolute;inset:0;background:linear-gradient(25deg,transparent 46%,rgba(255,255,255,.12) 46.5%,rgba(255,255,255,.12) 47%,transparent 47.5%),linear-gradient(120deg,transparent 54%,rgba(255,255,255,.08) 54.5%,rgba(255,255,255,.08) 55%,transparent 55.5%);background-size:160px 130px,210px 170px}
@@ -452,6 +452,31 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 @media(max-width:1000px){.socialGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.socialHead{align-items:flex-start;flex-direction:column}.socialGrid{display:flex;overflow-x:auto;gap:11px;padding-bottom:10px;scroll-snap-type:x mandatory}.socialGrid::-webkit-scrollbar{display:none}.socialCard{flex:0 0 78vw;scroll-snap-align:start;min-height:230px}}
 
+
+/* iPhone scroll fix + Sareak goiburuan */
+.topQuick{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.sareakButton{background:rgba(255,255,255,.16)}
+.tikOverlay.open{display:block}
+.tikFeed{
+  height:100dvh;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  scroll-behavior:auto;
+}
+.tikItem{
+  min-height:100dvh;
+  height:100dvh;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+}
+@media(max-width:700px){
+  .topQuick{gap:6px}
+  .topQuick .tikButton{padding:0 9px;font-size:9px;letter-spacing:.035em}
+}
+
 </style>
 </head>
 <body>
@@ -460,7 +485,10 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 <header class="top">
   <nav class="nav">
     <a class="brand" href="#hasiera" aria-label="EITB GARENA"><span class="eitbWord">eitb</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></a>
-    <button class="tikButton" id="tikButton" type="button">Scroll tik tak</button>
+    <div class="topQuick">
+      <button class="tikButton" id="tikButton" type="button">Scroll tik tak</button>
+      <button class="tikButton sareakButton" id="sareakButton" type="button" data-eu="Sareak" data-es="Redes">Sareak</button>
+    </div>
     <div class="navlinks">
       <a href="#edukiak" data-eu="Aurkitu" data-es="Descubrir">Aurkitu</a>
       <a href="#zuzenekoak" data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</a>
@@ -953,7 +981,7 @@ function tikItems(){
 }
 function renderTik(){
   const root=$("#tikFeed"); if(!root)return;
-  const feed=tikItems();
+  const feed=tikItems().slice(0,40);
   root.innerHTML=feed.map((x,i)=>{
     const desc=lang==="eu"?(x.eu||x.description||x.synopsis||"Ireki eduki ofiziala"):(x.es||x.description||x.synopsis||"Abrir contenido oficial");
     const badge=x._tikTrend?(lang==="eu"?"TRENDING":"TRENDING"):(lang==="eu"?"BERRIA":"NUEVO");
@@ -998,20 +1026,26 @@ function renderTikPreview(){
   });
 }
 function openTikAt(index=0){
+  const overlay=$("#tikOverlay"),feed=$("#tikFeed");
+  if(!overlay||!feed)return;
   renderTik();
-  $("#tikOverlay").classList.add("open");
-  $("#tikOverlay").setAttribute("aria-hidden","false");
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden","false");
+  document.documentElement.style.overflow="hidden";
   document.body.style.overflow="hidden";
   requestAnimationFrame(()=>{
-    const feed=$("#tikFeed");
-    const card=feed?.children?.[index];
-    if(card)card.scrollIntoView({block:"start",behavior:"auto"});
-    feed?.focus();
+    const card=feed.children[index]||feed.firstElementChild;
+    if(card)feed.scrollTop=card.offsetTop;
+    else feed.scrollTop=0;
+    feed.focus({preventScroll:true});
   });
 }
 function openTik(){openTikAt(0)}
 function closeTik(){
-  $("#tikOverlay").classList.remove("open");$("#tikOverlay").setAttribute("aria-hidden","true");document.body.style.overflow="";
+  $("#tikOverlay").classList.remove("open");
+  $("#tikOverlay").setAttribute("aria-hidden","true");
+  document.documentElement.style.overflow="";
+  document.body.style.overflow="";
 }
 
 function renderCards(){
@@ -1077,6 +1111,7 @@ $("#liveAllBtn").onclick=()=>{
   renderCards();
   document.querySelector("#edukiak")?.scrollIntoView({behavior:"smooth",block:"start"});
 };
+$("#sareakButton").onclick=()=>document.querySelector("#sareak")?.scrollIntoView({behavior:"smooth",block:"start"});
 $("#tikButton").onclick=openTik;
 $("#tikEnterAll").onclick=openTik;
 $("#tikClose").onclick=closeTik;
