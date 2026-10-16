@@ -180,6 +180,12 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 @media(max-width:1000px){.tikPreviewRow{grid-template-columns:repeat(2,minmax(0,1fr))}.tikPreviewCard:last-child{display:none}}
 @media(max-width:700px){.tikShowcase{padding-top:42px}.tikShowHead{align-items:flex-start;flex-direction:column}.tikPreviewRow{display:flex;overflow-x:auto;gap:14px;padding:6px 18px 18px 4px;scroll-snap-type:x mandatory}.tikPreviewRow::-webkit-scrollbar{display:none}.tikPreviewCard{flex:0 0 82vw;min-height:72vh;scroll-snap-align:center}.tikPreviewCard:last-child{display:block}.tikPreviewInfo h3{font-size:32px}}
 
+
+.liveTitleRow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.liveTitleRow h2{margin:0}
+.liveAllBtn{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:9px 14px;font-size:12px;font-weight:950;letter-spacing:.04em}
+.liveAllBtn:hover{background:#fff;color:#0865b2}
+
 </style>
 </head>
 <body>
@@ -239,7 +245,7 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 
 <section class="section" id="zuzenekoak">
   <div class="sectionHead">
-    <div><p class="kicker" data-eu="GERTATZEN ARI DENAREKIN KONEKTATU" data-es="CONECTA CON LO QUE PASA">GERTATZEN ARI DENAREKIN KONEKTATU</p><h2 data-eu="Zuzeneko nagusiak eta irrati entzunenak" data-es="Directos principales y radios más escuchadas">Zuzeneko nagusiak</h2></div>
+    <div><p class="kicker" data-eu="GERTATZEN ARI DENAREKIN KONEKTATU" data-es="CONECTA CON LO QUE PASA">GERTATZEN ARI DENAREKIN KONEKTATU</p><div class="liveTitleRow"><h2 data-eu="Zuzeneko nagusiak eta irrati entzunenak" data-es="Directos principales y radios más escuchadas">Zuzeneko nagusiak</h2><button class="liveAllBtn" id="liveAllBtn" type="button" data-eu="Guztiak" data-es="Todos">Guztiak</button></div></div>
     <p data-eu="Telebista, kirola eta EITBko irrati nagusiak zuzenean" data-es="Televisión, deporte y las principales radios de EITB en directo">Telebista, kirola eta irratia zuzenean</p>
   </div>
   <div class="liveGrid">
@@ -682,6 +688,14 @@ async function loadFeeds(){
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
   renderFeatured(); renderTik(); renderTikPreview(); renderCards();
 }
+$("#liveAllBtn").onclick=()=>{
+  active="live";
+  activeSubtype=null;
+  showFavs=false;
+  renderChips();
+  renderCards();
+  document.querySelector("#edukiak")?.scrollIntoView({behavior:"smooth",block:"start"});
+};
 $("#tikButton").onclick=openTik;
 $("#tikEnterAll").onclick=openTik;
 $("#tikClose").onclick=closeTik;
