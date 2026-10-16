@@ -32,7 +32,7 @@ img{display:block;width:100%}
 .heroMain{background:
 radial-gradient(circle at 72% 22%,rgba(255,117,76,.24),transparent 30%),
 linear-gradient(145deg,#111 20%,#23232a 62%,#151515)}
-.heroCopy{position:absolute;left:42px;bottom:42px;max-width:680px}
+.heroCopy{position:absolute;left:42px;right:42px;top:38px;bottom:auto;max-width:880px}
 .kicker{font-size:12px;letter-spacing:.18em;font-weight:900;color:var(--accent);text-transform:uppercase}
 h1{font-size:clamp(48px,7vw,96px);line-height:.92;letter-spacing:-.065em;margin:10px 0 22px;max-width:850px}
 .lead{font-size:clamp(17px,2.1vw,24px);line-height:1.35;color:#d5d5da;max-width:700px;margin:0 0 26px}
@@ -108,7 +108,7 @@ linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:
 .footer{max-width:1440px;margin:auto;padding:34px 22px 70px;color:#8f8f96;font-size:13px;line-height:1.55}.footer .brand{color:#fff;margin-bottom:14px}
 .toast{position:fixed;right:18px;bottom:18px;z-index:90;padding:11px 14px;border-radius:12px;background:#fff;color:#111;font-weight:750;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
 @media(max-width:1100px){.platforms{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.shelfGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.liveGrid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:520px}.heroCopy{left:22px;right:22px;bottom:25px}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}.featuredIntro{margin-top:22px}.shelfGrid{display:flex;overflow-x:auto;gap:14px;padding:7px 20px 20px 6px;scroll-snap-type:x mandatory}.shelfGrid::-webkit-scrollbar{display:none}.shelfGrid.three{display:flex}.featuredCard{flex:0 0 72vw;min-height:300px;scroll-snap-align:start}.featuredCard:nth-child(1){transform:rotate(-1.2deg)}.featuredCard:nth-child(3){transform:rotate(1.2deg)}.rankingGrid{display:flex;overflow-x:auto;gap:10px;padding-bottom:10px}.rankCard{flex:0 0 62vw}}
+@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:650px}.heroCopy{left:22px;right:22px;top:26px;bottom:auto}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}.featuredIntro{margin-top:22px}.shelfGrid{display:flex;overflow-x:auto;gap:14px;padding:7px 20px 20px 6px;scroll-snap-type:x mandatory}.shelfGrid::-webkit-scrollbar{display:none}.shelfGrid.three{display:flex}.featuredCard{flex:0 0 72vw;min-height:300px;scroll-snap-align:start}.featuredCard:nth-child(1){transform:rotate(-1.2deg)}.featuredCard:nth-child(3){transform:rotate(1.2deg)}.rankingGrid{display:flex;overflow-x:auto;gap:10px;padding-bottom:10px}.rankCard{flex:0 0 62vw}}
 @media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.poster{aspect-ratio:1/1}.source{font-size:9px}.card p{display:none}.open{padding:9px 6px}}
 
 /* GARENA — EITB blue identity */
@@ -186,6 +186,32 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
 .liveAllBtn{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:9px 14px;font-size:12px;font-weight:950;letter-spacing:.04em}
 .liveAllBtn:hover{background:#fff;color:#0865b2}
 
+
+.heroSections{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:18px;max-width:850px}
+.heroSectionBtn{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.24);border-radius:16px;min-height:56px;padding:10px 12px;text-align:left;color:#fff;font-size:12px;font-weight:950;letter-spacing:.015em;box-shadow:0 10px 24px rgba(0,35,77,.18);cursor:pointer;transition:transform .18s ease,filter .18s ease,border-color .18s ease}
+.heroSectionBtn:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.24),transparent 48%);pointer-events:none}
+.heroSectionBtn span{position:relative;z-index:1}
+.heroSectionBtn:hover{transform:translateY(-2px);filter:brightness(1.06);border-color:rgba(255,255,255,.5)}
+.heroSectionBtn.news{background:linear-gradient(145deg,#ff7958,#cf3f28)}
+.heroSectionBtn.live{background:linear-gradient(145deg,#18a9ff,#0870c8)}
+.heroSectionBtn.sports{background:linear-gradient(145deg,#21c985,#08784d)}
+.heroSectionBtn.movies{background:linear-gradient(145deg,#8065ff,#4930bd)}
+.heroSectionBtn.series{background:linear-gradient(145deg,#4e89ff,#2453be)}
+.heroSectionBtn.programs{background:linear-gradient(145deg,#ff5ca9,#b9276b)}
+.heroSectionBtn.docs{background:linear-gradient(145deg,#9a76ff,#5735be)}
+.heroSectionBtn.audio{background:linear-gradient(145deg,#f5c834,#c58600);color:#17233a}
+.heroSectionBtn.kids{background:linear-gradient(145deg,#25d5e7,#087b98)}
+@media(max-width:980px){.heroSections{grid-template-columns:repeat(3,minmax(0,1fr))}.heroMain{min-height:720px}}
+@media(max-width:700px){
+  .heroMain{min-height:690px}
+  .heroCopy{max-width:none}
+  .heroCopy h1{margin-bottom:14px}
+  .heroCopy .lead{margin-bottom:18px}
+  .heroSections{display:flex;overflow-x:auto;gap:8px;margin-top:16px;padding:0 10px 8px 0;scroll-snap-type:x proximity}
+  .heroSections::-webkit-scrollbar{display:none}
+  .heroSectionBtn{flex:0 0 auto;min-width:112px;min-height:50px;border-radius:15px;scroll-snap-align:start}
+}
+
 </style>
 </head>
 <body>
@@ -217,6 +243,17 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
         <div class="ctas">
           <a class="cta" href="#edukiak" data-eu="Edukiak arakatu ↗" data-es="Explorar contenidos ↗">Edukiak arakatu ↗</a>
           <a class="cta secondary" href="#zuzenekoak" data-eu="Zuzenekoetara joan" data-es="Ir a los directos">Zuzenekoetara joan</a>
+        </div>
+        <div class="heroSections" id="heroSections" aria-label="GARENA kategoriak">
+          <button class="heroSectionBtn news" type="button" data-hero-cat="news"><span data-eu="Albisteak" data-es="Noticias">Albisteak</span></button>
+          <button class="heroSectionBtn live" type="button" data-hero-cat="live"><span data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</span></button>
+          <button class="heroSectionBtn sports" type="button" data-hero-cat="sports"><span data-eu="Kirolak" data-es="Deportes">Kirolak</span></button>
+          <button class="heroSectionBtn movies" type="button" data-hero-cat="series" data-hero-subtype="media"><span data-eu="Filmak" data-es="Películas">Filmak</span></button>
+          <button class="heroSectionBtn series" type="button" data-hero-cat="series" data-hero-subtype="series"><span data-eu="Telesailak" data-es="Series">Telesailak</span></button>
+          <button class="heroSectionBtn programs" type="button" data-hero-cat="entertainment"><span data-eu="Saioak" data-es="Programas">Saioak</span></button>
+          <button class="heroSectionBtn docs" type="button" data-hero-cat="docs"><span data-eu="Dokumentalak" data-es="Documentales">Dokumentalak</span></button>
+          <button class="heroSectionBtn audio" type="button" data-hero-cat="audio"><span data-eu="Podcastak" data-es="Podcasts">Podcastak</span></button>
+          <button class="heroSectionBtn kids" type="button" data-hero-cat="kids"><span data-eu="Haurrak" data-es="Infantil">Haurrak</span></button>
         </div>
       </div>
     </article>
@@ -688,6 +725,17 @@ async function loadFeeds(){
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
   renderFeatured(); renderTik(); renderTikPreview(); renderCards();
 }
+document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
+  btn.onclick=()=>{
+    active=btn.dataset.heroCat||"all";
+    activeSubtype=btn.dataset.heroSubtype||null;
+    showFavs=false;
+    renderChips();
+    renderCards();
+    document.querySelector("#edukiak")?.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+});
+
 $("#liveAllBtn").onclick=()=>{
   active="live";
   activeSubtype=null;
