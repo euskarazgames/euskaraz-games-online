@@ -196,9 +196,14 @@ export class AtariaStats extends DurableObject {
       current.source = source || current.source;
       current.count = Number(current.count || 0) + 1;
       current.lastOpenedAt = new Date().toISOString();
+      const day = current.lastOpenedAt.slice(0,10);
+      current.daily = current.daily && typeof current.daily === "object" ? current.daily : {};
+      current.daily[day] = Number(current.daily[day] || 0) + 1;
+      const days = Object.keys(current.daily).sort().reverse();
+      for (const d of days.slice(14)) delete current.daily[d];
       await this.ctx.storage.put(key, current);
 
-      return Response.json({ ok: true, count: current.count }, {
+      return Response.json({ ok: true, count: current.count, today: current.daily[day] }, {
         headers: { "cache-control": "no-store" }
       });
     }
@@ -208,11 +213,16 @@ export class AtariaStats extends DurableObject {
         return new Response("Method Not Allowed", { status: 405, headers: { allow: "GET, HEAD" } });
       }
       const entries = await this.ctx.storage.list({ prefix: "item:" });
+      const category = String(url.searchParams.get("category") || "").slice(0,40);
+      const period = String(url.searchParams.get("period") || "");
+      const day = new Date().toISOString().slice(0,10);
       const ranking = [...entries.values()]
-        .filter(x => x && x.url && x.title)
-        .sort((a,b) => (Number(b.count||0)-Number(a.count||0)) || String(b.lastOpenedAt||"").localeCompare(String(a.lastOpenedAt||"")))
+        .filter(x => x && x.url && x.title && (!category || x.category === category))
+        .map(x => ({...x, periodCount: period === "today" ? Number(x.daily?.[day] || 0) : Number(x.count || 0)}))
+        .filter(x => period !== "today" || x.periodCount > 0)
+        .sort((a,b) => (Number(b.periodCount||0)-Number(a.periodCount||0)) || String(b.lastOpenedAt||"").localeCompare(String(a.lastOpenedAt||"")))
         .slice(0, 20);
-      const payload = JSON.stringify({ ranking, generatedAt: new Date().toISOString() });
+      const payload = JSON.stringify({ ranking, period: period || "all", category: category || null, generatedAt: new Date().toISOString() });
       return new Response(request.method === "HEAD" ? null : payload, {
         headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" }
       });
