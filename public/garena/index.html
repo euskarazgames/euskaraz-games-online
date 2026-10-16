@@ -477,6 +477,15 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
   .topQuick .tikButton{padding:0 9px;font-size:9px;letter-spacing:.035em}
 }
 
+
+/* Tik Tak Scroll infinito */
+.tikFeed:after{
+  content:"";
+  display:block;
+  height:1px;
+  width:100%;
+}
+
 </style>
 </head>
 <body>
@@ -774,7 +783,7 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); renderTik(); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -979,30 +988,79 @@ function tikItems(){
     return {...x,_tikScore:freshness+trending+visual,_tikTrend:Boolean(r),_tikRank:r?.pos??null};
   }).sort((a,b)=>b._tikScore-a._tikScore);
 }
-function renderTik(){
-  const root=$("#tikFeed"); if(!root)return;
-  const feed=tikItems().slice(0,40);
-  root.innerHTML=feed.map((x,i)=>{
-    const desc=lang==="eu"?(x.eu||x.description||x.synopsis||"Ireki eduki ofiziala"):(x.es||x.description||x.synopsis||"Abrir contenido oficial");
-    const badge=x._tikTrend?(lang==="eu"?"TRENDING":"TRENDING"):(lang==="eu"?"BERRIA":"NUEVO");
-    const progress=Math.max(4,Math.round(((i+1)/feed.length)*100));
-    return `<article class="tikItem">
-      <div class="tikMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>
-      <div class="tikInfo">
-        <span class="tikSource">${esc(x.source)}</span><span class="tikTrend">${badge}</span>
-        <h2>${esc(x.title)}</h2>
-        <p>${esc(desc)}</p>
-        <a class="tikOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a>
-      </div>
-      <div class="tikActions">
-        <span class="tikAction"><i>♥</i><b>${x._tikTrend?"TOP":"+"}</b></span>
-        <span class="tikAction"><i>↗</i><b>${lang==="eu"?"Partekatu":"Compartir"}</b></span>
-        <span class="tikAction"><i>☰</i><b>${i+1}/${feed.length}</b></span>
-      </div>
-      <div class="tikProgress"><i style="width:${progress}%"></i></div>
-    </article>`;
-  }).join("");
+
+let tikPool=[];
+let tikCursor=0;
+let tikCycle=0;
+let tikRenderedTotal=0;
+const TIK_BATCH=12;
+
+function tikCardHtml(x,position,totalHint){
+  const desc=lang==="eu"?(x.eu||x.description||x.synopsis||"Ireki eduki ofiziala"):(x.es||x.description||x.synopsis||"Abrir contenido oficial");
+  const badge=x._tikTrend?"TRENDING":(lang==="eu"?"BERRIA":"NUEVO");
+  return `<article class="tikItem" data-tik-pos="${position}">
+    <div class="tikMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>
+    <div class="tikInfo">
+      <span class="tikSource">${esc(x.source)}</span><span class="tikTrend">${badge}</span>
+      <h2>${esc(x.title)}</h2>
+      <p>${esc(desc)}</p>
+      <a class="tikOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a>
+    </div>
+    <div class="tikActions">
+      <span class="tikAction"><i>♥</i><b>${x._tikTrend?"TOP":"+"}</b></span>
+      <span class="tikAction"><i>↗</i><b>${lang==="eu"?"Partekatu":"Compartir"}</b></span>
+      <span class="tikAction"><i>☰</i><b>${position}</b></span>
+    </div>
+    <div class="tikProgress"><i style="width:${Math.max(5,Math.min(100,((position-1)%Math.max(totalHint,1)+1)/Math.max(totalHint,1)*100))}%"></i></div>
+  </article>`;
 }
+
+function refillTikPool(){
+  const base=tikItems();
+  if(!base.length){tikPool=[];return}
+  if(tikCycle===0){tikPool=base;return}
+  const shift=(tikCycle*7)%base.length;
+  tikPool=[...base.slice(shift),...base.slice(0,shift)];
+}
+
+function appendTikBatch(){
+  const root=$("#tikFeed"); if(!root)return;
+  if(!tikPool.length)refillTikPool();
+  if(!tikPool.length)return;
+
+  let html="";
+  for(let n=0;n<TIK_BATCH;n++){
+    if(tikCursor>=tikPool.length){
+      tikCycle++;
+      tikCursor=0;
+      refillTikPool();
+      if(!tikPool.length)break;
+    }
+    const x=tikPool[tikCursor++];
+    tikRenderedTotal++;
+    html+=tikCardHtml(x,tikRenderedTotal,tikPool.length);
+  }
+  root.insertAdjacentHTML("beforeend",html);
+}
+
+function renderTik(reset=true){
+  const root=$("#tikFeed"); if(!root)return;
+  if(reset){
+    tikCycle=0;
+    tikCursor=0;
+    tikRenderedTotal=0;
+    tikPool=tikItems();
+    root.innerHTML="";
+  }
+  if(!root.children.length)appendTikBatch();
+}
+
+function maybeLoadMoreTik(){
+  const root=$("#tikFeed"); if(!root||!$("#tikOverlay")?.classList.contains("open"))return;
+  const remaining=root.scrollHeight-root.scrollTop-root.clientHeight;
+  if(remaining<root.clientHeight*3)appendTikBatch();
+}
+
 function renderTikPreview(){
   const root=$("#tikPreviewRow"); if(!root)return;
   const list=tikItems().slice(0,3);
@@ -1028,7 +1086,7 @@ function renderTikPreview(){
 function openTikAt(index=0){
   const overlay=$("#tikOverlay"),feed=$("#tikFeed");
   if(!overlay||!feed)return;
-  renderTik();
+  renderTik(true);
   overlay.classList.add("open");
   overlay.setAttribute("aria-hidden","false");
   document.documentElement.style.overflow="hidden";
@@ -1090,7 +1148,7 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderFeatured(); renderTik(); renderTikPreview(); renderSocial(); renderCards();
+  renderFeatured(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderCards();
 }
 document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
   btn.onclick=()=>{
@@ -1112,6 +1170,12 @@ $("#liveAllBtn").onclick=()=>{
   document.querySelector("#edukiak")?.scrollIntoView({behavior:"smooth",block:"start"});
 };
 $("#sareakButton").onclick=()=>document.querySelector("#sareak")?.scrollIntoView({behavior:"smooth",block:"start"});
+let tikScrollTick=false;
+$("#tikFeed")?.addEventListener("scroll",()=>{
+  if(tikScrollTick)return;
+  tikScrollTick=true;
+  requestAnimationFrame(()=>{tikScrollTick=false;maybeLoadMoreTik()});
+},{passive:true});
 $("#tikButton").onclick=openTik;
 $("#tikEnterAll").onclick=openTik;
 $("#tikClose").onclick=closeTik;
