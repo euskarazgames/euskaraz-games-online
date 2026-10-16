@@ -366,6 +366,50 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
   .heroSectionBtn span{font-size:10.5px;line-height:1.08}
 }
 
+
+/* Lucide icons · GitHub open-source set */
+.heroSectionBtn:before{display:none!important}
+.heroSectionBtn{grid-template-columns:46px 1fr 18px}
+.heroSectionBtn .heroIcon{
+  position:relative;
+  z-index:1;
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 30% 18%,rgba(255,255,255,.38),transparent 35%),
+    linear-gradient(145deg,var(--c1),var(--c2));
+  box-shadow:
+    0 9px 22px color-mix(in srgb,var(--c1) 30%,transparent),
+    inset 0 1px 0 rgba(255,255,255,.24);
+}
+.heroSectionBtn .heroIcon svg{
+  width:24px;
+  height:24px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;
+}
+.heroSectionBtn .heroLabel{
+  position:relative;
+  z-index:1;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.08;
+  letter-spacing:-.012em;
+}
+@media(max-width:700px){
+  .heroSectionBtn{grid-template-columns:1fr;grid-template-rows:42px auto}
+  .heroSectionBtn .heroIcon{width:42px;height:42px;border-radius:13px}
+  .heroSectionBtn .heroIcon svg{width:22px;height:22px}
+  .heroSectionBtn .heroLabel{font-size:10.5px}
+}
+
 </style>
 </head>
 <body>
@@ -399,15 +443,15 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opa
           <a class="cta secondary" href="#zuzenekoak" data-eu="Zuzenekoetara joan" data-es="Ir a los directos">Zuzenekoetara joan</a>
         </div>
         <div class="heroSections" id="heroSections" aria-label="GARENA kategoriak">
-          <button class="heroSectionBtn news" aria-label="Albisteak / Noticias" type="button" data-hero-cat="news"><span data-eu="Albisteak" data-es="Noticias">Albisteak</span></button>
-          <button class="heroSectionBtn live" aria-label="Zuzenekoak / Directos" type="button" data-hero-cat="live"><span data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</span></button>
-          <button class="heroSectionBtn sports" aria-label="Kirolak / Deportes" type="button" data-hero-cat="sports"><span data-eu="Kirolak" data-es="Deportes">Kirolak</span></button>
-          <button class="heroSectionBtn movies" aria-label="Filmak / Películas" type="button" data-hero-cat="series" data-hero-subtype="media"><span data-eu="Filmak" data-es="Películas">Filmak</span></button>
-          <button class="heroSectionBtn series" aria-label="Telesailak / Series" type="button" data-hero-cat="series" data-hero-subtype="series"><span data-eu="Telesailak" data-es="Series">Telesailak</span></button>
-          <button class="heroSectionBtn programs" aria-label="Saioak / Programas" type="button" data-hero-cat="entertainment"><span data-eu="Saioak" data-es="Programas">Saioak</span></button>
-          <button class="heroSectionBtn docs" aria-label="Dokumentalak / Documentales" type="button" data-hero-cat="docs"><span data-eu="Dokumentalak" data-es="Documentales">Dokumentalak</span></button>
-          <button class="heroSectionBtn audio" aria-label="Podcastak / Podcasts" type="button" data-hero-cat="audio"><span data-eu="Podcastak" data-es="Podcasts">Podcastak</span></button>
-          <button class="heroSectionBtn kids" aria-label="Haurrak / Infantil" type="button" data-hero-cat="kids"><span data-eu="Haurrak" data-es="Infantil">Haurrak</span></button>
+          <button class="heroSectionBtn news" aria-label="Albisteak / Noticias" type="button" data-hero-cat="news"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18h-5"/><path d="M18 14h-8"/><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></svg></span><span class="heroLabel" data-eu="Albisteak" data-es="Noticias">Albisteak</span></button>
+          <button class="heroSectionBtn live" aria-label="Zuzenekoak / Directos" type="button" data-hero-cat="live"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.247 7.761a6 6 0 0 1 0 8.478"/><path d="M19.075 4.933a10 10 0 0 1 0 14.134"/><path d="M4.925 19.067a10 10 0 0 1 0-14.134"/><path d="M7.753 16.239a6 6 0 0 1 0-8.478"/><circle cx="12" cy="12" r="2"/></svg></span><span class="heroLabel" data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</span></button>
+          <button class="heroSectionBtn sports" aria-label="Kirolak / Deportes" type="button" data-hero-cat="sports"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg></span><span class="heroLabel" data-eu="Kirolak" data-es="Deportes">Kirolak</span></button>
+          <button class="heroSectionBtn movies" aria-label="Filmak / Películas" type="button" data-hero-cat="series" data-hero-subtype="media"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12.296 3.464 3.02 3.956"/><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m6.18 5.276 3.1 3.899"/></svg></span><span class="heroLabel" data-eu="Filmak" data-es="Películas">Filmak</span></button>
+          <button class="heroSectionBtn series" aria-label="Telesailak / Series" type="button" data-hero-cat="series" data-hero-subtype="series"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m17 2-5 5-5-5"/><rect width="20" height="15" x="2" y="7" rx="2"/></svg></span><span class="heroLabel" data-eu="Telesailak" data-es="Series">Telesailak</span></button>
+          <button class="heroSectionBtn programs" aria-label="Saioak / Programas" type="button" data-hero-cat="entertainment"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span><span class="heroLabel" data-eu="Saioak" data-es="Programas">Saioak</span></button>
+          <button class="heroSectionBtn docs" aria-label="Dokumentalak / Documentales" type="button" data-hero-cat="docs"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><span class="heroLabel" data-eu="Dokumentalak" data-es="Documentales">Dokumentalak</span></button>
+          <button class="heroSectionBtn audio" aria-label="Podcastak / Podcasts" type="button" data-hero-cat="audio"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg></span><span class="heroLabel" data-eu="Podcastak" data-es="Podcasts">Podcastak</span></button>
+          <button class="heroSectionBtn kids" aria-label="Haurrak / Infantil" type="button" data-hero-cat="kids"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M15 12h.01"/><path d="M19.38 6.813A9 9 0 0 1 20.8 10.2a2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/><path d="M9 12h.01"/></svg></span><span class="heroLabel" data-eu="Haurrak" data-es="Infantil">Haurrak</span></button>
         </div>
       </div>
     </article>
