@@ -551,23 +551,25 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 .tikMediaFrame .tikMedia{position:absolute;inset:0}
 .tikVideoBadge{position:absolute;top:86px;left:16px;z-index:4;padding:7px 10px;border-radius:999px;background:rgba(0,0,0,.46);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);font-size:10px;font-weight:950}
 
-/* Sareak · sareka bakarrik */
-.socialNetworks{display:flex;flex-direction:column;gap:22px;margin-top:22px}
-.socialNetworkBlock{border:1px solid rgba(255,255,255,.16);border-radius:26px;padding:18px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(0,42,88,.18));box-shadow:0 16px 40px rgba(0,38,80,.16)}
-.socialNetworkHead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.socialNetworkIcon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:var(--net);color:#fff;font-weight:950;font-size:12px;box-shadow:0 10px 26px color-mix(in srgb,var(--net) 35%,transparent)}
-.socialNetworkHead small{font-size:9px;font-weight:900;letter-spacing:.11em;color:rgba(255,255,255,.58)}
-.socialNetworkHead h3{margin:2px 0 0;font-size:24px;letter-spacing:-.035em}
-.socialAccountGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.socialAccount{display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:10px;padding:11px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(0,30,67,.24);transition:.18s ease}
-.socialAccount:hover{transform:translateY(-2px);background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)}
-.socialAvatar{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--net);font-size:10px;font-weight:950}
-.socialAccountText{min-width:0}
-.socialAccountText strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.socialAccountText small{display:block;margin-top:3px;font-size:9px;color:rgba(255,255,255,.62)}
-.socialArrow{font-size:16px;opacity:.8}
-@media(max-width:900px){.socialAccountGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:700px){.socialNetworkBlock{padding:14px}.socialAccountGrid{grid-template-columns:1fr}}
+/* Sareak · post feed */
+.socialFeed{margin-top:22px;max-height:min(72vh,760px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;padding:2px 2px 24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;scroll-snap-type:y proximity}
+.socialFeed::-webkit-scrollbar{display:none}
+.socialPost{position:relative;overflow:hidden;min-height:250px;border-radius:22px;border:1px solid rgba(255,255,255,.15);background:linear-gradient(150deg,rgba(0,50,100,.46),rgba(4,22,48,.72));display:flex;flex-direction:column;scroll-snap-align:start;box-shadow:0 14px 38px rgba(0,30,68,.2)}
+.socialPostMedia{height:170px;background-size:cover;background-position:center;background-color:#073f79;display:grid;place-items:center;font-size:22px;font-weight:950;letter-spacing:-.04em}
+.socialPostMedia.fallback{background:radial-gradient(circle at 78% 20%,rgba(255,255,255,.18),transparent 27%),linear-gradient(145deg,#0c7fd0,#073f79)}
+.socialPost.youtube .socialPostMedia.fallback{background:radial-gradient(circle at 78% 20%,rgba(255,255,255,.14),transparent 27%),linear-gradient(145deg,#e02b25,#7d1111)}
+.socialPost.x .socialPostMedia.fallback{background:linear-gradient(145deg,#1b2733,#05080c)}
+.socialPost.orain .socialPostMedia.fallback{background:radial-gradient(circle at 25% 20%,rgba(255,255,255,.18),transparent 25%),linear-gradient(145deg,#0d80d2,#064b87)}
+.socialPostBody{padding:14px;display:flex;flex:1;flex-direction:column}
+.socialPostMeta{display:flex;align-items:center;justify-content:space-between;gap:8px;color:rgba(255,255,255,.63);font-size:9px;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
+.socialPost h3{font-size:17px;line-height:1.12;margin:10px 0 14px;letter-spacing:-.02em}
+.socialPostOpen{margin-top:auto;font-size:10px;font-weight:950}
+.socialPost.youtube .socialPostOpen{color:#ff7a72}
+.socialPost.orain .socialPostOpen{color:#76c8ff}
+.socialPost.x .socialPostOpen{color:#dfe8ef}
+.socialFeedLoading{grid-column:1/-1;padding:28px;border-radius:20px;border:1px dashed rgba(255,255,255,.2);text-align:center;color:rgba(255,255,255,.68)}
+.socialScrollHint{display:flex;justify-content:center;padding-top:10px;font-size:10px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.55)}
+@media(max-width:700px){.socialFeed{grid-template-columns:1fr;max-height:68vh}.socialPost{min-height:270px}.socialPostMedia{height:180px}}
 
 </style>
 </head>
@@ -698,8 +700,11 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     </div>
     <a class="feedbackBtn" href="https://www.eitb.eus/es/contacto/" target="_blank" rel="noopener" data-eu="Iritzia eman ↗" data-es="Dar tu opinión ↗">Iritzia eman ↗</a>
   </div>
-  <p class="socialLead" data-eu="Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta." data-es="Instagram, TikTok, X y YouTube: las redes oficiales de las marcas ZEITB, organizadas por plataforma.">Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta.</p>
-  <div class="socialNetworks" id="socialNetworks"></div>
+  <p class="socialLead" data-eu="Azken postak: YouTube, X eta ORAIN. Behera irristatu post gehiago kargatzeko." data-es="Últimos posts: YouTube, X y ORAIN. Desliza hacia abajo para cargar más.">Azken postak: YouTube, X eta ORAIN. Behera irristatu post gehiago kargatzeko.</p>
+  <div class="socialFeed" id="socialFeed">
+    <div class="socialFeedLoading" data-eu="Postak kargatzen…" data-es="Cargando posts…">Postak kargatzen…</div>
+  </div>
+  <div class="socialScrollHint" data-eu="POST GEHIAGO ↓" data-es="MÁS POSTS ↓">POST GEHIAGO ↓</div>
 </section>
 
 </main>
@@ -726,47 +731,116 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 
 <script>
 
-const SOCIAL_NETWORKS=[
-  {key:"instagram",name:"Instagram",short:"IG",color:"#ff4fa3",accounts:[
-    ["ZEITB","https://www.instagram.com/eitb/"],
-    ["Gaztea","https://www.instagram.com/gaztea_irratia/"],
-    ["MAKUSI","https://www.instagram.com/makusi_eus/"],
-    ["ETBko Zuzenekoak","https://www.instagram.com/etb_zuzenekoak/"],
-    ["Euskadi Irratia","https://www.instagram.com/euskadi_irratia/"],
-    ["Radio Euskadi","https://www.instagram.com/boulevard_radioeuskadi/"]
-  ]},
-  {key:"tiktok",name:"TikTok",short:"TT",color:"#25d5e7",accounts:[
-    ["MAKUSI","https://www.tiktok.com/@makusi_eus"],
-    ["ETBko Zuzenekoak","https://www.tiktok.com/@etb_zuzenekoak"]
-  ]},
-  {key:"x",name:"X",short:"X",color:"#c7d2dc",accounts:[
-    ["ZEITB","https://x.com/eitb"],
-    ["Gaztea","https://x.com/gaztea"],
-    ["Euskadi Irratia","https://x.com/euskadi_irratia"],
-    ["Radio Euskadi","https://x.com/radioeuskadi"],
-    ["ZEITB Albisteak","https://x.com/eitbalbisteak"],
-    ["ZEITB Kirolak","https://x.com/eitbkirolak"]
-  ]},
-  {key:"youtube",name:"YouTube",short:"YT",color:"#ff3b30",accounts:[
-    ["ZEITB","https://www.youtube.com/@eitb"],
-    ["MAKUSI","https://www.youtube.com/@makusi_eus"]
-  ]}
+const SOCIAL_FALLBACK_POSTS=[
+  {platform:"YouTube",account:"@eitb",title:"VS: Homo Bilbainum",url:"https://www.youtube.com/watch?v=Rggplwv0oE4",image:"https://i.ytimg.com/vi/Rggplwv0oE4/hqdefault.jpg",category:"youtube",videoUrl:"https://www.youtube.com/watch?v=Rggplwv0oE4"},
+  {platform:"X",account:"@eitbkirolak",title:"Sarah Pollerosek Lointek Gernika utzi du",url:"https://x.com/eitbkirolak/status/2026754072422891890",category:"sports"},
+  {platform:"X",account:"@orainnoticias",title:"Un grupo inversor vasco podría estar interesado en la compra de Elmubas Petfood Group",url:"https://x.com/orainnoticias/status/2026744576078156112",category:"news"},
+  {platform:"X",account:"@euskaltelebista",title:"Irati Erauskin: Nire belaunaldiko gehiengoak presioa sentitu dugu sexuari dagokionean",url:"https://x.com/euskaltelebista/status/2026734027776966918",category:"news"},
+  {platform:"X",account:"@euskadi_irratia",title:"Mikele Landa zinemagilearekin elkarrizketa",url:"https://x.com/euskadi_irratia/status/2026719969178702268",category:"news"},
+  {platform:"X",account:"@radioeuskadi",title:"Dani Ezkerro eta euskal gastronomia",url:"https://x.com/radioeuskadi/status/2026734715835687008",category:"news"}
 ];
-function renderSocial(){
-  const root=$("#socialNetworks"); if(!root)return;
-  root.innerHTML=SOCIAL_NETWORKS.map(net=>`<section class="socialNetworkBlock" style="--net:${net.color}">
-    <div class="socialNetworkHead">
-      <div class="socialNetworkIcon">${net.short}</div>
-      <div><small>${lang==="eu"?"SARE OFIZIALA":"RED OFICIAL"}</small><h3>${net.name}</h3></div>
-    </div>
-    <div class="socialAccountGrid">
-      ${net.accounts.map(([name,url])=>`<a class="socialAccount" href="${url}" target="_blank" rel="noopener">
-        <span class="socialAvatar">${net.short}</span>
-        <span class="socialAccountText"><strong>${name}</strong><small>${lang==="eu"?"Azken argitalpenak ikusi":"Ver últimas publicaciones"}</small></span>
-        <span class="socialArrow">↗</span>
-      </a>`).join("")}
-    </div>
-  </section>`).join("");
+let socialPosts=[];
+let socialOrder=[];
+let socialCursor=0;
+let socialCycle=0;
+let socialScrollBound=false;
+const SOCIAL_BATCH=6;
+
+function socialClass(x){return String(x.platform||"social").toLowerCase().replace(/[^a-z0-9]+/g,"")}
+function socialUnique(list){
+  const seen=new Set();
+  return (list||[]).filter(function(x){
+    if(!x||!x.url||!x.title||seen.has(x.url))return false;
+    seen.add(x.url); return true;
+  });
+}
+function socialShuffle(list){
+  const a=[...list];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const t=a[i];a[i]=a[j];a[j]=t}
+  return a;
+}
+function socialPrepare(){
+  const base=socialUnique(socialPosts.length?socialPosts:SOCIAL_FALLBACK_POSTS);
+  const youtube=base.filter(function(x){return x.platform==="YouTube"});
+  const news=base.filter(function(x){return x.platform==="ORAIN"||x.category==="news"});
+  const other=base.filter(function(x){return !youtube.includes(x)&&!news.includes(x)});
+  socialOrder=[];
+  const pools=[socialShuffle(youtube),socialShuffle(news),socialShuffle(other)];
+  while(pools.some(function(p){return p.length})){
+    if(pools[0].length)socialOrder.push(pools[0].shift());
+    if(pools[1].length)socialOrder.push(pools[1].shift());
+    if(pools[0].length)socialOrder.push(pools[0].shift());
+    if(pools[2].length)socialOrder.push(pools[2].shift());
+  }
+  if(socialCycle>0&&socialOrder.length>1){
+    const shift=socialCycle%socialOrder.length;
+    socialOrder=[...socialOrder.slice(shift),...socialOrder.slice(0,shift)];
+  }
+  socialCursor=0;
+}
+function socialPostCard(x){
+  const safeImage=esc(x.image||"").replace(/'/g,"%27");
+  const media=x.image
+    ? "<div class=\"socialPostMedia\" style=\"background-image:url('"+safeImage+"')\"></div>"
+    : "<div class=\"socialPostMedia fallback\"><span>"+esc(x.platform||"POST")+"</span></div>";
+  const when=x.publishedAt?String(x.publishedAt).slice(0,10):"";
+  return "<a class=\"socialPost "+socialClass(x)+"\" href=\""+esc(x.url)+"\" target=\"_blank\" rel=\"noopener\">"
+    +media
+    +"<div class=\"socialPostBody\">"
+    +"<div class=\"socialPostMeta\"><span>"+esc(x.platform||"Post")+" · "+esc(x.account||x.source||"ZEITB")+"</span><span>"+esc(when)+"</span></div>"
+    +"<h3>"+esc(x.title)+"</h3>"
+    +"<span class=\"socialPostOpen\">"+(lang==="eu"?"POSTA IREKI ↗":"ABRIR POST ↗")+"</span>"
+    +"</div></a>";
+}
+function appendSocialBatch(){
+  const root=$("#socialFeed"); if(!root)return;
+  if(!socialOrder.length)socialPrepare();
+  if(!socialOrder.length)return;
+  let out="";
+  for(let n=0;n<SOCIAL_BATCH;n++){
+    if(socialCursor>=socialOrder.length){
+      socialCycle++;
+      socialPrepare();
+      if(!socialOrder.length)break;
+    }
+    out+=socialPostCard(socialOrder[socialCursor++]);
+  }
+  root.insertAdjacentHTML("beforeend",out);
+}
+function renderSocial(reset=true){
+  const root=$("#socialFeed"); if(!root)return;
+  if(reset){
+    socialCycle=0; socialCursor=0; socialPrepare(); root.innerHTML="";
+  }
+  if(!root.children.length)appendSocialBatch();
+}
+function initSocialScroll(){
+  const root=$("#socialFeed");
+  if(!root||socialScrollBound)return;
+  socialScrollBound=true;
+  let ticking=false;
+  root.addEventListener("scroll",function(){
+    if(ticking)return;
+    ticking=true;
+    requestAnimationFrame(function(){
+      ticking=false;
+      if(root.scrollHeight-root.scrollTop-root.clientHeight<root.clientHeight*1.5)appendSocialBatch();
+    });
+  },{passive:true});
+}
+async function loadSocialPosts(){
+  try{
+    const r=await fetch("/api/feed",{cache:"no-store"});
+    if(!r.ok)throw new Error("feed");
+    const j=await r.json();
+    socialPosts=socialUnique(Array.isArray(j.items)?j.items:[]);
+  }catch(e){
+    socialPosts=[...SOCIAL_FALLBACK_POSTS];
+  }
+  if(!socialPosts.length)socialPosts=[...SOCIAL_FALLBACK_POSTS];
+  renderSocial(true);
+  if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true);
+  renderTikPreview();
 }
 
 const PLATFORMS=[
@@ -1117,8 +1191,28 @@ function tikContentKey(x){
     .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
     .replace(/[^a-z0-9]+/g," ").trim();
 }
+function isYouTubeItem(x){
+  return String(x&&x.platform||"")==="YouTube"||/youtube\.com|youtu\.be/i.test(String(x&&x.url||""))||/^YouTube/i.test(String(x&&x.source||""));
+}
+function socialToTik(x){
+  return {
+    title:x.title,
+    source:x.platform==="ORAIN"?"ORAIN":(x.platform||x.account||"Sareak"),
+    platform:x.platform||"",
+    category:x.category||(x.platform==="ORAIN"?"news":(x.platform==="YouTube"?"youtube":"news")),
+    url:x.url,
+    image:x.image||null,
+    videoUrl:x.platform==="YouTube"?x.url:(x.videoUrl||null),
+    publishedAt:x.publishedAt||null,
+    eu:x.platform==="YouTube"?"YouTubeko azken bideoa":(x.platform==="ORAIN"?"Azken albistea":"Sareetako posta"),
+    es:x.platform==="YouTube"?"Último vídeo de YouTube":(x.platform==="ORAIN"?"Última noticia":"Post de redes"),
+    type:x.platform==="YouTube"?"media":"social",
+    _social:true
+  };
+}
 function tikBase(){
-  const raw=items.filter(x=>x&&x.url&&x.title);
+  const socialTik=(socialPosts||[]).map(socialToTik);
+  const raw=[...socialTik,...items].filter(x=>x&&x.url&&x.title);
   const byTitle=new Map();
   for(let i=0;i<raw.length;i++){
     const x=raw[i],key=tikContentKey(x)||x.url;
@@ -1151,7 +1245,9 @@ function weightedRandomOrder(list){
     const personal=Math.max(.35,1+tikPreferenceScore(x)/90);
     const novelty=recent.has(x.url)?.12:1;
     const modeBoost=tikMode==="new"?(1+x._tikFresh/20):1;
-    const weight=Math.max(.05,fresh*video*personal*novelty*modeBoost);
+    const newsBoost=x.category==="news"?4.8:1;
+    const youtubeBoost=isYouTubeItem(x)?6.5:1;
+    const weight=Math.max(.05,fresh*video*personal*novelty*modeBoost*newsBoost*youtubeBoost);
     return {x,key:-Math.log(Math.max(Math.random(),1e-9))/weight};
   }).sort((a,b)=>a.key-b.key).map(o=>o.x);
 }
@@ -1173,13 +1269,16 @@ function diversifyTikSources(list){
   return out;
 }
 function tikItems(){
-  let base=tikBase().filter(x=>(tikFeedback[x.url]?.value||0)>=0);
+  const base=tikBase().filter(x=>(tikFeedback[x.url]?.value||0)>=0);
   if(!base.length)return [];
-
-  // Discovery is random across every source, but new items get a much higher chance.
-  // Recently shown URLs are heavily down-weighted, not permanently removed.
-  const ordered=weightedRandomOrder(base);
-  return diversifyTikSources(ordered);
+  const preferred=diversifyTikSources(weightedRandomOrder(base.filter(x=>x.category==="news"||isYouTubeItem(x))));
+  const rest=diversifyTikSources(weightedRandomOrder(base.filter(x=>x.category!=="news"&&!isYouTubeItem(x))));
+  const out=[];
+  while(preferred.length||rest.length){
+    for(let i=0;i<3&&preferred.length;i++)out.push(preferred.shift());
+    if(rest.length)out.push(rest.shift());
+  }
+  return out;
 }
 
 let tikPool=[];
@@ -1436,10 +1535,11 @@ $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("atar
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-applyLang(); loadFeeds(); loadRanking();
+applyLang(); loadFeeds(); loadRanking(); loadSocialPosts(); initSocialScroll();
 setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
+setInterval(()=>{if(!document.hidden)loadSocialPosts()},15*60*1000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking();loadSocialPosts()}});
 </script>
 </body>
 </html>
