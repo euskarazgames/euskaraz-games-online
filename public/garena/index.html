@@ -569,27 +569,6 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 @media(max-width:900px){.socialAccountGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.socialNetworkBlock{padding:14px}.socialAccountGrid{grid-template-columns:1fr}}
 
-/* Sareak · post natiboak */
-.socialNativeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:22px}
-.socialNativePost{overflow:hidden;border-radius:22px;border:1px solid rgba(255,255,255,.14);background:rgba(3,35,72,.46);min-height:300px;display:flex;flex-direction:column;box-shadow:0 18px 44px rgba(0,35,75,.18)}
-.socialNativeMedia{height:180px;background-size:cover;background-position:center;background-color:#082f5d}
-.socialNativeMedia.fallback{display:grid;place-items:center;background:radial-gradient(circle at 70% 20%,rgba(255,255,255,.18),transparent 28%),linear-gradient(145deg,#0d80d2,#073f79)}
-.socialNativeMedia.fallback span{font-size:23px;font-weight:950;letter-spacing:-.04em}
-.socialNativeBody{padding:14px;display:flex;flex:1;flex-direction:column}
-.socialNativeMeta{display:flex;justify-content:space-between;gap:8px;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.62)}
-.socialNativeBody h3{margin:10px 0 16px;font-size:17px;line-height:1.12}
-.socialNativeOpen{margin-top:auto;font-size:10px;font-weight:950}
-.socialNativePost.youtube .socialNativeOpen{color:#ff6d63}.socialNativePost.instagram .socialNativeOpen{color:#ff86bc}.socialNativePost.x .socialNativeOpen{color:#e4edf5}
-.socialLoading{grid-column:1/-1;padding:26px;border-radius:20px;border:1px dashed rgba(255,255,255,.22);color:rgba(255,255,255,.7)}
-@media(max-width:1000px){.socialNativeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:700px){.socialNativeGrid{display:flex;overflow-x:auto;gap:11px;padding-bottom:10px;scroll-snap-type:x mandatory}.socialNativeGrid::-webkit-scrollbar{display:none}.socialNativePost{flex:0 0 82vw;scroll-snap-align:start}}
-
-
-
-.socialNativePost.instagram{background:linear-gradient(160deg,rgba(105,32,120,.42),rgba(3,35,72,.55))}
-.socialNativePost.instagram .socialNativeMedia.fallback{background:radial-gradient(circle at 30% 110%,#ffd66b 0 16%,transparent 36%),radial-gradient(circle at 85% 5%,#6f55ff 0 12%,transparent 34%),linear-gradient(145deg,#ff4d8d,#8b43d7)}
-.socialNativePost.instagram .socialNativeOpen:before{content:"◎ ";}
-
 </style>
 </head>
 <body>
@@ -719,10 +698,8 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     </div>
     <a class="feedbackBtn" href="https://www.eitb.eus/es/contacto/" target="_blank" rel="noopener" data-eu="Iritzia eman ↗" data-es="Dar tu opinión ↗">Iritzia eman ↗</a>
   </div>
-  <p class="socialLead" data-eu="Instagram, X eta YouTubeko azken post publikoak, 15 minuturo eguneratuta." data-es="Últimos posts públicos de Instagram, X y YouTube, actualizados cada 15 minutos.">Instagram, X eta YouTubeko azken post publikoak, 15 minuturo eguneratuta.</p>
-  <div class="socialNativeGrid" id="socialNativeGrid">
-    <div class="socialLoading" data-eu="Postak kargatzen…" data-es="Cargando posts…">Postak kargatzen…</div>
-  </div>
+  <p class="socialLead" data-eu="Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta." data-es="Instagram, TikTok, X y YouTube: las redes oficiales de las marcas ZEITB, organizadas por plataforma.">Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta.</p>
+  <div class="socialNetworks" id="socialNetworks"></div>
 </section>
 
 </main>
@@ -749,52 +726,47 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 
 <script>
 
-
-const SOCIAL_FALLBACK_POSTS=[
-  {platform:"X",account:"@eitbkirolak",title:"Sarah Pollerosek Lointek Gernika utzi du",url:"https://x.com/eitbkirolak/status/2026754072422891890"},
-  {platform:"X",account:"@orainnoticias",title:"Un grupo inversor vasco podría estar interesado en la compra de Elmubas Petfood Group",url:"https://x.com/orainnoticias/status/2026744576078156112"},
-  {platform:"X",account:"@euskaltelebista",title:"Irati Erauskin: Nire belaunaldiko gehiengoak presioa sentitu dugu sexuari dagokionean",url:"https://x.com/euskaltelebista/status/2026734027776966918"},
-  {platform:"X",account:"@euskadi_irratia",title:"Mikele Landa zinemagilearekin elkarrizketa",url:"https://x.com/euskadi_irratia/status/2026719969178702268"},
-  {platform:"X",account:"@radioeuskadi",title:"Dani Ezkerro eta euskal gastronomia",url:"https://x.com/radioeuskadi/status/2026734715835687008"},
-  {platform:"YouTube",account:"@eitb",title:"VS: Homo Bilbainum",url:"https://www.youtube.com/watch?v=Rggplwv0oE4",image:"https://i.ytimg.com/vi/Rggplwv0oE4/hqdefault.jpg"}
+const SOCIAL_NETWORKS=[
+  {key:"instagram",name:"Instagram",short:"IG",color:"#ff4fa3",accounts:[
+    ["ZEITB","https://www.instagram.com/eitb/"],
+    ["Gaztea","https://www.instagram.com/gaztea_irratia/"],
+    ["MAKUSI","https://www.instagram.com/makusi_eus/"],
+    ["ETBko Zuzenekoak","https://www.instagram.com/etb_zuzenekoak/"],
+    ["Euskadi Irratia","https://www.instagram.com/euskadi_irratia/"],
+    ["Radio Euskadi","https://www.instagram.com/boulevard_radioeuskadi/"]
+  ]},
+  {key:"tiktok",name:"TikTok",short:"TT",color:"#25d5e7",accounts:[
+    ["MAKUSI","https://www.tiktok.com/@makusi_eus"],
+    ["ETBko Zuzenekoak","https://www.tiktok.com/@etb_zuzenekoak"]
+  ]},
+  {key:"x",name:"X",short:"X",color:"#c7d2dc",accounts:[
+    ["ZEITB","https://x.com/eitb"],
+    ["Gaztea","https://x.com/gaztea"],
+    ["Euskadi Irratia","https://x.com/euskadi_irratia"],
+    ["Radio Euskadi","https://x.com/radioeuskadi"],
+    ["ZEITB Albisteak","https://x.com/eitbalbisteak"],
+    ["ZEITB Kirolak","https://x.com/eitbkirolak"]
+  ]},
+  {key:"youtube",name:"YouTube",short:"YT",color:"#ff3b30",accounts:[
+    ["ZEITB","https://www.youtube.com/@eitb"],
+    ["MAKUSI","https://www.youtube.com/@makusi_eus"]
+  ]}
 ];
-
-let socialPosts=[];
-function validSocialPost(x){
-  const u=String(x?.url||"");
-  if(!u.startsWith("https://"))return false;
-  return true;
-}
-function socialNetClass(x){return String(x.platform||"social").toLowerCase().replace(/[^a-z0-9]+/g,"")}
-function socialPostCard(x){
-  const media=x.image
-    ? `<div class="socialNativeMedia" style="background-image:url('${esc(x.image).replace(/'/g,"%27")}')"></div>`
-    : `<div class="socialNativeMedia fallback"><span>${esc(x.platform||"SOCIAL")}</span></div>`;
-  return `<a class="socialNativePost ${socialNetClass(x)}" href="${esc(x.url)}" target="_blank" rel="noopener">
-    ${media}
-    <div class="socialNativeBody">
-      <div class="socialNativeMeta"><span>${esc(x.platform||"Social")}</span><span>${esc(x.account||"")}</span></div>
-      <h3>${esc(x.title||x.account||"Post")}</h3>
-      <span class="socialNativeOpen">${lang==="eu"?"POSTA IREKI ↗":"ABRIR POST ↗"}</span>
+function renderSocial(){
+  const root=$("#socialNetworks"); if(!root)return;
+  root.innerHTML=SOCIAL_NETWORKS.map(net=>`<section class="socialNetworkBlock" style="--net:${net.color}">
+    <div class="socialNetworkHead">
+      <div class="socialNetworkIcon">${net.short}</div>
+      <div><small>${lang==="eu"?"SARE OFIZIALA":"RED OFICIAL"}</small><h3>${net.name}</h3></div>
     </div>
-  </a>`;
-}
-function renderSocialPosts(){
-  const root=$("#socialNativeGrid"); if(!root)return;
-  const live=socialPosts.filter(validSocialPost);
-  const fallback=SOCIAL_FALLBACK_POSTS.filter(validSocialPost);
-  const view=live.length?live:fallback;
-  root.innerHTML=view.map(socialPostCard).join("");
-}
-async function loadSocialPosts(){
-  try{
-    const r=await fetch("/garena/api/social",{cache:"no-store"});
-    if(!r.ok)throw 0;
-    const j=await r.json();
-    socialPosts=Array.isArray(j.items)?j.items:[];
-  }catch{socialPosts=[...SOCIAL_FALLBACK_POSTS]}
-  if(!socialPosts.length)socialPosts=[...SOCIAL_FALLBACK_POSTS];
-  renderSocialPosts();
+    <div class="socialAccountGrid">
+      ${net.accounts.map(([name,url])=>`<a class="socialAccount" href="${url}" target="_blank" rel="noopener">
+        <span class="socialAvatar">${net.short}</span>
+        <span class="socialAccountText"><strong>${name}</strong><small>${lang==="eu"?"Azken argitalpenak ikusi":"Ver últimas publicaciones"}</small></span>
+        <span class="socialArrow">↗</span>
+      </a>`).join("")}
+    </div>
+  </section>`).join("");
 }
 
 const PLATFORMS=[
@@ -887,7 +859,7 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocialPosts(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -1424,7 +1396,7 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderFeatured(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderCards();
+  renderFeatured(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderCards();
 }
 document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
   btn.onclick=()=>{
@@ -1472,12 +1444,10 @@ $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("atar
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-applyLang(); loadFeeds(); loadRanking(); loadSocialPosts();
+applyLang(); loadFeeds(); loadRanking();
 setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
-setInterval(()=>{if(!document.hidden)loadSocialPosts()},15*60*1000);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking();loadSocialPosts()}});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
 </script>
-
 </body>
 </html>
