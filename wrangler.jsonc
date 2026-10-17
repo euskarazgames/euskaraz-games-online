@@ -11,8 +11,6 @@
       "/ws",
       "/health",
       "/ataria/api/*",
-      "/garena",
-      "/garena/",
       "/garena/api/*"
     ]
   },
