@@ -579,14 +579,11 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 .socialNativeMeta{display:flex;justify-content:space-between;gap:8px;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.62)}
 .socialNativeBody h3{margin:10px 0 16px;font-size:17px;line-height:1.12}
 .socialNativeOpen{margin-top:auto;font-size:10px;font-weight:950}
-.socialNativePost.youtube .socialNativeOpen{color:#ff6d63}.socialNativePost.tiktok .socialNativeOpen{color:#4de8f1}.socialNativePost.instagram .socialNativeOpen{color:#ff86bc}.socialNativePost.x .socialNativeOpen{color:#e4edf5}
+.socialNativePost.youtube .socialNativeOpen{color:#ff6d63}.socialNativePost.instagram .socialNativeOpen{color:#ff86bc}.socialNativePost.x .socialNativeOpen{color:#e4edf5}
 .socialLoading{grid-column:1/-1;padding:26px;border-radius:20px;border:1px dashed rgba(255,255,255,.22);color:rgba(255,255,255,.7)}
 @media(max-width:1000px){.socialNativeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.socialNativeGrid{display:flex;overflow-x:auto;gap:11px;padding-bottom:10px;scroll-snap-type:x mandatory}.socialNativeGrid::-webkit-scrollbar{display:none}.socialNativePost{flex:0 0 82vw;scroll-snap-align:start}}
 
-
-.socialNativePost.tiktok .socialNativeMedia.fallback{background:radial-gradient(circle at 78% 20%,rgba(255,255,255,.2),transparent 26%),linear-gradient(145deg,#111,#00d8e5 52%,#ff2d72)}
-.socialNativePost.tiktok .socialNativeOpen:before{content:"▶ ";}
 
 </style>
 </head>
@@ -717,7 +714,7 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     </div>
     <a class="feedbackBtn" href="https://www.eitb.eus/es/contacto/" target="_blank" rel="noopener" data-eu="Iritzia eman ↗" data-es="Dar tu opinión ↗">Iritzia eman ↗</a>
   </div>
-  <p class="socialLead" data-eu="Sareetako azken post publikoak, zuzenean eta nahastuta." data-es="Últimos posts públicos de redes, directos y mezclados.">Sareetako azken post publikoak, zuzenean eta nahastuta.</p>
+  <p class="socialLead" data-eu="X eta YouTubeko azken post publikoak, 15 minuturo eguneratuta." data-es="Últimos posts públicos de X y YouTube, actualizados cada 15 minutos.">X eta YouTubeko azken post publikoak, 15 minuturo eguneratuta.</p>
   <div class="socialNativeGrid" id="socialNativeGrid">
     <div class="socialLoading" data-eu="Postak kargatzen…" data-es="Cargando posts…">Postak kargatzen…</div>
   </div>
@@ -761,7 +758,6 @@ let socialPosts=[];
 function validSocialPost(x){
   const u=String(x?.url||"");
   if(!u.startsWith("https://"))return false;
-  if(/tiktok\.com/i.test(u)&&u.includes("7374000525064375584"))return false;
   return true;
 }
 function socialNetClass(x){return String(x.platform||"social").toLowerCase().replace(/[^a-z0-9]+/g,"")}
@@ -1474,8 +1470,8 @@ $("#search").addEventListener("input",renderCards);
 applyLang(); loadFeeds(); loadRanking(); loadSocialPosts();
 setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
-setInterval(()=>{if(!document.hidden)loadSocialPosts()},5*60*1000);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
+setInterval(()=>{if(!document.hidden)loadSocialPosts()},15*60*1000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking();loadSocialPosts()}});
 </script>
 
 </body>
