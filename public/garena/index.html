@@ -590,6 +590,11 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 .socialNativePost.instagram .socialNativeMedia.fallback{background:radial-gradient(circle at 30% 110%,#ffd66b 0 16%,transparent 36%),radial-gradient(circle at 85% 5%,#6f55ff 0 12%,transparent 34%),linear-gradient(145deg,#ff4d8d,#8b43d7)}
 .socialNativePost.instagram .socialNativeOpen:before{content:"◎ ";}
 
+
+.socialMoreSentinel{height:42px;display:grid;place-items:center;color:rgba(255,255,255,.46);font-weight:950;letter-spacing:.35em}
+.socialMoreSentinel span{animation:socialPulse 1.35s ease-in-out infinite}
+@keyframes socialPulse{0%,100%{opacity:.28;transform:translateY(0)}50%{opacity:.9;transform:translateY(3px)}}
+
 </style>
 </head>
 <body>
@@ -723,6 +728,7 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
   <div class="socialNativeGrid" id="socialNativeGrid">
     <div class="socialLoading" data-eu="Postak kargatzen…" data-es="Cargando posts…">Postak kargatzen…</div>
   </div>
+  <div class="socialMoreSentinel" id="socialMoreSentinel" aria-hidden="true"><span>•••</span></div>
 </section>
 
 </main>
@@ -760,10 +766,15 @@ const SOCIAL_FALLBACK_POSTS=[
 ];
 
 let socialPosts=[];
+let socialFeed=[];
+let socialCursor=0;
+let socialCycle=0;
+let socialRecent=[];
+const SOCIAL_BATCH=9;
+
 function validSocialPost(x){
   const u=String(x?.url||"");
-  if(!u.startsWith("https://"))return false;
-  return true;
+  return u.startsWith("https://");
 }
 function socialNetClass(x){return String(x.platform||"social").toLowerCase().replace(/[^a-z0-9]+/g,"")}
 function socialPostCard(x){
@@ -779,12 +790,70 @@ function socialPostCard(x){
     </div>
   </a>`;
 }
-function renderSocialPosts(){
+function socialUnique(list){
+  const seen=new Set();
+  return list.filter(x=>validSocialPost(x)&&!seen.has(x.url)&&(seen.add(x.url),true));
+}
+function socialMix(list,cycle=0){
+  const pool=[...list],out=[];
+  const recentSet=new Set(socialRecent.slice(-24));
+  if(cycle>0){
+    pool.sort((a,b)=>{
+      const ar=recentSet.has(a.url)?1:0,br=recentSet.has(b.url)?1:0;
+      if(ar!==br)return ar-br;
+      return Math.random()-.5;
+    });
+  }
+  const recentNetworks=[];
+  while(pool.length){
+    let pick=0;
+    for(let i=0;i<Math.min(pool.length,15);i++){
+      const net=pool[i].platform||"Social";
+      if(!recentNetworks.includes(net)){pick=i;break}
+    }
+    const [x]=pool.splice(pick,1);
+    out.push(x);
+    recentNetworks.unshift(x.platform||"Social");
+    if(recentNetworks.length>2)recentNetworks.pop();
+  }
+  return out;
+}
+function refillSocialFeed(){
+  const live=socialUnique(socialPosts);
+  const fallback=socialUnique(SOCIAL_FALLBACK_POSTS);
+  const base=live.length?live:fallback;
+  socialFeed=socialMix(base,socialCycle);
+  socialCursor=0;
+}
+function appendSocialBatch(){
   const root=$("#socialNativeGrid"); if(!root)return;
-  const live=socialPosts.filter(validSocialPost);
-  const fallback=SOCIAL_FALLBACK_POSTS.filter(validSocialPost);
-  const view=live.length?live:fallback;
-  root.innerHTML=view.map(socialPostCard).join("");
+  if(!socialFeed.length)refillSocialFeed();
+  if(!socialFeed.length)return;
+
+  let html="";
+  for(let i=0;i<SOCIAL_BATCH;i++){
+    if(socialCursor>=socialFeed.length){
+      socialCycle++;
+      refillSocialFeed();
+      if(!socialFeed.length)break;
+    }
+    const x=socialFeed[socialCursor++];
+    socialRecent.push(x.url);
+    if(socialRecent.length>36)socialRecent.shift();
+    html+=socialPostCard(x);
+  }
+  root.insertAdjacentHTML("beforeend",html);
+}
+function renderSocialPosts(reset=true){
+  const root=$("#socialNativeGrid"); if(!root)return;
+  if(reset){
+    socialCursor=0;
+    socialCycle=0;
+    socialRecent=[];
+    refillSocialFeed();
+    root.innerHTML="";
+  }
+  if(!root.children.length)appendSocialBatch();
 }
 async function loadSocialPosts(){
   try{
@@ -794,7 +863,17 @@ async function loadSocialPosts(){
     socialPosts=Array.isArray(j.items)?j.items:[];
   }catch{socialPosts=[...SOCIAL_FALLBACK_POSTS]}
   if(!socialPosts.length)socialPosts=[...SOCIAL_FALLBACK_POSTS];
-  renderSocialPosts();
+  renderSocialPosts(true);
+}
+
+let socialObserver=null;
+function initSocialInfinite(){
+  const sentinel=$("#socialMoreSentinel");
+  if(!sentinel||socialObserver)return;
+  socialObserver=new IntersectionObserver(entries=>{
+    if(entries.some(e=>e.isIntersecting))appendSocialBatch();
+  },{root:null,rootMargin:"900px 0px 900px 0px",threshold:0});
+  socialObserver.observe(sentinel);
 }
 
 const PLATFORMS=[
@@ -1472,7 +1551,7 @@ $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("atar
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-applyLang(); loadFeeds(); loadRanking(); loadSocialPosts();
+applyLang(); loadFeeds(); loadRanking(); loadSocialPosts(); initSocialInfinite();
 setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
 setInterval(()=>{if(!document.hidden)loadSocialPosts()},15*60*1000);
