@@ -311,6 +311,6 @@ export async function handleSocialApi(request){
   }
   const combined=[...mixed];
   for(const x of SOCIAL_FALLBACK_POSTS)if(!combined.some(y=>y.url===x.url))combined.push(x);
-  const body={items:combined.slice(0,48),checkedAt:new Date().toISOString()};
+  const body={items:combined.slice(0,96),checkedAt:new Date().toISOString()};
   return new Response(request.method==="HEAD"?null:JSON.stringify(body),{headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store","x-content-type-options":"nosniff"}});
 }
