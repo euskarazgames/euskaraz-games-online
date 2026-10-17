@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0878cf">
+<title>GARENA · Standalone</title>
+<meta name="description" content="GARENA · bertsio independentea.">
+<style>
+:root{
+  --bg:#070708; --bg2:#111114; --card:#151519; --soft:#1d1d22;
+  --txt:#f5f5f6; --muted:#a6a6ad; --line:#2b2b31; --accent:#ff754c;
+  --radius:22px; --shadow:0 18px 60px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+img{display:block;width:100%}
+.skip{position:absolute;left:-9999px}.skip:focus{left:14px;top:14px;z-index:9999;background:#fff;color:#000;padding:10px 14px;border-radius:10px}
+.top{position:sticky;top:0;z-index:50;backdrop-filter:blur(18px);background:rgba(7,7,8,.82);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav{max-width:1440px;margin:auto;height:72px;padding:0 22px;display:flex;align-items:center;gap:22px}
+.brand{font-weight:950;font-size:26px;letter-spacing:-1.2px;display:flex;align-items:center;gap:5px}.brand b{color:var(--accent)}
+.navlinks{display:flex;gap:18px;color:#d7d7db;font-weight:650;font-size:14px}
+.spacer{flex:1}
+.lang,.favbtn{border:1px solid var(--line);background:#111116;color:#fff;border-radius:999px;padding:9px 13px}
+.hero{max-width:1440px;margin:auto;padding:62px 22px 22px}
+.heroGrid{display:block}
+.heroMain{border-radius:30px;overflow:hidden;position:relative;min-height:510px;background:#18181c;box-shadow:var(--shadow)}
+.heroMain{background:
+radial-gradient(circle at 72% 22%,rgba(255,117,76,.24),transparent 30%),
+linear-gradient(145deg,#111 20%,#23232a 62%,#151515)}
+.heroCopy{position:absolute;left:42px;right:42px;top:38px;bottom:auto;max-width:880px}
+.kicker{font-size:12px;letter-spacing:.18em;font-weight:900;color:var(--accent);text-transform:uppercase}
+h1{font-size:clamp(48px,7vw,96px);line-height:.92;letter-spacing:-.065em;margin:10px 0 22px;max-width:850px}
+.lead{font-size:clamp(17px,2.1vw,24px);line-height:1.35;color:#d5d5da;max-width:700px;margin:0 0 26px}
+.ctas{display:flex;gap:10px;flex-wrap:wrap}
+.cta{padding:13px 17px;border-radius:999px;border:1px solid #fff;background:#fff;color:#070708;font-weight:850}.cta.secondary{background:rgba(0,0,0,.25);color:#fff;border-color:#555}
+.heroSide{display:grid;grid-template-rows:1fr 1fr;gap:1px;background:#2b2b31}
+.feature{padding:26px;display:flex;flex-direction:column;justify-content:flex-end;min-height:254px;background:linear-gradient(160deg,#202028,#111)}
+.feature:first-child{background:linear-gradient(160deg,#23262d,#101012)}
+.feature.audio{background:linear-gradient(155deg,#ff754c,#d94f31);color:#090909}
+.feature .tag{font-size:11px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+.feature h3{font-size:28px;line-height:1.04;letter-spacing:-.035em;margin:8px 0}
+
+.featuredIntro{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:26px 0 18px}
+.featuredIntro p{margin:0;color:var(--muted);font-size:13px}
+.featuredShelves{display:flex;flex-direction:column;gap:30px}
+.featuredShelf{display:flex;flex-direction:column;gap:12px}
+.shelfHead{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.shelfHead h3{margin:0;font-size:24px;letter-spacing:-.035em}
+.shelfHead span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:850}
+.shelfGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.shelfGrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.newsBlock{display:flex;flex-direction:column;gap:12px}
+.newsSubhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
+.newsSubhead h4{margin:0;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78)}
+.shelfMore{align-self:flex-start;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:10px 15px;font-weight:900;font-size:12px}
+.shelfMore:hover{background:#fff;color:#0865b2}
+.featuredCard{position:relative;min-height:245px;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:linear-gradient(145deg,#27272e,#111);box-shadow:0 14px 34px rgba(0,0,0,.24);transition:.2s;isolation:isolate}
+.featuredCard:nth-child(1){transform:rotate(-.6deg)}.featuredCard:nth-child(3){transform:rotate(.6deg)}
+.featuredCard:hover{transform:translateY(-4px) rotate(0);border-color:#666}
+.featuredCard .bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.featuredCard:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9),rgba(0,0,0,.08) 70%);z-index:-1}
+.featuredCard .inside{position:absolute;inset:auto 16px 16px;display:flex;flex-direction:column;gap:7px}
+.featuredCard .kind{font-size:10px;font-weight:950;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+.featuredCard .featuredSource{font-size:10px;font-weight:850;letter-spacing:.08em;color:#ddd}
+.featuredCard h3{margin:0;font-size:23px;line-height:1.03;letter-spacing:-.035em}
+.platform{position:relative;overflow:hidden}
+.platform:before{content:"";position:absolute;inset:0;background:linear-gradient(145deg,var(--pc),transparent 58%);opacity:.72;z-index:0}
+.platform>*{position:relative;z-index:1}
+.platform small{display:block;color:#e8e8eb;font-size:11px;line-height:1.3;margin-top:7px;max-width:15ch}
+.rankingGrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.rankCard{position:relative;border:1px solid var(--line);border-radius:18px;background:#111114;padding:16px;min-height:145px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.rankNum{font-size:44px;line-height:1;font-weight:950;color:var(--accent);letter-spacing:-.06em}
+.rankCard h3{font-size:15px;line-height:1.15;margin:12px 0 8px}
+.rankMeta{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.rankEmpty{grid-column:1/-1;color:var(--muted);border:1px dashed var(--line);border-radius:18px;padding:24px}
+.section{max-width:1440px;margin:auto;padding:42px 22px}
+.sectionHead{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:18px}
+.sectionHead h2{font-size:clamp(30px,4vw,52px);letter-spacing:-.045em;margin:0}
+.sectionHead p{margin:0;color:var(--muted)}
+.platforms{display:grid;grid-template-columns:repeat(8,minmax(120px,1fr));gap:10px}
+.platform{min-height:112px;border:1px solid var(--line);background:#111114;border-radius:18px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;transition:.2s}
+.platform:hover{transform:translateY(-3px);border-color:#555}
+.platform strong{font-size:18px}.platform span{font-size:12px;color:var(--muted)}
+.liveGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.live{border-radius:20px;background:var(--card);border:1px solid var(--line);padding:20px;min-height:155px;display:flex;flex-direction:column;justify-content:space-between}
+.live .icon{font-size:26px}.live strong{font-size:21px}.live small{color:var(--muted)}
+.catalogWrap{background:#0d0d10;border-top:1px solid #1b1b20;border-bottom:1px solid #1b1b20}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 20px}
+.search{flex:1;min-width:240px;position:relative}.search input{width:100%;height:48px;border-radius:999px;border:1px solid var(--line);background:#151519;color:#fff;padding:0 18px 0 43px;outline:none}.search:before{content:"⌕";position:absolute;left:17px;top:9px;font-size:24px;color:#aaa}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{height:48px;padding:0 15px;border-radius:999px;border:1px solid var(--line);background:#131316;color:#ccc;font-weight:750}.chip.active{background:var(--accent);color:#0a0a0a;border-color:var(--accent)}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;position:relative;min-width:0}
+.poster{aspect-ratio:16/10;background:
+linear-gradient(135deg,rgba(255,117,76,.18),transparent 50%),
+linear-gradient(160deg,#292932,#111);position:relative;display:flex;align-items:flex-end;padding:14px}
+.poster:after{content:"▶";position:absolute;top:13px;left:13px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(0,0,0,.65);font-size:13px}
+.source{font-size:11px;font-weight:900;letter-spacing:.08em;padding:6px 8px;border-radius:999px;background:rgba(0,0,0,.62)}
+.cardBody{padding:15px 15px 14px}.card h3{font-size:18px;line-height:1.15;margin:0 0 10px;letter-spacing:-.025em}.card p{font-size:13px;color:var(--muted);margin:0 0 14px;line-height:1.35}
+.cardActions{display:flex;align-items:center;gap:8px}.open{flex:1;border:0;border-radius:12px;background:#fff;color:#080808;padding:10px 12px;font-weight:850;text-align:center;font-size:12px}.save{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:#0d0d10;color:#fff}
+.empty{grid-column:1/-1;padding:70px 20px;text-align:center;color:var(--muted)}
+.audioBanner{border-radius:28px;background:var(--accent);color:#070708;padding:34px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}.audioBanner h2{margin:0;font-size:clamp(34px,5vw,64px);letter-spacing:-.05em}.audioBanner p{max-width:700px;font-size:18px}.wave{font-size:30px;letter-spacing:7px;font-weight:900}
+.footer{max-width:1440px;margin:auto;padding:34px 22px 70px;color:#8f8f96;font-size:13px;line-height:1.55}.footer .brand{color:#fff;margin-bottom:14px}
+.toast{position:fixed;right:18px;bottom:18px;z-index:90;padding:11px 14px;border-radius:12px;background:#fff;color:#111;font-weight:750;opacity:0;transform:translateY(10px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}
+@media(max-width:1100px){.platforms{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(3,1fr)}.shelfGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.liveGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.navlinks{display:none}.nav{padding:0 14px}.hero{padding:24px 14px 14px}.heroMain{min-height:650px}.heroCopy{left:22px;right:22px;top:26px;bottom:auto}.section{padding:32px 14px}.platforms{grid-template-columns:repeat(2,1fr)}.liveGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card h3{font-size:15px}.cardBody{padding:12px}.audioBanner{grid-template-columns:1fr}.wave{font-size:22px}.featuredIntro{margin-top:22px}.shelfGrid{display:flex;overflow-x:auto;gap:14px;padding:7px 20px 20px 6px;scroll-snap-type:x mandatory}.shelfGrid::-webkit-scrollbar{display:none}.shelfGrid.three{display:flex}.featuredCard{flex:0 0 72vw;min-height:300px;scroll-snap-align:start}.featuredCard:nth-child(1){transform:rotate(-1.2deg)}.featuredCard:nth-child(3){transform:rotate(1.2deg)}.rankingGrid{display:flex;overflow-x:auto;gap:10px;padding-bottom:10px}.rankCard{flex:0 0 62vw}}
+@media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.poster{aspect-ratio:1/1}.source{font-size:9px}.card p{display:none}.open{padding:9px 6px}}
+
+/* GARENA — EITB blue identity */
+:root{--bg:#0469b8;--bg2:#075ea7;--card:rgba(2,64,121,.72);--soft:rgba(0,50,103,.62);--txt:#fff;--muted:rgba(255,255,255,.72);--line:rgba(255,255,255,.18);--accent:#fff;--shadow:0 22px 60px rgba(0,39,85,.25)}
+body{background:radial-gradient(circle at 58% 10%,rgba(0,161,240,.42),transparent 32%),linear-gradient(145deg,#0754a4 0%,#0785dc 48%,#045aa8 100%);background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.16;background:linear-gradient(24deg,transparent 47.7%,#fff 48%,#fff 48.35%,transparent 48.65%),linear-gradient(102deg,transparent 46.8%,#fff 47.1%,#fff 47.45%,transparent 47.8%),linear-gradient(158deg,transparent 58%,#fff 58.3%,#fff 58.65%,transparent 59%);background-size:520px 390px,680px 510px,760px 570px}
+.top{background:rgba(4,83,157,.76);border-bottom:1px solid rgba(255,255,255,.16)}
+.brand{gap:13px;font-size:26px;letter-spacing:-.03em;color:#fff}.eitbWord{font-size:29px;font-weight:900;letter-spacing:-.08em}.brandDivider{display:block;width:1px;height:36px;background:rgba(255,255,255,.82)}.garenaWord{font-family:"Arial Black",Inter,sans-serif;font-size:24px;font-weight:950;letter-spacing:.04em;transform:skew(-3deg)}
+.lang,.favbtn{background:rgba(0,60,120,.42);border-color:rgba(255,255,255,.25)}
+.heroMain{background:radial-gradient(circle at 78% 20%,rgba(29,183,255,.48),transparent 31%),linear-gradient(145deg,rgba(2,75,147,.94),rgba(5,139,220,.94));border:1px solid rgba(255,255,255,.18)}
+.heroMain:before{content:"";position:absolute;inset:0;opacity:.18;background:linear-gradient(28deg,transparent 48%,#fff 48.3%,#fff 48.7%,transparent 49%),linear-gradient(112deg,transparent 55%,#fff 55.3%,#fff 55.7%,transparent 56%);background-size:420px 310px,560px 420px}
+.heroCopy{z-index:2}.kicker{color:#fff;opacity:.82}h1{font-family:"Arial Black",Inter,sans-serif;letter-spacing:.02em}.lead{color:rgba(255,255,255,.86)}
+.cta{background:#fff;color:#075eaa;border-color:#fff}.cta.secondary{background:rgba(0,63,124,.32);color:#fff;border-color:rgba(255,255,255,.38)}
+.featuredCard,.card,.live,.rankCard{background:rgba(2,64,121,.66);border-color:rgba(255,255,255,.18)}
+.featuredCard:after{background:linear-gradient(to top,rgba(0,48,100,.94),rgba(0,67,132,.05) 72%)}.featuredCard .kind,.rankNum{color:#fff}.featuredCard .featuredSource{color:rgba(255,255,255,.78)}
+.platform{background:rgba(0,61,119,.72);border-color:rgba(255,255,255,.22)}.platform:before{opacity:.62}.platform span,.platform small{color:rgba(255,255,255,.82)}
+.catalogWrap{background:rgba(0,58,113,.34);border-color:rgba(255,255,255,.15)}
+.search input,.chip{background:rgba(0,63,123,.64);color:#fff;border-color:rgba(255,255,255,.2)}.search input::placeholder{color:rgba(255,255,255,.62)}.chip{color:rgba(255,255,255,.82)}.chip.active{background:#fff;color:#0865b2;border-color:#fff}
+.poster{background:linear-gradient(135deg,rgba(0,179,244,.35),transparent 52%),linear-gradient(160deg,#0877ca,#034d94)}
+.card p,.meta,.sectionHead p,.shelfHead span,.featuredIntro p,.rankMeta{color:rgba(255,255,255,.7)}.open{background:#fff;color:#0864af}.save{background:rgba(0,54,108,.62);border-color:rgba(255,255,255,.2)}
+.audioBanner{background:#fff;color:#0864af}footer{color:rgba(255,255,255,.62)}
+@media(max-width:700px){.brand{gap:8px}.eitbWord{font-size:24px}.garenaWord{font-size:18px}.brandDivider{height:28px}}
+
+
+.tikButton{touch-action:manipulation;height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.11);color:#fff;font-size:11px;font-weight:900;letter-spacing:.06em;white-space:nowrap}
+.tikButton:hover{background:#fff;color:#0865b2}
+.generatedCover{position:relative;overflow:hidden}
+.generatedCover:before{content:"";position:absolute;inset:0;background:linear-gradient(25deg,transparent 46%,rgba(255,255,255,.12) 46.5%,rgba(255,255,255,.12) 47%,transparent 47.5%),linear-gradient(120deg,transparent 54%,rgba(255,255,255,.08) 54.5%,rgba(255,255,255,.08) 55%,transparent 55.5%);background-size:160px 130px,210px 170px}
+.generatedCover:after{content:attr(data-cover-title);position:absolute;left:14px;right:14px;bottom:14px;font-size:clamp(16px,2vw,26px);line-height:1;font-weight:950;letter-spacing:-.04em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.35);z-index:2}
+.tikOverlay{position:fixed;inset:0;z-index:9999;background:#02070d;color:#fff;display:none}
+.tikOverlay.open{display:block}
+.tikTop{position:absolute;top:0;left:0;right:0;z-index:5;height:70px;display:flex;align-items:center;justify-content:space-between;padding:env(safe-area-inset-top,0) 16px 0;background:linear-gradient(to bottom,rgba(0,0,0,.5),transparent)}
+.tikBrand{display:flex;align-items:center;gap:10px;font-weight:900}
+.tikClose{width:42px;height:42px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(0,0,0,.34);color:#fff;font-size:28px;line-height:1}
+.tikFeed{height:100dvh;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior-y:contain}
+.tikItem{height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;align-items:flex-end;overflow:hidden;background:#08284a}
+.tikMedia{position:absolute;inset:0;background-size:cover;background-position:center}
+.tikMedia:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.16) 100%)}
+.tikInfo{position:relative;z-index:2;width:min(760px,100%);padding:0 22px calc(36px + env(safe-area-inset-bottom,0));}
+.tikSource{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:11px;font-weight:900;letter-spacing:.08em}
+.tikInfo h2{font-size:clamp(30px,7vw,64px);line-height:.94;letter-spacing:-.045em;margin:12px 0 10px}
+.tikInfo p{font-size:15px;line-height:1.4;color:rgba(255,255,255,.82);max-width:62ch}
+.tikOpen{display:inline-flex;margin-top:14px;padding:12px 16px;border-radius:999px;background:#fff;color:#075eaa;font-weight:900}
+.tikHint{position:absolute;right:18px;bottom:28px;z-index:2;writing-mode:vertical-rl;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+@media(max-width:700px){.tikButton{height:32px;padding:0 9px;font-size:9px}.tikInfo{padding-left:18px;padding-right:18px}.tikInfo h2{font-size:42px}}
+
+
+/* Tik Tak Scroll showcase */
+.tikShowcase{padding-top:58px;padding-bottom:64px}
+.tikShowHead{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:22px}
+.tikShowHead h2{margin:0;font-size:clamp(38px,5vw,68px);letter-spacing:-.055em}
+.tikShowHead p{margin:0;color:rgba(255,255,255,.72);max-width:42ch}
+.tikPreviewRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
+.tikPreviewCard{position:relative;min-height:610px;border-radius:38px;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:#062f59;box-shadow:0 28px 70px rgba(0,35,77,.32);cursor:pointer;isolation:isolate;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.tikPreviewCard:hover{transform:translateY(-7px) scale(1.012);box-shadow:0 34px 82px rgba(0,35,77,.42);border-color:rgba(255,255,255,.38)}
+.tikPreviewCard:before{content:"";position:absolute;z-index:5;top:12px;left:50%;transform:translateX(-50%);width:86px;height:20px;border-radius:999px;background:rgba(0,0,0,.5)}
+.tikPreviewMedia{position:absolute;inset:0;background-size:cover;background-position:center}
+.tikPreviewMedia:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.38) 46%,rgba(0,0,0,.09) 78%)}
+.tikPreviewInfo{position:absolute;z-index:3;left:18px;right:66px;bottom:18px}
+.tikPreviewSource{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(10px);font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.tikPreviewInfo h3{margin:11px 0 9px;font-size:clamp(27px,3vw,42px);line-height:.96;letter-spacing:-.05em}
+.tikPreviewInfo p{margin:0 0 14px;font-size:13px;line-height:1.38;color:rgba(255,255,255,.82);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tikPreviewCTA{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;background:#fff;color:#075eaa;font-size:11px;font-weight:950}
+.tikPreviewRail{position:absolute;right:13px;bottom:20px;z-index:3;display:flex;flex-direction:column;gap:10px}
+.tikPreviewBubble{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.16);backdrop-filter:blur(10px);font-weight:900}
+.tikShowFooter{display:flex;justify-content:center;margin-top:22px}
+.tikEnterAll{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);color:#fff;border-radius:999px;padding:12px 18px;font-weight:950}
+.tikEnterAll:hover{background:#fff;color:#0865b2}
+@media(max-width:1000px){.tikPreviewRow{grid-template-columns:repeat(2,minmax(0,1fr))}.tikPreviewCard:last-child{display:none}}
+@media(max-width:700px){.tikShowcase{padding-top:42px}.tikShowHead{align-items:flex-start;flex-direction:column}.tikPreviewRow{display:flex;overflow-x:auto;gap:14px;padding:6px 18px 18px 4px;scroll-snap-type:x mandatory}.tikPreviewRow::-webkit-scrollbar{display:none}.tikPreviewCard{flex:0 0 82vw;min-height:72vh;scroll-snap-align:center}.tikPreviewCard:last-child{display:block}.tikPreviewInfo h3{font-size:32px}}
+
+
+.liveTitleRow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.liveTitleRow h2{margin:0}
+.liveAllBtn{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;border-radius:999px;padding:9px 14px;font-size:12px;font-weight:950;letter-spacing:.04em}
+.liveAllBtn:hover{background:#fff;color:#0865b2}
+
+
+.heroSections{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:18px;max-width:850px}
+.heroSectionBtn{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.24);border-radius:16px;min-height:56px;padding:10px 12px;text-align:left;color:#fff;font-size:12px;font-weight:950;letter-spacing:.015em;box-shadow:0 10px 24px rgba(0,35,77,.18);cursor:pointer;transition:transform .18s ease,filter .18s ease,border-color .18s ease}
+.heroSectionBtn:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.24),transparent 48%);pointer-events:none}
+.heroSectionBtn span{position:relative;z-index:1}
+.heroSectionBtn:hover{transform:translateY(-2px);filter:brightness(1.06);border-color:rgba(255,255,255,.5)}
+.heroSectionBtn.news{background:linear-gradient(145deg,#ff7958,#cf3f28)}
+.heroSectionBtn.live{background:linear-gradient(145deg,#18a9ff,#0870c8)}
+.heroSectionBtn.sports{background:linear-gradient(145deg,#21c985,#08784d)}
+.heroSectionBtn.movies{background:linear-gradient(145deg,#8065ff,#4930bd)}
+.heroSectionBtn.series{background:linear-gradient(145deg,#4e89ff,#2453be)}
+.heroSectionBtn.programs{background:linear-gradient(145deg,#ff5ca9,#b9276b)}
+.heroSectionBtn.docs{background:linear-gradient(145deg,#9a76ff,#5735be)}
+.heroSectionBtn.audio{background:linear-gradient(145deg,#f5c834,#c58600);color:#17233a}
+.heroSectionBtn.kids{background:linear-gradient(145deg,#25d5e7,#087b98)}
+@media(max-width:980px){.heroSections{grid-template-columns:repeat(3,minmax(0,1fr))}.heroMain{min-height:720px}}
+@media(max-width:700px){
+  .heroMain{min-height:690px}
+  .heroCopy{max-width:none}
+  .heroCopy h1{margin-bottom:14px}
+  .heroCopy .lead{margin-bottom:18px}
+  .heroSections{display:flex;overflow-x:auto;gap:8px;margin-top:16px;padding:0 10px 8px 0;scroll-snap-type:x proximity}
+  .heroSections::-webkit-scrollbar{display:none}
+  .heroSectionBtn{flex:0 0 auto;min-width:112px;min-height:50px;border-radius:15px;scroll-snap-align:start}
+}
+
+
+/* Hero GARENA · composicion equilibrada */
+.heroMain{
+  min-height:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:54px clamp(24px,5vw,72px);
+}
+.heroCopy{
+  position:relative;
+  inset:auto;
+  width:min(920px,100%);
+  max-width:none;
+  margin:auto;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.heroCopy .kicker{margin:0 0 8px}
+.heroCopy h1{margin:4px 0 16px;max-width:none}
+.heroCopy .lead{max-width:760px;margin:0 auto 22px}
+.heroCopy .ctas{justify-content:center;margin-bottom:2px}
+.heroSections{
+  width:min(820px,100%);
+  max-width:none;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:22px auto 0;
+  padding:0;
+}
+.heroSectionBtn{
+  --c1:#1489db;
+  --c2:#0758a5;
+  position:relative;
+  display:grid;
+  grid-template-columns:42px 1fr 18px;
+  align-items:center;
+  gap:10px;
+  min-height:64px;
+  padding:10px 12px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,255,255,.16),rgba(255,255,255,.07));
+  color:#fff;
+  text-align:left;
+  box-shadow:0 12px 28px rgba(0,41,88,.18),inset 0 1px rgba(255,255,255,.12);
+  backdrop-filter:blur(14px);
+  transition:transform .18s ease,background .18s ease,border-color .18s ease;
+}
+.heroSectionBtn:before{
+  content:"";
+  position:relative;
+  inset:auto;
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  display:block;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.42),transparent 36%),
+    linear-gradient(145deg,var(--c1),var(--c2));
+  box-shadow:0 8px 18px color-mix(in srgb,var(--c1) 35%,transparent);
+}
+.heroSectionBtn:after{
+  content:"›";
+  position:relative;
+  inset:auto;
+  font-size:24px;
+  line-height:1;
+  font-weight:500;
+  color:rgba(255,255,255,.76);
+  transform:translateY(-1px);
+}
+.heroSectionBtn span{
+  z-index:1;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:-.01em;
+  line-height:1.1;
+}
+.heroSectionBtn:hover{
+  transform:translateY(-3px);
+  border-color:rgba(255,255,255,.48);
+  background:linear-gradient(145deg,rgba(255,255,255,.23),rgba(255,255,255,.1));
+  filter:none;
+}
+.heroSectionBtn.news{--c1:#ff7b59;--c2:#d53e29}
+.heroSectionBtn.live{--c1:#26b7ff;--c2:#0874cb}
+.heroSectionBtn.sports{--c1:#24cd89;--c2:#08784e}
+.heroSectionBtn.movies{--c1:#8b70ff;--c2:#5137c4}
+.heroSectionBtn.series{--c1:#5b94ff;--c2:#2856be}
+.heroSectionBtn.programs{--c1:#ff65b0;--c2:#bd2d72}
+.heroSectionBtn.docs{--c1:#a080ff;--c2:#5e3cc4}
+.heroSectionBtn.audio{--c1:#ffd55c;--c2:#c78b0a;color:#fff}
+.heroSectionBtn.kids{--c1:#33d9e9;--c2:#07839c}
+
+/* iconos minimalistas por contenido */
+.heroSectionBtn.news:before{content:"≡";color:#fff;font-size:23px;font-weight:950;text-align:center;line-height:42px}
+.heroSectionBtn.live:before{content:"▶";color:#fff;font-size:15px;text-align:center;line-height:42px;padding-left:2px}
+.heroSectionBtn.sports:before{content:"◆";color:#fff;font-size:17px;text-align:center;line-height:42px}
+.heroSectionBtn.movies:before{content:"●";color:#fff;font-size:19px;text-align:center;line-height:42px}
+.heroSectionBtn.series:before{content:"▦";color:#fff;font-size:20px;text-align:center;line-height:42px}
+.heroSectionBtn.programs:before{content:"✦";color:#fff;font-size:20px;text-align:center;line-height:42px}
+.heroSectionBtn.docs:before{content:"⌁";color:#fff;font-size:24px;text-align:center;line-height:40px}
+.heroSectionBtn.audio:before{content:"♫";color:#fff;font-size:21px;text-align:center;line-height:42px}
+.heroSectionBtn.kids:before{content:"★";color:#fff;font-size:19px;text-align:center;line-height:42px}
+
+@media(max-width:700px){
+  .hero{padding-top:24px}
+  .heroMain{
+    min-height:0;
+    padding:34px 18px 28px;
+    border-radius:26px;
+  }
+  .heroCopy{position:relative;inset:auto}
+  .heroCopy .kicker{font-size:10px;letter-spacing:.15em}
+  .heroCopy h1{font-size:clamp(54px,17vw,74px);margin:6px 0 14px}
+  .heroCopy .lead{font-size:17px;line-height:1.34;margin-bottom:18px;max-width:34ch}
+  .heroCopy .ctas{width:100%;justify-content:center}
+  .heroCopy .cta{padding:11px 14px;font-size:14px}
+  .heroSections{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    width:100%;
+    gap:8px;
+    margin-top:18px;
+    overflow:visible;
+    padding:0;
+  }
+  .heroSectionBtn{
+    grid-template-columns:1fr;
+    grid-template-rows:36px auto;
+    justify-items:center;
+    gap:6px;
+    min-width:0;
+    min-height:82px;
+    padding:9px 5px 8px;
+    border-radius:16px;
+    text-align:center;
+    scroll-snap-align:none;
+  }
+  .heroSectionBtn:before{
+    width:36px;
+    height:36px;
+    border-radius:11px;
+    line-height:36px!important;
+  }
+  .heroSectionBtn:after{display:none}
+  .heroSectionBtn span{font-size:10.5px;line-height:1.08}
+}
+
+
+/* Lucide icons · GitHub open-source set */
+.heroSectionBtn:before{display:none!important}
+.heroSectionBtn{grid-template-columns:46px 1fr 18px}
+.heroSectionBtn .heroIcon{
+  position:relative;
+  z-index:1;
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(circle at 30% 18%,rgba(255,255,255,.38),transparent 35%),
+    linear-gradient(145deg,var(--c1),var(--c2));
+  box-shadow:
+    0 9px 22px color-mix(in srgb,var(--c1) 30%,transparent),
+    inset 0 1px 0 rgba(255,255,255,.24);
+}
+.heroSectionBtn .heroIcon svg{
+  width:24px;
+  height:24px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;
+}
+.heroSectionBtn .heroLabel{
+  position:relative;
+  z-index:1;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.08;
+  letter-spacing:-.012em;
+}
+@media(max-width:700px){
+  .heroSectionBtn{grid-template-columns:1fr;grid-template-rows:42px auto}
+  .heroSectionBtn .heroIcon{width:42px;height:42px;border-radius:13px}
+  .heroSectionBtn .heroIcon svg{width:22px;height:22px}
+  .heroSectionBtn .heroLabel{font-size:10.5px}
+}
+
+
+/* Tik Tak Scroll · pantaila soziala */
+.tikTop{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+.tikTop .tikClose{justify-self:end}
+.tikTabs{display:flex;align-items:center;gap:16px;font-size:13px;font-weight:900;text-shadow:0 1px 10px rgba(0,0,0,.35)}
+.tikTabs span{opacity:.62;position:relative;padding:10px 0}
+.tikTabs .active{opacity:1}
+.tikTabs .active:after{content:"";position:absolute;left:50%;bottom:3px;width:24px;height:2px;border-radius:99px;background:#fff;transform:translateX(-50%)}
+.tikItem{isolation:isolate}
+.tikInfo{padding-right:82px}
+.tikInfo .tikTrend{display:inline-flex;align-items:center;gap:6px;margin-left:7px;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);font-size:10px;font-weight:950;letter-spacing:.07em}
+.tikActions{position:absolute;right:15px;bottom:94px;z-index:3;display:flex;flex-direction:column;align-items:center;gap:15px}
+.tikAction{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-size:10px;font-weight:800;text-shadow:0 1px 10px rgba(0,0,0,.6)}
+.tikAction i{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(5,17,32,.34);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);font-style:normal;font-size:19px}
+.tikProgress{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.18);z-index:4}
+.tikProgress i{display:block;height:100%;background:#fff;border-radius:99px 99px 0 0}
+@media(max-width:700px){.tikTop{grid-template-columns:1fr auto 1fr}.tikBrand .garenaWord{display:none}.tikTabs{gap:13px;font-size:12px}.tikInfo{padding-right:76px}.tikActions{right:12px}}
+
+/* Sareak */
+.socialSection{padding-top:54px;padding-bottom:64px}
+.socialHead{display:flex;align-items:end;justify-content:space-between;gap:18px}
+.socialHead h2{font-size:clamp(38px,5vw,66px);letter-spacing:-.055em;margin:0}
+.socialLead{max-width:720px;color:rgba(255,255,255,.72);margin:12px 0 22px}
+.feedbackBtn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:12px 16px;background:#fff;color:#075eaa;font-weight:950;white-space:nowrap}
+.socialGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.socialCard{position:relative;overflow:hidden;min-height:220px;border:1px solid rgba(255,255,255,.18);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.14),rgba(0,48,99,.34));padding:18px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 18px 44px rgba(0,42,88,.2)}
+.socialCard:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 86% 7%,var(--sc),transparent 33%);opacity:.42;pointer-events:none}
+.socialCard>*{position:relative;z-index:1}
+.socialBrand{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.socialBrand strong{font-size:22px;letter-spacing:-.04em}
+.socialBrand span{font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.68)}
+.socialLatest{margin:22px 0 16px}
+.socialLatest small{display:block;color:rgba(255,255,255,.62);font-size:10px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+.socialLatest b{font-size:16px;line-height:1.14}
+.socialLinks{display:flex;flex-wrap:wrap;gap:7px}
+.socialLink{display:inline-flex;align-items:center;gap:6px;border-radius:999px;border:1px solid rgba(255,255,255,.22);padding:8px 10px;background:rgba(0,30,70,.22);font-size:11px;font-weight:900}
+.socialLink:hover{background:#fff;color:#0865b2}
+.socialNet{width:20px;height:20px;border-radius:7px;display:grid;place-items:center;background:rgba(255,255,255,.16);font-size:9px;font-weight:950}
+.socialNote{margin-top:15px;font-size:11px;color:rgba(255,255,255,.58)}
+@media(max-width:1000px){.socialGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.socialHead{align-items:flex-start;flex-direction:column}.socialGrid{display:flex;overflow-x:auto;gap:11px;padding-bottom:10px;scroll-snap-type:x mandatory}.socialGrid::-webkit-scrollbar{display:none}.socialCard{flex:0 0 78vw;scroll-snap-align:start;min-height:230px}}
+
+
+/* iPhone scroll fix + Sareak goiburuan */
+.topQuick{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.sareakButton{background:rgba(255,255,255,.16)}
+.tikOverlay.open{display:block}
+.tikFeed{
+  height:100dvh;
+  overflow-y:auto;
+  overscroll-behavior-y:contain;
+  scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  scroll-behavior:auto;
+}
+.tikItem{
+  min-height:100dvh;
+  height:100dvh;
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+}
+@media(max-width:700px){
+  .topQuick{gap:6px}
+  .topQuick .tikButton{padding:0 9px;font-size:9px;letter-spacing:.035em}
+}
+
+
+/* Tik Tak Scroll infinito */
+.tikFeed:after{
+  content:"";
+  display:block;
+  height:1px;
+  width:100%;
+}
+
+
+/* ZEITB logo */
+.eitbWord{
+  font-size:26px;
+  font-weight:950;
+  letter-spacing:-.045em;
+  white-space:nowrap;
+}
+@media(max-width:700px){
+  .eitbWord{font-size:23px}
+}
+
+
+/* Tik Tak gomendio pertsonalizatua */
+.tikTabs button{
+  appearance:none;border:0;background:none;color:#fff;font:inherit;font-weight:900;
+  opacity:.58;position:relative;padding:10px 0;cursor:pointer
+}
+.tikTabs button.active{opacity:1}
+.tikTabs button.active:after{content:"";position:absolute;left:50%;bottom:3px;width:24px;height:2px;border-radius:99px;background:#fff;transform:translateX(-50%)}
+.tikTabs span{display:none}
+.tikActionBtn{
+  appearance:none;border:0;background:none;color:#fff;padding:0;margin:0;
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  font-size:10px;font-weight:800;text-shadow:0 1px 10px rgba(0,0,0,.6)
+}
+.tikActionBtn i{
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(5,17,32,.34);border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(10px);font-style:normal;font-size:19px;transition:.16s ease
+}
+.tikActionBtn.selected i{background:#fff;color:#0865b2;transform:scale(1.06)}
+.tikActionBtn.dislike.selected i{background:#ff5b67;color:#fff}
+.tikAIHint{
+  display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:7px 10px;
+  border-radius:999px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(8px);font-size:10px;font-weight:850;color:rgba(255,255,255,.9)
+}
+
+
+/* Sareak sendoa + bideo inline */
+a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.socialTopicsHead{margin:34px 0 14px}
+.socialTopicsHead h3{margin:4px 0 0;font-size:clamp(24px,3vw,36px);letter-spacing:-.04em}
+.socialTopics{display:flex;flex-direction:column;gap:28px}
+.socialTopicBlock{display:flex;flex-direction:column;gap:11px}
+.socialTopicTitle{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.socialTopicTitle h4{margin:0;font-size:20px;letter-spacing:-.03em}
+.socialTopicTitle span{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+.socialPostGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.socialPost{position:relative;min-height:210px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.14);background:#0b3f74;isolation:isolate}
+.socialPost .socialPostBg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2}
+.socialPost:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,15,36,.94),rgba(0,20,45,.08) 72%);z-index:-1}
+.socialPostInfo{position:absolute;left:14px;right:14px;bottom:14px}
+.socialPostInfo small{display:block;font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:5px}
+.socialPostInfo strong{display:block;font-size:16px;line-height:1.08}
+.socialPostInfo span{display:inline-block;margin-top:8px;font-size:10px;font-weight:900;color:#fff}
+@media(max-width:900px){.socialPostGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.socialPostGrid{display:flex;overflow-x:auto;gap:10px;padding-bottom:8px}.socialPostGrid::-webkit-scrollbar{display:none}.socialPost{flex:0 0 76vw;min-height:220px}}
+
+.tikMediaFrame{position:absolute;inset:0;z-index:-2;background:#000}
+.tikMediaFrame iframe,.tikMediaFrame video{width:100%;height:100%;border:0;object-fit:cover;background:#000}
+.tikMediaFrame .tikMedia{position:absolute;inset:0}
+.tikVideoBadge{position:absolute;top:86px;left:16px;z-index:4;padding:7px 10px;border-radius:999px;background:rgba(0,0,0,.46);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);font-size:10px;font-weight:950}
+
+/* Sareak · sareka bakarrik */
+.socialNetworks{display:flex;flex-direction:column;gap:22px;margin-top:22px}
+.socialNetworkBlock{border:1px solid rgba(255,255,255,.16);border-radius:26px;padding:18px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(0,42,88,.18));box-shadow:0 16px 40px rgba(0,38,80,.16)}
+.socialNetworkHead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.socialNetworkIcon{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:var(--net);color:#fff;font-weight:950;font-size:12px;box-shadow:0 10px 26px color-mix(in srgb,var(--net) 35%,transparent)}
+.socialNetworkHead small{font-size:9px;font-weight:900;letter-spacing:.11em;color:rgba(255,255,255,.58)}
+.socialNetworkHead h3{margin:2px 0 0;font-size:24px;letter-spacing:-.035em}
+.socialAccountGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.socialAccount{display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:10px;padding:11px;border-radius:16px;border:1px solid rgba(255,255,255,.12);background:rgba(0,30,67,.24);transition:.18s ease}
+.socialAccount:hover{transform:translateY(-2px);background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3)}
+.socialAvatar{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--net);font-size:10px;font-weight:950}
+.socialAccountText{min-width:0}
+.socialAccountText strong{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.socialAccountText small{display:block;margin-top:3px;font-size:9px;color:rgba(255,255,255,.62)}
+.socialArrow{font-size:16px;opacity:.8}
+@media(max-width:900px){.socialAccountGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.socialNetworkBlock{padding:14px}.socialAccountGrid{grid-template-columns:1fr}}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#edukiak">Edukira joan</a>
+
+<header class="top">
+  <nav class="nav">
+    <a class="brand" href="#hasiera" aria-label="ZEITB GARENA"><span class="eitbWord">ZEITB</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></a>
+    <div class="topQuick">
+      <button class="tikButton" id="tikButton" type="button">Scroll tik tak</button>
+      <a class="tikButton sareakButton" id="sareakButton" href="#sareak" data-eu="Sareak" data-es="Redes">Sareak</a>
+    </div>
+    <div class="navlinks">
+      <a href="#edukiak" data-eu="Aurkitu" data-es="Descubrir">Aurkitu</a>
+      <a href="#zuzenekoak" data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</a>
+      <a href="#plataformak" data-eu="Plataformak" data-es="Plataformas">Plataformak</a>
+    </div>
+    <div class="spacer"></div>
+    <button class="favbtn" id="favToggle">♡ <span data-eu="Nire zerrenda" data-es="Mi lista">Nire zerrenda</span> <b id="favCount">0</b></button>
+    <button class="lang" id="langBtn">ES</button>
+  </nav>
+</header>
+
+<main id="hasiera">
+<section class="hero">
+  <div class="heroGrid">
+    <article class="heroMain">
+      <div class="heroCopy">
+        <div class="kicker" data-eu="ZEITB UNIBERTSOA · TOKI BAKARREAN" data-es="EL UNIVERSO ZEITB · EN UN SOLO LUGAR">ZEITB UNIBERTSOA · TOKI BAKARREAN</div>
+        <h1>GARENA</h1>
+        <p class="lead" data-eu="Albisteak, telesailak, zinema, kirola, entretenimendua eta audioa. ZEITB unibertsoa, klik batera." data-es="Noticias, series, cine, deporte, entretenimiento y audio. Todo el universo ZEITB, a un clic.">Albisteak, telesailak, zinema, kirola, entretenimendua eta audioa. ZEITB unibertsoa, klik batera.</p>
+        <div class="ctas">
+          <a class="cta" href="#edukiak" data-eu="Edukiak arakatu ↗" data-es="Explorar contenidos ↗">Edukiak arakatu ↗</a>
+          <a class="cta secondary" href="#zuzenekoak" data-eu="Zuzenekoetara joan" data-es="Ir a los directos">Zuzenekoetara joan</a>
+        </div>
+        <div class="heroSections" id="heroSections" aria-label="GARENA kategoriak">
+          <button class="heroSectionBtn news" aria-label="Albisteak / Noticias" type="button" data-hero-cat="news"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18h-5"/><path d="M18 14h-8"/><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/></svg></span><span class="heroLabel" data-eu="Albisteak" data-es="Noticias">Albisteak</span></button>
+          <button class="heroSectionBtn live" aria-label="Zuzenekoak / Directos" type="button" data-hero-cat="live"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.247 7.761a6 6 0 0 1 0 8.478"/><path d="M19.075 4.933a10 10 0 0 1 0 14.134"/><path d="M4.925 19.067a10 10 0 0 1 0-14.134"/><path d="M7.753 16.239a6 6 0 0 1 0-8.478"/><circle cx="12" cy="12" r="2"/></svg></span><span class="heroLabel" data-eu="Zuzenekoak" data-es="Directos">Zuzenekoak</span></button>
+          <button class="heroSectionBtn sports" aria-label="Kirolak / Deportes" type="button" data-hero-cat="sports"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14.66V17a1 1 0 0 1-1 1 2 2 0 0 0-2 2v2"/><path d="M14 14.66V17a1 1 0 0 0 1 1 2 2 0 0 1 2 2v2"/><path d="M17.916 10H19.5A2.5 2.5 0 0 0 22 7.5V5a1 1 0 0 0-1-1h-3"/><path d="M4 22h16"/><path d="M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z"/><path d="M6.084 10H4.5A2.5 2.5 0 0 1 2 7.5V5a1 1 0 0 1 1-1h3"/></svg></span><span class="heroLabel" data-eu="Kirolak" data-es="Deportes">Kirolak</span></button>
+          <button class="heroSectionBtn movies" aria-label="Filmak / Películas" type="button" data-hero-cat="series" data-hero-subtype="media"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12.296 3.464 3.02 3.956"/><path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z"/><path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="m6.18 5.276 3.1 3.899"/></svg></span><span class="heroLabel" data-eu="Filmak" data-es="Películas">Filmak</span></button>
+          <button class="heroSectionBtn series" aria-label="Telesailak / Series" type="button" data-hero-cat="series" data-hero-subtype="series"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m17 2-5 5-5-5"/><rect width="20" height="15" x="2" y="7" rx="2"/></svg></span><span class="heroLabel" data-eu="Telesailak" data-es="Series">Telesailak</span></button>
+          <button class="heroSectionBtn programs" aria-label="Saioak / Programas" type="button" data-hero-cat="entertainment"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/></svg></span><span class="heroLabel" data-eu="Saioak" data-es="Programas">Saioak</span></button>
+          <button class="heroSectionBtn docs" aria-label="Dokumentalak / Documentales" type="button" data-hero-cat="docs"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><span class="heroLabel" data-eu="Dokumentalak" data-es="Documentales">Dokumentalak</span></button>
+          <button class="heroSectionBtn audio" aria-label="Podcastak / Podcasts" type="button" data-hero-cat="audio"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg></span><span class="heroLabel" data-eu="Podcastak" data-es="Podcasts">Podcastak</span></button>
+          <button class="heroSectionBtn kids" aria-label="Haurrak / Infantil" type="button" data-hero-cat="kids"><span class="heroIcon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M15 12h.01"/><path d="M19.38 6.813A9 9 0 0 1 20.8 10.2a2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"/><path d="M9 12h.01"/></svg></span><span class="heroLabel" data-eu="Haurrak" data-es="Infantil">Haurrak</span></button>
+        </div>
+      </div>
+    </article>
+  </div>
+  <div class="featuredIntro">
+    <div><p class="kicker" data-eu="GARENAK AUKERATUTA" data-es="DESTACADOS DE GARENA">GARENAK AUKERATUTA</p></div>
+    <p data-eu="Albistea · filma · saioa · podcasta · kirola" data-es="Noticia · película · programa · podcast · deporte">Albistea · filma · saioa · podcasta · kirola</p>
+  </div>
+  <div class="featuredShelves" id="featuredShelves" aria-live="polite"></div>
+</section>
+
+<section class="section" id="ranking">
+  <div class="sectionHead">
+    <div><p class="kicker" data-eu="GARENAN GEHIEN IREKITAKOAK" data-es="LO MÁS ABIERTO EN GARENA">GARENAN GEHIEN IREKITAKOAK</p><h2 data-eu="Ranking-a" data-es="Ranking">Ranking-a</h2></div>
+    <p data-eu="GARENA barruko irekieretan oinarrituta" data-es="Basado en aperturas dentro de GARENA">GARENA barruko irekieretan oinarrituta</p>
+  </div>
+  <div class="rankingGrid" id="rankingGrid"></div>
+</section>
+
+<section class="section" id="plataformak">
+  <div class="sectionHead">
+    <div><p class="kicker" data-eu="ZURE PLATAFORMAK, GERTUAGO" data-es="TUS PLATAFORMAS, MÁS CERCA">ZURE PLATAFORMAK, GERTUAGO</p><h2 data-eu="Sarbide ofizialak" data-es="Accesos oficiales">Sarbide ofizialak</h2></div>
+  </div>
+  <div class="platforms" id="platformGrid"></div>
+</section>
+
+<section class="section" id="zuzenekoak">
+  <div class="sectionHead">
+    <div><p class="kicker" data-eu="GERTATZEN ARI DENAREKIN KONEKTATU" data-es="CONECTA CON LO QUE PASA">GERTATZEN ARI DENAREKIN KONEKTATU</p><div class="liveTitleRow"><h2 data-eu="Zuzeneko nagusiak eta irrati entzunenak" data-es="Directos principales y radios más escuchadas">Zuzeneko nagusiak</h2><button class="liveAllBtn" id="liveAllBtn" type="button" data-eu="Guztiak" data-es="Todos">Guztiak</button></div></div>
+    <p data-eu="Telebista, kirola eta ZEITBko irrati nagusiak zuzenean" data-es="Televisión, deporte y las principales radios de ZEITB en directo">Telebista, kirola eta irratia zuzenean</p>
+  </div>
+  <div class="liveGrid">
+    <a class="live" href="https://etbon.eus/etb-1" rel="noopener"><div class="icon">▣</div><strong>ETB1 ON</strong><small data-eu="Ireki zuzeneko emisioa ↗" data-es="Abrir emisión en directo ↗">Ireki zuzeneko emisioa ↗</small></a>
+    <a class="live" href="https://etbon.eus/etb-2" rel="noopener"><div class="icon">▣</div><strong>ETB2 ON</strong><small data-eu="Ikusi ETB ONeko zuzenekoak ↗" data-es="Ver directos de ETB ON ↗">Ikusi ETB ONeko zuzenekoak ↗</small></a>
+    <a class="live" id="sportLive" href="https://kirolakeitb.eus/eu/" rel="noopener"><div class="icon">↗</div><strong data-eu="Kirola zuzenean" data-es="Deporte en directo">Kirola zuzenean</strong><small data-eu="Emisioak eta agenda ↗" data-es="Emisiones y agenda ↗">Emisioak eta agenda ↗</small></a>
+    <a class="live" href="https://guau.eus/ch/radio-euskadi" rel="noopener"><div class="icon">≋</div><strong>Radio Euskadi</strong><small data-eu="Entzun zuzenean ↗" data-es="Escuchar en directo ↗">Entzun zuzenean ↗</small></a>
+    <a class="live" href="https://guau.eus/ch/euskadi-irratia" rel="noopener"><div class="icon">≋</div><strong>Euskadi Irratia</strong><small data-eu="Entzun zuzenean ↗" data-es="Escuchar en directo ↗">Entzun zuzenean ↗</small></a>
+    <a class="live" href="https://guau.eus/ch/gaztea" rel="noopener"><div class="icon">♫</div><strong>Gaztea</strong><small data-eu="Entzun zuzenean ↗" data-es="Escuchar en directo ↗">Entzun zuzenean ↗</small></a>
+  </div>
+</section>
+
+<div class="catalogWrap" id="edukiak">
+<section class="section">
+  <div class="sectionHead">
+    <div><p class="kicker" data-eu="AUKERATU ZURE UNEA" data-es="ELIGE TU MOMENTO">AUKERATU ZURE UNEA</p><h2 data-eu="Zer ikusi, entzun edo irakurri nahi duzu?" data-es="¿Qué te apetece hoy?">Zer ikusi, entzun edo irakurri nahi duzu?</h2></div>
+  </div>
+  <div class="toolbar">
+    <label class="search"><input id="search" autocomplete="off" placeholder="Bilatu edukia edo plataforma"></label>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="meta"><span id="status">Katalogoa prest</span><span id="count"></span></div>
+  <div class="grid" id="grid"></div>
+</section>
+</div>
+
+<section class="section">
+  <a class="audioBanner" href="https://guau.eus/" target="_blank" rel="noopener">
+    <div><p class="kicker" style="color:#111" data-eu="BELARRIEKIN ERE BIZI DA" data-es="TAMBIÉN SE VIVE CON LOS OÍDOS">BELARRIEKIN ERE BIZI DA</p><h2>GUAU</h2><p data-eu="Zuzeneko irratia, podcastak, fikzio sonoroa eta beti itzultzen diren ahotsak." data-es="Radio en directo, podcasts, ficción sonora y voces que siempre vuelven.">Zuzeneko irratia, podcastak, fikzio sonoroa eta beti itzultzen diren ahotsak.</p></div>
+    <div class="wave">▂ ▅ ▃ ▇ ▅ ▂</div>
+  </a>
+</section>
+
+<section class="section tikShowcase" id="tik-tak-scroll">
+  <div class="tikShowHead">
+    <div>
+      <p class="kicker" data-eu="BESTE MODU BATEAN IKUSI" data-es="VER DE OTRA MANERA">BESTE MODU BATEAN IKUSI</p>
+      <h2>Tik Tak Scroll</h2>
+    </div>
+    <p data-eu="Mugikorrean bezala: klik bat eta barrura. Irristatu gora GARENAko edukien artean." data-es="Como en el móvil: un clic y entras. Desliza hacia arriba entre los contenidos de GARENA.">Mugikorrean bezala: klik bat eta barrura. Irristatu gora GARENAko edukien artean.</p>
+  </div>
+  <div class="tikPreviewRow" id="tikPreviewRow"></div>
+  <div class="tikShowFooter">
+    <button class="tikEnterAll" id="tikEnterAll" type="button" data-eu="Tik Tak Scroll ireki ↗" data-es="Abrir Tik Tak Scroll ↗">Tik Tak Scroll ireki ↗</button>
+  </div>
+</section>
+
+<section class="section socialSection" id="sareak">
+  <div class="socialHead">
+    <div>
+      <p class="kicker" data-eu="ZEITB · SAREETAN" data-es="ZEITB · EN REDES">ZEITB · SAREETAN</p>
+      <h2 data-eu="Sareak" data-es="Redes">Sareak</h2>
+    </div>
+    <a class="feedbackBtn" href="https://www.eitb.eus/es/contacto/" target="_blank" rel="noopener" data-eu="Iritzia eman ↗" data-es="Dar tu opinión ↗">Iritzia eman ↗</a>
+  </div>
+  <p class="socialLead" data-eu="Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta." data-es="Instagram, TikTok, X y YouTube: las redes oficiales de las marcas ZEITB, organizadas por plataforma.">Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta.</p>
+  <div class="socialNetworks" id="socialNetworks"></div>
+</section>
+
+</main>
+
+<div class="tikOverlay" id="tikOverlay" aria-hidden="true">
+  <div class="tikTop">
+    <div class="tikBrand"><span class="eitbWord">ZEITB</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></div>
+    <div class="tikTabs" role="tablist" aria-label="Tik Tak">
+      <button class="active" type="button" role="tab" data-tik-mode="foryou" data-eu="Zuretzat" data-es="Para ti">Zuretzat</button>
+      <button type="button" role="tab" data-tik-mode="new" data-eu="Berria" data-es="Nuevo">Berria</button>
+    </div>
+    <button class="tikClose" id="tikClose" type="button" aria-label="Cerrar">×</button>
+  </div>
+  <div class="tikFeed" id="tikFeed" tabindex="0"></div>
+</div>
+
+<footer class="footer">
+  <div class="brand"><span class="eitbWord">ZEITB</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></div>
+  <p data-eu="ZEITB unibertsoa aurkitzeko atari independentea. Ez da ZEITBren webgune ofiziala. Edukiak beren plataforma ofizialetan irekitzen dira." data-es="Un punto de encuentro independiente para el universo ZEITB. No es una web oficial de ZEITB. Los contenidos se abren en sus plataformas oficiales.">ZEITB unibertsoa aurkitzeko atari independentea. Ez da ZEITBren webgune ofiziala. Edukiak beren plataforma ofizialetan irekitzen dira.</p>
+  <p data-eu="Sarbidea erregistroaren, eskubideen eta lurraldeko erabilgarritasunaren araberakoa izan daiteke." data-es="El acceso puede requerir registro y depende de los derechos y la disponibilidad territorial.">Sarbidea erregistroaren, eskubideen eta lurraldeko erabilgarritasunaren araberakoa izan daiteke.</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+const SOCIAL_NETWORKS=[
+  {key:"instagram",name:"Instagram",short:"IG",color:"#ff4fa3",accounts:[
+    ["ZEITB","https://www.instagram.com/eitb/"],
+    ["Gaztea","https://www.instagram.com/gaztea_irratia/"],
+    ["MAKUSI","https://www.instagram.com/makusi_eus/"],
+    ["ETBko Zuzenekoak","https://www.instagram.com/etb_zuzenekoak/"],
+    ["Euskadi Irratia","https://www.instagram.com/euskadi_irratia/"],
+    ["Radio Euskadi","https://www.instagram.com/boulevard_radioeuskadi/"]
+  ]},
+  {key:"tiktok",name:"TikTok",short:"TT",color:"#25d5e7",accounts:[
+    ["MAKUSI","https://www.tiktok.com/@makusi_eus"],
+    ["ETBko Zuzenekoak","https://www.tiktok.com/@etb_zuzenekoak"]
+  ]},
+  {key:"x",name:"X",short:"X",color:"#c7d2dc",accounts:[
+    ["ZEITB","https://x.com/eitb"],
+    ["Gaztea","https://x.com/gaztea"],
+    ["Euskadi Irratia","https://x.com/euskadi_irratia"],
+    ["Radio Euskadi","https://x.com/radioeuskadi"],
+    ["ZEITB Albisteak","https://x.com/eitbalbisteak"],
+    ["ZEITB Kirolak","https://x.com/eitbkirolak"]
+  ]},
+  {key:"youtube",name:"YouTube",short:"YT",color:"#ff3b30",accounts:[
+    ["ZEITB","https://www.youtube.com/@eitb"],
+    ["MAKUSI","https://www.youtube.com/@makusi_eus"]
+  ]}
+];
+function renderSocial(){
+  const root=$("#socialNetworks"); if(!root)return;
+  root.innerHTML=SOCIAL_NETWORKS.map(net=>`<section class="socialNetworkBlock" style="--net:${net.color}">
+    <div class="socialNetworkHead">
+      <div class="socialNetworkIcon">${net.short}</div>
+      <div><small>${lang==="eu"?"SARE OFIZIALA":"RED OFICIAL"}</small><h3>${net.name}</h3></div>
+    </div>
+    <div class="socialAccountGrid">
+      ${net.accounts.map(([name,url])=>`<a class="socialAccount" href="${url}" target="_blank" rel="noopener">
+        <span class="socialAvatar">${net.short}</span>
+        <span class="socialAccountText"><strong>${name}</strong><small>${lang==="eu"?"Azken argitalpenak ikusi":"Ver últimas publicaciones"}</small></span>
+        <span class="socialArrow">↗</span>
+      </a>`).join("")}
+    </div>
+  </section>`).join("");
+}
+
+const PLATFORMS=[
+  ["ORAIN","https://orain.eus/eu/","https://orain.eus/es/","Albisteak eta aktualitatea","Noticias y actualidad","#ff754c"],
+  ["PRIMERAN","https://primeran.eus/","https://primeran.eus/","Filmak, telesailak eta dokumentalak","Películas, series y documentales","#7656ff"],
+  ["ETB ON","https://etbon.eus/","https://etbon.eus/","Telebista, zuzenekoak eta saioak","Televisión, directos y programas","#258cff"],
+  ["KIROLAK","https://kirolakeitb.eus/eu/","https://kirolakeitb.eus/es/","Kirola, emaitzak eta emankizunak","Deporte, resultados y retransmisiones","#17b978"],
+  ["GUAU","https://guau.eus/","https://guau.eus/","Irratia, podcastak eta audioa","Radio, podcasts y audio","#f0b91c"],
+  ["Gaztea","https://www.gaztea.eus/","https://www.gaztea.eus/","Musika eta gazte kultura","Música y cultura joven","#ff4fa3"],
+  ["MAKUSI","https://makusi.eus/","https://makusi.eus/","Haur eta gazteentzako edukiak","Contenido infantil y juvenil","#23c7d9"],
+  ["YouTube","https://www.youtube.com/@eitb","https://www.youtube.com/@eitb","Bideoak, klipak eta kanalak","Vídeos, clips y canales","#ff1f36"]
+]
+
+/*
+  GARENA katalogo dinamikoa
+  -------------------------
+  Zure Cloudflare Worker / GitHub JSON endpoint-a baduzu, gehitu hemen.
+  Endpoint bakoitzak array bat itzul dezake edo {items:[...]}.
+  Item formatua:
+  {title, source, category, url, image?, description?, lang?}
+
+  Adibidea:
+  const CATALOG_FEEDS = [
+    "https://zure-worker.workers.dev/catalog.json",
+    "https://raw.githubusercontent.com/USER/REPO/main/catalog.json"
+  ];
+*/
+const CATALOG_FEEDS=[];
+
+const SEED=[
+{title:"ETB1 ON",source:"ETB ON",category:"live",url:"https://etbon.eus/etb-1",eu:"ETB1 zuzenean",es:"ETB1 en directo",type:"stream"},
+{title:"ETB2 ON",source:"ETB ON",category:"live",url:"https://etbon.eus/etb-2",eu:"ETB2 zuzenean",es:"ETB2 en directo",type:"stream"},
+{title:"Odol ilargia",source:"PRIMERAN",category:"series",url:"https://primeran.eus/",eu:"Ikusi telesaila PRIMERANen",es:"Ver la serie en PRIMERAN"},
+{title:"Errotik. Sustraietatik",source:"PRIMERAN · Dokumentalak",category:"docs",url:"https://primeran.eus/",eu:"Dokumentala ireki",es:"Abrir documental"},
+{title:"A un metro",source:"ETB ON",category:"series",url:"https://etbon.eus/m/a-un-metro-2-18035763",eu:"Ikusi atalak ETB ONen",es:"Ver episodios en ETB ON"},
+{title:"Euskal Kantak",source:"GUAU",category:"audio",url:"https://guau.eus/",eu:"Entzun GUAUn",es:"Escuchar en GUAU"},
+{title:"Gure Zirkua",source:"PRIMERAN",category:"entertainment",url:"https://primeran.eus/",eu:"Ikusi PRIMERANen",es:"Ver en PRIMERAN"},
+{title:"Wazemank barrez lehertzekoak!",source:"PRIMERAN",category:"entertainment",url:"https://primeran.eus/",eu:"Ikusi atalak",es:"Ver episodios"},
+{title:"Tribuaren Berbak",source:"ETB ON",category:"entertainment",url:"https://etbon.eus/s/tribuaren-berbak",eu:"Ikusi ETB ONen",es:"Ver en ETB ON"},
+{title:"Gaztea",source:"GUAU",category:"audio",url:"https://guau.eus/",eu:"Entzun zuzenean",es:"Escuchar en directo"},
+{title:"GO!azen",source:"MAKUSI",category:"kids",url:"https://www.makusi.eus/",eu:"Ireki MAKUSI",es:"Abrir MAKUSI"},
+{title:"Gaupasa",source:"PRIMERAN",category:"series",url:"https://primeran.eus/",eu:"Ikusi atalak",es:"Ver episodios"},
+{title:"CaixaBank Mastersa",source:"ETB ON",category:"sports",url:"https://etbon.eus/s/caixabank-mastersa",eu:"Ikusi partidak",es:"Ver partidos"},
+{title:"Euskadi Irratia",source:"GUAU",category:"audio",url:"https://guau.eus/",eu:"Entzun zuzenean",es:"Escuchar en directo"},
+{title:"Pottokiak",source:"MAKUSI",category:"kids",url:"https://www.makusi.eus/",eu:"Ikusi MAKUSIn",es:"Ver en MAKUSI"},
+{title:"Hombre bala · Mikel Erentxun",source:"PRIMERAN · Dokumentalak",category:"docs",url:"https://primeran.eus/",eu:"Dokumentala ireki",es:"Abrir documental"},
+{title:"Bariazioak",source:"PRIMERAN",category:"series",url:"https://primeran.eus/",eu:"Ireki edukia",es:"Abrir contenido"},
+{title:"Saskibaloia: gizonak",source:"ETB ON",category:"sports",url:"https://www.etbon.eus/",eu:"Ikusi kirola",es:"Ver deporte"},
+{title:"Radio Euskadi",source:"GUAU",category:"audio",url:"https://guau.eus/",eu:"Entzun zuzenean",es:"Escuchar en directo"},
+{title:"Power Up",source:"MAKUSI",category:"kids",url:"https://www.makusi.eus/",eu:"Ireki MAKUSI",es:"Abrir MAKUSI"},
+{title:"Margolaria",source:"PRIMERAN · Dokumentalak",category:"docs",url:"https://primeran.eus/",eu:"Dokumentala ireki",es:"Abrir documental"},
+{title:"Radio Euskadi +",source:"GUAU",category:"audio",url:"https://guau.eus/",eu:"Ireki emisioa",es:"Abrir emisión"},
+{title:"ORAIN · Azken albisteak",source:"ORAIN",category:"news",url:"https://orain.eus/",eu:"Irakurri eta ikusi",es:"Leer y ver"},
+{title:"KIROLAK · Azken ordua",source:"KIROLAK EITB",category:"sports",url:"https://kirolakeitb.eus/",eu:"Kirol albisteak",es:"Noticias deportivas"},
+{title:"Gaztea · Musika eta kultura",source:"Gaztea",category:"audio",url:"https://www.gaztea.eus/",eu:"Aurkitu Gaztea",es:"Descubrir Gaztea"}
+];
+
+const CATS=[
+["all","Dena","Todo"],["news","Albisteak","Noticias"],["live","Zuzenekoak","Directos"],
+["series","Zinema eta telesailak","Cine y series"],["sports","Kirolak","Deportes"],
+["entertainment","Entretenimendua","Entretenimiento"],["docs","Dokumentalak","Documentales"],
+["audio","Podcast eta irratia","Podcast y radio"],["kids","Haurrak","Infantil"]
+];
+
+let lang=localStorage.getItem("ataria-lang")||"eu";
+let active="all", activeSubtype=null, showFavs=false, items=[...SEED];
+let favs=new Set(JSON.parse(localStorage.getItem("ataria-favs")||"[]"));
+
+const $=s=>document.querySelector(s);
+const esc=s=>(s??"").toString().replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+const COVER_COLORS={
+  "ORAIN":["#ff754c","#b53d25"],"PRIMERAN":["#7656ff","#3b24a8"],"ETB ON":["#258cff","#0b4aa7"],
+  "KIROLAK EITB":["#17b978","#087346"],"GUAU":["#f0b91c","#9a6a00"],"Gaztea":["#ff4fa3","#9b1f60"],
+  "MAKUSI":["#23c7d9","#087d8f"],"PRIMERAN · Dokumentalak":["#7656ff","#302070"]
+};
+function coverColors(x){
+  const key=Object.keys(COVER_COLORS).find(k=>(x.source||"").startsWith(k));
+  return COVER_COLORS[key]||["#0e7ac7","#084d91"];
+}
+function coverStyle(x){
+  if(x.image)return `background-image:linear-gradient(to top,rgba(0,0,0,.5),transparent 58%),url('${esc(x.image).replace(/'/g,"%27")}');background-size:cover;background-position:center`;
+  const [a,b]=coverColors(x);
+  return `background:radial-gradient(circle at 72% 24%,rgba(255,255,255,.22),transparent 28%),linear-gradient(145deg,${a},${b})`;
+}
+function coverClass(x){return x.image?"":" generatedCover"}
+
+
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
+  $("#langBtn").textContent=lang==="eu"?"ES":"EU";
+  $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
+}
+function renderPlatforms(){
+  $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
+}
+function renderChips(){
+  $("#chips").innerHTML=CATS.map(c=>`<button class="chip ${active===c[0]?"active":""}" data-cat="${c[0]}">${lang==="eu"?c[1]:c[2]}</button>`).join("");
+  document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{active=b.dataset.cat;activeSubtype=null;renderChips();renderCards()});
+}
+const FEATURE_SHELVES=[
+  {key:"sports",eu:"Kirolak",es:"Deportes",cat:"sports",pick:x=>x.category==="sports"},
+  {key:"movies",eu:"Filmak",es:"Películas",cat:"series",subtype:"media",pick:x=>x.category==="series"&&x.type==="media"},
+  {key:"series",eu:"Telesailak",es:"Series",cat:"series",subtype:"series",pick:x=>x.category==="series"&&x.type==="series"},
+  {key:"programs",eu:"Saioak",es:"Programas",cat:"entertainment",pick:x=>x.category==="entertainment"},
+  {key:"docs",eu:"Dokumentalak",es:"Documentales",cat:"docs",pick:x=>x.category==="docs"},
+  {key:"audio",eu:"Podcastak eta audioa",es:"Podcasts y audio",cat:"audio",pick:x=>x.category==="audio"},
+  {key:"kids",eu:"Haurrak",es:"Infantil",cat:"kids",pick:x=>x.category==="kids"}
+];
+function uniqueByUrl(list){
+  const seen=new Set();
+  return list.filter(x=>x&&x.url&&!seen.has(x.url)&&(seen.add(x.url),true));
+}
+function shelfItems(def,limit=5){
+  let list=items.filter(def.pick);
+  if(def.key==="movies" && list.length<limit) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="series")];
+  if(def.key==="series" && list.length<limit) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="media")];
+  return uniqueByUrl(list)
+    .sort((a,b)=>Number(Boolean(b.image))-Number(Boolean(a.image)))
+    .slice(0,limit);
+}
+function latestNews(limit=5){
+  return uniqueByUrl(items.filter(x=>x.category==="news")).slice(0,limit);
+}
+function newsDate(x){
+  if(x.publishedAt)return String(x.publishedAt).slice(0,10);
+  const m=String(x.url||"").match(/\/(20\d{2})\/(\d{2})\/(\d{2})\//);
+  return m?`${m[1]}-${m[2]}-${m[3]}`:"";
+}
+function editorialScore(x,index=0,kind="news"){
+  const text=`${x.title||""} ${x.synopsis||""} ${x.description||""}`.toLowerCase();
+  let score=100-Math.min(index,50)*1.35;
+
+  const commonHigh=[
+    /gobern|jaurlarit|parlament|lege|ley|aurrekont|presupuest/,
+    /hautes|elecci|bozk|vot/,
+    /gerra|guerra|gatazka|conflict|eraso|ataque/,
+    /istripu|accident|sute|incend|uholde|inund|alerta|larriald/,
+    /etxebiz|vivienda|hipotek|alquiler|alokair/,
+    /osasun|salud|hospital|hezkunt|educaci/,
+    /lanpost|empleo|langabe|paro|econom|inflaci|prezio|precio/
+  ];
+  const commonMedium=[
+    /euskadi|euskal herria|bizkaia|gipuzkoa|araba|navarra|nafar/,
+    /europa|espain|españa|frantzia|francia|mundu|mundo/,
+    /energia|garraio|transport|klima|clima|justizia|justicia/
+  ];
+  const categorySignals={
+    sports:[/final|derbi|txapelketa|campeon|liga|kopa|copa|mundial|euro|partid|match|pilota|remo|trainer|futbol|basket|saski|athletic|real sociedad|osasuna|alaves/],
+    movies:[/estreinaldi|estreno|premio|sari|festival|film|película|zinema|cine|thriller|comedia|drama|aventura/],
+    series:[/temporada|season|final|estreinaldi|estreno|atal|episodio|serie|telesail/],
+    programs:[/berezi|especial|elkarrizketa|entrevista|lehiaketa|concurso|saio|programa|show|umore|humor/],
+    docs:[/ikerketa|investiga|historia|istorio|gizarte|sociedad|memoria|kultura|cultura|natura|naturaleza|dokument|documental/],
+    audio:[/elkarrizketa|entrevista|podcast|musika|música|aktualitate|actualidad|kultura|cultura|radio|irrati/],
+    kids:[/estreinaldi|estreno|abentura|aventura|familia|haur|infantil|gazte|joven|animazio|animación/]
+  };
+
+  if(kind==="news"){
+    for(const re of commonHigh)if(re.test(text))score+=16;
+    for(const re of commonMedium)if(re.test(text))score+=7;
+  }else{
+    for(const re of commonMedium)if(re.test(text))score+=4;
+    for(const re of categorySignals[kind]||[])if(re.test(text))score+=10;
+  }
+
+  if(/[0-9]{2,}%|milioi|millones?|miles?|ehunka|cientos?/.test(text))score+=5;
+  if(/azken ordu|última hora|zuzenean|directo|orain|gaur|hoy|berri|nuevo|nueva|estreinaldi|estreno/.test(text))score+=6;
+  if((x.title||"").length>=35&&(x.title||"").length<=105)score+=3;
+  if(x.image)score+=3;
+  if((x.synopsis||"").length>80)score+=2;
+  if(x.source==="PRIMERAN"||x.source==="ETB ON"||x.source==="KIROLAK EITB"||x.source==="ORAIN")score+=1;
+  return score;
+}
+function diverseTop(pool,kind="news",limit=3){
+  const ranked=uniqueByUrl(pool).map((x,i)=>({x,score:editorialScore(x,i,kind)})).sort((a,b)=>b.score-a.score);
+  const out=[],fingerprints=[];
+  for(const row of ranked){
+    const fp=(row.x.title||"").toLowerCase().replace(/[^a-záéíóúüñç0-9 ]/gi," ").split(/\s+/).filter(w=>w.length>4).slice(0,6);
+    const tooSimilar=fingerprints.some(prev=>fp.filter(w=>prev.includes(w)).length>=3);
+    if(tooSimilar)continue;
+    out.push(row.x);fingerprints.push(fp);
+    if(out.length>=limit)break;
+  }
+  for(const row of ranked){if(out.length>=limit)break;if(!out.some(y=>y.url===row.x.url))out.push(row.x)}
+  return out.slice(0,limit);
+}
+function relevantNewsToday(limit=3,exclude=[]){
+  const excluded=new Set(exclude.map(x=>x?.url).filter(Boolean));
+  const news=uniqueByUrl(items.filter(x=>x.category==="news"&&!excluded.has(x.url)));
+  if(!news.length)return [];
+  const today=new Date().toISOString().slice(0,10);
+  let pool=news.filter(x=>newsDate(x)===today);
+  if(pool.length<limit)pool=news.slice(0,Math.max(20,limit));
+  return diverseTop(pool,"news",limit);
+}
+function topForShelf(def,limit=3,exclude=[]){
+  const excluded=new Set(exclude.map(x=>x?.url).filter(Boolean));
+  let pool=uniqueByUrl(items.filter(x=>def.pick(x)&&!excluded.has(x.url)));
+  if(def.key==="movies"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="series"&&!excluded.has(x.url))]);
+  if(def.key==="series"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="media"&&!excluded.has(x.url))]);
+  return diverseTop(pool,def.key,limit);
+}
+function trackedAttrs(x){
+  return `data-track="content" data-url="${esc(x.url)}" data-title="${esc(x.title)}" data-category="${esc(x.category||"")}" data-source="${esc(x.source||"")}"`;
+}
+function featuredCardHtml(x,label){
+  const bg=`<div class="bg${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>`;
+  return `<a class="featuredCard" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${bg}<div class="inside"><span class="kind">${esc(label)}</span><span class="featuredSource">${esc(x.source)}</span><h3>${esc(x.title)}</h3></div></a>`;
+}
+function moreButton(cat,subtype=""){
+  return `<button class="shelfMore" data-more-cat="${cat}" data-more-subtype="${subtype}">${lang==="eu"?"Dena ikusi":"Ver todo"} ↗</button>`;
+}
+function renderFeatured(){
+  const root=$("#featuredShelves"); if(!root)return;
+  const latest=latestNews(5);
+  const relevant=relevantNewsToday(3,latest);
+  const newsTopCards=relevant.map((x,i)=>featuredCardHtml(x,`TOP ${i+1}`)).join("");
+  const newsHtml=`<div class="featuredShelf newsBlock">
+    <div class="shelfHead"><h3>${lang==="eu"?"Albisteak":"Noticias"}</h3></div>
+    <div class="newsSubhead"><h4>${lang==="eu"?"Azken 5 albisteak":"Últimas 5 noticias"}</h4></div>
+    <div class="shelfGrid">${latest.map(x=>featuredCardHtml(x,lang==="eu"?"Azkena":"Última hora")).join("")}</div>
+    <div class="newsSubhead"><h4>TOP 3</h4></div>
+    <div class="shelfGrid three">${newsTopCards}</div>
+    ${moreButton("news")}
+  </div>`;
+
+  const rest=FEATURE_SHELVES.map(def=>{
+    const chosen=shelfItems(def,5);
+    const top=topForShelf(def,3,chosen);
+    const cards=chosen.map(x=>featuredCardHtml(x,lang==="eu"?def.eu:def.es)).join("");
+    const topCards=top.map((x,i)=>featuredCardHtml(x,`TOP ${i+1}`)).join("");
+    return `<div class="featuredShelf">
+      <div class="shelfHead"><h3>${lang==="eu"?def.eu:def.es}</h3></div>
+      <div class="shelfGrid">${cards}</div>
+      <div class="newsSubhead"><h4>TOP 3</h4></div>
+      <div class="shelfGrid three">${topCards}</div>
+      ${moreButton(def.cat,def.subtype||"")}
+    </div>`;
+  }).join("");
+
+  root.innerHTML=newsHtml+rest;
+  document.querySelectorAll(".shelfMore").forEach(b=>b.onclick=()=>{
+    active=b.dataset.moreCat||"all";
+    activeSubtype=b.dataset.moreSubtype||null;
+    showFavs=false;
+    renderChips();
+    renderCards();
+    document.querySelector("#edukiak")?.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+}
+let ranking=[];
+async function loadRanking(){
+  ranking=[];
+  renderRanking();
+  renderFeatured();
+}
+function renderRanking(){
+  const root=$("#rankingGrid"); if(!root)return;
+  if(!ranking.length){
+    root.innerHTML=`<div class="rankEmpty">${lang==="eu"?"Ranking-a GARENAk irekierak jaso ahala agertuko da. Ez dugu daturik asmatzen.":"El ranking aparecerá a medida que GARENA registre aperturas. No mostramos datos inventados."}</div>`;
+    return;
+  }
+  root.innerHTML=ranking.slice(0,5).map((x,i)=>`<a class="rankCard" href="${esc(x.url)}" rel="noopener" data-track="content" data-url="${esc(x.url)}" data-title="${esc(x.title)}" data-category="${esc(x.category||"")}" data-source="${esc(x.source||"")}"><div class="rankNum">#${i+1}</div><h3>${esc(x.title)}</h3><div class="rankMeta"><span>${esc(x.source||"GARENA")}</span><span>${Number(x.count||0)} ${lang==="eu"?"irekiera":"aperturas"}</span></div></a>`).join("");
+}
+function trackOpen(a){
+  return;
+}
+document.addEventListener("click",e=>{
+  const a=e.target.closest('a[data-track="content"]');
+  if(a)trackOpen(a);
+});
+function updateLocalizedLinks(){
+  const sport=$("#sportLive");
+  if(sport)sport.href=lang==="eu"?"https://kirolakeitb.eus/eu/":"https://kirolakeitb.eus/es/";
+}
+
+
+const TIK_STOP=new Set(("eta edo bat batean da de del la el los las un una unos unas y o que por para con sin en al a e es ez dira du da como más mas lo se su sus zein zer hau hori esta este esta estos estas izan izango ere baina sobre entre desde hasta nor nork non cuando cuando porque porque").split(/\s+/));
+let tikMode=localStorage.getItem("garena-tik-mode")||"foryou";
+let tikFeedback={};
+try{tikFeedback=JSON.parse(localStorage.getItem("garena-tik-feedback")||"{}")||{}}catch{tikFeedback={}}
+
+function tikText(x){
+  return `${x.title||""} ${x.description||""} ${x.synopsis||""} ${x.eu||""} ${x.es||""}`.toLowerCase();
+}
+function tikTerms(x){
+  const words=tikText(x).normalize("NFD").replace(/[\u0300-\u036f]/g,"").match(/[a-z0-9]{4,}/g)||[];
+  const seen=new Set(),out=[];
+  for(const w of words){
+    if(TIK_STOP.has(w)||seen.has(w))continue;
+    seen.add(w);out.push(w);
+    if(out.length>=18)break;
+  }
+  return out;
+}
+function tikTime(x,index=0){
+  const raw=x.publishedAt||"";
+  const t=raw?Date.parse(raw):NaN;
+  if(Number.isFinite(t))return t;
+  const m=String(x.url||"").match(/\/(20\d{2})\/(\d{2})\/(\d{2})\//);
+  if(m){
+    const u=Date.parse(`${m[1]}-${m[2]}-${m[3]}T12:00:00Z`);
+    if(Number.isFinite(u))return u;
+  }
+  return Date.now()-index*60000;
+}
+function tikPreferenceScore(x){
+  const terms=new Set(tikTerms(x));
+  let score=0;
+  for(const [url,f] of Object.entries(tikFeedback)){
+    if(!f||!Number(f.value))continue;
+    const v=Number(f.value);
+    if(url===x.url)score+=v*120;
+    if(f.category&&f.category===x.category)score+=v*14;
+    if(f.source&&f.source===x.source)score+=v*5;
+    for(const term of f.terms||[])if(terms.has(term))score+=v*11;
+  }
+  return score;
+}
+function tikRelatedScore(x,newsAnchors){
+  if(x.category==="news")return 0;
+  const terms=new Set(tikTerms(x));
+  let best=0;
+  for(const n of newsAnchors.slice(0,16)){
+    let overlap=0;
+    for(const t of tikTerms(n))if(terms.has(t))overlap++;
+    best=Math.max(best,overlap*18);
+  }
+  return best;
+}
+function tikPlayableVideo(x){
+  const u=String(x.embedUrl||x.embed||x.videoUrl||x.video||x.url||"");
+  return Boolean(x.embedUrl||x.embed||x.videoUrl||x.video||/youtu\.be|youtube\.com\/(?:watch|shorts|embed)/i.test(u));
+}
+function tikVideoScore(x){
+  const text=`${x.title||""} ${x.description||""} ${x.synopsis||""}`.toLowerCase();
+  if(tikPlayableVideo(x))return 260;
+  if(x.type==="stream")return 180;
+  if(x.type==="media")return 120;
+  if(/\b(video|bideo|clip|short|trailer|laburpen|resumen)\b/i.test(text))return 95;
+  if(x.category==="entertainment"||x.category==="sports")return 35;
+  return 0;
+}
+
+function tikContentKey(x){
+  return String(x.title||"").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g," ").trim();
+}
+function tikBase(){
+  const raw=items.filter(x=>x&&x.url&&x.title);
+  const byTitle=new Map();
+  for(let i=0;i<raw.length;i++){
+    const x=raw[i],key=tikContentKey(x)||x.url;
+    const prev=byTitle.get(key);
+    if(!prev||tikTime(x,i)>tikTime(prev,prev._tikIndex||9999))byTitle.set(key,{...x,_tikIndex:i});
+  }
+  const base=[...byTitle.values()];
+  const rankMap=new Map(ranking.map((x,i)=>[x.url,{pos:i,count:Number(x.count||0)}]));
+  return base.map((x,i)=>{
+    const r=rankMap.get(x.url);
+    const ageHours=Math.max(0,(Date.now()-tikTime(x,x._tikIndex??i))/3600000);
+    const freshness=Math.max(0,240-Math.min(ageHours,240));
+    const trending=r?Math.max(0,70-r.pos*7)+Math.log2(r.count+1)*4:0;
+    return {...x,_tikFresh:freshness,_tikVideoScore:tikVideoScore(x),_tikPlayable:tikPlayableVideo(x),_tikTrend:Boolean(r),_tikRank:r?.pos??null,_tikIndex:x._tikIndex??i};
+  });
+}
+
+let tikRecent=[];
+try{tikRecent=JSON.parse(localStorage.getItem("garena-tik-recent")||"[]")||[]}catch{tikRecent=[]}
+function saveTikRecent(url){
+  if(!url)return;
+  tikRecent=[url,...tikRecent.filter(x=>x!==url)].slice(0,180);
+  localStorage.setItem("garena-tik-recent",JSON.stringify(tikRecent));
+}
+function weightedRandomOrder(list){
+  const recent=new Set(tikRecent.slice(0,120));
+  return list.map((x,i)=>{
+    const fresh=1+x._tikFresh/28;
+    const video=1+x._tikVideoScore/180;
+    const personal=Math.max(.35,1+tikPreferenceScore(x)/90);
+    const novelty=recent.has(x.url)?.12:1;
+    const modeBoost=tikMode==="new"?(1+x._tikFresh/20):1;
+    const weight=Math.max(.05,fresh*video*personal*novelty*modeBoost);
+    return {x,key:-Math.log(Math.max(Math.random(),1e-9))/weight};
+  }).sort((a,b)=>a.key-b.key).map(o=>o.x);
+}
+function diversifyTikSources(list){
+  const remaining=[...list],out=[];
+  const recentSources=[];
+  while(remaining.length){
+    let pick=0;
+    for(let i=0;i<Math.min(remaining.length,18);i++){
+      const src=remaining[i].sourceId||remaining[i].source||"";
+      if(!recentSources.includes(src)){pick=i;break}
+    }
+    const [x]=remaining.splice(pick,1);
+    out.push(x);
+    const src=x.sourceId||x.source||"";
+    recentSources.unshift(src);
+    if(recentSources.length>2)recentSources.pop();
+  }
+  return out;
+}
+function tikItems(){
+  let base=tikBase().filter(x=>(tikFeedback[x.url]?.value||0)>=0);
+  if(!base.length)return [];
+
+  // Discovery is random across every source, but new items get a much higher chance.
+  // Recently shown URLs are heavily down-weighted, not permanently removed.
+  const ordered=weightedRandomOrder(base);
+  return diversifyTikSources(ordered);
+}
+
+let tikPool=[];
+let tikCursor=0;
+let tikCycle=0;
+let tikRenderedTotal=0;
+const TIK_BATCH=12;
+
+
+function youtubeEmbedUrl(value){
+  try{
+    const u=new URL(value);
+    let id="";
+    if(u.hostname==="youtu.be")id=u.pathname.slice(1).split("/")[0];
+    else if(/(^|\.)youtube\.com$/.test(u.hostname)){
+      if(u.pathname==="/watch")id=u.searchParams.get("v")||"";
+      else{
+        const m=u.pathname.match(/^\/(?:shorts|embed)\/([^/?#]+)/);
+        if(m)id=m[1];
+      }
+    }
+    return id?`https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?playsinline=1&rel=0`:"";
+  }catch{return ""}
+}
+function tikVideoHtml(x){
+  const embed=x.embedUrl||x.embed||"";
+  const direct=x.videoUrl||x.video||"";
+  const yt=youtubeEmbedUrl(embed||direct||x.url||"");
+  if(yt)return `<div class="tikMediaFrame"><iframe src="${esc(yt)}" title="${esc(x.title)}" loading="lazy" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div><span class="tikVideoBadge">▶ VIDEO</span>`;
+  if(/^https:\/\//i.test(direct)&&/\.(mp4|webm|m4v)(?:\?|$)/i.test(direct)){
+    return `<div class="tikMediaFrame"><video controls playsinline preload="metadata" ${x.image?`poster="${esc(x.image)}"`:""} src="${esc(direct)}"></video></div><span class="tikVideoBadge">▶ VIDEO</span>`;
+  }
+  return `<div class="tikMediaFrame"><div class="tikMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div></div>`;
+}
+
+function tikCardHtml(x,position,totalHint){
+  const desc=lang==="eu"?(x.eu||x.description||x.synopsis||"Ireki eduki ofiziala"):(x.es||x.description||x.synopsis||"Abrir contenido oficial");
+  const badge=x._tikPlayable?"VIDEO":(x.category==="news"?(lang==="eu"?"ALBISTEA":"NOTICIA"):(x._tikTrend?"TRENDING":(lang==="eu"?"LOTUTA":"RELACIONADO")));
+  const vote=Number(tikFeedback[x.url]?.value||0);
+  const aiHint=tikMode==="foryou"
+    ?(lang==="eu"?"Nobedadeak, ausaz eta zure gustuekin":"Novedades, aleatorio y según tus gustos")
+    :(lang==="eu"?"Berriena, ausaz nahastuta":"Lo más nuevo, mezclado al azar");
+  return `<article class="tikItem" data-tik-pos="${position}" data-url="${esc(x.url)}">
+    ${tikVideoHtml(x)}
+    <div class="tikInfo">
+      <span class="tikSource">${esc(x.source)}</span><span class="tikTrend">${badge}</span>
+      <h2>${esc(x.title)}</h2>
+      <p>${esc(desc)}</p>
+      <a class="tikOpen" href="${esc(x.url)}" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a>
+      <span class="tikAIHint">✦ ${aiHint}</span>
+    </div>
+    <div class="tikActions">
+      <button class="tikActionBtn like ${vote===1?"selected":""}" type="button" data-tik-vote="1" data-url="${esc(x.url)}" aria-label="${lang==="eu"?"Gustuko dut":"Me gusta"}"><i>♥</i><b>${lang==="eu"?"Gustuko":"Me gusta"}</b></button>
+      <button class="tikActionBtn dislike ${vote===-1?"selected":""}" type="button" data-tik-vote="-1" data-url="${esc(x.url)}" aria-label="${lang==="eu"?"Ez zait gustatzen":"No me gusta"}"><i>×</i><b>${lang==="eu"?"Ez":"No"}</b></button>
+      <span class="tikAction"><i>↗</i><b>${lang==="eu"?"Partekatu":"Compartir"}</b></span>
+    </div>
+    <div class="tikProgress"><i style="width:${Math.max(5,Math.min(100,((position-1)%Math.max(totalHint,1)+1)/Math.max(totalHint,1)*100))}%"></i></div>
+  </article>`;
+}
+
+function refillTikPool(){
+  const base=tikItems();
+  if(!base.length){tikPool=[];return}
+  tikPool=base;
+}
+function appendTikBatch(){
+  const root=$("#tikFeed"); if(!root)return;
+  if(!tikPool.length)refillTikPool();
+  if(!tikPool.length)return;
+  let html="";
+  for(let n=0;n<TIK_BATCH;n++){
+    if(tikCursor>=tikPool.length){
+      tikCycle++;
+      tikCursor=0;
+      refillTikPool();
+      if(!tikPool.length)break;
+    }
+    const x=tikPool[tikCursor++];
+    tikRenderedTotal++;
+    saveTikRecent(x.url);
+    html+=tikCardHtml(x,tikRenderedTotal,tikPool.length);
+  }
+  root.insertAdjacentHTML("beforeend",html);
+}
+function syncTikTabs(){
+  document.querySelectorAll("[data-tik-mode]").forEach(b=>{
+    const on=b.dataset.tikMode===tikMode;
+    b.classList.toggle("active",on);
+    b.setAttribute("aria-selected",on?"true":"false");
+  });
+}
+function renderTik(reset=true){
+  const root=$("#tikFeed"); if(!root)return;
+  syncTikTabs();
+  if(reset){
+    tikCycle=0;tikCursor=0;tikRenderedTotal=0;
+    tikPool=tikItems();root.innerHTML="";
+  }
+  if(!root.children.length)appendTikBatch();
+}
+function maybeLoadMoreTik(){
+  const root=$("#tikFeed"); if(!root||!$("#tikOverlay")?.classList.contains("open"))return;
+  const remaining=root.scrollHeight-root.scrollTop-root.clientHeight;
+  if(remaining<root.clientHeight*3)appendTikBatch();
+}
+function setTikMode(mode){
+  tikMode=mode==="new"?"new":"foryou";
+  localStorage.setItem("garena-tik-mode",tikMode);
+  const feed=$("#tikFeed");
+  renderTik(true);
+  if(feed)feed.scrollTop=0;
+}
+function saveTikVote(url,value){
+  const x=items.find(i=>i.url===url);
+  if(!x)return;
+  const current=Number(tikFeedback[url]?.value||0);
+  if(current===value)delete tikFeedback[url];
+  else tikFeedback[url]={value,category:x.category||"",source:x.source||"",terms:tikTerms(x),at:Date.now()};
+  localStorage.setItem("garena-tik-feedback",JSON.stringify(tikFeedback));
+}
+
+function renderTikPreview(){
+  const root=$("#tikPreviewRow"); if(!root)return;
+  const list=tikItems().slice(0,3);
+  root.innerHTML=list.map((x,i)=>{
+    const desc=lang==="eu"?(x.eu||x.description||x.synopsis||"Ireki edukia"):(x.es||x.description||x.synopsis||"Abrir contenido");
+    return `<article class="tikPreviewCard" role="button" tabindex="0" data-tik-index="${i}">
+      <div class="tikPreviewMedia${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}"></div>
+      <div class="tikPreviewInfo">
+        <span class="tikPreviewSource">${esc(x.source)}</span>
+        <h3>${esc(x.title)}</h3>
+        <p>${esc(desc)}</p>
+        <span class="tikPreviewCTA">${lang==="eu"?"Sartu ↗":"Entrar ↗"}</span>
+      </div>
+      <div class="tikPreviewRail"><div class="tikPreviewBubble">▶</div><div class="tikPreviewBubble">♥</div><div class="tikPreviewBubble">↗</div></div>
+    </article>`;
+  }).join("");
+  root.querySelectorAll(".tikPreviewCard").forEach(card=>{
+    const go=()=>openTikAt(Number(card.dataset.tikIndex||0));
+    card.onclick=go;
+    card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}};
+  });
+}
+function openTikAt(index=0){
+  const overlay=$("#tikOverlay"),feed=$("#tikFeed");
+  if(!overlay||!feed)return;
+  renderTik(true);
+  overlay.classList.add("open");
+  overlay.setAttribute("aria-hidden","false");
+  document.documentElement.style.overflow="hidden";
+  document.body.style.overflow="hidden";
+  requestAnimationFrame(()=>{
+    const card=feed.children[index]||feed.firstElementChild;
+    if(card)feed.scrollTop=card.offsetTop;
+    else feed.scrollTop=0;
+    feed.focus({preventScroll:true});
+  });
+}
+function openTik(){openTikAt(0)}
+function closeTik(){
+  $("#tikOverlay").classList.remove("open");
+  $("#tikOverlay").setAttribute("aria-hidden","true");
+  document.documentElement.style.overflow="";
+  document.body.style.overflow="";
+}
+
+function renderCards(){
+  const q=$("#search").value.trim().toLowerCase();
+  let view=items.filter(x=>(active==="all"||x.category===active) && (!activeSubtype||x.type===activeSubtype) && (!q || (x.title+" "+x.source+" "+(x.eu||"")+" "+(x.es||"")).toLowerCase().includes(q)));
+  if(showFavs)view=view.filter(x=>favs.has(x.title));
+  $("#count").textContent=(lang==="eu"?`${view.length} eduki`:`${view.length} contenidos`);
+  $("#favCount").textContent=favs.size;
+  if(!view.length){$("#grid").innerHTML=`<div class="empty">${lang==="eu"?"Ez da edukirik aurkitu.":"No se han encontrado contenidos."}</div>`;return}
+  $("#grid").innerHTML=view.map(x=>`
+    <article class="card">
+      <div class="poster${coverClass(x)}" data-cover-title="${esc(x.title)}" style="${coverStyle(x)}">
+        <span class="source">${esc(x.source)}</span>
+      </div>
+      <div class="cardBody">
+        <h3>${esc(x.title)}</h3>
+        <p>${esc(lang==="eu"?(x.eu||"Ireki eduki ofiziala"):(x.es||"Abrir contenido oficial"))}</p>
+        <div class="cardActions">
+          <a class="open" href="${esc(x.url)}" target="_blank" rel="noopener" ${trackedAttrs(x)}>${lang==="eu"?"IREKI ↗":"ABRIR ↗"}</a>
+          <button class="save" data-title="${esc(x.title)}" aria-label="Guardar">${favs.has(x.title)?"♥":"♡"}</button>
+        </div>
+      </div>
+    </article>`).join("");
+  document.querySelectorAll(".save").forEach(b=>b.onclick=()=>{
+    const t=b.dataset.title; favs.has(t)?favs.delete(t):favs.add(t);
+    localStorage.setItem("ataria-favs",JSON.stringify([...favs])); renderCards(); toast(lang==="eu"?"Zerrenda eguneratu da":"Lista actualizada");
+  });
+}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("show"),1500)}
+async function loadFeeds(){
+  if(!CATALOG_FEEDS.length){$("#status").textContent=lang==="eu"?"Tokiko katalogoa":"Catálogo local";return}
+  $("#status").textContent=lang==="eu"?"Iturriak kontsultatzen…":"Consultando fuentes…";
+  const merged=[];
+  await Promise.all(CATALOG_FEEDS.map(async url=>{
+    try{
+      const r=await fetch(url,{cache:"no-store"}); if(!r.ok)throw 0;
+      const j=await r.json(); const arr=Array.isArray(j)?j:(j.items||[]);
+      for(const x of arr) if(x&&x.title&&x.url) merged.push(x);
+    }catch(e){}
+  }));
+  if(merged.length){
+    const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
+    items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
+  }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
+  renderFeatured(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderCards();
+}
+document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
+  btn.onclick=()=>{
+    active=btn.dataset.heroCat||"all";
+    activeSubtype=btn.dataset.heroSubtype||null;
+    showFavs=false;
+    renderChips();
+    renderCards();
+    document.querySelector("#edukiak")?.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+});
+
+$("#liveAllBtn").onclick=()=>{
+  active="live";
+  activeSubtype=null;
+  showFavs=false;
+  renderChips();
+  renderCards();
+  document.querySelector("#edukiak")?.scrollIntoView({behavior:"smooth",block:"start"});
+};
+let tikScrollTick=false;
+$("#tikFeed")?.addEventListener("scroll",()=>{
+  if(tikScrollTick)return;
+  tikScrollTick=true;
+  requestAnimationFrame(()=>{tikScrollTick=false;maybeLoadMoreTik()});
+},{passive:true});
+document.querySelectorAll("[data-tik-mode]").forEach(b=>b.onclick=()=>setTikMode(b.dataset.tikMode));
+$("#tikFeed")?.addEventListener("click",e=>{
+  const btn=e.target.closest("[data-tik-vote]");
+  if(!btn)return;
+  e.preventDefault();
+  const url=btn.dataset.url,value=Number(btn.dataset.tikVote);
+  saveTikVote(url,value);
+  const card=btn.closest(".tikItem");
+  card?.querySelectorAll("[data-tik-vote]").forEach(b=>b.classList.toggle("selected",Number(b.dataset.tikVote)===Number(tikFeedback[url]?.value||0)));
+  tikPool=tikItems();
+  if(value===-1&&card?.nextElementSibling)card.nextElementSibling.scrollIntoView({behavior:"smooth",block:"start"});
+  toast(lang==="eu"?"Zure gomendioak eguneratu dira":"Tus recomendaciones se han actualizado");
+});
+$("#tikButton").onclick=openTik;
+$("#tikEnterAll").onclick=openTik;
+$("#tikClose").onclick=closeTik;
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#tikOverlay").classList.contains("open"))closeTik()});
+$("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("ataria-lang",lang);applyLang()};
+$("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
+$("#search").addEventListener("input",renderCards);
+
+applyLang(); loadFeeds(); loadRanking();
+setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
+setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
+</script>
+</body>
+</html>
