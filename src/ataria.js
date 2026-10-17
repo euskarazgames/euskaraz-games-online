@@ -185,8 +185,6 @@ const SOCIAL_SOURCES = [
   {id:"ig-eitb",platform:"Instagram",user:"eitb",url:"https://www.instagram.com/eitb/",kind:"instagram"},
   {id:"ig-gaztea",platform:"Instagram",user:"gaztea_irratia",url:"https://www.instagram.com/gaztea_irratia/",kind:"instagram"},
   {id:"ig-makusi",platform:"Instagram",user:"makusi_eus",url:"https://www.instagram.com/makusi_eus/",kind:"instagram"},
-  {id:"tt-makusi",platform:"TikTok",user:"makusi_eus",url:"https://www.tiktok.com/@makusi_eus",kind:"tiktok"},
-  {id:"tt-etb",platform:"TikTok",user:"etb_zuzenekoak",url:"https://www.tiktok.com/@etb_zuzenekoak",kind:"tiktok"},
   {id:"x-eitb",platform:"X",user:"eitb",url:"https://x.com/eitb",kind:"x"},
   {id:"x-albisteak",platform:"X",user:"eitbalbisteak",url:"https://x.com/eitbalbisteak",kind:"x"},
   {id:"x-kirolak",platform:"X",user:"eitbkirolak",url:"https://x.com/eitbkirolak",kind:"x"},
@@ -201,15 +199,6 @@ function socialPostsFromHtml(text, src){
     for(const m of text.matchAll(re)){
       const key=m[1]+":"+m[2]; if(seen.has(key))continue; seen.add(key);
       out.push({platform:"Instagram",account:"@"+src.user,title:"Instagram · @"+src.user,url:"https://www.instagram.com/"+m[1]+"/"+m[2]+"/",type:"social"});
-      if(out.length>=8)break;
-    }
-  } else if(src.kind==="tiktok"){
-    const ids=[];
-    for(const m of text.matchAll(/\/video\/(\d{12,24})/g))ids.push(m[1]);
-    for(const m of text.matchAll(/"id"\s*:\s*"(\d{15,24})"/g))ids.push(m[1]);
-    for(const id of ids){
-      if(seen.has(id))continue; seen.add(id);
-      out.push({platform:"TikTok",account:"@"+src.user,title:"TikTok · @"+src.user,url:"https://www.tiktok.com/@"+src.user+"/video/"+id,type:"social-video"});
       if(out.length>=8)break;
     }
   } else if(src.kind==="x"){
@@ -229,25 +218,6 @@ function socialPostsFromHtml(text, src){
   return out;
 }
 
-async function validateTikTokPosts(items){
-  const candidates=(items||[]).slice(0,6);
-  const checked=await Promise.allSettled(candidates.map(async x=>{
-    const endpoint="https://www.tiktok.com/oembed?url="+encodeURIComponent(x.url);
-    const r=await fetch(endpoint,{headers:{"accept":"application/json"},cf:{cacheTtl:300,cacheEverything:true}});
-    if(!r.ok)throw new Error("TikTok oEmbed "+r.status);
-    const j=await r.json();
-    if(!j||!j.html||!j.author_name)throw new Error("TikTok unavailable");
-    return {
-      ...x,
-      title:clean(j.title||x.title||"TikTok"),
-      account:j.author_name?("@"+String(j.author_name).replace(/^@/,"")):x.account,
-      image:typeof j.thumbnail_url==="string"?j.thumbnail_url:(x.image||null),
-      type:"social-video"
-    };
-  }));
-  return checked.filter(r=>r.status==="fulfilled").map(r=>r.value);
-}
-
 async function readSocialSource(src, request){
   const origin=new URL(request.url).origin;
   const cache=caches.default;
@@ -256,7 +226,7 @@ async function readSocialSource(src, request){
   let cached=null;
   if(hit){
     try{cached=await hit.json()}catch{cached=null}
-    if(cached&&Date.now()-Date.parse(cached.fetchedAt||0)<300000)return cached;
+    if(cached&&Date.now()-Date.parse(cached.fetchedAt||0)<900000)return cached;
   }
   try{
     const res=await fetch(src.url,{
@@ -266,12 +236,11 @@ async function readSocialSource(src, request){
         "user-agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1"
       },
       redirect:"follow",
-      cf:{cacheTtl:300,cacheEverything:true}
+      cf:{cacheTtl:900,cacheEverything:true}
     });
     if(!res.ok)throw new Error("HTTP "+res.status);
     const text=await res.text();
     let items=socialPostsFromHtml(text,src);
-    if(src.kind==="tiktok")items=await validateTikTokPosts(items);
     const payload={id:src.id,items,fetchedAt:new Date().toISOString()};
     if(items.length)await cache.put(key,Response.json(payload,{headers:{"cache-control":"public,max-age=86400"}}));
     return items.length?payload:(cached||payload);
