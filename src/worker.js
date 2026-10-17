@@ -21,16 +21,6 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === "/garena" || url.pathname === "/garena/") {
-      const assetUrl = new URL(request.url);
-      assetUrl.pathname = "/garena/index.html";
-      const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
-      const headers = new Headers(asset.headers);
-      headers.set("cache-control", "no-store, no-cache, must-revalidate");
-      headers.set("pragma", "no-cache");
-      headers.set("expires", "0");
-      return new Response(asset.body, { status: asset.status, statusText: asset.statusText, headers });
-    }
 
     if (url.pathname === "/ataria/api/catalog" || url.pathname === "/garena/api/catalog") {
       return handleAtariaApi(request);
