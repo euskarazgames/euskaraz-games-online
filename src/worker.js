@@ -21,6 +21,13 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === "/garena" || url.pathname === "/garena/") {
+      const target = new URL(request.url);
+      target.pathname = "/garena-live";
+      target.search = "";
+      return Response.redirect(target.toString(), 302);
+    }
+
 
     if (url.pathname === "/ataria/api/catalog" || url.pathname === "/garena/api/catalog") {
       return handleAtariaApi(request);
