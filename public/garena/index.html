@@ -585,6 +585,11 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 @media(max-width:700px){.socialNativeGrid{display:flex;overflow-x:auto;gap:11px;padding-bottom:10px;scroll-snap-type:x mandatory}.socialNativeGrid::-webkit-scrollbar{display:none}.socialNativePost{flex:0 0 82vw;scroll-snap-align:start}}
 
 
+
+.socialNativePost.instagram{background:linear-gradient(160deg,rgba(105,32,120,.42),rgba(3,35,72,.55))}
+.socialNativePost.instagram .socialNativeMedia.fallback{background:radial-gradient(circle at 30% 110%,#ffd66b 0 16%,transparent 36%),radial-gradient(circle at 85% 5%,#6f55ff 0 12%,transparent 34%),linear-gradient(145deg,#ff4d8d,#8b43d7)}
+.socialNativePost.instagram .socialNativeOpen:before{content:"◎ ";}
+
 </style>
 </head>
 <body>
@@ -714,7 +719,7 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     </div>
     <a class="feedbackBtn" href="https://www.eitb.eus/es/contacto/" target="_blank" rel="noopener" data-eu="Iritzia eman ↗" data-es="Dar tu opinión ↗">Iritzia eman ↗</a>
   </div>
-  <p class="socialLead" data-eu="X eta YouTubeko azken post publikoak, 15 minuturo eguneratuta." data-es="Últimos posts públicos de X y YouTube, actualizados cada 15 minutos.">X eta YouTubeko azken post publikoak, 15 minuturo eguneratuta.</p>
+  <p class="socialLead" data-eu="Instagram, X eta YouTubeko azken post publikoak, 15 minuturo eguneratuta." data-es="Últimos posts públicos de Instagram, X y YouTube, actualizados cada 15 minutos.">Instagram, X eta YouTubeko azken post publikoak, 15 minuturo eguneratuta.</p>
   <div class="socialNativeGrid" id="socialNativeGrid">
     <div class="socialLoading" data-eu="Postak kargatzen…" data-es="Cargando posts…">Postak kargatzen…</div>
   </div>
