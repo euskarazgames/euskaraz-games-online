@@ -185,6 +185,9 @@ const SOCIAL_SOURCES = [
   {id:"ig-eitb",platform:"Instagram",user:"eitb",url:"https://www.instagram.com/eitb/",kind:"instagram"},
   {id:"ig-gaztea",platform:"Instagram",user:"gaztea_irratia",url:"https://www.instagram.com/gaztea_irratia/",kind:"instagram"},
   {id:"ig-makusi",platform:"Instagram",user:"makusi_eus",url:"https://www.instagram.com/makusi_eus/",kind:"instagram"},
+  {id:"ig-etb-live",platform:"Instagram",user:"etb_zuzenekoak",url:"https://www.instagram.com/etb_zuzenekoak/",kind:"instagram"},
+  {id:"ig-euskadi-irratia",platform:"Instagram",user:"euskadi_irratia",url:"https://www.instagram.com/euskadi_irratia/",kind:"instagram"},
+  {id:"ig-radio-euskadi",platform:"Instagram",user:"boulevard_radioeuskadi",url:"https://www.instagram.com/boulevard_radioeuskadi/",kind:"instagram"},
   {id:"x-eitb",platform:"X",user:"eitb",url:"https://x.com/eitb",kind:"x"},
   {id:"x-albisteak",platform:"X",user:"eitbalbisteak",url:"https://x.com/eitbalbisteak",kind:"x"},
   {id:"x-kirolak",platform:"X",user:"eitbkirolak",url:"https://x.com/eitbkirolak",kind:"x"},
@@ -195,11 +198,39 @@ const SOCIAL_SOURCES = [
 function socialPostsFromHtml(text, src){
   const out=[], seen=new Set();
   if(src.kind==="instagram"){
-    const re=/\/(p|reel)\/([A-Za-z0-9_-]{5,})\/?/g;
-    for(const m of text.matchAll(re)){
-      const key=m[1]+":"+m[2]; if(seen.has(key))continue; seen.add(key);
-      out.push({platform:"Instagram",account:"@"+src.user,title:"Instagram · @"+src.user,url:"https://www.instagram.com/"+m[1]+"/"+m[2]+"/",type:"social"});
-      if(out.length>=8)break;
+    const normalized=String(text||"")
+      .replace(/\\u002F/gi,"/")
+      .replace(/\\u0026/gi,"&")
+      .replace(/\\\//g,"/");
+    const candidates=[];
+    for(const m of normalized.matchAll(/\/(p|reel)\/([A-Za-z0-9_-]{5,})\/?/g)){
+      candidates.push({kind:m[1],code:m[2],idx:m.index||0});
+    }
+    for(const m of normalized.matchAll(/"shortcode"\s*:\s*"([A-Za-z0-9_-]{5,})"/g)){
+      const around=normalized.slice(Math.max(0,(m.index||0)-500),Math.min(normalized.length,(m.index||0)+1800));
+      const kind=/"product_type"\s*:\s*"clips"|is_video"\s*:\s*true/i.test(around)?"reel":"p";
+      candidates.push({kind,code:m[1],idx:m.index||0});
+    }
+    for(const c of candidates){
+      const key=c.kind+":"+c.code; if(seen.has(key))continue; seen.add(key);
+      const around=normalized.slice(Math.max(0,c.idx-1400),Math.min(normalized.length,c.idx+3200));
+      const caption=clean(
+        around.match(/"(?:caption|accessibility_caption|text)"\s*:\s*"([^"]{6,320})"/i)?.[1]||
+        around.match(/"edge_media_to_caption"[\s\S]{0,900}?"text"\s*:\s*"([^"]{6,320})"/i)?.[1]||
+        ""
+      );
+      let image=
+        around.match(/"(?:display_url|thumbnail_src)"\s*:\s*"(https:[^"]+)"/i)?.[1]||
+        around.match(/"url"\s*:\s*"(https:[^"]+(?:cdninstagram|fbcdn)[^"]*)"/i)?.[1]||
+        null;
+      if(image)image=image.replace(/\\u0026/g,"&").replace(/\\\//g,"/");
+      out.push({
+        platform:"Instagram",account:"@"+src.user,
+        title:caption||("Instagram · @"+src.user),
+        url:"https://www.instagram.com/"+c.kind+"/"+c.code+"/",
+        image,type:c.kind==="reel"?"social-video":"social"
+      });
+      if(out.length>=10)break;
     }
   } else if(src.kind==="x"){
     const re=new RegExp("\\/"+src.user+"\\/status\\/(\\d{8,24})","gi");
