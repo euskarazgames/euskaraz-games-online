@@ -881,13 +881,42 @@ function uniqueByUrl(list){
   const seen=new Set();
   return list.filter(x=>x&&x.url&&!seen.has(x.url)&&(seen.add(x.url),true));
 }
+const GARENA_VISIT_SEED=Math.floor(Math.random()*0x7fffffff);
+let garenaRotationHistory={};
+try{garenaRotationHistory=JSON.parse(localStorage.getItem("garena-shelf-history-v2")||"{}")||{}}catch(e){garenaRotationHistory={}}
+let garenaRotationSaved=false;
+function rotationHash(value){
+  let h=(2166136261^GARENA_VISIT_SEED)>>>0;
+  for(let i=0;i<value.length;i++){h=Math.imul(h^value.charCodeAt(i),16777619)>>>0}
+  return h/4294967296;
+}
+function rotatingShelfOrder(pool,key){
+  const recent=new Set((garenaRotationHistory[key]||[]).slice(0,24));
+  return uniqueByUrl(pool).map(x=>({
+    x,
+    recent:recent.has(x.url)?1:0,
+    hasPhoto:x.image?0:1,
+    random:rotationHash(key+"|"+x.url)
+  })).sort((a,b)=>a.hasPhoto-b.hasPhoto||a.recent-b.recent||a.random-b.random).map(v=>v.x);
+}
+function rememberShelfRotation(){
+  if(garenaRotationSaved||items.length<=SEED.length)return;
+  garenaRotationSaved=true;
+  try{
+    for(const def of FEATURE_SHELVES){
+      const shown=[...shelfItems(def,5),...topForShelf(def,3,shelfItems(def,5))].map(x=>x.url);
+      const old=garenaRotationHistory[def.key]||[];
+      garenaRotationHistory[def.key]=[...shown,...old.filter(u=>!shown.includes(u))].slice(0,32);
+    }
+    localStorage.setItem("garena-shelf-history-v2",JSON.stringify(garenaRotationHistory));
+  }catch(e){}
+}
+
 function shelfItems(def,limit=5){
   let list=items.filter(def.pick);
   if(def.key==="movies" && list.length<limit) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="series")];
   if(def.key==="series" && list.length<limit) list=[...list,...items.filter(x=>x.category==="series"&&x.type!=="media")];
-  return uniqueByUrl(list)
-    .sort((a,b)=>Number(Boolean(b.image))-Number(Boolean(a.image)))
-    .slice(0,limit);
+  return rotatingShelfOrder(list,def.key).slice(0,limit);
 }
 function latestNews(limit=5){
   return uniqueByUrl(items.filter(x=>x.category==="news")).slice(0,limit);
@@ -968,7 +997,7 @@ function topForShelf(def,limit=3,exclude=[]){
   let pool=uniqueByUrl(items.filter(x=>def.pick(x)&&!excluded.has(x.url)));
   if(def.key==="movies"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="series"&&!excluded.has(x.url))]);
   if(def.key==="series"&&pool.length<limit)pool=uniqueByUrl([...pool,...items.filter(x=>x.category==="series"&&x.type!=="media"&&!excluded.has(x.url))]);
-  return diverseTop(pool,def.key,limit);
+  return rotatingShelfOrder(pool,def.key+"-top").slice(0,limit);
 }
 function trackedAttrs(x){
   return `data-track="content" data-url="${esc(x.url)}" data-title="${esc(x.title)}" data-category="${esc(x.category||"")}" data-source="${esc(x.source||"")}"`;
@@ -1396,7 +1425,7 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
-  renderFeatured(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderCards();
+  renderFeatured(); rememberShelfRotation(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderCards();
 }
 document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
   btn.onclick=()=>{
