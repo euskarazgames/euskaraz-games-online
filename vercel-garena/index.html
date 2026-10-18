@@ -571,6 +571,9 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 .socialScrollHint{display:flex;justify-content:center;padding-top:10px;font-size:10px;font-weight:900;letter-spacing:.08em;color:rgba(255,255,255,.55)}
 @media(max-width:700px){.socialFeed{grid-template-columns:1fr;max-height:68vh}.socialPost{min-height:270px}.socialPostMedia{height:180px}}
 
+
+/* Sareak YouTube top */
+.youtubeTopSection{margin-top:32px}.youtubeTopHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.youtubeTopHead h3{font-size:clamp(20px,3vw,30px);margin:0}.youtubeTopList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.youtubeTopCard{display:grid;grid-template-columns:38px 120px minmax(0,1fr);gap:12px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:18px;background:rgba(0,32,70,.35);min-height:95px}.youtubeTopCard img{width:120px;aspect-ratio:16/9;object-fit:cover;border-radius:9px}.youtubeTopRank{font-size:23px;font-weight:950;color:#ff8d85;text-align:center}.youtubeTopInfo{min-width:0}.youtubeTopInfo strong{display:block;font-size:13px;line-height:1.25;margin-bottom:8px}.youtubeTopInfo small{color:rgba(255,255,255,.6)}.youtubeTopStatus{color:rgba(255,255,255,.7);font-size:12px;margin:10px 0}@media(max-width:850px){.youtubeTopList{grid-template-columns:1fr}}@media(max-width:470px){.youtubeTopCard{grid-template-columns:28px 90px minmax(0,1fr);gap:7px}.youtubeTopCard img{width:90px}.youtubeTopRank{font-size:17px}}
 </style>
 </head>
 <body>
@@ -581,7 +584,7 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     <a class="brand" href="#hasiera" aria-label="ZEITB GARENA"><span class="eitbWord">ZEITB</span><i class="brandDivider"></i><span class="garenaWord">GARENA</span></a>
     <div class="topQuick">
       <button class="tikButton" id="tikButton" type="button">Scroll tik tak</button>
-      <a class="tikButton sareakButton" id="sareakButton" href="#sareak" data-eu="Sareak" data-es="Redes">Sareak</a>
+
       <a class="tikButton" id="corporateButton" href="https://www.eitb.eus/" target="_blank" rel="noopener noreferrer" data-eu="Korporatiboa ↗" data-es="Corporativa ↗">Korporatiboa ↗</a>
     </div>
     <div class="navlinks">
@@ -706,6 +709,12 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     <div class="socialFeedLoading" data-eu="Postak kargatzen…" data-es="Cargando posts…">Postak kargatzen…</div>
   </div>
   <div class="socialScrollHint" data-eu="POST GEHIAGO ↓" data-es="MÁS POSTS ↓">POST GEHIAGO ↓</div>
+  <div class="youtubeTopSection" id="youtubeTopSection">
+    <div class="youtubeTopHead"><h3 data-eu="YouTube · Ikusienak TOP 50" data-es="YouTube · TOP 50 más vistos">YouTube · Ikusienak TOP 50</h3></div>
+    <p class="youtubeTopStatus" id="youtubeTopStatus" data-eu="YouTubeko benetako ikustaldiak kontsultatzen…" data-es="Consultando visualizaciones reales de YouTube…">YouTubeko benetako ikustaldiak kontsultatzen…</p>
+    <div class="youtubeTopList" id="youtubeTopList"></div>
+  </div>
+
 </section>
 
 </main>
@@ -929,12 +938,31 @@ function coverStyle(x){
 function coverClass(x){return x.image?"":" generatedCover"}
 
 
+
+let youtubeTopItems=[];
+function renderYoutubeTop(){
+  const root=$("#youtubeTopList"),status=$("#youtubeTopStatus");if(!root||!status)return;
+  status.textContent=youtubeTopItems.length
+    ?(lang==="eu"?youtubeTopItems.length+" bideo · YouTubeko ikustaldi errealen arabera":" "+youtubeTopItems.length+" vídeos · por visualizaciones reales de YouTube")
+    :(lang==="eu"?"Une honetan ezin da ikusienenen rankinga egiaztatu.":"No se puede verificar ahora el ranking de más vistos.");
+  root.innerHTML=youtubeTopItems.map(x=>'<a class="youtubeTopCard" href="'+esc(x.url)+'" target="_blank" rel="noopener"><span class="youtubeTopRank">#'+Number(x.rank||0)+'</span><img loading="lazy" src="'+esc(x.image)+'" alt=""><span class="youtubeTopInfo"><strong>'+esc(x.title)+'</strong><small>'+Number(x.views||0).toLocaleString(lang==="eu"?"eu-ES":"es-ES")+' '+(lang==="eu"?"ikustaldi":"visualizaciones")+'</small></span></a>').join("");
+}
+async function loadYoutubeTop(){
+  try{
+    const r=await fetch("https://garena-euskaraz.vercel.app/api/youtube-top",{cache:"no-store"});
+    if(!r.ok)throw Error("youtube");
+    const j=await r.json();
+    youtubeTopItems=Array.isArray(j.items)?j.items.filter(x=>x&&x.url&&Number.isFinite(x.views)).slice(0,50):[];
+  }catch(e){youtubeTopItems=[]}
+  renderYoutubeTop();
+}
+
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderYoutubeTop(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -1565,7 +1593,7 @@ $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("atar
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-applyLang(); loadFeeds(); loadRanking(); loadSocialPosts(); initSocialScroll();
+applyLang(); loadYoutubeTop(); loadFeeds(); loadRanking(); loadSocialPosts(); initSocialScroll();
 setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
 setInterval(()=>{if(!document.hidden)loadSocialPosts()},15*60*1000);
