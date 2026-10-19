@@ -40,37 +40,36 @@ function description(source, type){
   if(type==='stream') return `Ireki zuzenekoa ${source.name}en`;
   return `Ireki edukia ${source.name}en`;
 }
-function parseApi(text, source){
-  const data = JSON.parse(text);
-  if(!Array.isArray(data.children)) throw new Error('Katalogo-formatu ezezaguna');
-  const out=[], seen=new Set();
-  for(const row of data.children){
-    let perRow=0;
-    for(const x of row.children||[]){
-      if(!x || !['media','series','stream'].includes(x.collection) || !x.slug || !x.title) continue;
-      const route = x.collection==='media' ? 'm' : x.collection==='series' ? 's' : 'ch';
-      const url = `${source.origin}/${route}/${encodeURIComponent(x.slug)}`;
-      if(seen.has(url)) continue;
-      if(x.end_date && Date.parse(x.end_date) < Date.now()) continue;
-      const images = Array.isArray(x.images) ? x.images : [];
-      const preferred = images.find(i=>i.format===1&&i.has_text) || images.find(i=>i.format===1) || images.find(i=>i.format===7) || images[0];
-      const image = preferred ? safeImage(preferred.file, source.origin) : null;
-      if(!image && x.collection!=='stream') continue;
-      seen.add(url);
-      out.push({
-        id:`${source.id}-${x.collection}-${x.slug}`,
-        title:clean(x.title), source:source.name, sourceId:source.id,
-        category:x.collection==='stream'?'live':inferCategory(source,row), url, image,
-        description:description(source,x.collection), type:x.collection,
-        synopsis:clean(x.description||'').slice(0,360)
-      });
-      if(++perRow >= 16) break;
-      if(out.length >= 220) break;
-    }
-    if(out.length >= 220) break;
+function parseApi(text,source){
+ const data=JSON.parse(text),out=[],seen=new Set();
+ const queue=[data];let loops=0;
+ while(queue.length&&loops++<7000&&out.length<240){
+  const entry=queue.shift();
+  if(!entry||typeof entry!=="object")continue;
+  if(Array.isArray(entry)){for(const x of entry.slice(0,120))queue.push(x);continue}
+  const x=entry;
+  const title=clean(x.title||x.name||x.heading||"");
+  const slug=x.slug||x.url_slug;
+  const collection=x.collection||x.type;
+  if(title.length>2&&slug&&["media","series","stream"].includes(collection)){
+   const route=collection==="media"?"m":collection==="series"?"s":"ch";
+   const url=source.origin+"/"+route+"/"+encodeURIComponent(slug);
+   if(!seen.has(url)&&(!x.end_date||Date.parse(x.end_date)>=Date.now())){
+    const images=Array.isArray(x.images)?x.images:[];
+    const preferred=images.find(i=>i&&i.format===1&&i.has_text)||images.find(i=>i&&i.format===1)||images[0];
+    const candidates=[preferred&&preferred.file,...images.map(i=>i&&i.file),x.image,x.poster,x.thumbnail,x.cover,x.banner,x.image_url];
+    const image=candidates.map(y=>typeof y==="object"?y?.url||y?.file:y).map(y=>y&&safeImage(y,source.origin)).find(Boolean)||null;
+    seen.add(url);
+    out.push({id:source.id+"-"+collection+"-"+slug,title,source:source.name,sourceId:source.id,
+      category:collection==="stream"?"live":inferCategory(source,x),url,image,
+      description:description(source,collection),type:collection,synopsis:clean(x.description||x.synopsis||"").slice(0,360)});
+   }
   }
-  if(!out.length) throw new Error('Katalogoa hutsik');
-  return out;
+  for(const key of ["children","items","data","results","sections","content","rows","blocks","cards"]){
+   const v=x[key];if(v&&typeof v==="object")queue.push(v);
+  }
+ }
+ return out;
 }
 function imageFrom(fragment, base){
   const patterns=[
@@ -117,29 +116,29 @@ function parseMakusi(html, source){
   if(!out.length)throw new Error('Ez da MAKUSI edukirik aurkitu');
   return out;
 }
-function parseHtml(html, source){
-  const out=[], seen=new Set();
-  const re=/<a\b([^>]*\bhref=["']([^"']+)["'][^>]*)>([\s\S]*?)<\/a>/gi;
-  for(const m of html.matchAll(re)){
-    let url;
-    try{ url=new URL(decode(m[2]),source.origin); }catch{ continue; }
-    if(url.protocol!=='https:' || url.hostname!==new URL(source.origin).hostname) continue;
-    if(!/\/20\d{2}\/\d{2}\/\d{2}\//.test(url.pathname)) continue;
-    if(seen.has(url.href)) continue;
-    const attrs=m[1], body=m[3];
-    let title = attrs.match(/aria-label=["']([^"']+)/i)?.[1] || body.match(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/i)?.[1];
-    title=clean(title).replace(/^Ikusi albistearen xehetasunak:\s*/i,'');
-    if(!title || title.length<6) continue;
-    let img = body.match(/<img[^>]*\bsrc=["']([^"']+)/i)?.[1] || body.match(/data-cmp-src=["']([^"']+)/i)?.[1];
-    img = img ? safeImage(img,source.origin) : null;
-    seen.add(url.href);
-    const dm=url.pathname.match(/\/(20\d{2})\/(\d{2})\/(\d{2})\//);
-    const publishedAt=dm?`${dm[1]}-${dm[2]}-${dm[3]}T12:00:00Z`:null;
-    out.push({id:`${source.id}-${url.pathname}`,title,source:source.name,sourceId:source.id,category:source.base,url:url.href,image:img,description:source.id==='orain'?'Irakurri ORAINen':source.id==='gaztea'?'Ikusi Gaztean':'Irakurri KIROLAK EITBn',type:'article',publishedAt});
-    if(out.length>=40) break;
-  }
-  if(!out.length) throw new Error('Ez da albisterik aurkitu');
-  return out;
+function parseHtml(html,source){
+ const out=[],seen=new Set();
+ const regex=/<a\b([^>]*\bhref=["']([^"']+)["'][^>]*)>([\s\S]*?)<\/a>/gi;
+ for(const m of html.matchAll(regex)){
+  let url;try{url=new URL(decode(m[2]),source.origin)}catch{continue}
+  if(url.protocol!=="https:"||url.hostname!==new URL(source.origin).hostname||seen.has(url.href))continue;
+  if(!/\/20\d{2}\/\d{2}\/\d{2}\//.test(url.pathname))continue;
+  const attrs=m[1],body=m[3];
+  let title=clean(attrs.match(/aria-label=["']([^"']+)/i)?.[1]||
+    body.match(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/i)?.[1]||
+    body.match(/<img[^>]+alt=["']([^"']+)/i)?.[1]||body);
+  title=title.replace(/^Ikusi albistearen xehetasunak:\s*/i,"").slice(0,210);
+  if(title.length<12)continue;
+  const around=html.slice(Math.max(0,(m.index||0)-250),Math.min(html.length,(m.index||0)+m[0].length+400));
+  const image=imageFrom(body,source.origin)||imageFrom(around,source.origin)||null;
+  seen.add(url.href);
+  const dm=url.pathname.match(/\/(20\d{2})\/(\d{2})\/(\d{2})\//);
+  const publishedAt=dm?dm[1]+"-"+dm[2]+"-"+dm[3]+"T12:00:00Z":null;
+  out.push({id:source.id+"-"+url.pathname,title,source:source.name,sourceId:source.id,category:source.base,
+    url:url.href,image,description:source.id==="orain"?"Irakurri ORAINen":"Ireki albistea",type:"article",publishedAt});
+  if(out.length>=70)break;
+ }
+ return out;
 }
 async function readSource(source, request){
   const origin=new URL(request.url).origin;
