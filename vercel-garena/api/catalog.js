@@ -117,7 +117,7 @@ function parseHtml(html,source){
  for(const m of html.matchAll(regex)){
   let url;try{url=new URL(decode(m[2]),source.origin)}catch{continue}
   if(url.protocol!=="https:"||url.hostname!==new URL(source.origin).hostname||seen.has(url.href))continue;
-  if(!/\/20\d{2}\/\d{2}\/\d{2}\//.test(url.pathname))continue;
+  if(!(/\/20\d{2}\/\d{2}\/\d{2}\//.test(url.pathname)||/\/detalle\/\d+\//.test(url.pathname)||/\/albisteak?\//.test(url.pathname)||/\/noticias?\//.test(url.pathname)))continue;
   const attrs=m[1],body=m[3];
   let title=clean(attrs.match(/aria-label=["']([^"']+)/i)?.[1]||
     body.match(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/i)?.[1]||
@@ -135,6 +135,22 @@ function parseHtml(html,source){
  }
  return out;
 }
+async function enrichNewsImages(items){
+ const target=items.filter(x=>x.category==="news"&&!x.image).slice(0,10);
+ await Promise.all(target.map(async x=>{
+  try{
+   const signal=AbortSignal.timeout(3500);
+   const r=await fetch(x.url,{signal,headers:{accept:"text/html"}});
+   if(!r.ok)return;
+   const html=(await r.text()).slice(0,150000);
+   const m=html.match(/<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image)["'][^>]+content=["']([^"']+)["']/i)
+    ||html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["'](?:og:image|twitter:image)["']/i);
+   const img=m&&safeImage(m[1],x.url);
+   if(img)x.image=img;
+  }catch(e){}
+ }));
+ return items;
+}
 async function readSource(source){
   try{
     const r=await fetch(source.url,{
@@ -148,6 +164,7 @@ async function readSource(source){
     if(!r.ok)throw new Error('HTTP '+r.status);
     const text=await r.text();
     const items=source.kind==='api'?parseApi(text,source):source.kind==='makusi'?parseMakusi(text,source):parseHtml(text,source);
+    if(source.id==='orain')await enrichNewsImages(items);
     return {id:source.id,name:source.name,items,fetchedAt:new Date().toISOString(),status:'ok'};
   }catch(e){
     return {id:source.id,name:source.name,items:[],fetchedAt:null,status:'unavailable'};
