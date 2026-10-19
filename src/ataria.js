@@ -4,8 +4,9 @@ const SOURCES = [
   { id:'primeran-docs', name:'PRIMERAN · Dokumentalak', url:'https://primeran.eus/api/v1/pages/dokumentalak-p', origin:'https://primeran.eus', kind:'api', base:'docs' },
   { id:'etbon', name:'ETB ON', url:'https://etbon.eus/api/v1/home', origin:'https://etbon.eus', kind:'api', base:'entertainment' },
   { id:'guau', name:'GUAU', url:'https://guau.eus/api/v1/home', origin:'https://guau.eus', kind:'api', base:'audio' },
-  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/', origin:'https://orain.eus', kind:'html', base:'news', ttl:60 },
-  { id:'kirolak', name:'KIROLAK EITB', url:'https://kirolakeitb.eus/eu/', origin:'https://kirolakeitb.eus', kind:'html', base:'sports' },
+  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/azken-berriak/', origin:'https://orain.eus', kind:'html', base:'news', ttl:60 },
+
+  { id:'eitb-news', name:'EITB Albisteak', url:'https://www.eitb.eus/eu/albisteak/', origin:'https://www.eitb.eus', kind:'html', base:'news', ttl:120 },  { id:'kirolak', name:'KIROLAK EITB', url:'https://kirolakeitb.eus/eu/', origin:'https://kirolakeitb.eus', kind:'html', base:'sports' },
   { id:'makusi', name:'MAKUSI', url:'https://makusi.eus/', origin:'https://makusi.eus', kind:'makusi', base:'kids' },
   { id:'gaztea', name:'Gaztea', url:'https://www.gaztea.eus/', origin:'https://www.gaztea.eus', kind:'html', base:'audio' },
 ];
@@ -15,13 +16,15 @@ const decode = (s='') => String(s)
   .replace(/&quot;/g,'"').replace(/&apos;|&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ');
 const clean = s => decode(String(s||'').replace(/<[^>]*>/g,' ')).replace(/\s+/g,' ').trim();
 
-function safeImage(value, base){
-  try {
-    const u = new URL(decode(value), base);
-    if(u.protocol !== 'https:') return null;
-    const allowed = ['cdnstorage.primeran.eus','eitb.scene7.com','s7g10.scene7.com','orain.eus','kirolakeitb.eus','www.eitb.eus','eitb.eus','makusi.eus','www.makusi.eus','gaztea.eus','www.gaztea.eus'];
-    return allowed.some(h=>u.hostname===h || u.hostname.endsWith('.'+h)) ? u.href : null;
-  } catch { return null; }
+function safeImage(value,base){
+ try{
+  if(!value||typeof value!=="string")return null;
+  const u=new URL(decode(value),base);
+  if(u.protocol!=="https:"||!u.hostname||u.hostname==="localhost"||u.hostname.endsWith(".local"))return null;
+  if(/^(?:127\.|10\.|0\.|192\.168\.|169\.254\.)/.test(u.hostname))return null;
+  if(/\.(?:svg|ico)(?:$|\?)/i.test(u.pathname))return null;
+  return u.href;
+ }catch{return null}
 }
 function inferCategory(source,row={}){
   if(source.id==='primeran-docs') return 'docs';
@@ -163,12 +166,12 @@ async function readSource(source, request){
   const origin=new URL(request.url).origin;
   const ttl=Number(source.ttl||TTL);
   const cache=caches.default;
-  const key=new Request(`${origin}/garena/__cache/${source.id}`);
+  const key=new Request(`${origin}/garena/__cache/v5/${source.id}`);
   const hit=await cache.match(key);
   if(hit){
     const cached=await hit.json();
     const age=Date.now()-Date.parse(cached.fetchedAt||0);
-    if(age < ttl*1000 && !(source.id==='orain' && !(cached.items||[]).some(i=>i.image))) return {...cached,status:'cache'};
+    if(age < ttl*1000 && Array.isArray(cached.items) && cached.items.length) return {...cached,status:'cache'};
   }
   try{
     const res=await fetch(source.url,{headers:{accept:source.kind==='api'?'application/json':'text/html','user-agent':'GARENA/1.0 (+EITB public directory)'},cf:{cacheTtl:ttl,cacheEverything:true}});
@@ -176,6 +179,7 @@ async function readSource(source, request){
     const text=await res.text();
     const items=source.kind==='api'?parseApi(text,source):source.kind==='makusi'?parseMakusi(text,source):parseHtml(text,source);
     if(source.id==='orain')await enrichNewsImages(items);
+    if(!items.length)throw new Error('empty source');
     const fresh={id:source.id,name:source.name,items,fetchedAt:new Date().toISOString(),status:'eguneratuta'};
     await cache.put(key,Response.json(fresh,{headers:{'cache-control':'public,max-age=604800'}}));
     return fresh;
