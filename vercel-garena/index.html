@@ -581,45 +581,64 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 .sareakAccess strong{display:block;font-size:16px}.sareakAccess small{display:block;opacity:.8;margin-top:4px}
 .officialSocialLinks{padding-top:22px}.officialSocialLinks h3{margin:8px 0 12px;font-size:20px}.officialSocialGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.officialSocialGrid a{padding:13px 15px;border:1px solid rgba(255,255,255,.21);background:rgba(13,87,151,.34);border-radius:15px;font-weight:800;font-size:12px;display:flex;align-items:center;min-height:48px}
 
-/* GARENA cinematic premium navigation */
-.heroSections{gap:13px!important}
+
+/* Original GARENA category palette with tactile embossed buttons */
 .heroSectionBtn{
-  min-height:83px!important;padding:16px 19px!important;
-  display:flex!important;align-items:center!important;gap:13px!important;
   border-radius:17px!important;
-  border:1px solid rgba(217,231,255,.17)!important;
-  background:linear-gradient(112deg,rgba(24,39,68,.96),rgba(7,18,41,.96))!important;
-  box-shadow:0 12px 28px rgba(0,9,32,.26),inset 0 1px rgba(255,255,255,.045)!important;
-  position:relative;overflow:hidden;isolation:isolate;
-  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease!important
+  min-height:72px!important;
+  padding:12px 16px!important;
+  border:1px solid rgba(255,255,255,.33)!important;
+  box-shadow:inset 0 2px 1px rgba(255,255,255,.25),
+    inset 0 -5px 10px rgba(0,0,0,.12),
+    0 7px 0 rgba(3,25,70,.25),
+    0 15px 24px rgba(0,17,64,.3)!important;
+  display:flex!important;align-items:center!important;gap:13px!important;
+  isolation:isolate;
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease!important;
 }
-.heroSectionBtn:before{content:"";position:absolute;inset:0;width:4px!important;
-  background:var(--category-accent,#61a4f5)!important;opacity:.9!important;
-  transform:none!important;pointer-events:none}
-.heroSectionBtn:after{content:"↗";position:absolute;right:17px;top:50%;transform:translateY(-50%);
-  font-size:19px;color:rgba(220,236,255,.63);font-weight:400}
-.heroSectionBtn:hover,.heroSectionBtn:focus-visible{
-  transform:translateY(-3px)!important;
-  border-color:rgba(209,228,255,.49)!important;
-  box-shadow:0 18px 38px rgba(0,10,35,.36),inset 0 1px rgba(255,255,255,.09)!important
+.heroSectionBtn:before{
+  content:"";position:absolute;inset:0;width:auto!important;
+  transform:none!important;opacity:1!important;
+  background:linear-gradient(180deg,rgba(255,255,255,.19),transparent 50%,rgba(0,0,0,.08))!important;
+  pointer-events:none
 }
-.heroSectionBtn:focus-visible{outline:2px solid #fff;outline-offset:3px}
-.heroSectionBtn .heroIcon{flex:0 0 42px;width:42px!important;height:42px!important;
-  background:rgba(255,255,255,.065)!important;border:1px solid rgba(255,255,255,.10)!important;
-  border-radius:12px!important;box-shadow:none!important;display:grid!important;place-items:center!important}
-.heroSectionBtn .heroIcon svg{width:22px!important;height:22px!important;stroke-width:1.7!important}
-.heroSectionBtn .heroLabel{font-size:15px!important;font-weight:750!important;letter-spacing:-.015em!important;
-  line-height:1.2!important;color:#f5f8ff!important;padding-right:16px!important}
-.heroSectionBtn.news{--category-accent:#d96c63}
-.heroSectionBtn.live{--category-accent:#4a95de}
-.heroSectionBtn.sports{--category-accent:#34a38d}
-.heroSectionBtn.movies{--category-accent:#9878d9}
-.heroSectionBtn.series{--category-accent:#628fe3}
-.heroSectionBtn.shows{--category-accent:#bd7fae}
-.heroSectionBtn.docs{--category-accent:#7c91b3}
-.heroSectionBtn.audio{--category-accent:#d6ab60}
-.heroSectionBtn.kids{--category-accent:#57aac4}
-@media(max-width:700px){.heroSections{gap:9px!important}.heroSectionBtn{min-height:69px!important;padding:12px!important}.heroSectionBtn .heroIcon{width:36px!important;height:36px!important;flex-basis:36px!important}.heroSectionBtn .heroLabel{font-size:13px!important}.heroSectionBtn:after{right:10px;font-size:15px}}
+.heroSectionBtn:after{
+  content:"›";position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  font-size:24px;color:#fff;font-weight:800;opacity:.84
+}
+.heroSectionBtn:hover{
+  transform:translateY(-2px)!important;filter:brightness(1.09)!important;
+  box-shadow:inset 0 2px 1px rgba(255,255,255,.3),
+    inset 0 -4px 9px rgba(0,0,0,.12),0 9px 0 rgba(3,25,70,.26),
+    0 20px 30px rgba(0,17,64,.36)!important
+}
+.heroSectionBtn:active{
+  transform:translateY(5px)!important;
+  box-shadow:inset 0 3px 7px rgba(0,0,0,.2),
+    inset 0 1px 1px rgba(255,255,255,.17),
+    0 2px 0 rgba(3,25,70,.28),0 5px 10px rgba(0,17,64,.2)!important
+}
+.heroSectionBtn .heroIcon{
+  width:43px!important;height:43px!important;flex:0 0 43px!important;
+  border-radius:13px!important;background:rgba(4,25,70,.16)!important;
+  border:1px solid rgba(255,255,255,.15)!important;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.12),0 1px rgba(255,255,255,.13)!important
+}
+.heroSectionBtn .heroIcon svg{width:23px!important;height:23px!important;stroke-width:1.9!important}
+.heroSectionBtn .heroLabel{font-size:14px!important;font-weight:850!important;color:#fff!important;letter-spacing:0!important}
+.heroSectionBtn.news{background:linear-gradient(145deg,#ff7958,#cf3f28)!important}
+.heroSectionBtn.live{background:linear-gradient(145deg,#18a9ff,#0870c8)!important}
+.heroSectionBtn.sports{background:linear-gradient(145deg,#21c985,#08784d)!important}
+.heroSectionBtn.movies{background:linear-gradient(145deg,#8065ff,#4930bd)!important}
+.heroSectionBtn.series{background:linear-gradient(145deg,#297bff,#1b4fd1)!important}
+.heroSectionBtn.shows{background:linear-gradient(145deg,#e63dbd,#a92391)!important}
+.heroSectionBtn.docs{background:linear-gradient(145deg,#a46bfa,#6936c5)!important}
+.heroSectionBtn.audio{background:linear-gradient(145deg,#edd425,#b39405)!important}
+.heroSectionBtn.kids{background:linear-gradient(145deg,#24cafa,#0789d6)!important}
+@media(max-width:700px){
+  .heroSectionBtn{min-height:67px!important;padding:11px 13px!important}
+  .heroSectionBtn .heroIcon{width:38px!important;height:38px!important;flex-basis:38px!important}
+}
 @media(prefers-reduced-motion:reduce){.heroSectionBtn{transition:none!important}}
 
 </style>
