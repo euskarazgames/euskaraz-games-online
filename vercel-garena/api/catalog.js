@@ -3,8 +3,9 @@ const SOURCES = [
   { id:'primeran-docs', name:'PRIMERAN · Dokumentalak', url:'https://primeran.eus/api/v1/pages/dokumentalak-p', origin:'https://primeran.eus', kind:'api', base:'docs' },
   { id:'etbon', name:'ETB ON', url:'https://etbon.eus/api/v1/home', origin:'https://etbon.eus', kind:'api', base:'entertainment' },
   { id:'guau', name:'GUAU', url:'https://guau.eus/api/v1/home', origin:'https://guau.eus', kind:'api', base:'audio' },
-  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/', origin:'https://orain.eus', kind:'html', base:'news' },
-  { id:'kirolak', name:'KIROLAK EITB', url:'https://kirolakeitb.eus/eu/', origin:'https://kirolakeitb.eus', kind:'html', base:'sports' },
+  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/azken-berriak/', origin:'https://orain.eus', kind:'html', base:'news' },
+
+  { id:'eitb-news', name:'EITB Albisteak', url:'https://www.eitb.eus/eu/albisteak/', origin:'https://www.eitb.eus', kind:'html', base:'news', ttl:120 },  { id:'kirolak', name:'KIROLAK EITB', url:'https://kirolakeitb.eus/eu/', origin:'https://kirolakeitb.eus', kind:'html', base:'sports' },
   { id:'makusi', name:'MAKUSI', url:'https://makusi.eus/', origin:'https://makusi.eus', kind:'makusi', base:'kids' },
   { id:'gaztea', name:'Gaztea', url:'https://www.gaztea.eus/', origin:'https://www.gaztea.eus', kind:'html', base:'audio' }
 ];
@@ -15,12 +16,14 @@ const decode=(s='')=>String(s)
 const clean=s=>decode(String(s||'').replace(/<[^>]*>/g,' ')).replace(/\s+/g,' ').trim();
 
 function safeImage(value,base){
-  try{
-    const u=new URL(decode(value),base);
-    if(u.protocol!=='https:')return null;
-    const allowed=['cdnstorage.primeran.eus','eitb.scene7.com','s7g10.scene7.com','orain.eus','kirolakeitb.eus','www.eitb.eus','eitb.eus','makusi.eus','www.makusi.eus','gaztea.eus','www.gaztea.eus'];
-    return allowed.some(h=>u.hostname===h||u.hostname.endsWith('.'+h))?u.href:null;
-  }catch{return null}
+ try{
+  if(!value||typeof value!=="string")return null;
+  const u=new URL(decode(value),base);
+  if(u.protocol!=="https:"||!u.hostname||u.hostname==="localhost"||u.hostname.endsWith(".local"))return null;
+  if(/^(?:127\.|10\.|0\.|192\.168\.|169\.254\.)/.test(u.hostname))return null;
+  if(/\.(?:svg|ico)(?:$|\?)/i.test(u.pathname))return null;
+  return u.href;
+ }catch{return null}
 }
 function inferCategory(source,row={}){
   if(source.id==='primeran-docs')return 'docs';
@@ -164,7 +167,8 @@ async function readSource(source){
     if(!r.ok)throw new Error('HTTP '+r.status);
     const text=await r.text();
     const items=source.kind==='api'?parseApi(text,source):source.kind==='makusi'?parseMakusi(text,source):parseHtml(text,source);
-    if(source.id==='orain')await enrichNewsImages(items);
+    if(source.id==='orain'||source.id==='eitb-news')await enrichNewsImages(items);
+    if(!items.length)throw new Error('empty source');
     return {id:source.id,name:source.name,items,fetchedAt:new Date().toISOString(),status:'ok'};
   }catch(e){
     return {id:source.id,name:source.name,items:[],fetchedAt:null,status:'unavailable'};
@@ -187,7 +191,7 @@ module.exports=async function handler(req,res){
   const body={items:merge(parts),sources:parts.map(p=>({id:p.id,name:p.name,fetchedAt:p.fetchedAt,status:p.status,count:p.items.length})),checkedAt:new Date().toISOString(),contentRefreshMinutes:15};
   res.statusCode=200;
   res.setHeader('Content-Type','application/json; charset=utf-8');
-  res.setHeader('Cache-Control','public, s-maxage=900, stale-while-revalidate=300');
+  res.setHeader('Cache-Control','public, s-maxage=120, stale-while-revalidate=300');
   if(req.method==='HEAD')return res.end();
   res.end(JSON.stringify(body));
 };
