@@ -580,6 +580,48 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 .sareakAccess{display:flex;min-height:90px;margin-top:12px;justify-content:space-between;gap:14px;align-items:center;text-decoration:none}
 .sareakAccess strong{display:block;font-size:16px}.sareakAccess small{display:block;opacity:.8;margin-top:4px}
 .officialSocialLinks{padding-top:22px}.officialSocialLinks h3{margin:8px 0 12px;font-size:20px}.officialSocialGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.officialSocialGrid a{padding:13px 15px;border:1px solid rgba(255,255,255,.21);background:rgba(13,87,151,.34);border-radius:15px;font-weight:800;font-size:12px;display:flex;align-items:center;min-height:48px}
+
+/* GARENA cinematic premium navigation */
+.heroSections{gap:13px!important}
+.heroSectionBtn{
+  min-height:83px!important;padding:16px 19px!important;
+  display:flex!important;align-items:center!important;gap:13px!important;
+  border-radius:17px!important;
+  border:1px solid rgba(217,231,255,.17)!important;
+  background:linear-gradient(112deg,rgba(24,39,68,.96),rgba(7,18,41,.96))!important;
+  box-shadow:0 12px 28px rgba(0,9,32,.26),inset 0 1px rgba(255,255,255,.045)!important;
+  position:relative;overflow:hidden;isolation:isolate;
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease!important
+}
+.heroSectionBtn:before{content:"";position:absolute;inset:0;width:4px!important;
+  background:var(--category-accent,#61a4f5)!important;opacity:.9!important;
+  transform:none!important;pointer-events:none}
+.heroSectionBtn:after{content:"↗";position:absolute;right:17px;top:50%;transform:translateY(-50%);
+  font-size:19px;color:rgba(220,236,255,.63);font-weight:400}
+.heroSectionBtn:hover,.heroSectionBtn:focus-visible{
+  transform:translateY(-3px)!important;
+  border-color:rgba(209,228,255,.49)!important;
+  box-shadow:0 18px 38px rgba(0,10,35,.36),inset 0 1px rgba(255,255,255,.09)!important
+}
+.heroSectionBtn:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.heroSectionBtn .heroIcon{flex:0 0 42px;width:42px!important;height:42px!important;
+  background:rgba(255,255,255,.065)!important;border:1px solid rgba(255,255,255,.10)!important;
+  border-radius:12px!important;box-shadow:none!important;display:grid!important;place-items:center!important}
+.heroSectionBtn .heroIcon svg{width:22px!important;height:22px!important;stroke-width:1.7!important}
+.heroSectionBtn .heroLabel{font-size:15px!important;font-weight:750!important;letter-spacing:-.015em!important;
+  line-height:1.2!important;color:#f5f8ff!important;padding-right:16px!important}
+.heroSectionBtn.news{--category-accent:#d96c63}
+.heroSectionBtn.live{--category-accent:#4a95de}
+.heroSectionBtn.sports{--category-accent:#34a38d}
+.heroSectionBtn.movies{--category-accent:#9878d9}
+.heroSectionBtn.series{--category-accent:#628fe3}
+.heroSectionBtn.shows{--category-accent:#bd7fae}
+.heroSectionBtn.docs{--category-accent:#7c91b3}
+.heroSectionBtn.audio{--category-accent:#d6ab60}
+.heroSectionBtn.kids{--category-accent:#57aac4}
+@media(max-width:700px){.heroSections{gap:9px!important}.heroSectionBtn{min-height:69px!important;padding:12px!important}.heroSectionBtn .heroIcon{width:36px!important;height:36px!important;flex-basis:36px!important}.heroSectionBtn .heroLabel{font-size:13px!important}.heroSectionBtn:after{right:10px;font-size:15px}}
+@media(prefers-reduced-motion:reduce){.heroSectionBtn{transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -716,11 +758,7 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     <div class="socialFeedLoading" data-eu="Postak kargatzen…" data-es="Cargando posts…">Postak kargatzen…</div>
   </div>
   <div class="socialScrollHint" data-eu="POST GEHIAGO ↓" data-es="MÁS POSTS ↓">POST GEHIAGO ↓</div>
-  <div class="youtubeTopSection" id="youtubeTopSection">
-    <div class="youtubeTopHead"><h3 data-eu="YouTube · Ikusienak TOP 50" data-es="YouTube · TOP 50 más vistos">YouTube · Ikusienak TOP 50</h3></div>
-    <p class="youtubeTopStatus" id="youtubeTopStatus" data-eu="YouTubeko benetako ikustaldiak kontsultatzen…" data-es="Consultando visualizaciones reales de YouTube…">YouTubeko benetako ikustaldiak kontsultatzen…</p>
-    <div class="youtubeTopList" id="youtubeTopList"></div>
-  </div>
+  
 
 <div class="officialSocialLinks"><h3 data-eu="EITBren sare ofizialak" data-es="Redes oficiales de EITB">EITBren sare ofizialak</h3><div class="officialSocialGrid"><a href="https://www.instagram.com/eitb/" target="_blank" rel="noopener noreferrer">EITB · Instagram ↗</a><a href="https://www.instagram.com/etb_zuzenekoak/" target="_blank" rel="noopener noreferrer">ETBko Zuzenekoak · Instagram ↗</a><a href="https://www.tiktok.com/@etb_zuzenekoak" target="_blank" rel="noopener noreferrer">ETBko Zuzenekoak · TikTok ↗</a><a href="https://www.youtube.com/@eitb" target="_blank" rel="noopener noreferrer">EITB · YouTube ↗</a><a href="https://x.com/eitb" target="_blank" rel="noopener noreferrer">EITB · X ↗</a><a href="https://x.com/eitbalbisteak" target="_blank" rel="noopener noreferrer">EITB Albisteak · X ↗</a><a href="https://x.com/eitbkirolak" target="_blank" rel="noopener noreferrer">EITB Kirolak · X ↗</a><a href="https://x.com/gaztea" target="_blank" rel="noopener noreferrer">Gaztea · X ↗</a></div></div></section>
 
@@ -961,15 +999,14 @@ async function loadYoutubeTop(){
     const j=await r.json();
     youtubeTopItems=Array.isArray(j.items)?j.items.filter(x=>x&&x.url&&Number.isFinite(x.views)).slice(0,50):[];
   }catch(e){youtubeTopItems=[]}
-  renderYoutubeTop();
-}
+  }
 
 function applyLang(){
   document.documentElement.lang=lang;
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderYoutubeTop(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -1601,7 +1638,7 @@ $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("atar
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-applyLang(); loadYoutubeTop(); loadFeeds(); loadRanking(); loadSocialPosts(); initSocialScroll();
+applyLang(); loadFeeds(); loadRanking(); loadSocialPosts(); initSocialScroll();
 setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
 setInterval(()=>{if(!document.hidden)loadSocialPosts()},15*60*1000);
