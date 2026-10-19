@@ -71,17 +71,20 @@ function parseApi(text,source){
  }
  return out;
 }
-function imageFrom(fragment, base){
-  const patterns=[
-    /<img[^>]+(?:src|data-src|data-cmp-src)=["']([^"']+)["']/i,
-    /<source[^>]+srcset=["']([^"'\s,]+)/i,
-    /background-image\s*:\s*url\(["']?([^"')]+)["']?\)/i
-  ];
-  for(const re of patterns){
-    const v=fragment.match(re)?.[1];
-    if(v){const img=safeImage(v,base);if(img)return img;}
-  }
-  return null;
+function imageFrom(fragment,base){
+ const attrs=["src","data-src","data-cmp-src","data-original","data-lazy-src","data-image","srcset","data-srcset"];
+ const candidates=[];
+ for(const att of attrs){
+  const rx=new RegExp("(?:^|\\s)"+att+"\\s*=\\s*[\\\"']([^\\\"']+)[\\\"']","gi");
+  for(const m of String(fragment||"").matchAll(rx))candidates.push(m[1].split(/\s*,\s*/)[0].split(/\s+/)[0]);
+ }
+ const style=String(fragment||"").match(/background-image\s*:\s*url\(["']?([^"')]+)["']?\)/i);
+ if(style)candidates.push(style[1]);
+ for(const v of candidates){
+  const image=safeImage(v,base);
+  if(image)return image;
+ }
+ return null;
 }
 function titleFromSlug(path){
   const slug=decodeURIComponent(path.split('/').filter(Boolean).pop()||'');
