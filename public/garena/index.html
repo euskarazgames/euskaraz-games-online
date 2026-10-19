@@ -639,6 +639,41 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 }
 @media(prefers-reduced-motion:reduce){.heroSectionBtn{transition:none!important}}
 
+
+/* Mobile-first symmetric 3x3 grid, keep raised colored buttons */
+.heroSections{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:12px!important;max-width:980px!important;width:100%!important;
+ margin:24px auto 0!important;align-items:stretch!important;
+}
+.heroSections .heroSectionBtn{
+ display:flex!important;flex-direction:column!important;justify-content:center!important;
+ align-items:center!important;text-align:center!important;gap:12px!important;
+ width:100%!important;min-width:0!important;min-height:130px!important;
+ padding:18px 8px!important;border-radius:21px!important;
+}
+.heroSections .heroSectionBtn .heroIcon{
+ display:grid!important;place-items:center!important;margin:0!important;
+ width:50px!important;height:50px!important;flex:0 0 50px!important;
+}
+.heroSections .heroSectionBtn .heroLabel{
+ display:block!important;width:100%!important;min-width:0!important;
+ padding:0!important;margin:0!important;text-align:center!important;
+ white-space:normal!important;overflow-wrap:break-word!important;
+ font-size:clamp(11px,1.45vw,15px)!important;line-height:1.2!important;
+}
+.heroSections .heroSectionBtn:after{display:none!important}
+@media(max-width:740px){
+ .heroSections{gap:10px!important}
+ .heroSections .heroSectionBtn{min-height:118px!important;padding:12px 4px!important;gap:10px!important}
+ .heroSections .heroSectionBtn .heroIcon{width:42px!important;height:42px!important;flex-basis:42px!important}
+ .heroSections .heroSectionBtn .heroLabel{font-size:clamp(10px,2.9vw,14px)!important;letter-spacing:-.025em!important}
+}
+@media(max-width:365px){
+ .heroSections{gap:7px!important}
+ .heroSections .heroSectionBtn{min-height:108px!important;padding:9px 3px!important;border-radius:16px!important}
+ .heroSections .heroSectionBtn .heroLabel{font-size:10px!important}
+}
 </style>
 </head>
 <body>
