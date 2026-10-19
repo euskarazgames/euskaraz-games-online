@@ -1035,7 +1035,12 @@ function shelfItems(def,limit=5){
   return rotatingShelfOrder(list,def.key).slice(0,limit);
 }
 function latestNews(limit=5){
-  return uniqueByUrl(items.filter(x=>x.category==="news")).slice(0,limit);
+  return uniqueByUrl(items.filter(x=>x.category==="news"))
+    .sort((a,b)=>{
+      const at=Date.parse(a.publishedAt||"")||Date.parse(newsDate(a)||"")||0;
+      const bt=Date.parse(b.publishedAt||"")||Date.parse(newsDate(b)||"")||0;
+      return bt-at;
+    }).slice(0,limit);
 }
 function newsDate(x){
   if(x.publishedAt)return String(x.publishedAt).slice(0,10);
@@ -1526,6 +1531,33 @@ function renderCards(){
   });
 }
 function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("show"),1500)}
+
+// Keep the latest working catalog on this device so covers survive temporary API failures.
+const GARENA_CATALOG_CACHE_KEY="garena-last-catalog-v3";
+function restoreGarenaCatalog(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(GARENA_CATALOG_CACHE_KEY)||"null");
+  if(saved&&Array.isArray(saved.items)&&saved.items.length){
+   const seen=new Set();
+   items=[...saved.items,...SEED].filter(x=>{
+    const key=String(x.url||"")+"|"+String(x.title||"");
+    if(!x.url||!x.title||seen.has(key))return false;
+    seen.add(key);return true;
+   });
+   return true;
+  }
+ }catch(e){}
+ return false;
+}
+function cacheGarenaCatalog(current){
+ try{
+  const withImages=current.filter(x=>x&&x.url&&x.title&&x.image).length;
+  if(current.length>=10&&withImages>=3){
+   localStorage.setItem(GARENA_CATALOG_CACHE_KEY,JSON.stringify({at:Date.now(),items:current.slice(0,600)}));
+  }
+ }catch(e){}
+}
+
 async function loadFeeds(){
   if(!CATALOG_FEEDS.length){$("#status").textContent=lang==="eu"?"Tokiko katalogoa":"Catálogo local";return}
   $("#status").textContent=lang==="eu"?"Iturriak kontsultatzen…":"Consultando fuentes…";
@@ -1539,8 +1571,8 @@ async function loadFeeds(){
   }));
   if(merged.length){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
-    items=all; $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
-  }else $("#status").textContent=lang==="eu"?"Tokiko kopia erabilita":"Usando copia local";
+    items=all; cacheGarenaCatalog(merged); $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
+  }else {const restored=restoreGarenaCatalog(); $("#status").textContent=restored?(lang==="eu"?"Azken katalogo erabilgarria":"Último catálogo disponible"):(lang==="eu"?"Tokiko kopia erabilita":"Usando copia local");}
   renderFeatured(); rememberShelfRotation(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderCards();
 }
 document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
@@ -1590,7 +1622,7 @@ $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("atar
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-applyLang(); loadFeeds(); loadRanking();
+restoreGarenaCatalog(); applyLang(); loadFeeds(); loadRanking();
 setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
