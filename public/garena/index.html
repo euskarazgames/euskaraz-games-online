@@ -1135,10 +1135,13 @@ function renderFeatured(){
   const latest=latestNews(5);
   const relevant=relevantNewsToday(3,latest);
   const newsTopCards=relevant.map((x,i)=>featuredCardHtml(x,`TOP ${i+1}`)).join("");
+  const newsFallback=latest.length?"":
+    '<a class="featuredCard" href="https://orain.eus/eu/azken-berriak/" target="_blank" rel="noopener"><div class="bg generatedCover" style="background:linear-gradient(135deg,#126fa7,#052947)"></div><div class="inside"><span class="kind">ORAIN</span><h3>'+(lang==="eu"?"Azken albisteak ireki ↗":"Abrir últimas noticias ↗")+'</h3></div></a>';
+
   const newsHtml=`<div class="featuredShelf newsBlock">
     <div class="shelfHead"><h3>${lang==="eu"?"Albisteak":"Noticias"}</h3></div>
     <div class="newsSubhead"><h4>${lang==="eu"?"Azken 5 albisteak":"Últimas 5 noticias"}</h4></div>
-    <div class="shelfGrid">${latest.map(x=>featuredCardHtml(x,lang==="eu"?"Azkena":"Última hora")).join("")}</div>
+    <div class="shelfGrid">${latest.map(x=>featuredCardHtml(x,lang==="eu"?"Azkena":"Última hora")).join("")}${newsFallback}</div>
     <div class="newsSubhead"><h4>TOP 3</h4></div>
     <div class="shelfGrid three">${newsTopCards}</div>
     ${moreButton("news")}
