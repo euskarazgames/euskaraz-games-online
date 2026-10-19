@@ -178,7 +178,7 @@ async function readSource(source, request){
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const text=await res.text();
     const items=source.kind==='api'?parseApi(text,source):source.kind==='makusi'?parseMakusi(text,source):parseHtml(text,source);
-    if(source.id==='orain')await enrichNewsImages(items);
+    if(source.id==='orain'||source.id==='eitb-news')await enrichNewsImages(items);
     if(!items.length)throw new Error('empty source');
     const fresh={id:source.id,name:source.name,items,fetchedAt:new Date().toISOString(),status:'eguneratuta'};
     await cache.put(key,Response.json(fresh,{headers:{'cache-control':'public,max-age=604800'}}));
