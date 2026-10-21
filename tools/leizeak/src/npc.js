@@ -244,6 +244,7 @@
     if (f("basajaun") && !f("cliff")) return mariCliff();
     if (f("tartalo") && !f("irati-tartalo")) return iratiFinale();
     if (f("errolan") && !f("irati-errolan")) return iratiJentil();
+    if (f("odei") && !f("irati-odei")) return iratiOdei();
     if (f("irati-tartalo") && !f("errolan"))
       return talk(N, [["IRATI", "Harrespilako trikuharria… amonak esaten zuen jentilak haren azpian ezkutatu zirela, zeruan argi bitxi bat ikusi zutenean. Jo ESNATU haren ondoan."]]);
     if (f("lamia") && !f("irati-lamia"))
@@ -257,7 +258,9 @@
         ],
         () => flagSet("irati-lamia"),
       );
-    if (f("irati-errolan")) return talk(N, [["IRATI", "Jentilen zerua… hodeien gainean. Zazpi argietatik hiru gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
+    if (f("irati-odei")) return talk(N, [["IRATI", "Herensugea eta Inguma… Bi argi gorri besterik ez, Amaiur. Atseden hartu: harana zurea da, eta zerua ere bai."]]);
+    if (f("irati-errolan") && !f("ortzadarra")) return talk(N, [["IRATI", "Jentilen zerua… hodeien gainean. Harrespilako jentil zaharrak badaki nola igo: galdetu iezaiozu."]]);
+    if (f("irati-errolan")) return talk(N, [["IRATI", "Ortzadar bat harrespilan! Herri osoa atera da ikustera. Igo, Amaiur: hodeien gainean, trumoia entzuten da."]]);
     if (f("tartalo")) return talk(N, [["IRATI", "Anboto… Mariren etxea. Zazpi argietatik lau gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
     if (f("lamia")) return talk(N, [["IRATI", f("lepoa") ? "Tartaloren koba lepoaren goian dago. Argia eraman, Amaiur." : "Artzainen lepoa: haize-errotari putz egin adarrarekin."]]);
     if (saved.flags.includes("basajaun"))
@@ -389,6 +392,18 @@
           if (!saved.rhythms.includes("entzun")) txalaLearn("entzun", "JENTIL ZAHARRA", go);
           else go();
         },
+      );
+    if (f("odei")) return talk(N, [["JENTIL ZAHARRA", "Euri goxoa… Odei aske dago. Mende askoan ez dut horrelako usainik sentitu. Bi zaindari falta, sorgin txikia."]]);
+    if (f("ortzadarra")) return talk(N, [["JENTIL ZAHARRA", "Ortzadarra… igo, sorgin txikia. Hodeien gainean, gure uharte zaharrak. Iraganean, hodeiak harri bezain trinkoak ziren."]]);
+    if (f("irati-errolan") && saved.rhythms.includes("ortzi")) return talk(N, [["JENTIL ZAHARRA", "Harrespilaren erdian, gure harrien artean: jo ORTZI. Zeruak entzungo zaitu."]]);
+    if (f("irati-errolan"))
+      return talk(
+        N,
+        [
+          ["JENTIL ZAHARRA", "Jentilen zerua… Antzina, gu ere igotzen ginen hara, ortzadarra agertzen zenean, euriaren eta eguzkiaren artean."],
+          ["JENTIL ZAHARRA", "Ortzi, zeru zaharra, gure laguna zen. Haren erritmoa gogoratzen dut oraindik: entzun, eta errepikatu."],
+        ],
+        () => txalaLearn("ortzi", "JENTIL ZAHARRA", () => notify(L("Jo ORTZI harrespilaren erdian: ortzadarra, zerurako bidea."), "", 5)),
       );
     if (f("errolan")) return talk(N, [["JENTIL ZAHARRA", "Errolan aske… Mende askoan lehen aldiz, jentilen hiriak lo egiten du lasai. Eskerrik asko, sorgin txikia."]]);
     if (f("irati-tartalo"))

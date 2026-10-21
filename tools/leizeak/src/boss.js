@@ -230,6 +230,7 @@
     lamiaReset();
     tartaloReset();
     jentilReset();
+    odeiReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;

@@ -1652,6 +1652,9 @@
   /* @include heura.js */
   /* @include tximista.js */
   /* @include jentilak.js */
+  /* @include enara.js */
+  /* @include zerua.js */
+  /* @include odei.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -2051,6 +2054,7 @@
     hero.add(playerLight);
     magicInit();
     heuraInit();
+    wingsBuild();
     orb(0.5, 1, 0, 0.12, "#ffd3a0", hero);
     glow(0, 1, 0, "#f0ca8f", 1.2).userData.player = true;
     fxInit();
@@ -2081,6 +2085,10 @@
     buildJentil();
     buildRunePuzzles("jentil");
     dolmenBuild();
+    /* bosgarrena: JENTILEN ZERUA (eta haraneko ortzadarra) */
+    buildZerua();
+    buildRunePuzzles("zerua");
+    ortzadarBuild();
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -2141,6 +2149,7 @@
   }
   function teleport(x, z, y) {
     climbDrop();
+    glideStop();
     jumpBuffer = 0;
     groundGrace = 0;
     /* lur irregularra: azpiko lurrera (edo gaineko gainazalera, gehienez 2.5 m) itsatsi */
@@ -2183,6 +2192,7 @@
     if (respawnTimer > 0) return;
     ponyDismount(true);
     climbDrop();
+    glideStop();
     hardFall = !!hard;
     respawnTimer = hard ? 0.6 : 0.38;
     P.vx = P.vz = 0;
@@ -2324,6 +2334,8 @@
       FB.jump(P.jumps === 2 || wallKick ? 2 : 1);
       if (P.jumps === 2) coachDone("jump");
     }
+    /* ENARA: jauzi bikoitzaren ondoren JAUZIari eutsi → planeatu */
+    glideCheck();
     if (CHAIN.state === "pull") {
       /* SUGAARREN KATEA: eraztunerantz tiraka (grabitaterik gabe) */
       const v = chainPullVel();
@@ -2354,11 +2366,18 @@
       }
       P.vy -= 25 * dt;
     }
+    if (P.glide && CHAIN.state !== "pull" && P.dashT <= 0) glideVel(dt, d, len);
+    else if (!P.grounded && CHAIN.state !== "pull" && P.dashT <= 0) {
+      /* hegorik gabe, haize-zutabean: erorketa leunagoa */
+      const up = updraftAt(P.x, P.y, P.z);
+      if (up > 0 && P.vy < 0) P.vy = Math.max(P.vy, -6);
+    }
     const px = P.x,
       pz = P.z,
       py = P.y;
-    let nx = P.x + P.vx * dt,
-      nz = P.z + P.vz * dt,
+    /* P.wx / P.wz: kanpoko haizea (Odeiren bolada) */
+    let nx = P.x + (P.vx + (P.wx || 0)) * dt,
+      nz = P.z + (P.vz + (P.wz || 0)) * dt,
       ny = P.y + P.vy * dt;
     /* gelak itxita (borroka) edo zonaren mugak */
     [nx, nz] = roomCollide(px, pz, nx, nz, py);
@@ -2432,6 +2451,7 @@
       }
       P.shiftAir = false;
       P.platform = landing;
+      P.glide = false;
     } else P.platform = null;
     P.x = nx;
     P.z = nz;
@@ -2484,7 +2504,8 @@
                   ? run
                   : "Idle",
     );
-    if (!P.climb) climbTry(d, len);
+    if (!P.climb && !P.glide) climbTry(d, len);
+    glideVisual(dt);
     trackSafe(dt);
     if (P.y < ZONES[ZONE.cur].fallY) fall();
     /* gunea (herria, zelaiak, leizeko gela...): HUDaren izena eta helburuak */
@@ -2586,7 +2607,13 @@
       sun.intensity = mix(1.8, 1.95, phaseBlend);
       ambient.intensity = mix(0.86, 0.95, phaseBlend) * (scene.environment ? 0.55 : 1);
       scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
+      /* zeruan ez dago gaurik (hodeien gainean, eguzkia beti) */
+      if (ZONES[ZONE.cur].sky) {
+        DAY.k = 0;
+        DAY.tw = 0;
+      }
       dayVisuals();
+      if (ZONES[ZONE.cur].sky) skyVisuals();
     } else {
       sun.color.set(phaseBlend > 0.5 ? "#8fa9cc" : "#c08c5c");
       sun.intensity = 0.38;
@@ -2673,7 +2700,9 @@
     const look = new T.Vector3(P.x, P.y + (P.riding ? 1.7 : 1), P.z).add(CAM.look),
       /* Errolan (erraldoia): kamera urrunago eta begirada gorago */
       tall = BOSS.on && BOSS.kind === "errolan",
-      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : 1.25) : 1) * (P.riding ? 1.16 : 1));
+      /* Odei (zeruan): kamera urrunago, begirada gorago; planeatzean ere urrunago */
+      cloud = BOSS.on && BOSS.kind === "odei",
+      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
     lockCamera(dt, look);
     /* etsai nagusia: biak enkoadratu (finkatu gabe ere) */
     CAM.bossK = mix(CAM.bossK || 0, BOSS.on && !LOCK.target ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -2681,6 +2710,10 @@
       const c = BOSS.center();
       look.x = mix(look.x, (look.x + c.x) / 2, 0.55 * CAM.bossK);
       look.z = mix(look.z, (look.z + c.z) / 2, 0.55 * CAM.bossK);
+      if (cloud) {
+        look.y += clamp((ODEI.y - P.y) * 0.3, 0, 4.5) * CAM.bossK;
+        offset.y *= 1 - 0.28 * CAM.bossK;
+      }
       if (tall) {
         /* harkaitza altxatzean: kamera gorago eta urrunago (harria ikusteko) */
         CAM.liftK = mix(CAM.liftK || 0, ERR.state === "lift" || ERR.state === "throw" ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -2833,7 +2866,7 @@
     $("coinLab").textContent = "TXANPONAK";
     $("keyLab").textContent = "GILTZAK";
     $("bombLab").textContent = "TXIMISTA";
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ...(saved.items.includes("tximistarria") ? [["X", "tximistarria"]] : []), ["L", "egunkaria"]]
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ...(saved.items.includes("tximistarria") ? [["X", "tximistarria"]] : []), ...(saved.items.includes("enara") ? [["␣ eutsi", "enara"]] : []), ["L", "egunkaria"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
     if (ready) {
@@ -3092,10 +3125,20 @@
       for (const R of ROOMS) {
         if (R.zone !== ZONE.cur || (!saved.visited.includes(R.id) && ROOM.cur !== R)) continue;
         c.fillStyle = ROOM.cur === R ? "#3d6475" : "#26404b";
-        c.fillRect(xx(R.x - R.w / 2), zz(R.z - R.d / 2), R.w * sc, R.d * sc);
         c.strokeStyle = "#7fb9c4";
-        c.strokeRect(xx(R.x - R.w / 2), zz(R.z - R.d / 2), R.w * sc, R.d * sc);
+        if (R.rx) {
+          /* zeruko uharte biribila */
+          c.beginPath();
+          c.ellipse(xx(R.x), zz(R.z), R.rx * sc, R.rz * sc, 0, 0, TAU);
+          c.fill();
+          c.stroke();
+        } else {
+          c.fillRect(xx(R.x - R.w / 2), zz(R.z - R.d / 2), R.w * sc, R.d * sc);
+          c.strokeRect(xx(R.x - R.w / 2), zz(R.z - R.d / 2), R.w * sc, R.d * sc);
+        }
       }
+      /* haize-zutabe biziak */
+      for (const U of UPDRAFTS) if (U.group === ZONES[ZONE.cur].group && U.k > 0.5) dot(U.x, U.z, 3.5, "#bff6ff");
       for (const D of DOORS) if (!D.open && D.g.parent === ZONES[ZONE.cur].group) dot(D.x, D.z, 3, D.kind === "boss" ? "#ff9d4a" : D.kind === "key" ? "#e8c27a" : "#8a96a0");
       for (const C of CHESTS) if (!C.opened && C.m.visible && C.zoneGroup === ZONES[ZONE.cur].group) dot(C.x, C.z, 3, "#ffe4a2");
     }
@@ -3154,6 +3197,7 @@
       hornUpdate(dt);
       fansUpdate(dt);
       mistsUpdate(dt);
+      updraftsUpdate(dt);
       if (ZONE.cur === "ibarra") {
         hubUpdate(dt);
         npcsUpdate(dt);
@@ -3462,6 +3506,7 @@
         (hasChain() ? L("KATEA: suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.") + "\n\n" : "") +
         (hasHorn() ? L("ADARRA: haize-bolada aurrera — errotak, balsak, lainoa, hostoak.") + "\n\n" : "") +
         (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
+        (hasWings() ? L("ENARA: jauzi bikoitza eta eutsi JAUZIari — planeatu; haize-zutabeek gora eramaten zaituzte.") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",
@@ -3509,6 +3554,20 @@
       window.__game = {
         P,
         saved,
+        GLIDE,
+        UPDRAFTS,
+        updraftAt,
+        DGZ,
+        ZR,
+        Z7,
+        ORZ,
+        ODEI,
+        odeiStart,
+        ortziEffect,
+        glideStop,
+        setJumpHeld: (v) => {
+          jumpHeld = !!v;
+        },
         input,
         get platforms() {
           return platforms;

@@ -92,8 +92,9 @@ ardiak, txalapartarien erronka.
 ## 5. Bide-orria (hurrengo entregak)
 - ✔ 2. leizea: LAMIEN LEIZEA (ura/izotza, HAIZE-ADARRA, Lamia Iluna). ✔ 3. leizea: TARTALOREN KOBA
   (sua eta harria, SUGAR-IZPIA, Tartalo). ✔ 4. leizea: JENTILBARATZA (jentilen hiri lurperatua,
-  TXIMISTARRIA, Errolan). Hurrengoak: Jentilen zerua (Anboto, hodeien gainean) eta, azkenik, Mariren
-  koba (Anboto). Zazpi zaindari guztira: lau askatuta.
+  TXIMISTARRIA, Errolan). ✔ 5. leizea: JENTILEN ZERUA (hodeien gaineko uharteak, ORTZI eta ortzadarra,
+  ENARAREN HEGOAK, Odei). Hurrengoak: Herensugea eta Inguma (zeruko beste bi zaindariak) eta, azkenik,
+  Mariren koba (Anboto). Zazpi zaindari guztira: bost askatuta.
 - Egun/gau zikloa ("gaua gauekoentzat, eguna egunekoentzat"): gauez beste etsai eta gertaera batzuk.
 - Mapa osoa, eskuliburua eta bildumen menua.
 - Iraupena: 6-8 ordu. Bigarren mailako misio gehiago, minijokoak eta amaiera osoa.
@@ -121,6 +122,15 @@ nagusiaren aurka. Ateak, giltzak eta itzulerak gela-zentral baten inguruan (bide
   biltegia (bigarren sutondoa; atarira lasterbidea, alde horretatik bakarrik) → Errolan: harkaitza
   altxatuta duela TXIMISTARRIA oinetara, eskukada aldaratu edo harkaitza itzuli → belauniko → bularreko
   ekaitz-harria. Gelak elkarri lotuta daude: tresna berri bakoitzak lehengo geletara bide laburrak irekitzen ditu.
+- **JENTILEN ZERUA** (ENARAREN HEGOAK): ORTZI erritmoa harrespilan → ortzadarra (oinez igotzen da) →
+  ortzadarraren muturra (sutondoa) → hodei-zubiak (IRAGANEAN trinkoak; garaia airean aldatu; ekialdean
+  laino trinkoa: HAIZE-ADARRA → arnasa-zatia) → zeruko plaza (borroka, giltza, sutondoa) → haize-errota
+  (adarrarekin biratu → igogailua) → giltza txikiko atea → hodei-zaina (zaindaria) → ENARA: plazaren
+  mendebaldeko haize-zutabea (ORAINEAN) → tximista-dorrea (hiru ekaitz-kanpaia, bat orainean; heura
+  iraganean → giltza nagusia) → enaren habia (beste haize-zutabe bat, arnasa-zatia) → zeruko eskailerak
+  eta ekaitz-hesia (ate handia) → Odei: kanpaiak elkarren segidan → hodeia urratu → haize-zuloetan gora
+  planeatuz bihotzera; haize-boladak HAIZE-ADARRAz geldiarazten dira. Uharteak airean daude: erortzean,
+  azken lur segurura (arnasa bat galduta); ekaitz-hesiak planeatuz ere ez du uzten pasatzen.
 - Mitologia: Tartalo ilunpean ikusten duen begi bakarreko artzain erraldoia (argiak itsutzen du),
   lamiak eta urrezko orrazia, Gaueko gauaren espiritua, Mari Anboton. Istorioa eta gelak originalak.
 
@@ -150,6 +160,15 @@ berregin dira:
 - **Gela konektatuak, lasterbideak eta atseden-lekuak** → **SUTONDOAK** (etxeko sutondoa, babesgune) eta
   alde batetik bakarrik irekitzen diren **LASTERBIDEAK**.
 - **Norbera baino askoz handiagoak diren izakiak** → **Errolan**, kondairetako harri-jaurtitzaile jentila.
+
+## 5e. Zeruko leizea: ideia orokorrak (gure eran)
+Mekanika orokorrak bakarrik, euskal sinesmenetatik berreginak:
+- **Planeatzea eta haize-korronteak** → **ENARAREN HEGOAK** eta haize-zutabeak (batzuk Gauekoren ekaitzean,
+  ORAINEAN bakarrik): bi garaien mekanika sinatuari lotuta.
+- **Zerurako zubia** → **ortzadarra** (Ortzi, zeru zaharraren izena: ortzadar, ortzegun…), txalapartaren
+  erritmo batekin harrespilan.
+- **Ekaitz-izaki erraldoia** → **Odei** (trumoiaren hodeia). Herriek ekaitzen aurka kanpaiak jotzen zituzten:
+  hemen, lau ekaitz-kanpaiek hodeia urratzen dute.
 
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da

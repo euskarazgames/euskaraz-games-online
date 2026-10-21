@@ -34,11 +34,22 @@
       }
     /* borroka-gela itxita: ezin da irten */
     const R = ROOM.fight;
-    if (R && py > R.y - 2) {
-      const hw = R.w / 2 - 0.7,
-        hd = R.d / 2 - 0.7;
-      nx = clamp(nx, R.x - hw, R.x + hw);
-      nz = clamp(nz, R.z - hd, R.z + hd);
+    if (R && !R.noClamp && py > R.y - 2) {
+      if (R.rx) {
+        /* uharte biribila: elipsean */
+        const ex = (nx - R.x) / (R.rx - 0.8),
+          ez = (nz - R.z) / (R.rz - 0.8),
+          e = Math.hypot(ex, ez);
+        if (e > 1) {
+          nx = R.x + (nx - R.x) / e;
+          nz = R.z + (nz - R.z) / e;
+        }
+      } else {
+        const hw = R.w / 2 - 0.7,
+          hd = R.d / 2 - 0.7;
+        nx = clamp(nx, R.x - hw, R.x + hw);
+        nz = clamp(nz, R.z - hd, R.z + hd);
+      }
     }
     return [nx, nz];
   }
@@ -406,7 +417,7 @@
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ" };
+  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "giltza" || icon === "giltzanagusia") {
@@ -457,6 +468,21 @@
         bolt.rotation.z = Math.cos(i * 2.1) * 0.6;
         g.add(bolt);
       }
+    } else if (icon === "enara") {
+      /* enararen hegoak (txikiak) */
+      const s = new T.Shape();
+      s.moveTo(0, 0.12);
+      s.bezierCurveTo(0.3, 0.2, 0.6, 0.05, 0.9, -0.34);
+      s.bezierCurveTo(0.6, -0.2, 0.3, -0.18, 0, -0.12);
+      s.closePath();
+      const geo = new T.ShapeGeometry(s);
+      for (const sx of [1, -1]) {
+        const w = new T.Mesh(geo, new T.MeshStandardMaterial({ color: "#2a3a66", emissive: new T.Color("#3a5aa8"), emissiveIntensity: 0.6, side: T.DoubleSide }));
+        w.scale.x = sx;
+        g.add(w);
+      }
+      const b = new T.Mesh(new T.SphereGeometry(0.11, 8, 6), material("#efe7d6", 0.3));
+      g.add(b);
     } else if (icon === "sugarra") {
       const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));
       rod.rotation.z = 0.4;

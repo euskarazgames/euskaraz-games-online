@@ -109,8 +109,20 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   heuraz igo eta goitik lau kanpaia (bat harri arrakalatu baten barruan). Etsai nagusia, **Errolan**,
   jentil erraldoia: harkaitza altxatzen duenean TXIMISTARRIA oinetara (harria buruan erortzen zaio),
   eskukada ALDARATU, harkaitzak EZKUTUAz itzuli → belauniko, bularreko ekaitz-harria agerian.
+- **JENTILEN ZERUA**, bosgarren leizea: jentil zaharrak **ORTZI** erritmoa irakasten du (◀ ▶ ▶ ◀ ▶);
+  harrespilan jotzean **ortzadarra** jaiotzen da, eta haren gainean oinez igotzen da hodeien gainera.
+  Hodei-itsasoaren gaineko uharte zaharrak: hodei-harriak (IRAGANEAN trinkoak; garaia airean aldatu),
+  laino trinkoa (HAIZE-ADARRA → bide ezkutua), zeruko plaza (borroka, giltza, sutondoa), jentilen
+  haize-errota (adarrarekin biratu → harrizko igogailua), hodei-zaina (zaindaria) eta tresna berria:
+  **ENARAREN HEGOAK** (jauzi bikoitza eta eutsi: planeatu; **haize-zutabeek** gora eramaten dute,
+  batzuk ORAINEAN bakarrik). Tximista-dorrean hiru ekaitz-kanpaia eta heura (giltza nagusia), enaren
+  habia (ezkutuko uhartetxoa) eta **ekaitz-hesia**. Etsai nagusia, **Odei**, trumoiaren hodeia:
+  tximistak, kazkabarra eta haize-boladak (HAIZE-ADARRAz geldiarazi); herriek ekaitzen aurka kanpaiak
+  jotzen zituzten bezala, lau ekaitz-kanpaiak elkarren segidan → hodeia urratu, bihotza goian agerian →
+  haize-zuloetatik gora planeatuz, SORGINKERIA. Hiru txanda, kanpaiak gero eta garai gehiagotan banatuta.
 - Istorioa: hiru zaindari askatu ondoren, Irati eta azken eszena (zazpi argi Anboto gainean:
-  hiru berde, lau gorri); Errolan askatu ondoren, laugarren argia berde bihurtzen da → JARRAITZEKO…
+  hiru berde, lau gorri); Errolan askatu ondoren, laugarren argia berde bihurtzen da; Odei askatu
+  ondoren, bosgarrena (Herensugea eta Inguma falta) → JARRAITZEKO…
 - **EGUNA ETA GAUA** ("gaua gauekoentzat, eguna egunekoentzat"): Basajaun askatu ondoren haranean
   denbora ibiltzen da. Gauez: izarrak eta ilargia, leiho eta farolak, Amaiurren kriseilua; herritarrak
   etxera doaz eta plazako txalapartak bakarrik jotzen du; **Gauekoren itzalak** zelaietan (herrira ez
@@ -142,6 +154,7 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
 - Iturburua: `tools/leizeak/src/` (`game.js`, `world.js`, `haran.js`, `ibarra.js`, `bizia.js`,
   `quests.js`, `npc.js`, `txalaparta.js`, `dungeon.js`, `rooms.js`, `boss.js`, `lamia.js`, `tartalo.js`,
   `adarra.js`, `gaua.js`, `pottoka.js`, `sekretuak.js`, `heura.js`, `tximista.js`, `jentilak.js`,
+  `enara.js` (planeatzea, haize-zutabeak), `zerua.js` (Jentilen zerua, ortzadarra), `odei.js`,
   `chain.js`, `lockon.js`, `story.js`, `combat.js`,
   `magic.js`, `craft.js`, `runes.js`, `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
   ateratzen da; modeloak `tools/leizeak/models/*.glb`-tik, `build_models.mjs`-ek KayKit-etik sortuak).
@@ -154,8 +167,10 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   Tartalo barne, eta azken eszena), `tools/test/leizeak_gaua.js` (eguna/gaua, EGUZKILORE, itzalak,
   arima-argiak), `tools/test/leizeak_pottoka.js` (Beltxa: deitu, igo, lauhazka, jaitsi),
   `tools/test/leizeak_sekretuak.js` (haraneko bost misterioak), `tools/test/leizeak_trebetasunak.js`
-  (ALDARATU, EZKUTUA, HEURA, TXIMISTARRIA, kanpaiak) eta `tools/test/leizeak_jentilak.js` (laugarren
-  leizea osoa: trikuharria, sutondoa, lasterbideak, Errolan eta azken eszena). Proba-kakoa: `?test` → `window.__game`.
+  (ALDARATU, EZKUTUA, HEURA, TXIMISTARRIA, kanpaiak), `tools/test/leizeak_jentilak.js` (laugarren
+  leizea osoa: trikuharria, sutondoa, lasterbideak, Errolan eta azken eszena) eta
+  `tools/test/leizeak_zerua.js` (bosgarrena: ORTZI, ortzadarra, hodei-harriak, igogailua, ENARA eta
+  haize-zutabeak, dorrea, habia, ekaitz-hesia, Odei eta azken eszena). Proba-kakoa: `?test` → `window.__game`.
 
 ## Cloudflare
 - Worker-aren izena: `euskaraz-games-online`

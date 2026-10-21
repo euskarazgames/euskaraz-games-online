@@ -395,7 +395,7 @@
         on = (k) => layerOn(k, t);
       const cave = !ZONES[ZONE.cur].outdoor;
       /* txalaparta: haranean, bi jotzaileren elkarrizketa (leizean isilik) */
-      if (on("txala") && !cave && TXP[s] && (lv > 0 || bi % 2 === 0)) txTok(TXP[s] === 1 ? 196 : 233, t, s % 4 === 0 ? 1 : 0.72);
+      if (on("txala") && !cave && !ZONES[ZONE.cur].sky && TXP[s] && (lv > 0 || bi % 2 === 0)) txTok(TXP[s] === 1 ? 196 : 233, t, s % 4 === 0 ? 1 : 0.72);
       /* leizea: tantak eta drone sakona esplorazioan */
       if (cave && lv <= 1) {
         if ((s === 6 || s === 13) && (n * 13) % 7 < 2) bell(mf(84 + ((n * 5) % 7)), t, 0.012, MZ.era);

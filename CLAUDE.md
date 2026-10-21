@@ -7,8 +7,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
 - `public/games/<jokoa>.html` — zazpi joko, fitxategi bakarrekoak, three.js r128:
   `pilota`, `zesta`, `artzain` ("Kirol" motorra), `basoa`, `itsas` ("Solid" motorra),
   `oihartzun` (bi garaiko plataforma-jokoa; `elur.html` haren aurreko bertsioa da) eta
-  `leizeak` (LEIZEEN DEIA, OIHARTZUN II: Ibarra harana, txalaparta eta lau leize — Basajaun, Lamia, Tartalo,
-  Jentilbaratza/Errolan).
+  `leizeak` (LEIZEEN DEIA, OIHARTZUN II: Ibarra harana, txalaparta eta bost leize — Basajaun, Lamia, Tartalo,
+  Jentilbaratza/Errolan, Jentilen zerua/Odei).
   OIHARTZUN-ek `?test` parametroarekin `window.__game` proba-kakoa erakusten du.
   OIHARTZUN-en iturburua: `tools/oihartzun/src/` (game.js, combat.js, magic.js, ascent.js, story.js,
   runes.js…). Ez editatu `public/games/oihartzun.html` zuzenean: `python3 tools/oihartzun/build.py`
@@ -16,7 +16,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
 - LEIZEEN DEIA: iturburua `tools/leizeak/src/` (game.js, world.js, npc.js, txalaparta.js, dungeon.js,
   rooms.js, boss.js, chain.js, lockon.js, story.js, haran.js, ibarra.js, quests.js, adarra.js, lamia.js,
   tartalo.js, gaua.js (eguna/gaua), pottoka.js, sekretuak.js, heura.js (eskalada), tximista.js (bonbak eta
-  arrakalak), jentilak.js (Jentilbaratza, sutondoak, lasterbideak, Errolan)…). Ez editatu `public/games/leizeak.html` zuzenean:
+  arrakalak), jentilak.js (Jentilbaratza, sutondoak, lasterbideak, Errolan), enara.js (planeatzea eta
+  haize-zutabeak), zerua.js (Jentilen zerua, uharteak, ortzadarra), odei.js (Odei)…). Ez editatu `public/games/leizeak.html` zuzenean:
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
@@ -52,4 +53,5 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_pottoka.js http://127.0.0.1:809
 NODE_PATH=$(npm root -g) node tools/test/leizeak_sekretuak.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_trebetasunak.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_jentilak.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_zerua.js http://127.0.0.1:8091/games/leizeak.html
 ```

@@ -47,6 +47,19 @@
         );
       },
     },
+    enara: {
+      get() {
+        if (!saved.items.includes("enara")) saved.items.push("enara");
+        persist();
+        translate();
+        itemGet(
+          "enara",
+          L("ENARAREN HEGOAK"),
+          L("Enara baten hegoak. Airean, jauzi bikoitzaren ondoren, eutsi JAUZIari: planeatu. Haize-zutabeek gora eramaten zaituzte. ") + (mobile ? L("JAUZI bi aldiz eta eutsi.") : L("␣ bi aldiz eta eutsi.")),
+          () => coach("glide", "␣", "␣ ×2 eta eutsi: ENARA (planeatu)", "", "jumpBtn", "JAUZI ×2 eta eutsi: ENARA", ""),
+        );
+      },
+    },
     katea: {
       get() {
         if (!saved.items.includes("katea")) saved.items.push("katea");
@@ -110,6 +123,10 @@
     if (!flag("jentilatea")) return ["Harrespilako trikuharria: jentilen atea. Jo ESNATU haren ondoan (" + d(45, -69.5) + " m).", [45, -67, 9]];
     if (!flag("errolan")) return ["JENTILBARATZA: trikuharriaren azpian, jentilen hiria (" + d(45, -69.5) + " m).", [45, -69.4, 9]];
     if (!flag("irati-errolan")) return ["Itzuli herrira: Iratiri Errolanen berri eman.", [0, 41, 0]];
+    if (!saved.rhythms.includes("ortzi")) return ["Harrespilan, jentil zaharrak badaki zerura nola igo (" + d(46, -64) + " m).", [46, -62.4, 9]];
+    if (!flag("ortzadarra")) return ["Harrespilaren erdian jo ORTZI (txalaparta): ortzadarra.", [46, -66.5, 9]];
+    if (!flag("odei")) return ["Ortzadarra: igo hodeien gainera, JENTILEN ZERUA (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
+    if (!flag("irati-odei")) return ["Itzuli herrira: Iratiri Odeiren berri eman.", [0, 41, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {
@@ -223,8 +240,8 @@
     if (ZAZPI.t < 0) return;
     const t = (ZAZPI.t += dt);
     /* laugarren argia: gorritik berdera (Errolan aske) */
-    if (ZAZPI.turn && ZAZPI.green < 4 && t > 4.2) {
-      zazpiColors(4);
+    if (ZAZPI.turn && ZAZPI.green < (ZAZPI.turnTo || 4) && t > 4.2) {
+      zazpiColors(ZAZPI.turnTo || 4);
       SND.stinger(true);
     }
     ZAZPI.storm.material.opacity = clamp(t * 0.6, 0, 1);
@@ -282,6 +299,34 @@
         if (ZAZPI.g) ZAZPI.g.visible = false;
         title("JARRAITZEKO…", "");
         notify(L("Lau leize amaituta. Harana zurea da: arnasa-zatiak, misterioak, erronkak… Jentilen zerua laster."), "", 8);
+        hud();
+      },
+    );
+  }
+  /* bosgarren zatiaren amaiera: Odei aske → bosgarren argia berde */
+  function iratiOdei() {
+    if (flag("irati-odei") || ZONE.cur !== "ibarra") return;
+    if (!ZAZPI.g) zazpiBuild();
+    zazpiColors(4);
+    ZAZPI.armed = true;
+    ZAZPI.turn = true;
+    ZAZPI.turnTo = 5;
+    say(
+      [
+        ["IRATI", "Amaiur! Gaur euria egin du, eta euri goxoa zen, ez kazkabarra. Txalapartak lasaiago jotzen du.", "", 0, 41, 0],
+        ["AMAIUR", "Odei aske dago. Trumoi bat zeraman bihotzean, Errolanek bezala.", "", P.x, P.z, 0],
+        ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Bosgarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["GAUEKO", "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten, eta Ingumak ametsetan harrapatzen ditu ausartenak ere.", "", P.x, P.z, 0],
+        ["IRATI", "Ez dago bakarrik, Gaueko. Herri osoak jotzen du berarekin.", "", 0, 41, 0],
+        ["AMAIUR", "Bi falta. Gero, Anbotora.", "", P.x, P.z, 0],
+      ],
+      () => {
+        flagSet("irati-odei");
+        ZAZPI.t = -1;
+        ZAZPI.turn = false;
+        if (ZAZPI.g) ZAZPI.g.visible = false;
+        title("JARRAITZEKO…", "");
+        notify(L("Bost leize amaituta. Harana eta zerua zureak dira: arnasa-zatiak, misterioak, erronkak… Herensugea eta Inguma laster."), "", 8);
         hud();
       },
     );

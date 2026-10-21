@@ -13,6 +13,8 @@
     lamia: { name: "LAMIEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     tartalo: { name: "TARTALOREN KOBA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     jentil: { name: "JENTILBARATZA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    /* zerua: kanpoan baina itsasorik gabe (hodei-itsasoa beherago), gaurik ez */
+    zerua: { name: "JENTILEN ZERUA", outdoor: true, sky: true, fallY: -16, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
   };
   const ZONE = { cur: "ibarra", fadeT: 0, pending: null };
   const AREA = { cur: "", seen: new Set() };
@@ -97,13 +99,17 @@
   }
   /* argia eta lainoa zonaren arabera */
   function zoneLook() {
-    const out = ZONES[ZONE.cur].outdoor;
-    sky.visible = sea.visible = out;
+    const out = ZONES[ZONE.cur].outdoor,
+      high = !!ZONES[ZONE.cur].sky;
+    sky.visible = out;
+    sea.visible = out && !high;
+    /* zeruan argi gehiegi: esposizio apalagoa */
+    renderer.toneMappingExposure = high ? 0.94 : 1.12;
     if (ATMO.dust) ATMO.dust.visible = out;
     for (const b of birds) b.visible = out;
     if (out) {
-      scene.fog.near = 130;
-      scene.fog.far = 560;
+      scene.fog.near = high ? 180 : 130;
+      scene.fog.far = high ? 950 : 560;
       playerLight.intensity = 0;
       scene.environment = (phase ? ATMO.envNow : ATMO.envPast) || null;
       ambient.color.set("#c8dfe8");

@@ -13,6 +13,7 @@
     entzun: { seq: ["R", "L", "R", "R"], name: "ENTZUN", desc: "Oihartzun-uhin bat: ezkutuko bideak eta altxorrak une batez agerian." },
     eguzkilore: { seq: ["R", "R", "L", "L"], name: "EGUZKILORE", desc: "Eguzkiari dei: gauez egunsentia, egunez ilunabarra. Leizean, itzalak zorabiatzen ditu." },
     pottoka: { seq: ["L", "R", "L", "L"], name: "POTTOKA", desc: "Beltxari dei: haranean, Joanesen pottoka lauhazka etortzen da." },
+    ortzi: { seq: ["L", "R", "R", "L", "R"], name: "ORTZI", desc: "Zeru zaharraren erritmoa: harrespilan, ortzadarra jaiotzen da — zerurako bidea." },
   };
   const seqText = (seq) => seq.map((s) => (s === "L" ? "◀" : "▶")).join(" ");
   /* plazako txalaparta: bi asto, hiru ohol luze eta lau makila (diseinu propioa) */
@@ -238,6 +239,7 @@
     } else if (k === "entzun") echoPulse();
     else if (k === "eguzkilore") eguzkiloreEffect();
     else if (k === "pottoka") pottokaCall();
+    else if (k === "ortzi") ortziEffect();
     hud();
   }
   /* ENTZUN: oihartzun-uhina — ezkutuko plataformak (s.hidden) eta kutxak agerian */
