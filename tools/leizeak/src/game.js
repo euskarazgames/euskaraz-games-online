@@ -566,7 +566,8 @@
     for (let k = 0; k < (o.n || 10); k++) {
       const i = FX.next;
       FX.next = (FX.next + 1) % FX.N;
-      const a = o.ring ? (k / o.n) * TAU : Math.random() * TAU,
+      /* dir: [dx, dz] → kono batean (kolpearen noranzkoan); bestela biribilean */
+      const a = o.ring ? (k / o.n) * TAU : o.dir ? Math.atan2(o.dir[1], o.dir[0]) + (Math.random() - 0.5) * (o.cone || 1) : Math.random() * TAU,
         sp = (o.speed || 3) * (o.ring ? 1 : 0.4 + Math.random() * 0.8),
         hz = o.spread === undefined ? 1 : o.spread;
       FX.pos[i * 3] = x + (o.jitter || 0) * (Math.random() - 0.5);
@@ -583,6 +584,48 @@
       FX.col[i * 3 + 1] = c.g;
       FX.col[i * 3 + 2] = c.b;
     }
+  }
+  /* talka-izarra: distira zuri labur bat kolpearen puntuan (fotograma gutxi) */
+  const FLASHES = [];
+  let STAR_TEX = null;
+  function starTexture() {
+    if (STAR_TEX) return STAR_TEX;
+    const c = document.createElement("canvas");
+    c.width = c.height = 128;
+    const g = c.getContext("2d"),
+      gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, "#ffffff");
+    gr.addColorStop(0.18, "#ffffffcc");
+    gr.addColorStop(0.5, "#ffffff22");
+    gr.addColorStop(1, "#ffffff00");
+    g.fillStyle = gr;
+    g.fillRect(0, 0, 128, 128);
+    /* lau izpi */
+    g.globalCompositeOperation = "lighter";
+    for (const [w, h] of [[120, 7], [7, 120]]) {
+      const lg = g.createRadialGradient(64, 64, 0, 64, 64, 60);
+      lg.addColorStop(0, "#ffffffee");
+      lg.addColorStop(1, "#ffffff00");
+      g.fillStyle = lg;
+      g.fillRect(64 - w / 2, 64 - h / 2, w, h);
+    }
+    STAR_TEX = new T.CanvasTexture(c);
+    return STAR_TEX;
+  }
+  function fxFlash(x, y, z, size = 2, color = "#ffffff", life = 0.09) {
+    let f = FLASHES.find((f) => f.t >= f.life);
+    if (!f) {
+      const s = new T.Sprite(new T.SpriteMaterial({ map: starTexture(), transparent: true, blending: T.AdditiveBlending, depthWrite: false, depthTest: false }));
+      s.renderOrder = 14;
+      scene.add(s);
+      f = { s, t: 0, life: 0 };
+      FLASHES.push(f);
+    }
+    f.s.material.color.set(color);
+    f.s.position.set(x, y, z);
+    f.s.material.rotation = Math.random() * PI;
+    Object.assign(f, { t: 0, life, size });
+    f.s.visible = true;
   }
   /* Uhin-eraztuna (garai-aldaketa, bultzada bikoitza…) */
   function fxRing(x, y, z, color, maxR = 6, dur = 0.55) {
@@ -624,6 +667,16 @@
     const g = FX.pts.geometry;
     g.attributes.position.needsUpdate = g.attributes.alpha.needsUpdate = g.attributes.psize.needsUpdate = g.attributes.color.needsUpdate = true;
     FX.pts.material.uniforms.uPx.value = renderer.getPixelRatio() * (innerHeight / 720);
+    for (const f of FLASHES) {
+      if (f.t >= f.life) {
+        f.s.visible = false;
+        continue;
+      }
+      f.t += dt;
+      const u = Math.min(1, f.t / f.life);
+      f.s.scale.setScalar(f.size * (0.55 + u * 0.7));
+      f.s.material.opacity = 1 - u * u;
+    }
     for (const r of FX.rings) {
       if (r.t >= r.dur) {
         r.m.visible = false;
@@ -695,12 +748,14 @@
       hitStop = 0.07;
       shake(0.55);
       squash(-2);
+      fxFlash(P.x, P.y + 1.1, P.z, 3, "#ffb39a", 0.1);
       fxBurst(P.x, P.y + 1, P.z, { n: 20, speed: 5, life: 0.5, size: 0.28, color: "#ff8a6a", grav: 4 });
       SND.hurt();
     },
     bossHit(x, y, z) {
       hitStop = 0.11;
       shake(0.85);
+      fxFlash(x, y, z, 6.5, "#ffffff", 0.13);
       fxBurst(x, y, z, { n: 60, speed: 9, life: 0.9, size: 0.38, color: "#fff1c4", grav: 2, drag: 2 });
       fxRing(x, y, z, "#fff1c4", 9, 0.7);
       SND.bossHit();
@@ -1033,12 +1088,25 @@
         hiss(t, n === 3 ? 0.26 : 0.13, n === 3 ? 0.12 : 0.08, "bandpass", 700, n === 3 ? 3800 : 2900, 1.3);
         bell([880, 987.77, 1174.66][n - 1] * (phase ? 1.5 : 1), t + 0.01, 0.022);
       },
+      /* kolpea: "zart" lehor bat talka-fotograman (zarata laburra + tonua beherantz, bakoitza apur bat desberdin) */
       hit(d) {
         if (!ok()) return;
-        const t = ctx.currentTime;
+        const t = ctx.currentTime,
+          v = 0.9 + Math.random() * 0.22;
+        hiss(t, 0.035, 0.22 + d * 0.05, "highpass", 3800 * v, 1500, 0.9);
         hiss(t, 0.09, 0.16 + d * 0.04, "lowpass", 2600, 300, 0.8);
-        tone("sine", 190, t, 0.002, 0.12, 0.14 + d * 0.04, sfx, 70);
-        tone("square", 2400, t, 0.001, 0.02, 0.02, sfx, 1800);
+        tone("triangle", 330 * v, t, 0.001, 0.08, 0.12 + d * 0.03, sfx, 95);
+        tone("sine", 190 * v, t, 0.002, 0.12, 0.14 + d * 0.04, sfx, 60);
+        if (d >= 2) tone("sine", 82, t, 0.002, 0.22, 0.2, sfx, 42);
+      },
+      /* bizitzarik gabe: puxika bat bezala lehertu (askoz batera: bakarra) */
+      pop() {
+        if (!ok() || time - (SND.popT ?? -9) < 0.06) return;
+        SND.popT = time;
+        const t = ctx.currentTime;
+        hiss(t, 0.06, 0.3, "bandpass", 2400, 900, 1.4);
+        tone("sine", 920, t, 0.001, 0.1, 0.12, sfx, 180);
+        tone("triangle", 140, t, 0.002, 0.18, 0.12, sfx, 55);
       },
       /* ALDARATU: burdin-hots distiratsua eta akorde laburra */
       parry() {
@@ -1655,6 +1723,7 @@
   /* @include enara.js */
   /* @include zerua.js */
   /* @include odei.js */
+  /* @include herria.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -2089,6 +2158,9 @@
     buildZerua();
     buildRunePuzzles("zerua");
     ortzadarBuild();
+    /* herria: etxe-izenak eta ateak; Amaiurren etxea (ITURRALDE) barrutik */
+    herriaInit();
+    buildEtxea();
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -2638,6 +2710,8 @@
     if (ponyNear()) return { kind: "pony", label: L("IGO"), fn: ponyMount };
     const HN = hearthNear();
     if (HN) return { kind: "hearth", label: L("ATSEDEN"), fn: () => hearthRest(HN) };
+    const HA = homeActionNear();
+    if (HA) return HA;
     const SC = shortcutNear();
     if (SC) return SC;
     const D = doorNear();
@@ -2648,6 +2722,8 @@
     if (andereDoorNear()) return { kind: "door", label: L("ATEA"), fn: andereDoor };
     if (ZONE.cur === "ibarra") {
       if (P.riding) return { kind: "pony", label: L("JAITSI"), fn: () => ponyDismount() };
+      const HD = houseDoorNear();
+      if (HD) return houseAction(HD);
       const sp = TXALA.spots.find((s) => s.group === ZONES.ibarra.group && Math.hypot(s.x - P.x, s.z - P.z) < 3.4);
       if (sp && txalaKnown().length) return { kind: "txala", label: L("TXALAPARTA"), fn: txalaOpen };
       const S = HUB.stones.find((s) => !s.awake && Math.hypot(s.x - P.x, s.z - P.z) < (s.gate ? 9 : 4.5));
@@ -3050,7 +3126,7 @@
     const Z = ZONES[ZONE.cur],
       A = AREA.cur ? AREAS[AREA.cur] || ROOMS_AREA[AREA.cur] : null;
     const DG = DGS[ZONE.cur];
-    $("chapter").textContent = DG ? DG.num + " · " + Z.name : "LEIZEEN DEIA";
+    $("chapter").textContent = DG ? (DG.home ? L("ETXEA") : DG.num + " · " + Z.name) : "LEIZEEN DEIA";
     $("placeName").textContent = A ? A[0] : Z.name;
     $("goal").textContent = QST.mikel
       ? L("Jomugak: ") + QST.mikel.hits + " / " + QST.mikel.need + " · " + Math.max(0, Math.ceil(QST.mikel.t)) + " s"
@@ -3062,7 +3138,7 @@
     $("dashDot").textContent = P.dashReady ? "◆" : "◇";
     $("dashDot").style.opacity = P.dashReady ? 1 : 0.5;
     $("coins").textContent = saved.coins;
-    $("keyBox").hidden = !DG;
+    $("keyBox").hidden = !DG || !!DG.home;
     $("bombBox").hidden = !hasBomb();
     if (hasBomb()) $("bombN").textContent = "●".repeat(TXB.n) + "○".repeat(Math.max(0, TXB.max - TXB.n));
     if (DG) $("keyN").textContent = (saved.keyz[ZONE.cur] || 0) + (saved.items.includes(DG.bigKey) && !saved.doors.includes(DG.bossDoor) ? " ◆" : "");
@@ -3198,6 +3274,7 @@
       fansUpdate(dt);
       mistsUpdate(dt);
       updraftsUpdate(dt);
+      pouchesUpdate(dt);
       if (ZONE.cur === "ibarra") {
         hubUpdate(dt);
         npcsUpdate(dt);
@@ -3554,6 +3631,14 @@
       window.__game = {
         P,
         saved,
+        HOUSE,
+        DGE,
+        POUCHES,
+        houseKnock,
+        houseDoorNear,
+        homeEnter,
+        homeSleep,
+        homeActionNear,
         GLIDE,
         UPDRAFTS,
         updraftAt,

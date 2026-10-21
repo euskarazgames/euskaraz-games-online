@@ -123,6 +123,13 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
 - Istorioa: hiru zaindari askatu ondoren, Irati eta azken eszena (zazpi argi Anboto gainean:
   hiru berde, lau gorri); Errolan askatu ondoren, laugarren argia berde bihurtzen da; Odei askatu
   ondoren, bosgarrena (Herensugea eta Inguma falta) → JARRAITZEKO…
+- **HERRIA, etxez etxe**: etxe bakoitzak bere izena du atearen gainean (PELLONEA, OKINENEA,
+  GOIKOETXEA, ARTZAINENEA, ARRANTZALENEA, BELARRENEA, MENDIETA, OSTATUA…) eta norbait bizi da barruan.
+  **ATEA JO**: egunez ala gauez, nor dagoen etxean eta istorioa nola doan, erantzun desberdinak (Maiteren
+  ogi beroak arnasa itzultzen du, Mikelen amonak sendabelar-botila bat ematen du, Mendietakoak itzultzen
+  dira zaindariak askatu ahala…). **ITURRALDE**, Amaiur eta Iratiren etxea, barrutik: sutondoa
+  (atseden eta kontrol-puntua), ohea (lo egin egunsentira edo ilunabarrera arte), Iratiren txokoa eta
+  zaindarien **oroitzapenen apala** (askatutako zaindari bakoitzak oroigarri bat uzten du).
 - **EGUNA ETA GAUA** ("gaua gauekoentzat, eguna egunekoentzat"): Basajaun askatu ondoren haranean
   denbora ibiltzen da. Gauez: izarrak eta ilargia, leiho eta farolak, Amaiurren kriseilua; herritarrak
   etxera doaz eta plazako txalapartak bakarrik jotzen du; **Gauekoren itzalak** zelaietan (herrira ez
@@ -149,12 +156,19 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   gorputz-kolpeak geldiarazten, karga galduta; Basajauni bere harkaitza itzuliz gero, zorabiatuta geratzen
   da) eta **ALDARATU** (kolpea iristen den unean SORGINKERIA sakatu, behin: kolpea desbideratzen da,
   etsaia zorabiatuta geratzen da eta kalte bikoitza jasotzen du; segidan sakatzeak ez du balio).
+- **Kolpe sendoak**: kolpe bakoitzean etsaia zuri distiratzen da eta zapaltzen, txinpartak kolpearen
+  noranzkoan eta talka-izarra, hots lehorra (bakoitza apur bat desberdin), atzera bultzada eta
+  izozte labur bat (kolpe handietan gehiago); bizitzarik gabe, puxika bat bezala puztu eta lehertzen da.
+- **ESTALPEAK**: zutabeek, kutxek eta harri-blokeek itzalen proiektilak geldiarazten dituzte (ezkutatu
+  atzean); borroka-gela batzuetan blokeek gela azpi-espazioetan banatzen dute, eta haien atzean,
+  kameratik ezkutuan, txanpon-zorroak daude.
 - Kamera eta irakurgarritasuna: Amaiur eta kameraren artean dauden hormak, etxeak eta zuhaitzak
   gardendu egiten dira; leizean argia zuziek eta Amaiurren kriseiluak ematen dute.
 - Iturburua: `tools/leizeak/src/` (`game.js`, `world.js`, `haran.js`, `ibarra.js`, `bizia.js`,
   `quests.js`, `npc.js`, `txalaparta.js`, `dungeon.js`, `rooms.js`, `boss.js`, `lamia.js`, `tartalo.js`,
   `adarra.js`, `gaua.js`, `pottoka.js`, `sekretuak.js`, `heura.js`, `tximista.js`, `jentilak.js`,
   `enara.js` (planeatzea, haize-zutabeak), `zerua.js` (Jentilen zerua, ortzadarra), `odei.js`,
+  `herria.js` (etxe-izenak, ATEA JO, Iturralde),
   `chain.js`, `lockon.js`, `story.js`, `combat.js`,
   `magic.js`, `craft.js`, `runes.js`, `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
   ateratzen da; modeloak `tools/leizeak/models/*.glb`-tik, `build_models.mjs`-ek KayKit-etik sortuak).
@@ -170,7 +184,9 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   (ALDARATU, EZKUTUA, HEURA, TXIMISTARRIA, kanpaiak), `tools/test/leizeak_jentilak.js` (laugarren
   leizea osoa: trikuharria, sutondoa, lasterbideak, Errolan eta azken eszena) eta
   `tools/test/leizeak_zerua.js` (bosgarrena: ORTZI, ortzadarra, hodei-harriak, igogailua, ENARA eta
-  haize-zutabeak, dorrea, habia, ekaitz-hesia, Odei eta azken eszena). Proba-kakoa: `?test` → `window.__game`.
+  haize-zutabeak, dorrea, habia, ekaitz-hesia, Odei eta azken eszena) eta `tools/test/leizeak_herria.js`
+  (etxe-izenak, ATEA JO egunez eta gauez, Iturralde barrutik, kolpe sendoak eta estalpeak).
+  Proba-kakoa: `?test` → `window.__game`.
 
 ## Cloudflare
 - Worker-aren izena: `euskaraz-games-online`

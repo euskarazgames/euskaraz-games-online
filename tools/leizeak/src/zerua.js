@@ -662,6 +662,11 @@
     });
     DGZ.keyChest = chest("zC-key", ZE(0), 0, -62, 0, { t: "key" }, { hidden: !isCleared("Z3") });
     DGZ.hearthC = sutondoa("zC-su", ZE(-8.4), 0, -53.2, 1.9, -1.5);
+    /* estalpeak: bi harri-bloke (plaza azpi-espazioetan) eta haien atzean, zorroak */
+    coverBlock(ZE(-6.5), -59.5, 3.2, 2.0, 2.0);
+    coverBlock(ZE(6.5), -57, 2.0, 3.2, 2.0);
+    pouch("zC-zorroa1", ZE(-7.2), 0, -61.3, 15);
+    pouch("zC-zorroa2", ZE(7.2), 0, -59.4, 15);
     jentilStatue(ZE(8), -70.5, -0.4, 0.7);
     bprop("rubble_half", ZE(-7), 0, -69.5, DS * 0.6, 0.7);
     bprop("rubble_large", ZE(9.5), 0, -55, DS * 0.5, 2.1);

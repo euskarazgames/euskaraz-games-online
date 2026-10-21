@@ -284,21 +284,30 @@
       }
       return;
     }
-    const mult = e.state === "stun" || e.parried > 0 ? 2 : 1;
+    const mult = e.state === "stun" || e.parried > 0 ? 2 : 1,
+      big = dmg * mult >= 2;
     e.hp -= dmg * mult;
-    e.flash = 0.1;
+    /* 1 · DISTIRA: etsaia zuri fotograma gutxi batzuetan (eta zapalduta: kolpea gorputzean) */
+    e.flash = 0.12;
+    e.punch = 0.13;
     e.hitT = 0.3;
-    const kb = (dmg >= 2 ? 9 : 4.2) / e.D.mass;
+    /* 4 · ATZERA BULTZATU */
+    const kb = (big ? 9.5 : 5.6) / e.D.mass;
     e.vx += nx * kb;
     e.vz += nz * kb;
     if (e.state === "wind" && e.type !== "brute" && dmg >= 2) {
       e.state = "recover";
       e.t = 0;
     }
-    hitStop = Math.max(hitStop, dmg >= 2 ? 0.06 : 0.022);
-    shake(dmg >= 2 ? 0.18 : 0.06);
-    haptic(dmg >= 2 ? 18 : 7);
-    fxBurst(e.x, e.y + e.H, e.z, { n: 8 + dmg * 5, speed: 5, life: 0.4, size: 0.26, color: ERA_COL[e.era < 0 ? 2 : e.era], grav: 3 });
+    /* 5 · DARDARA ETA IZOZTU (kolpearen arabera) */
+    hitStop = Math.max(hitStop, big ? 0.075 : 0.038);
+    shake(big ? 0.2 : 0.085);
+    haptic(big ? 18 : 7);
+    /* 3 · TXINPARTAK: kolpearen noranzkoan, eta talka-izarra */
+    const hy = e.y + e.H * (e.skel ? 1.3 : 1);
+    fxBurst(e.x - nx * 0.3, hy, e.z - nz * 0.3, { n: 7 + dmg * 4, dir: [nx, nz], cone: 1.15, speed: 9.5, up: 1.4, life: 0.3, size: 0.2, color: "#fff4d6", grav: 7, drag: 3.5 });
+    fxBurst(e.x, hy, e.z, { n: 6 + dmg * 3, speed: 4.5, life: 0.4, size: 0.26, color: ERA_COL[e.era < 0 ? 2 : e.era], grav: 3 });
+    fxFlash(e.x - nx * 0.45, hy, e.z - nz * 0.45, big ? 3.4 : 2.3, "#ffffff", big ? 0.11 : 0.08);
     damageNumber(e, dmg * mult);
     SND.hit(dmg * mult);
     comboHit();
@@ -340,9 +349,11 @@
     if (e.shine) e.shine.visible = false;
     e.aura.visible = e.bar.visible = false;
     e.shield.visible = false;
-    fxBurst(e.x, e.y + 0.8, e.z, { n: 34, speed: 6, up: 2, life: 0.9, size: 0.36, color: "#7a2fd6", grav: 1 });
-    fxBurst(e.x, e.y + 0.8, e.z, { n: 16, speed: 3, up: 3, life: 1.1, size: 0.3, color: ERA_COL[e.era < 0 ? 2 : e.era], grav: -1 });
-    fxRing(e.x, e.y + 0.1, e.z, ERA_COL[e.era < 0 ? 2 : e.era], 3, 0.5);
+    /* bizitzarik gabe: puxika bat bezala — puztu (zuri), gero lehertu (enemyUpdate) */
+    e.pop = 0.1;
+    e.flash = 0.2;
+    hitStop = Math.max(hitStop, 0.085);
+    shake(0.16);
     SND.kill();
     haptic(16);
     /* argi-izpia: batzuetan bizitza bat itzultzen du */
@@ -396,6 +407,34 @@
       if (e.mixer) e.mixer.update(dt);
       if (e.state === "dead") {
         e.aura.visible = e.bar.visible = false;
+        if (e.pop > 0) {
+          /* puztu… eta lehertu */
+          e.pop -= dt;
+          e.gS ??= e.g.scale.x;
+          const k = 1 - Math.max(0, e.pop) / 0.1,
+            s = 1 + 0.34 * Math.sin(k * PI * 0.5);
+          if (e.skel) e.g.scale.set(e.gS * s, e.gS * (1 + 0.2 * k), e.gS * s);
+          else e.g.scale.setScalar(e.D.S * s);
+          e.body.emissive.set("#ffffff");
+          e.body.emissiveIntensity = 2.6;
+          if (e.rigid) {
+            e.rigid.emissive.set("#ffffff");
+            e.rigid.emissiveIntensity = 2.6;
+          }
+          if (e.pop <= 0) {
+            if (e.skel) e.g.scale.setScalar(e.gS);
+            const col = ERA_COL[e.era < 0 ? 2 : e.era],
+              cy = e.y + (e.skel ? e.H * 1.2 : 0.8);
+            fxBurst(e.x, cy, e.z, { n: 40, speed: 8, up: 2.4, life: 0.85, size: 0.38, color: "#7a2fd6", grav: 1.5 });
+            fxBurst(e.x, cy, e.z, { n: 24, speed: 11, ring: true, life: 0.35, size: 0.3, color: "#ffffff", grav: 0, drag: 5 });
+            fxBurst(e.x, cy, e.z, { n: 16, speed: 3, up: 3, life: 1.1, size: 0.3, color: col, grav: -1 });
+            fxRing(e.x, e.y + 0.1, e.z, col, 3.4, 0.5);
+            fxFlash(e.x, cy, e.z, 4.2, "#ffffff", 0.12);
+            SND.pop();
+            if (e.rigid) e.rigid.emissive.set("#000000");
+          }
+          continue;
+        }
         if (e.skel) {
           /* hezurrak lurrera erori, gero lurrean hondoratu */
           e.x += e.vx * dt;
@@ -563,7 +602,7 @@
         enemyAnim(e);
         e.g.rotation.z = e.state === "stun" ? Math.sin(time * 18) * 0.08 : 0;
         e.body.emissive.set(e.flash > 0 ? "#ffffff" : wind ? "#d0203e" : "#000000");
-        e.body.emissiveIntensity = e.flash > 0 ? 1.4 : wind ? 0.35 + 0.35 * Math.sin(time * 30) : 0;
+        e.body.emissiveIntensity = e.flash > 0 ? 2.4 : wind ? 0.35 + 0.35 * Math.sin(time * 30) : 0;
         e.rigid.emissive.copy(e.body.emissive);
         e.rigid.emissiveIntensity = e.body.emissiveIntensity;
         if (e.shine) e.shine.material.opacity = wind ? 1 : 0.75 + Math.sin(time * 5 + e.x) * 0.15;
@@ -575,6 +614,17 @@
         e.body.emissive.set(e.flash > 0 ? "#ffffff" : wind ? "#c01a3c" : "#1a0626");
         e.body.emissiveIntensity = e.flash > 0 ? 2 : wind ? 0.7 + 0.6 * Math.sin(time * 30) : 0.6;
       }
+      /* kolpearen zapalketa (punch): zabaldu eta zapaldu, segundo zati batean */
+      if (e.punch > 0) {
+        e.punch = Math.max(0, e.punch - dt);
+        const k = e.punch / 0.13,
+          sx = 1 + 0.2 * k,
+          sy = 1 - 0.16 * k;
+        if (e.skel) {
+          e.gS ??= e.g.scale.x;
+          e.g.scale.set(e.gS * sx, e.gS * sy, e.gS * sx);
+        } else e.g.scale.set(e.g.scale.x * sx, e.g.scale.y * sy, e.g.scale.z * sx);
+      } else if (e.skel && e.gS && e.g.scale.y !== e.gS) e.g.scale.setScalar(e.gS);
       const vulnerable = e.era === -1 || e.era === phase;
       e.shield.material.opacity = Math.max(vulnerable ? 0 : 0.85 + 0.15 * Math.sin(time * 5), e.shield.material.opacity - dt * 3);
       e.shield.material.uniforms.uA.value = e.shield.material.opacity;
@@ -689,6 +739,22 @@
     SHOTS.push({ m, x: e.x + ux * 0.6, z: e.z + uz * 0.6, y: y0, vx: ux * 8.5 * K, vz: uz * 8.5 * K, sp: 8.5 * K, t: 0, era: e.era, from: e });
     SND.shot();
   }
+  /* ESTALPEA: zutabeek, kutxek eta harriek itzalen proiektilak geldiarazten dituzte (ezkutatu atzean!) */
+  function shotCover(s) {
+    for (const o of solids) {
+      if (o.r < 0.35 || o.noCover) continue;
+      const top = o.y + (phase === 0 || o.pillar ? o.h : o.h * 0.19);
+      if (s.y > top + 0.15 || s.y < o.y - 0.3 || Math.hypot(s.x - o.x, s.z - o.z) > o.r + 0.2) continue;
+      fxBurst(s.x, s.y, s.z, { n: 10, speed: 3.5, life: 0.3, size: 0.22, color: "#e8e2d4", grav: 4 });
+      SND.clang(0.35);
+      if (!COACH.seen.has("estalpea")) {
+        coachDone("estalpea");
+        notify(L("ESTALPEA: zutabeek eta kutxek proiektilak geldiarazten dituzte. Ezkutatu atzean!"), "", 3.5);
+      }
+      return true;
+    }
+    return false;
+  }
   /* EZKUTUA: INDARRA kargatzean, aurretik datozen proiektilak itzultzen dira (jaurtitzailearengana) */
   function shieldBlocks(s) {
     if (s.back || !MAG.charging || MAG.charge < 0.12) return false;
@@ -792,7 +858,7 @@
       } else if (Math.hypot(P.x - s.x, P.z - s.z) < 0.75 && Math.abs(P.y + 1 - s.y) < 1.2) {
         playerHit(1, s.x - s.vx, s.z - s.vz);
         gone = true;
-      }
+      } else if (shotCover(s)) gone = true;
       if (gone) {
         scene.remove(s.m);
         SHOTS.splice(i, 1);

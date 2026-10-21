@@ -294,6 +294,73 @@
     persist();
     hud();
   }
+  /* ---------------- ESTALPEAK eta ezkutuko zorroak (borroka-geletan) ----------------
+     Bloke handiek gela azpi-espazioetan banatzen dute: itzalen proiektilak geldiarazten
+     dituzte (shotCover) eta haien atzean, kameratik ezkutuan, txanpon-zorro bat egon daiteke. */
+  function coverBlock(x, z, w, d, h, y = 0, kind = "stone") {
+    const g = new T.Group();
+    g.position.set(x, y, z);
+    BP.add(g);
+    if (kind === "crates") {
+      /* egurrezko kutxa-pila (KayKit) */
+      const n = Math.max(1, Math.round(Math.max(w, d) / 1.3));
+      for (let i = 0; i < n; i++) {
+        const t = n === 1 ? 0 : i / (n - 1) - 0.5,
+          ox = w >= d ? t * (w - 1.3) : 0,
+          oz = w >= d ? 0 : t * (d - 1.3);
+        model("crate_A_big", ox, 0, oz, 1.25, i * 0.4, g);
+        if (i % 2 === 0) model("crate_B_small", ox * 0.9, 1.25, oz * 0.9, 0.75, i, g);
+      }
+    } else {
+      const b = new T.Mesh(new T.BoxGeometry(w, h, d), stackMaterial());
+      b.position.y = h / 2;
+      b.castShadow = b.receiveShadow = true;
+      g.add(b);
+      const cap = new T.Mesh(new T.BoxGeometry(w + 0.2, 0.22, d + 0.2), rockMaterial());
+      cap.position.y = h + 0.05;
+      cap.castShadow = true;
+      g.add(cap);
+      const rune = new T.Mesh(new T.PlaneGeometry(Math.min(w, h) * 0.55, Math.min(w, h) * 0.55), new T.MeshBasicMaterial({ color: "#ffd38a", map: runeTexture(), transparent: true, opacity: 0.35, depthWrite: false, blending: T.AdditiveBlending }));
+      rune.position.set(0, h * 0.55, d / 2 + 0.02);
+      g.add(rune);
+    }
+    wallBlock(x, z, w, d, 0, y, h);
+    /* talka (itzalak, proiektilak): zirkuluak blokearen luzeran */
+    const n = Math.max(1, Math.round(Math.max(w, d) / Math.min(w, d))),
+      r = (Math.min(w, d) / 2) * 1.08;
+    for (let i = 0; i < n; i++) {
+      const t = n === 1 ? 0 : i / (n - 1) - 0.5;
+      solids.push({ x: x + (w >= d ? t * (w - 2 * r) : 0), z: z + (w >= d ? 0 : t * (d - 2 * r)), r, h, y, pillar: true });
+    }
+    return g;
+  }
+  const POUCHES = [];
+  function pouch(id, x, y, z, n) {
+    if (saved.chests.includes(id)) return null;
+    const g = model("sack", x, y, z, 0.62, x * 1.7);
+    const fl = glow(x, y + 0.5, z, "#ffe2a6", 1.4);
+    const Pc = { id, x, y, z, n, g, fl, grp: BP, got: false };
+    POUCHES.push(Pc);
+    return Pc;
+  }
+  function pouchesUpdate(dt) {
+    const grp = ZONES[ZONE.cur].group;
+    for (const Pc of POUCHES) {
+      if (Pc.got || Pc.grp !== grp) continue;
+      Pc.fl.material.opacity = 0.35 + Math.sin(time * 4 + Pc.x) * 0.15;
+      if (Math.hypot(P.x - Pc.x, P.z - Pc.z) < 1.15 && Math.abs(P.y - Pc.y) < 1.6) {
+        Pc.got = true;
+        Pc.g.visible = Pc.fl.visible = false;
+        saved.chests.push(Pc.id);
+        saved.coins += Pc.n;
+        persist();
+        SND.coin(true);
+        fxBurst(Pc.x, Pc.y + 0.6, Pc.z, { n: 26, speed: 3, up: 3, life: 0.8, size: 0.24, color: "#ffe08a", grav: 3 });
+        notify(L("Ezkutuko zorroa: +") + Pc.n + L(" txanpon."), "", 2.6);
+        hud();
+      }
+    }
+  }
   /* arnasa-zatiak: lau zati = arnasa bat gehiago */
   function pieceGet(id) {
     if (!saved.pieces.includes(id)) saved.pieces.push(id);

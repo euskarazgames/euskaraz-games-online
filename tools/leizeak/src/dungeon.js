@@ -317,6 +317,10 @@
       bprop("pillar_decorated", px, 0, pz, DS * 0.9, 0);
       solids.push({ x: px, z: pz, r: 1.3, h: 6, y: 0, pillar: true });
     }
+    /* estalpeak: kutxa-pilak iparraldean (proiektiletatik babesteko) eta ezkutuko zorroa */
+    coverBlock(E(-9.5), -88.5, 2.6, 1.4, 1.8, 0, "crates");
+    coverBlock(E(9.5), -88.5, 2.6, 1.4, 1.8, 0, "crates");
+    pouch("dD-zorroa", E(9.5), 0, -90.2, 12);
     DOORDEF.De = door("dD-e", E(15), -66, PI / 2, 0, "bars", "D");
     DOORDEF.Dw = door("dD-w", E(-15), -78, PI / 2, 0, "bars", "D");
     DOORDEF.Dn = door("dD-n", E(0), -93, 0, 0, "boss");

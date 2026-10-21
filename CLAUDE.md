@@ -17,7 +17,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   rooms.js, boss.js, chain.js, lockon.js, story.js, haran.js, ibarra.js, quests.js, adarra.js, lamia.js,
   tartalo.js, gaua.js (eguna/gaua), pottoka.js, sekretuak.js, heura.js (eskalada), tximista.js (bonbak eta
   arrakalak), jentilak.js (Jentilbaratza, sutondoak, lasterbideak, Errolan), enara.js (planeatzea eta
-  haize-zutabeak), zerua.js (Jentilen zerua, uharteak, ortzadarra), odei.js (Odei)…). Ez editatu `public/games/leizeak.html` zuzenean:
+  haize-zutabeak), zerua.js (Jentilen zerua, uharteak, ortzadarra), odei.js (Odei), herria.js (etxe-izenak,
+  ATEA JO, Iturralde etxea barrutik)…). Ez editatu `public/games/leizeak.html` zuzenean:
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
@@ -54,4 +55,5 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_sekretuak.js http://127.0.0.1:8
 NODE_PATH=$(npm root -g) node tools/test/leizeak_trebetasunak.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_jentilak.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_zerua.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_herria.js http://127.0.0.1:8091/games/leizeak.html
 ```

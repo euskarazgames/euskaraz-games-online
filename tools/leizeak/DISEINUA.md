@@ -170,6 +170,17 @@ Mekanika orokorrak bakarrik, euskal sinesmenetatik berreginak:
 - **Ekaitz-izaki erraldoia** → **Odei** (trumoiaren hodeia). Herriek ekaitzen aurka kanpaiak jotzen zituzten:
   hemen, lau ekaitz-kanpaiek hodeia urratzen dute.
 
+## 5f. Diseinu-teknika orokorrak (gure eran, III)
+Erabiltzaileak partekatutako bideo laburretatik (diseinu-aholkuak, ez joko jakin baten edukia):
+- **Kolpe sendoak (bost urrats)** → DISTIRA (etsaia zuri fotograma gutxi batzuetan, zapalduta), HOTSA
+  (kolpe lehorra talka-fotograman, aldaketa txikiekin), TXINPARTAK (kolpearen noranzkoan, talka-izarra),
+  BULTZADA (atzera) eta DARDARA + IZOZTEA (kolpearen indarraren arabera). Bizitzarik gabe: puztu eta lehertu.
+- **Herri txikia, baina ezagutzen duzuna** → herri handi baten ordez, etxe gutxi eta denak esanguratsuak:
+  etxe-izenak (euskal etxeen ohitura), bakoitzean norbait (eguna/gaua), ATEA JO, eta Amaiurren etxea
+  barrutik, istorioaren oroitzapenekin. Herriak aldatzen da zaindariak askatu ahala (Mendietakoak).
+- **Edukiontziak gela hutsetan** → bloke handiek gela "zapore" gabe bat azpi-espazioetan banatzen dute:
+  estalpea (proiektilak geldiarazi), bideak eta, haien atzean, sekretu txikiak (txanpon-zorroak).
+
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da
 neurgarriak diren helburuekin: errore 0 kargan eta ibilbide osoan (bot-probak), 60 fps
