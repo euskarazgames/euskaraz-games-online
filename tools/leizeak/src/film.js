@@ -24,6 +24,7 @@
     $("hud").style.opacity = "0";
     $("touch").style.visibility = "hidden";
     $("pause").hidden = true;
+    $("deiaRing").hidden = true;
     $("waypoint").hidden = true;
     $("prompt").hidden = true;
     if (guideBeacon) guideBeacon.visible = false;
@@ -143,6 +144,7 @@
     $("hud").style.opacity = "1";
     $("touch").style.visibility = "";
     $("pause").hidden = !started;
+    $("deiaRing").hidden = !RING.on;
     const f = FILM.after;
     FILM.after = null;
     if (f) f();

@@ -424,6 +424,8 @@
       N = NPCS.find((n) => n.id === "irati");
     if (ZONE.cur !== "ibarra") enterZone("ibarra", { x: sp.x + 4, y: 0, z: sp.z + 5, a: PI }, true);
     PRO.ghost = false;
+    RING.on = false;
+    $("deiaRing").hidden = true;
     proBeamsShow(false);
     film(
       [
@@ -458,7 +460,7 @@
   function proTitle() {
     film(
       [
-        { d: 7.5, cam: [[6, 4, 46], [10, 26, 70]], look: [[0, 3, 30], [10, 30, -110]], title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
+        { d: 7.5, cap: null, cam: [[6, 4, 46], [10, 26, 70]], look: [[0, 3, 30], [10, 30, -110]], title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
         { d: 4.5, cam: [[10, 26, 70], [11, 28, 72]], look: [10, 30, -110], say: "pro_g6", fade: "out", title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
       ],
       proEnd,

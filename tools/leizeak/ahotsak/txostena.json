@@ -33,5 +33,278 @@
   "seed": 105106,
   "dur": 3.45,
   "asr": "Oihartzun bat naiz, zuk gogoratzen nauzun bitartean, hemen nago."
+ },
+ "pro_i3": {
+  "who": "IRATI",
+  "cer": 0.024,
+  "seed": 105100,
+  "dur": 4.07,
+  "asr": "Hiru gaudira txalaparteak bakarrik jotzen duela, ez da Mari norbaitek deitzen zaitu."
+ },
+ "pro_i4": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105100,
+  "dur": 2.66,
+  "asr": "Isilik, ilunpean izenek belarriak dituzte."
+ },
+ "pro_i5": {
+  "who": "IRATI",
+  "cer": 0.022,
+  "seed": 105100,
+  "dur": 2.77,
+  "asr": "Lehenik argia, piztu zutondoa zure sorginkeriaz."
+ },
+ "pro_i6": {
+  "who": "IRATI",
+  "cer": 0.058,
+  "seed": 105100,
+  "dur": 3.7,
+  "asr": "Hori da, orain begiratu gora ganbarara, nire makillaka daude oraindik."
+ },
+ "pro_i6b": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105100,
+  "dur": 3.45,
+  "asr": "Ganbara garaiegi dago jauzi batentzat, airean jauzi berriro."
+ },
+ "pro_i7": {
+  "who": "IRATI",
+  "cer": 0.027,
+  "seed": 105100,
+  "dur": 3.9,
+  "asr": "Txarapartak bi ahots ditu, bata galdetzen du, besteak erantzuten, ez ahaztu."
+ },
+ "pro_i8": {
+  "who": "IRATI",
+  "cer": 0.013,
+  "seed": 105100,
+  "dur": 4.47,
+  "asr": "Gauekoren egua da, baina gogoratu udako atea, zabalik, gogoratu eta zeharkatu."
+ },
+ "pro_i9": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105100,
+  "dur": 4.24,
+  "asr": "Kontuz, gauekoren begiak kalean dabiltza, argiak ukitzen bazaitu, ikusiko zaitu."
+ },
+ "pro_i10": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105108,
+  "dur": 3.68,
+  "asr": "Itxaron itzalean, edo pasatu ziztu bizian, bultzadan ez zaitu ikusten."
+ },
+ "pro_i11": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105108,
+  "dur": 5.39,
+  "asr": "Plazan, itzalak txalapartaren inguruan, begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira."
+ },
+ "pro_i12": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105108,
+  "dur": 2.0,
+  "asr": "Finkatu bat eta jo, gero hurrengoa."
+ },
+ "pro_i13": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105108,
+  "dur": 1.72,
+  "asr": "Begira, amaiur, egunsentia!"
+ },
+ "pro_i14": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105108,
+  "dur": 3.68,
+  "asr": "Ez naiz mamua, oihartzuna naiz eta egunsentian argiago entzuten naiz."
+ },
+ "pro_i15": {
+  "who": "IRATI",
+  "cer": 0.01,
+  "seed": 105108,
+  "dur": 5.52,
+  "asr": "Mari isildu egin da, eta haren leizeak itxi, gauekoren itzalak izakiak gaiztotzen ari dira, basa jaun lehena."
+ },
+ "pro_i16": {
+  "who": "IRATI",
+  "cer": 0.013,
+  "seed": 105108,
+  "dur": 4.41,
+  "asr": "Ikasi erritmoak pello eta pehiorengandik, gero, basoko leizea, ni hemen egongo naiz."
+ },
+ "dei_i1": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105131,
+  "dur": 1.95,
+  "asr": "Hemen nago amaiur, zer behar duzu?"
+ },
+ "dei_i2": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105116,
+  "dur": 1.23,
+  "asr": "Kontuz ibili amaiur."
+ },
+ "dz_leizea1": {
+  "who": "IRATI",
+  "cer": 0.015,
+  "seed": 105131,
+  "dur": 3.47,
+  "asr": "Basa jaunen leizea, basoaren bihotza da amaiur, itzalak barruan daude."
+ },
+ "dz_leizea2": {
+  "who": "IRATI",
+  "cer": 0.014,
+  "seed": 105116,
+  "dur": 4.07,
+  "asr": "Sutegiak itzalita badakizu zer egin, eta gogoratu, begien kolorea, garai..."
+ },
+ "dz_lamia1": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105116,
+  "dur": 3.62,
+  "asr": "Lamien leizea, lehen kantuz betetzen zen, orain, izotza baino ez."
+ },
+ "dz_lamia2": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105100,
+  "dur": 3.79,
+  "asr": "Izotza orainekoa da, iraganean ura dabil, bilatu bidea bietan."
+ },
+ "dz_tartalo1": {
+  "who": "IRATI",
+  "cer": 0.017,
+  "seed": 105116,
+  "dur": 3.32,
+  "asr": "Tartaloren kova, begi bakarra du eta ilunpean dena ikusten du."
+ },
+ "dz_tartalo3": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105116,
+  "dur": 2.4,
+  "asr": "Ez entzun, argia da hemen zure armarik onena."
+ },
+ "dz_jentil1": {
+  "who": "IRATI",
+  "cer": 0.038,
+  "seed": 105116,
+  "dur": 4.34,
+  "asr": "Jentil baratza, jentilak harribiurtu ziren, zeruan argi bitxi bat ikusi zutenean."
+ },
+ "dz_jentil2": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105124,
+  "dur": 2.36,
+  "asr": "Harri hauek gogoratzen dute, entzun eta jo."
+ },
+ "dz_zerua1": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105124,
+  "dur": 2.77,
+  "asr": "Hodeien gainean zaude amaiur, ez begiratu behera."
+ },
+ "dz_zerua2": {
+  "who": "IRATI",
+  "cer": 0.02,
+  "seed": 105124,
+  "dur": 2.94,
+  "asr": "Haizeak gora eramango zaitu, fidatu enararen egoez."
+ },
+ "dz_herensuge1": {
+  "who": "IRATI",
+  "cer": 0.054,
+  "seed": 105124,
+  "dur": 2.89,
+  "asr": "Heren sujearen aitzuloa, beroa sentitzen dut hemendik ere."
+ },
+ "dz_herensuge3": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105162,
+  "dur": 2.4,
+  "asr": "Argiak erakutsiko dizu, beti erakusten du."
+ },
+ "pro_a2": {
+  "who": "AMAIUR",
+  "cer": 0.0,
+  "seed": 105100,
+  "dur": 0.7,
+  "asr": "Gaueko."
+ },
+ "pro_a3": {
+  "who": "AMAIUR",
+  "cer": 0.0,
+  "seed": 105100,
+  "dur": 1.29,
+  "asr": "Atea izoztuta dago."
+ },
+ "pro_a4": {
+  "who": "AMAIUR",
+  "cer": 0.0,
+  "seed": 105100,
+  "dur": 1.51,
+  "asr": "Irati ikusten zaitut."
+ },
+ "pro_a5": {
+  "who": "AMAIUR",
+  "cer": 0.0,
+  "seed": 105100,
+  "dur": 1.74,
+  "asr": "Oraingoan ez zaitut galduko."
+ },
+ "pro_g3": {
+  "who": "GAUEKO",
+  "cer": 0.026,
+  "seed": 103400,
+  "dur": 2.51,
+  "asr": "Aizpak elkarrekin berriro, zein polita."
+ },
+ "pro_g4": {
+  "who": "GAUEKO",
+  "cer": 0.043,
+  "seed": 103400,
+  "dur": 1.78,
+  "asr": "Hor zaude, zorgin txikia."
+ },
+ "pro_g5": {
+  "who": "GAUEKO",
+  "cer": 0.0,
+  "seed": 103400,
+  "dur": 1.4,
+  "asr": "Ikusten zaitut."
+ },
+ "pro_g6": {
+  "who": "GAUEKO",
+  "cer": 0.026,
+  "seed": 103400,
+  "dur": 2.51,
+  "asr": "Zatoz orgin, leizeek zure izena dakite."
+ },
+ "dz_tartalo2": {
+  "who": "GAUEKO",
+  "cer": 0.0,
+  "seed": 103400,
+  "dur": 2.62,
+  "asr": "Ilunpea nire etxea da sorgin, ongi etorri."
+ },
+ "dz_herensuge2": {
+  "who": "GAUEKO",
+  "cer": 0.024,
+  "seed": 103400,
+  "dur": 2.47,
+  "asr": "Zazpi buru, zazpi gezur, zein da egia zorgin?"
  }
 }

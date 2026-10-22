@@ -353,7 +353,9 @@
     const sp = TXALA.spots[0];
     if (!sp) return;
     for (const pl of sp.planks) pl.position.y = mix(pl.position.y, 1.33, 1 - Math.exp(-dt * 10));
-    if (!((DAY.k > 0.6 && clockRuns()) || PRO.ghost) || TXALA.on) return;
+    const on = ((DAY.k > 0.6 && clockRuns()) || PRO.ghost) && !TXALA.on;
+    ghostSticks(sp, dt, on);
+    if (!on) return;
     DAY.ghostT -= dt;
     if (DAY.ghostT > 0) return;
     const seq = GHOST_SEQ[DAY.ghostSeq % GHOST_SEQ.length];
@@ -372,6 +374,38 @@
     if (d < 32 && !cinematic) SND.tok(s, true, clamp(1 - d / 32, 0, 1) * 0.5);
   }
 
+  /* makila fantasmak: oholen bi aldeetan (L eta R), kolpe bakoitzean behera eta distira */
+  function ghostSticks(sp, dt, on) {
+    if (!sp.ghost) {
+      sp.ghost = [-1, 1].map((s) => {
+        const pv = new T.Group(),
+          mat = new T.MeshBasicMaterial({ color: "#bff6ff", transparent: true, opacity: 0, blending: T.AdditiveBlending, depthWrite: false }),
+          st = new T.Mesh(new T.CylinderGeometry(0.035, 0.055, 1.1, 6), mat),
+          halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#9fd8ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0 }));
+        /* eskua (pv) oholen alboan; makila erdirantz */
+        st.rotation.x = PI / 2;
+        st.position.z = -s * 0.55;
+        halo.position.z = -s * 1.08;
+        halo.scale.setScalar(0.9);
+        pv.add(st, halo);
+        pv.position.set(0, 1.65, s * 1.25);
+        sp.g.add(pv);
+        return { pv, mat, halo, s, k: 0 };
+      });
+    }
+    for (const G of sp.ghost) {
+      const pl = sp.planks[G.s < 0 ? 0 : 2],
+        hit = pl.position.y < 1.29;
+      G.k = mix(G.k, on ? 1 : 0, 1 - Math.exp(-dt * 3));
+      G.mat.opacity = 0.75 * G.k;
+      G.halo.material.opacity = (hit ? 0.9 : 0.35) * G.k;
+      G.pv.visible = G.k > 0.01;
+      /* atsedenean punta gora; kolpean, oholaren gainera */
+      const a = hit ? -G.s * 0.25 : G.s * 0.9;
+      G.pv.rotation.x = mix(G.pv.rotation.x, a, 1 - Math.exp(-dt * (hit ? 40 : 7)));
+      G.pv.position.y = 1.65 + Math.sin(time * 2 + G.s) * 0.04;
+    }
+  }
   /* ------------------------------ Gauekoren itzalak ------------------------------ */
   function nightFoes(dt) {
     for (const e of ENEMIES) {

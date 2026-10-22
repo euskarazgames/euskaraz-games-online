@@ -46,6 +46,7 @@ def main():
     ap.add_argument('--cer', type=float, default=0.08)
     ap.add_argument('--batch', type=int, default=6, help='pertsonaia bereko lerroak batera (CPU-n azkarrago)')
     ap.add_argument('--kbps', default='48k')
+    ap.add_argument('--speed', type=float, default=1.0, help='<1: astiroago (denbora gehiago testu osorako)')
     a = ap.parse_args()
 
     import numpy as np, soundfile as sf, librosa, torch
@@ -106,7 +107,9 @@ def main():
                 seed = R.get('seed', 7) * 100 + k * 31 + i
                 torch.manual_seed(seed)
                 texts = [lines[l][1] for l in chunk]
-                wavs = model.generate(text=texts, language=['eu'] * len(chunk), voice_clone_prompt=[prompts[key]] * len(chunk))
+                # berriro saiatzean, denbora pixka bat gehiago: azken hitzak ez dira galtzen
+                sp = a.speed * (0.92 if k else 1.0)
+                wavs = model.generate(text=texts, language=['eu'] * len(chunk), voice_clone_prompt=[prompts[key]] * len(chunk), speed=[sp] * len(chunk))
                 for lid, w in zip(chunk, wavs):
                     w = w.astype(np.float32)
                     cer, hyp = check(lines[lid][1], w)

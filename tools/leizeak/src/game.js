@@ -3538,6 +3538,7 @@
     paused = true;
     clearInput();
     $("cinema").hidden = false;
+    $("deiaRing").hidden = true;
     $("hud").style.opacity = "0";
     $("touch").style.visibility = "hidden";
     $("waypoint").hidden = true;
@@ -3593,6 +3594,7 @@
     clearInput();
     accumulator = 0;
     $("cinema").hidden = true;
+    $("deiaRing").hidden = !RING.on;
     $("hud").style.opacity = "1";
     $("touch").style.visibility = "";
     $("chapterTitle").style.opacity = 0;
@@ -3610,7 +3612,7 @@
     const pk = (innerHeight > innerWidth ? 1.55 : 1) * (ZONES[ZONE.cur].outdoor ? 1 : 0.85),
       /* oihartzun-deietan: Amaiur hurbiletik, isilik entzuten */
       near = scenes[c.i].call,
-      pos = sh[6] ? new T.Vector3(...sh[6]) : look.clone().add(near ? new T.Vector3(3.6 * Math.cos(a + c.t * 0.05), 2.2, 4.6).multiplyScalar(innerHeight > innerWidth ? 1.3 : 1) : new T.Vector3(9 * Math.cos(a + c.t * 0.035), ZONES[ZONE.cur].outdoor ? 7 : 11, 12).multiplyScalar(pk));
+      pos = sh[6] ? new T.Vector3(...sh[6]) : look.clone().add(near ? new T.Vector3(3.6 * Math.cos(a + c.t * 0.05), 2.2, 4.6).multiplyScalar(innerHeight > innerWidth ? 1.75 : 1) : new T.Vector3(9 * Math.cos(a + c.t * 0.035), ZONES[ZONE.cur].outdoor ? 7 : 11, 12).multiplyScalar(pk));
     camera.position.lerp(pos, 1 - Math.exp(-dt * 2));
     camera.lookAt(look);
     CAM.cineLook = look;
@@ -3626,6 +3628,8 @@
     }
     if (c.typing && c.vOn) {
       c.shown += dt * (c.vEnd ? Math.max(14, c.full.length / Math.max(0.6, c.vEnd * 0.85)) : 50);
+      /* ahotsarekin: testua audioaren erlojuari lotuta (fotograma motelekin ere ez da atzeratzen) */
+      if (c.vEnd && VOICE.cur && VOICE.cur.id === c.voice) c.shown = Math.max(c.shown, ((SND.ctx.currentTime - VOICE.cur.t0) / (VOICE.cur.dur * 0.85)) * c.full.length);
       const n = Math.min(c.full.length, Math.floor(c.shown));
       if (n !== c.lastN) {
         $("cineText").textContent = c.full.slice(0, n);

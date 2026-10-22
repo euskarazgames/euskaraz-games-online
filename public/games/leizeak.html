@@ -245,6 +245,7 @@ body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{v
 #locCap{position:fixed;right:26px;top:72px;z-index:12;pointer-events:none;text-align:right;white-space:pre;font:600 12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em;color:#d7efe9;text-shadow:0 0 10px #000,0 1px 2px #000;transition:opacity 1.2s}
 #locCap.out{opacity:0}
 @media(max-width:600px){#locCap{font-size:10px;right:14px;top:64px}}
+@media(pointer:coarse) and (orientation:portrait){#deiaRing{top:168px;padding:7px 12px 7px 10px;font-size:11px;gap:8px}#deiaRing b{font-size:10px;letter-spacing:.12em}}
 
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>LEIZEEN DEIA<small id="loadLabel">Txalapartak gauez jotzen du…</small><i><b id="loadBar"></b></i></div></div>
 <section id="start"><div class="eyebrow">EUSKARAZ GAMES · OIHARTZUN II</div><h1>LEIZEEN<span>DEIA</span></h1><p id="premise"></p><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>01 · BASAJAUNEN LEIZEA</span><div><button id="credits">KREDITUAK</button> <button id="reset">↺</button></div></div></section>
@@ -9270,7 +9271,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const A = AREAS[id] || ROOMS_AREA[id];
     if (!A) return;
     $("placeName").textContent = A[0];
-    if (!AREA.seen.has(id)) {
+    /* hitzaurrean ez (bere errotuluak ditu); lehen benetako bisitan agertuko da */
+    if (!AREA.seen.has(id) && !PRO.on) {
       AREA.seen.add(id);
       title(A[0], A[0]);
       if (A[1]) notify(A[1], "", 4);
@@ -17410,7 +17412,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const sp = TXALA.spots[0];
     if (!sp) return;
     for (const pl of sp.planks) pl.position.y = mix(pl.position.y, 1.33, 1 - Math.exp(-dt * 10));
-    if (!((DAY.k > 0.6 && clockRuns()) || PRO.ghost) || TXALA.on) return;
+    const on = ((DAY.k > 0.6 && clockRuns()) || PRO.ghost) && !TXALA.on;
+    ghostSticks(sp, dt, on);
+    if (!on) return;
     DAY.ghostT -= dt;
     if (DAY.ghostT > 0) return;
     const seq = GHOST_SEQ[DAY.ghostSeq % GHOST_SEQ.length];
@@ -17429,6 +17433,38 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (d < 32 && !cinematic) SND.tok(s, true, clamp(1 - d / 32, 0, 1) * 0.5);
   }
 
+  /* makila fantasmak: oholen bi aldeetan (L eta R), kolpe bakoitzean behera eta distira */
+  function ghostSticks(sp, dt, on) {
+    if (!sp.ghost) {
+      sp.ghost = [-1, 1].map((s) => {
+        const pv = new T.Group(),
+          mat = new T.MeshBasicMaterial({ color: "#bff6ff", transparent: true, opacity: 0, blending: T.AdditiveBlending, depthWrite: false }),
+          st = new T.Mesh(new T.CylinderGeometry(0.035, 0.055, 1.1, 6), mat),
+          halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#9fd8ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0 }));
+        /* eskua (pv) oholen alboan; makila erdirantz */
+        st.rotation.x = PI / 2;
+        st.position.z = -s * 0.55;
+        halo.position.z = -s * 1.08;
+        halo.scale.setScalar(0.9);
+        pv.add(st, halo);
+        pv.position.set(0, 1.65, s * 1.25);
+        sp.g.add(pv);
+        return { pv, mat, halo, s, k: 0 };
+      });
+    }
+    for (const G of sp.ghost) {
+      const pl = sp.planks[G.s < 0 ? 0 : 2],
+        hit = pl.position.y < 1.29;
+      G.k = mix(G.k, on ? 1 : 0, 1 - Math.exp(-dt * 3));
+      G.mat.opacity = 0.75 * G.k;
+      G.halo.material.opacity = (hit ? 0.9 : 0.35) * G.k;
+      G.pv.visible = G.k > 0.01;
+      /* atsedenean punta gora; kolpean, oholaren gainera */
+      const a = hit ? -G.s * 0.25 : G.s * 0.9;
+      G.pv.rotation.x = mix(G.pv.rotation.x, a, 1 - Math.exp(-dt * (hit ? 40 : 7)));
+      G.pv.position.y = 1.65 + Math.sin(time * 2 + G.s) * 0.04;
+    }
+  }
   /* ------------------------------ Gauekoren itzalak ------------------------------ */
   function nightFoes(dt) {
     for (const e of ENEMIES) {
@@ -24556,6 +24592,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     $("hud").style.opacity = "0";
     $("touch").style.visibility = "hidden";
     $("pause").hidden = true;
+    $("deiaRing").hidden = true;
     $("waypoint").hidden = true;
     $("prompt").hidden = true;
     if (guideBeacon) guideBeacon.visible = false;
@@ -24675,6 +24712,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     $("hud").style.opacity = "1";
     $("touch").style.visibility = "";
     $("pause").hidden = !started;
+    $("deiaRing").hidden = !RING.on;
     const f = FILM.after;
     FILM.after = null;
     if (f) f();
@@ -25263,6 +25301,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       N = NPCS.find((n) => n.id === "irati");
     if (ZONE.cur !== "ibarra") enterZone("ibarra", { x: sp.x + 4, y: 0, z: sp.z + 5, a: PI }, true);
     PRO.ghost = false;
+    RING.on = false;
+    $("deiaRing").hidden = true;
     proBeamsShow(false);
     film(
       [
@@ -25297,7 +25337,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function proTitle() {
     film(
       [
-        { d: 7.5, cam: [[6, 4, 46], [10, 26, 70]], look: [[0, 3, 30], [10, 30, -110]], title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
+        { d: 7.5, cap: null, cam: [[6, 4, 46], [10, 26, 70]], look: [[0, 3, 30], [10, 30, -110]], title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
         { d: 4.5, cam: [[10, 26, 70], [11, 28, 72]], look: [10, 30, -110], say: "pro_g6", fade: "out", title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
       ],
       proEnd,
@@ -27131,6 +27171,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     paused = true;
     clearInput();
     $("cinema").hidden = false;
+    $("deiaRing").hidden = true;
     $("hud").style.opacity = "0";
     $("touch").style.visibility = "hidden";
     $("waypoint").hidden = true;
@@ -27186,6 +27227,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     clearInput();
     accumulator = 0;
     $("cinema").hidden = true;
+    $("deiaRing").hidden = !RING.on;
     $("hud").style.opacity = "1";
     $("touch").style.visibility = "";
     $("chapterTitle").style.opacity = 0;
@@ -27203,7 +27245,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const pk = (innerHeight > innerWidth ? 1.55 : 1) * (ZONES[ZONE.cur].outdoor ? 1 : 0.85),
       /* oihartzun-deietan: Amaiur hurbiletik, isilik entzuten */
       near = scenes[c.i].call,
-      pos = sh[6] ? new T.Vector3(...sh[6]) : look.clone().add(near ? new T.Vector3(3.6 * Math.cos(a + c.t * 0.05), 2.2, 4.6).multiplyScalar(innerHeight > innerWidth ? 1.3 : 1) : new T.Vector3(9 * Math.cos(a + c.t * 0.035), ZONES[ZONE.cur].outdoor ? 7 : 11, 12).multiplyScalar(pk));
+      pos = sh[6] ? new T.Vector3(...sh[6]) : look.clone().add(near ? new T.Vector3(3.6 * Math.cos(a + c.t * 0.05), 2.2, 4.6).multiplyScalar(innerHeight > innerWidth ? 1.75 : 1) : new T.Vector3(9 * Math.cos(a + c.t * 0.035), ZONES[ZONE.cur].outdoor ? 7 : 11, 12).multiplyScalar(pk));
     camera.position.lerp(pos, 1 - Math.exp(-dt * 2));
     camera.lookAt(look);
     CAM.cineLook = look;
@@ -27219,6 +27261,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     if (c.typing && c.vOn) {
       c.shown += dt * (c.vEnd ? Math.max(14, c.full.length / Math.max(0.6, c.vEnd * 0.85)) : 50);
+      /* ahotsarekin: testua audioaren erlojuari lotuta (fotograma motelekin ere ez da atzeratzen) */
+      if (c.vEnd && VOICE.cur && VOICE.cur.id === c.voice) c.shown = Math.max(c.shown, ((SND.ctx.currentTime - VOICE.cur.t0) / (VOICE.cur.dur * 0.85)) * c.full.length);
       const n = Math.min(c.full.length, Math.floor(c.shown));
       if (n !== c.lastN) {
         $("cineText").textContent = c.full.slice(0, n);
