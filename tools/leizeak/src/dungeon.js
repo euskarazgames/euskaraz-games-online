@@ -392,7 +392,7 @@
     const DG = DGS[ZONE.cur];
     if (!DG) return;
     /* zuziak dir-dir, eta gertuko bi zuziek argi errealak */
-    let near = DG.torches.map((t) => [Math.hypot(t.x - P.x, t.z - P.z), t]).sort((a, b) => a[0] - b[0]);
+    let near = DG.torches.filter((t) => !t.off).map((t) => [Math.hypot(t.x - P.x, t.z - P.z), t]).sort((a, b) => a[0] - b[0]);
     for (const [i, l] of DG.lights.entries()) {
       const t = near[i] && near[i][1];
       if (!t) continue;
@@ -402,7 +402,7 @@
     }
     for (const t of DG.torches) {
       t.fl.material.opacity = 0.55 + Math.sin(time * 11 + t.ph) * 0.12;
-      t.fl.visible = !t.side || t.side.k < 0.5;
+      t.fl.visible = !t.off && (!t.side || t.side.k < 0.5);
     }
     if (DG.exitGlow) DG.exitGlow.material.opacity = 0.25 + Math.sin(time * 2) * 0.1;
     /* gelaren lainoa (gela ilunak) */

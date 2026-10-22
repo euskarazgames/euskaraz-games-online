@@ -43,7 +43,8 @@
     if (saved.cleared.includes(def.clearId) || ROOM.fight) return;
     ROOM.fight = Object.assign(R, { boss: true });
     clearEnemies();
-    const e = spawnEnemy("brute", 0, x, z, R.y || 0);
+    /* def.type: zaindari mota (lehenetsia: hezurdura erraldoia) */
+    const e = spawnEnemy(def.type || "brute", 0, x, z, R.y || 0);
     e.room = R;
     e.mini = true;
     e.K = def.K || 1.12;

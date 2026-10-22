@@ -40,7 +40,9 @@ const { launch } = require('./_browser');
   await ev(() => { __game.renderer.setPixelRatio(0.5); __game.renderer.shadowMap.enabled = false; });
   await page.click('#play');
   await wait(600);
-  ok(await ev(() => !!__game.cinematicState()), 'hasierako eszena');
+  /* hitzaurrea (zinema eta erronkak) leizeak_prologoa.js-ek egiaztatzen du; hemen saltatu */
+  ok(await ev(() => __game.FILM.on && __game.PRO.on), 'hasierako zinema (hitzaurrea)');
+  await ev(() => __game.prologueSkip());
   await skipScenes();
   ok((await flags()).includes('intro'), 'intro bandera');
 

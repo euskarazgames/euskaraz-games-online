@@ -19,9 +19,15 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   arrakalak), jentilak.js (Jentilbaratza, sutondoak, lasterbideak, Errolan), enara.js (planeatzea eta
   haize-zutabeak), zerua.js (Jentilen zerua, uharteak, ortzadarra), odei.js (Odei), herria.js (etxe-izenak,
   ATEA JO, Iturralde etxea barrutik), ispilua.js (EGUZKI-ISPILUA: argi-zutabeak, izpia, ispilu-harriak,
-  kristalak, sare beltzak), herensuge.js (Herensugearen haitzuloa, laba, Odeiren hodeia, Herensugea)…). Ez editatu `public/games/leizeak.html` zuzenean:
+  kristalak, sare beltzak), herensuge.js (Herensugearen haitzuloa, laba, Odeiren hodeia, Herensugea),
+  film.js (zinema: letterbox, errotuluak, azpitituluak), ahotsak.js (ahotsak, Web Audio iragazkiak),
+  deiak.js (OIHARTZUN-DEIAK: Iratiren deiak, DEITU · IRATI), prologoa.js (hitzaurrea: erronka bakoitzak
+  tresna bat irakasten du; partida berrietan bakarrik)…). Ez editatu `public/games/leizeak.html` zuzenean:
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
+  Ahotsak: `tools/leizeak/ahotsak/lerroak.json` (testuak; build-ean txertatzen dira azpititulu gisa) →
+  `sortu.py` (OmniVoice, CPU) → `public/assets/voice/leizeak/<id>.mp3`. Ahots sintetikoak bakarrik
+  (erref/: diseinatutako erreferentziak); ez klonatu inoren ahotsik. Lizentziak: `public/assets/CREDITS.md`.
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
 - `public/assets/{tex,sky,covers}` — testurak, zeruak eta atariko irudiak. Kredituak: `public/assets/CREDITS.md`.
 - `public/garena`, `public/ataria`, `src/ataria.js` — GARENA katalogoa (jokoetatik aparte).
@@ -58,4 +64,5 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_jentilak.js http://127.0.0.1:80
 NODE_PATH=$(npm root -g) node tools/test/leizeak_zerua.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_herria.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_herensuge.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_prologoa.js http://127.0.0.1:8091/games/leizeak.html
 ```

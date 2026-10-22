@@ -200,6 +200,33 @@ Mekanika orokorrak bakarrik (argi-izpiak islatzea genero osoko puzzle klasikoa d
 - **Buru askoko herensugea** → euskal ipuinetako zazpi buruko herensugea: hemen, sei buru Gauekoren gezurrak
   dira, eta zazpigarrena, benetakoa, askatu egiten da (haren alaba Lamien putzuko herensuge gaztea da).
 
+## 5h. Hasiera mailakatua eta kontaketa (gure eran, IV)
+Erabiltzailearen eskaerak: istorioa pixkanaka hastea, eszena zinematografikoekin, eta tresnak erronka
+txikien bidez irakastea (gero istorioan behar direnak); kontaketan, deien eta ezkutuko misioen giroa.
+Ideia orokorrak bakarrik (ez beste jokoen edukirik, ez interfazerik, ez testurik):
+- **ZINEMA** (`film.js`) → letterbox-a, kamera-bidaiak, kokapen- eta ordu-errotuluak makinaz idatziak
+  ("IBARRA HARANA · 03:12"), azpitituluak eta ahotsak, beltzera urtzeak eta izenburu-txartela. SALTATU beti.
+- **HITZAURREA "OIHARTZUNA"** (`prologoa.js`) → gaua, txalaparta bakarrik, Gauekoren begiak hodeietan;
+  Amaiur Iturralden esnatzen da eta erronka bakoitzak tresna bat irakasten du:
+  MUGITU (harria dardaraka) → SORGINKERIA (sutondoa; gero leizeetako sutegiak) → JAUZI BIKOITZA
+  (ganbara; Iratiren makilak = txalaparta) → GARAIA (atea izoztuta orainean, zabalik udan) → BULTZADA
+  (Gauekoren begiak kalean: itzalean itxaron edo ziztu bizian pasatu; harrapatuz gero, atera itzuli) →
+  FINKATU eta garaiak borrokan (plazako itzalak, bat urre-begiduna). Egunsentia, Irati eta izenburua.
+  Ikasi gabeko tresnak blokeatuta (eta botoiak ezkutatuta) hitzaurrean bakarrik; partida zaharrek libre.
+- **OIHARTZUN-DEIAK** (`deiak.js`) → Iratiren ahotsa oihartzun-harritik: deia jotzen (txalaparta-kolpe
+  bigunak, ◀ ◀ ▶), ERANTZUN, erretratu biribila, uhina eta ahotsa. Gauekok deia "zulatzen" du
+  (interferentzia gorria). Menuan, DEITU · IRATI: helburuaren araberako aholkua. Leize bakoitzaren lehen
+  sarreran, Iratiren deia (Tartalorenean eta Herensugearenean Gauekok zulatua); borrokan ez da bakarrik
+  irekitzen, eta luzaroan erantzun gabe "galdutako deia" da (menutik berreskuratu).
+- **Kokapen-errotuluak** → zona-aldaketa bakoitzean, goian eskuinean, makinaz: zonaren izena, ordua eta
+  garaia ("BASAJAUNEN LEIZEA / 07:12 · IRAGANA").
+- **AHOTSAK** (`ahotsak.js`, `tools/leizeak/ahotsak/`) → ahots sintetikoak (OmniVoice, euskaraz; inor ez
+  da klonatu: pertsonaia bakoitza generoz, adinez eta tonuz diseinatua). Euskarazko Whisper batek lerro
+  bakoitza transkribatzen du eta argia ez bada berriro sortzen da. Jokoan: Iratiri oihartzun-iragazkia,
+  Gaueko baxuago eta erreberberazioarekin; hitz egitean musika jaisten da. Audiorik gabe, testua bakarrik.
+- **Kamera** → BULTZADAn ez dago FOV-kolperik; kamerak malguki kritikoki moteldua erabiltzen du
+  (azelerazioa zerotik hasten da), eta aurrera-begiratzeak abiadura mugatua du.
+
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da
 neurgarriak diren helburuekin: errore 0 kargan eta ibilbide osoan (bot-probak), 60 fps

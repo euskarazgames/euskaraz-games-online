@@ -78,6 +78,7 @@
       persist();
       AREA.cur = "";
       hud();
+      zoneEntered(id);
     };
     if (instant) return go();
     ZONE.pending = go;

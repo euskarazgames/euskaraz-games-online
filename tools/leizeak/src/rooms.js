@@ -485,10 +485,20 @@
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀" };
+  const ICONS = { makilak: "≋", giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀" };
   function itemMesh(icon) {
     const g = new T.Group();
-    if (icon === "giltza" || icon === "giltzanagusia") {
+    if (icon === "makilak") {
+      /* Iratiren txalaparta-makilak: bi makila gurutzatuta, mutur ilunekin */
+      for (const s of [-1, 1]) {
+        const st = new T.Mesh(new T.CylinderGeometry(0.045, 0.06, 1.15, 8), material("#c99a62", 0.15)),
+          tip = new T.Mesh(new T.SphereGeometry(0.075, 8, 6), material("#5a3c26"));
+        tip.position.y = 0.58;
+        st.add(tip);
+        st.rotation.z = s * 0.42;
+        g.add(st);
+      }
+    } else if (icon === "giltza" || icon === "giltzanagusia") {
       const k = model("key", 0, 0, 0, icon === "giltzanagusia" ? 1.1 : 0.8, 0, g);
       k.rotation.z = PI / 2;
       if (icon === "giltzanagusia") k.traverse((n) => n.isMesh && (n.material = material("#ff9d4a", 0.6)));

@@ -728,7 +728,7 @@
       SND.land(k);
     },
     dash() {
-      CAM.fovKick = 7;
+      /* kamerak ez du kolperik jasotzen (FOV-jauzirik ez): abiadura arrastoak eta soinuak ematen dute */
       squash(-1.4);
       fxBurst(P.x, P.y + 1, P.z, { n: 14, speed: 3, life: 0.4, size: 0.24, color: eraCol(), grav: 0, drag: 6, jitter: 0.6 });
       SND.dash();
@@ -1023,6 +1023,27 @@
     }
     return {
       init,
+      get ctx() {
+        return ctx;
+      },
+      /* oihartzun-deia: interferentzia (Gauekoren sarrera) */
+      static(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.45, 0.07 * v, "bandpass", 2600, 900, 0.5);
+        hiss(t + 0.05, 0.25, 0.04 * v, "highpass", 5200, 7000, 0.7);
+        tone("square", 55, t, 0.005, 0.3, 0.02 * v, sfx, 48);
+      },
+      /* ahotsak (ahotsak.js): bus nagusia eta erreberberazioa; hitz egitean musika eta giroa jaitsi */
+      voiceNodes() {
+        return ctx ? { master, verbIn } : null;
+      },
+      duck(on) {
+        if (!ctx) return;
+        const t = ctx.currentTime;
+        mus.gain.setTargetAtTime(on ? 0.15 : 0.42, t, on ? 0.08 : 0.7);
+        amb.gain.setTargetAtTime(on ? 0.12 : 0.32, t, on ? 0.08 : 0.7);
+      },
       setMuted(m) {
         if (!ctx) return;
         master.gain.setTargetAtTime(m ? 0 : 0.9, ctx.currentTime, 0.05);
@@ -1697,6 +1718,8 @@
   }
   function coachUpdate() {
     if (!started || paused || cinematic || TXALA.on) return;
+    /* hitzaurreko irakaspenak (pro-*) ez ordezkatu */
+    if (PRO.on && COACH.cur && COACH.cur.startsWith("pro-")) return;
     const fight = !!ROOM.fight || ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 16);
     if (ATK.n && COACH.cur === "attack") coachDone("attack");
     if (MAG.charging && COACH.cur === "charge") coachDone("charge");
@@ -1768,6 +1791,10 @@
   /* @include herria.js */
   /* @include ispilua.js */
   /* @include herensuge.js */
+  /* @include ahotsak.js */
+  /* @include film.js */
+  /* @include deiak.js */
+  /* @include prologoa.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -2322,6 +2349,7 @@
   }
   function dash() {
     if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer || P.riding || P.climb) return;
+    if (!PRO.can.dash) return proNope("dash");
     let d = direction();
     if (Math.hypot(d.x, d.z) < 0.1) d = { x: Math.sin(P.angle), z: Math.cos(P.angle) };
     const n = Math.hypot(d.x, d.z) || 1;
@@ -2339,6 +2367,7 @@
   }
   function switchPhase() {
     if (!started || paused || TXALA.on || phaseCooldown > 0 || respawnTimer) return;
+    if (!PRO.can.phase) return proNope("phase");
     phase = 1 - phase;
     phaseCooldown = 0.22;
     shiftFlash = 1;
@@ -2739,6 +2768,13 @@
       sun.intensity = 0.38;
       ambient.intensity = 0.5;
       scene.fog.color.copy(CAVE_PAST).lerp(CAVE_NOW, phaseBlend);
+      /* etxean gauez: ilargi-argia leihotik; sutondoa itzalita badago, are ilunago */
+      if (ZONE.cur === "etxea" && DAY.k > 0.5) {
+        const cold = DGE.hearth && DGE.hearth.unlit;
+        sun.color.set("#7f9fd8");
+        sun.intensity = cold ? 0.22 : 0.3;
+        ambient.intensity = cold ? 0.2 : 0.34;
+      }
     }
     scene.background.copy(scene.fog.color);
     if (sky.material.uniforms.uFog) sky.material.uniforms.uFog.value.copy(scene.fog.color);
@@ -2749,6 +2785,9 @@
      ================================================================== */
   function actionHere() {
     if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer || P.climb) return null;
+    if (RING.on && ringReach()) return { kind: "talk", label: L("ERANTZUN"), fn: deiaAnswer };
+    const PA = proActionNear();
+    if (PA) return PA;
     const N = npcNear();
     if (N) return { kind: "talk", label: L("HITZ EGIN"), fn: () => talkTo(N) };
     const OC = odeiCloudNear();
@@ -2816,8 +2855,11 @@
       camera.lookAt(...ov.look);
       return;
     }
+    /* aurrera begiratu: abiadura mugatua (bultzadak eta kateak ez dute kamera aurrera-atzera astintzen) */
+    const lv = Math.hypot(P.vx, P.vz),
+      lk = lv > 9 ? 9 / lv : 1;
     CAM.look.lerp(
-      new T.Vector3(clamp(P.vx * 0.26, -3.2, 3.2), 0, clamp(P.vz * 0.26, -3.2, 3.2)),
+      new T.Vector3(clamp(P.vx * lk * 0.26, -3.2, 3.2), 0, clamp(P.vz * lk * 0.26, -3.2, 3.2)),
       1 - Math.exp(-dt * 2.4),
     );
     const F = camFrame();
@@ -2864,8 +2906,21 @@
     const target = look.clone().add(offset);
     /* haranean: muinoek eta mendi-hegalek ez dezatela Amaiur estali */
     if (ZONE.cur === "ibarra") camTerrainLift(look, target);
-    if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) CAM.pos = camera.position.clone();
-    CAM.pos.lerp(target, 1 - Math.exp(-dt * 7));
+    if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) {
+      CAM.pos = camera.position.clone();
+      CAM.vel = new T.Vector3();
+    }
+    /* malguki kritikoki moteldua (SmoothDamp): abiadura-aldaketa bortitzetan (bultzada, katea)
+       kamerak ez du kolperik: azelerazioa zerotik hasten da eta leunki itzaltzen da */
+    const w = 11,
+      wx = w * dt,
+      ex = 1 / (1 + wx + 0.48 * wx * wx + 0.235 * wx * wx * wx);
+    for (const k of ["x", "y", "z"]) {
+      const ch = CAM.pos[k] - target[k],
+        tmp = (CAM.vel[k] + w * ch) * dt;
+      CAM.vel[k] = (CAM.vel[k] - w * tmp) * ex;
+      CAM.pos[k] = target[k] + (ch + tmp) * ex;
+    }
     camera.position.copy(CAM.pos);
     const sh = CAM.trauma * CAM.trauma;
     if (sh > 0.0005) {
@@ -2905,7 +2960,7 @@
     updateWorld(0);
     AREA.cur = "";
     hud();
-    if (!flag("intro")) introScene();
+    if (!flag("intro")) prologueStart();
     else {
       title(ZONES[ZONE.cur].name, "");
       notify(L("Bideak zure urratsak gogoratzen ditu."), "", 3);
@@ -2927,7 +2982,7 @@
     );
   }
   function pause() {
-    if (cinematic || GET.on) return;
+    if (cinematic || GET.on || FILM.on) return;
     if (TXALA.on) return txalaClose();
     if (!started || !$("overlay").hidden) return;
     const zoneName = ZONES[ZONE.cur].name;
@@ -2947,6 +3002,7 @@
       [
         [L("JARRAITU"), () => {}],
         [L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)],
+        ...(saved.flags.includes("intro") || saved.flags.includes("pro-deia") ? [[L("DEITU · IRATI"), () => setTimeout(iratiCall, 0)]] : []),
         [L("KONTROLAK"), help],
         [
           L("LAGUNTZA: ") + (saved.assist ? "BAI" : "EZ"),
@@ -2972,11 +3028,18 @@
       ],
     );
   }
+  /* tekla-zerrenda: hitzaurrean, ikasitako tresnak bakarrik */
+  function keysRender() {
+    const has = (k) => saved.items.includes(k);
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
+      .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
+      .join("");
+  }
   function translate() {
     document.documentElement.lang = language;
     $("premise").textContent =
       "Erlojua hautsi zenetik urtebetera, Ibarrako txalapartak gauez jotzen hasi dira, inork ukitu gabe.\nMari isildu da. Haren leizeak itxita daude.\nZu Amaiur zara, sorgina. Deia entzun duzu.";
-    $("play").textContent = saved.flags.includes("intro") ? "JARRAITU →" : "DEIARI ERANTZUN →";
+    $("play").textContent = saved.flags.includes("intro") || saved.flags.includes("pro-0") ? "JARRAITU →" : "DEIARI ERANTZUN →";
     $("helpBtn").textContent = "NOLA JOKATU";
     $("phaseBtn").textContent = "ALDATU";
     $("jumpBtn").textContent = "JAUZI";
@@ -2999,9 +3062,7 @@
     $("coinLab").textContent = "TXANPONAK";
     $("keyLab").textContent = "GILTZAK";
     $("bombLab").textContent = "TXIMISTA";
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ...(saved.items.includes("tximistarria") ? [["X", "tximistarria"]] : []), ...(saved.items.includes("enara") ? [["␣ eutsi", "enara"]] : []), ...(saved.items.includes("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
-      .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
-      .join("");
+    keysRender();
     if (ready) {
       setPhaseVisual();
       hud();
@@ -3028,6 +3089,10 @@
     };
     addEventListener("keydown", (e) => {
       if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"].includes(e.code)) e.preventDefault();
+      if (FILM.on) {
+        if (e.code === "Escape") filmSkip();
+        return;
+      }
       /* gauza bat lortu da: edozein tekla → jarraitu */
       if (GET.on) {
         if (!e.repeat && ["Space", "Enter", "KeyE", "Escape", "KeyJ"].includes(e.code)) itemGetClose();
@@ -3068,6 +3133,8 @@
     $("cineNext").onclick = nextShot;
     $("itemGet").onclick = itemGetClose;
     $("cineSkip").onclick = endScene;
+    $("filmSkip").onclick = filmSkip;
+    $("deiaRing").onclick = () => deiaAnswer();
     $("phaseBtn").onclick = switchPhase;
     $("dashBtn").onclick = dash;
     $("jumpBtn").onclick = jump;
@@ -3335,6 +3402,8 @@
       odeiCloudUpdate(dt);
       skyDragonUpdate(dt);
       pouchesUpdate(dt);
+      deiaUpdate(dt);
+      proUpdate(dt);
       if (ZONE.cur === "ibarra") {
         hubUpdate(dt);
         npcsUpdate(dt);
@@ -3377,7 +3446,8 @@
     if (window.__hold) return; /* probetarako: fotogramaz fotograma grabatzeko */
     const raw = Math.min(0.12, (now - last) / 1000);
     last = now;
-    if (cinematic) {
+    if (FILM.on) filmUpdate(raw);
+    else if (cinematic) {
       updateCinema(raw);
       occlusionUpdate(raw);
     } else if (GET.on) {
@@ -3438,7 +3508,7 @@
     guideBeacon = null;
   /* helburuaren urrezko markatzailea (lurrean eraztuna + pantailako gezia) */
   function drawGuide() {
-    const o = started && !cinematic && !CRAFT.on && !ROOM.fight && !BOSS.on ? objective()[1] : null;
+    const o = started && !cinematic && !FILM.on && !CRAFT.on && !ROOM.fight && !BOSS.on ? objective()[1] : null;
     if (!o) {
       $("waypoint").hidden = true;
       if (guideBeacon) guideBeacon.visible = false;
@@ -3477,8 +3547,17 @@
   }
   function showShot() {
     const c = cinematic,
-      sh = scenes[c.i][c.n];
-    Object.assign(c, { t: 0, full: L(sh[1], sh[2]), shown: 0, lastN: -1, typing: true, doneT: 0 });
+      sh = scenes[c.i][c.n],
+      call = !!scenes[c.i].call;
+    voiceStop();
+    /* sh[7]: ahotsaren id-a (ahotsak.js); deietan, larruazal berezia (oihartzun-deia) */
+    Object.assign(c, { t: 0, full: L(sh[1], sh[2]), shown: 0, lastN: -1, typing: true, doneT: 0, voice: sh[7] || null, vOn: !sh[7], vEnd: 0, vT0: 0 });
+    const cin = $("cinema"),
+      intr = call && /^(GAUEKO|INGUMA)/.test(sh[0]);
+    cin.classList.toggle("deia", call);
+    cin.classList.toggle("intrusion", intr);
+    $("cineTag").textContent = call ? (intr ? "OIHARTZUN-DEIA · ▶ ▶ ▶ ▶ · ?" : "OIHARTZUN-DEIA · ◀ ◀ ▶") : "LEIZEEN DEIA";
+    if (intr) SND.static(1);
     $("cineWho").textContent = sh[0];
     $("cineText").textContent = "";
     $("cineFull").textContent = c.full;
@@ -3490,20 +3569,24 @@
       pt.dataset.kind = kind;
     }
     pt.className = kind + " talk";
-    SND.radio();
+    if (!intr) SND.radio();
   }
   function nextShot() {
     if (!cinematic) return;
     const c = cinematic;
     if (c.typing) {
       c.shown = c.full.length; /* lehenik testua osatu */
+      if (!c.vOn) c.vOn = true; /* ahotsa ez da hasi: testua bakarrik */
       return;
     }
+    voiceStop();
     if (++c.n >= scenes[c.i].length) endScene();
     else showShot();
   }
   function endScene() {
     if (!cinematic) return;
+    voiceStop();
+    $("cinema").classList.remove("deia", "intrusion");
     $("portrait").classList.remove("talk");
     cinematic = null;
     paused = false;
@@ -3525,7 +3608,9 @@
       a = c.n % 2 ? -0.35 : 0.3;
     /* leizean: hurbilago eta goitik (hormak); sh[6]: kameraren kokapen finkoa (zerua begiratzeko...) */
     const pk = (innerHeight > innerWidth ? 1.55 : 1) * (ZONES[ZONE.cur].outdoor ? 1 : 0.85),
-      pos = sh[6] ? new T.Vector3(...sh[6]) : look.clone().add(new T.Vector3(9 * Math.cos(a + c.t * 0.035), ZONES[ZONE.cur].outdoor ? 7 : 11, 12).multiplyScalar(pk));
+      /* oihartzun-deietan: Amaiur hurbiletik, isilik entzuten */
+      near = scenes[c.i].call,
+      pos = sh[6] ? new T.Vector3(...sh[6]) : look.clone().add(near ? new T.Vector3(3.6 * Math.cos(a + c.t * 0.05), 2.2, 4.6).multiplyScalar(innerHeight > innerWidth ? 1.3 : 1) : new T.Vector3(9 * Math.cos(a + c.t * 0.035), ZONES[ZONE.cur].outdoor ? 7 : 11, 12).multiplyScalar(pk));
     camera.position.lerp(pos, 1 - Math.exp(-dt * 2));
     camera.lookAt(look);
     CAM.cineLook = look;
@@ -3533,20 +3618,30 @@
     sea.material.uniforms.clock.value += dt;
     if (ZONE.cur === "ibarra") mariUpdate(dt);
     music(dt);
-    if (c.typing) {
-      c.shown += dt * 50;
+    /* ahotsa: kargatuta dagoenean hasi (gehienez 0.8 s itxaron; bestela testua bakarrik) */
+    if (!c.vOn && (voiceReady(c.voice) || c.t > 0.8)) {
+      c.vOn = true;
+      c.vEnd = voicePlay(c.voice);
+      c.vT0 = c.t;
+    }
+    if (c.typing && c.vOn) {
+      c.shown += dt * (c.vEnd ? Math.max(14, c.full.length / Math.max(0.6, c.vEnd * 0.85)) : 50);
       const n = Math.min(c.full.length, Math.floor(c.shown));
       if (n !== c.lastN) {
         $("cineText").textContent = c.full.slice(0, n);
-        if (n > c.lastN && n % 3 === 0 && /\S/.test(c.full[n - 1] || "")) SND.blip();
+        if (!c.vEnd && n > c.lastN && n % 3 === 0 && /\S/.test(c.full[n - 1] || "")) SND.blip();
         c.lastN = n;
       }
       if (n >= c.full.length) {
         c.typing = false;
         c.doneT = c.t;
-        $("portrait").classList.remove("talk");
+        if (!c.vEnd) $("portrait").classList.remove("talk");
       }
-    } else if (c.t - c.doneT > Math.max(4.5, c.full.length * 0.055)) nextShot();
+    } else if (!c.typing && (c.vEnd ? !voicePlaying() && c.t - c.vT0 > c.vEnd + 0.5 : c.t - c.doneT > Math.max(4.5, c.full.length * 0.055))) nextShot();
+    /* ahotsarekin: ahoa ahotsaren mailaren arabera; deietan, uhina */
+    const lv = c.vEnd ? voiceLevel() : 0;
+    if (c.vEnd) $("portrait").classList.toggle("talk", lv > 0.08);
+    if (scenes[c.i].call) deiaWave(lv);
   }
 
   let jumpHeld = false;
@@ -3911,6 +4006,20 @@
         magicReset,
         returnCheckpoint,
         cinematicState: () => cinematic,
+        PRO,
+        FILM,
+        RING,
+        VOICE,
+        prologueStart,
+        prologueSkip,
+        proUpdate,
+        deiaAnswer,
+        deiaRing,
+        deia,
+        iratiCall,
+        filmSkip,
+        filmEnd,
+        voiceLoad,
         coachState: () => ({ cur: COACH.cur, seen: [...COACH.seen], frame, time }),
         phase: () => phase,
         blend: () => phaseBlend,

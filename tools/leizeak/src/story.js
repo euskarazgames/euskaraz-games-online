@@ -107,6 +107,7 @@
   }
   /* --------------------------- helburuak --------------------------- */
   function objective() {
+    if (PRO.on) return proObjective();
     const d = (x, z) => Math.round(Math.hypot(P.x - x, P.z - z));
     const DG = DGS[ZONE.cur];
     if (DG && DG.objective) return DG.objective();
@@ -148,19 +149,6 @@
     if (ready) hud();
   }
   /* --------------------------- hasiera eta amaiera --------------------------- */
-  function introScene() {
-    say(
-      [
-        ["· · ·", "Egunsentia Ibarran. Gau osoan, plazako txalapartak bakarrik jo du, inork ukitu gabe: tok, tok-tok.", "", 0, 30, 0],
-        ["AMAIUR", "Berriro. Hirugarren gaua. Erritmo hori… ezagutzen dut, nonbaitetik.", "", P.x, P.z, 0],
-        ["IRATI", "Amaiur. Plazara etorri. Nire ahotsa entzuten baduzu, oraindik ez da berandu.", "", 0, 41, 0],
-      ],
-      () => {
-        flagSet("intro");
-        notify(L("Plazara: Iratiren oihartzuna zain dago."), "", 5);
-      },
-    );
-  }
   /* etsai nagusiaren ondoren: irteera-argia eta, haranean, Mariren suzko bola */
   function storyAfterBoss() {
     title("BASAJAUN ASKE", "");

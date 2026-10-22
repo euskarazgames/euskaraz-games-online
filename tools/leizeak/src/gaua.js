@@ -272,6 +272,23 @@
   /* ------------------------------ herritarrak gauez ------------------------------ */
   /* npcsUpdate-tik: true → NPCa hemen kudeatuta (etxera bidean edo etxean) */
   function npcNight(N, dt) {
+    /* hitzaurrean (gaua, Gauekoren begiak): herritar guztiak etxean; egunsentian itzultzen dira */
+    if (PRO.hideNpc) {
+      if (!N.away) {
+        Object.assign(N, { away: true, proHid: true, walking: false });
+        N.g.visible = false;
+        if (N.solid) N.solid.r = 0;
+      }
+      return true;
+    }
+    if (N.proHid) {
+      N.proHid = false;
+      if (!NIGHT_HOME[N.id]) {
+        N.away = false;
+        N.g.visible = true;
+        if (N.solid) N.solid.r = 0.6;
+      }
+    }
     const H = NIGHT_HOME[N.id];
     if (!H) return false;
     if (DAY.k > 0.55 && clockRuns()) {
@@ -336,7 +353,7 @@
     const sp = TXALA.spots[0];
     if (!sp) return;
     for (const pl of sp.planks) pl.position.y = mix(pl.position.y, 1.33, 1 - Math.exp(-dt * 10));
-    if (!(DAY.k > 0.6 && clockRuns()) || TXALA.on) return;
+    if (!((DAY.k > 0.6 && clockRuns()) || PRO.ghost) || TXALA.on) return;
     DAY.ghostT -= dt;
     if (DAY.ghostT > 0) return;
     const seq = GHOST_SEQ[DAY.ghostSeq % GHOST_SEQ.length];

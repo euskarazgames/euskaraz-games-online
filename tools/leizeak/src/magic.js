@@ -364,7 +364,8 @@
     MAG.ring.material.color.set(phase ? "#bff6ff" : "#ffe1a8");
     SND.swing(3);
     squash(-1.4);
-    shake(0.15);
+    /* bultzadaren ondoren ez dago kamera-kolperik: dardara etsaia jotzean bakarrik */
+    MAG.spinShook = false;
     haptic(14);
     coachDone("spin");
   }
@@ -386,6 +387,10 @@
           d = Math.hypot(dx, dz);
         if (d > 3.3 + e.D.r * 0.5 || Math.abs(e.y - P.y) > 2.2) continue;
         MAG.spinHit.add(e);
+        if (!MAG.spinShook) {
+          MAG.spinShook = true;
+          shake(0.12);
+        }
         hitEnemy(e, 2, dx / (d || 1), dz / (d || 1));
         e.vx += (dx / (d || 1)) * 7;
         e.vz += (dz / (d || 1)) * 7;

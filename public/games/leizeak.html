@@ -194,13 +194,65 @@ body:has(#bossHud:not([hidden])) #phaseHud{top:86px}
 #portrait.lamiailuna{background:radial-gradient(ellipse at 50% 40%,#0e2c33,#020a0c 70%)}#portrait.lamia{background:radial-gradient(ellipse at 50% 35%,#1f5560,#061719 75%)}#portrait.tartalo{background:radial-gradient(ellipse at 50% 35%,#4a3424,#140b06 75%)}
 /* gune-izenburua: Amaiurren gainetik (ez gainean); mugikor bertikalean, laguntza-txartelaren azpian */
 @media(pointer:coarse) and (orientation:portrait){#chapterTitle{top:35%}}
+/* ====== ZINEMA: letterbox, errotuluak, azpitituluak eta izenburua ====== */
+#film{position:fixed;inset:0;z-index:26;pointer-events:none}
+#film .bar{position:absolute;left:0;right:0;height:0;background:#000;transition:height .9s cubic-bezier(.4,0,.2,1);overflow:hidden}
+#film .bar.t{top:0;display:flex;align-items:center;justify-content:flex-end;padding:0 4%}
+#film .bar.b{bottom:0}
+#film.on .bar{height:11vh}
+#filmSkip{pointer-events:auto;padding:7px 14px;background:transparent;border:1px solid #ffffff3a;border-radius:16px;color:#d9e8e4;font:600 11px/1 ui-monospace,monospace;letter-spacing:.14em;opacity:.7}
+#filmSkip:hover{opacity:1}
+#filmFade{position:absolute;inset:0;background:#000;opacity:0;transition:opacity 1s ease}
+#filmCap{position:absolute;left:6%;top:calc(11vh + 22px);font:600 13px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em;color:#d7efe9;white-space:pre-wrap;text-shadow:0 0 10px #000,0 1px 2px #000;max-width:80%}
+#filmSub{position:absolute;left:50%;bottom:calc(11vh + 18px);transform:translateX(-50%);width:min(760px,88vw);text-align:center;text-shadow:0 2px 8px #000,0 0 2px #000}
+#filmWho{display:block;margin-bottom:6px;font:700 11px/1 ui-monospace,monospace;letter-spacing:.24em;color:#9fe3d4}
+#filmSub.dark #filmWho{color:#ffb35c}
+#filmLine{font:20px/1.45 Georgia,serif;color:#f6f1e3}
+#filmTitle{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0;transition:opacity 2.2s ease}
+#filmTitle.show{opacity:1}
+#filmTitleBig{font:700 clamp(34px,7.4vw,84px)/1 Georgia,serif;letter-spacing:.14em;color:#f4e2b8;text-shadow:0 0 40px #ffb35c66,0 4px 18px #000}
+#filmTitleSmall{font:600 clamp(11px,1.6vw,15px)/1 ui-monospace,monospace;letter-spacing:.5em;color:#bfe9e0;text-shadow:0 2px 8px #000}
+@media(max-width:600px){#filmCap{font-size:11px;left:5%}#filmLine{font-size:16px}#film.on .bar{height:9vh}#filmCap{top:calc(9vh + 14px)}#filmSub{bottom:calc(9vh + 12px)}}
+/* ====== OIHARTZUN-DEIAK: oihartzun-harriaren bidezko deiak ====== */
+#deiaWave{display:none}
+#cinema.deia{background:linear-gradient(#01080d 0 9%,transparent 9% 62%,#01080dee 92%)}
+#cinema.deia #cineTag{color:#9fe3d4}
+#cinema.deia #cineTag::before{content:"◉ ";color:#7fffd4;animation:deiaDot 1.2s steps(2) infinite}
+#cinema.deia #codec{background:linear-gradient(115deg,#071c24f7,#0b1630f7);border-top:1px solid #7fe3c9;border-bottom:1px solid #7fe3c955}
+#cinema.deia #portrait{border-radius:50%;width:118px;min-height:118px;height:118px;align-self:center;box-shadow:0 0 0 2px #7fe3c955,0 0 30px #3fd1b433}
+#cinema.deia #portrait::before{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid #7fe3c9;opacity:0;z-index:2}
+#cinema.deia #portrait.talk::before{animation:ripple 1.1s ease-out infinite}
+#cinema.deia #deiaWave{display:block;position:absolute;right:20px;top:14px;width:200px;height:34px;opacity:.9}
+#cinema.deia.intrusion #codec{background:linear-gradient(115deg,#1c0606f7,#120404f7);border-top-color:#ff6a3a;animation:jolt .18s steps(2) infinite}
+#cinema.deia.intrusion #cineWho{color:#ff9a6a}
+#cinema.deia.intrusion #portrait{box-shadow:0 0 0 2px #ff6a3a77,0 0 34px #ff3a1a44}
+#cinema.deia.intrusion #codec::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#ffffff0d 0 1px,transparent 1px 3px);animation:noise .2s steps(3) infinite}
+@keyframes deiaDot{50%{opacity:.2}}
+@keyframes ripple{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.35)}}
+@keyframes jolt{50%{transform:translate(1px,-1px)}}
+@media(max-width:600px){#cinema.deia #portrait{width:64px;height:64px;min-height:64px}#cinema.deia #deiaWave{width:120px;height:26px;top:10px;right:12px}}
+#deiaRing{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:14;display:flex;align-items:center;gap:10px;padding:9px 16px 9px 12px;background:#06202bee;border:1px solid #7fe3c9;border-radius:24px;color:#dff7f1;font:600 12px/1 system-ui;letter-spacing:.06em;box-shadow:0 0 0 0 #7fe3c966;animation:ringPulse 1s ease-out infinite;cursor:pointer}
+#deiaRing i{width:10px;height:10px;border-radius:50%;background:#7fffd4;box-shadow:0 0 10px #7fffd4}
+#deiaRing b{font:700 11px ui-monospace,monospace;letter-spacing:.2em;color:#9fe3d4}
+#deiaRing small{margin-left:4px;padding:5px 9px;border-radius:12px;background:#7fe3c9;color:#062028;font:800 11px system-ui}
+@keyframes ringPulse{0%{box-shadow:0 0 0 0 #7fe3c977}100%{box-shadow:0 0 0 16px #7fe3c900}}
+#beamAlert{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:15;pointer-events:none;font:700 clamp(22px,4vw,40px)/1 Georgia,serif;letter-spacing:.3em;color:#ffd08a;text-shadow:0 0 24px #ff7a2a,0 2px 10px #000;animation:alertIn .5s cubic-bezier(.2,.9,.2,1)}
+@keyframes alertIn{from{opacity:0;transform:translate(-50%,-50%) scale(1.6)}}
+@media (prefers-reduced-motion: reduce){#cinema.deia.intrusion #codec,#deiaRing,#cinema.deia #portrait.talk::before{animation:none}}
+/* hitzaurrea: oraindik ikasi gabeko tresnen botoiak ezkutatuta */
+body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{visibility:hidden}
+/* kokapen-errotulua: zona-aldaketan, makinaz idatzia */
+#locCap{position:fixed;right:26px;top:72px;z-index:12;pointer-events:none;text-align:right;white-space:pre;font:600 12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em;color:#d7efe9;text-shadow:0 0 10px #000,0 1px 2px #000;transition:opacity 1.2s}
+#locCap.out{opacity:0}
+@media(max-width:600px){#locCap{font-size:10px;right:14px;top:64px}}
 
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>LEIZEEN DEIA<small id="loadLabel">Txalapartak gauez jotzen du…</small><i><b id="loadBar"></b></i></div></div>
 <section id="start"><div class="eyebrow">EUSKARAZ GAMES · OIHARTZUN II</div><h1>LEIZEEN<span>DEIA</span></h1><p id="premise"></p><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>01 · BASAJAUNEN LEIZEA</span><div><button id="credits">KREDITUAK</button> <button id="reset">↺</button></div></div></section>
 <div id="top"><button id="camBtn" aria-label="Kamera">⤢</button><button id="audio">♫</button><button id="quality" aria-label="Kalitatea">HD</button><button id="pause" hidden>Ⅱ</button></div>
 <div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="coins">0</b><small id="coinLab"></small></div><div id="keyBox" hidden><b id="keyN">0</b><small id="keyLab"></small></div><div id="bombBox" hidden><b id="bombN">●●●</b><small id="bombLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
 <div id="touch"><div id="stick"><i id="knob"></i></div><div id="touchActions"><button id="weaveBtn"></button><button id="recallBtn" aria-label="Finkatu"></button><button id="phaseBtn"></button><button id="dashBtn">BULTZADA</button><button id="jumpBtn"></button><button id="useBtn"></button><button id="attackBtn"></button><button id="craftBtn"></button><button id="rotateBtn" aria-label="Biratu"></button></div></div>
-<section id="cinema" hidden><div id="cineTop"><span>LEIZEEN DEIA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="katea" hidden></div><div id="shieldHint" hidden></div><div id="zoneFade"></div><div id="itemGet" hidden role="dialog" aria-live="polite"><div class="ig"><div id="getIcon"></div><h2 id="getName"></h2><p id="getText"></p><small id="getMore">JARRAITU ›</small></div></div><div id="txala" hidden><div class="tx"><header><b id="txTitle"></b><button id="txClose" aria-label="Itxi">✕</button></header><div id="txSeq"></div><p id="txMsg"></p><div id="txPads"><button id="txL"><span>◀</span>EZKERRA<small>← · J</small></button><button id="txR"><span>▶</span>ESKUINA<small>→ · K</small></button></div><div id="txKnown"></div></div></div><div id="fatal" hidden></div>
+<section id="cinema" hidden><div id="cineTop"><span id="cineTag">LEIZEEN DEIA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><canvas id="deiaWave" width="240" height="40" aria-hidden="true"></canvas><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="katea" hidden></div><div id="shieldHint" hidden></div><div id="zoneFade"></div><div id="itemGet" hidden role="dialog" aria-live="polite"><div class="ig"><div id="getIcon"></div><h2 id="getName"></h2><p id="getText"></p><small id="getMore">JARRAITU ›</small></div></div><div id="txala" hidden><div class="tx"><header><b id="txTitle"></b><button id="txClose" aria-label="Itxi">✕</button></header><div id="txSeq"></div><p id="txMsg"></p><div id="txPads"><button id="txL"><span>◀</span>EZKERRA<small>← · J</small></button><button id="txR"><span>▶</span>ESKUINA<small>→ · K</small></button></div><div id="txKnown"></div></div></div><div id="film" hidden><div id="filmFade"></div><div class="bar t"><button id="filmSkip">SALTATU →</button></div><div class="bar b"></div><div id="filmCap" aria-live="polite"></div><div id="filmTitle" hidden><b id="filmTitleBig"></b><small id="filmTitleSmall"></small></div><div id="filmSub" hidden><span id="filmWho"></span><span id="filmLine"></span></div></div><button id="deiaRing" hidden><i></i><b>OIHARTZUN-DEIA</b><span id="deiaFrom"></span><small id="deiaKey">ERANTZUN</small></button><div id="beamAlert" hidden>IKUSI ZAITU</div><div id="locCap" hidden aria-live="polite"></div>
+<div id="fatal" hidden></div>
 <script>/**
  * @license
  * Copyright 2010-2021 Three.js Authors
@@ -4571,7 +4623,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       SND.land(k);
     },
     dash() {
-      CAM.fovKick = 7;
+      /* kamerak ez du kolperik jasotzen (FOV-jauzirik ez): abiadura arrastoak eta soinuak ematen dute */
       squash(-1.4);
       fxBurst(P.x, P.y + 1, P.z, { n: 14, speed: 3, life: 0.4, size: 0.24, color: eraCol(), grav: 0, drag: 6, jitter: 0.6 });
       SND.dash();
@@ -5334,6 +5386,27 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     return {
       init,
+      get ctx() {
+        return ctx;
+      },
+      /* oihartzun-deia: interferentzia (Gauekoren sarrera) */
+      static(v = 1) {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.45, 0.07 * v, "bandpass", 2600, 900, 0.5);
+        hiss(t + 0.05, 0.25, 0.04 * v, "highpass", 5200, 7000, 0.7);
+        tone("square", 55, t, 0.005, 0.3, 0.02 * v, sfx, 48);
+      },
+      /* ahotsak (ahotsak.js): bus nagusia eta erreberberazioa; hitz egitean musika eta giroa jaitsi */
+      voiceNodes() {
+        return ctx ? { master, verbIn } : null;
+      },
+      duck(on) {
+        if (!ctx) return;
+        const t = ctx.currentTime;
+        mus.gain.setTargetAtTime(on ? 0.15 : 0.42, t, on ? 0.08 : 0.7);
+        amb.gain.setTargetAtTime(on ? 0.12 : 0.32, t, on ? 0.08 : 0.7);
+      },
       setMuted(m) {
         if (!ctx) return;
         master.gain.setTargetAtTime(m ? 0 : 0.9, ctx.currentTime, 0.05);
@@ -6008,6 +6081,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function coachUpdate() {
     if (!started || paused || cinematic || TXALA.on) return;
+    /* hitzaurreko irakaspenak (pro-*) ez ordezkatu */
+    if (PRO.on && COACH.cur && COACH.cur.startsWith("pro-")) return;
     const fight = !!ROOM.fight || ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 16);
     if (ATK.n && COACH.cur === "attack") coachDone("attack");
     if (MAG.charging && COACH.cur === "charge") coachDone("charge");
@@ -6534,10 +6609,20 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀" };
+  const ICONS = { makilak: "≋", giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀" };
   function itemMesh(icon) {
     const g = new T.Group();
-    if (icon === "giltza" || icon === "giltzanagusia") {
+    if (icon === "makilak") {
+      /* Iratiren txalaparta-makilak: bi makila gurutzatuta, mutur ilunekin */
+      for (const s of [-1, 1]) {
+        const st = new T.Mesh(new T.CylinderGeometry(0.045, 0.06, 1.15, 8), material("#c99a62", 0.15)),
+          tip = new T.Mesh(new T.SphereGeometry(0.075, 8, 6), material("#5a3c26"));
+        tip.position.y = 0.58;
+        st.add(tip);
+        st.rotation.z = s * 0.42;
+        g.add(st);
+      }
+    } else if (icon === "giltza" || icon === "giltzanagusia") {
       const k = model("key", 0, 0, 0, icon === "giltzanagusia" ? 1.1 : 0.8, 0, g);
       k.rotation.z = PI / 2;
       if (icon === "giltzanagusia") k.traverse((n) => n.isMesh && (n.material = material("#ff9d4a", 0.6)));
@@ -6645,6 +6730,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     brute: { hp: 10, speed: 2.5, r: 1.3, dmg: 2, mass: 2.6, S: 1.45, H: 1.6 },
     /* SAGUZARRA (6. leizea): biraka, gero murgilka; argiak lurrera botatzen du */
     bat: { hp: 2, speed: 5.4, r: 0.62, dmg: 1, mass: 0.45, S: 1, H: 1.15 },
+    mamua: { hp: 3, speed: 3.4, r: 0.68, dmg: 1, mass: 0.7, S: 1, H: 1.3 },
   };
   const ERA_COL = ["#ffb85c", "#7fe9ff", "#c98bff"];
   const ATK = { n: 0, t: 9, dir: 0, waveCd: 0, lungeT: 0, hold: false };
@@ -6824,6 +6910,35 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         return w;
       });
       g.userData.wings = wings;
+    } else if (type === "mamua") {
+      /* MAMUA: maindire bat, barrutik argi; ertz uhinduna eta begi-zulo ilunak */
+      const prof = [];
+      for (let i = 0; i <= 10; i++) {
+        const k = i / 10;
+        prof.push(new T.Vector2(Math.sin(Math.min(1, k * 1.7) * PI * 0.5) * (0.55 + k * 0.32), 1.75 - k * 1.75));
+      }
+      const geo = new T.LatheGeometry(prof, 22),
+        pa = geo.attributes.position;
+      for (let i = 0; i < pa.count; i++) {
+        const y = pa.getY(i);
+        if (y < 0.35) {
+          const a = Math.atan2(pa.getZ(i), pa.getX(i));
+          pa.setY(i, y + Math.sin(a * 6) * 0.12 * (1 - y / 0.35));
+        }
+      }
+      geo.computeVertexNormals();
+      body.color.set("#ece6ff");
+      body.transparent = true;
+      body.opacity = 0.86;
+      body.side = T.DoubleSide;
+      body.emissive.set("#4a3a7a");
+      add(geo, body, 0, 0, 0);
+      const hole = new T.MeshBasicMaterial({ color: "#1a0f2e" });
+      add(sphere, hole, -0.2, 1.3, 0.47, 0.11, 0.15, 0.06);
+      add(sphere, hole, 0.2, 1.3, 0.47, 0.11, 0.15, 0.06);
+      add(sphere, eye, -0.2, 1.3, 0.5, 0.045, 0.06, 0.03);
+      add(sphere, eye, 0.2, 1.3, 0.5, 0.045, 0.06, 0.03);
+      add(sphere, hole, 0, 1.0, 0.53, 0.08, 0.1, 0.04);
     } else if (type === "eye") {
       outline(add(sphere, body, 0, 0, 0, 0.5, 0.5, 0.5), 1.1);
       add(sphere, eye, 0, 0.02, 0.42, 0.24, 0.24, 0.1);
@@ -7114,8 +7229,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       e.blinkCd = Math.max(0, e.blinkCd - dt);
       if (e.state === "spawn") {
         if (e.skel) e.g.position.set(e.x, e.y, e.z);
-        else e.g.position.set(e.x, e.y - 2 + smooth01(Math.min(1, e.t / 0.7)) * 2 + (e.type === "eye" ? 1.9 : e.type === "bat" ? 1.7 : 0), e.z);
-        if (e.t > e.spawnLen) (e.state = e.type === "eye" || e.type === "bat" ? "hover" : "chase"), (e.t = 0);
+        else e.g.position.set(e.x, e.y - 2 + smooth01(Math.min(1, e.t / 0.7)) * 2 + (e.type === "eye" ? 1.9 : e.type === "bat" ? 1.7 : e.type === "mamua" ? 0.35 : 0), e.z);
+        if (e.t > e.spawnLen) (e.state = e.type === "eye" || e.type === "bat" ? "hover" : e.type === "mamua" ? "drift" : "chase"), (e.t = 0);
       } else if (e.stun > 0 && e.state !== "stun") {
         /* garai-uhinak gelditua */
       } else if (e.type === "grunt") {
@@ -7163,6 +7278,38 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           if (e.t > 0.34) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "recover" && e.t > 0.55) (e.state = "hover"), (e.t = 0), (e.cd = 1.1 + Math.random() * 1.3);
 
+      } else if (e.type === "mamua") {
+        /* MAMUA: astiro hurbildu; desagertu eta Amaiurren ondoan agertu (atzean) → heldu (ALDARATU daiteke) */
+        if (e.state === "drift") {
+          want = e.D.speed * K * 0.6;
+          wx = ux;
+          wz = uz;
+          e.dir = Math.atan2(ux, uz);
+          e.cd -= dt * K;
+          if (e.cd <= 0 && d < 11) (e.state = "fade"), (e.t = 0);
+          else if (d < 2.3 && e.t > 0.4) (e.state = "wind"), (e.t = 0), (e.atk0 = time), (e.lx = ux), (e.lz = uz);
+        } else if (e.state === "fade") {
+          e.vx *= 0.8;
+          e.vz *= 0.8;
+          if (e.t > 0.32) {
+            mamuaWarp(e, I);
+            e.state = "appear";
+            e.t = 0;
+          }
+        } else if (e.state === "appear") {
+          e.dir = Math.atan2(ux, uz);
+          if (e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.atk0 = time), SND.screech && SND.screech();
+        } else if (e.state === "wind") {
+          e.dir = Math.atan2(ux, uz);
+          e.lx = ux;
+          e.lz = uz;
+          if (e.t > 0.5 / Math.sqrt(K)) (e.state = "grab"), (e.t = 0);
+        } else if (e.state === "grab") {
+          e.vx = e.lx * 9;
+          e.vz = e.lz * 9;
+          if (d < e.D.r + 0.7 && Math.abs(P.y - e.y) < 1.8) meleeHit(e, e.D.dmg);
+          if (e.t > 0.3) (e.state = "recover"), (e.t = 0);
+        } else if (e.state === "recover" && e.t > 0.7) (e.state = "drift"), (e.t = 0), (e.cd = 2.2 + Math.random() * 1.5);
       } else if (e.type === "eye") {
         if (e.state === "hover") {
           const desired = 7,
@@ -7284,7 +7431,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       /* ikusmena */
       /* saguzarra: airean; murgilka behera, zorabiatuta lurrean */
       e.fly = e.type !== "bat" ? 0 : mix(e.fly ?? 1.7, e.stun > 0 ? 0.3 : e.state === "lunge" ? 0.95 : 1.75, 1 - Math.exp(-dt * (e.stun > 0 ? 9 : 7)));
-      const bob = e.type === "eye" && !e.skel ? 1.9 + Math.sin(time * 2.4 + e.x) * 0.2 : e.type === "bat" ? e.fly + Math.sin(time * 5 + e.x) * 0.12 : 0;
+      const bob = e.type === "eye" && !e.skel ? 1.9 + Math.sin(time * 2.4 + e.x) * 0.2 : e.type === "bat" ? e.fly + Math.sin(time * 5 + e.x) * 0.12 : e.type === "mamua" ? 0.35 + Math.sin(time * 2.2 + e.x) * 0.15 : 0;
       if (e.wings) {
         const f = e.stun > 0 ? 0.15 + Math.sin(time * 3) * 0.1 : Math.sin(time * (e.state === "lunge" ? 9 : 24) + e.x * 3) * 0.75;
         e.wings[0].rotation.z = f;
@@ -7308,6 +7455,16 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         else e.g.rotation.z = 0;
         e.body.emissive.set(e.flash > 0 ? "#ffffff" : wind ? "#c01a3c" : "#1a0626");
         e.body.emissiveIntensity = e.flash > 0 ? 2 : wind ? 0.7 + 0.6 * Math.sin(time * 30) : 0.6;
+        if (e.type === "mamua") {
+          /* desagertu / agertu (gardentasuna) eta barruko argi zurixka */
+          e.vis = mix(e.vis ?? 1, e.state === "fade" ? 0 : 1, 1 - Math.exp(-dt * (e.state === "fade" ? 14 : 8)));
+          if (!(e.flash > 0) && !wind) {
+            e.body.emissive.set(e.counting > 0 ? "#7a6aff" : "#4a3a7a");
+            e.body.emissiveIntensity = 0.55;
+          }
+          e.body.opacity = 0.86 * e.vis;
+          e.g.visible = e.vis > 0.04;
+        }
       }
       /* kolpearen zapalketa (punch): zabaldu eta zapaldu, segundo zati batean */
       if (e.punch > 0) {
@@ -7413,6 +7570,26 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     e.cd = Math.min(e.cd, 0.6);
     fxRing(e.x, e.y + 0.1, e.z, ERA_COL[e.era < 0 ? 2 : e.era], 2, 0.4);
     SND.shot();
+  }
+  /* mamua: Amaiurren atzean edo alboan agertu (lur gainean, gelaren barruan) */
+  function mamuaWarp(e, I) {
+    fxBurst(e.x, e.y + 1, e.z, { n: 14, speed: 2.5, up: 1, life: 0.5, size: 0.3, color: "#d9c8ff", grav: -0.5 });
+    for (let k = 0; k < 14; k++) {
+      const a = P.angle + PI + (Math.random() - 0.5) * (k < 7 ? 1.6 : 4),
+        r = 2.4 + Math.random() * 0.8,
+        x = P.x + Math.sin(a) * r,
+        z = P.z + Math.cos(a) * r;
+      if (I && (I.rx ? ((x - I.x) / I.rx) ** 2 + ((z - I.z) / I.rz) ** 2 > 0.7 : Math.abs(x - I.x) > I.w / 2 - 1.5 || Math.abs(z - I.z) > I.d / 2 - 1.5)) continue;
+      if (solids.some((o) => Math.hypot(x - o.x, z - o.z) < o.r + 0.9)) continue;
+      const g = support(x, z, e.y + 1.2);
+      if (!g || Math.abs(topY(g, x, z) - e.y) > 1.2) continue;
+      e.x = x;
+      e.z = z;
+      e.y = topY(g, x, z);
+      break;
+    }
+    e.vx = e.vz = 0;
+    SND.whoosh();
   }
   const TELE = [];
   let teleGeo = null;
@@ -8130,7 +8307,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     MAG.ring.material.color.set(phase ? "#bff6ff" : "#ffe1a8");
     SND.swing(3);
     squash(-1.4);
-    shake(0.15);
+    /* bultzadaren ondoren ez dago kamera-kolperik: dardara etsaia jotzean bakarrik */
+    MAG.spinShook = false;
     haptic(14);
     coachDone("spin");
   }
@@ -8152,6 +8330,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           d = Math.hypot(dx, dz);
         if (d > 3.3 + e.D.r * 0.5 || Math.abs(e.y - P.y) > 2.2) continue;
         MAG.spinHit.add(e);
+        if (!MAG.spinShook) {
+          MAG.spinShook = true;
+          shake(0.12);
+        }
         hitEnemy(e, 2, dx / (d || 1), dz / (d || 1));
         e.vx += (dx / (d || 1)) * 7;
         e.vz += (dz / (d || 1)) * 7;
@@ -9033,6 +9215,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       persist();
       AREA.cur = "";
       hud();
+      zoneEntered(id);
     };
     if (instant) return go();
     ZONE.pending = go;
@@ -11685,7 +11868,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function marksUpdate() {
     for (const M of QST.marks) {
       const k = ZONE.cur === "ibarra" ? npcNews(M.N) : null;
-      M.sp.visible = !!k && Math.hypot(P.x - M.N.x, P.z - M.N.z) < 60 && !cinematic;
+      M.sp.visible = !!k && !M.N.away && M.N.g.visible && Math.hypot(P.x - M.N.x, P.z - M.N.z) < 60 && !cinematic;
       if (!M.sp.visible) continue;
       M.sp.material.map = k === "?" ? QST.texDone : QST.texNew;
       M.sp.position.set(M.N.x, M.N.y + (M.N.scale || 1) * 2.55 + Math.sin(time * 3 + M.N.x) * 0.08, M.N.z);
@@ -12397,6 +12580,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     return t.state !== "dead" && ENEMIES.includes(t) && Math.hypot(t.x - P.x, t.z - P.z) < 28;
   }
   function lockToggle() {
+    if (!PRO.can.lock) return proNope("lock");
     if (!started || paused || TXALA.on) return;
     const list = lockCandidates();
     if (!list.length) {
@@ -13620,7 +13804,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const DG = DGS[ZONE.cur];
     if (!DG) return;
     /* zuziak dir-dir, eta gertuko bi zuziek argi errealak */
-    let near = DG.torches.map((t) => [Math.hypot(t.x - P.x, t.z - P.z), t]).sort((a, b) => a[0] - b[0]);
+    let near = DG.torches.filter((t) => !t.off).map((t) => [Math.hypot(t.x - P.x, t.z - P.z), t]).sort((a, b) => a[0] - b[0]);
     for (const [i, l] of DG.lights.entries()) {
       const t = near[i] && near[i][1];
       if (!t) continue;
@@ -13630,7 +13814,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     for (const t of DG.torches) {
       t.fl.material.opacity = 0.55 + Math.sin(time * 11 + t.ph) * 0.12;
-      t.fl.visible = !t.side || t.side.k < 0.5;
+      t.fl.visible = !t.off && (!t.side || t.side.k < 0.5);
     }
     if (DG.exitGlow) DG.exitGlow.material.opacity = 0.25 + Math.sin(time * 2) * 0.1;
     /* gelaren lainoa (gela ilunak) */
@@ -13707,7 +13891,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (saved.cleared.includes(def.clearId) || ROOM.fight) return;
     ROOM.fight = Object.assign(R, { boss: true });
     clearEnemies();
-    const e = spawnEnemy("brute", 0, x, z, R.y || 0);
+    /* def.type: zaindari mota (lehenetsia: hezurdura erraldoia) */
+    const e = spawnEnemy(def.type || "brute", 0, x, z, R.y || 0);
     e.room = R;
     e.mini = true;
     e.K = def.K || 1.12;
@@ -14328,6 +14513,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   /* --------------------------- helburuak --------------------------- */
   function objective() {
+    if (PRO.on) return proObjective();
     const d = (x, z) => Math.round(Math.hypot(P.x - x, P.z - z));
     const DG = DGS[ZONE.cur];
     if (DG && DG.objective) return DG.objective();
@@ -14369,19 +14555,6 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (ready) hud();
   }
   /* --------------------------- hasiera eta amaiera --------------------------- */
-  function introScene() {
-    say(
-      [
-        ["· · ·", "Egunsentia Ibarran. Gau osoan, plazako txalapartak bakarrik jo du, inork ukitu gabe: tok, tok-tok.", "", 0, 30, 0],
-        ["AMAIUR", "Berriro. Hirugarren gaua. Erritmo hori… ezagutzen dut, nonbaitetik.", "", P.x, P.z, 0],
-        ["IRATI", "Amaiur. Plazara etorri. Nire ahotsa entzuten baduzu, oraindik ez da berandu.", "", 0, 41, 0],
-      ],
-      () => {
-        flagSet("intro");
-        notify(L("Plazara: Iratiren oihartzuna zain dago."), "", 5);
-      },
-    );
-  }
   /* etsai nagusiaren ondoren: irteera-argia eta, haranean, Mariren suzko bola */
   function storyAfterBoss() {
     title("BASAJAUN ASKE", "");
@@ -17156,6 +17329,23 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* ------------------------------ herritarrak gauez ------------------------------ */
   /* npcsUpdate-tik: true → NPCa hemen kudeatuta (etxera bidean edo etxean) */
   function npcNight(N, dt) {
+    /* hitzaurrean (gaua, Gauekoren begiak): herritar guztiak etxean; egunsentian itzultzen dira */
+    if (PRO.hideNpc) {
+      if (!N.away) {
+        Object.assign(N, { away: true, proHid: true, walking: false });
+        N.g.visible = false;
+        if (N.solid) N.solid.r = 0;
+      }
+      return true;
+    }
+    if (N.proHid) {
+      N.proHid = false;
+      if (!NIGHT_HOME[N.id]) {
+        N.away = false;
+        N.g.visible = true;
+        if (N.solid) N.solid.r = 0.6;
+      }
+    }
     const H = NIGHT_HOME[N.id];
     if (!H) return false;
     if (DAY.k > 0.55 && clockRuns()) {
@@ -17220,7 +17410,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const sp = TXALA.spots[0];
     if (!sp) return;
     for (const pl of sp.planks) pl.position.y = mix(pl.position.y, 1.33, 1 - Math.exp(-dt * 10));
-    if (!(DAY.k > 0.6 && clockRuns()) || TXALA.on) return;
+    if (!((DAY.k > 0.6 && clockRuns()) || PRO.ghost) || TXALA.on) return;
     DAY.ghostT -= dt;
     if (DAY.ghostT > 0) return;
     const seq = GHOST_SEQ[DAY.ghostSeq % GHOST_SEQ.length];
@@ -18765,7 +18955,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     return H;
   }
   function hearthNear() {
-    return HEARTHS.find((H) => H.grp === ZONES[ZONE.cur].group && Math.hypot(P.x - H.x, P.z - H.z) < 3 && Math.abs(P.y - H.y) < 1.6);
+    return HEARTHS.find((H) => !H.unlit && H.grp === ZONES[ZONE.cur].group && Math.hypot(P.x - H.x, P.z - H.z) < 3 && Math.abs(P.y - H.y) < 1.6);
   }
   function hearthRest(H) {
     P.hp = P.maxHp;
@@ -18787,6 +18977,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function hearthsUpdate(dt) {
     for (const H of HEARTHS) {
       if (H.grp !== ZONES[ZONE.cur].group) continue;
+      /* itzalita (hitzaurrean, Iturralden): SORGINKERIAk pizten du */
+      H.flame.visible = H.core.visible = H.fl.visible = !H.unlit;
+      if (H.unlit) continue;
       const f = 1 + Math.sin(time * 13 + H.ph) * 0.1 + Math.sin(time * 29 + H.ph) * 0.06;
       H.flame.scale.set(1, f, 1);
       H.core.scale.set(1, 2 - f, 1);
@@ -21901,6 +22094,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const c2 = obj(new T.CylinderGeometry(0.05, 0.05, 0.24, 8), material("#f4ead2"));
     c2.position.set(E(6.3), 0.95, -3.6);
     candle(E(6.3), 1.12, -3.6);
+    /* hitzaurrea: oihartzun-harria, ganbara eta Iratiren kutxa, izoztutako atea */
+    proBuildHouse(E, D);
     skyRoom("ETXEA", E(0), 0, W, D, { area: "etxeA", name: "ITURRALDE", desc: "Etxea. Sutondoa, ohea, Iratiren txokoa." });
     dungeonEnd(DGE);
   }
@@ -22006,7 +22201,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       M.g.visible = on || M.kind === "?";
       if (on) M.g.rotation.y += dt * 0.25;
     }
-    if (!saved.flags.includes("etxea")) {
+    if (!saved.flags.includes("etxea") && !PRO.on) {
       flagSet("etxea");
       notify(L("Etxean. Sutondoan atseden; ohean, eguna edo gaua; apalean, zaindarien oroitzapenak."), "", 6);
     }
@@ -24190,6 +24385,1009 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     bossBar(null);
   }
+  /* ==================================================================
+     AHOTSAK · pertsonaien ahotsak (sintetikoak; ikus tools/leizeak/ahotsak/)
+     Lerroen testua lerroak.json-etik dator (build-ean txertatua): azpitituluak beti daude.
+     Audioa /assets/voice/leizeak/<id>.mp3 da, behar denean kargatua; ez badago (lineaz kanpo,
+     fitxategirik gabe…), testua bakarrik. Web Audio iragazkiak pertsonaiaren arabera:
+     IRATI oihartzun-harritik (banda estua eta oihartzuna), GAUEKO ilunpetik (baxuagoa, motelago,
+     erreberberazio luzea), AMAIUR hurbil eta lehor. Hitz egiten den bitartean musika jaisten da.
+     ================================================================== */
+  const VOICE_LINES = {"pro_g1":["GAUEKO","Jo, txalaparta. Jo, eta deitu iezaiozu."],"pro_g2":["GAUEKO","Zazpi leize. Zazpi zaindari. Eta sorgin bakar bat."],"pro_i1":["IRATI","Amaiur. Entzuten didazu? Ez esan ezer. Entzun bakarrik."],"pro_a1":["AMAIUR","Irati…? Harriaren barruan zaude?"],"pro_i2":["IRATI","Oihartzun bat naiz. Zuk gogoratzen nauzun bitartean, hemen nago."],"pro_i3":["IRATI","Hiru gau dira txalapartak bakarrik jotzen duela. Ez da Mari. Norbaitek deitzen zaitu."],"pro_a2":["AMAIUR","Gaueko."],"pro_i4":["IRATI","Isilik. Ilunpean, izenek belarriak dituzte."],"pro_i5":["IRATI","Lehenik, argia. Piztu sutondoa zure sorginkeriaz."],"pro_i6":["IRATI","Hori da. Orain, begiratu gora, ganbarara. Nire makilak han daude oraindik."],"pro_i6b":["IRATI","Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."],"pro_i7":["IRATI","Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ez ahaztu."],"pro_a3":["AMAIUR","Atea izoztuta dago."],"pro_i8":["IRATI","Gauekoren negua da. Baina gogoratu udako atea, zabalik. Gogoratu, eta zeharkatu."],"pro_g3":["GAUEKO","Ahizpak elkarrekin, berriro. Zein polita."],"pro_i9":["IRATI","Kontuz. Gauekoren begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."],"pro_i10":["IRATI","Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."],"pro_g4":["GAUEKO","Hor zaude, sorgin txikia."],"pro_g5":["GAUEKO","Ikusten zaitut."],"pro_i11":["IRATI","Plazan, itzalak txalapartaren inguruan. Begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira."],"pro_i12":["IRATI","Finkatu bat, eta jo. Gero, hurrengoa."],"pro_i13":["IRATI","Begira, Amaiur. Egunsentia."],"pro_a4":["AMAIUR","Irati… ikusten zaitut."],"pro_i14":["IRATI","Ez naiz mamua. Oihartzuna naiz, eta egunsentian argiago entzuten naiz."],"pro_i15":["IRATI","Mari isildu egin da, eta haren leizeak itxi. Gauekoren itzalak izakiak gaiztotzen ari dira. Basajaun lehena."],"pro_i16":["IRATI","Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni hemen egongo naiz."],"pro_a5":["AMAIUR","Oraingoan ez zaitut galduko."],"pro_g6":["GAUEKO","Zatoz, sorgin. Leizeek zure izena dakite."],"dei_i1":["IRATI","Hemen nago, Amaiur. Zer behar duzu?"],"dei_i2":["IRATI","Kontuz ibili, Amaiur."],"dz_leizea1":["IRATI","Basajaunen leizea. Basoaren bihotza da, Amaiur. Itzalak barruan daude."],"dz_leizea2":["IRATI","Sutegiak itzalita? Badakizu zer egin. Eta gogoratu: begien kolorea, garaia."],"dz_lamia1":["IRATI","Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."],"dz_lamia2":["IRATI","Izotza orainekoa da. Iraganean, ura dabil. Bilatu bidea bietan."],"dz_tartalo1":["IRATI","Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."],"dz_tartalo2":["GAUEKO","Ilunpea nire etxea da, sorgin. Ongi etorri."],"dz_tartalo3":["IRATI","Ez entzun. Argia da hemen zure armarik onena."],"dz_jentil1":["IRATI","Jentilbaratza. Jentilak harri bihurtu ziren, zeruan argi bitxi bat ikusi zutenean."],"dz_jentil2":["IRATI","Harri hauek gogoratzen dute. Entzun, eta jo."],"dz_zerua1":["IRATI","Hodeien gainean zaude, Amaiur. Ez begiratu behera."],"dz_zerua2":["IRATI","Haizeak gora eramango zaitu. Fidatu enararen hegoez."],"dz_herensuge1":["IRATI","Herensugearen haitzuloa. Beroa sentitzen dut hemendik ere."],"dz_herensuge2":["GAUEKO","Zazpi buru, zazpi gezur. Zein da egia, sorgin?"],"dz_herensuge3":["IRATI","Argiak erakutsiko dizu. Beti erakusten du."]};
+  const VOICE = { base: "/assets/voice/leizeak/", buf: new Map(), wait: new Map(), cur: null, an: null, data: null, chains: {}, level: 0 };
+  const voiceLine = (id) => VOICE_LINES[id] || ["", ""];
+  function voiceLoad(id) {
+    if (VOICE.buf.has(id)) return Promise.resolve(VOICE.buf.get(id));
+    if (VOICE.wait.has(id)) return VOICE.wait.get(id);
+    const ctx = SND.ctx;
+    if (!ctx || !VOICE_LINES[id]) return Promise.resolve(null);
+    const inl = window.LEIZEAK_VOICES,
+      url = inl && inl[id] ? inl[id] : VOICE.base + id + ".mp3";
+    const p = fetch(url)
+      .then((r) => (r.ok ? r.arrayBuffer() : null))
+      .then((ab) => (ab ? new Promise((res) => ctx.decodeAudioData(ab, res, () => res(null))) : null))
+      .catch(() => null)
+      .then((b) => {
+        VOICE.buf.set(id, b);
+        VOICE.wait.delete(id);
+        return b;
+      });
+    VOICE.wait.set(id, p);
+    return p;
+  }
+  function voicePreload(ids) {
+    for (const id of ids) if (id) voiceLoad(id);
+  }
+  /* kargatuta dago (edo ez dago eta ez da egongo)? */
+  const voiceReady = (id) => VOICE.buf.has(id) || !SND.ctx;
+  /* pertsonaia bakoitzaren katea (behin sortua) → analizatzailea → bus nagusia */
+  function voiceChain(who) {
+    const k = who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") || who.startsWith("INGUMA") ? "gaueko" : "dry";
+    if (VOICE.chains[k]) return VOICE.chains[k];
+    const ctx = SND.ctx,
+      N = SND.voiceNodes();
+    if (!VOICE.an) {
+      VOICE.an = ctx.createAnalyser();
+      VOICE.an.fftSize = 1024;
+      VOICE.data = new Uint8Array(VOICE.an.fftSize);
+      VOICE.an.connect(N.master);
+    }
+    const input = ctx.createGain(),
+      send = ctx.createGain();
+    send.connect(N.verbIn);
+    if (k === "irati") {
+      /* oihartzun-harria: behe eta goi muturrak kenduta, presentzia, atzerapen leuna */
+      const hp = ctx.createBiquadFilter(),
+        pk = ctx.createBiquadFilter(),
+        lp = ctx.createBiquadFilter(),
+        dl = ctx.createDelay(1),
+        fb = ctx.createGain(),
+        wet = ctx.createGain();
+      hp.type = "highpass";
+      hp.frequency.value = 240;
+      pk.type = "peaking";
+      pk.frequency.value = 2300;
+      pk.gain.value = 4;
+      lp.type = "lowpass";
+      lp.frequency.value = 6200;
+      dl.delayTime.value = 0.17;
+      fb.gain.value = 0.28;
+      wet.gain.value = 0.32;
+      input.connect(hp).connect(pk).connect(lp);
+      lp.connect(VOICE.an);
+      lp.connect(dl);
+      dl.connect(fb).connect(dl);
+      dl.connect(wet).connect(VOICE.an);
+      send.gain.value = 0.3;
+      lp.connect(send);
+    } else if (k === "gaueko") {
+      /* ilunpetik: baxuak indartuta, distortsio leuna eta erreberberazio handia */
+      const ls = ctx.createBiquadFilter(),
+        ws = ctx.createWaveShaper(),
+        lp = ctx.createBiquadFilter();
+      ls.type = "lowshelf";
+      ls.frequency.value = 200;
+      ls.gain.value = 6;
+      const c = new Float32Array(512);
+      for (let i = 0; i < 512; i++) {
+        const x = (i / 511) * 2 - 1;
+        c[i] = Math.tanh(x * 1.6) / Math.tanh(1.6);
+      }
+      ws.curve = c;
+      lp.type = "lowpass";
+      lp.frequency.value = 5200;
+      input.connect(ls).connect(ws).connect(lp);
+      lp.connect(VOICE.an);
+      send.gain.value = 0.75;
+      lp.connect(send);
+    } else {
+      input.connect(VOICE.an);
+      send.gain.value = 0.1;
+      input.connect(send);
+    }
+    return (VOICE.chains[k] = { input, rate: k === "gaueko" ? 0.92 : 1 });
+  }
+  /* jo: iraupena (s) itzultzen du; 0 audiorik ez badago */
+  function voicePlay(id) {
+    voiceStop();
+    const b = VOICE.buf.get(id),
+      ctx = SND.ctx;
+    if (!b || !ctx || muted) return 0;
+    const C = voiceChain(voiceLine(id)[0]),
+      src = ctx.createBufferSource();
+    src.buffer = b;
+    src.playbackRate.value = C.rate;
+    src.connect(C.input);
+    src.start();
+    const dur = b.duration / C.rate;
+    VOICE.cur = { src, id, t0: ctx.currentTime, dur };
+    src.onended = () => {
+      if (VOICE.cur && VOICE.cur.src === src) {
+        VOICE.cur = null;
+        SND.duck(false);
+      }
+    };
+    SND.duck(true);
+    return dur;
+  }
+  function voiceStop() {
+    if (!VOICE.cur) return;
+    try {
+      VOICE.cur.src.stop();
+    } catch {}
+    VOICE.cur = null;
+    SND.duck(false);
+  }
+  const voicePlaying = () => !!VOICE.cur;
+  /* ahotsaren maila (0..1): ahoaren animazioa eta uhin-marrazkia */
+  function voiceLevel() {
+    if (!VOICE.cur || !VOICE.an) return (VOICE.level = mix(VOICE.level, 0, 0.3));
+    VOICE.an.getByteTimeDomainData(VOICE.data);
+    let s = 0;
+    for (let i = 0; i < VOICE.data.length; i += 4) {
+      const v = (VOICE.data[i] - 128) / 128;
+      s += v * v;
+    }
+    return (VOICE.level = mix(VOICE.level, clamp(Math.sqrt(s / (VOICE.data.length / 4)) * 5, 0, 1), 0.5));
+  }
+  /* ==================================================================
+     ZINEMA · plano zinematografikoak: letterbox-a, kamera-bidaiak, kokapen- eta ordu-errotuluak
+     (makinaz idatziak), azpitituluak eta ahotsak, beltzera urtzeak eta izenburu-txartela.
+     Mundua geldi dago (logikarik ez), baina ura, zerua, partikulak eta animazioak bizirik.
+     Plano bakoitza: { d, cam:[A,B], look:[A,B]|P, fov, cap:[lerroak], say:"id", text:[nor,testua],
+       fade:"in"|"out"|"black", title:[handia, txikia], on(), tick(dt,k) } — A/B funtzioak izan daitezke.
+     SALTATU (botoia edo Esc): amaierako deia (after) zuzenean; hark ezartzen du egoera.
+     ================================================================== */
+  const FILM = { on: false, list: null, i: -1, t: 0, sh: null, after: null, capFull: "", capN: 0, vEnd: 0, vOn: false, A: null, B: null, LA: null, LB: null };
+  const vec = (a) => new T.Vector3(...(typeof a === "function" ? a() : a));
+  const easeIO = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+  function film(list, after) {
+    if (FILM.on) return;
+    coachHide();
+    clearInput();
+    voiceStop();
+    Object.assign(FILM, { on: true, list, i: -1, after: after || null });
+    paused = true;
+    const el = $("film");
+    el.hidden = false;
+    el.classList.remove("on");
+    void el.offsetWidth;
+    el.classList.add("on");
+    $("hud").style.opacity = "0";
+    $("touch").style.visibility = "hidden";
+    $("pause").hidden = true;
+    $("waypoint").hidden = true;
+    $("prompt").hidden = true;
+    if (guideBeacon) guideBeacon.visible = false;
+    voicePreload(list.map((s) => s.say));
+    filmNext();
+  }
+  function filmNext() {
+    if (!FILM.on) return;
+    FILM.i++;
+    if (FILM.i >= FILM.list.length) return filmEnd();
+    const s = (FILM.sh = FILM.list[FILM.i]);
+    FILM.t = 0;
+    FILM.vOn = !s.say;
+    FILM.vEnd = 0;
+    if (s.on) s.on();
+    FILM.A = vec(s.cam[0]);
+    FILM.B = vec(s.cam[1] || s.cam[0]);
+    const lk = s.look || [P.x, P.y + 1.2, P.z];
+    FILM.LA = vec(Array.isArray(lk[0]) || typeof lk[0] === "function" ? lk[0] : lk);
+    FILM.LB = vec(Array.isArray(lk[0]) || typeof lk[0] === "function" ? lk[1] || lk[0] : lk);
+    if (s.cap) {
+      FILM.capFull = s.cap.join("\n");
+      FILM.capN = 0;
+      $("filmCap").textContent = "";
+    } else if (s.cap === null) $("filmCap").textContent = FILM.capFull = "";
+    const line = s.say ? voiceLine(s.say) : s.text;
+    $("filmSub").hidden = !line;
+    if (line) {
+      $("filmWho").textContent = line[0];
+      $("filmLine").textContent = L(line[1]);
+      $("filmSub").className = line[0].startsWith("GAUEKO") ? "dark" : "";
+    }
+    const fd = $("filmFade");
+    fd.style.transition = "none";
+    fd.style.opacity = s.fade === "in" || s.fade === "black" ? 1 : 0;
+    void fd.offsetWidth;
+    fd.style.transition = "";
+    if (s.fade === "in") fd.style.opacity = 0;
+    /* izenburu-txartela: plano batetik bestera berdina bada, ez da berriro hasten */
+    const tt = $("filmTitle"),
+      tk = s.title ? s.title.join("|") : "";
+    if (tk !== tt.dataset.k) {
+      tt.dataset.k = tk;
+      tt.hidden = !s.title;
+      tt.classList.remove("show");
+      if (s.title) {
+        $("filmTitleBig").textContent = s.title[0];
+        $("filmTitleSmall").textContent = s.title[1] || "";
+        void tt.offsetWidth;
+        tt.classList.add("show");
+      }
+    }
+    if (s.fov) {
+      camera.fov = s.fov;
+      camera.updateProjectionMatrix();
+    }
+  }
+  function filmUpdate(dt) {
+    const s = FILM.sh;
+    if (!s) return;
+    FILM.t += dt;
+    const k = clamp(FILM.t / s.d, 0, 1),
+      e = easeIO(k);
+    camera.position.lerpVectors(FILM.A, FILM.B, e);
+    const look = new T.Vector3().lerpVectors(FILM.LA, FILM.LB, e);
+    camera.lookAt(look);
+    CAM.cineLook = look;
+    if (s.tick) s.tick(dt, k);
+    /* ahotsa: kargatuta dagoenean hasi (gehienez 0.8 s itxaron; bestela testua bakarrik) */
+    if (!FILM.vOn && (voiceReady(s.say) || FILM.t > 0.8)) {
+      FILM.vOn = true;
+      const d = voicePlay(s.say);
+      FILM.vEnd = d ? FILM.t + d : 0;
+    }
+    if (FILM.capN < FILM.capFull.length) {
+      const n = Math.min(FILM.capFull.length, Math.floor((FILM.capN += dt * 26)));
+      $("filmCap").textContent = FILM.capFull.slice(0, n) + (n < FILM.capFull.length ? "▌" : "");
+      if (n % 2 === 0 && /\S/.test(FILM.capFull[n - 1] || "")) SND.blip();
+    }
+    if (s.fade === "out" && FILM.t > s.d - 1.05 && !FILM.outT) {
+      FILM.outT = 1;
+      $("filmFade").style.opacity = 1;
+    }
+    if (mixer) mixer.update(dt);
+    time += dt;
+    eraVisuals();
+    if (ZONE.cur === "ibarra") {
+      mariUpdate(dt);
+      npcsUpdate(dt);
+      if (PRO.ghost) ghostTxala(dt);
+    }
+    music(dt);
+    occlusionUpdate(dt);
+    if (FILM.t >= s.d && FILM.vOn && (!FILM.vEnd || FILM.t >= FILM.vEnd + 0.35)) {
+      FILM.outT = 0;
+      filmNext();
+    }
+  }
+  function filmEnd() {
+    if (!FILM.on) return;
+    voiceStop();
+    FILM.on = false;
+    FILM.sh = null;
+    FILM.outT = 0;
+    const el = $("film");
+    el.classList.remove("on");
+    $("filmTitle").hidden = true;
+    $("filmTitle").dataset.k = "";
+    $("filmSub").hidden = true;
+    $("filmCap").textContent = "";
+    $("filmFade").style.opacity = 0;
+    setTimeout(() => !FILM.on && (el.hidden = true), 700);
+    paused = false;
+    clearInput();
+    accumulator = 0;
+    CAM.pos = null;
+    $("hud").style.opacity = "1";
+    $("touch").style.visibility = "";
+    $("pause").hidden = !started;
+    const f = FILM.after;
+    FILM.after = null;
+    if (f) f();
+    hud();
+  }
+  const filmSkip = () => filmEnd();
+  /* ==================================================================
+     OIHARTZUN-DEIAK · Iratiren ahotsa oihartzun-harritik
+     Deia iristean: harria dardaraka, txalaparta-kolpe bigunak (◀ ◀ ▶, Iratiren "sinadura")
+     eta HUDean "OIHARTZUN-DEIA". ERANTZUN (E, ekintza-botoia edo ukitu) → elkarrizketa
+     deien larruazalarekin: erretratu biribila, uhina eta ahotsa. Erantzuten ez bada, segundo
+     batzuen buruan bakarrik irekitzen da (istorioa ez da geratzen). Gauekok deia "zulatu"
+     dezake: interferentzia, kolore gorria eta haren ahotsa.
+     Edozein unetan, menuan: DEITU · IRATI → zer egin galdetu (helburuaren arabera).
+     ================================================================== */
+  const RING = { on: false, t: 0, k: 0, auto: 6, next: null, from: "", near: null };
+  /* erantzun daiteke? (lehen deian, harriaren ondoan bakarrik) */
+  const ringReach = () => !RING.near || Math.hypot(P.x - RING.near.x, P.z - RING.near.z) < RING.near.r;
+  /* lerroak: ahots-id-ak ("pro_i1") edo [nor, testua] */
+  function deiaShots(lines, at) {
+    return lines.map((l) => {
+      if (typeof l === "string") {
+        const [who, text] = voiceLine(l),
+          p = (at && at[who]) || [P.x, P.z, P.y];
+        return [who, text, "", p[0], p[1], p[2], null, l];
+      }
+      const p = (at && at[l[0]]) || [P.x, P.z, P.y];
+      return [l[0], l[1], "", p[0], p[1], p[2]];
+    });
+  }
+  /* deia (larruazal berezia) zuzenean */
+  function deia(lines, after) {
+    const sh = deiaShots(lines);
+    sh.call = true;
+    voicePreload(lines.filter((l) => typeof l === "string"));
+    say(sh, after);
+  }
+  /* elkarrizketa arrunta, ahotsekin (aurrez aurre): at = { IRATI: [x, z, y] } */
+  function vsay(lines, after, at) {
+    voicePreload(lines.filter((l) => typeof l === "string"));
+    say(deiaShots(lines, at), after);
+  }
+  /* deia jotzen: erantzun arte (edo auto segundo) */
+  function deiaRing(from, lines, after, auto = 6, near = null) {
+    voicePreload(lines.filter((l) => typeof l === "string"));
+    Object.assign(RING, { on: true, t: 0, k: 0, auto, from, near, next: () => deia(lines, after) });
+    $("deiaFrom").textContent = from;
+    $("deiaKey").textContent = mobile ? L("ERANTZUN") : L("ERANTZUN · E");
+    $("deiaRing").hidden = false;
+  }
+  function deiaAnswer(force) {
+    if (!RING.on || cinematic || FILM.on || (force !== true && !ringReach())) return;
+    RING.on = false;
+    $("deiaRing").hidden = true;
+    SND.tok("R", false, 0.5);
+    const f = RING.next;
+    RING.next = null;
+    if (f) f();
+  }
+  /* jokoaren tick-etik: tonua (txalaparta-kolpe bigunak) eta erantzun automatikoa */
+  function deiaUpdate(dt) {
+    if (!RING.on) return;
+    RING.t += dt;
+    RING.k -= dt;
+    if (RING.k <= 0) {
+      RING.k = 1.5;
+      ["L", "L", "R"].forEach((s, i) => setTimeout(() => RING.on && SND.tok(s, true, 0.45), i * 190));
+      haptic(20);
+    }
+    const reach = ringReach();
+    $("deiaKey").textContent = reach ? (mobile ? L("ERANTZUN") : L("ERANTZUN · E")) : L("HURBILDU");
+    /* borrokan ez da bakarrik irekitzen; luzaroan erantzun gabe: galdutako deia (menutik berreskuratu) */
+    if (RING.t > RING.auto && !cinematic && !FILM.on && !GET.on && !TXALA.on && !ROOM.fight && !BOSS.on) deiaAnswer(true);
+    else if (RING.t > 30) {
+      RING.on = false;
+      RING.missed = RING.next;
+      RING.next = null;
+      $("deiaRing").hidden = true;
+      notify(L("Galdutako deia: menuan, DEITU · IRATI."), "", 3);
+    }
+  }
+  /* uhina (ahotsaren analizatzailetik) deien kanbasean */
+  function deiaWave(lv) {
+    const cv = $("deiaWave");
+    if (!cv || !VOICE.an) return;
+    const g = cv.getContext("2d"),
+      w = cv.width,
+      h = cv.height,
+      d = VOICE.data,
+      intr = $("cinema").classList.contains("intrusion");
+    g.clearRect(0, 0, w, h);
+    g.strokeStyle = intr ? "#ff8a5a" : "#7fe3c9";
+    g.lineWidth = 2;
+    g.beginPath();
+    const n = 96;
+    for (let i = 0; i < n; i++) {
+      const v = voicePlaying() ? (d[Math.floor((i / n) * d.length)] - 128) / 128 : 0,
+        x = (i / (n - 1)) * w,
+        y = h / 2 + v * h * 1.6 + (intr ? (Math.random() - 0.5) * 6 * lv : 0);
+      i ? g.lineTo(x, y) : g.moveTo(x, y);
+    }
+    g.stroke();
+  }
+  /* menutik: DEITU · IRATI (zer egin) */
+  function iratiCall() {
+    if (!started || cinematic || FILM.on) return;
+    if (RING.missed) {
+      const f = RING.missed;
+      RING.missed = null;
+      return f();
+    }
+    const o = objective()[0] || "";
+    const extra = [
+      "Gogoratu: itzal bakoitza bere begien koloreko garaian zauritzen da.",
+      "Ez ahaztu sutondoak: atseden hartu, eta handik jarraituko duzu.",
+      "Txalapartak bi ahots ditu. Zuk erantzun, Amaiur.",
+      "Harri-danborrak entzun: leizeek beren bidea kantatzen dute.",
+    ][Math.floor(time) % 4];
+    deia(["dei_i1", ["IRATI", o], ["IRATI", extra], "dei_i2"]);
+  }
+  /* ---- leize bakoitzaren lehen sarrera: Iratiren deia (behin) · kokapen-errotulua beti ---- */
+  const ZONE_CALLS = {
+    leizea: ["dz_leizea1", "dz_leizea2"],
+    lamia: ["dz_lamia1", "dz_lamia2"],
+    tartalo: ["dz_tartalo1", "dz_tartalo2", "dz_tartalo3"],
+    jentil: ["dz_jentil1", "dz_jentil2"],
+    zerua: ["dz_zerua1", "dz_zerua2"],
+    herensuge: ["dz_herensuge1", "dz_herensuge2", "dz_herensuge3"],
+  };
+  const CALL_TEST = new URLSearchParams(location.search).has("test");
+  function zoneEntered(id) {
+    if (!FILM.on) locCaption(id);
+    const lines = ZONE_CALLS[id];
+    /* probetan (?test) deirik ez, eskatu ezean (window.__calls): botak ez eteteko */
+    if (!lines || PRO.on || saved.flags.includes("deia-" + id) || (CALL_TEST && !window.__calls)) return;
+    saved.flags.push("deia-" + id);
+    persist();
+    setTimeout(() => ZONE.cur === id && !RING.on && deiaRing("IRATI", lines, null, 7), 2200);
+  }
+  /* kokapen-errotulua (goian eskuinean, makinaz): "BASAJAUNEN LEIZEA" / "07:12 · IRAGANA" */
+  let locTimer = 0;
+  function locCaption(id) {
+    const Z = ZONES[id];
+    if (!Z) return;
+    const t = ((saved.tod ?? 0.35) * 24 + 24) % 24,
+      hh = String(Math.floor(t)).padStart(2, "0"),
+      mm = String(Math.floor((t % 1) * 60)).padStart(2, "0"),
+      full = Z.name + "\n" + hh + ":" + mm + " · " + (phase ? "ORAINA" : "IRAGANA"),
+      el = $("locCap");
+    clearInterval(locTimer);
+    el.classList.remove("out");
+    el.hidden = false;
+    let n = 0;
+    locTimer = setInterval(() => {
+      n++;
+      el.textContent = full.slice(0, n) + (n < full.length ? "▌" : "");
+      if (n >= full.length) {
+        clearInterval(locTimer);
+        locTimer = setTimeout(() => el.classList.add("out"), 3600);
+      }
+    }, 34);
+  }
+  /* ==================================================================
+     HITZAURREA · "OIHARTZUNA" (0. atala)
+     Hasiera mailakatua: zinema (gaua, txalaparta bakarrik, Gaueko), Iturralden esnatu, Iratiren
+     lehen oihartzun-deia eta erronka txikiak; bakoitzak tresna bat irakasten du, gero istorioan
+     behar dena:
+       1 · MUGITU          → oihartzun-harria dardaraka (deia)
+       2 · SORGINKERIA     → sutondoa piztu            (leizeetako sutegiak)
+       3 · JAUZI BIKOITZA  → ganbara: Iratiren makilak (txalaparta)
+       4 · GARAIA          → atea izoztuta; udan zabalik (garai-zubiak, itzalak)
+       5 · BULTZADA        → Gauekoren begiak kalean: itzalean itxaron edo ziztu bizian pasatu
+       6 · FINKATU + garaiak borrokan → plazako itzalak (urrezko begiak: iraganean bakarrik)
+     Egunsentia, Iratiren oihartzuna plazan eta izenburua. Banderak: pro-0, pro-deia, pro-sua,
+     pro-makilak, pro-atea, pro-kalea, pro-plaza → intro + irati1 + prologoa.
+     Partida zaharrek (intro banderarekin) ez dute hitzaurrerik eta tresnak libre dituzte.
+     ================================================================== */
+  const PRO = { on: false, hideNpc: false, ghost: false, can: { phase: true, dash: true, lock: true }, stone: null, chest: null, ice: null, hearth: null, beams: [], caught: 0, catchT: 0, hold: null, eyes: null, fight: null, rise: 0, said: {}, nopeT: 0 };
+  const proFlag = (k) => saved.flags.includes(k);
+  function proLocks() {
+    PRO.can.phase = !PRO.on || proFlag("pro-makilak");
+    PRO.can.dash = !PRO.on || proFlag("pro-atea");
+    PRO.can.lock = !PRO.on || proFlag("pro-kalea");
+    const b = document.body.classList;
+    b.toggle("pro-nophase", !PRO.can.phase);
+    b.toggle("pro-nodash", !PRO.can.dash);
+    b.toggle("pro-nolock", !PRO.can.lock);
+    keysRender();
+  }
+  /* ikasi gabeko tresna: garaiaz, pista txiki bat (besteetan, isilik) */
+  function proNope(what) {
+    if (what !== "phase" || time - PRO.nopeT < 4) return;
+    PRO.nopeT = time;
+    notify(L("Garaiak… oraindik ez dituzu gogoratzen."), "", 2.5);
+  }
+  const proDoor = () => {
+    const S = HOUSE.home;
+    return { x: S.x + S.fx * 1.6, y: S.y, z: S.z + S.fz * 1.6, a: Math.atan2(S.fx, S.fz) };
+  };
+  /* gaua: erlojua geldi, herritarrak etxean, txalaparta bakarrik */
+  function proNight(tod = 0.155) {
+    saved.tod = tod;
+    DAY.k = nightOf(tod);
+    DAY.tw = 4 * DAY.k * (1 - DAY.k);
+    DAY.night = DAY.k > 0.5;
+    PRO.hideNpc = PRO.ghost = true;
+  }
+
+  /* ------------------------------ eraikitzea (Iturralde barruan) ------------------------------ */
+  function proBuildHouse(E, D) {
+    /* oihartzun-harria: leiho azpiko aulki txikian; Iratiren ahotsa hemendik dator */
+    const stool = obj(new T.BoxGeometry(0.9, 0.62, 0.7), material("#6e4a2c"));
+    stool.position.set(E(-1.2), 0.31, -D / 2 + 0.75);
+    solids.push({ x: E(-1.2), z: -D / 2 + 0.75, r: 0.55, h: 0.62, y: 0, pillar: true });
+    const g = new T.Group(),
+      st = new T.Mesh(new T.SphereGeometry(0.24, 18, 12), new T.MeshStandardMaterial({ color: "#5d7f86", roughness: 0.35, emissive: new T.Color("#5fe3c8"), emissiveIntensity: 0.2 })),
+      band = new T.Mesh(new T.TorusGeometry(0.25, 0.018, 6, 28), new T.MeshBasicMaterial({ color: "#a8fff0", transparent: true, opacity: 0.5 })),
+      halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#7fffe0", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0 }));
+    st.scale.set(1, 0.72, 1);
+    band.rotation.x = PI / 2;
+    halo.scale.setScalar(2.4);
+    g.add(st, band, halo);
+    g.position.set(E(-1.2), 0.85, -D / 2 + 0.75);
+    BP.add(g);
+    PRO.stone = { x: E(-1.2), z: -D / 2 + 0.75, g, st, band, halo, ring: 0 };
+    /* GANBARA: apalen gainean, jauzi bikoitzarekin bakarrik iristen da */
+    const loft = slab({ x: E(4.1), z: -D / 2 + 0.85, y: 3.6, w: 5.4, d: 1.7, h: 0.26, mat: "wood", area: "etxeA" });
+    loft.m.castShadow = true;
+    const beam = material("#5a3c26");
+    for (const x of [E(1.55), E(6.65)]) {
+      const p = obj(new T.BoxGeometry(0.24, 3.4, 0.24), beam);
+      p.position.set(x, 1.7, -D / 2 + 1.6);
+      solids.push({ x, z: -D / 2 + 1.6, r: 0.22, h: 3.4, y: 0, pillar: true });
+    }
+    const lip = obj(new T.BoxGeometry(5.4, 0.18, 0.12), beam);
+    lip.position.set(E(4.1), 3.62, -D / 2 + 1.68);
+    /* Iratiren kutxa ganbaran: barruan, haren txalaparta-makilak */
+    const chest = new T.Group(),
+      box = new T.Mesh(new T.BoxGeometry(0.9, 0.5, 0.56), material("#7a4e2c")),
+      lid = new T.Group(),
+      lidM = new T.Mesh(new T.BoxGeometry(0.92, 0.14, 0.58), material("#8a5a34"));
+    box.position.y = 0.25;
+    lidM.position.set(0, 0.07, 0.29);
+    lid.add(lidM);
+    lid.position.set(0, 0.5, -0.29);
+    for (const x of [-0.3, 0.3]) {
+      const s = new T.Mesh(new T.BoxGeometry(0.06, 0.52, 0.6), material("#c9a35c", 0.2));
+      s.position.set(x, 0.25, 0);
+      chest.add(s);
+    }
+    chest.add(box, lid);
+    const ch = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#7fffe0", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0 }));
+    ch.scale.setScalar(2.2);
+    ch.position.y = 0.7;
+    chest.add(ch);
+    chest.position.set(E(5.7), 3.6, -D / 2 + 0.75);
+    BP.add(chest);
+    PRO.chest = { x: E(5.7), y: 3.6, z: -D / 2 + 0.75, g: chest, lid, halo: ch, open: false };
+    /* atea izoztuta (orainean): Gauekoren negua; iraganean, uda eta atea zabalik */
+    const ice = obj(new T.BoxGeometry(2.7, 2.95, 0.42), new T.MeshStandardMaterial({ color: "#cdefff", roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.85, emissive: new T.Color("#6fb8e8"), emissiveIntensity: 0.35 }));
+    ice.position.set(E(0), 1.47, D / 2 + 0.05);
+    ice.castShadow = false;
+    PRO.ice = ice;
+    /* sutondoa: hitzaurrean itzalita; SORGINKERIAk pizten du */
+    PRO.hearthTarget = { rune: true, x: DGE.hearth.x, y: 0.95, z: DGE.hearth.z, r: 1.3, lit: false, live: () => PRO.on && ZONE.cur === "etxea" && proFlag("pro-deia") && !proFlag("pro-sua"), hit: () => proHearthLit() };
+    RUNES.push(PRO.hearthTarget);
+  }
+  /* sutondoa piztuta ala ez (hitzaurrearen arabera) */
+  function proHearthState() {
+    const H = DGE.hearth;
+    if (!H) return;
+    H.unlit = PRO.on && !proFlag("pro-sua");
+    const tch = DGE.torches.find((t) => t.fl === H.fl);
+    if (tch) tch.off = H.unlit;
+  }
+
+  /* ------------------------------ hasiera ------------------------------ */
+  function prologueStart() {
+    PRO.on = true;
+    proLocks();
+    proNight();
+    proHearthState();
+    if (!proFlag("pro-0")) return proColdOpen();
+    if (!proFlag("pro-atea")) return proHouse();
+    if (!proFlag("pro-plaza")) return proStreet();
+    proDawn();
+  }
+  /* Gauekoren begiak hodeietan (zinemarako) */
+  function proEyes() {
+    if (PRO.eyes) return PRO.eyes;
+    const g = new T.Group();
+    for (const s of [-1, 1]) {
+      const e = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffcf7a", transparent: true, blending: T.AdditiveBlending, depthWrite: false, fog: false, opacity: 0 }));
+      e.scale.set(15, 0.1, 1);
+      e.position.set(s * 9, 0, 0);
+      g.add(e);
+    }
+    g.position.set(8, 66, -96);
+    ZONES.ibarra.group.add(g);
+    return (PRO.eyes = g);
+  }
+  function proEyesOpen(k) {
+    const g = proEyes();
+    g.visible = true;
+    for (const e of g.children) {
+      e.material.opacity = clamp(k * 1.6, 0, 1);
+      e.scale.set(15, 0.1 + 5 * smooth01(clamp(k * 1.3, 0, 1)), 1);
+    }
+  }
+  function proColdOpen() {
+    const sp = TXALA.spots[0],
+      S = HOUSE.home;
+    film(
+      [
+        { d: 6.5, fade: "in", cam: [[70, 40, 122], [50, 29, 96]], look: [[0, 4, 30], [3, 3, 27]], cap: ["IBARRA HARANA · 03:12", "ERLOJUA HAUTSI ZENETIK · 365 EGUN"] },
+        { d: 5.5, cam: [[7.5, 4.8, 39.5], [4.2, 3, 35.6]], look: [sp.x, 1.3, sp.z], cap: ["HERRIKO PLAZA", "HIRUGARREN GAUA · INORK EZ DU JOTZEN"] },
+        { d: 4.6, cam: [[2, 5, 45], [1, 6.5, 41]], look: [[8, 30, -60], [8, 60, -96]], cap: null, say: "pro_g1", tick: (dt, k) => proEyesOpen(k) },
+        { d: 4.4, cam: [[1, 6.5, 41], [-2, 12, 26]], look: [[8, 60, -96], [8, 64, -96]], say: "pro_g2", tick: () => proEyesOpen(1) },
+        { d: 5.2, cam: [[11, 7, 43], [15.5, 4.4, 38.5]], look: [S.x, 2.6, S.z], cap: ["ITURRALDE · 03:40", "BI AHIZPAREN ETXEA. BAT BAKARRIK LO."], fade: "out", on: () => PRO.eyes && (PRO.eyes.visible = false) },
+        {
+          d: 5.4,
+          fade: "in",
+          cap: null,
+          on: () => proBedroom(),
+          cam: [() => [DGE.bed.x + 4.6, 4.4, DGE.bed.z + 5], () => [DGE.bed.x + 3.6, 3.5, DGE.bed.z + 3.4]],
+          look: [() => [DGE.bed.x, 0.9, DGE.bed.z], () => [PRO.stone.x, 0.9, PRO.stone.z]],
+          tick: (dt) => proStoneRing(dt, true),
+        },
+      ],
+      () => {
+        if (PRO.eyes) PRO.eyes.visible = false;
+        flagSet("pro-0");
+        proHouse(true);
+      },
+    );
+  }
+  /* zinemaren azken planoa: etxean, ohean lo */
+  function proBedroom() {
+    if (ZONE.cur !== "etxea") enterZone("etxea", { x: DGE.bed.x + 1.7, y: 0, z: DGE.bed.z, a: PI / 2 }, true);
+    proHearthState();
+    /* etzanda: burua burkoaren aldean (iparra), aurpegia gora */
+    hero.position.set(DGE.bed.x, 0.84, DGE.bed.z + 1.15);
+    if (actor) actor.rotation.x = -PI / 2;
+    hero.rotation.y = 0;
+  }
+
+  /* ------------------------------ 1-4 · Iturralde ------------------------------ */
+  function proHouse(fromFilm) {
+    if (ZONE.cur !== "etxea") enterZone("etxea", { x: DGE.bed.x + 1.8, y: 0, z: DGE.bed.z, a: PI / 2 }, true);
+    teleport(DGE.bed.x + 1.8, DGE.bed.z, 0);
+    P.angle = PI / 2;
+    hero.rotation.y = P.angle;
+    proHearthState();
+    proLocks();
+    if (actor) actor.rotation.x = fromFilm ? -PI / 2 : 0;
+    PRO.rise = fromFilm ? 1 : 0;
+    CAM.pos = null;
+    title("ITURRALDE", "");
+    locCaption("etxea");
+    if (!proFlag("pro-deia")) {
+      deiaRing(
+        "IRATI",
+        ["pro_i1", "pro_a1", "pro_i2", "pro_i3", "pro_a2", "pro_i4", "pro_i5"],
+        () => {
+          flagSet("pro-deia");
+          coach("pro-magic", "J", "J edo klika: SORGINKERIA → sutondoa", "", "attackBtn", "SORGINKERIA: sutondoa piztu", "");
+          hud();
+        },
+        16,
+        { x: PRO.stone.x, z: PRO.stone.z + 0.6, r: 2.6 },
+      );
+      notify(L("Oihartzun-harria dardaraka dago. Hurbildu eta erantzun."), "", 5);
+    }
+  }
+  /* oihartzun-harria: dardara, distira eta txalaparta-kolpe bigunak deia jotzen duen bitartean */
+  function proStoneRing(dt, film) {
+    const S = PRO.stone;
+    if (!S) return;
+    const on = film || RING.on;
+    S.ring = mix(S.ring, on ? 1 : proFlag("pro-deia") ? 0.25 : 0, 1 - Math.exp(-dt * 4));
+    S.halo.material.opacity = S.ring * (0.55 + Math.sin(time * 9) * 0.25);
+    S.st.material.emissiveIntensity = 0.2 + S.ring * 1.3;
+    S.g.position.x = S.x + (on ? Math.sin(time * 70) * 0.012 : 0);
+    S.band.rotation.z += dt * (0.5 + S.ring * 3);
+    if (film) {
+      PRO.filmRing = (PRO.filmRing || 0) - dt;
+      if (PRO.filmRing <= 0) {
+        PRO.filmRing = 1.5;
+        ["L", "L", "R"].forEach((s, i) => setTimeout(() => FILM.on && SND.tok(s, true, 0.4), i * 190));
+      }
+    }
+  }
+  function proHearthLit() {
+    if (proFlag("pro-sua")) return;
+    flagSet("pro-sua");
+    PRO.hearthTarget.lit = true;
+    proHearthState();
+    const H = DGE.hearth;
+    SND.flame();
+    SND.rune(true);
+    fxBurst(H.x, 1, H.z, { n: 46, speed: 4, up: 3, life: 1, size: 0.34, color: "#ffb35c", grav: -1.5 });
+    fxRing(H.x, 0.2, H.z, "#ffcf8a", 4.5, 0.8);
+    coachDone("pro-magic");
+    title("SUA", "");
+    setTimeout(() => {
+      if (!PRO.on) return;
+      deia(["pro_i6", "pro_i6b"], () => {
+        coach("pro-dj", "␣ ×2", "␣ eta airean berriro ␣: JAUZI BIKOITZA", "", "jumpBtn", "JAUZI, eta airean berriro: JAUZI BIKOITZA", "");
+        hud();
+      });
+    }, 900);
+  }
+  function proOpenChest() {
+    const C = PRO.chest;
+    if (!C || C.open) return;
+    C.open = true;
+    coachDone("pro-dj");
+    SND.creak();
+    itemGet("makilak", L("IRATIREN MAKILAK"), L("Iratiren txalaparta-makilak. Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ikasitako erritmoak edonon jo daitezke: ") + (mobile ? L("⋯ menuan, TXALAPARTA.") : L("B tekla.")), () => {
+      flagSet("pro-makilak");
+      if (!saved.items.includes("makilak")) saved.items.push("makilak");
+      persist();
+      proLocks();
+      deia(["pro_i7", "pro_a3", "pro_i8", "pro_g3"], () => {
+        coach("pro-phase", "Q", "Q: GARAIA → IRAGANA (uda): atea zabalik", "", "phaseBtn", "ALDATU: IRAGANA (uda) → atea zabalik", "");
+        hud();
+      });
+    });
+  }
+  /* ekintzak (actionHere-tik): harria, kutxa */
+  function proActionNear() {
+    if (!PRO.on || ZONE.cur !== "etxea") return null;
+    const C = PRO.chest;
+    if (C && !C.open && Math.hypot(P.x - C.x, P.z - C.z) < 1.9 && Math.abs(P.y - C.y) < 1.2)
+      return proFlag("pro-sua") ? { kind: "chest", label: L("IREKI"), fn: proOpenChest } : { kind: "locked", label: L("ILUN"), fn: () => notify(L("Ilunpean ez da ezer ikusten. Lehenik, argia: sutondoa."), "", 3) };
+    return null;
+  }
+
+  /* ------------------------------ 5 · kalea: Gauekoren begiak ------------------------------ */
+  const PRO_BEAMS = [
+    /* [x0, z0, ax, az, abiadura, fasea, erradioa] */
+    [18.2, 32, 0, 7.5, 1.35, 0, 2.6],
+    [12.4, 32.4, 0, 8.2, 1.75, 2.2, 2.6],
+    [6.4, 31.6, 4.4, 4.4, 1.15, 0.6, 2.4],
+  ];
+  function proBeamsBuild() {
+    if (PRO.beams.length) return;
+    const c = document.createElement("canvas");
+    c.width = c.height = 128;
+    const gr = c.getContext("2d"),
+      rg = gr.createRadialGradient(64, 64, 6, 64, 64, 62);
+    rg.addColorStop(0, "rgba(255,236,190,0.95)");
+    rg.addColorStop(0.65, "rgba(255,206,130,0.55)");
+    rg.addColorStop(0.92, "rgba(255,170,80,0.18)");
+    rg.addColorStop(1, "rgba(255,170,80,0)");
+    gr.fillStyle = rg;
+    gr.fillRect(0, 0, 128, 128);
+    const tex = new T.CanvasTexture(c);
+    for (const [x0, z0, ax, az, sp, ph, r] of PRO_BEAMS) {
+      const spot = new T.Mesh(new T.CircleGeometry(r * 1.12, 32), new T.MeshBasicMaterial({ map: tex, transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.9 }));
+      spot.rotation.x = -PI / 2;
+      spot.renderOrder = 3;
+      const cone = new T.Mesh(new T.CylinderGeometry(0.25, r, 26, 24, 1, true), new T.MeshBasicMaterial({ color: "#ffd9a0", transparent: true, opacity: 0.07, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide }));
+      ZONES.ibarra.group.add(spot, cone);
+      PRO.beams.push({ x0, z0, ax, az, sp, ph, r, spot, cone, x: x0, z: z0 });
+    }
+  }
+  function proBeamsShow(v) {
+    for (const B of PRO.beams) B.spot.visible = B.cone.visible = v;
+  }
+  function proStreet() {
+    PRO.hideNpc = PRO.ghost = true;
+    proLocks();
+    proBeamsBuild();
+    proBeamsShow(true);
+    /* kalea gaindituta (partida plazan gorde zen): plazaren ondoan jarraitu */
+    const d = proFlag("pro-kalea") ? { x: 6, y: 0, z: 32.5, a: -PI / 2 } : proDoor();
+    if (ZONE.cur !== "ibarra") enterZone("ibarra", d, true);
+    else {
+      teleport(d.x, d.z, d.y);
+      P.angle = d.a;
+    }
+    Object.assign(SAFE, { ...proDoor(), phase: 1 });
+    CAM.pos = null;
+    locCaption("ibarra");
+    if (!proFlag("pro-kalea") && !PRO.said.street) {
+      PRO.said.street = true;
+      setTimeout(() => PRO.on && !proFlag("pro-kalea") && deiaRing("IRATI", ["pro_i9", "pro_i10"], () => coach("pro-dash", "F", "F: BULTZADA · ziztu bizian, begiradak ez zaitu ikusten", "", "dashBtn", "BULTZADA: ziztu bizian, begiradak ez zaitu ikusten", ""), 4), 700);
+    }
+  }
+  /* begiradak: bidea, ukitzea eta harrapatzea */
+  function proBeamsUpdate(dt) {
+    if (!PRO.beams.length || ZONE.cur !== "ibarra") return;
+    const active = PRO.on && proFlag("pro-atea") && !proFlag("pro-kalea");
+    proBeamsShow(active);
+    if (!active) return;
+    const slow = PRO.caught >= 4 ? 0.72 : 1;
+    for (const B of PRO.beams) {
+      const a = time * B.sp * slow + B.ph;
+      B.x = B.x0 + Math.cos(a) * B.ax;
+      B.z = B.z0 + Math.sin(a) * B.az;
+      const y = gy(B.x, B.z);
+      B.spot.position.set(B.x, y + 0.07, B.z);
+      B.cone.position.set(B.x, y + 13, B.z);
+      B.spot.material.opacity = 0.75 + Math.sin(time * 6 + B.ph) * 0.12;
+    }
+    if (PRO.catchT > 0) {
+      PRO.catchT -= dt;
+      if (PRO.hold) {
+        P.x = PRO.hold.x;
+        P.z = PRO.hold.z;
+        P.vx = P.vz = 0;
+      }
+      if (PRO.catchT <= 0) {
+        $("beamAlert").hidden = true;
+        PRO.hold = null;
+        const d = proDoor();
+        teleport(d.x, d.z, d.y);
+        P.angle = d.a;
+        CAM.pos = null;
+        ZONE.fadeT = 0.39;
+      }
+      return;
+    }
+    if (respawnTimer || cinematic || FILM.on) return;
+    /* plazara iritsita: kalea gainditua */
+    if (P.x < 3.2) {
+      flagSet("pro-kalea");
+      proLocks();
+      return proPlaza();
+    }
+    if (P.dashT > 0) return;
+    for (const B of PRO.beams) if (Math.hypot(P.x - B.x, P.z - B.z) < B.r * 0.86) return proCaught(B);
+  }
+  function proCaught(B) {
+    PRO.caught++;
+    PRO.catchT = 1.6;
+    PRO.hold = { x: P.x, z: P.z };
+    $("beamAlert").hidden = false;
+    $("beamAlert").textContent = L("IKUSI ZAITU");
+    SND.static(1.2);
+    SND.thud();
+    shake(0.35);
+    fxBurst(P.x, P.y + 1, P.z, { n: 30, speed: 3, up: 1, life: 0.8, size: 0.4, color: "#1a1020", grav: -2 });
+    voiceLoad("pro_g4").then(() => voiceLoad("pro_g5"));
+    voicePlay(PRO.caught % 2 ? "pro_g4" : "pro_g5");
+    if (PRO.caught === 3) setTimeout(() => notify(L("Irati: «Bultzadan ez zaitu ikusten. Itxaron argia urruntzen den arte, eta orduan: F!»"), "", 5), 1700);
+  }
+
+  /* ------------------------------ 6 · plaza: lehen borroka ------------------------------ */
+  function proPlaza() {
+    if (PRO.fight) return;
+    const sp = TXALA.spots[0];
+    PRO.fight = { list: [], done: false };
+    title("PLAZA", "");
+    deia(["pro_i11", "pro_i12"], () => {
+      const pos = [
+        [sp.x - 5.5, sp.z - 3, 1],
+        [sp.x + 5.5, sp.z - 2.5, 1],
+        [sp.x, sp.z + 6.5, 0],
+      ];
+      for (const [x, z, era] of pos) {
+        const e = spawnEnemy("grunt", era, x, z, gy(x, z));
+        Object.assign(e, { terrain: true, K: 0.75, pro: true });
+        PRO.fight.list.push(e);
+      }
+      coach("pro-lock", "T", "T: FINKATU · helburu bat, eta jo", "", "recallBtn", "◎: FINKATU · helburu bat, eta jo", "");
+      notify(L("Urrezko begiak: IRAGANEAN bakarrik zauritzen dira. Urdinak: ORAINEAN."), "", 6);
+      hud();
+    });
+  }
+  function proFightUpdate() {
+    const F = PRO.fight;
+    if (!F || F.done || !F.list.length) return;
+    if (LOCK.target) coachDone("pro-lock");
+    if (F.list.every((e) => e.state === "dead")) {
+      F.done = true;
+      flagSet("pro-plaza");
+      setTimeout(proDawn, 900);
+    }
+  }
+
+  /* ------------------------------ egunsentia, Irati eta izenburua ------------------------------ */
+  function proDawn() {
+    const sp = TXALA.spots[0],
+      N = NPCS.find((n) => n.id === "irati");
+    if (ZONE.cur !== "ibarra") enterZone("ibarra", { x: sp.x + 4, y: 0, z: sp.z + 5, a: PI }, true);
+    PRO.ghost = false;
+    proBeamsShow(false);
+    film(
+      [
+        {
+          d: 6,
+          cam: [[sp.x + 9, 3.5, sp.z + 12], [sp.x + 5, 6, sp.z + 14]],
+          look: [[sp.x, 1.5, sp.z], [sp.x - 10, 9, sp.z - 40]],
+          cap: ["HERRIKO PLAZA · 06:31", "EGUNSENTIA. TXALAPARTA ISILDU DA."],
+          tick: (dt, k) => {
+            saved.tod = mix(0.16, 0.29, smooth01(k));
+            DAY.k = nightOf(saved.tod);
+            DAY.tw = 4 * DAY.k * (1 - DAY.k);
+            eraVisuals();
+          },
+        },
+      ],
+      () => {
+        saved.tod = 0.3;
+        DAY.k = nightOf(0.3);
+        DAY.night = false;
+        PRO.hideNpc = false;
+        if (N) {
+          N.g.visible = true;
+          fxBurst(N.x, 1.2, N.z, { n: 50, speed: 2.5, up: 2.5, life: 1.3, size: 0.3, color: "#bff6ff", grav: -1 });
+          fxRing(N.x, 0.15, N.z, "#9ae3e5", 4, 1);
+        }
+        SND.memory();
+        vsay(["pro_i13", "pro_a4", "pro_i14", "pro_i15", "pro_i16", "pro_a5"], proTitle, { IRATI: [0, 41, 0] });
+      },
+    );
+  }
+  function proTitle() {
+    film(
+      [
+        { d: 7.5, cam: [[6, 4, 46], [10, 26, 70]], look: [[0, 3, 30], [10, 30, -110]], title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
+        { d: 4.5, cam: [[10, 26, 70], [11, 28, 72]], look: [10, 30, -110], say: "pro_g6", fade: "out", title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
+      ],
+      proEnd,
+    );
+  }
+  function proEnd() {
+    for (const k of ["pro-0", "pro-deia", "pro-sua", "pro-makilak", "pro-atea", "pro-kalea", "pro-plaza", "intro", "irati1", "prologoa"]) if (!proFlag(k)) saved.flags.push(k);
+    if (!saved.items.includes("makilak")) saved.items.push("makilak");
+    saved.tod = Math.max(saved.tod, 0.3);
+    PRO.on = PRO.hideNpc = PRO.ghost = false;
+    if (actor) actor.rotation.x = 0;
+    proLocks();
+    proHearthState();
+    proBeamsShow(false);
+    for (const e of ENEMIES) if (e.pro && e.state !== "dead") killEnemy(e);
+    persist();
+    $("filmFade").style.opacity = 0;
+    title("IBARRA", "");
+    notify(L("Plazako txalaparta: Pello eta Peiok erritmo zaharrak dakizkite."), "", 6);
+    hud();
+  }
+  /* probetarako (eta partida zaharretarako): hitzaurrea saltatu */
+  function prologueSkip() {
+    if (FILM.on) {
+      FILM.after = null;
+      filmEnd();
+    }
+    if (cinematic) endScene();
+    RING.on = false;
+    $("deiaRing").hidden = true;
+    proEnd();
+    if (ZONE.cur !== "ibarra") enterZone("ibarra", ZONES.ibarra.spawn, true);
+  }
+
+  /* ------------------------------ eguneraketa (tick-etik) ------------------------------ */
+  function proUpdate(dt) {
+    if (!PRO.on) return;
+    /* esnatzea: ohetik zutitu */
+    if (PRO.rise > 0) {
+      PRO.rise = Math.max(0, PRO.rise - dt * 1.6);
+      if (actor) actor.rotation.x = -PI / 2 * smooth01(PRO.rise);
+    }
+    if (ZONE.cur === "etxea") {
+      proStoneRing(dt, false);
+      const C = PRO.chest;
+      if (C) {
+        C.halo.material.opacity = proFlag("pro-sua") && !C.open ? 0.55 + Math.sin(time * 4) * 0.25 : 0;
+        C.lid.rotation.x = mix(C.lid.rotation.x, C.open ? -1.9 : 0, 1 - Math.exp(-dt * 6));
+      }
+      /* izotza: orainean atea itxita; iraganean (uda) zabalik */
+      const iceOn = !proFlag("pro-atea");
+      PRO.ice.visible = iceOn;
+      if (iceOn) {
+        PRO.ice.material.opacity = 0.85 * phaseBlend;
+        if (phase === 1 && Math.abs(P.x - HX) < 1.7 && P.z > 4.35) {
+          P.z = 4.35;
+          P.vz = Math.min(0, P.vz);
+          if (!PRO.said.ice && proFlag("pro-makilak")) {
+            PRO.said.ice = true;
+            notify(L("Izotza. Gogoratu udako atea: GARAIA."), "", 3);
+          }
+        }
+        if (phase === 0 && proFlag("pro-makilak")) coachDone("pro-phase");
+      }
+      return;
+    }
+    if (ZONE.cur === "ibarra") {
+      /* etxetik irtenda: kalea */
+      if (!proFlag("pro-atea") && proFlag("pro-makilak")) {
+        flagSet("pro-atea");
+        proLocks();
+        proStreet();
+      }
+      proBeamsUpdate(dt);
+      if (proFlag("pro-kalea") && !proFlag("pro-plaza") && !PRO.fight && !cinematic && !FILM.on) proPlaza();
+      proFightUpdate();
+    }
+  }
+  /* helburua (HUD) hitzaurrean */
+  function proObjective() {
+    if (ZONE.cur === "etxea") {
+      if (!proFlag("pro-deia")) return ["Oihartzun-harria dardaraka: hurbildu eta ERANTZUN.", [PRO.stone.x, PRO.stone.z + 1.2, 0]];
+      if (!proFlag("pro-sua")) return ["Piztu sutondoa SORGINKERIArekin.", [DGE.hearth.x, DGE.hearth.z + 1.5, 0]];
+      if (!proFlag("pro-makilak")) return ["Ganbaran, Iratiren kutxa. JAUZI BIKOITZA.", [PRO.chest.x, PRO.chest.z, 3.6]];
+      return ["Atea izoztuta: GARAIA aldatu (IRAGANA, uda) eta irten.", [DGE.exitArch.x, DGE.exitArch.z - 1, 0]];
+    }
+    if (!proFlag("pro-kalea")) return ["Plazara, Gauekoren begiei ihes eginez (itzalean itxaron edo BULTZADA).", [2, 31, 0]];
+    if (!proFlag("pro-plaza")) return ["Plazako itzalak garbitu. Urrezko begiak: IRAGANA.", [TXALA.spots[0].x, TXALA.spots[0].z, 0]];
+    return ["Egunsentia.", null];
+  }
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -24744,6 +25942,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function dash() {
     if (!started || paused || TXALA.on || !P.dashReady || P.dashT > 0 || respawnTimer || P.riding || P.climb) return;
+    if (!PRO.can.dash) return proNope("dash");
     let d = direction();
     if (Math.hypot(d.x, d.z) < 0.1) d = { x: Math.sin(P.angle), z: Math.cos(P.angle) };
     const n = Math.hypot(d.x, d.z) || 1;
@@ -24761,6 +25960,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function switchPhase() {
     if (!started || paused || TXALA.on || phaseCooldown > 0 || respawnTimer) return;
+    if (!PRO.can.phase) return proNope("phase");
     phase = 1 - phase;
     phaseCooldown = 0.22;
     shiftFlash = 1;
@@ -25161,6 +26361,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       sun.intensity = 0.38;
       ambient.intensity = 0.5;
       scene.fog.color.copy(CAVE_PAST).lerp(CAVE_NOW, phaseBlend);
+      /* etxean gauez: ilargi-argia leihotik; sutondoa itzalita badago, are ilunago */
+      if (ZONE.cur === "etxea" && DAY.k > 0.5) {
+        const cold = DGE.hearth && DGE.hearth.unlit;
+        sun.color.set("#7f9fd8");
+        sun.intensity = cold ? 0.22 : 0.3;
+        ambient.intensity = cold ? 0.2 : 0.34;
+      }
     }
     scene.background.copy(scene.fog.color);
     if (sky.material.uniforms.uFog) sky.material.uniforms.uFog.value.copy(scene.fog.color);
@@ -25171,6 +26378,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
      ================================================================== */
   function actionHere() {
     if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer || P.climb) return null;
+    if (RING.on && ringReach()) return { kind: "talk", label: L("ERANTZUN"), fn: deiaAnswer };
+    const PA = proActionNear();
+    if (PA) return PA;
     const N = npcNear();
     if (N) return { kind: "talk", label: L("HITZ EGIN"), fn: () => talkTo(N) };
     const OC = odeiCloudNear();
@@ -25238,8 +26448,11 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       camera.lookAt(...ov.look);
       return;
     }
+    /* aurrera begiratu: abiadura mugatua (bultzadak eta kateak ez dute kamera aurrera-atzera astintzen) */
+    const lv = Math.hypot(P.vx, P.vz),
+      lk = lv > 9 ? 9 / lv : 1;
     CAM.look.lerp(
-      new T.Vector3(clamp(P.vx * 0.26, -3.2, 3.2), 0, clamp(P.vz * 0.26, -3.2, 3.2)),
+      new T.Vector3(clamp(P.vx * lk * 0.26, -3.2, 3.2), 0, clamp(P.vz * lk * 0.26, -3.2, 3.2)),
       1 - Math.exp(-dt * 2.4),
     );
     const F = camFrame();
@@ -25286,8 +26499,21 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const target = look.clone().add(offset);
     /* haranean: muinoek eta mendi-hegalek ez dezatela Amaiur estali */
     if (ZONE.cur === "ibarra") camTerrainLift(look, target);
-    if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) CAM.pos = camera.position.clone();
-    CAM.pos.lerp(target, 1 - Math.exp(-dt * 7));
+    if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) {
+      CAM.pos = camera.position.clone();
+      CAM.vel = new T.Vector3();
+    }
+    /* malguki kritikoki moteldua (SmoothDamp): abiadura-aldaketa bortitzetan (bultzada, katea)
+       kamerak ez du kolperik: azelerazioa zerotik hasten da eta leunki itzaltzen da */
+    const w = 11,
+      wx = w * dt,
+      ex = 1 / (1 + wx + 0.48 * wx * wx + 0.235 * wx * wx * wx);
+    for (const k of ["x", "y", "z"]) {
+      const ch = CAM.pos[k] - target[k],
+        tmp = (CAM.vel[k] + w * ch) * dt;
+      CAM.vel[k] = (CAM.vel[k] - w * tmp) * ex;
+      CAM.pos[k] = target[k] + (ch + tmp) * ex;
+    }
     camera.position.copy(CAM.pos);
     const sh = CAM.trauma * CAM.trauma;
     if (sh > 0.0005) {
@@ -25327,7 +26553,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     updateWorld(0);
     AREA.cur = "";
     hud();
-    if (!flag("intro")) introScene();
+    if (!flag("intro")) prologueStart();
     else {
       title(ZONES[ZONE.cur].name, "");
       notify(L("Bideak zure urratsak gogoratzen ditu."), "", 3);
@@ -25349,7 +26575,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     );
   }
   function pause() {
-    if (cinematic || GET.on) return;
+    if (cinematic || GET.on || FILM.on) return;
     if (TXALA.on) return txalaClose();
     if (!started || !$("overlay").hidden) return;
     const zoneName = ZONES[ZONE.cur].name;
@@ -25369,6 +26595,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       [
         [L("JARRAITU"), () => {}],
         [L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)],
+        ...(saved.flags.includes("intro") || saved.flags.includes("pro-deia") ? [[L("DEITU · IRATI"), () => setTimeout(iratiCall, 0)]] : []),
         [L("KONTROLAK"), help],
         [
           L("LAGUNTZA: ") + (saved.assist ? "BAI" : "EZ"),
@@ -25394,11 +26621,18 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       ],
     );
   }
+  /* tekla-zerrenda: hitzaurrean, ikasitako tresnak bakarrik */
+  function keysRender() {
+    const has = (k) => saved.items.includes(k);
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
+      .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
+      .join("");
+  }
   function translate() {
     document.documentElement.lang = language;
     $("premise").textContent =
       "Erlojua hautsi zenetik urtebetera, Ibarrako txalapartak gauez jotzen hasi dira, inork ukitu gabe.\nMari isildu da. Haren leizeak itxita daude.\nZu Amaiur zara, sorgina. Deia entzun duzu.";
-    $("play").textContent = saved.flags.includes("intro") ? "JARRAITU →" : "DEIARI ERANTZUN →";
+    $("play").textContent = saved.flags.includes("intro") || saved.flags.includes("pro-0") ? "JARRAITU →" : "DEIARI ERANTZUN →";
     $("helpBtn").textContent = "NOLA JOKATU";
     $("phaseBtn").textContent = "ALDATU";
     $("jumpBtn").textContent = "JAUZI";
@@ -25421,9 +26655,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     $("coinLab").textContent = "TXANPONAK";
     $("keyLab").textContent = "GILTZAK";
     $("bombLab").textContent = "TXIMISTA";
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ...(saved.items.includes("tximistarria") ? [["X", "tximistarria"]] : []), ...(saved.items.includes("enara") ? [["␣ eutsi", "enara"]] : []), ...(saved.items.includes("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
-      .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
-      .join("");
+    keysRender();
     if (ready) {
       setPhaseVisual();
       hud();
@@ -25450,6 +26682,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     };
     addEventListener("keydown", (e) => {
       if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"].includes(e.code)) e.preventDefault();
+      if (FILM.on) {
+        if (e.code === "Escape") filmSkip();
+        return;
+      }
       /* gauza bat lortu da: edozein tekla → jarraitu */
       if (GET.on) {
         if (!e.repeat && ["Space", "Enter", "KeyE", "Escape", "KeyJ"].includes(e.code)) itemGetClose();
@@ -25490,6 +26726,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     $("cineNext").onclick = nextShot;
     $("itemGet").onclick = itemGetClose;
     $("cineSkip").onclick = endScene;
+    $("filmSkip").onclick = filmSkip;
+    $("deiaRing").onclick = () => deiaAnswer();
     $("phaseBtn").onclick = switchPhase;
     $("dashBtn").onclick = dash;
     $("jumpBtn").onclick = jump;
@@ -25757,6 +26995,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       odeiCloudUpdate(dt);
       skyDragonUpdate(dt);
       pouchesUpdate(dt);
+      deiaUpdate(dt);
+      proUpdate(dt);
       if (ZONE.cur === "ibarra") {
         hubUpdate(dt);
         npcsUpdate(dt);
@@ -25799,7 +27039,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (window.__hold) return; /* probetarako: fotogramaz fotograma grabatzeko */
     const raw = Math.min(0.12, (now - last) / 1000);
     last = now;
-    if (cinematic) {
+    if (FILM.on) filmUpdate(raw);
+    else if (cinematic) {
       updateCinema(raw);
       occlusionUpdate(raw);
     } else if (GET.on) {
@@ -25860,7 +27101,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     guideBeacon = null;
   /* helburuaren urrezko markatzailea (lurrean eraztuna + pantailako gezia) */
   function drawGuide() {
-    const o = started && !cinematic && !CRAFT.on && !ROOM.fight && !BOSS.on ? objective()[1] : null;
+    const o = started && !cinematic && !FILM.on && !CRAFT.on && !ROOM.fight && !BOSS.on ? objective()[1] : null;
     if (!o) {
       $("waypoint").hidden = true;
       if (guideBeacon) guideBeacon.visible = false;
@@ -25899,8 +27140,17 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function showShot() {
     const c = cinematic,
-      sh = scenes[c.i][c.n];
-    Object.assign(c, { t: 0, full: L(sh[1], sh[2]), shown: 0, lastN: -1, typing: true, doneT: 0 });
+      sh = scenes[c.i][c.n],
+      call = !!scenes[c.i].call;
+    voiceStop();
+    /* sh[7]: ahotsaren id-a (ahotsak.js); deietan, larruazal berezia (oihartzun-deia) */
+    Object.assign(c, { t: 0, full: L(sh[1], sh[2]), shown: 0, lastN: -1, typing: true, doneT: 0, voice: sh[7] || null, vOn: !sh[7], vEnd: 0, vT0: 0 });
+    const cin = $("cinema"),
+      intr = call && /^(GAUEKO|INGUMA)/.test(sh[0]);
+    cin.classList.toggle("deia", call);
+    cin.classList.toggle("intrusion", intr);
+    $("cineTag").textContent = call ? (intr ? "OIHARTZUN-DEIA · ▶ ▶ ▶ ▶ · ?" : "OIHARTZUN-DEIA · ◀ ◀ ▶") : "LEIZEEN DEIA";
+    if (intr) SND.static(1);
     $("cineWho").textContent = sh[0];
     $("cineText").textContent = "";
     $("cineFull").textContent = c.full;
@@ -25912,20 +27162,24 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       pt.dataset.kind = kind;
     }
     pt.className = kind + " talk";
-    SND.radio();
+    if (!intr) SND.radio();
   }
   function nextShot() {
     if (!cinematic) return;
     const c = cinematic;
     if (c.typing) {
       c.shown = c.full.length; /* lehenik testua osatu */
+      if (!c.vOn) c.vOn = true; /* ahotsa ez da hasi: testua bakarrik */
       return;
     }
+    voiceStop();
     if (++c.n >= scenes[c.i].length) endScene();
     else showShot();
   }
   function endScene() {
     if (!cinematic) return;
+    voiceStop();
+    $("cinema").classList.remove("deia", "intrusion");
     $("portrait").classList.remove("talk");
     cinematic = null;
     paused = false;
@@ -25947,7 +27201,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       a = c.n % 2 ? -0.35 : 0.3;
     /* leizean: hurbilago eta goitik (hormak); sh[6]: kameraren kokapen finkoa (zerua begiratzeko...) */
     const pk = (innerHeight > innerWidth ? 1.55 : 1) * (ZONES[ZONE.cur].outdoor ? 1 : 0.85),
-      pos = sh[6] ? new T.Vector3(...sh[6]) : look.clone().add(new T.Vector3(9 * Math.cos(a + c.t * 0.035), ZONES[ZONE.cur].outdoor ? 7 : 11, 12).multiplyScalar(pk));
+      /* oihartzun-deietan: Amaiur hurbiletik, isilik entzuten */
+      near = scenes[c.i].call,
+      pos = sh[6] ? new T.Vector3(...sh[6]) : look.clone().add(near ? new T.Vector3(3.6 * Math.cos(a + c.t * 0.05), 2.2, 4.6).multiplyScalar(innerHeight > innerWidth ? 1.3 : 1) : new T.Vector3(9 * Math.cos(a + c.t * 0.035), ZONES[ZONE.cur].outdoor ? 7 : 11, 12).multiplyScalar(pk));
     camera.position.lerp(pos, 1 - Math.exp(-dt * 2));
     camera.lookAt(look);
     CAM.cineLook = look;
@@ -25955,20 +27211,30 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     sea.material.uniforms.clock.value += dt;
     if (ZONE.cur === "ibarra") mariUpdate(dt);
     music(dt);
-    if (c.typing) {
-      c.shown += dt * 50;
+    /* ahotsa: kargatuta dagoenean hasi (gehienez 0.8 s itxaron; bestela testua bakarrik) */
+    if (!c.vOn && (voiceReady(c.voice) || c.t > 0.8)) {
+      c.vOn = true;
+      c.vEnd = voicePlay(c.voice);
+      c.vT0 = c.t;
+    }
+    if (c.typing && c.vOn) {
+      c.shown += dt * (c.vEnd ? Math.max(14, c.full.length / Math.max(0.6, c.vEnd * 0.85)) : 50);
       const n = Math.min(c.full.length, Math.floor(c.shown));
       if (n !== c.lastN) {
         $("cineText").textContent = c.full.slice(0, n);
-        if (n > c.lastN && n % 3 === 0 && /\S/.test(c.full[n - 1] || "")) SND.blip();
+        if (!c.vEnd && n > c.lastN && n % 3 === 0 && /\S/.test(c.full[n - 1] || "")) SND.blip();
         c.lastN = n;
       }
       if (n >= c.full.length) {
         c.typing = false;
         c.doneT = c.t;
-        $("portrait").classList.remove("talk");
+        if (!c.vEnd) $("portrait").classList.remove("talk");
       }
-    } else if (c.t - c.doneT > Math.max(4.5, c.full.length * 0.055)) nextShot();
+    } else if (!c.typing && (c.vEnd ? !voicePlaying() && c.t - c.vT0 > c.vEnd + 0.5 : c.t - c.doneT > Math.max(4.5, c.full.length * 0.055))) nextShot();
+    /* ahotsarekin: ahoa ahotsaren mailaren arabera; deietan, uhina */
+    const lv = c.vEnd ? voiceLevel() : 0;
+    if (c.vEnd) $("portrait").classList.toggle("talk", lv > 0.08);
+    if (scenes[c.i].call) deiaWave(lv);
   }
 
   let jumpHeld = false;
@@ -26333,6 +27599,20 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         magicReset,
         returnCheckpoint,
         cinematicState: () => cinematic,
+        PRO,
+        FILM,
+        RING,
+        VOICE,
+        prologueStart,
+        prologueSkip,
+        proUpdate,
+        deiaAnswer,
+        deiaRing,
+        deia,
+        iratiCall,
+        filmSkip,
+        filmEnd,
+        voiceLoad,
         coachState: () => ({ cur: COACH.cur, seen: [...COACH.seen], frame, time }),
         phase: () => phase,
         blend: () => phaseBlend,

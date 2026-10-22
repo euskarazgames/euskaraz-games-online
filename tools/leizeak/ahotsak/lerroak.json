@@ -1,0 +1,178 @@
+{
+  "pro_g1": [
+    "GAUEKO",
+    "Jo, txalaparta. Jo, eta deitu iezaiozu."
+  ],
+  "pro_g2": [
+    "GAUEKO",
+    "Zazpi leize. Zazpi zaindari. Eta sorgin bakar bat."
+  ],
+  "pro_i1": [
+    "IRATI",
+    "Amaiur. Entzuten didazu? Ez esan ezer. Entzun bakarrik."
+  ],
+  "pro_a1": [
+    "AMAIUR",
+    "Irati…? Harriaren barruan zaude?"
+  ],
+  "pro_i2": [
+    "IRATI",
+    "Oihartzun bat naiz. Zuk gogoratzen nauzun bitartean, hemen nago."
+  ],
+  "pro_i3": [
+    "IRATI",
+    "Hiru gau dira txalapartak bakarrik jotzen duela. Ez da Mari. Norbaitek deitzen zaitu."
+  ],
+  "pro_a2": [
+    "AMAIUR",
+    "Gaueko."
+  ],
+  "pro_i4": [
+    "IRATI",
+    "Isilik. Ilunpean, izenek belarriak dituzte."
+  ],
+  "pro_i5": [
+    "IRATI",
+    "Lehenik, argia. Piztu sutondoa zure sorginkeriaz."
+  ],
+  "pro_i6": [
+    "IRATI",
+    "Hori da. Orain, begiratu gora, ganbarara. Nire makilak han daude oraindik."
+  ],
+  "pro_i6b": [
+    "IRATI",
+    "Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."
+  ],
+  "pro_i7": [
+    "IRATI",
+    "Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ez ahaztu."
+  ],
+  "pro_a3": [
+    "AMAIUR",
+    "Atea izoztuta dago."
+  ],
+  "pro_i8": [
+    "IRATI",
+    "Gauekoren negua da. Baina gogoratu udako atea, zabalik. Gogoratu, eta zeharkatu."
+  ],
+  "pro_g3": [
+    "GAUEKO",
+    "Ahizpak elkarrekin, berriro. Zein polita."
+  ],
+  "pro_i9": [
+    "IRATI",
+    "Kontuz. Gauekoren begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."
+  ],
+  "pro_i10": [
+    "IRATI",
+    "Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."
+  ],
+  "pro_g4": [
+    "GAUEKO",
+    "Hor zaude, sorgin txikia."
+  ],
+  "pro_g5": [
+    "GAUEKO",
+    "Ikusten zaitut."
+  ],
+  "pro_i11": [
+    "IRATI",
+    "Plazan, itzalak txalapartaren inguruan. Begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira."
+  ],
+  "pro_i12": [
+    "IRATI",
+    "Finkatu bat, eta jo. Gero, hurrengoa."
+  ],
+  "pro_i13": [
+    "IRATI",
+    "Begira, Amaiur. Egunsentia."
+  ],
+  "pro_a4": [
+    "AMAIUR",
+    "Irati… ikusten zaitut."
+  ],
+  "pro_i14": [
+    "IRATI",
+    "Ez naiz mamua. Oihartzuna naiz, eta egunsentian argiago entzuten naiz."
+  ],
+  "pro_i15": [
+    "IRATI",
+    "Mari isildu egin da, eta haren leizeak itxi. Gauekoren itzalak izakiak gaiztotzen ari dira. Basajaun lehena."
+  ],
+  "pro_i16": [
+    "IRATI",
+    "Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni hemen egongo naiz."
+  ],
+  "pro_a5": [
+    "AMAIUR",
+    "Oraingoan ez zaitut galduko."
+  ],
+  "pro_g6": [
+    "GAUEKO",
+    "Zatoz, sorgin. Leizeek zure izena dakite."
+  ],
+  "dei_i1": [
+    "IRATI",
+    "Hemen nago, Amaiur. Zer behar duzu?"
+  ],
+  "dei_i2": [
+    "IRATI",
+    "Kontuz ibili, Amaiur."
+  ],
+  "dz_leizea1": [
+    "IRATI",
+    "Basajaunen leizea. Basoaren bihotza da, Amaiur. Itzalak barruan daude."
+  ],
+  "dz_leizea2": [
+    "IRATI",
+    "Sutegiak itzalita? Badakizu zer egin. Eta gogoratu: begien kolorea, garaia."
+  ],
+  "dz_lamia1": [
+    "IRATI",
+    "Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."
+  ],
+  "dz_lamia2": [
+    "IRATI",
+    "Izotza orainekoa da. Iraganean, ura dabil. Bilatu bidea bietan."
+  ],
+  "dz_tartalo1": [
+    "IRATI",
+    "Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."
+  ],
+  "dz_tartalo2": [
+    "GAUEKO",
+    "Ilunpea nire etxea da, sorgin. Ongi etorri."
+  ],
+  "dz_tartalo3": [
+    "IRATI",
+    "Ez entzun. Argia da hemen zure armarik onena."
+  ],
+  "dz_jentil1": [
+    "IRATI",
+    "Jentilbaratza. Jentilak harri bihurtu ziren, zeruan argi bitxi bat ikusi zutenean."
+  ],
+  "dz_jentil2": [
+    "IRATI",
+    "Harri hauek gogoratzen dute. Entzun, eta jo."
+  ],
+  "dz_zerua1": [
+    "IRATI",
+    "Hodeien gainean zaude, Amaiur. Ez begiratu behera."
+  ],
+  "dz_zerua2": [
+    "IRATI",
+    "Haizeak gora eramango zaitu. Fidatu enararen hegoez."
+  ],
+  "dz_herensuge1": [
+    "IRATI",
+    "Herensugearen haitzuloa. Beroa sentitzen dut hemendik ere."
+  ],
+  "dz_herensuge2": [
+    "GAUEKO",
+    "Zazpi buru, zazpi gezur. Zein da egia, sorgin?"
+  ],
+  "dz_herensuge3": [
+    "IRATI",
+    "Argiak erakutsiko dizu. Beti erakusten du."
+  ]
+}

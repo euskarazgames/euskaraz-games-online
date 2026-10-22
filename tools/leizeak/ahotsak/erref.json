@@ -1,0 +1,23 @@
+{
+ "amaiur": {
+  "wav": "erref/amaiur.flac",
+  "text": "Ibarrako txalapartak gauez jotzen du, eta nik bakarrik entzuten dut haren deia.",
+  "instruct": "female, young adult, low pitch",
+  "seed": 1051,
+  "f0": 234.5
+ },
+ "irati": {
+  "wav": "erref/irati.flac",
+  "text": "Txalapartak bi ahots ditu, ahizpa: batak galdetzen du, eta besteak erantzuten du beti.",
+  "instruct": "female, teenager, high pitch",
+  "seed": 1051,
+  "f0": 295.5
+ },
+ "gaueko": {
+  "wav": "erref/gaueko.flac",
+  "text": "Gaua nirea da, eta ilunpean ibiltzen direnak ere nireak dira, sorgin txikia.",
+  "instruct": "male, elderly, very low pitch",
+  "seed": 1034,
+  "f0": 110.7
+ }
+}

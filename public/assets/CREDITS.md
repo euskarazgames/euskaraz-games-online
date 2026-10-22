@@ -54,3 +54,17 @@ hezurduren animazio partekatuak). KayKit: https://kaylousberg.com · lizentzia C
 `tools/leizeak/models/build_models.mjs` scriptak eszena bakarrean biltzen ditu (`props.glb`, testurak
 deduplikatuta eta sareak kuantizatuta). Mendiak, ardiak, txalaparta, suge-eraztunak, erretratuak, musika
 eta soinu guztiak joko honetarako sortu dira (prozeduralak).
+
+## LEIZEEN DEIA · ahotsak (sintetikoak)
+
+`voice/leizeak/*.mp3`: Amaiur, Irati eta Gaueko pertsonaien ahotsak, euskaraz, **sintetikoak**:
+[OmniVoice](https://github.com/k2-fsa/OmniVoice) ereduarekin sortuak (VoiceStudio-ren motorra). Ahots
+bakoitza "voice design" moduan diseinatu zen (generoa, adina eta tonua bakarrik); ez da inor klonatu.
+Lerroak eta sortzeko scripta: `tools/leizeak/ahotsak/` (`lerroak.json`, `sortu.py`, `erref/`).
+
+- OmniVoice: kodea Apache-2.0; aurrez entrenatutako eredua **CC-BY-NC** (merkataritzaz kanpoko erabilera).
+- Audio-tokenizatzailea: Built with Higgs Materials licensed from Boson AI USA, Inc., Copyright Boson AI USA,
+  Inc., All Rights Reserved and Meta Llama 3 licensed under the Meta Llama 3 Community License, Copyright
+  Meta Platforms, Inc., All Rights Reserved. Based on Meta Llama 3.
+- Egiaztapena: [xezpeleta/whisper-medium-eu](https://huggingface.co/xezpeleta/whisper-medium-eu) (Apache-2.0)
+  euskarazko transkripzioarekin, lerro bakoitzaren argitasuna neurtzeko.

@@ -8,7 +8,7 @@ three.js r128 + GLTFLoader OIHARTZUN-en fitxategitik ateratzen dira ("vendor" bl
   python3 tools/leizeak/build.py            # muntatu
   python3 tools/leizeak/build.py --check    # muntatu gabe, sintaxia egiaztatu
 """
-import base64, pathlib, re, subprocess, sys, tempfile
+import base64, json, pathlib, re, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 HERE = pathlib.Path(__file__).resolve().parent
@@ -60,10 +60,12 @@ def vendor_block():
 
 
 def include(text):
-    """/* @include fitxategia.js */ lerroak src/ karpetako fitxategiarekin ordezkatu."""
+    """/* @include fitxategia.js */ lerroak src/ karpetako fitxategiarekin ordezkatu;
+    /* @json bidea.json */ (src/-rekiko) JSON trinkoarekin (adib. ahotsen lerroak)."""
     def sub(m):
         return include((SRC / m.group(1)).read_text(encoding='utf-8').rstrip('\n'))
-    return re.sub(r'^[ \t]*/\* @include ([\w.-]+) \*/[ \t]*$', sub, text, flags=re.M)
+    text = re.sub(r'^[ \t]*/\* @include ([\w.-]+) \*/[ \t]*$', sub, text, flags=re.M)
+    return re.sub(r'/\* @json ([\w./-]+) \*/', lambda m: json.dumps(json.loads((SRC / m.group(1)).read_text(encoding='utf-8')), ensure_ascii=False, separators=(',', ':')), text)
 
 
 def assemble():

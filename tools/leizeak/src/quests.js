@@ -281,7 +281,7 @@
   function marksUpdate() {
     for (const M of QST.marks) {
       const k = ZONE.cur === "ibarra" ? npcNews(M.N) : null;
-      M.sp.visible = !!k && Math.hypot(P.x - M.N.x, P.z - M.N.z) < 60 && !cinematic;
+      M.sp.visible = !!k && !M.N.away && M.N.g.visible && Math.hypot(P.x - M.N.x, P.z - M.N.z) < 60 && !cinematic;
       if (!M.sp.visible) continue;
       M.sp.material.map = k === "?" ? QST.texDone : QST.texNew;
       M.sp.position.set(M.N.x, M.N.y + (M.N.scale || 1) * 2.55 + Math.sin(time * 3 + M.N.x) * 0.08, M.N.z);

@@ -125,7 +125,7 @@
     return H;
   }
   function hearthNear() {
-    return HEARTHS.find((H) => H.grp === ZONES[ZONE.cur].group && Math.hypot(P.x - H.x, P.z - H.z) < 3 && Math.abs(P.y - H.y) < 1.6);
+    return HEARTHS.find((H) => !H.unlit && H.grp === ZONES[ZONE.cur].group && Math.hypot(P.x - H.x, P.z - H.z) < 3 && Math.abs(P.y - H.y) < 1.6);
   }
   function hearthRest(H) {
     P.hp = P.maxHp;
@@ -147,6 +147,9 @@
   function hearthsUpdate(dt) {
     for (const H of HEARTHS) {
       if (H.grp !== ZONES[ZONE.cur].group) continue;
+      /* itzalita (hitzaurrean, Iturralden): SORGINKERIAk pizten du */
+      H.flame.visible = H.core.visible = H.fl.visible = !H.unlit;
+      if (H.unlit) continue;
       const f = 1 + Math.sin(time * 13 + H.ph) * 0.1 + Math.sin(time * 29 + H.ph) * 0.06;
       H.flame.scale.set(1, f, 1);
       H.core.scale.set(1, 2 - f, 1);

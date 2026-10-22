@@ -40,6 +40,7 @@
     return t.state !== "dead" && ENEMIES.includes(t) && Math.hypot(t.x - P.x, t.z - P.z) < 28;
   }
   function lockToggle() {
+    if (!PRO.can.lock) return proNope("lock");
     if (!started || paused || TXALA.on) return;
     const list = lockCandidates();
     if (!list.length) {

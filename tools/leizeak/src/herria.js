@@ -468,6 +468,8 @@
     const c2 = obj(new T.CylinderGeometry(0.05, 0.05, 0.24, 8), material("#f4ead2"));
     c2.position.set(E(6.3), 0.95, -3.6);
     candle(E(6.3), 1.12, -3.6);
+    /* hitzaurrea: oihartzun-harria, ganbara eta Iratiren kutxa, izoztutako atea */
+    proBuildHouse(E, D);
     skyRoom("ETXEA", E(0), 0, W, D, { area: "etxeA", name: "ITURRALDE", desc: "Etxea. Sutondoa, ohea, Iratiren txokoa." });
     dungeonEnd(DGE);
   }
@@ -573,7 +575,7 @@
       M.g.visible = on || M.kind === "?";
       if (on) M.g.rotation.y += dt * 0.25;
     }
-    if (!saved.flags.includes("etxea")) {
+    if (!saved.flags.includes("etxea") && !PRO.on) {
       flagSet("etxea");
       notify(L("Etxean. Sutondoan atseden; ohean, eguna edo gaua; apalean, zaindarien oroitzapenak."), "", 6);
     }

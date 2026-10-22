@@ -1,0 +1,37 @@
+{
+ "pro_g1": {
+  "who": "GAUEKO",
+  "cer": 0.086,
+  "seed": 103468,
+  "dur": 2.15,
+  "asr": "Jo txalaparta, jo eta deitu ez zaiozu."
+ },
+ "pro_g2": {
+  "who": "GAUEKO",
+  "cer": 0.021,
+  "seed": 103406,
+  "dur": 3.0,
+  "asr": "Zazpi leize, zazpi zaindari, eta zorgin bakar bat."
+ },
+ "pro_i1": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105106,
+  "dur": 2.66,
+  "asr": "Amaiur, entzuten didazu ez esan ezer entzun bakarrik."
+ },
+ "pro_a1": {
+  "who": "AMAIUR",
+  "cer": 0.0,
+  "seed": 105106,
+  "dur": 1.83,
+  "asr": "Irati, harriaren barruan zaude."
+ },
+ "pro_i2": {
+  "who": "IRATI",
+  "cer": 0.0,
+  "seed": 105106,
+  "dur": 3.45,
+  "asr": "Oihartzun bat naiz, zuk gogoratzen nauzun bitartean, hemen nago."
+ }
+}

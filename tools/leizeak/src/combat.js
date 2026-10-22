@@ -16,6 +16,7 @@
     brute: { hp: 10, speed: 2.5, r: 1.3, dmg: 2, mass: 2.6, S: 1.45, H: 1.6 },
     /* SAGUZARRA (6. leizea): biraka, gero murgilka; argiak lurrera botatzen du */
     bat: { hp: 2, speed: 5.4, r: 0.62, dmg: 1, mass: 0.45, S: 1, H: 1.15 },
+    mamua: { hp: 3, speed: 3.4, r: 0.68, dmg: 1, mass: 0.7, S: 1, H: 1.3 },
   };
   const ERA_COL = ["#ffb85c", "#7fe9ff", "#c98bff"];
   const ATK = { n: 0, t: 9, dir: 0, waveCd: 0, lungeT: 0, hold: false };
@@ -195,6 +196,35 @@
         return w;
       });
       g.userData.wings = wings;
+    } else if (type === "mamua") {
+      /* MAMUA: maindire bat, barrutik argi; ertz uhinduna eta begi-zulo ilunak */
+      const prof = [];
+      for (let i = 0; i <= 10; i++) {
+        const k = i / 10;
+        prof.push(new T.Vector2(Math.sin(Math.min(1, k * 1.7) * PI * 0.5) * (0.55 + k * 0.32), 1.75 - k * 1.75));
+      }
+      const geo = new T.LatheGeometry(prof, 22),
+        pa = geo.attributes.position;
+      for (let i = 0; i < pa.count; i++) {
+        const y = pa.getY(i);
+        if (y < 0.35) {
+          const a = Math.atan2(pa.getZ(i), pa.getX(i));
+          pa.setY(i, y + Math.sin(a * 6) * 0.12 * (1 - y / 0.35));
+        }
+      }
+      geo.computeVertexNormals();
+      body.color.set("#ece6ff");
+      body.transparent = true;
+      body.opacity = 0.86;
+      body.side = T.DoubleSide;
+      body.emissive.set("#4a3a7a");
+      add(geo, body, 0, 0, 0);
+      const hole = new T.MeshBasicMaterial({ color: "#1a0f2e" });
+      add(sphere, hole, -0.2, 1.3, 0.47, 0.11, 0.15, 0.06);
+      add(sphere, hole, 0.2, 1.3, 0.47, 0.11, 0.15, 0.06);
+      add(sphere, eye, -0.2, 1.3, 0.5, 0.045, 0.06, 0.03);
+      add(sphere, eye, 0.2, 1.3, 0.5, 0.045, 0.06, 0.03);
+      add(sphere, hole, 0, 1.0, 0.53, 0.08, 0.1, 0.04);
     } else if (type === "eye") {
       outline(add(sphere, body, 0, 0, 0, 0.5, 0.5, 0.5), 1.1);
       add(sphere, eye, 0, 0.02, 0.42, 0.24, 0.24, 0.1);
@@ -485,8 +515,8 @@
       e.blinkCd = Math.max(0, e.blinkCd - dt);
       if (e.state === "spawn") {
         if (e.skel) e.g.position.set(e.x, e.y, e.z);
-        else e.g.position.set(e.x, e.y - 2 + smooth01(Math.min(1, e.t / 0.7)) * 2 + (e.type === "eye" ? 1.9 : e.type === "bat" ? 1.7 : 0), e.z);
-        if (e.t > e.spawnLen) (e.state = e.type === "eye" || e.type === "bat" ? "hover" : "chase"), (e.t = 0);
+        else e.g.position.set(e.x, e.y - 2 + smooth01(Math.min(1, e.t / 0.7)) * 2 + (e.type === "eye" ? 1.9 : e.type === "bat" ? 1.7 : e.type === "mamua" ? 0.35 : 0), e.z);
+        if (e.t > e.spawnLen) (e.state = e.type === "eye" || e.type === "bat" ? "hover" : e.type === "mamua" ? "drift" : "chase"), (e.t = 0);
       } else if (e.stun > 0 && e.state !== "stun") {
         /* garai-uhinak gelditua */
       } else if (e.type === "grunt") {
@@ -534,6 +564,38 @@
           if (e.t > 0.34) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "recover" && e.t > 0.55) (e.state = "hover"), (e.t = 0), (e.cd = 1.1 + Math.random() * 1.3);
 
+      } else if (e.type === "mamua") {
+        /* MAMUA: astiro hurbildu; desagertu eta Amaiurren ondoan agertu (atzean) → heldu (ALDARATU daiteke) */
+        if (e.state === "drift") {
+          want = e.D.speed * K * 0.6;
+          wx = ux;
+          wz = uz;
+          e.dir = Math.atan2(ux, uz);
+          e.cd -= dt * K;
+          if (e.cd <= 0 && d < 11) (e.state = "fade"), (e.t = 0);
+          else if (d < 2.3 && e.t > 0.4) (e.state = "wind"), (e.t = 0), (e.atk0 = time), (e.lx = ux), (e.lz = uz);
+        } else if (e.state === "fade") {
+          e.vx *= 0.8;
+          e.vz *= 0.8;
+          if (e.t > 0.32) {
+            mamuaWarp(e, I);
+            e.state = "appear";
+            e.t = 0;
+          }
+        } else if (e.state === "appear") {
+          e.dir = Math.atan2(ux, uz);
+          if (e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.atk0 = time), SND.screech && SND.screech();
+        } else if (e.state === "wind") {
+          e.dir = Math.atan2(ux, uz);
+          e.lx = ux;
+          e.lz = uz;
+          if (e.t > 0.5 / Math.sqrt(K)) (e.state = "grab"), (e.t = 0);
+        } else if (e.state === "grab") {
+          e.vx = e.lx * 9;
+          e.vz = e.lz * 9;
+          if (d < e.D.r + 0.7 && Math.abs(P.y - e.y) < 1.8) meleeHit(e, e.D.dmg);
+          if (e.t > 0.3) (e.state = "recover"), (e.t = 0);
+        } else if (e.state === "recover" && e.t > 0.7) (e.state = "drift"), (e.t = 0), (e.cd = 2.2 + Math.random() * 1.5);
       } else if (e.type === "eye") {
         if (e.state === "hover") {
           const desired = 7,
@@ -655,7 +717,7 @@
       /* ikusmena */
       /* saguzarra: airean; murgilka behera, zorabiatuta lurrean */
       e.fly = e.type !== "bat" ? 0 : mix(e.fly ?? 1.7, e.stun > 0 ? 0.3 : e.state === "lunge" ? 0.95 : 1.75, 1 - Math.exp(-dt * (e.stun > 0 ? 9 : 7)));
-      const bob = e.type === "eye" && !e.skel ? 1.9 + Math.sin(time * 2.4 + e.x) * 0.2 : e.type === "bat" ? e.fly + Math.sin(time * 5 + e.x) * 0.12 : 0;
+      const bob = e.type === "eye" && !e.skel ? 1.9 + Math.sin(time * 2.4 + e.x) * 0.2 : e.type === "bat" ? e.fly + Math.sin(time * 5 + e.x) * 0.12 : e.type === "mamua" ? 0.35 + Math.sin(time * 2.2 + e.x) * 0.15 : 0;
       if (e.wings) {
         const f = e.stun > 0 ? 0.15 + Math.sin(time * 3) * 0.1 : Math.sin(time * (e.state === "lunge" ? 9 : 24) + e.x * 3) * 0.75;
         e.wings[0].rotation.z = f;
@@ -679,6 +741,16 @@
         else e.g.rotation.z = 0;
         e.body.emissive.set(e.flash > 0 ? "#ffffff" : wind ? "#c01a3c" : "#1a0626");
         e.body.emissiveIntensity = e.flash > 0 ? 2 : wind ? 0.7 + 0.6 * Math.sin(time * 30) : 0.6;
+        if (e.type === "mamua") {
+          /* desagertu / agertu (gardentasuna) eta barruko argi zurixka */
+          e.vis = mix(e.vis ?? 1, e.state === "fade" ? 0 : 1, 1 - Math.exp(-dt * (e.state === "fade" ? 14 : 8)));
+          if (!(e.flash > 0) && !wind) {
+            e.body.emissive.set(e.counting > 0 ? "#7a6aff" : "#4a3a7a");
+            e.body.emissiveIntensity = 0.55;
+          }
+          e.body.opacity = 0.86 * e.vis;
+          e.g.visible = e.vis > 0.04;
+        }
       }
       /* kolpearen zapalketa (punch): zabaldu eta zapaldu, segundo zati batean */
       if (e.punch > 0) {
@@ -784,6 +856,26 @@
     e.cd = Math.min(e.cd, 0.6);
     fxRing(e.x, e.y + 0.1, e.z, ERA_COL[e.era < 0 ? 2 : e.era], 2, 0.4);
     SND.shot();
+  }
+  /* mamua: Amaiurren atzean edo alboan agertu (lur gainean, gelaren barruan) */
+  function mamuaWarp(e, I) {
+    fxBurst(e.x, e.y + 1, e.z, { n: 14, speed: 2.5, up: 1, life: 0.5, size: 0.3, color: "#d9c8ff", grav: -0.5 });
+    for (let k = 0; k < 14; k++) {
+      const a = P.angle + PI + (Math.random() - 0.5) * (k < 7 ? 1.6 : 4),
+        r = 2.4 + Math.random() * 0.8,
+        x = P.x + Math.sin(a) * r,
+        z = P.z + Math.cos(a) * r;
+      if (I && (I.rx ? ((x - I.x) / I.rx) ** 2 + ((z - I.z) / I.rz) ** 2 > 0.7 : Math.abs(x - I.x) > I.w / 2 - 1.5 || Math.abs(z - I.z) > I.d / 2 - 1.5)) continue;
+      if (solids.some((o) => Math.hypot(x - o.x, z - o.z) < o.r + 0.9)) continue;
+      const g = support(x, z, e.y + 1.2);
+      if (!g || Math.abs(topY(g, x, z) - e.y) > 1.2) continue;
+      e.x = x;
+      e.z = z;
+      e.y = topY(g, x, z);
+      break;
+    }
+    e.vx = e.vz = 0;
+    SND.whoosh();
   }
   const TELE = [];
   let teleGeo = null;
