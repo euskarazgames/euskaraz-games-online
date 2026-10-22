@@ -657,19 +657,22 @@
     let budget = total * grow;
     draw(hx, hy, hz, ox, MIR.y, oz, 0.22);
     let tip = null;
-    for (const s of tr.segs) {
+    /* azken zatia: buru baten begietara bada, gora (begien altuerara) */
+    const endY = tr.end && tr.end.k === "boss" && tr.end.r.y !== undefined ? tr.end.r.y : MIR.y;
+    for (const [si, s] of tr.segs.entries()) {
       if (budget <= 0) break;
       const L2 = Math.hypot(s[2] - s[0], s[3] - s[1]),
         k = Math.min(1, budget / (L2 || 1));
       const x1 = mix(s[0], s[2], k),
-        z1 = mix(s[1], s[3], k);
-      draw(s[0], MIR.y, s[1], x1, MIR.y, z1, 0.26);
-      tip = [x1, z1];
+        z1 = mix(s[1], s[3], k),
+        y1 = si === tr.segs.length - 1 ? mix(MIR.y, endY, k) : MIR.y;
+      draw(s[0], MIR.y, s[1], x1, y1, z1, 0.26);
+      tip = [x1, y1, z1];
       budget -= L2;
     }
     for (let i = hop; i < MIR.beams.length; i++) MIR.beams[i].core.visible = MIR.beams[i].halo.visible = false;
     if (tip) {
-      MIR.flare.position.set(tip[0], MIR.y, tip[1]);
+      MIR.flare.position.set(tip[0], tip[1], tip[2]);
       MIR.flare.material.color.set(LIGHT[kind]);
       MIR.flare.material.opacity = 0.85;
       MIR.flare.scale.setScalar(1.6 + Math.sin(time * 30) * 0.25);
@@ -683,7 +686,7 @@
     /* helburua */
     const E = (MIR.end = tr.end);
     if (!E) return;
-    if (frame % 3 === 0) fxBurst(E.x, MIR.y, E.z, { n: 2, speed: 2.2, up: 0.6, life: 0.3, size: 0.16, color: LIGHT[kind], grav: 2 });
+    if (frame % 3 === 0) fxBurst(E.x, endY, E.z, { n: 2, speed: 2.2, up: 0.6, life: 0.3, size: 0.16, color: LIGHT[kind], grav: 2 });
     if (E.k === "crystal") crystalLight(E.C, kind, dt);
     else if (E.k === "web") {
       if (kind === "sun") {
