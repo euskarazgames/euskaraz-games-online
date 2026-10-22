@@ -15,6 +15,7 @@
     jentil: { name: "JENTILBARATZA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     /* zerua: kanpoan baina itsasorik gabe (hodei-itsasoa beherago), gaurik ez */
     zerua: { name: "JENTILEN ZERUA", outdoor: true, sky: true, fallY: -16, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    herensuge: { name: "HERENSUGEAREN HAITZULOA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
   };
   const ZONE = { cur: "ibarra", fadeT: 0, pending: null };
   const AREA = { cur: "", seen: new Set() };
@@ -64,6 +65,7 @@
   function enterZone(id, spawn, instant) {
     const go = () => {
       ponyDismount(true);
+      mirrorLower();
       clearEnemies();
       if (CRAFT.on) craftExit();
       LOCK.target = null;

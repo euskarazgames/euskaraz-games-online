@@ -1099,6 +1099,48 @@
         tone("sine", 190 * v, t, 0.002, 0.12, 0.14 + d * 0.04, sfx, 60);
         if (d >= 2) tone("sine", 82, t, 0.002, 0.22, 0.2, sfx, 42);
       },
+      /* saguzarraren garrasia (murgildu aurretik) */
+      screech() {
+        if (!ok() || time - (SND.scrT ?? -9) < 0.15) return;
+        SND.scrT = time;
+        const t = ctx.currentTime;
+        tone("sawtooth", 2400, t, 0.005, 0.16, 0.025, sfx, 3600);
+        tone("square", 3100, t + 0.03, 0.004, 0.1, 0.012, sfx, 2600);
+      },
+      /* EGUZKI-ISPILUA: altxatu (distira), izpiaren burrunba, kristala, biraketa */
+      mirror() {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          k = phase ? 1.122 : 1;
+        [1046.5, 1318.5, 1568].forEach((f, i) => bell(f * k, t + i * 0.05, 0.03));
+        hiss(t, 0.4, 0.025, "highpass", 6000, 9000, 0.8);
+      },
+      hum(kind) {
+        if (!ok()) return;
+        const t = ctx.currentTime,
+          f = kind === "moon" ? 330 : 262;
+        tone("sine", f, t, 0.08, 0.55, 0.016, sfx, f * 1.01);
+        tone("sine", f * 1.5, t, 0.08, 0.5, 0.009, sfx, f * 1.5);
+      },
+      chime() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        [1318.5, 1760, 2093].forEach((f, i) => bell(f, t + i * 0.07, 0.045));
+      },
+      turn() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 0.18, 0.05, "bandpass", 900, 500, 2);
+        tone("square", 180, t, 0.002, 0.08, 0.02, sfx, 140);
+      },
+      /* Herensugearen su-arnasa */
+      breath() {
+        if (!ok()) return;
+        const t = ctx.currentTime;
+        hiss(t, 1.5, 0.1, "lowpass", 600, 2600, 0.7);
+        hiss(t + 0.1, 1.3, 0.05, "bandpass", 1800, 900, 1);
+        tone("sawtooth", 70, t, 0.05, 1.4, 0.045, sfx, 55);
+      },
       /* bizitzarik gabe: puxika bat bezala lehertu (askoz batera: bakarra) */
       pop() {
         if (!ok() || time - (SND.popT ?? -9) < 0.06) return;
@@ -1724,6 +1766,8 @@
   /* @include zerua.js */
   /* @include odei.js */
   /* @include herria.js */
+  /* @include ispilua.js */
+  /* @include herensuge.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -2158,6 +2202,8 @@
     buildZerua();
     buildRunePuzzles("zerua");
     ortzadarBuild();
+    /* seigarrena: HERENSUGEAREN HAITZULOA (Odeiren hodeia zeruan) */
+    buildHerensuge();
     /* herria: etxe-izenak eta ateak; Amaiurren etxea (ITURRALDE) barrutik */
     herriaInit();
     buildEtxea();
@@ -2265,6 +2311,7 @@
     ponyDismount(true);
     climbDrop();
     glideStop();
+    mirrorLower();
     hardFall = !!hard;
     respawnTimer = hard ? 0.6 : 0.38;
     P.vx = P.vz = 0;
@@ -2372,7 +2419,8 @@
       surf = !!(input.keys.ShiftLeft || input.keys.ShiftRight) || (mobile && Math.hypot(input.x, input.z) > 0.88);
     /* eraikitzean: pieza eskuan → geldirik; mugitzen hasiz gero, eraikuntza-modutik irten */
     if (CRAFT.on && !CRAFT.held && len > 0.3) craftExit();
-    if (CRAFT.held) {
+    /* eskuan pieza bat edo EGUZKI-ISPILUA altxatuta: geldirik (makilak apuntatzen du) */
+    if (CRAFT.held || MIR.on) {
       d = { x: 0, z: 0 };
       len = 0;
     }
@@ -2703,6 +2751,8 @@
     if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer || P.climb) return null;
     const N = npcNear();
     if (N) return { kind: "talk", label: L("HITZ EGIN"), fn: () => talkTo(N) };
+    const OC = odeiCloudNear();
+    if (OC) return OC;
     const C = chestNear();
     if (C) return { kind: "chest", label: L("IREKI"), fn: () => openChest(C) };
     const LC = lockedChestNear();
@@ -2714,6 +2764,8 @@
     if (HA) return HA;
     const SC = shortcutNear();
     if (SC) return SC;
+    const MN = mirrorNear();
+    if (MN) return { kind: "turn", label: L("BIRATU"), fn: () => mirrorTurn(MN) };
     const D = doorNear();
     if (D) return { kind: "door", label: D.kind === "boss" ? L("ATE HANDIA") : L("ATEA"), fn: () => tryDoor(D) };
     if (drumNear()) return { kind: "drum", label: L("ENTZUN"), fn: drumTalk };
@@ -2778,7 +2830,8 @@
       tall = BOSS.on && BOSS.kind === "errolan",
       /* Odei (zeruan): kamera urrunago, begirada gorago; planeatzean ere urrunago */
       cloud = BOSS.on && BOSS.kind === "odei",
-      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
+      dragon = BOSS.on && BOSS.kind === "zazpi",
+      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : dragon ? 1.38 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
     lockCamera(dt, look);
     /* etsai nagusia: biak enkoadratu (finkatu gabe ere) */
     CAM.bossK = mix(CAM.bossK || 0, BOSS.on && !LOCK.target ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -2789,6 +2842,10 @@
       if (cloud) {
         look.y += clamp((ODEI.y - P.y) * 0.3, 0, 4.5) * CAM.bossK;
         offset.y *= 1 - 0.28 * CAM.bossK;
+      }
+      if (dragon) {
+        look.y += 1.6 * CAM.bossK;
+        offset.y *= 1 - 0.12 * CAM.bossK;
       }
       if (tall) {
         /* harkaitza altxatzean: kamera gorago eta urrunago (harria ikusteko) */
@@ -2942,7 +2999,7 @@
     $("coinLab").textContent = "TXANPONAK";
     $("keyLab").textContent = "GILTZAK";
     $("bombLab").textContent = "TXIMISTA";
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ...(saved.items.includes("tximistarria") ? [["X", "tximistarria"]] : []), ...(saved.items.includes("enara") ? [["␣ eutsi", "enara"]] : []), ["L", "egunkaria"]]
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ["F", "bultzada"], ["Q", "garaia"], ["E", "ekin"], ["T", "finkatu"], ["B", "txalaparta"], ["C", "katea"], ...(saved.items.includes("adarra") ? [["V", "adarra"]] : []), ...(saved.items.includes("tximistarria") ? [["X", "tximistarria"]] : []), ...(saved.items.includes("enara") ? [["␣ eutsi", "enara"]] : []), ...(saved.items.includes("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
     if (ready) {
@@ -3274,6 +3331,9 @@
       fansUpdate(dt);
       mistsUpdate(dt);
       updraftsUpdate(dt);
+      shaftsUpdate(dt);
+      odeiCloudUpdate(dt);
+      skyDragonUpdate(dt);
       pouchesUpdate(dt);
       if (ZONE.cur === "ibarra") {
         hubUpdate(dt);
@@ -3584,6 +3644,7 @@
         (hasHorn() ? L("ADARRA: haize-bolada aurrera — errotak, balsak, lainoa, hostoak.") + "\n\n" : "") +
         (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
         (hasWings() ? L("ENARA: jauzi bikoitza eta eutsi JAUZIari — planeatu; haize-zutabeek gora eramaten zaituzte.") + "\n\n" : "") +
+        (saved.items.includes("ispilua") ? L("EGUZKI-ISPILUA: argi-zutabe batean, eutsi SORGINKERIAri eta apuntatu. Iraganean eguzkia, orainean ilargia. Ispilu-harriak: BIRATU.") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",
@@ -3631,6 +3692,29 @@
       window.__game = {
         P,
         saved,
+        SHAFTS,
+        MIRRORS,
+        CRYSTALS,
+        CRYSTAL_SETS,
+        WEBS,
+        MIR,
+        mirrorTurn,
+        mirrorRaise,
+        mirrorLower,
+        mirrorCan,
+        beamTrace,
+        shaftAt,
+        shaftLight,
+        DGH,
+        HZ,
+        ZB,
+        zbStart,
+        zbDown,
+        zbHit,
+        zbLight,
+        odeiCloudRide,
+        odeiCloudNear,
+        iratiHerensuge,
         HOUSE,
         DGE,
         POUCHES,

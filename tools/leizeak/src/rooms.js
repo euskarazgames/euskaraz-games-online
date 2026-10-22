@@ -178,7 +178,8 @@
       }
     }
     const lock = kind === "key" || kind === "boss" ? orb(0, 2.6, 0.35, kind === "boss" ? 0.42 : 0.26, kind === "boss" ? "#ff9d4a" : "#e8c27a", g) : null;
-    const p = { x, z, y: y + 9, bottom: y - 1, w: kind === "bars" ? 5.6 : 5.6, d: 1.0, rot, phase: -1, wall: true, safe: false };
+    /* barrak: argia (EGUZKI-ISPILUA) artetik pasatzen da */
+    const p = { x, z, y: y + 9, bottom: y - 1, w: 5.6, d: 1.0, rot, phase: -1, wall: true, safe: false, bars: kind === "bars" };
     platforms.push(p);
     /* atea bere hormarekin gardentzen da (kamera eta Amaiurren artean badago) */
     const ca = Math.cos(rot) * 2.8,
@@ -484,7 +485,7 @@
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎" };
+  const ICONS = { giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "giltza" || icon === "giltzanagusia") {
@@ -550,6 +551,19 @@
       }
       const b = new T.Mesh(new T.SphereGeometry(0.11, 8, 6), material("#efe7d6", 0.3));
       g.add(b);
+    } else if (icon === "ispilua") {
+      /* EGUZKI-ISPILUA: brontzezko diskoa, eguzki-izpiak ertzean */
+      const disc = new T.Mesh(new T.CircleGeometry(0.42, 24), new T.MeshStandardMaterial({ color: "#f6ecd0", metalness: 0.9, roughness: 0.15, emissive: new T.Color("#ffd27a"), emissiveIntensity: 0.9, side: T.DoubleSide }));
+      g.add(disc);
+      const rim = new T.Mesh(new T.TorusGeometry(0.44, 0.05, 6, 24), material("#b07a2e", 0.4));
+      g.add(rim);
+      for (let i = 0; i < 8; i++) {
+        const a = (i / 8) * TAU,
+          ray = new T.Mesh(new T.ConeGeometry(0.06, 0.2, 3), material("#ffc94a", 1.2));
+        ray.position.set(Math.cos(a) * 0.56, Math.sin(a) * 0.56, 0);
+        ray.rotation.z = a - PI / 2;
+        g.add(ray);
+      }
     } else if (icon === "sugarra") {
       const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));
       rod.rotation.z = 0.4;

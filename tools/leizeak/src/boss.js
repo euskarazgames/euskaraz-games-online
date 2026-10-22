@@ -231,6 +231,7 @@
     tartaloReset();
     jentilReset();
     odeiReset();
+    zbReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;

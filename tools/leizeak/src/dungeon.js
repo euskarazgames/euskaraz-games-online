@@ -415,8 +415,8 @@
       scene.fog.far = mix(scene.fog.far, f[1] + far, 1 - Math.exp(-dt * 2));
     }
     if (DG.update) DG.update(dt);
-    /* irteera: hegoko arkua → haranera */
-    if (!ZONE.pending && Math.hypot(P.x - DG.exitArch.x, P.z - (DG.exitArch.z + 3.6)) < 2.2) enterZone("ibarra", DG.exitTo());
+    /* irteera: hegoko arkua → haranera (edo DG.exitZone: Suge-mendia → zerua) */
+    if (!ZONE.pending && Math.hypot(P.x - DG.exitArch.x, P.z - (DG.exitArch.z + 3.6)) < 2.2) enterZone(DG.exitZone || "ibarra", DG.exitTo());
     /* harri-danborra: hurbil eta ENTZUN ez badaki → deia */
     if (DG === DUNGEON && DUNGEON.drumSkin) DUNGEON.drumSkin.position.y = 1.62 + Math.max(0, Math.sin(time * 4.8)) * 0.04;
   }

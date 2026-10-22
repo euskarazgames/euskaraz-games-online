@@ -14,6 +14,8 @@
     grunt: { hp: 3, speed: 3.9, r: 0.85, dmg: 1, mass: 1, S: 1.55, H: 1.2 },
     eye: { hp: 3, speed: 3.1, r: 0.85, dmg: 1, mass: 0.8, S: 1.5, H: 1.25 },
     brute: { hp: 10, speed: 2.5, r: 1.3, dmg: 2, mass: 2.6, S: 1.45, H: 1.6 },
+    /* SAGUZARRA (6. leizea): biraka, gero murgilka; argiak lurrera botatzen du */
+    bat: { hp: 2, speed: 5.4, r: 0.62, dmg: 1, mass: 0.45, S: 1, H: 1.15 },
   };
   const ERA_COL = ["#ffb85c", "#7fe9ff", "#c98bff"];
   const ATK = { n: 0, t: 9, dir: 0, waveCd: 0, lungeT: 0, hold: false };
@@ -29,8 +31,10 @@
   const SKEL_OF = { grunt: ["skel_minion", 1.32], eye: ["skel_mage", 1.32], brute: ["skel_warrior", 1.62] };
   const SKEL_TINT = ["#f0d6ae", "#c4ddf0", "#dccbf5"];
   function skelMesh(type, era) {
-    const def = SKEL_OF[type],
-      src = models[def[0]],
+    const def = SKEL_OF[type];
+    /* saguzarrak: hezurdurarik ez (prozedurala) */
+    if (!def) return null;
+    const src = models[def[0]],
       clips = models.skel_minion && models.skel_minion.animations;
     if (!src || !clips || !clips.length) return null;
     const ei = era < 0 ? 2 : era,
@@ -164,6 +168,33 @@
       const teeth = new T.MeshBasicMaterial({ color: "#f3e9ff" });
       for (let i = 0; i < 5; i++) add(new T.ConeGeometry(0.035, 0.11, 4), teeth, (i - 2) * 0.075, 0.52, 0.53, 1, -1, 1);
       for (let i = 0; i < 5; i++) add(new T.ConeGeometry(0.12, 0.38, 5), body, Math.sin(i * 1.3) * 0.38, 0.1, Math.cos(i * 1.3) * 0.38, 1, -1, 1);
+    } else if (type === "bat") {
+      /* saguzarra: gorputz txikia, belarri zorrotzak eta bi hego (kulunkan, ikusmenean) */
+      outline(add(sphere, body, 0, 0, 0, 0.32, 0.3, 0.36), 1.12);
+      add(sphere, eye, -0.11, 0.08, 0.3, 0.06, 0.07, 0.04);
+      add(sphere, eye, 0.11, 0.08, 0.3, 0.06, 0.07, 0.04);
+      for (const s of [-1, 1]) add(new T.ConeGeometry(0.07, 0.26, 4), horn, s * 0.14, 0.33, 0.02).rotation.z = -s * 0.35;
+      const wg = new T.Shape();
+      wg.moveTo(0, 0.12);
+      wg.lineTo(0.55, 0.22);
+      wg.lineTo(0.95, 0.05);
+      wg.lineTo(0.78, -0.12);
+      wg.lineTo(0.6, -0.04);
+      wg.lineTo(0.42, -0.18);
+      wg.lineTo(0.22, -0.06);
+      wg.lineTo(0, -0.12);
+      wg.closePath();
+      const wgeo = new T.ShapeGeometry(wg),
+        wmat = new T.MeshStandardMaterial({ color: "#1a1020", roughness: 0.7, side: T.DoubleSide, emissive: new T.Color("#1a0626"), emissiveIntensity: 0.5 });
+      wgeo.rotateX(-PI / 2);
+      const wings = [1, -1].map((s) => {
+        const w = new T.Mesh(wgeo, wmat);
+        w.scale.x = s;
+        w.position.set(s * 0.2, 0.02, 0);
+        g.add(w);
+        return w;
+      });
+      g.userData.wings = wings;
     } else if (type === "eye") {
       outline(add(sphere, body, 0, 0, 0, 0.5, 0.5, 0.5), 1.1);
       add(sphere, eye, 0, 0.02, 0.42, 0.24, 0.24, 0.1);
@@ -181,10 +212,10 @@
       }
     }
     const R = (EN_DEF[type].r / EN_DEF[type].S) * 1.35,
-      parts = enemyExtras(type, era, R, type === "eye" ? 0 : R * 0.8);
+      parts = enemyExtras(type, era, R, type === "eye" || type === "bat" ? 0 : R * 0.8);
     g.add(parts.shield);
     scene.add(g);
-    return { g, body, eye, ...parts };
+    return { g, body, eye, wings: g.userData.wings, ...parts };
   }
   function spawnEnemy(type, era, x, z, y) {
     const D = EN_DEF[type],
@@ -454,8 +485,8 @@
       e.blinkCd = Math.max(0, e.blinkCd - dt);
       if (e.state === "spawn") {
         if (e.skel) e.g.position.set(e.x, e.y, e.z);
-        else e.g.position.set(e.x, e.y - 2 + smooth01(Math.min(1, e.t / 0.7)) * 2 + (e.type === "eye" ? 1.9 : 0), e.z);
-        if (e.t > e.spawnLen) (e.state = e.type === "eye" ? "hover" : "chase"), (e.t = 0);
+        else e.g.position.set(e.x, e.y - 2 + smooth01(Math.min(1, e.t / 0.7)) * 2 + (e.type === "eye" ? 1.9 : e.type === "bat" ? 1.7 : 0), e.z);
+        if (e.t > e.spawnLen) (e.state = e.type === "eye" || e.type === "bat" ? "hover" : "chase"), (e.t = 0);
       } else if (e.stun > 0 && e.state !== "stun") {
         /* garai-uhinak gelditua */
       } else if (e.type === "grunt") {
@@ -475,6 +506,34 @@
           if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) meleeHit(e, e.D.dmg);
           if (e.t > 0.22) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "recover" && e.t > 0.6) (e.state = "chase"), (e.t = 0);
+      } else if (e.type === "bat") {
+        /* SAGUZARRA: Amaiurren inguruan biraka; abisua (garrasia) eta murgilka (ALDARATU daiteke) */
+        if (e.state === "hover") {
+          const desired = 4.4,
+            sp = (e.orbit ??= Math.random() < 0.5 ? 1 : -1);
+          want = e.D.speed * K;
+          wx = ux * (d - desired) * 0.5 - uz * sp * 1.25;
+          wz = uz * (d - desired) * 0.5 + ux * sp * 1.25;
+          e.dir = Math.atan2(wx, wz);
+          e.cd -= dt * K;
+          if (e.cd <= 0 && d < 7.5) {
+            e.state = "wind";
+            e.t = 0;
+            e.atk0 = time;
+            SND.screech && SND.screech();
+          }
+        } else if (e.state === "wind") {
+          e.dir = Math.atan2(ux, uz);
+          e.lx = ux;
+          e.lz = uz;
+          if (e.t > 0.55 / Math.sqrt(K)) (e.state = "lunge"), (e.t = 0);
+        } else if (e.state === "lunge") {
+          e.vx = e.lx * 12.5;
+          e.vz = e.lz * 12.5;
+          if (d < e.D.r + 0.65 && Math.abs(P.y - e.y) < 1.7) meleeHit(e, e.D.dmg);
+          if (e.t > 0.34) (e.state = "recover"), (e.t = 0);
+        } else if (e.state === "recover" && e.t > 0.55) (e.state = "hover"), (e.t = 0), (e.cd = 1.1 + Math.random() * 1.3);
+
       } else if (e.type === "eye") {
         if (e.state === "hover") {
           const desired = 7,
@@ -594,7 +653,14 @@
       e.x = nx;
       e.z = nz;
       /* ikusmena */
-      const bob = e.type === "eye" && !e.skel ? 1.9 + Math.sin(time * 2.4 + e.x) * 0.2 : 0;
+      /* saguzarra: airean; murgilka behera, zorabiatuta lurrean */
+      e.fly = e.type !== "bat" ? 0 : mix(e.fly ?? 1.7, e.stun > 0 ? 0.3 : e.state === "lunge" ? 0.95 : 1.75, 1 - Math.exp(-dt * (e.stun > 0 ? 9 : 7)));
+      const bob = e.type === "eye" && !e.skel ? 1.9 + Math.sin(time * 2.4 + e.x) * 0.2 : e.type === "bat" ? e.fly + Math.sin(time * 5 + e.x) * 0.12 : 0;
+      if (e.wings) {
+        const f = e.stun > 0 ? 0.15 + Math.sin(time * 3) * 0.1 : Math.sin(time * (e.state === "lunge" ? 9 : 24) + e.x * 3) * 0.75;
+        e.wings[0].rotation.z = f;
+        e.wings[1].rotation.z = -f;
+      }
       if (e.state !== "spawn") e.g.position.set(e.x, e.y + bob, e.z);
       e.g.rotation.y += Math.atan2(Math.sin(e.dir - e.g.rotation.y), Math.cos(e.dir - e.g.rotation.y)) * (1 - Math.exp(-dt * 10));
       const wind = e.state === "wind" || e.state === "aim";
@@ -633,7 +699,7 @@
       e.aura.position.set(e.x, e.y + 0.04, e.z);
       e.aura.material.opacity = vulnerable ? 0.85 : 0.35;
       e.bar.visible = e.hp < e.max;
-      e.bar.position.set(e.x, e.y + (e.skel ? e.H * 2 + 0.75 : e.type === "brute" ? 3.7 : e.type === "eye" ? 3.2 : 2.5), e.z);
+      e.bar.position.set(e.x, e.y + (e.skel ? e.H * 2 + 0.75 : e.type === "brute" ? 3.7 : e.type === "eye" ? 3.2 : e.type === "bat" ? 2.6 : 2.5), e.z);
       e.bar.quaternion.copy(camera.quaternion);
       e.fg.scale.x = Math.max(0.001, e.hp / e.max);
       e.fg.position.x = -(1 - e.fg.scale.x) / 2;
@@ -830,10 +896,13 @@
         s.m.rotation.z += dt * 3;
         const hitP = !s.back && Math.hypot(P.x - s.x, P.z - s.z) < 1.1 && Math.abs(P.y + 1 - s.y) < 1.3,
           hitB = s.back && backHits(s);
-        if (s.y < 0.5 || hitP || hitB || s.t > 4) {
-          fxBurst(s.x, Math.max(0.3, s.y), s.z, { n: 22, speed: 5, up: 3, life: 0.6, size: 0.32, color: "#9a8a6a", grav: 9 });
-          SND.crumble();
-          if (!s.back && (hitP || (Math.hypot(P.x - s.x, P.z - s.z) < 1.9 && P.y < 1.2))) playerHit(1, s.x, s.z);
+        /* s.floor: zoruaren altuera (gela garaietan); s.fire: su-bola (Herensugea) */
+        const fl = s.floor || 0;
+        if (s.y < fl + 0.5 || hitP || hitB || s.t > 4) {
+          fxBurst(s.x, Math.max(fl + 0.3, s.y), s.z, s.fire ? { n: 26, speed: 5.5, up: 3.5, life: 0.7, size: 0.4, color: "#ff8a2a", grav: -1 } : { n: 22, speed: 5, up: 3, life: 0.6, size: 0.32, color: "#9a8a6a", grav: 9 });
+          s.fire ? SND.flame() : SND.crumble();
+          if (s.fire && s.onLand) s.onLand(s);
+          if (!s.back && (hitP || (Math.hypot(P.x - s.x, P.z - s.z) < 1.9 && P.y < fl + 1.2))) playerHit(1, s.x, s.z);
           scene.remove(s.m);
           if (s.m.parent) s.m.parent.remove(s.m);
           SHOTS.splice(i, 1);

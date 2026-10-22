@@ -60,6 +60,19 @@
         );
       },
     },
+    ispilua: {
+      get() {
+        if (!saved.items.includes("ispilua")) saved.items.push("ispilua");
+        persist();
+        translate();
+        itemGet(
+          "ispilua",
+          L("EGUZKI-ISPILUA"),
+          L("Brontzezko ispilu zaharra, eguzki bat atzean. Argi-zutabe batean (sabaiko arrakalak), eutsi SORGINKERIAri: argia islatu eta apuntatu. IRAGANEAN eguzkia, ORAINEAN ilargia. Gela honetan bertan ere, zutabe bat dago… ") + (mobile ? L("Eutsi SORGINKERIA botoiari argian.") : L("Eutsi J argian.")),
+          () => coach("ispilua", "J", "Argi-zutabean: mantendu J → EGUZKI-ISPILUA (apuntatu)", "", "attackBtn", "Argi-zutabean: mantendu SORGINKERIA → ISPILUA", ""),
+        );
+      },
+    },
     katea: {
       get() {
         if (!saved.items.includes("katea")) saved.items.push("katea");
@@ -127,6 +140,8 @@
     if (!flag("ortzadarra")) return ["Harrespilaren erdian jo ORTZI (txalaparta): ortzadarra.", [46, -66.5, 9]];
     if (!flag("odei")) return ["Ortzadarra: igo hodeien gainera, JENTILEN ZERUA (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
     if (!flag("irati-odei")) return ["Itzuli herrira: Iratiri Odeiren berri eman.", [0, 41, 0]];
+    if (!flag("herensugea")) return ["JENTILEN ZERUA: ortzadarretik igo, eta Odeiren hodei zuriak SUGE-MENDIRA eramango zaitu (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
+    if (!flag("irati-herensuge")) return ["Plazan: Iratiri Herensugearen berri eman.", [0, 41, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {
@@ -326,7 +341,35 @@
         ZAZPI.turn = false;
         if (ZAZPI.g) ZAZPI.g.visible = false;
         title("JARRAITZEKO…", "");
-        notify(L("Bost leize amaituta. Harana eta zerua zureak dira: arnasa-zatiak, misterioak, erronkak… Herensugea eta Inguma laster."), "", 8);
+        notify(L("Bost leize amaituta. Herensugea zain dago, hodeien beste aldean: igo ortzadarretik, eta Odeiren hodei zuriak eramango zaitu."), "", 8);
+        hud();
+      },
+    );
+  }
+  /* seigarren zatiaren amaiera: Herensugea aske → seigarren argia berde; Inguma */
+  function iratiHerensuge() {
+    if (flag("irati-herensuge") || ZONE.cur !== "ibarra") return;
+    if (!ZAZPI.g) zazpiBuild();
+    zazpiColors(5);
+    ZAZPI.armed = true;
+    ZAZPI.turn = true;
+    ZAZPI.turnTo = 6;
+    say(
+      [
+        ["IRATI", "Amaiur! Herensuge bat herriaren gainean, hegan! Haurrak oihuka atera dira… baina zuri begira zegoen, ez guri.", "", 0, 41, 0],
+        ["AMAIUR", "Zazpi buru zituen, eta sei gezurrak ziren. Orain bat bakarra du: berea.", "", P.x, P.z, 0],
+        ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Seigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["GAUEKO", "Sei. Esna zaude oraindik, sorgin txikia? Laster lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: INGUMA.", "", P.x, P.z, 0],
+        ["IRATI", "Gaur gauean, ez itzali sutondoa, Amaiur. Nire amonak esaten zuen: Ingumaren aurka, kanta bat ohe ondoan.", "", 0, 41, 0],
+        ["AMAIUR", "Kanta bat… Bat falta. Gero, Anbotora.", "", P.x, P.z, 0],
+      ],
+      () => {
+        flagSet("irati-herensuge");
+        ZAZPI.t = -1;
+        ZAZPI.turn = false;
+        if (ZAZPI.g) ZAZPI.g.visible = false;
+        title("JARRAITZEKO…", "");
+        notify(L("Sei leize amaituta. Harana, zerua eta suge-mendia zureak dira. Inguma laster: ametsetan…"), "", 8);
         hud();
       },
     );

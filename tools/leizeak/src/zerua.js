@@ -942,6 +942,12 @@
   DGZ.objective = () => {
     const R = DGZ.rooms,
       it = (k) => saved.items.includes(k);
+    /* Odei aske: zerua amaituta (Herensugea, hodeien beste aldean) */
+    if (saved.flags.includes("odei")) {
+      if (!saved.flags.includes("irati-odei")) return ["Itzuli ortzadarretik (hegoan): herrian, Irati zain.", [DGZ.exitArch.x, DGZ.exitArch.z, 0]];
+      if (!saved.flags.includes("herensugea")) return ["Odeiren hodei zuria (ortzadarraren muturrean): SUGE-MENDIRA.", HZ.cloud ? [HZ.cloud.position.x, HZ.cloud.position.z, 0] : null];
+      return ["Ortzadarra (hegoan): haranera.", [DGZ.exitArch.x, DGZ.exitArch.z, 0]];
+    }
     if (!isCleared("Z3")) return ROOM.cur === R.Z3 ? ["Zeruko plaza: garaitu itzalak (ertzetik kontuz).", [R.Z3.x, R.Z3.z, 0]] : ["Iparrera hodei-zubietatik: hodeiak IRAGANEAN trinkoak dira. Aldatu garaia airean.", [R.Z3.x, -51, 0]];
     if (!saved.doors.includes("zD-n") && !(saved.keyz.zerua > 0)) return ["Kutxa: plazaren erdian.", [R.Z3.x, R.Z3.z, 0]];
     if (!saved.doors.includes("zD-n")) {
@@ -954,6 +960,5 @@
       if (ROOM.cur === R.Z6) return isCleared("zF-bells") ? ["Dorrea: igo heura IRAGANEAN; goian, kutxa.", [ZE(-46), -60.8, 14]] : ["Hiru ekaitz-kanpaiak, elkarren segidan (bat ORAINEAN bakarrik).", [ZE(-46), -56, 14]];
       return ["Plazaren mendebaldean, haize-zutabea (ORAINEAN): jauzi bikoitza eta eutsi JAUZIari — planeatu gora, dorreraino.", [ZE(-21), -62, 0]];
     }
-    if (!saved.flags.includes("odei")) return saved.doors.includes(DGZ.bossDoor) ? ["Ekaitzaren begia: ODEI.", [Z7.x, Z7.z + 10, Z7.y]] : ["Zeruko eskailerak iparrean: ekaitz-hesiaren ate handia (giltza nagusia).", [ZE(0), -112, 18]];
-    return ["Itzuli ortzadarretik (hegoan): herrian, Irati zain.", [DGZ.exitArch.x, DGZ.exitArch.z, 0]];
+    return saved.doors.includes(DGZ.bossDoor) ? ["Ekaitzaren begia: ODEI.", [Z7.x, Z7.z + 10, Z7.y]] : ["Zeruko eskailerak iparrean: ekaitz-hesiaren ate handia (giltza nagusia).", [ZE(0), -112, 18]];
   };

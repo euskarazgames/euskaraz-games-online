@@ -20,7 +20,7 @@
     { id: "ostatua", name: "OSTATUA", at: [2, 58] },
   ];
   const HOUSE = { list: [], breadT: -99, home: null };
-  const freedCount = () => ["basajaun", "lamia", "tartalo", "errolan", "odei"].filter((k) => saved.flags.includes(k)).length;
+  const freedCount = () => ["basajaun", "lamia", "tartalo", "errolan", "odei", "herensugea"].filter((k) => saved.flags.includes(k)).length;
   const isNight = () => DAY.k > 0.5;
   /* etxe-izenaren ohola: egur iluna, letra zizelkatuak eta bi lauburu txiki */
   function nameBoard(text) {
@@ -136,7 +136,7 @@
           return voice("PEIO", [L("Nor dabil gau honetan? A, sorgina zara! Badakizu zergatik deitzen den etxe hau Pellonea? Pello bost minutu lehenago jaio zelako. Bidegabekeria hutsa."), L("…Pellok dio lo egiteko. Egunez etorri, eta erritmo berri bat irakatsiko dizugu.")]);
         case "arrantzalenea":
           if (!home("txomin")) return quiet(night ? L("Inork ez du erantzuten. Txomin kaian dago, gauez ere: izotzari begira, itsasoa noiz askatuko.") : L("Inork ez du erantzuten. Txomin kaian egoten da egunez, txalupa zaharraren ondoan."));
-          return voice("TXOMIN", [f("odei") ? L("Gaur euria egin du itsasoan. Izotza ahultzen ari da, neska: udan, berriro arrantzara!") : L("Gauez itsasoa entzuten dut… izotza karraska. Egunen batean, berriro aterako naiz.")]);
+          return voice("TXOMIN", [f("herensugea") ? L("Herensuge urre bat ikusi dut itsasoaren gainean, hegan! Lehenengo, beldurra. Gero… txalupari begira zegoen, laguntzeko moduan.") : f("odei") ? L("Gaur euria egin du itsasoan. Izotza ahultzen ari da, neska: udan, berriro arrantzara!") : L("Gauez itsasoa entzuten dut… izotza karraska. Egunen batean, berriro aterako naiz.")]);
         case "okinenea": {
           const fresh = time - HOUSE.breadT > 90;
           if (P.hp < P.maxHp && fresh) {
@@ -156,7 +156,7 @@
               persist();
               itemGet("botila", L("SENDABELAR-BOTILA"), L("Bizitzak amaitzean, berez erabiltzen da. Orain: ") + saved.potions + ".");
             });
-          return voice("MIKELEN AMONA", [night ? L("Ixo! Mikel lotan dago. Ametsetan ere pilotan jokatzen du, ostikoka ohean.") : f("odei") ? L("Atzo euria egin zuen, euri goxoa. Nire belaunek ere eskertu dute.") : L("Mikel? Frontoian, betiko moduan. Pilota baino ez du buruan.")]);
+          return voice("MIKELEN AMONA", [night ? (f("irati-herensuge") ? L("Ixo! Mikel lotan dago… Amets gaiztoak ditu azkenaldian. Nik kantu zahar bat kantatzen diot ohe ondoan: Ingumaren aurka, betidanik.") : L("Ixo! Mikel lotan dago. Ametsetan ere pilotan jokatzen du, ostikoka ohean.")) : f("odei") ? L("Atzo euria egin zuen, euri goxoa. Nire belaunek ere eskertu dute.") : L("Mikel? Frontoian, betiko moduan. Pilota baino ez du buruan.")]);
         case "belarrenea":
           return quiet(night ? L("Inork ez du erantzuten: Kattalin elizan dago, argizaiolak pizten. Atean, eguzkilore lehor bat iltzatuta.") : L("Inork ez du erantzuten. Atean, eguzkilore lehor bat iltzatuta: gaueko izakiak uxatzeko, amonek zioten bezala."));
         case "artzainenea":
@@ -213,7 +213,7 @@
     { flag: "tartalo", name: "ARDI-ZINTZARRIA", text: "Tartaloren artaldeko zintzarria. Orain ardiak lasai bazkatzen dira lepoan.", kind: "zintzarria" },
     { flag: "errolan", name: "TXIMISTA-HARRIA", text: "Errolanen ekaitz-harriaren zati bat. Eskuan, oraindik epel dago.", kind: "tximista" },
     { flag: "odei", name: "EURI-URA", text: "Odeiren lehen euri goxoa, beirazko ontzi batean. Argiak ortzadarra egiten du barruan.", kind: "euria" },
-    { flag: "herensugea", name: "?", text: "Hutsik oraindik. Herensugea, hegan, hodeien beste aldean.", kind: "?" },
+    { flag: "herensugea", name: "HERENSUGE-EZKATA", text: "Herensugearen ezkata bat, urrezkoa. Sutan jarrita ere, hotz; eskuan, bihotz baten taupadak.", kind: "ezkata" },
     { flag: "inguma", name: "?", text: "Hutsik oraindik. Inguma, amets gaiztoen jauna.", kind: "?" },
   ];
   function mementoMesh(kind) {
@@ -244,6 +244,12 @@
       const st = new T.Mesh(new T.DodecahedronGeometry(0.14, 0), new T.MeshStandardMaterial({ color: "#3b4250", roughness: 0.5, emissive: new T.Color("#7fc8ff"), emissiveIntensity: 1.2, flatShading: true }));
       st.position.y = 0.15;
       g.add(st);
+    } else if (kind === "ezkata") {
+      /* herensuge-ezkata: tanta itxurako plaka urrea */
+      const sc = new T.Mesh(new T.SphereGeometry(0.15, 10, 8), new T.MeshStandardMaterial({ color: "#d9a441", metalness: 0.8, roughness: 0.25, emissive: new T.Color("#7a4a10"), emissiveIntensity: 0.5 }));
+      sc.scale.set(1, 1.35, 0.3);
+      sc.position.y = 0.2;
+      g.add(sc);
     } else if (kind === "euria") {
       const jar = new T.Mesh(new T.CylinderGeometry(0.12, 0.12, 0.3, 12), new T.MeshStandardMaterial({ color: "#bfe6ff", transparent: true, opacity: 0.45, roughness: 0.1, emissive: new T.Color("#5fb8e8"), emissiveIntensity: 0.4 }));
       jar.position.y = 0.15;
@@ -504,6 +510,22 @@
       DAY.night = DAY.k > 0.5;
       rest();
       persist();
+      /* Herensugearen ondoren: lehen ametsa (Inguma) */
+      if (saved.flags.includes("irati-herensuge") && !saved.flags.includes("inguma-ametsa")) {
+        flagSet("inguma-ametsa");
+        return say(
+          [
+            ["· · ·", "Amets bat. Iturralde, baina hutsik. Sutondoa itzalita. Txalapartak, urrunean, erritmo okerra jotzen du: atzekoz aurrera.", "", P.x, P.z, P.y],
+            ["???", "Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten. Entzun: «Amaiur…»", "", P.x, P.z, P.y + 2],
+            ["AMAIUR", "Irati? Ez… Zu ez zara Irati.", "", P.x, P.z, P.y],
+            ["INGUMA", "Inguma naiz. Eta gaur ez zaitut eramango. Laster, bai. Lo ona, sorgin txikia.", "", P.x, P.z, P.y + 2],
+          ],
+          () => {
+            title(msg, "");
+            notify(L("Esnatu zara, izerditan. Ohe ondoan, kantu zahar bat entzun duzu… norbaitek kantatzen zuen?"), "", 6);
+          },
+        );
+      }
       title(msg, "");
       notify(L("Ondo lo egin duzu. Arnasa beteta."), "", 3);
     };
@@ -525,7 +547,9 @@
   }
   function homeIrati() {
     const f = (k) => saved.flags.includes(k);
-    const t = f("odei")
+    const t = f("herensugea")
+      ? L("Iratiren marrazkia, berriro: sei argi berde eta zazpigarrena, gorria. Behean, bi ahizpa… eta herensuge urre txiki bat, hegan, haien gainean.")
+      : f("odei")
       ? L("Marrazkiaren ondoan, Iratiren idazkera: «Zazpi argi, eta behean bi ahizpa». Bost argi berde dira orain. Hutsuneetan, euri-tanta txiki batzuk: Iratik margotu zituen?")
       : f("errolan")
         ? L("Iratiren marrazkia: zazpi argi mendi baten gainean. Behean, bi neska txiki eskutik helduta. Lau argi berdez margotu dituzu, konturatu gabe.")

@@ -245,6 +245,7 @@
     if (f("tartalo") && !f("irati-tartalo")) return iratiFinale();
     if (f("errolan") && !f("irati-errolan")) return iratiJentil();
     if (f("odei") && !f("irati-odei")) return iratiOdei();
+    if (f("herensugea") && !f("irati-herensuge")) return iratiHerensuge();
     if (f("irati-tartalo") && !f("errolan"))
       return talk(N, [["IRATI", "Harrespilako trikuharria… amonak esaten zuen jentilak haren azpian ezkutatu zirela, zeruan argi bitxi bat ikusi zutenean. Jo ESNATU haren ondoan."]]);
     if (f("lamia") && !f("irati-lamia"))
@@ -258,7 +259,8 @@
         ],
         () => flagSet("irati-lamia"),
       );
-    if (f("irati-odei")) return talk(N, [["IRATI", "Herensugea eta Inguma… Bi argi gorri besterik ez, Amaiur. Atseden hartu: harana zurea da, eta zerua ere bai."]]);
+    if (f("irati-herensuge")) return talk(N, [["IRATI", f("inguma-ametsa") ? "Amets gaizto bat? Ingumak nire ahotsa egin zuen? … Amonak kantu bat zekien, ohe ondoan kantatzeko. Gogoratu nahi dut, Amaiur." : "Argi bakarra falta da, gorria. Gaur gauean, lo egin etxean, Iturralden: sutondoa piztuta, eta kantu bat ohe ondoan."]]);
+    if (f("irati-odei")) return talk(N, [["IRATI", "Herensugea… hodeien beste aldean. Zeruan, Odeiren hodei zuria zain duzu, ortzadarraren muturrean. Kontuz haren suarekin, Amaiur."]]);
     if (f("irati-errolan") && !f("ortzadarra")) return talk(N, [["IRATI", "Jentilen zerua… hodeien gainean. Harrespilako jentil zaharrak badaki nola igo: galdetu iezaiozu."]]);
     if (f("irati-errolan")) return talk(N, [["IRATI", "Ortzadar bat harrespilan! Herri osoa atera da ikustera. Igo, Amaiur: hodeien gainean, trumoia entzuten da."]]);
     if (f("tartalo")) return talk(N, [["IRATI", "Anboto… Mariren etxea. Zazpi argietatik lau gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
@@ -393,6 +395,7 @@
           else go();
         },
       );
+    if (f("herensugea")) return talk(N, [["JENTIL ZAHARRA", "Herensuge urre bat zeruan, sorgin txikia! Gure aiton-amonek ikusi zuten azkena, mila urte dira. Zaindari bakarra falta."]]);
     if (f("odei")) return talk(N, [["JENTIL ZAHARRA", "Euri goxoa… Odei aske dago. Mende askoan ez dut horrelako usainik sentitu. Bi zaindari falta, sorgin txikia."]]);
     if (f("ortzadarra")) return talk(N, [["JENTIL ZAHARRA", "Ortzadarra… igo, sorgin txikia. Hodeien gainean, gure uharte zaharrak. Iraganean, hodeiak harri bezain trinkoak ziren."]]);
     if (f("irati-errolan") && saved.rhythms.includes("ortzi")) return talk(N, [["JENTIL ZAHARRA", "Harrespilaren erdian, gure harrien artean: jo ORTZI. Zeruak entzungo zaitu."]]);

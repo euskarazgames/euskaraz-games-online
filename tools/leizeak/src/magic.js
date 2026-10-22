@@ -474,11 +474,14 @@
     /* mantendu → kargatu; askatu → INDARRA */
     if (ATK.hold && started && !paused && !CRAFT.on && !respawnTimer) {
       MAG.holdT += dt;
-      if (!MAG.charging && MAG.holdT > 0.3 && MAG.spinT > 0.45 && P.dashT <= 0 && !P.climb) chargeStart();
+      /* argi-zutabe batean: EGUZKI-ISPILUA (ispilua.js) INDARRAren ordez */
+      if (!MAG.charging && !MIR.on && MAG.holdT > 0.3 && MAG.spinT > 0.45 && P.dashT <= 0 && !P.climb) mirrorCan() ? mirrorRaise() : chargeStart();
     } else {
       if (MAG.charging) chargeRelease();
+      if (MIR.on) mirrorLower();
       MAG.holdT = 0;
     }
+    mirrorUpdate(dt);
     if (MAG.charging) {
       const was = MAG.charge;
       MAG.charge = Math.min(1, MAG.charge + dt / 0.7);
@@ -542,6 +545,7 @@
     MAG.charge = 0;
     MAG.holdT = 0;
     ATK.hold = false;
+    mirrorLower();
     castStop();
     comboBreak();
   }

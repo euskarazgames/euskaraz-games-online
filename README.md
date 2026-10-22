@@ -120,9 +120,24 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   tximistak, kazkabarra eta haize-boladak (HAIZE-ADARRAz geldiarazi); herriek ekaitzen aurka kanpaiak
   jotzen zituzten bezala, lau ekaitz-kanpaiak elkarren segidan → hodeia urratu, bihotza goian agerian →
   haize-zuloetatik gora planeatuz, SORGINKERIA. Hiru txanda, kanpaiak gero eta garai gehiagotan banatuta.
+- **HERENSUGEAREN HAITZULOA**, seigarren leizea: zeruan, ortzadarraren muturrean, **Odeiren hodei zuriak**
+  SUGE-MENDIRA eramaten du. Sare beltza (SUA), **laba-arroila** (ORAINEAN laba gogortuta: lurrazaletik
+  erdiko harkaitzera; IRAGANEAN beroa gora: bero-zutabean ENARAz ertz garaira; laba ukituz gero, erre),
+  etsai berria: **SAGUZARRAK** (zain, garrasia, murgildu: ALDARATU edo saihestu), saguzarren habia
+  (borroka, giltza, sutondoa), ispilu-zaina (zaindaria) eta tresna berria: **EGUZKI-ISPILUA**. Sabaiko
+  arrakaletatik **argi-zutabeak** sartzen dira: IRAGANEAN eguzkia, ORAINEAN ilargia; zutabe batean
+  SORGINKERIAri eutsi → ispilua altxatu eta izpia apuntatu. **Ispilu-harriak** (BIRATU: argia aurpegiak
+  begiratzen duen norabidean bidaltzen dute), **kristalak** (urreak eguzkia, urdinak ilargia, zuriak
+  biak), **sare beltzak** (eguzkiak edo SUAk erretzen ditu; ilargiak ez) eta argiak saguzarrak lurrera
+  botatzen ditu. Barren artetik argia pasatzen da. Ispiluen aretoa eta kristalen gela (giltza nagusia).
+  Etsai nagusia, **Herensugea**, zazpi burukoa (buruak txandaka esnatzen dira): hozka (ALDARATU),
+  su-arnasa (estalpe baxuen atzean ezkutatu), su-bolak (EZKUTUAz itzuli) eta argia begietara (urreak
+  EGUZKIA, urdinak ILARGIA) → burua lurrera → eztarriko itzal-harria jo. Azken burua, erdikoa: begi bat
+  urrea eta bestea urdina, bata bestearen atzetik. Askatuta, Herensugeak herrira eramaten du hegan.
 - Istorioa: hiru zaindari askatu ondoren, Irati eta azken eszena (zazpi argi Anboto gainean:
   hiru berde, lau gorri); Errolan askatu ondoren, laugarren argia berde bihurtzen da; Odei askatu
-  ondoren, bosgarrena (Herensugea eta Inguma falta) → JARRAITZEKO…
+  ondoren, bosgarrena; Herensugea askatu ondoren, seigarrena (Inguma falta: Iturralden lo eginez gero,
+  lehen ametsa) → JARRAITZEKO…
 - **HERRIA, etxez etxe**: etxe bakoitzak bere izena du atearen gainean (PELLONEA, OKINENEA,
   GOIKOETXEA, ARTZAINENEA, ARRANTZALENEA, BELARRENEA, MENDIETA, OSTATUA…) eta norbait bizi da barruan.
   **ATEA JO**: egunez ala gauez, nor dagoen etxean eta istorioa nola doan, erantzun desberdinak (Maiteren
@@ -168,7 +183,8 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   `quests.js`, `npc.js`, `txalaparta.js`, `dungeon.js`, `rooms.js`, `boss.js`, `lamia.js`, `tartalo.js`,
   `adarra.js`, `gaua.js`, `pottoka.js`, `sekretuak.js`, `heura.js`, `tximista.js`, `jentilak.js`,
   `enara.js` (planeatzea, haize-zutabeak), `zerua.js` (Jentilen zerua, ortzadarra), `odei.js`,
-  `herria.js` (etxe-izenak, ATEA JO, Iturralde),
+  `herria.js` (etxe-izenak, ATEA JO, Iturralde), `ispilua.js` (EGUZKI-ISPILUA: argi-zutabeak, izpia,
+  ispilu-harriak, kristalak, sare beltzak), `herensuge.js` (Herensugearen haitzuloa eta Herensugea),
   `chain.js`, `lockon.js`, `story.js`, `combat.js`,
   `magic.js`, `craft.js`, `runes.js`, `music.js`) → `python3 tools/leizeak/build.py` (three.js OIHARTZUN-en fitxategitik
   ateratzen da; modeloak `tools/leizeak/models/*.glb`-tik, `build_models.mjs`-ek KayKit-etik sortuak).
@@ -185,7 +201,9 @@ eta bide-orria: `tools/leizeak/DISEINUA.md`.
   leizea osoa: trikuharria, sutondoa, lasterbideak, Errolan eta azken eszena) eta
   `tools/test/leizeak_zerua.js` (bosgarrena: ORTZI, ortzadarra, hodei-harriak, igogailua, ENARA eta
   haize-zutabeak, dorrea, habia, ekaitz-hesia, Odei eta azken eszena) eta `tools/test/leizeak_herria.js`
-  (etxe-izenak, ATEA JO egunez eta gauez, Iturralde barrutik, kolpe sendoak eta estalpeak).
+  (etxe-izenak, ATEA JO egunez eta gauez, Iturralde barrutik, kolpe sendoak eta estalpeak) eta
+  `tools/test/leizeak_herensuge.js` (seigarrena: Odeiren hodeia, sare beltza, laba-arroila, saguzarrak,
+  habia, EGUZKI-ISPILUA, ispilu-harriak eta kristalak, Herensugea, hegaldia, Irati eta Ingumaren ametsa).
   Proba-kakoa: `?test` → `window.__game`.
 
 ## Cloudflare

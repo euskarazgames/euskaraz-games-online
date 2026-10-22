@@ -7,8 +7,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
 - `public/games/<jokoa>.html` — zazpi joko, fitxategi bakarrekoak, three.js r128:
   `pilota`, `zesta`, `artzain` ("Kirol" motorra), `basoa`, `itsas` ("Solid" motorra),
   `oihartzun` (bi garaiko plataforma-jokoa; `elur.html` haren aurreko bertsioa da) eta
-  `leizeak` (LEIZEEN DEIA, OIHARTZUN II: Ibarra harana, txalaparta eta bost leize — Basajaun, Lamia, Tartalo,
-  Jentilbaratza/Errolan, Jentilen zerua/Odei).
+  `leizeak` (LEIZEEN DEIA, OIHARTZUN II: Ibarra harana, txalaparta eta sei leize — Basajaun, Lamia, Tartalo,
+  Jentilbaratza/Errolan, Jentilen zerua/Odei, Herensugearen haitzuloa/Herensugea).
   OIHARTZUN-ek `?test` parametroarekin `window.__game` proba-kakoa erakusten du.
   OIHARTZUN-en iturburua: `tools/oihartzun/src/` (game.js, combat.js, magic.js, ascent.js, story.js,
   runes.js…). Ez editatu `public/games/oihartzun.html` zuzenean: `python3 tools/oihartzun/build.py`
@@ -18,7 +18,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   tartalo.js, gaua.js (eguna/gaua), pottoka.js, sekretuak.js, heura.js (eskalada), tximista.js (bonbak eta
   arrakalak), jentilak.js (Jentilbaratza, sutondoak, lasterbideak, Errolan), enara.js (planeatzea eta
   haize-zutabeak), zerua.js (Jentilen zerua, uharteak, ortzadarra), odei.js (Odei), herria.js (etxe-izenak,
-  ATEA JO, Iturralde etxea barrutik)…). Ez editatu `public/games/leizeak.html` zuzenean:
+  ATEA JO, Iturralde etxea barrutik), ispilua.js (EGUZKI-ISPILUA: argi-zutabeak, izpia, ispilu-harriak,
+  kristalak, sare beltzak), herensuge.js (Herensugearen haitzuloa, laba, Odeiren hodeia, Herensugea)…). Ez editatu `public/games/leizeak.html` zuzenean:
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
@@ -56,4 +57,5 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_trebetasunak.js http://127.0.0.
 NODE_PATH=$(npm root -g) node tools/test/leizeak_jentilak.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_zerua.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_herria.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_herensuge.js http://127.0.0.1:8091/games/leizeak.html
 ```

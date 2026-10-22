@@ -93,8 +93,9 @@ ardiak, txalapartarien erronka.
 - ✔ 2. leizea: LAMIEN LEIZEA (ura/izotza, HAIZE-ADARRA, Lamia Iluna). ✔ 3. leizea: TARTALOREN KOBA
   (sua eta harria, SUGAR-IZPIA, Tartalo). ✔ 4. leizea: JENTILBARATZA (jentilen hiri lurperatua,
   TXIMISTARRIA, Errolan). ✔ 5. leizea: JENTILEN ZERUA (hodeien gaineko uharteak, ORTZI eta ortzadarra,
-  ENARAREN HEGOAK, Odei). Hurrengoak: Herensugea eta Inguma (zeruko beste bi zaindariak) eta, azkenik,
-  Mariren koba (Anboto). Zazpi zaindari guztira: bost askatuta.
+  ENARAREN HEGOAK, Odei). ✔ 6. leizea: HERENSUGEAREN HAITZULOA (sua eta argia, EGUZKI-ISPILUA,
+  saguzarrak, Herensugea). Hurrengoak: Inguma (ametsetan; Iturralden lo eginez gero, lehen ametsa) eta,
+  azkenik, Mariren koba (Anboto). Zazpi zaindari guztira: sei askatuta.
 - Egun/gau zikloa ("gaua gauekoentzat, eguna egunekoentzat"): gauez beste etsai eta gertaera batzuk.
 - Mapa osoa, eskuliburua eta bildumen menua.
 - Iraupena: 6-8 ordu. Bigarren mailako misio gehiago, minijokoak eta amaiera osoa.
@@ -131,6 +132,15 @@ nagusiaren aurka. Ateak, giltzak eta itzulerak gela-zentral baten inguruan (bide
   eta ekaitz-hesia (ate handia) → Odei: kanpaiak elkarren segidan → hodeia urratu → haize-zuloetan gora
   planeatuz bihotzera; haize-boladak HAIZE-ADARRAz geldiarazten dira. Uharteak airean daude: erortzean,
   azken lur segurura (arnasa bat galduta); ekaitz-hesiak planeatuz ere ez du uzten pasatzen.
+- **HERENSUGEAREN HAITZULOA** (EGUZKI-ISPILUA): Odeiren hodeia (zeruan) → Suge-mendiaren ahoa (sutondoa;
+  sare beltza SUAz; argi-zutabe bat, oraindik ezertarako ez) → laba-arroila (ORAINEAN lurrazala erdiko
+  harkaitzeraino, han IRAGANERA: bero-zutabean ENARAz ertz garaira; mendebaldeko apala: arnasa-zatia;
+  saguzarrak) → saguzarren habia (borroka, giltza, bigarren sutondoa) → ispilu-zaina (zaindaria) →
+  EGUZKI-ISPILUA: kristal zuria (saria) → habiako eguzki-zuloa (IRAGANEAN): barren artetik kristal
+  urrera → ispiluen aretoa (bi ispilu-harri BIRATU; sarea EGUZKIAz erre, gero kristal urdina ILARGIAz) →
+  kristalen gela (zutabe batek bide zuzena ixten du: hiru kristal, hiru bide; giltza nagusia) →
+  Herensugea: buruak txandaka (2 + 2 + 2 + 1); argia begietara, ALDARATU hozka, su-bolak EZKUTUAz
+  itzuli → burua lurrera → eztarriko itzal-harria. Azken buruak bi argiak behar ditu, segidan.
 - Mitologia: Tartalo ilunpean ikusten duen begi bakarreko artzain erraldoia (argiak itsutzen du),
   lamiak eta urrezko orrazia, Gaueko gauaren espiritua, Mari Anboton. Istorioa eta gelak originalak.
 
@@ -180,6 +190,15 @@ Erabiltzaileak partekatutako bideo laburretatik (diseinu-aholkuak, ez joko jakin
   barrutik, istorioaren oroitzapenekin. Herriak aldatzen da zaindariak askatu ahala (Mendietakoak).
 - **Edukiontziak gela hutsetan** → bloke handiek gela "zapore" gabe bat azpi-espazioetan banatzen dute:
   estalpea (proiektilak geldiarazi), bideak eta, haien atzean, sekretu txikiak (txanpon-zorroak).
+
+## 5g. Argiaren leizea: ideia orokorrak (gure eran)
+Mekanika orokorrak bakarrik (argi-izpiak islatzea genero osoko puzzle klasikoa da), gure eran:
+- **Bi argi, bi garai** → eguzkia IRAGANEAN eta ilargia ORAINEAN, zutabe beretik: garaia aldatzeak izpiaren
+  izaera aldatzen du (eguzkiak sare beltzak erretzen ditu; kristal bakoitzak bere argia nahi du).
+- **Ispiluak** → ispilu-harri zaharrek argia "berriz igortzen dute" beren aurpegiaren norabidean (zortzi
+  norabide, BIRATU): irakurtzeko errazagoa da islapen fisikoa baino.
+- **Buru askoko herensugea** → euskal ipuinetako zazpi buruko herensugea: hemen, sei buru Gauekoren gezurrak
+  dira, eta zazpigarrena, benetakoa, askatu egiten da (haren alaba Lamien putzuko herensuge gaztea da).
 
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da
