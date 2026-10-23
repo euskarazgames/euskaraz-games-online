@@ -6610,7 +6610,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { makilak: "≋", giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀" };
+  const ICONS = { makilak: "≋", giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀", bertsoa: "♪", hautsa: "✧" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "makilak") {
@@ -6698,6 +6698,31 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ray.position.set(Math.cos(a) * 0.56, Math.sin(a) * 0.56, 0);
         ray.rotation.z = a - PI / 2;
         g.add(ray);
+      }
+    } else if (icon === "bertsoa") {
+      /* seaska-kantaren bertsoa: hiru nota-buru eta zurtoinak, distiratsu */
+      for (let i = 0; i < 3; i++) {
+        const head = new T.Mesh(new T.SphereGeometry(0.11, 10, 8), material("#e6dcff", 0.9));
+        head.scale.set(1.3, 0.9, 0.8);
+        head.position.set((i - 1) * 0.3, -0.25 + Math.sin(i * 2) * 0.12, 0);
+        const st = new T.Mesh(new T.CylinderGeometry(0.018, 0.018, 0.5, 5), material("#e6dcff", 0.9));
+        st.position.set((i - 1) * 0.3 + 0.12, head.position.y + 0.25, 0);
+        g.add(head, st);
+      }
+    } else if (icon === "hautsa") {
+      /* amonaren hauts-zorroa: larruzko poltsa eta izar-hautsa ahotik */
+      const bag = new T.Mesh(new T.SphereGeometry(0.3, 14, 10), material("#7a5a3a"));
+      bag.scale.set(1, 1.1, 1);
+      const neck = new T.Mesh(new T.CylinderGeometry(0.08, 0.15, 0.18, 10), material("#6a4a2a"));
+      neck.position.y = 0.36;
+      const tie = new T.Mesh(new T.TorusGeometry(0.1, 0.025, 5, 14), material("#c9a86a", 0.3));
+      tie.position.y = 0.36;
+      tie.rotation.x = PI / 2;
+      g.add(bag, neck, tie);
+      for (let i = 0; i < 6; i++) {
+        const st = new T.Mesh(new T.OctahedronGeometry(0.05, 0), material("#fff1a8", 2));
+        st.position.set(Math.cos(i * 1.7) * 0.18, 0.5 + i * 0.09, Math.sin(i * 1.7) * 0.18);
+        g.add(st);
       }
     } else if (icon === "sugarra") {
       const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));
@@ -7685,6 +7710,14 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         return true;
       }
     }
+    /* izarra (Inguma): hegan dagoen jaurtitzailea jo */
+    if (s.star && BOSS.canStagger()) {
+      const c = BOSS.center();
+      if (Math.hypot(c.x - s.x, c.z - s.z) < (c.r || 2.6) && s.y > c.y - 1.5 && s.y < c.y + (c.h || 4)) {
+        BOSS.stagger();
+        return true;
+      }
+    }
     return false;
   }
   function shotsUpdate(dt) {
@@ -7722,6 +7755,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           d = Math.hypot(dx, dz) || 1;
         s.vx = mix(s.vx, (dx / d) * s.sp, dt * 2);
         s.vz = mix(s.vz, (dz / d) * s.sp, dt * 2);
+      }
+      /* itzulitako izarra: jaurtitzailearengana gidatua (hegan dabil) */
+      if (s.back && s.star && s.from) {
+        const hx = s.from.x - s.x,
+          hz = s.from.z - s.z,
+          hd = Math.hypot(hx, hz) || 1;
+        s.vx = mix(s.vx, (hx / hd) * s.sp, Math.min(1, dt * 6));
+        s.vz = mix(s.vz, (hz / hd) * s.sp, Math.min(1, dt * 6));
+        s.y = mix(s.y, s.from.y + 1, Math.min(1, dt * 4));
       }
       s.x += s.vx * dt;
       s.z += s.vz * dt;
@@ -8222,10 +8264,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         boltImpact(b, b.x, b.y, b.z, false);
         if (!b.big || hitB.fireOnly || hitB.bombOnly) gone = true;
       }
-      /* itzalen proiektilak: izpiak suntsitzen ditu */
+      /* itzalen proiektilak: izpiak suntsitzen ditu (itzulitakoak ez: orain zureak dira) */
       for (let j = SHOTS.length - 1; j >= 0 && !gone; j--) {
         const s = SHOTS[j];
-        if (Math.hypot(s.x - b.x, s.y - b.y, s.z - b.z) < (b.big ? 1.4 : 0.85)) {
+        if (!s.back && Math.hypot(s.x - b.x, s.y - b.y, s.z - b.z) < (b.big ? 1.4 : 0.85)) {
           fxBurst(s.x, s.y, s.z, { n: 10, speed: 4, life: 0.3, size: 0.25, color: "#ffffff", grav: 0 });
           SND.clang();
           scene.remove(s.m);
@@ -8340,7 +8382,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         e.vz += (dz / (d || 1)) * 7;
       }
       for (let j = SHOTS.length - 1; j >= 0; j--)
-        if (Math.hypot(SHOTS[j].x - P.x, SHOTS[j].z - P.z) < 3.6) {
+        if (!SHOTS[j].back && Math.hypot(SHOTS[j].x - P.x, SHOTS[j].z - P.z) < 3.6) {
           fxBurst(SHOTS[j].x, SHOTS[j].y, SHOTS[j].z, { n: 8, speed: 3, life: 0.3, size: 0.2, color: "#ffffff", grav: 0 });
           scene.remove(SHOTS[j].m);
           SHOTS.splice(j, 1);
@@ -11942,6 +11984,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     );
   }
   function talkTxomin(N, f) {
+    if (seaskaTalk(N, f)) return;
     if (!f("txomin"))
       return talk(
         N,
@@ -12258,6 +12301,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     eguzkilore: { seq: ["R", "R", "L", "L"], name: "EGUZKILORE", desc: "Eguzkiari dei: gauez egunsentia, egunez ilunabarra. Leizean, itzalak zorabiatzen ditu." },
     pottoka: { seq: ["L", "R", "L", "L"], name: "POTTOKA", desc: "Beltxari dei: haranean, Joanesen pottoka lauhazka etortzen da." },
     ortzi: { seq: ["L", "R", "R", "L", "R"], name: "ORTZI", desc: "Zeru zaharraren erritmoa: harrespilan, ortzadarra jaiotzen da — zerurako bidea." },
+    seaska: { seq: ["L", "R", "L", "R", "L"], name: "SEASKA", desc: "Amonaren seaska-kanta: itzalak lokartzen ditu. Ametsean, sehaskak eta Ingumak ere entzuten dute." },
   };
   const seqText = (seq) => seq.map((s) => (s === "L" ? "◀" : "▶")).join(" ");
   /* plazako txalaparta: bi asto, hiru ohol luze eta lau makila (diseinu propioa) */
@@ -12484,6 +12528,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     else if (k === "eguzkilore") eguzkiloreEffect();
     else if (k === "pottoka") pottokaCall();
     else if (k === "ortzi") ortziEffect();
+    else if (k === "seaska") seaskaEffect();
     hud();
   }
   /* ENTZUN: oihartzun-uhina — ezkutuko plataformak (s.hidden) eta kutxak agerian */
@@ -12566,7 +12611,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function lockCandidates() {
     const list = ENEMIES.filter((e) => e.state !== "dead" && e.state !== "spawn" && Math.hypot(e.x - P.x, e.z - P.z) < 24 && Math.abs(e.y - P.y) < 8);
-    if (BOSS.on && BOSS.lockable && !BOSS.dead) list.push(BOSS.lockable);
+    if (BOSS.on && BOSS.lockable && !BOSS.dead && !BOSS.noLock()) list.push(BOSS.lockable);
     return list;
   }
   function lockPos(t) {
@@ -12578,7 +12623,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function lockValid(t) {
     if (!t) return false;
-    if (t.boss) return BOSS.on && !BOSS.dead;
+    if (t.boss) return BOSS.on && !BOSS.dead && !BOSS.noLock();
     return t.state !== "dead" && ENEMIES.includes(t) && Math.hypot(t.x - P.x, t.z - P.z) < 28;
   }
   function lockToggle() {
@@ -13139,6 +13184,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ],
         () => flagSet("irati-lamia"),
       );
+    /* zazpigarren atala: seaska-kanta (seaska.js) */
+    if (f("irati-herensuge") && seaskaIrati(N, f)) return;
+    if (f("irati-inguma")) return talk(N, [["IRATI", "Anboto… zazpi argi berde, eta Gaueko zain. Ez dakit zer naizen, Amaiur. Baina txalapartak bi ahots ditu: elkarrekin joango gara."]]);
+    if (f("seaska-kanta")) return talk(N, [["IRATI", "Gauez, Iturralden: ohean, AMETSERA. Eta gogoratu: benetako Iratik ez du inoiz zure izena oihukatzen."]]);
     if (f("irati-herensuge")) return talk(N, [["IRATI", f("inguma-ametsa") ? "Amets gaizto bat? Ingumak nire ahotsa egin zuen? … Amonak kantu bat zekien, ohe ondoan kantatzeko. Gogoratu nahi dut, Amaiur." : "Argi bakarra falta da, gorria. Gaur gauean, lo egin etxean, Iturralden: sutondoa piztuta, eta kantu bat ohe ondoan."]]);
     if (f("irati-odei")) return talk(N, [["IRATI", "Herensugea… hodeien beste aldean. Zeruan, Odeiren hodei zuria zain duzu, ortzadarraren muturrean. Kontuz haren suarekin, Amaiur."]]);
     if (f("irati-errolan") && !f("ortzadarra")) return talk(N, [["IRATI", "Jentilen zerua… hodeien gainean. Harrespilako jentil zaharrak badaki nola igo: galdetu iezaiozu."]]);
@@ -13230,6 +13279,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function talkKattalin(N, f) {
     if (kattalinNight(N, f)) return;
+    if (seaskaTalk(N, f)) return;
     if (!f("kattalin"))
       return talk(
         N,
@@ -13260,6 +13310,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     return talk(N, [["KATTALIN", ["Harrespilan jentil zahar bat bizi da, harrizkoa. Galdetu iezaiozu Mariri buruz.", "Andere… nire amona. Sorgina zen, zu bezala. Ehun urte dira desagertu zela.", "Gure aitonek esaten zuten: izena duen guztia bada."][Math.floor(time) % 3]]]);
   }
   function talkJentil(N, f) {
+    if (seaskaTalk(N, f)) return;
     if (!f("jentil"))
       return talk(
         N,
@@ -13880,6 +13931,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     /* itzulitako harkaitza: etsai nagusia zorabiatu (baldin badaki) */
     stagger: () => bk() && bk().stagger && bk().stagger(),
     canStagger: () => BOSS.on && !!bk() && !!bk().stagger,
+    /* fijazioa ezin (adib. Inguma eta haren kopiak, ENTZUN gabe) */
+    noLock: () => !!bk() && !!bk().noLock && bk().noLock(),
     ring: {
       live: () => BOSS.on && !!bk() && !!bk().ring && bk().ring.live(),
       pos: () => bk().ring.pos(),
@@ -14083,6 +14136,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     jentilReset();
     odeiReset();
     zbReset();
+    ingumaReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;
@@ -14504,6 +14558,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* elkarrizketak eszena gisa: [nor, testua, "", x, z, y] */
   let CINE_AFTER = null;
   function say(shots, after) {
+    /* ahotsak (sh[7]) aurrez kargatu: planoa hasten denerako prest egon daitezen */
+    voicePreload(shots.map((s) => s[7]));
     scenes.push(shots);
     CINE_AFTER = after || null;
     playScene(scenes.length - 1);
@@ -14551,6 +14607,17 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (!flag("irati-odei")) return ["Itzuli herrira: Iratiri Odeiren berri eman.", [0, 41, 0]];
     if (!flag("herensugea")) return ["JENTILEN ZERUA: ortzadarretik igo, eta Odeiren hodei zuriak SUGE-MENDIRA eramango zaitu (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
     if (!flag("irati-herensuge")) return ["Plazan: Iratiri Herensugearen berri eman.", [0, 41, 0]];
+    /* zazpigarren atala: Inguma (seaska.js, ametsa.js) */
+    if (!flag("inguma-ametsa")) return ["Iturralden lo egin (ohea), sutondoa piztuta.", [28, 31, 0]];
+    if (!flag("seaska")) return ["Plazan: Iratiri ametsaren berri eman.", [0, 41, 0]];
+    if (!flag("seaska-kanta")) {
+      const B = BERTSOAK.find((b) => !flag(b.flag));
+      if (!B) return ["Plazan: Irati, hiru bertsoekin.", [0, 41, 0]];
+      const at = { "bertso-belar": [-15.5, 28.5, 0], "bertso-hare": [8.2, 78, -7.2], "bertso-izar": [46, -64, 9] }[B.flag];
+      return ["Seaska-kantaren bertsoak (" + bertsoCount() + "/3): " + B.who + (B.flag === "bertso-izar" && DAY.k < 0.5 ? " — gauez." : "."), at];
+    }
+    if (!flag("inguma")) return ["Iturralden, ohean: AMETSERA (Ingumaren ametsa).", [28, 31, 0]];
+    if (!flag("irati-inguma")) return ["Irten kanpora: Anboto aldera begiratu.", [28, 31, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {
@@ -14580,7 +14647,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ["IRATI", "Amaiur! Basajaunen orroa entzun dugu herritik… baina ez zen haserrea. Askatu duzu!", "", 0, 41, 0],
         ["· · ·", "Bat-batean, zerua argitzen da. Suzko bola bat, Anbotoko aldetik, itsaso aldera hegan.", "", 10, -120, 79, [0, 4, 34]],
         ["IRATI", "Mariren sua… baina Mari ez doa haren barruan. Norbaitek darama.", "", 0, 41, 0],
-        ["GAUEKO", "Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik.", "", P.x, P.z, 0],
+        ["GAUEKO", "Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik.", "", P.x, P.z, 0, null, "st_g1"],
         ["AMAIUR", "Gaueko… ez zinen desagertu.", "", P.x, P.z, 0],
         ["IRATI", "Ez gaude bakarrik, Amaiur. Basajaun zurekin dago orain. Eta herri osoa.", "", 0, 41, 0],
       ],
@@ -14673,7 +14740,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala. Eta izen bat esan zuen: Anboto.", "", P.x, P.z, 0],
         ["· · ·", "Une horretan, Anboto aldetik, hodei beltz bat jaitsi da harana estaltzera. Haren barruan, zazpi argi.", "", 20, -170, 120, [0, 30, 40]],
         ["· · ·", "Hiru argi berde: Basajaun, Lamia, Tartalo. Beste lauak gorri, taupaka, bihotz gaiztotuak bezala.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean, ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan.", "", P.x, P.z, 0],
+        ["GAUEKO", "Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean… ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan.", "", P.x, P.z, 0, null, "st_g3"],
         ["IRATI", "Ez entzun. Beldur da: herriak berriro jotzen du gauez, eta erritmoa indartzen ari da.", "", 0, 41, 0],
         ["AMAIUR", "Orrazia, adarra, sua… eta zuek. Anbotora noa.", "", P.x, P.z, 0],
       ],
@@ -14699,7 +14766,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ["IRATI", "Amaiur! Gau osoan harrespilako harriek dardara egin dute… eta gero, trumoi bat, zerua garbi zegoen arren.", "", 0, 41, 0],
         ["AMAIUR", "Errolan, jentilen azkena. Aske dago. Ekaitz bat zeraman bularrean.", "", P.x, P.z, 0],
         ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Laugarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan, nire hiru zaindari gogorrenak zain daude.", "", P.x, P.z, 0],
+        ["GAUEKO", "Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan… nire hiru zaindari gogorrenak zain daude.", "", P.x, P.z, 0, null, "st_g4"],
         ["IRATI", "Ez gaude bakarrik: herriak berriro jotzen du txalaparta, gauez eta egunez.", "", 0, 41, 0],
         ["AMAIUR", "Jentilen zerura, beraz. Hodeien gainera.", "", P.x, P.z, 0],
       ],
@@ -14727,7 +14794,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ["IRATI", "Amaiur! Gaur euria egin du, eta euri goxoa zen, ez kazkabarra. Txalapartak lasaiago jotzen du.", "", 0, 41, 0],
         ["AMAIUR", "Odei aske dago. Trumoi bat zeraman bihotzean, Errolanek bezala.", "", P.x, P.z, 0],
         ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Bosgarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten, eta Ingumak ametsetan harrapatzen ditu ausartenak ere.", "", P.x, P.z, 0],
+        ["GAUEKO", "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere.", "", P.x, P.z, 0, null, "st_g5"],
         ["IRATI", "Ez dago bakarrik, Gaueko. Herri osoak jotzen du berarekin.", "", 0, 41, 0],
         ["AMAIUR", "Bi falta. Gero, Anbotora.", "", P.x, P.z, 0],
       ],
@@ -14755,7 +14822,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         ["IRATI", "Amaiur! Herensuge bat herriaren gainean, hegan! Haurrak oihuka atera dira… baina zuri begira zegoen, ez guri.", "", 0, 41, 0],
         ["AMAIUR", "Zazpi buru zituen, eta sei gezurrak ziren. Orain bat bakarra du: berea.", "", P.x, P.z, 0],
         ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Seigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Sei. Esna zaude oraindik, sorgin txikia? Laster lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: INGUMA.", "", P.x, P.z, 0],
+        ["GAUEKO", "Sei. Esna zaude oraindik, sorgin txikia? Laster… lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: Inguma.", "", P.x, P.z, 0, null, "st_g6"],
         ["IRATI", "Gaur gauean, ez itzali sutondoa, Amaiur. Nire amonak esaten zuen: Ingumaren aurka, kanta bat ohe ondoan.", "", 0, 41, 0],
         ["AMAIUR", "Kanta bat… Bat falta. Gero, Anbotora.", "", P.x, P.z, 0],
       ],
@@ -21876,7 +21943,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     { flag: "errolan", name: "TXIMISTA-HARRIA", text: "Errolanen ekaitz-harriaren zati bat. Eskuan, oraindik epel dago.", kind: "tximista" },
     { flag: "odei", name: "EURI-URA", text: "Odeiren lehen euri goxoa, beirazko ontzi batean. Argiak ortzadarra egiten du barruan.", kind: "euria" },
     { flag: "herensugea", name: "HERENSUGE-EZKATA", text: "Herensugearen ezkata bat, urrezkoa. Sutan jarrita ere, hotz; eskuan, bihotz baten taupadak.", kind: "ezkata" },
-    { flag: "inguma", name: "?", text: "Hutsik oraindik. Inguma, amets gaiztoen jauna.", kind: "?" },
+    { flag: "inguma", name: "AMONAREN HAUTS-ZORROA", text: "Hutsik, baina barruan izar-hauts pixka bat geratzen da: gauez, distira egiten du. Seaska-kanta, ahopean, beti.", kind: "zorroa" },
   ];
   function mementoMesh(kind) {
     const g = new T.Group();
@@ -21912,6 +21979,17 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       sc.scale.set(1, 1.35, 0.3);
       sc.position.y = 0.2;
       g.add(sc);
+    } else if (kind === "zorroa") {
+      /* hauts-zorroa: larruzko poltsa txikia, lokarria eta izar-distira */
+      const bag = new T.Mesh(new T.SphereGeometry(0.13, 12, 10), material("#7a5a3a"));
+      bag.scale.set(1, 1.15, 1);
+      bag.position.y = 0.14;
+      const neck = new T.Mesh(new T.CylinderGeometry(0.04, 0.07, 0.08, 10), material("#6a4a2a"));
+      neck.position.y = 0.3;
+      const glow = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#d9c8ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.6 }));
+      glow.position.y = 0.36;
+      glow.scale.setScalar(0.4);
+      g.add(bag, neck, glow);
     } else if (kind === "euria") {
       const jar = new T.Mesh(new T.CylinderGeometry(0.12, 0.12, 0.3, 12), new T.MeshStandardMaterial({ color: "#bfe6ff", transparent: true, opacity: 0.45, roughness: 0.1, emissive: new T.Color("#5fb8e8"), emissiveIntensity: 0.4 }));
       jar.position.y = 0.15;
@@ -22180,9 +22258,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         return say(
           [
             ["· · ·", "Amets bat. Iturralde, baina hutsik. Sutondoa itzalita. Txalapartak, urrunean, erritmo okerra jotzen du: atzekoz aurrera.", "", P.x, P.z, P.y],
-            ["???", "Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten. Entzun: «Amaiur…»", "", P.x, P.z, P.y + 2],
-            ["AMAIUR", "Irati? Ez… Zu ez zara Irati.", "", P.x, P.z, P.y],
-            ["INGUMA", "Inguma naiz. Eta gaur ez zaitut eramango. Laster, bai. Lo ona, sorgin txikia.", "", P.x, P.z, P.y + 2],
+            ["IRATI?", "Amaiur… Amaiur, esnatu. Ni naiz… Irati.", "", P.x, P.z, P.y + 2, null, "c7_p1"],
+            ["AMAIUR", "Irati? Ez… Zu ez zara Irati.", "", P.x, P.z, P.y, null, "c7_p2"],
+            ["INGUMA", "Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten.", "", P.x, P.z, P.y + 2, null, "c7_p3"],
+            ["INGUMA", "Inguma naiz. Gaur ez zaitut eramango. Laster… bai. Lo ona, sorgin txikia.", "", P.x, P.z, P.y + 2, null, "c7_p4"],
           ],
           () => {
             title(msg, "");
@@ -22193,7 +22272,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       title(msg, "");
       notify(L("Ondo lo egin duzu. Arnasa beteta."), "", 3);
     };
-    dialog(L("OHEA"), L("Lo egin?"), "", L("Amaren mantaren usaina. Kanpoan, txalapartak urrunean."), "", [
+    /* SEASKA-KANTA eta hauts-zorroa eskuan: Ingumaren ametsera (seaska.js) */
+    const dream = seaskaReady();
+    dialog(L("OHEA"), dream ? L("Ingumaren ametsa") : L("Lo egin?"), "", dream ? L("Hauts-zorroa eskuan, seaska-kanta ahopean. Lo egin, eta Ingumaren ametsera jaitsi?") : L("Amaren mantaren usaina. Kanpoan, txalapartak urrunean."), "", [
+      ...(dream ? [[L("AMETSERA"), () => setTimeout(ametsaEnter, 0)]] : []),
       [L("EGUNSENTIRA ARTE"), () => sleepTo(0.28, L("EGUN ON!"))],
       [L("ILUNABARRERA ARTE"), () => sleepTo(0.73, L("ARRATSALDE ON!"))],
       [L("EZ ORAIN"), () => {}],
@@ -22211,7 +22293,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function homeIrati() {
     const f = (k) => saved.flags.includes(k);
-    const t = f("herensugea")
+    const t = f("inguma")
+      ? L("Iratiren marrazkia: zazpi argi berde mendi baten gainean. Behean, bi ahizpa eskutik… eta haien itzala, bakarra, ilargi azpian. Lehen ez zegoen hor.")
+      : f("herensugea")
       ? L("Iratiren marrazkia, berriro: sei argi berde eta zazpigarrena, gorria. Behean, bi ahizpa… eta herensuge urre txiki bat, hegan, haien gainean.")
       : f("odei")
       ? L("Marrazkiaren ondoan, Iratiren idazkera: «Zazpi argi, eta behean bi ahizpa». Bost argi berde dira orain. Hutsuneetan, euri-tanta txiki batzuk: Iratik margotu zituen?")
@@ -22242,7 +22326,14 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       notify(L("Etxean. Sutondoan atseden; ohean, eguna edo gaua; apalean, zaindarien oroitzapenak."), "", 6);
     }
   };
-  DGE.objective = () => ["Etxean: sutondoa (atseden), ohea (eguna edo gaua), oroitzapenak. Irten atetik (hegoan).", [DGE.exitArch.x, DGE.exitArch.z, 0]];
+  DGE.objective = () => {
+    const f = (k) => saved.flags.includes(k);
+    /* zazpigarren atala: ohea (lehen amets gaiztoa, gero AMETSERA) eta, esnatu ondoren, kanpora */
+    if (DGE.bed && f("irati-herensuge") && !f("inguma-ametsa")) return ["Ohean lo egin, sutondoa piztuta.", [DGE.bed.x, DGE.bed.z, 0]];
+    if (DGE.bed && seaskaReady()) return ["Ohean: AMETSERA (Ingumaren ametsa).", [DGE.bed.x, DGE.bed.z, 0]];
+    if (f("inguma") && !f("irati-inguma")) return ["Irten kanpora (hegoko atea): Anboto aldera begiratu.", [DGE.exitArch.x, DGE.exitArch.z, 0]];
+    return ["Etxean: sutondoa (atseden), ohea (eguna edo gaua), oroitzapenak. Irten atetik (hegoan).", [DGE.exitArch.x, DGE.exitArch.z, 0]];
+  };
   /* ==================================================================
      EGUZKI-ISPILUA · Herensugearen haitzuloko tresna (diseinu propioa)
      Sabaiko arrakaletatik argia sartzen da haitzulora: IRAGANEAN eguzkia (urrea),
@@ -24426,10 +24517,12 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
      Lerroen testua lerroak.json-etik dator (build-ean txertatua): azpitituluak beti daude.
      Audioa /assets/voice/leizeak/<id>.mp3 da, behar denean kargatua; ez badago (lineaz kanpo,
      fitxategirik gabe…), testua bakarrik. Web Audio iragazkiak pertsonaiaren arabera:
-     IRATI oihartzun-harritik (banda estua eta oihartzuna), GAUEKO ilunpetik (baxuagoa, motelago,
-     erreberberazio luzea), AMAIUR hurbil eta lehor. Hitz egiten den bitartean musika jaisten da.
+     IRATI oihartzun-harritik (banda estua eta oihartzun leuna), GAUEKO ilunpetik (fitxategian bertan
+     oktaba bat beherako geruza eta eten luzeak; hemen presentzia, oihartzun laburra eta erreberberazioa,
+     distortsiorik eta abiadura-aldaketarik gabe: argi entzun behar da), INGUMA ametsetik (ahots
+     dardaratsua, modulatutako atzerapena), AMAIUR hurbil eta lehor. Hitz egitean musika jaisten da.
      ================================================================== */
-  const VOICE_LINES = {"pro_g1":["GAUEKO","Jo, txalaparta. Jo, eta deitu iezaiozu."],"pro_g2":["GAUEKO","Zazpi leize. Zazpi zaindari. Eta sorgin bakar bat."],"pro_i1":["IRATI","Amaiur. Entzuten didazu? Ez esan ezer. Entzun bakarrik."],"pro_a1":["AMAIUR","Irati…? Harriaren barruan zaude?"],"pro_i2":["IRATI","Oihartzun bat naiz. Zuk gogoratzen nauzun bitartean, hemen nago."],"pro_i3":["IRATI","Hiru gau dira txalapartak bakarrik jotzen duela. Ez da Mari. Norbaitek deitzen zaitu."],"pro_a2":["AMAIUR","Gaueko."],"pro_i4":["IRATI","Isilik. Ilunpean, izenek belarriak dituzte."],"pro_i5":["IRATI","Lehenik, argia. Piztu sutondoa zure sorginkeriaz."],"pro_i6":["IRATI","Hori da. Orain, begiratu gora, ganbarara. Nire makilak han daude oraindik."],"pro_i6b":["IRATI","Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."],"pro_i7":["IRATI","Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ez ahaztu."],"pro_a3":["AMAIUR","Atea izoztuta dago."],"pro_i8":["IRATI","Gauekoren negua da. Baina gogoratu udako atea, zabalik. Gogoratu, eta zeharkatu."],"pro_g3":["GAUEKO","Ahizpak elkarrekin, berriro. Zein polita."],"pro_i9":["IRATI","Kontuz. Gauekoren begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."],"pro_i10":["IRATI","Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."],"pro_g4":["GAUEKO","Hor zaude, sorgin txikia."],"pro_g5":["GAUEKO","Ikusten zaitut."],"pro_i11":["IRATI","Plazan, itzalak txalapartaren inguruan. Begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira."],"pro_i12":["IRATI","Finkatu bat, eta jo. Gero, hurrengoa."],"pro_i13":["IRATI","Begira, Amaiur. Egunsentia."],"pro_a4":["AMAIUR","Irati… ikusten zaitut."],"pro_i14":["IRATI","Ez naiz mamua. Oihartzuna naiz, eta egunsentian argiago entzuten naiz."],"pro_i15":["IRATI","Mari isildu egin da, eta haren leizeak itxi. Gauekoren itzalak izakiak gaiztotzen ari dira. Basajaun lehena."],"pro_i16":["IRATI","Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni hemen egongo naiz."],"pro_a5":["AMAIUR","Oraingoan ez zaitut galduko."],"pro_g6":["GAUEKO","Zatoz, sorgin. Leizeek zure izena dakite."],"dei_i1":["IRATI","Hemen nago, Amaiur. Zer behar duzu?"],"dei_i2":["IRATI","Kontuz ibili, Amaiur."],"dz_leizea1":["IRATI","Basajaunen leizea. Basoaren bihotza da, Amaiur. Itzalak barruan daude."],"dz_leizea2":["IRATI","Sutegiak itzalita? Badakizu zer egin. Eta gogoratu: begien kolorea, garaia."],"dz_lamia1":["IRATI","Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."],"dz_lamia2":["IRATI","Izotza orainekoa da. Iraganean, ura dabil. Bilatu bidea bietan."],"dz_tartalo1":["IRATI","Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."],"dz_tartalo2":["GAUEKO","Ilunpea nire etxea da, sorgin. Ongi etorri."],"dz_tartalo3":["IRATI","Ez entzun. Argia da hemen zure armarik onena."],"dz_jentil1":["IRATI","Jentilbaratza. Jentilak harri bihurtu ziren, zeruan argi bitxi bat ikusi zutenean."],"dz_jentil2":["IRATI","Harri hauek gogoratzen dute. Entzun, eta jo."],"dz_zerua1":["IRATI","Hodeien gainean zaude, Amaiur. Ez begiratu behera."],"dz_zerua2":["IRATI","Haizeak gora eramango zaitu. Fidatu enararen hegoez."],"dz_herensuge1":["IRATI","Herensugearen haitzuloa. Beroa sentitzen dut hemendik ere."],"dz_herensuge2":["GAUEKO","Zazpi buru, zazpi gezur. Zein da egia, sorgin?"],"dz_herensuge3":["IRATI","Argiak erakutsiko dizu. Beti erakusten du."]};
+  const VOICE_LINES = {"pro_g1":["GAUEKO","Jo, txalaparta… Jo. Eta deitu iezaiozu."],"pro_g2":["GAUEKO","Zazpi leize. Zazpi zaindari… Eta sorgin bakar bat."],"pro_i1":["IRATI","Amaiur. Entzuten didazu? Ez esan ezer. Entzun bakarrik."],"pro_a1":["AMAIUR","Irati…? Harriaren barruan zaude?"],"pro_i2":["IRATI","Oihartzun bat naiz. Zuk gogoratzen nauzun bitartean, hemen nago."],"pro_i3":["IRATI","Hiru gau dira txalapartak bakarrik jotzen duela. Ez da Mari. Norbaitek deitzen zaitu."],"pro_a2":["AMAIUR","Gaueko."],"pro_i4":["IRATI","Isilik. Ilunpean, izenek belarriak dituzte."],"pro_i5":["IRATI","Lehenik, argia. Piztu sutondoa zure sorginkeriaz."],"pro_i6":["IRATI","Hori da. Orain, begiratu gora, ganbarara. Nire makilak han daude oraindik."],"pro_i6b":["IRATI","Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."],"pro_i7":["IRATI","Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ez ahaztu."],"pro_a3":["AMAIUR","Atea izoztuta dago."],"pro_i8":["IRATI","Gauekoren negua da. Baina gogoratu udako atea, zabalik. Gogoratu, eta zeharkatu."],"pro_g3":["GAUEKO","Ahizpak elkarrekin… berriro. Zein polita."],"pro_i9":["IRATI","Kontuz. Gauekoren begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."],"pro_i10":["IRATI","Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."],"pro_g4":["GAUEKO","Hor zaude… sorgin txikia."],"pro_g5":["GAUEKO","Ikusten… zaitut."],"pro_i11":["IRATI","Plazan, itzalak txalapartaren inguruan. Begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira."],"pro_i12":["IRATI","Finkatu bat, eta jo. Gero, hurrengoa."],"pro_i13":["IRATI","Begira, Amaiur. Egunsentia."],"pro_a4":["AMAIUR","Irati… ikusten zaitut."],"pro_i14":["IRATI","Ez naiz mamua. Oihartzuna naiz, eta egunsentian argiago entzuten naiz."],"pro_i15":["IRATI","Mari isildu egin da, eta haren leizeak itxi. Gauekoren itzalak izakiak gaiztotzen ari dira. Basajaun lehena."],"pro_i16":["IRATI","Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni hemen egongo naiz."],"pro_a5":["AMAIUR","Oraingoan ez zaitut galduko."],"pro_g6":["GAUEKO","Zatoz, sorgin. Leizeek… zure izena dakite."],"dei_i1":["IRATI","Hemen nago, Amaiur. Zer behar duzu?"],"dei_i2":["IRATI","Kontuz ibili, Amaiur."],"dz_leizea1":["IRATI","Basajaunen leizea. Basoaren bihotza da, Amaiur. Itzalak barruan daude."],"dz_leizea2":["IRATI","Sutegiak itzalita? Badakizu zer egin. Eta gogoratu: begien kolorea, garaia."],"dz_lamia1":["IRATI","Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."],"dz_lamia2":["IRATI","Izotza orainekoa da. Iraganean, ura dabil. Bilatu bidea bietan."],"dz_tartalo1":["IRATI","Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."],"dz_tartalo2":["GAUEKO","Ilunpea nire etxea da, sorgin. Ongi… etorri."],"dz_tartalo3":["IRATI","Ez entzun. Argia da hemen zure armarik onena."],"dz_jentil1":["IRATI","Jentilbaratza. Jentilak harri bihurtu ziren, zeruan argi bitxi bat ikusi zutenean."],"dz_jentil2":["IRATI","Harri hauek gogoratzen dute. Entzun, eta jo."],"dz_zerua1":["IRATI","Hodeien gainean zaude, Amaiur. Ez begiratu behera."],"dz_zerua2":["IRATI","Haizeak gora eramango zaitu. Fidatu enararen hegoez."],"dz_herensuge1":["IRATI","Herensugearen haitzuloa. Beroa sentitzen dut hemendik ere."],"dz_herensuge2":["GAUEKO","Zazpi buru. Zazpi gezur… Zein da egia, sorgin?"],"dz_herensuge3":["IRATI","Argiak erakutsiko dizu. Beti erakusten du."],"c7_i1":["IRATI","Inguma… Amonak ez zuen inoiz haren izena ozen esaten."],"c7_a1":["AMAIUR","Nire ametsetan sartu da. Zure ahotsa egiten zuen, Irati."],"c7_i2":["IRATI","Orduan, entzun ondo: Ingumak dena kontatu behar du. Izarrak, belarrak, hareak… Kontatzen ari den bitartean, ezin du inor ukitu."],"c7_i3":["IRATI","Amonaren seaska-kantak hiru bertso zituen. Bat Kattalinek daki, bestea Txominek. Hirugarrena… jentil zaharrak, gauez, izarren azpian."],"c7_i4":["IRATI","Hiru bertsoak. Orain, kantatu nirekin: txalapartak gogoratuko du."],"c7_i5":["IRATI","Eta hau: amonaren hauts-zorroa. Izar-hautsa. Bota Ingumari, eta kontatzen hasiko da."],"c7_a2":["AMAIUR","Gaur gauean lo egingo dut. Eta haren ametsean sartuko naiz."],"c7_i6":["IRATI","Ez fidatu nire ahotsaz ametsean, Amaiur. Benetako Iratik ez du inoiz zure izena oihukatzen."],"c7_n1":["INGUMA","Ongi etorri nire etxera, sorgin txikia. Hemen, denbora ez da igarotzen."],"c7_f1":["IRATI?","Amaiur! Amaiur, hemen nago! Etorri, azkar!"],"c7_a3":["AMAIUR","Irati ez da inoiz oihuka aritzen. Zu ez zara bera."],"c7_n2":["INGUMA","Azkarra zara. Baina ametsean… dena da nirea."],"c7_n3":["INGUMA","Lo zaude, Amaiur. Eta lo dagoenak… ez du borrokatzen."],"c7_a4":["AMAIUR","Zeruan izarrak. Lurrean belarrak. Itsasoan hareak. Kontatu, Inguma!"],"c7_n4":["INGUMA","Bat, bi, hiru… Ez! Ez dut kontatu nahi!"],"c7_n5":["INGUMA","Zure ahizpa ere hemen dago, ametsen azpian. Entzun!"],"c7_n6":["INGUMA","Seaska-kanta… Ez! Ez kantatu hori!"],"c7_n7":["INGUMA","Lo… lo egingo dut… betiko…"],"c7_i7":["IRATI","Amaiur. Esnatu. Egunsentia da. Zazpigarren argia… berdea."],"c7_a5":["AMAIUR","Zazpi zaindari aske. Orain, Gaueko."],"c7_g1":["GAUEKO","Zazpi argi… Ondo, sorgin. Etorri Anbotora. Zure ahizpa… nirekin dago."],"c7_a6":["AMAIUR","Irati…?"],"c7_i8":["IRATI","Amaiur… ez dakit nola esan. Oihartzun bat baino gehiago naiz. Eta Gauekok badaki."],"st_g1":["GAUEKO","Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik."],"st_g3":["GAUEKO","Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean… ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan."],"st_g4":["GAUEKO","Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan… nire hiru zaindari gogorrenak zain daude."],"st_g5":["GAUEKO","Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere."],"st_g6":["GAUEKO","Sei. Esna zaude oraindik, sorgin txikia? Laster… lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: Inguma."],"c7_p1":["IRATI?","Amaiur… Amaiur, esnatu. Ni naiz… Irati."],"c7_p2":["AMAIUR","Irati? Ez… Zu ez zara Irati."],"c7_p3":["INGUMA","Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten."],"c7_p4":["INGUMA","Inguma naiz. Gaur ez zaitut eramango. Laster… bai. Lo ona, sorgin txikia."]};
   const VOICE = { base: "/assets/voice/leizeak/", buf: new Map(), wait: new Map(), cur: null, an: null, data: null, chains: {}, level: 0 };
   const voiceLine = (id) => VOICE_LINES[id] || ["", ""];
   function voiceLoad(id) {
@@ -24458,7 +24551,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   const voiceReady = (id) => VOICE.buf.has(id) || !SND.ctx;
   /* pertsonaia bakoitzaren katea (behin sortua) → analizatzailea → bus nagusia */
   function voiceChain(who) {
-    const k = who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") || who.startsWith("INGUMA") ? "gaueko" : "dry";
+    const k = who.startsWith("INGUMA") || who === "IRATI?" ? "inguma" : who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") ? "gaueko" : "dry";
     if (VOICE.chains[k]) return VOICE.chains[k];
     const ctx = SND.ctx,
       N = SND.voiceNodes();
@@ -24480,15 +24573,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         fb = ctx.createGain(),
         wet = ctx.createGain();
       hp.type = "highpass";
-      hp.frequency.value = 240;
+      hp.frequency.value = 180;
       pk.type = "peaking";
       pk.frequency.value = 2300;
-      pk.gain.value = 4;
+      pk.gain.value = 3;
       lp.type = "lowpass";
-      lp.frequency.value = 6200;
+      lp.frequency.value = 7200;
       dl.delayTime.value = 0.17;
-      fb.gain.value = 0.28;
-      wet.gain.value = 0.32;
+      fb.gain.value = 0.2;
+      wet.gain.value = 0.2;
       input.connect(hp).connect(pk).connect(lp);
       lp.connect(VOICE.an);
       lp.connect(dl);
@@ -24497,31 +24590,58 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       send.gain.value = 0.3;
       lp.connect(send);
     } else if (k === "gaueko") {
-      /* ilunpetik: baxuak indartuta, distortsio leuna eta erreberberazio handia */
-      const ls = ctx.createBiquadFilter(),
-        ws = ctx.createWaveShaper(),
-        lp = ctx.createBiquadFilter();
+      /* ilunpetik, baina argi: baxu leunak, presentzia (kontsonanteak), oihartzun labur bat eta
+         erreberberazio neurritsua. Sakontasuna fitxategian dago (oktaba beherako geruza). */
+      const hp = ctx.createBiquadFilter(),
+        ls = ctx.createBiquadFilter(),
+        pk = ctx.createBiquadFilter(),
+        lp = ctx.createBiquadFilter(),
+        dl = ctx.createDelay(1),
+        wet = ctx.createGain();
+      hp.type = "highpass";
+      hp.frequency.value = 55;
       ls.type = "lowshelf";
-      ls.frequency.value = 200;
-      ls.gain.value = 6;
-      const c = new Float32Array(512);
-      for (let i = 0; i < 512; i++) {
-        const x = (i / 511) * 2 - 1;
-        c[i] = Math.tanh(x * 1.6) / Math.tanh(1.6);
-      }
-      ws.curve = c;
+      ls.frequency.value = 160;
+      ls.gain.value = 2;
+      pk.type = "peaking";
+      pk.frequency.value = 2600;
+      pk.Q.value = 1;
+      pk.gain.value = 3;
       lp.type = "lowpass";
-      lp.frequency.value = 5200;
-      input.connect(ls).connect(ws).connect(lp);
+      lp.frequency.value = 9500;
+      dl.delayTime.value = 0.095;
+      wet.gain.value = 0.14;
+      input.connect(hp).connect(ls).connect(pk).connect(lp);
       lp.connect(VOICE.an);
-      send.gain.value = 0.75;
+      lp.connect(dl).connect(wet).connect(VOICE.an);
+      send.gain.value = 0.35;
       lp.connect(send);
+    } else if (k === "inguma") {
+      /* ametsetik: ahotsa dardaraka (atzerapen modulatua) eta erreberberazio luzea */
+      const hp = ctx.createBiquadFilter(),
+        dl = ctx.createDelay(0.1),
+        lfo = ctx.createOscillator(),
+        depth = ctx.createGain(),
+        wet = ctx.createGain();
+      hp.type = "highpass";
+      hp.frequency.value = 140;
+      dl.delayTime.value = 0.012;
+      lfo.frequency.value = 0.7;
+      depth.gain.value = 0.004;
+      lfo.connect(depth).connect(dl.delayTime);
+      lfo.start();
+      wet.gain.value = 0.55;
+      input.connect(hp);
+      hp.connect(VOICE.an);
+      hp.connect(dl).connect(wet).connect(VOICE.an);
+      send.gain.value = 0.6;
+      hp.connect(send);
     } else {
       input.connect(VOICE.an);
       send.gain.value = 0.1;
       input.connect(send);
     }
-    return (VOICE.chains[k] = { input, rate: k === "gaueko" ? 0.92 : 1 });
+    return (VOICE.chains[k] = { input, rate: 1 });
   }
   /* jo: iraupena (s) itzultzen du; 0 audiorik ez badago */
   function voicePlay(id) {
@@ -24845,6 +24965,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   const CALL_TEST = new URLSearchParams(location.search).has("test");
   function zoneEntered(id) {
     if (!FILM.on) locCaption(id);
+    /* Inguma garaituta: etxetik irtetean, zazpigarren argia (seaska.js) */
+    if (id === "ibarra" && saved.flags.includes("inguma") && !saved.flags.includes("irati-inguma")) setTimeout(ingumaFinale, 1400);
     const lines = ZONE_CALLS[id];
     /* probetan (?test) deirik ez, eskatu ezean (window.__calls): botak ez eteteko */
     if (!lines || PRO.on || saved.flags.includes("deia-" + id) || (CALL_TEST && !window.__calls)) return;
@@ -25428,6 +25550,1574 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (!proFlag("pro-plaza")) return ["Plazako itzalak garbitu. Urrezko begiak: IRAGANA.", [TXALA.spots[0].x, TXALA.spots[0].z, 0]];
     return ["Egunsentia.", null];
   }
+  /* ==================================================================
+     IZAR-HAUTSA · amonaren hauts-zorroa (ametseko tresna, diseinu propioa)
+     Ingumaren aurkako konjuru zaharrak dio: «zeruan izarrak, lurrean belarrak,
+     itsasoan hareak: denak kontatu arte, ez etorri enegana». Gaueko izakiek
+     ezin diote kontatzeari utzi: Z (edo IZARRAK botoia) → hauts-eskukada aurrera:
+     · itzalak, saguzarrak, mamuak… KONTATZEN geratzen dira (geldi, kalte bikoitza);
+     · IZAR-LAINOAN (ametsa leun dagoen tokietan) hautsak izar-plataforma bat
+       sortzen du jaurti den altueran: zubiak hutsunean, eta jauziaren goienean
+       jaurtiz gero, izar-eskailerak. Hiru gehienez, bost segundoz.
+     ================================================================== */
+  const HAUTS = { list: [], plats: [], mists: [], cd: 0, n: 0, mat: null, geo: null, counted: 0 };
+  const hasDust = () => saved.items.includes("hautsa");
+  const DUST_REACH = 2.5,
+    DUST_R = 1.8,
+    DUST_LIFE = 5,
+    DUST_MAX = 3;
+  /* izar-lainoa: { x, z, w, d, y0, y1 } — barruan, hautsak plataformak sortzen ditu */
+  function starMist(o) {
+    const M = { x: o.x, z: o.z, w: o.w, d: o.d, y0: o.y0 ?? -6, y1: o.y1 ?? 30, group: BP, puffs: [] };
+    /* distira leuna: zenbait sprite (lainoa) eta izar txikiak */
+    const n = Math.max(3, Math.round((o.w * o.d) / 40));
+    for (let i = 0; i < n; i++) {
+      const s = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#9d7bff", transparent: true, opacity: 0.12, blending: T.AdditiveBlending, depthWrite: false, fog: false }));
+      const px = o.x + (((i * 37) % 17) / 17 - 0.5) * o.w * 0.9,
+        pz = o.z + (((i * 53) % 13) / 13 - 0.5) * o.d * 0.9,
+        py = M.y0 + 1 + ((i * 29) % 11) / 11 * Math.min(10, M.y1 - M.y0);
+      s.position.set(px, py, pz);
+      s.scale.setScalar(5 + (i % 3) * 2);
+      BP.add(s);
+      M.puffs.push({ s, y0: py, ph: i * 1.7 });
+    }
+    HAUTS.mists.push(M);
+    return M;
+  }
+  const inMist = (x, y, z) => HAUTS.mists.find((M) => M.group === ZONES[ZONE.cur].group && Math.abs(x - M.x) < M.w / 2 && Math.abs(z - M.z) < M.d / 2 && y > M.y0 && y < M.y1) || null;
+  /* jaurti: helburua aurrean (etsai bat konoan badago, harengana) */
+  function dustThrow() {
+    if (!hasDust() || !started || paused || TXALA.on || CRAFT.on || cinematic || respawnTimer || GET.on || P.climb || P.riding || CHAIN.state !== "idle") return;
+    if (HAUTS.cd > 0) return;
+    HAUTS.cd = 0.4;
+    HAUTS.n++;
+    const fa = faceDir(),
+      fx = Math.sin(fa),
+      fz = Math.cos(fa);
+    let tx = P.x + fx * DUST_REACH,
+      tz = P.z + fz * DUST_REACH,
+      ty = P.y;
+    /* etsai hurbila konoan: harengana (kontatzera) */
+    let best = null,
+      bd = 9;
+    for (const e of ENEMIES) {
+      if (e.state === "dead" || e.state === "spawn") continue;
+      const dx = e.x - P.x,
+        dz = e.z - P.z,
+        d = Math.hypot(dx, dz);
+      if (d < bd && d > 0.5 && (dx * fx + dz * fz) / d > 0.6 && Math.abs(e.y - P.y) < 4) (bd = d), (best = e);
+    }
+    /* etsai nagusia (eta haren kopiak): BOSSK[kind].dustAim() → [{x, y, z}] */
+    const BK = BOSS.on && BOSSK[BOSS.kind];
+    if (BK && BK.dustAim)
+      for (const c of BK.dustAim()) {
+        const dx = c.x - P.x,
+          dz = c.z - P.z,
+          d = Math.hypot(dx, dz);
+        if (d < (best ? bd : 14) && d > 0.5 && (dx * fx + dz * fz) / d > 0.55 && Math.abs(c.y - P.y) < 7) (bd = d), (best = c);
+      }
+    if (best && !inMist(tx, ty + 0.5, tz)) {
+      tx = best.x;
+      tz = best.z;
+      ty = best.y;
+    }
+    P.angle = Math.atan2(tx - P.x, tz - P.z);
+    MAG.aimT = 0.25;
+    /* airean, izar-lainoan: izarra berehala oinen azpian (izar-eskailerak) */
+    if (!P.grounded && inMist(P.x, P.y, P.z)) {
+      const M = inMist(P.x, P.y, P.z),
+        p = starPlatform(P.x + fx * 0.5, Math.max(M.y0 + 0.5, P.y - 0.05), P.z + fz * 0.5);
+      p.t = 0.6;
+      if (P.vy < 0) P.vy = 0;
+      fxBurst(P.x, P.y, P.z, { n: 20, speed: 3, up: 0.5, life: 0.6, size: 0.18, color: "#e9dcff", grav: 1 });
+      castAnim("Spellcast_Shoot", 2.6, 5);
+      SND.dust ? SND.dust() : SND.cast();
+      coachDone("hautsa");
+      return;
+    }
+    const s = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#e6d8ff", transparent: true, opacity: 0.95, blending: T.AdditiveBlending, depthWrite: false }));
+    s.scale.setScalar(1.1);
+    const o = { x: P.x + fx * 0.5, y: P.y + 1.4, z: P.z + fz * 0.5 };
+    s.position.set(o.x, o.y, o.z);
+    ZONES[ZONE.cur].group.add(s);
+    HAUTS.list.push({ s, o, tx, ty, tz, t: 0, T: best ? clamp(bd / 14, 0.18, 0.5) : 0.22, grp: ZONES[ZONE.cur].group, py: P.y });
+    castAnim("Spellcast_Shoot", 2.6, 5);
+    SND.dust ? SND.dust() : SND.cast();
+    coachDone("hautsa");
+  }
+  /* lehertzean: izar-plataforma (lainoan) eta kontatzaileak */
+  function dustBurst(D) {
+    const { tx, tz } = D,
+      ty = D.ty;
+    fxBurst(tx, ty + 1, tz, { n: 26, speed: 3.6, up: 1.2, life: 0.8, size: 0.2, color: "#e9dcff", grav: 0.6 });
+    fxRing(tx, ty + 0.2, tz, "#b99bff", 2.6, 0.45);
+    /* kontatu! (gaueko izakiak) */
+    let n = 0;
+    for (const e of ENEMIES) {
+      if (e.state === "dead" || e.state === "spawn") continue;
+      if (Math.hypot(e.x - tx, e.z - tz) < 2.8 && Math.abs(e.y - ty) < 3.5) {
+        dustCount(e, e.mini ? 2.5 : 4.2);
+        n++;
+      }
+    }
+    if (BOSS.on && BOSSK[BOSS.kind] && BOSSK[BOSS.kind].dust) n += BOSSK[BOSS.kind].dust(tx, ty, tz) || 0;
+    for (const G of DUST_GATES) if (G.group === ZONES[ZONE.cur].group && Math.hypot(G.x - tx, G.z - tz) < G.r + 2.5) (gateCount(G), n++);
+    if (n) notifyOnce("kontatu", L("«Denak kontatu arte, ez etorri enegana!» — kontatzen ari dira: orain, kalte bikoitza."), "");
+    /* izar-plataforma */
+    const M = inMist(tx, ty + 0.5, tz);
+    if (M) starPlatform(tx, Math.max(M.y0 + 0.5, ty), tz);
+  }
+  function dustCount(e, secs) {
+    e.counting = Math.max(e.counting || 0, secs);
+    e.countN = e.countN || 0;
+    e.countT = 0;
+    e.stun = Math.max(e.stun, secs);
+    e.parried = Math.max(e.parried || 0, secs);
+    if (e.state === "lunge" || e.state === "wind" || e.state === "grab") (e.state = e.type === "bat" ? "hover" : "recover"), (e.t = -secs);
+    HAUTS.counted++;
+  }
+  /* ---- izar-plataformak ---- */
+  function starPlatform(x, y, z) {
+    if (!HAUTS.geo) {
+      HAUTS.geo = new T.CylinderGeometry(DUST_R, DUST_R * 0.82, 0.3, 24);
+      HAUTS.mat = new T.MeshStandardMaterial({ color: "#3a2a6a", emissive: new T.Color("#7a5cff"), emissiveIntensity: 0.9, transparent: true, opacity: 0.55, roughness: 0.3 });
+    }
+    while (HAUTS.plats.length >= DUST_MAX) starPlatformRemove(HAUTS.plats[0]);
+    const g = new T.Group();
+    g.position.set(x, y, z);
+    const disc = new T.Mesh(HAUTS.geo, HAUTS.mat.clone());
+    disc.position.y = -0.15;
+    g.add(disc);
+    /* konstelazioa: izar-puntuak diskoan */
+    const pts = [];
+    for (let i = 0; i < 9; i++) {
+      const a = i * 2.39996,
+        r = DUST_R * 0.92 * Math.sqrt((i + 0.5) / 9);
+      pts.push(Math.cos(a) * r, 0.04, Math.sin(a) * r);
+    }
+    const pg = new T.BufferGeometry();
+    pg.setAttribute("position", new T.Float32BufferAttribute(pts, 3));
+    const stars = new T.Points(pg, new T.PointsMaterial({ color: "#fff6d8", size: 0.34, transparent: true, opacity: 0.95, depthWrite: false, blending: T.AdditiveBlending }));
+    g.add(stars);
+    const lines = new T.LineLoop(pg, new T.LineBasicMaterial({ color: "#c9b6ff", transparent: true, opacity: 0.5 }));
+    g.add(lines);
+    ZONES[ZONE.cur].group.add(g);
+    const p = { x, z, y, bottom: y - 0.4, rx: DUST_R, rz: DUST_R, phase: -1, safe: false, star: true, m: g, disc, t: 0, grp: ZONES[ZONE.cur].group, list: ZONES[ZONE.cur].platforms };
+    p.list.push(p);
+    HAUTS.plats.push(p);
+    SND.chime ? SND.chime() : SND.ready();
+    return p;
+  }
+  function starPlatformRemove(p) {
+    const i = p.list.indexOf(p);
+    if (i >= 0) p.list.splice(i, 1);
+    const j = HAUTS.plats.indexOf(p);
+    if (j >= 0) HAUTS.plats.splice(j, 1);
+    p.m.parent && p.m.parent.remove(p.m);
+    p.disc.material.dispose();
+    if (P.platform === p) P.grounded = false;
+    fxBurst(p.x, p.y + 0.2, p.z, { n: 14, speed: 1.6, up: 0.4, life: 0.6, size: 0.16, color: "#c9b6ff", grav: 2 });
+  }
+  /* ---- ATE-ZAINAK: harrizko bi zaindari pasabidea ixten; hautsarekin kontatzen hasten dira eta aldentzen ---- */
+  const DUST_GATES = [];
+  function dustGate(o) {
+    /* o: { x, z, y, w (pasabidearen zabalera), rot } */
+    const y = o.y || 0,
+      w = o.w || 4,
+      rot = o.rot || 0,
+      c = Math.cos(rot),
+      s = Math.sin(rot);
+    const G = { x: o.x, z: o.z, y, w, rot, r: w / 2, k: 0, t: 0, group: BP, guards: [], wall: null, n: 0 };
+    for (const sd of [-1, 1]) {
+      const g = new T.Group(),
+        stone = rockMaterial();
+      const body = new T.Mesh(new T.CylinderGeometry(0.75, 1, 3.4, 8), stone);
+      body.position.y = 1.7;
+      body.castShadow = true;
+      g.add(body);
+      const head = new T.Mesh(new T.DodecahedronGeometry(0.75, 0), stone);
+      head.position.y = 3.9;
+      g.add(head);
+      for (const ex of [-0.25, 0.25]) {
+        const eye = new T.Mesh(new T.SphereGeometry(0.09, 8, 6), new T.MeshBasicMaterial({ color: "#b99bff" }));
+        eye.position.set(ex, 4, 0.66);
+        g.add(eye);
+      }
+      g.rotation.y = rot;
+      BP.add(g);
+      G.guards.push({ g, sd, eye: g.children.slice(2) });
+    }
+    /* talka: pasabidea itxita (ate-zainak elkarren ondoan) */
+    G.wall = wallBlock(o.x, o.z, w, 1.2, rot, y, 5);
+    DUST_GATES.push(G);
+    gatePose(G);
+    return G;
+  }
+  function gatePose(G) {
+    const c = Math.cos(G.rot),
+      s = Math.sin(G.rot);
+    for (const Q of G.guards) {
+      /* itxita: erdian elkarrekin (±0.9); irekita: alboetara (±w/2 + 1) */
+      const off = Q.sd * mix(0.95, G.w / 2 + 1.3, G.k);
+      Q.g.position.set(G.x + c * off, G.y, G.z - s * off);
+    }
+    G.wall.off = G.k > 0.6;
+  }
+  function gateCount(G) {
+    if (G.t > 0.5) {
+      G.t = 6.5;
+      return;
+    }
+    G.t = 6.5;
+    G.n = 0;
+    SND.wake();
+    notifyOnce("ate-zainak", L("Ate-zainak kontatzen hasi dira! Pasa, kontatzen amaitu aurretik."), "");
+  }
+  function gatesUpdate(dt) {
+    for (const G of DUST_GATES) {
+      if (G.group !== ZONES[ZONE.cur].group) continue;
+      const was = G.t;
+      G.t = Math.max(0, G.t - dt);
+      G.k = mix(G.k, G.t > 0 ? 1 : 0, 1 - Math.exp(-dt * (G.t > 0 ? 5 : 3)));
+      /* itxi ez, Amaiur erdian badago */
+      if (G.t <= 0 && G.k > 0.05 && Math.hypot(P.x - G.x, P.z - G.z) < G.w / 2 + 0.4) G.k = Math.max(G.k, 0.7);
+      gatePose(G);
+      if (G.t > 0 && Math.floor(was * 2) !== Math.floor(G.t * 2)) {
+        G.n++;
+        for (const Q of G.guards) damageNumber({ x: Q.g.position.x, y: G.y + 3.4, z: Q.g.position.z, H: 0.5 }, String(G.n), "#d9c8ff");
+      }
+      for (const Q of G.guards) for (const e of Q.eye) e.material.color.set(G.t > 0 ? "#fff1a8" : "#b99bff");
+    }
+  }
+  /* ---------------------------- eguneratzea ---------------------------- */
+  function hautsaUpdate(dt) {
+    HAUTS.cd = Math.max(0, HAUTS.cd - dt);
+    /* hegaldian */
+    for (let i = HAUTS.list.length - 1; i >= 0; i--) {
+      const D = HAUTS.list[i];
+      D.t += dt;
+      const k = Math.min(1, D.t / D.T);
+      D.s.position.set(mix(D.o.x, D.tx, k), mix(D.o.y, D.ty + 0.8, k) + Math.sin(k * PI) * 0.8, mix(D.o.z, D.tz, k));
+      if (frame % 2 === 0) fxBurst(D.s.position.x, D.s.position.y, D.s.position.z, { n: 2, speed: 0.4, life: 0.4, size: 0.12, color: "#e6d8ff", grav: 0.5, drag: 3 });
+      if (k >= 1) {
+        D.s.parent && D.s.parent.remove(D.s);
+        D.s.material.dispose();
+        HAUTS.list.splice(i, 1);
+        if (D.grp === ZONES[ZONE.cur].group) dustBurst(D);
+      }
+    }
+    /* izar-plataformak: bizitza, keinuka amaieran */
+    for (let i = HAUTS.plats.length - 1; i >= 0; i--) {
+      const p = HAUTS.plats[i];
+      if (p.grp !== ZONES[ZONE.cur].group) {
+        starPlatformRemove(p);
+        continue;
+      }
+      /* gainean zaudenean, astiroago */
+      p.t += dt * (P.platform === p ? 0.6 : 1);
+      const left = DUST_LIFE - p.t;
+      p.disc.material.opacity = left < 1.2 ? (Math.sin(time * 28) > 0 ? 0.55 : 0.12) : 0.55;
+      p.m.rotation.y += dt * 0.4;
+      if (left <= 0) starPlatformRemove(p);
+    }
+    /* lainoak: kulunka */
+    for (const M of HAUTS.mists) {
+      if (M.group !== ZONES[ZONE.cur].group) continue;
+      for (const q of M.puffs) {
+        q.s.position.y = q.y0 + Math.sin(time * 0.6 + q.ph) * 0.5;
+        q.s.material.opacity = 0.1 + Math.sin(time * 0.9 + q.ph) * 0.04;
+      }
+      if (Math.random() < dt * 4) fxBurst(M.x + (Math.random() - 0.5) * M.w, M.y0 + 1 + Math.random() * 6, M.z + (Math.random() - 0.5) * M.d, { n: 1, speed: 0.2, up: 0.3, life: 1.6, size: 0.1, color: "#d9c8ff", grav: -0.1, drag: 1 });
+    }
+    /* kontatzaileak: zenbakiak buruaren gainean */
+    for (const e of ENEMIES) {
+      if (!(e.counting > 0) || e.state === "dead") continue;
+      e.counting -= dt;
+      e.countT = (e.countT || 0) + dt;
+      e.stun = Math.max(e.stun, Math.min(0.2, e.counting));
+      if (e.countT > 0.5) {
+        e.countT = 0;
+        e.countN = (e.countN || 0) + 1;
+        damageNumber(e, String(e.countN), "#d9c8ff");
+      }
+    }
+    gatesUpdate(dt);
+  }
+  /* IZARRAK botoia (ctxPower): hautsak zerbait egingo luke hemen? */
+  function dustUseful() {
+    const grp = ZONES[ZONE.cur].group;
+    if (HAUTS.mists.some((M) => M.group === grp && Math.abs(P.x - M.x) < M.w / 2 + 5 && Math.abs(P.z - M.z) < M.d / 2 + 5)) return true;
+    if (DUST_GATES.some((G) => G.group === grp && G.t <= 0 && Math.hypot(G.x - P.x, G.z - P.z) < 9)) return true;
+    if (BOSS.on && BOSSK[BOSS.kind] && BOSSK[BOSS.kind].dust) return true;
+    return ZONE.cur === "ametsa" && ENEMIES.some((e) => e.state !== "dead" && !(e.counting > 0) && Math.hypot(e.x - P.x, e.z - P.z) < 10);
+  }
+  function hautsaReset() {
+    for (const p of HAUTS.plats.slice()) starPlatformRemove(p);
+    for (const D of HAUTS.list) D.s.parent && D.s.parent.remove(D.s);
+    HAUTS.list.length = 0;
+  }
+  /* ==================================================================
+     SEASKA-KANTA · zazpigarren ataleko bidea (diseinu propioa, euskal ohitura zaharrean oinarritua)
+     Herri-konjuru zaharrak dio Ingumak dena kontatu behar duela etxera sartu aurretik:
+     zeruko izarrak, lurreko belarrak, itsasoko hareak. Amonaren seaska-kantak hiru bertso zituen:
+       · LURREAN BELARRAK ... Kattalinek daki (belar-biltzailea)
+       · ITSASOAN HAREAK .... Txominek (arrantzalea, kaian)
+       · ZERUAN IZARRAK ..... jentil zaharrak, GAUEZ bakarrik (izarrik gabe, ez dago bertsorik)
+     Hiru bertsoekin, Iratik SEASKA erritmoa irakasten du eta amonaren hauts-zorroa ematen
+     (IZAR-HAUTSA). Gauez, Iturralden lo egin → AMETSA (ametsa.js). Ingumaren ondoren: esnatu,
+     zazpigarren argia berde… eta Gauekoren deia (Anbotora).
+     Banderak: inguma-ametsa → seaska → bertso-belar / bertso-hare / bertso-izar → seaska-kanta
+     → ametsa → inguma → irati-inguma.
+     ================================================================== */
+  const BERTSOAK = [
+    { flag: "bertso-belar", name: "LURREAN BELARRAK", text: "«Lurrean belarrak, baso eta larreetan: kontatu, Inguma, belar guztiak banan-banan.»", who: "Kattalin" },
+    { flag: "bertso-hare", name: "ITSASOAN HAREAK", text: "«Itsasoan hareak, hondartzan eta hondoan: kontatu, Inguma, hare-ale guztiak.»", who: "Txomin" },
+    { flag: "bertso-izar", name: "ZERUAN IZARRAK", text: "«Zeruan izarrak, ortzi osoan: kontatu, Inguma, izar guztiak, bat bera ahaztu gabe.»", who: "jentil zaharra (gauez)" },
+  ];
+  const bertsoCount = () => BERTSOAK.filter((B) => saved.flags.includes(B.flag)).length;
+  /* bertso bat jaso (une berezia) */
+  function bertsoGet(flagId, after) {
+    const B = BERTSOAK.find((b) => b.flag === flagId);
+    if (!B || saved.flags.includes(flagId)) return after && after();
+    flagSet(flagId);
+    const n = bertsoCount();
+    itemGet("bertsoa", L("BERTSOA: ") + B.name, B.text + "  (" + n + " / 3)", () => {
+      if (n >= 3) notify(L("Hiru bertsoak! Itzuli Iratirengana, plazara."), "", 5);
+      else notify(L("Bertsoak: ") + n + " / 3 · " + BERTSOAK.filter((b) => !saved.flags.includes(b.flag)).map((b) => b.who).join(", "), "", 5);
+      if (after) after();
+    });
+  }
+  /* herritarren adarrak (talkKattalin / talkTxomin / talkJentil-etik): true → kudeatuta */
+  function seaskaTalk(N, f) {
+    if (!f("seaska") || f("seaska-kanta")) return false;
+    if (N.id === "kattalin" && !f("bertso-belar")) {
+      talk(
+        N,
+        [
+          ["KATTALIN", "Amonaren seaska-kanta? Andere ere kantatzen zuen, belarrak lehortzen genituenean… Itxaron. Gogoratzen dut."],
+          ["KATTALIN", "«Lurrean belarrak, baso eta larreetan…» Ingumak belar bakoitza kontatu behar du. Horregatik ez zuen inoiz amaitzen."],
+        ],
+        () => bertsoGet("bertso-belar"),
+      );
+      return true;
+    }
+    if (N.id === "txomin" && !f("bertso-hare")) {
+      talk(
+        N,
+        [
+          ["TXOMIN", "Seaska-kanta… Zure amonak kantatzen zigun, txikitan, kaian, sareak josten genituen bitartean."],
+          ["TXOMIN", "«Itsasoan hareak, hondartzan eta hondoan…» Hondartzako hare guztiak, neska. Inor ez da sekula horiek kontatzera iritsi."],
+        ],
+        () => bertsoGet("bertso-hare"),
+      );
+      return true;
+    }
+    if (N.id === "jentil" && !f("bertso-izar")) {
+      if (DAY.k < 0.5)
+        talk(N, [["JENTIL ZAHARRA", "Izarren bertsoa? Gauez etorri, sorgin txikia. Izarrik gabe, ez dago bertsorik."]]);
+      else
+        talk(
+          N,
+          [
+            ["JENTIL ZAHARRA", "Begira gora. Gu, jentilak, izarrak kontatzen genituen gauez, ehun urtez. Inguma beti galtzen zen kontuan."],
+            ["JENTIL ZAHARRA", "«Zeruan izarrak, ortzi osoan…» Bat bera ahaztuz gero, berriro hasi behar du. Horregatik, egunsentia beti iristen da lehenago."],
+          ],
+          () => bertsoGet("bertso-izar"),
+        );
+      return true;
+    }
+    return false;
+  }
+  /* Irati (talkIrati-tik): true → kudeatuta */
+  function seaskaIrati(N, f) {
+    const at = { IRATI: [N.x, N.z, N.y || 0] };
+    if (f("inguma-ametsa") && !f("seaska")) {
+      vsay(["c7_i1", "c7_a1", "c7_i2", "c7_i3"], () => {
+        flagSet("seaska");
+        title("SEASKA-KANTA", "");
+        notify(L("Hiru bertso: Kattalin, Txomin eta jentil zaharra (gauez, harrespilan)."), "", 6);
+        hud();
+      }, at);
+      return true;
+    }
+    if (f("seaska") && !f("seaska-kanta")) {
+      if (bertsoCount() < 3) {
+        talk(N, [["IRATI", "Bertsoak: " + bertsoCount() + " / 3. " + BERTSOAK.filter((b) => !f(b.flag)).map((b) => b.who).join(", ") + "… Gogoratu: izarrena gauez bakarrik."]]);
+        return true;
+      }
+      /* urratsak: Irati → SEASKA erritmoa → hauts-zorroa → Amaiur eta Iratiren abisua */
+      const warn = () =>
+        vsay(
+          ["c7_a2", "c7_i6"],
+          () => {
+            flagSet("seaska-kanta");
+            coach("hautsa", "Z", "Z: IZAR-HAUTSA · bota, eta kontatzen hasiko dira", "", "useBtn", "IZARRAK: bota, eta kontatzen hasiko dira", "");
+            notify(L("Gauez, Iturralden: ohean, AMETSERA."), "", 6);
+            hud();
+          },
+          at,
+        );
+      const pouch = () =>
+        itemGet("hautsa", L("IZAR-HAUTSA"), L("Amonaren hauts-zorroa. Bota: Gaueko izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, hautsak izar-plataformak sortzen ditu; airean botaz gero, izar-eskailerak. ") + (mobile ? L("IZARRAK botoia agertzen da behar denean.") : L("Z tekla.")), () => {
+          if (!saved.items.includes("hautsa")) saved.items.push("hautsa");
+          persist();
+          translate();
+          warn();
+        });
+      vsay(["c7_i4"], () => txalaLearn("seaska", "IRATI", () => vsay(["c7_i5"], pouch, at)), at);
+      return true;
+    }
+    return false;
+  }
+  /* SEASKA erritmoa (txalaparta.js-ko rhythmEffect-etik) */
+  function seaskaEffect() {
+    fxRing(P.x, P.y + 0.3, P.z, "#c9b6ff", 12, 1.1);
+    fxBurst(P.x, P.y + 1.6, P.z, { n: 36, speed: 2.4, up: 1.5, life: 1.4, size: 0.3, color: "#e6dcff", grav: -0.4, drag: 1.5 });
+    SND.sing ? SND.sing(0.8) : SND.wake();
+    /* ametsean: sehaska (ametsa.js) eta Inguma (inguma.js) */
+    if (ZONE.cur === "ametsa" && ametsaSeaska()) return;
+    let n = 0;
+    for (const e of ENEMIES) {
+      if (e.state === "dead" || e.state === "spawn" || Math.hypot(e.x - P.x, e.z - P.z) > 12) continue;
+      e.stun = Math.max(e.stun, 3.5);
+      damageNumber(e, "z z z", "#d9c8ff");
+      n++;
+    }
+    notify(n ? L("Seaska-kanta: inguruko itzalak lokartu dira.") : L("Seaska-kanta… lo egiteko kanta. Ametsetan du indarrik handiena."), "", 3);
+  }
+
+  /* ---------------------- ohetik ametsera (herria.js homeSleep: AMETSERA) ---------------------- */
+  const seaskaReady = () => saved.flags.includes("seaska-kanta") && !saved.flags.includes("inguma");
+  function ametsaEnter() {
+    saved.tod = 0.02;
+    DAY.k = 1;
+    DAY.night = true;
+    const first = !saved.flags.includes("ametsa");
+    film(
+      [
+        {
+          d: 4.6,
+          fade: "in",
+          cap: ["ITURRALDE · 00:28", first ? "AMAIUR LO DAGO. EZ DAGO BAKARRIK." : "BERRIRO, AMETSERA."],
+          on: () => {
+            hero.position.set(DGE.bed.x, 0.84, DGE.bed.z + 1.15);
+            if (actor) actor.rotation.x = -PI / 2;
+            hero.rotation.y = 0;
+          },
+          cam: [() => [DGE.bed.x + 4.4, 4.2, DGE.bed.z + 4.8], () => [DGE.bed.x + 1.6, 2.6, DGE.bed.z + 2.4]],
+          look: [() => [DGE.bed.x, 0.9, DGE.bed.z + 0.4], () => [DGE.bed.x, 0.9, DGE.bed.z]],
+        },
+        ...(first
+          ? [
+              {
+                d: 4.4,
+                fade: "out",
+                cam: [() => [DGE.bed.x + 1.6, 2.6, DGE.bed.z + 2.4], () => [DGE.bed.x + 0.6, 7.5, DGE.bed.z + 1.2]],
+                look: [() => [DGE.bed.x, 0.9, DGE.bed.z], () => [DGE.bed.x, 0.9, DGE.bed.z]],
+                say: "c7_n1",
+              },
+            ]
+          : []),
+      ],
+      () => {
+        if (actor) actor.rotation.x = 0;
+        flagSet("ametsa");
+        enterZone("ametsa", { ...DGA.entry, cp: true }, true);
+        title("AMETSA", "");
+        $("filmFade").style.opacity = 0;
+      },
+    );
+  }
+
+  /* ---------------------- esnatu (Inguma garaituta) ---------------------- */
+  function ametsaWake() {
+    saved.tod = 0.27;
+    DAY.k = nightOf(0.27);
+    enterZone("etxea", { x: DGE.bed.x + 1.8, y: 0, z: DGE.bed.z, a: PI / 2, cp: true }, true);
+    film(
+      [
+        {
+          d: 4.2,
+          fade: "in",
+          cap: ["ITURRALDE · 06:28", "EGUNSENTIA"],
+          on: () => {
+            hero.position.set(DGE.bed.x, 0.84, DGE.bed.z + 1.15);
+            if (actor) actor.rotation.x = -PI / 2;
+            hero.rotation.y = 0;
+          },
+          cam: [() => [DGE.bed.x + 1.2, 6.5, DGE.bed.z + 1.6], () => [DGE.bed.x + 3.4, 3.2, DGE.bed.z + 3.8]],
+          look: [() => [DGE.bed.x, 0.9, DGE.bed.z], () => [DGE.bed.x, 0.9, DGE.bed.z + 0.4]],
+        },
+      ],
+      () => {
+        if (actor) actor.rotation.x = 0;
+        teleport(DGE.bed.x + 1.8, DGE.bed.z, 0);
+        P.angle = PI / 2;
+        flagSet("inguma");
+        deia(["c7_i7"], () => {
+          notify(L("Irten kanpora, eta begiratu Anboto aldera."), "", 6);
+          hud();
+        });
+      },
+    );
+  }
+  /* zazpigarren atalaren amaiera (Iturralde → haranera irtetean): zazpigarren argia berde, eta Gaueko */
+  function ingumaFinale() {
+    const f = (k) => saved.flags.includes(k);
+    if (!f("inguma") || f("irati-inguma") || ZONE.cur !== "ibarra" || cinematic || FILM.on) return;
+    if (!ZAZPI.g) zazpiBuild();
+    zazpiColors(6);
+    ZAZPI.armed = true;
+    ZAZPI.turn = true;
+    ZAZPI.turnTo = 7;
+    const V = (id, x, z, y, cam) => {
+      const [who, text] = voiceLine(id);
+      return [who, text, "", x, z, y, cam || null, id];
+    };
+    voicePreload(["c7_a5", "c7_g1", "c7_a6", "c7_i8"]);
+    say(
+      [
+        V("c7_a5", P.x, P.z, P.y),
+        ["· · ·", "Herriko txalapartak bakarrik jo du, astiro, egunsentiarekin. Anboto aldetik, haize hotz bat.", "", P.x, P.z, P.y],
+        ["· · ·", "Anbotoko hodeian, zazpi argiak. Zazpigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        V("c7_g1", 20, -170, 120, [0, 30, 40]),
+        V("c7_a6", P.x, P.z, P.y),
+        V("c7_i8", 0, 41, 0),
+      ],
+      () => {
+        flagSet("irati-inguma");
+        ZAZPI.t = -1;
+        ZAZPI.turn = false;
+        if (ZAZPI.g) ZAZPI.g.visible = false;
+        title("JARRAITZEKO…", "");
+        notify(L("Zazpi zaindariak aske. Anbotoko hodeian, zazpi argi berde… eta Gaueko zain, Irati ere bai."), "", 8);
+        hud();
+      },
+    );
+  }
+  /* ==================================================================
+     AMETSA · zazpigarren leizea (diseinu propioa) — Amaiurren ametsa, Ingumaren etxea
+     Iturralden lo egin (SEASKA-KANTA eta hauts-zorroa eskuan) → izarrez betetako hutsunea:
+     Amaiurren mantak uharte bihurtuta, altzariak hegan, erloju geldituak (denbora ez da igarotzen).
+       M1 Ohe-uhartea .......... iritsiera; SUTONDOA; ohe erraldoia (ESNATU: etxera itzuli);
+                                 iparrean IZAR-LAINOA: hautsa bota → izar-plataforma
+       M2 Izar-eskailerak ...... uharte garaia: jauzi bikoitza eta AIREAN hautsa (izar-maila) →
+                                 GILTZA TXIKIA. Mendebaldean, ENTZUN: ezkutuko harriak → arnasa-zatia
+       M3 Mamuen sukaldea ...... (giltza txikiko atea) borroka: MAMUAK (atzetik agertzen dira);
+                                 hautsarekin KONTATZEN → kalte bikoitza. Iparrean barrak.
+       M4 Ate-zainen zubia ..... bi ATE-ZAIN: hautsa → kontatzen hasten dira → pasa, amaitu aurretik;
+                                 tartean, izar-lainoa
+       M5 Sehaskaren uhartea ... dei faltsua ("Irati"?), AMETS-GAIZTOA (mamu erraldoia); SEASKA
+                                 sehaskaren ondoan → GILTZA NAGUSIA
+       M6 Ingumaren ohea ....... ate handia → INGUMA (inguma.js)
+     Hutsunera eroriz gero, azken lur segurura (arnasa bat galduta).
+     ================================================================== */
+  const AX = 2700;
+  const AE = (x) => AX + x;
+  ZONES.ametsa = { name: "AMETSA", outdoor: true, sky: true, dream: true, fallY: -16, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
+  const DGA = {
+    id: "ametsa",
+    num: "07",
+    entry: { x: AX, y: 0, z: 5.5, a: PI },
+    /* ametsetik ez dago arkurik: ohean ESNATU (M1) edo Inguma garaitu */
+    exitArch: { x: AX, z: 9999 },
+    exitTo: () => ({ x: DGE.bed.x + 1.8, y: 0, z: DGE.bed.z, a: PI / 2, cp: true }),
+    exitZone: "etxea",
+    bigKey: "giltzanagusia-ametsa",
+    bigKeyText: "Ingumaren ohe-gelara daraman ate handia irekitzen du.",
+    bossDoor: "aE-n",
+    lights: [],
+    torches: [],
+    rooms: {},
+    torchCol: ["#c9a8ff", "#9fb8ff"],
+    fog: [70, 330],
+  };
+  const AM = { quilts: {}, floaters: [], clocks: [], motes: null, cradle: null, txala: null, fake: false, wakeBed: null, gates: [], revealT: 0 };
+
+  /* ------------------------------ eraikigaiak ------------------------------ */
+  /* manta-uhartea: adabakiz egindako manta (lauburu-puntadak) gainean, izar-harri iluna azpian */
+  function quiltTex(seed) {
+    if (AM.quilts[seed]) return AM.quilts[seed];
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const g = c.getContext("2d"),
+      cols = ["#7a2a3a", "#3a3f7a", "#8a6a3a", "#5a2a6a", "#2f5a6a", "#6a3a2a"];
+    let sd = seed * 97 + 13;
+    const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 4; i++)
+      for (let j = 0; j < 4; j++) {
+        g.fillStyle = cols[Math.floor(rnd() * cols.length)];
+        g.fillRect(i * 64, j * 64, 64, 64);
+        /* adabaki bakoitzean, lauburu edo izar txiki bat */
+        g.strokeStyle = "rgba(240,220,180,0.55)";
+        g.lineWidth = 3;
+        const cx = i * 64 + 32,
+          cy = j * 64 + 32;
+        if ((i + j) % 2) {
+          for (let k = 0; k < 4; k++) {
+            const a = (k * PI) / 2;
+            g.beginPath();
+            g.arc(cx + Math.cos(a) * 9, cy + Math.sin(a) * 9, 9, a, a + PI);
+            g.stroke();
+          }
+        } else {
+          g.beginPath();
+          for (let k = 0; k < 10; k++) {
+            const a = (k / 10) * TAU - PI / 2,
+              r = k % 2 ? 6 : 15;
+            k ? g.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r) : g.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+          }
+          g.closePath();
+          g.stroke();
+        }
+      }
+    /* josturak (puntadak) adabakien artean */
+    g.setLineDash([6, 6]);
+    g.strokeStyle = "rgba(255,240,200,0.6)";
+    g.lineWidth = 2;
+    for (let i = 1; i < 4; i++) {
+      g.beginPath();
+      g.moveTo(i * 64, 0);
+      g.lineTo(i * 64, 256);
+      g.moveTo(0, i * 64);
+      g.lineTo(256, i * 64);
+      g.stroke();
+    }
+    const t = new T.CanvasTexture(c);
+    t.wrapS = t.wrapT = T.RepeatWrapping;
+    t.anisotropy = 4;
+    return (AM.quilts[seed] = t);
+  }
+  let DREAM_UNDER = null;
+  function dreamUnderMat() {
+    return (DREAM_UNDER ||= new T.MeshStandardMaterial({ color: "#1b1433", emissive: new T.Color("#2a1a55"), emissiveIntensity: 0.35, roughness: 0.9, flatShading: true }));
+  }
+  function dreamIsland(o) {
+    const { x, z, y } = o,
+      rx = o.r,
+      rz = o.rz || o.r,
+      depth = o.depth || rx * 1.1;
+    /* azpia: kono alderantzikatua, izar-puntu txikiekin */
+    const ug = new T.ConeGeometry(1, 1, 14, 3);
+    ug.rotateX(PI);
+    ug.translate(0, -0.5, 0);
+    ug.scale(rx, depth, rz);
+    const under = obj(ug, dreamUnderMat());
+    under.position.set(x, y - 0.3, z);
+    under.castShadow = false;
+    const pts = [];
+    for (let i = 0; i < 26; i++) {
+      const a = i * 2.39996 + x,
+        k = ((i * 37) % 26) / 26,
+        r = (1 - k) * 0.95;
+      pts.push(x + Math.cos(a) * rx * r, y - 0.4 - k * depth * 0.95, z + Math.sin(a) * rz * r);
+    }
+    const pg = new T.BufferGeometry();
+    pg.setAttribute("position", new T.Float32BufferAttribute(pts, 3));
+    BP.add(new T.Points(pg, new T.PointsMaterial({ color: "#e9dcff", size: 0.28, transparent: true, opacity: 0.8, depthWrite: false, blending: T.AdditiveBlending })));
+    /* goia: manta (adabakiak) */
+    const geo = new T.CircleGeometry(1, 40);
+    geo.rotateX(-PI / 2);
+    geo.scale(rx, 1, rz);
+    const tex = quiltTex(o.seed ?? Math.round(x + z)).clone();
+    tex.needsUpdate = true;
+    tex.repeat.set(rx / 5, rz / 5);
+    const top = obj(geo, new T.MeshStandardMaterial({ map: tex, roughness: 0.95 }));
+    top.position.set(x, y + 0.02, z);
+    top.castShadow = false;
+    /* ertza: manta-ertz bilbatua (zilindro irekia) */
+    const rim = new T.CylinderGeometry(1, 1, 1, 40, 1, true);
+    rim.scale(rx * 1.01, 0.6, rz * 1.01);
+    const rm = obj(rim, new T.MeshStandardMaterial({ color: "#c9a86a", roughness: 0.9 }));
+    rm.position.set(x, y - 0.28, z);
+    rm.castShadow = false;
+    const p = { x, z, y, bottom: y - depth * 0.5, rx: rx * 0.975, rz: rz * 0.975, phase: o.phase ?? -1, area: o.area, m: top, safe: o.safe !== false };
+    platforms.push(p);
+    if (o.phase !== undefined && o.phase >= 0) {
+      const ghost = new T.Mesh(new T.CylinderGeometry(rx, rx * 0.6, 0.5, 20), new T.MeshBasicMaterial({ color: ERA_COL[o.phase], wireframe: true, transparent: true, opacity: 0.18 }));
+      ghost.position.set(x, y - 0.25, z);
+      BP.add(ghost);
+      p.ghost = ghost;
+      p.m = top;
+      phaseObjects.push(p);
+    }
+    return p;
+  }
+  /* manta-zubia: oihal-zerrenda tenkatua (adabakiak) */
+  function quiltBridge(x, z, w, d, y, area) {
+    const p = slab({ x, z, y, w, d, h: 0.5, area });
+    const tex = quiltTex(Math.round(x * 3 + z)).clone();
+    tex.needsUpdate = true;
+    tex.repeat.set(w / 4, d / 4);
+    p.m.material = new T.MeshStandardMaterial({ map: tex, roughness: 0.95 });
+    return p;
+  }
+  /* altzari hegalariak (apaingarriak): aulkia, mahaia, kandela, liburuak */
+  function floater(kind, x, y, z, s = 1, rot = 0) {
+    const g = new T.Group(),
+      wood = material("#6e4a2c"),
+      add = (geo, mat, px, py, pz) => {
+        const m = new T.Mesh(geo, mat);
+        m.position.set(px, py, pz);
+        m.castShadow = false;
+        g.add(m);
+        return m;
+      };
+    if (kind === "aulkia") {
+      add(new T.BoxGeometry(1, 0.15, 1), wood, 0, 1, 0);
+      add(new T.BoxGeometry(1, 1.2, 0.15), wood, 0, 1.6, -0.45);
+      for (const [a, b] of [[-0.4, -0.4], [0.4, -0.4], [-0.4, 0.4], [0.4, 0.4]]) add(new T.BoxGeometry(0.12, 1, 0.12), wood, a, 0.5, b);
+    } else if (kind === "mahaia") {
+      add(new T.BoxGeometry(2.4, 0.15, 1.4), wood, 0, 1, 0);
+      for (const [a, b] of [[-1, -0.55], [1, -0.55], [-1, 0.55], [1, 0.55]]) add(new T.BoxGeometry(0.12, 1, 0.12), wood, a, 0.5, b);
+    } else if (kind === "kandela") {
+      add(new T.CylinderGeometry(0.16, 0.18, 0.9, 10), material("#f4ead2"), 0, 0.45, 0);
+      const fl = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffcf8a", transparent: true, blending: T.AdditiveBlending, depthWrite: false }));
+      fl.position.set(0, 1.05, 0);
+      fl.scale.setScalar(1.6);
+      g.add(fl);
+    } else if (kind === "liburuak") {
+      for (let i = 0; i < 4; i++) add(new T.BoxGeometry(0.9, 0.18, 0.65), material(["#7a2a3a", "#3a3f7a", "#8a6a3a", "#2f5a6a"][i]), (i % 2) * 0.1, 0.1 + i * 0.2, 0).rotation.y = i * 0.3;
+    }
+    g.position.set(x, y, z);
+    g.rotation.y = rot;
+    g.scale.setScalar(s);
+    BP.add(g);
+    AM.floaters.push({ g, y0: y, ph: x * 0.3 + z * 0.17, spin: kind === "liburuak" ? 0.3 : 0.08 });
+    return g;
+  }
+  /* erloju geldituak (OIHARTZUN-en erlojua gogoratuz): esfera, orratzak eta zenbaki-markak */
+  function stoppedClock(x, y, z, r = 1.6) {
+    const g = new T.Group(),
+      face = new T.Mesh(new T.CircleGeometry(r, 36), material("#efe6d2")),
+      rim = new T.Mesh(new T.TorusGeometry(r, r * 0.08, 6, 36), material("#b48a3e", 0.3));
+    g.add(face, rim);
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * TAU,
+        mk = new T.Mesh(new T.BoxGeometry(r * 0.06, r * 0.18, 0.04), material("#3a2a1a"));
+      mk.position.set(Math.sin(a) * r * 0.82, Math.cos(a) * r * 0.82, 0.02);
+      mk.rotation.z = -a;
+      g.add(mk);
+    }
+    const hand1 = new T.Mesh(new T.BoxGeometry(r * 0.07, r * 0.75, 0.05), material("#1a1410")),
+      hand2 = new T.Mesh(new T.BoxGeometry(r * 0.05, r * 0.5, 0.05), material("#1a1410"));
+    hand1.geometry.translate(0, r * 0.35, 0.04);
+    hand2.geometry.translate(0, r * 0.22, 0.05);
+    hand1.rotation.z = -2.2;
+    hand2.rotation.z = -0.4;
+    g.add(hand1, hand2);
+    /* arrakala: erlojua hautsita */
+    const crack = new T.Mesh(new T.BoxGeometry(r * 1.4, r * 0.03, 0.03), material("#6a5a4a"));
+    crack.rotation.z = 0.7;
+    crack.position.z = 0.03;
+    g.add(crack);
+    g.position.set(x, y, z);
+    g.lookAt(x, y, z + 10);
+    BP.add(g);
+    AM.clocks.push({ g, y0: y, ph: x + z, hand1, hand2 });
+    return g;
+  }
+  /* sehaska erraldoia (M5): kulunkan; SEASKAk geldiarazten du */
+  function cradleBuild(x, y, z) {
+    const g = new T.Group(),
+      wood = material("#8a5a34"),
+      pale = material("#e9e1cf");
+    const pivot = new T.Group();
+    pivot.position.y = 1.4;
+    g.add(pivot);
+    /* kulunkak (bi arku) */
+    for (const s of [-1, 1]) {
+      const rocker = new T.Mesh(new T.TorusGeometry(2.6, 0.18, 6, 24, PI * 0.5), wood);
+      rocker.rotation.set(0, PI / 2, PI * 1.25);
+      rocker.position.set(s * 1.6, 0.4, 0);
+      pivot.add(rocker);
+    }
+    const box = new T.Mesh(new T.BoxGeometry(3.8, 1.4, 5.2), wood);
+    box.position.y = 1.2;
+    pivot.add(box);
+    const sheet = new T.Mesh(new T.BoxGeometry(3.4, 0.2, 4.8), pale);
+    sheet.position.y = 1.95;
+    pivot.add(sheet);
+    const head = new T.Mesh(new T.BoxGeometry(3.8, 2.4, 0.3), wood);
+    head.position.set(0, 2.2, -2.55);
+    pivot.add(head);
+    /* barrutik argi bat (lo dagoen haurraren oihartzuna?) */
+    const glowS = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#e6dcff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.6 }));
+    glowS.position.y = 2.6;
+    glowS.scale.setScalar(4);
+    pivot.add(glowS);
+    g.position.set(x, y, z);
+    BP.add(g);
+    solids.push({ x, z, r: 2.9, h: 3, y, pillar: true });
+    AM.cradle = { g, pivot, glowS, x, y, z, calm: isCleared("aD-seaska") ? 1 : 0 };
+  }
+
+  /* ------------------------------ eraikitzea ------------------------------ */
+  function buildAmetsa() {
+    dungeonBegin(DGA);
+    /* ---- M1: Ohe-uhartea ---- */
+    skyRoom("M1", AE(0), 0, 24, 24, { area: "aA", name: "OHE-UHARTEA", desc: "Zure ohea, baina erraldoia. Inguruan, izarrak eta isiltasuna.", rx: 12 });
+    dreamIsland({ x: AE(0), z: 0, y: 0, r: 12, area: "aA", seed: 1 });
+    /* ohe erraldoia (ESNATU) */
+    const bed = new T.Group(),
+      frame = new T.Mesh(new T.BoxGeometry(5.6, 1.4, 8.4), material("#6e4a2c")),
+      sheet = new T.Mesh(new T.BoxGeometry(5.2, 0.5, 7.8), material("#f2efe6")),
+      blanket = new T.Mesh(new T.BoxGeometry(5.4, 0.3, 4.8), material("#a8332a")),
+      pillow = new T.Mesh(new T.BoxGeometry(3.6, 0.5, 1.4), material("#fbf8f0")),
+      headb = new T.Mesh(new T.BoxGeometry(5.6, 3.4, 0.4), material("#6e4a2c"));
+    frame.position.y = 0.7;
+    sheet.position.y = 1.6;
+    blanket.position.set(0, 1.9, 1.2);
+    pillow.position.set(0, 2, -2.8);
+    headb.position.set(0, 1.7, -4.2);
+    bed.add(frame, sheet, blanket, pillow, headb);
+    bed.traverse((n) => n.isMesh && ((n.castShadow = true), (n.receiveShadow = true)));
+    bed.position.set(AE(-5.5), 0, -1);
+    BP.add(bed);
+    solids.push({ x: AE(-5.5), z: -1, r: 2.9, h: 2, y: 0, pillar: true }, { x: AE(-5.5), z: 2.2, r: 2.6, h: 2, y: 0, pillar: true }, { x: AE(-5.5), z: -4, r: 2.6, h: 2, y: 0, pillar: true });
+    AM.wakeBed = { x: AE(-5.5), z: -1 };
+    DGA.hearthA = sutondoa("aA-su", AE(5.5), 0, 2.5, 1.6, 1.8);
+    floater("kandela", AE(8.5), 3.4, -6, 1.6);
+    floater("aulkia", AE(-11), 5, 8, 1.4, 0.6);
+    stoppedClock(AE(10), 7, -12, 2.2);
+    stoppedClock(AE(-14), 9, -18, 1.4);
+    /* izar-lainoa: M1 → M2 (hutsunea) */
+    starMist({ x: AE(0), z: -16.5, w: 9, d: 10, y0: -6, y1: 6 });
+    /* ---- M2: Izar-eskailerak ---- */
+    skyRoom("M2", AE(0), -31, 18, 18, { area: "aB", name: "IZAR-ESKAILERAK", desc: "Goian, uharte txiki bat. Ez dago eskailerarik… zuk egin ezean.", rx: 9 });
+    dreamIsland({ x: AE(0), z: -31, y: 0, r: 9, area: "aB", seed: 2 });
+    /* goiko uhartetxoa: giltza txikia (izar-eskailerak behar dira) */
+    dreamIsland({ x: AE(6.5), z: -38, y: 9, r: 3.4, area: "aB", seed: 3, depth: 3 });
+    starMist({ x: AE(4), z: -35, w: 10, d: 9, y0: -2, y1: 12 });
+    DGA.keyChest = chest("aB-key", AE(7), 9, -38.6, PI, { t: "key" });
+    stoppedClock(AE(12), 11, -42, 1.8);
+    floater("liburuak", AE(-8), 6, -36, 1.4);
+    /* mendebaldean: ENTZUN → ezkutuko harriak → arnasa-zatia */
+    for (const [hx, hz, hy] of [[-12.5, -32, 0.6], [-16.5, -33.5, 1.4], [-20.5, -35, 2.2]]) hiddenSlab(AE(hx), hz, hy, 2.4, 2.4);
+    dreamIsland({ x: AE(-25), z: -36.5, y: 2.2, r: 2.8, area: "aB", seed: 4, depth: 2.5 });
+    chest("aB-piece", AE(-25), 2.2, -36.5, PI / 2, { t: "piece", id: "ametsa" });
+    /* ---- M2 → M3: manta-zubia eta giltza txikiko atea ---- */
+    quiltBridge(AE(0), -45.5, 4, 11, 0, "aB");
+    DOORDEF.aBn = door("aB-n", AE(0), -46, 0, 0, "key");
+    /* ---- M3: Mamuen sukaldea (borroka) ---- */
+    skyRoom("M3", AE(0), -62, 24, 22, {
+      area: "aC",
+      name: "MAMUEN SUKALDEA",
+      desc: "Mahai bat, aulkiak, lapikoak… eta maindireak, inor barruan ez dutela.",
+      rx: 12,
+      rz: 11,
+      waves: [[["mamua", -1, 2]], [["mamua", -1, 2], ["grunt", 1, 1]], [["mamua", -1, 3]]],
+      diff: 1.15,
+      hpK: 1.3,
+      fightText: "Mamuak! Desagertu eta zure atzean agertzen dira. IZAR-HAUTSA: kontatzen hasten dira — orduan, kalte bikoitza.",
+      onWin: () => {
+        openDoor(DOORDEF.aCn);
+        notify(L("Sukaldea isildu da. Iparreko barrak irekita."), "", 4);
+      },
+    });
+    dreamIsland({ x: AE(0), z: -62, y: 0, r: 12, rz: 11, area: "aC", seed: 5 });
+    floater("mahaia", AE(-4), 0.05, -64, 1.6, 0.3);
+    floater("aulkia", AE(1.5), 0.05, -67, 1.4, 2.4);
+    floater("kandela", AE(-4.5), 1.7, -64, 1);
+    stoppedClock(AE(-14), 8, -66, 2);
+    DOORDEF.aCn = door("aC-n", AE(0), -73.5, 0, 0, "bars", "M3");
+    /* ---- M4: Ate-zainen zubia ---- */
+    skyRoom("M4", AE(0), -88, 10, 26, { area: "aD", name: "ATE-ZAINEN ZUBIA", desc: "Bi harrizko zaindari. Kontatzen hasten direnean, ez dute ezer ikusten." });
+    quiltBridge(AE(0), -79, 4, 10, 0, "aD");
+    AM.gates.push(dustGate({ x: AE(0), z: -80, y: 0, w: 4, rot: 0 }));
+    /* tartean: izar-lainoa (zubirik gabe) */
+    starMist({ x: AE(0), z: -88.4, w: 6, d: 10.4, y0: -6, y1: 5 });
+    quiltBridge(AE(0), -97, 4, 9, 0, "aD");
+    AM.gates.push(dustGate({ x: AE(0), z: -97.5, y: 0, w: 4, rot: 0 }));
+    /* ---- M5: Sehaskaren uhartea ---- */
+    skyRoom("M5", AE(0), -114, 22, 22, { area: "aE", name: "SEHASKAREN UHARTEA", desc: "Sehaska bat, kulunkan, inork ukitu gabe. Txalaparta bat ondoan.", rx: 11 });
+    dreamIsland({ x: AE(0), z: -114, y: 0, r: 11, area: "aE", seed: 6 });
+    cradleBuild(AE(0), 0, -117);
+    AM.txala = txalapartaMesh(AE(5.5), 0, -110, -PI / 2, "aE");
+    TXALA.spots.push(AM.txala);
+    DGA.bigChest = chest("aE-bigkey", AE(-5.5), 0, -110, PI / 4, { t: "bigkey" }, { hidden: !isCleared("aD-seaska") });
+    DGA.hearthE = sutondoa("aE-su", AE(-7), 0, -120.5, 1.6, 1.6);
+    stoppedClock(AE(12), 9, -122, 2.6);
+    floater("kandela", AE(-10), 4, -108, 1.3);
+    /* ---- M5 → M6: zubia eta ate handia ---- */
+    quiltBridge(AE(0), -130, 4, 10, 0, "aE");
+    DOORDEF.aEn = door("aE-n", AE(0), -126, 0, 0, "boss");
+    /* ---- M6: Ingumaren ohea (etsai nagusia) ---- */
+    skyRoom("M6", AE(0), -152, 36, 36, { area: "aF", name: "INGUMAREN OHEA", desc: "Ohe bat hutsunearen erdian. Norbait eserita dago gainean.", rx: 17 });
+    dreamIsland({ x: AE(0), z: -152, y: 0, r: 17, area: "aF", seed: 7, depth: 14 });
+    DGA.bossRoom = DGA.rooms.M6;
+    ingumaBuild();
+    dungeonEnd(DGA);
+    /* izar-motak (partikulak hutsunean) */
+    const pts = [];
+    for (let i = 0; i < 260; i++) {
+      const a = i * 2.39996,
+        r = 25 + ((i * 53) % 90),
+        h = -30 + ((i * 37) % 70);
+      pts.push(AE(Math.cos(a) * r), h, -75 + Math.sin(a) * r * 1.4);
+    }
+    const pg = new T.BufferGeometry();
+    pg.setAttribute("position", new T.Float32BufferAttribute(pts, 3));
+    AM.motes = new T.Points(pg, new T.PointsMaterial({ color: "#f3ecff", size: 0.5, transparent: true, opacity: 0.85, depthWrite: false, blending: T.AdditiveBlending, fog: false }));
+    ZONES.ametsa.group.add(AM.motes);
+  }
+  /* ------------------------------ ametsaren itxura ------------------------------ */
+  const DREAM_FOG = new T.Color("#1a1232"),
+    DREAM_FOG_PAST = new T.Color("#2a1830");
+  function dreamVisuals() {
+    sun.color.set(phaseBlend > 0.5 ? "#9fb8ff" : "#d7a8ff");
+    sun.intensity = 0.95;
+    ambient.intensity = 0.62 * (scene.environment ? 0.7 : 1);
+    ambient.color.set("#b9a8ff");
+    ambient.groundColor.set("#2a1f4a");
+    scene.fog.color.copy(DREAM_FOG_PAST).lerp(DREAM_FOG, phaseBlend);
+    scene.fog.near = DGA.fog[0];
+    scene.fog.far = DGA.fog[1];
+    playerLight.intensity = 1.6;
+  }
+
+  /* ------------------------------ eguneraketa ------------------------------ */
+  /* SEASKA sehaskaren ondoan (seaska.js-tik): true → kudeatuta */
+  function ametsaSeaska() {
+    if (BOSS.on && BOSS.kind === "inguma") return ingumaLullaby();
+    const C = AM.cradle;
+    if (C && !isCleared("aD-seaska") && Math.hypot(P.x - C.x, P.z - C.z) < 9) {
+      saved.cleared.push("aD-seaska");
+      persist();
+      SND.memory();
+      fxRing(C.x, 0.2, C.z, "#e6dcff", 7, 1.2);
+      fxBurst(C.x, 3, C.z, { n: 50, speed: 3, up: 2, life: 1.4, size: 0.34, color: "#f3ecff", grav: -0.6 });
+      title("SEHASKA GELDITU DA", "");
+      AM.revealT = 0.9;
+      return true;
+    }
+    return false;
+  }
+  /* dei faltsua (M5-era iristean): "Irati"… ez da bera */
+  function ametsaFakeCall() {
+    if (AM.fake || saved.flags.includes("ametsa-deia")) return;
+    AM.fake = true;
+    deiaRing("IRATI", ["c7_f1", "c7_a3", "c7_n2"], () => {
+      flagSet("ametsa-deia");
+      notify(L("Inguma ahotsak egiten ditu. Sehaskaren ondoan, zerbait esnatzen da…"), "", 5);
+    }, 4);
+  }
+  DGA.update = (dt) => {
+    hearthsUpdate(dt);
+    ingumaUpdate(dt);
+    const R = DGA.rooms;
+    for (const F of AM.floaters) {
+      F.g.position.y = F.y0 + Math.sin(time * 0.7 + F.ph) * 0.35;
+      F.g.rotation.y += dt * F.spin;
+    }
+    for (const C of AM.clocks) {
+      C.g.position.y = C.y0 + Math.sin(time * 0.5 + C.ph) * 0.5;
+      /* orratzak dardaraka: denbora ez da igarotzen */
+      C.hand1.rotation.z = -2.2 + Math.sin(time * 9 + C.ph) * 0.02;
+    }
+    if (AM.motes) AM.motes.rotation.y += dt * 0.004;
+    /* sehaska geldi → giltza nagusiaren kutxa agerian */
+    if (AM.revealT > 0 && (AM.revealT -= dt) <= 0) {
+      revealChest(DGA.bigChest);
+      notify(L("Sehaska isildu da. Giltza handi bat agertu da, haren ondoan."), "", 4.5);
+    }
+    /* sehaska: kulunka (SEASKAren ondoren, geldi) */
+    const Cr = AM.cradle;
+    if (Cr) {
+      Cr.calm = mix(Cr.calm, isCleared("aD-seaska") ? 1 : 0, 1 - Math.exp(-dt * 1.2));
+      Cr.pivot.rotation.z = Math.sin(time * 1.3) * 0.22 * (1 - Cr.calm);
+      Cr.glowS.material.opacity = 0.35 + 0.3 * (1 - Cr.calm) + Math.sin(time * 2) * 0.08;
+    }
+    /* M1: lehen aldiz, izar-hautsaren pista */
+    if (ROOM.cur === R.M1 && P.z < -7 && P.grounded) notifyOnce("ametsa-hautsa", L("Hutsunea, eta izar-lainoa. Bota IZAR-HAUTSA lainora: izar-plataforma bat!"), "");
+    /* M5: dei faltsua, gero amets-gaiztoa */
+    if (ROOM.cur === R.M5 && P.grounded && P.z < -105) ametsaFakeCall();
+    if (R.M5 && !MINI.e && !ROOM.fight && !cinematic && !RING.on && ROOM.cur === R.M5 && saved.flags.includes("ametsa-deia") && !isCleared("aE-mini") && P.grounded && Math.hypot(P.x - R.M5.x, P.z - R.M5.z) < 9)
+      miniBegin(
+        R.M5,
+        {
+          type: "mamua",
+          name: "AMETS-GAIZTOA",
+          clearId: "aE-mini",
+          hp: 36,
+          scale: 2.2,
+          K: 1.2,
+          tint: "#cbb8ff",
+          add: [["mamua", -1, 2]],
+          hint: "Amets-gaiztoa! Desagertu eta atzean agertzen da: IZAR-HAUTSA, eta kontatzen ari den bitartean, jo.",
+          onDead: () => notify(L("Amets-gaiztoa desagertu da. Sehaska kulunkan dago oraindik… SEASKA kantatu haren ondoan."), "", 6),
+        },
+        R.M5.x,
+        R.M5.z + 2,
+      );
+    /* ohean ESNATU (M1): ametsetik irten */
+  };
+  /* ekintzak (actionHere-tik): ESNATU ohe erraldoian */
+  function ametsaActionNear() {
+    if (ZONE.cur !== "ametsa" || !AM.wakeBed || BOSS.on) return null;
+    /* Inguma garaituta (eta oraindik esnatu gabe, adib. partida berriz kargatuta): egunsentira */
+    const done = saved.flags.includes("inguma") && !saved.flags.includes("irati-inguma");
+    if (Math.hypot(P.x - AM.wakeBed.x, P.z - AM.wakeBed.z) < 4.2 && P.y < 2)
+      return {
+        kind: "hearth",
+        label: L("ESNATU"),
+        fn: () => (done ? ametsaWake() : dialog(L("AMETSA"), L("Esnatu?"), "", L("Ohean etzan eta begiak ireki: Iturraldera itzuliko zara. Ametsa zain geratuko da."), "", [[L("ESNATU"), () => setTimeout(() => enterZone("etxea", DGA.exitTo()), 0)], [L("EZ ORAIN"), () => {}]])),
+      };
+    return null;
+  }
+  DGA.objective = () => {
+    const R = DGA.rooms,
+      has = (k) => saved.items.includes(k);
+    if (saved.flags.includes("inguma")) return ["Ametsa amaituta. Esnatu (ohe erraldoia, hegoan).", [AM.wakeBed.x, AM.wakeBed.z + 3, 0]];
+    if (!saved.doors.includes("aB-n") && !(saved.keyz.ametsa > 0)) {
+      if (ROOM.cur === R.M1 || P.z > -21) return ["Iparrera, hutsunearen gainetik: IZAR-HAUTSA izar-lainora (Z) → izar-plataforma.", [AE(0), -16.5, 0]];
+      return ["Goiko uhartetxoa: jauzi bikoitza, eta AIREAN hautsa bota → izar-maila oinen azpian.", [AE(6.5), -38, 9]];
+    }
+    if (!saved.doors.includes("aB-n")) return ["Iparreko atea: giltza txikia.", [AE(0), -44, 0]];
+    if (!isCleared("M3")) return ["Mamuen sukaldea: IZAR-HAUTSA → kontatzen → kalte bikoitza.", [R.M3.x, R.M3.z, 0]];
+    if (!has(DGA.bigKey)) {
+      if (P.z > -101) return ["Ate-zainak: hautsa bota → kontatzen hasten dira → pasa, amaitu aurretik.", [AE(0), -88, 0]];
+      if (!isCleared("aE-mini") && saved.flags.includes("ametsa-deia")) return ["Sehaskaren uhartea: amets-gaiztoa.", [R.M5.x, R.M5.z, 0]];
+      if (!isCleared("aD-seaska")) return ["Sehaskaren ondoan, txalaparta: SEASKA (◀ ▶ ◀ ▶ ◀).", [AM.txala.x, AM.txala.z, 0]];
+      return ["Giltza nagusiaren kutxa, sehaskaren ondoan.", [DGA.bigChest.x, DGA.bigChest.z, 0]];
+    }
+    if (!saved.doors.includes(DGA.bossDoor)) return ["Iparrean, ate handia: giltza nagusia.", [AE(0), -124, 0]];
+    return ["Ingumaren ohea.", [R.M6.x, R.M6.z + 10, 0]];
+  };
+  /* ==================================================================
+     INGUMA · zazpigarren zaindaria (diseinu propioa; euskal mitologiako amets gaiztoen izakia)
+     Lo daudenen bularrean esertzen da. Herri-konjuruak dio dena kontatu behar duela lehenik:
+     haren aurka, seaska-kantaren hiru bertsoak, hiru fasetan:
+       1 ZERUAN IZARRAK ... goian hegan: izar-euria (EZKUTUAz itzuli → zorabiatuta) eta murgiltzea
+                            (itzala lurrean: alde egin). Murgildu ondoren, nekatuta behean →
+                            IZAR-HAUTSA → KONTATZEN → zauritu.
+       2 LURREAN BELARRAK . amets-belarrak lurrean (ORAINEAN mina; IRAGANEAN belar hutsak) eta
+                            hiru Inguma: ENTZUN (txalaparta) → benetakoa urre-distiraz → hautsa.
+                            Faltsuak, jotzean, mamu bihurtzen dira.
+       3 ITSASOAN HAREAK .. handitu eta ohean eseri: amesgaiztoa betetzen (hare-haizea bultzaka).
+                            SEASKA (txalaparta) → lokartu eta lurrera → zauritu (hautsarekin, bikoitza).
+     ================================================================== */
+  const ING = { g: null, body: null, eyes: [], smile: null, arms: [], state: "sleep", t: 0, hp: 0, phase: 0, x: 0, y: 7, z: 0, ang: 0, dive: null, fakes: [], realI: 0, reveal: 0, grass: [], crush: 0, scale: 1, seenIntro: false, said: {}, shotT: 2.5, src: { x: 0, y: 0, z: 0, era: -1 }, bed: null, grassMat: null, grassGeo: null, shadow: null, meter: null, flash: 0, swap: 0, stats: { counts: 0, lull: 0 } };
+  const ING_HP = 10,
+    ING_R = 2.4;
+  /* ametseko hitzak (jokoa gelditu gabe): ahotsa eta azpititulua */
+  function bark(id) {
+    if (ING.said[id]) return;
+    ING.said[id] = true;
+    const [who, text] = voiceLine(id);
+    voiceLoad(id).then(() => voicePlay(id));
+    notify(who + ": " + L(text), "", 4.5);
+  }
+  /* --------------------------- eraikitzea --------------------------- */
+  function ingumaMesh(fake) {
+    const g = new T.Group(),
+      cloth = new T.MeshStandardMaterial({ color: "#120a1f", emissive: new T.Color(fake ? "#3a2a5a" : "#2a1450"), emissiveIntensity: 0.5, roughness: 0.9, side: T.DoubleSide, transparent: !!fake, opacity: fake ? 0.85 : 1 });
+    /* kapa: behealdea zarpail (uhinak), goian estua */
+    const prof = [];
+    for (let i = 0; i <= 12; i++) {
+      const k = i / 12;
+      prof.push(new T.Vector2(0.25 + Math.pow(1 - k, 1.6) * 1.6, 3.6 * k));
+    }
+    const geo = new T.LatheGeometry(prof, 20),
+      pa = geo.attributes.position;
+    for (let i = 0; i < pa.count; i++) {
+      const y = pa.getY(i);
+      if (y < 0.5) pa.setY(i, y + Math.sin(Math.atan2(pa.getZ(i), pa.getX(i)) * 7) * 0.22 * (1 - y / 0.5));
+    }
+    geo.computeVertexNormals();
+    const body = new T.Mesh(geo, cloth);
+    body.castShadow = true;
+    g.add(body);
+    /* burua: kaputxa iluna, bi begi zurbil handi eta irribarre mehea */
+    const head = new T.Mesh(new T.SphereGeometry(0.62, 16, 12), cloth);
+    head.position.y = 3.95;
+    head.scale.set(1, 1.15, 1);
+    g.add(head);
+    const eyes = [];
+    for (const s of [-1, 1]) {
+      const eye = new T.Mesh(new T.SphereGeometry(0.17, 10, 8), new T.MeshBasicMaterial({ color: "#f3ecff" }));
+      eye.position.set(s * 0.24, 4.05, 0.52);
+      eye.scale.set(1, 1.35, 0.6);
+      g.add(eye);
+      eyes.push(eye);
+    }
+    const smile = new T.Mesh(new T.TorusGeometry(0.26, 0.035, 5, 14, PI * 0.9), new T.MeshBasicMaterial({ color: "#f3ecff" }));
+    smile.position.set(0, 3.72, 0.55);
+    smile.rotation.z = PI * 1.05;
+    g.add(smile);
+    /* beso luzeak eta hatz-atzaparrak */
+    const arms = [];
+    for (const s of [-1, 1]) {
+      const pivot = new T.Group();
+      pivot.position.set(s * 0.55, 3.2, 0.1);
+      const arm = new T.Mesh(new T.CylinderGeometry(0.07, 0.11, 2.2, 6), cloth);
+      arm.position.y = -1.1;
+      pivot.add(arm);
+      for (let f = -1; f <= 1; f++) {
+        const claw = new T.Mesh(new T.ConeGeometry(0.04, 0.5, 4), new T.MeshBasicMaterial({ color: "#d9c8ff" }));
+        claw.position.set(f * 0.08, -2.4, 0.06);
+        claw.rotation.x = PI;
+        pivot.add(claw);
+      }
+      pivot.rotation.z = s * 0.5;
+      g.add(pivot);
+      arms.push(pivot);
+    }
+    const aura = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#7a5cff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.45 }));
+    aura.position.y = 2.6;
+    aura.scale.setScalar(7);
+    g.add(aura);
+    return { g, body, eyes, smile, arms, aura, cloth };
+  }
+  function ingumaBuild() {
+    const R = DGA.bossRoom;
+    /* ohea arenaren iparrean: Amaiur lo (maindirepean), sorgin-txapela burkoan */
+    const bed = new T.Group(),
+      frame = new T.Mesh(new T.BoxGeometry(3.4, 0.9, 5.2), material("#6e4a2c")),
+      sheet = new T.Mesh(new T.BoxGeometry(3.1, 0.3, 4.9), material("#f2efe6")),
+      mound = new T.Mesh(new T.SphereGeometry(1, 14, 10), material("#a8332a")),
+      pillow = new T.Mesh(new T.BoxGeometry(2.2, 0.35, 0.9), material("#fbf8f0")),
+      hat = new T.Mesh(new T.ConeGeometry(0.45, 1.1, 10), material("#3a3f7a")),
+      brim = new T.Mesh(new T.CylinderGeometry(0.75, 0.75, 0.06, 16), material("#3a3f7a"));
+    frame.position.y = 0.45;
+    sheet.position.y = 1.0;
+    mound.scale.set(1.25, 0.45, 2.1);
+    mound.position.set(0, 1.15, 0.5);
+    pillow.position.set(0, 1.25, -1.9);
+    hat.position.set(0.2, 1.75, -1.85);
+    hat.rotation.x = -0.9;
+    brim.position.set(0.2, 1.5, -1.65);
+    brim.rotation.x = -0.9;
+    bed.add(frame, sheet, mound, pillow, hat, brim);
+    bed.traverse((n) => n.isMesh && ((n.castShadow = true), (n.receiveShadow = true)));
+    bed.position.set(R.x, 0, R.z - 9);
+    BP.add(bed);
+    solids.push({ x: R.x, z: R.z - 9, r: 2.2, h: 1.4, y: 0, pillar: true });
+    ING.bed = { x: R.x, z: R.z - 9, g: bed, mound };
+    const M = ingumaMesh(false);
+    Object.assign(ING, M);
+    ING.g.position.set(R.x, 7, R.z - 9);
+    BP.add(ING.g);
+    for (let i = 0; i < 2; i++) {
+      const F = ingumaMesh(true);
+      F.g.visible = false;
+      BP.add(F.g);
+      ING.fakes.push({ ...F, x: R.x, y: 3, z: R.z, alive: true, t: 0 });
+    }
+    /* murgiltzearen itzala lurrean */
+    ING.shadow = new T.Mesh(new T.CircleGeometry(2.4, 28), new T.MeshBasicMaterial({ color: "#2a0a3a", transparent: true, opacity: 0, depthWrite: false }));
+    ING.shadow.rotation.x = -PI / 2;
+    ING.shadow.position.y = 0.06;
+    ING.shadow.renderOrder = 3;
+    BP.add(ING.shadow);
+    ING.x = R.x;
+    ING.z = R.z - 9;
+    if (saved.flags.includes("inguma")) ING.g.visible = false;
+  }
+  /* --------------------------- borroka --------------------------- */
+  const ingR = () => DGA.bossRoom;
+  function ingumaStart() {
+    if (BOSS.on || saved.flags.includes("inguma") || !ING.g) return;
+    const R = ingR();
+    ROOM.fight = Object.assign(R, { boss: true });
+    clearEnemies();
+    BOSS.on = true;
+    BOSS.dead = false;
+    BOSS.kind = "inguma";
+    BOSS.weakR = 1.8;
+    Object.assign(ING, { state: "intro", t: 0, hp: ING_HP, phase: 1, crush: 0, scale: 1, reveal: 0, swap: 0, shotT: 2.5, said: {} });
+    ING.g.visible = true;
+    ING.x = ING.bed.x;
+    ING.z = ING.bed.z;
+    ING.y = 2.4;
+    const fight = () => {
+      ING.state = "float";
+      ING.t = 0;
+      title("INGUMA", "");
+      SND.roar();
+      shake(0.5);
+      bossBar("INGUMA", 1);
+      notify(L("Goian hegan. Izarrak: EZKUTUA (eutsi SORGINKERIAri). Murgiltzean, alde egin; gero, nekatuta: IZAR-HAUTSA!"), "", 7);
+    };
+    if (ING.seenIntro) return fight();
+    ING.seenIntro = true;
+    vsay(["c7_n3", "c7_a4"], fight, { INGUMA: [ING.x, ING.z, 2.4] });
+  }
+  /* kontatzen hasi (IZAR-HAUTSA): zaurgarri */
+  function ingumaCount(secs = 4.5) {
+    ING.state = "count";
+    ING.t = 0;
+    ING.countT = secs;
+    ING.countN = 0;
+    ING.stats.counts++;
+    bark("c7_n4");
+    SND.wake();
+    fxRing(ING.x, ING.y + 0.5, ING.z, "#d9c8ff", 4, 0.6);
+  }
+  function ingumaDust(tx, ty, tz) {
+    if (!BOSS.on || BOSS.kind !== "inguma") return 0;
+    const near = (x, y, z) => Math.hypot(x - tx, z - tz) < ING_R + 2 && Math.abs(y - ty) < 4.5;
+    if (ING.phase === 2) {
+      for (const F of ING.fakes) {
+        if (F.alive && F.g.visible && near(F.x, F.y, F.z)) {
+          fakePop(F);
+          return 1;
+        }
+      }
+    }
+    if (!near(ING.x, ING.y, ING.z)) return 0;
+    if (ING.state === "tired" || ING.state === "float2" || ING.state === "lull" || ING.state === "stagger") {
+      ingumaCount(ING.state === "lull" ? 6 : 4.5);
+      return 1;
+    }
+    return 0;
+  }
+  function ingumaHit(n) {
+    if (!BOSS.vulnerable()) return;
+    /* lokartuta eta kontatzen: kalte bikoitza */
+    const k = ING.state === "count" && ING.lullBoth ? 2 : 1;
+    ING.hp -= n * k;
+    const w = BOSS.weak();
+    FB.bossHit(w.x, w.y, w.z);
+    damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.5 }, n * k);
+    ING.flash = 0.25;
+    bossBar("INGUMA", (3 - ING.phase + Math.max(0, ING.hp) / ING_HP) / 3);
+    if (ING.hp > 0) return;
+    if (ING.phase >= 3) return ingumaDefeat();
+    ING.phase++;
+    ING.hp = ING_HP;
+    SND.roar();
+    shake(0.7);
+    slowmo = 0.5;
+    if (ING.phase === 2) {
+      ING.state = "float2";
+      ING.t = 0;
+      ING.realI = Math.floor(Math.random() * 3);
+      for (const F of ING.fakes) Object.assign(F, { alive: true, t: 0 });
+      grassSpawn();
+      bark("c7_n5");
+      notify(L("Hiru Inguma! ENTZUN (txalaparta): benetakoa distiratuko da. Amets-belarrak: IRAGANEAN ez dute minik egiten."), "", 7);
+    } else {
+      ING.state = "sit";
+      ING.t = 0;
+      ING.crush = 0;
+      for (const F of ING.fakes) F.g.visible = false;
+      grassClear();
+      notify(L("Ohean eseri da: amesgaiztoa betetzen ari da! SEASKA (◀ ▶ ◀ ▶ ◀): lokartu ezazu."), "", 7);
+    }
+  }
+  /* SEASKA (seaska.js → ametsaSeaska-tik) */
+  function ingumaLullaby() {
+    if (!BOSS.on || BOSS.kind !== "inguma") return false;
+    if (ING.phase < 3) {
+      notify(L("Inguma barrez: «Oraindik ez, sorgin txikia!» — esna dago, hegan. Lehenik, kontatu dezala."), "", 3.5);
+      return true;
+    }
+    if (ING.state !== "sit") return true;
+    ING.state = "lull";
+    ING.t = 0;
+    ING.crush = Math.max(0, ING.crush - 0.4);
+    ING.stats.lull++;
+    bark("c7_n6");
+    fxBurst(ING.x, ING.y + 2, ING.z, { n: 40, speed: 2, up: 1, life: 1.4, size: 0.3, color: "#e6dcff", grav: -0.3 });
+    notify(L("Lokartzen ari da! Orain: jo (eta IZAR-HAUTSA: kalte bikoitza)."), "", 4);
+    return true;
+  }
+  /* itzulitako izarra: zorabiatuta (hautsarentzat leihoa) */
+  function ingumaStagger() {
+    if (ING.phase !== 1 || ING.state === "count") return;
+    ING.state = "stagger";
+    ING.t = 0;
+    SND.clang(0.7);
+    fxBurst(ING.x, ING.y + 2, ING.z, { n: 30, speed: 4, life: 0.6, size: 0.3, color: "#fff1a8", grav: 2 });
+    notifyOnce("inguma-zorabiatu", L("Bere izarrak itzuli zaizkio! Zorabiatuta: IZAR-HAUTSA orain!"), "");
+  }
+  /* faltsua lehertu: mamu bat */
+  function fakePop(F) {
+    F.alive = false;
+    F.t = 0;
+    F.g.visible = false;
+    fxBurst(F.x, F.y + 2, F.z, { n: 30, speed: 3, life: 0.8, size: 0.35, color: "#cbb8ff", grav: -0.5 });
+    SND.whoosh();
+    if (ENEMIES.filter((e) => e.state !== "dead").length < 3) {
+      const e = spawnEnemy("mamua", -1, F.x, F.z, 0);
+      e.room = ingR();
+    }
+    notifyOnce("inguma-faltsua", L("Faltsua! Mamu bihurtu da. Benetakoa: ENTZUN (txalaparta)."), "");
+  }
+  /* amets-belarrak (2. fasea): ORAINEAN mina ematen dute */
+  function grassSpawn() {
+    grassClear();
+    const R = ingR();
+    for (let i = 0; i < 7; i++) {
+      const a = (i / 7) * TAU + 0.4,
+        r = 5 + (i % 3) * 3.2,
+        x = R.x + Math.cos(a) * r,
+        z = R.z + Math.sin(a) * r;
+      const g = new T.Group();
+      ING.grassMat ||= new T.MeshStandardMaterial({ color: "#2a1a3a", emissive: new T.Color("#5a2a7a"), emissiveIntensity: 0.6, roughness: 0.8 });
+      ING.grassGeo ||= [0, 1, 2].map((j) => new T.ConeGeometry(0.07, 0.9 + j * 0.3, 4));
+      for (let k = 0; k < 14; k++) {
+        const b = new T.Mesh(ING.grassGeo[k % 3], ING.grassMat);
+        const ka = k * 2.4,
+          kr = 0.3 + (k % 5) * 0.32;
+        b.position.set(Math.cos(ka) * kr, 0.45, Math.sin(ka) * kr);
+        b.rotation.z = Math.sin(ka) * 0.3;
+        g.add(b);
+      }
+      g.position.set(x, 0, z);
+      ZONES.ametsa.group.add(g);
+      ING.grass.push({ g, x, z, r: 1.9, k: 0, hurtT: 0 });
+    }
+  }
+  function grassClear() {
+    for (const G of ING.grass) G.g.parent && G.g.parent.remove(G.g);
+    ING.grass.length = 0;
+  }
+  function ingumaDefeat() {
+    BOSS.dead = true;
+    ING.state = "dead";
+    flagSet("inguma");
+    P.wx = P.wz = 0;
+    grassClear();
+    for (const e of ENEMIES) if (e.state !== "dead") killEnemy(e);
+    ROOM.fight = null;
+    bossBar(null);
+    SND.stinger(true);
+    slowmo = 1.2;
+    vsay(["c7_n7"], () => {
+      BOSS.on = false;
+      ING.g.visible = false;
+      for (const F of ING.fakes) F.g.visible = false;
+      saved.hearts = Math.max(saved.hearts, 7);
+      updateMaxHp();
+      P.hp = P.maxHp;
+      persist();
+      itemGet("bihotza", L("INGUMAREN KATEA, HAUTSIA"), L("Arnasa bat gehiago. Ametsak berriro zureak dira."), () => ametsaWake());
+    }, { INGUMA: [ING.x, ING.z, ING.y] });
+  }
+  /* --------------------------- eguneraketa --------------------------- */
+  function ingumaUpdate(dt) {
+    if (!ING.g || ZONE.cur !== "ametsa") return;
+    const R = ingR();
+    /* hasi: arenan sartzean */
+    if (!BOSS.on && !saved.flags.includes("inguma") && saved.doors.includes(DGA.bossDoor) && ROOM.cur === R && P.grounded && Math.hypot(P.x - R.x, P.z - R.z) < 13 && !cinematic && !FILM.on) ingumaStart();
+    ING.flash = Math.max(0, ING.flash - dt);
+    const live = BOSS.on && BOSS.kind === "inguma" && !BOSS.dead;
+    if (!live) {
+      /* lo: ohean eserita, astiro arnasa hartzen */
+      if (!saved.flags.includes("inguma")) {
+        ING.g.position.set(ING.bed.x, 1.3 + Math.sin(time * 1.2) * 0.05, ING.bed.z);
+        ING.g.rotation.y = 0;
+      }
+      return;
+    }
+    ING.t += dt;
+    const t = ING.t,
+      dx = P.x - ING.x,
+      dz = P.z - ING.z,
+      d = Math.hypot(dx, dz) || 1;
+    let ty = ING.y;
+    /* --- 1. fasea: IZARRAK --- */
+    if (ING.state === "float") {
+      ING.ang += dt * 0.45;
+      const tx = R.x + Math.cos(ING.ang) * 10,
+        tz = R.z + Math.sin(ING.ang) * 10;
+      ING.x = mix(ING.x, tx, 1 - Math.exp(-dt * 1.5));
+      ING.z = mix(ING.z, tz, 1 - Math.exp(-dt * 1.5));
+      ty = mix(ING.y, 7.5 + Math.sin(t * 1.4) * 0.6, 1 - Math.exp(-dt * 2.5));
+      ING.shotT -= dt;
+      if (ING.shotT <= 0) {
+        ING.shotT = 2.4;
+        /* izar-euria: hiru izar, haizemailean */
+        const a = Math.atan2(dx, dz);
+        for (const s of [-0.28, 0, 0.28]) {
+          shoot(ING.src, Math.sin(a + s), Math.cos(a + s), 0.85);
+          const S = SHOTS[SHOTS.length - 1];
+          S.star = true;
+          S.m.material = material("#fff1a8", 1.4);
+        }
+      }
+      if (t > 7.5) {
+        ING.state = "diveWind";
+        ING.t = 0;
+        ING.dive = { x: P.x, z: P.z };
+        SND.screech && SND.screech();
+      }
+    } else if (ING.state === "diveWind") {
+      ty = mix(ING.y, 9, 1 - Math.exp(-dt * 3));
+      ING.dive.x = mix(ING.dive.x, P.x, 1 - Math.exp(-dt * 2));
+      ING.dive.z = mix(ING.dive.z, P.z, 1 - Math.exp(-dt * 2));
+      if (t > 1.1) {
+        ING.state = "dive";
+        ING.t = 0;
+        ING.from = { x: ING.x, y: ING.y, z: ING.z };
+      }
+    } else if (ING.state === "dive") {
+      const k = Math.min(1, t / 0.38);
+      ING.x = mix(ING.from.x, ING.dive.x, k);
+      ING.z = mix(ING.from.z, ING.dive.z, k);
+      ty = mix(ING.from.y, 1, k * k);
+      if (k >= 1) {
+        shake(0.45);
+        fxRing(ING.x, 0.15, ING.z, "#7a5cff", 4, 0.5);
+        if (Math.hypot(P.x - ING.x, P.z - ING.z) < 2.4 && P.y < 2.5 && P.dashT <= 0) playerHit(1, ING.x, ING.z);
+        ING.state = "tired";
+        ING.t = 0;
+        notifyOnce("inguma-nekatuta", L("Nekatuta, behean! IZAR-HAUTSA (Z) bota: kontatzen hasiko da."), "");
+      }
+    } else if (ING.state === "tired" || ING.state === "stagger") {
+      /* zorabiatuta (izarra itzulita) erortzen da; nekatuta, behean arnasestuka */
+      ty = mix(ING.y, 1.1, 1 - Math.exp(-dt * (ING.state === "stagger" ? 4 : 8))) + Math.sin(t * 6) * 0.02;
+      if (t > (ING.state === "stagger" ? 3.4 : 2.8)) {
+        ING.state = ING.phase === 1 ? "float" : "float2";
+        ING.t = 0;
+      }
+    } else if (ING.state === "count") {
+      /* kontatzen: geldi, zenbakiak buruaren gainean */
+      ty = mix(ING.y, ING.phase === 3 ? 0.8 : 1.4, 1 - Math.exp(-dt * 4));
+      ING.countT -= dt;
+      if (Math.floor((t - dt) * 2) !== Math.floor(t * 2)) damageNumber({ x: ING.x, y: ty + 4.4, z: ING.z, H: 0.4 }, String(++ING.countN), "#d9c8ff");
+      if (ING.countT <= 0) {
+        ING.lullBoth = false;
+        ING.state = ING.phase === 1 ? "float" : ING.phase === 2 ? "float2" : "sit";
+        ING.t = 0;
+        if (ING.phase === 2) ING.realI = Math.floor(Math.random() * 3);
+      }
+    }
+    /* --- 2. fasea: BELARRAK (hiru Inguma, ENTZUN) --- */
+    if (ING.state === "float2" || (ING.phase === 2 && ING.state === "count")) {
+      ING.reveal = TXALA.reveal > 0 ? 1 : Math.max(0, ING.reveal - dt * 0.5);
+      ING.swap += dt;
+      if (ING.swap > 7 && ING.state === "float2") {
+        ING.swap = 0;
+        ING.realI = (ING.realI + 1 + Math.floor(Math.random() * 2)) % 3;
+        SND.whoosh();
+      }
+      const slots = [0, 1, 2].map((i) => {
+        const a = ING.ang + (i * TAU) / 3;
+        return [R.x + Math.cos(a) * 8, R.z + Math.sin(a) * 8];
+      });
+      if (ING.state === "float2") {
+        ING.ang += dt * 0.35;
+        ING.x = mix(ING.x, slots[ING.realI][0], 1 - Math.exp(-dt * 2.5));
+        ING.z = mix(ING.z, slots[ING.realI][1], 1 - Math.exp(-dt * 2.5));
+        ty = mix(ING.y, 3 + Math.sin(t * 1.6) * 0.4, 1 - Math.exp(-dt * 2.5));
+      }
+      let j = 0;
+      for (let i = 0; i < 3; i++) {
+        if (i === ING.realI) continue;
+        const F = ING.fakes[j++];
+        if (!F.alive) {
+          F.t += dt;
+          if (F.t > 6) (F.alive = true), (F.t = 0);
+        }
+        F.g.visible = F.alive;
+        F.x = mix(F.x, slots[i][0], 1 - Math.exp(-dt * 2.5));
+        F.z = mix(F.z, slots[i][1], 1 - Math.exp(-dt * 2.5));
+        F.y = 3 + Math.sin(t * 1.6 + i) * 0.4;
+        F.g.position.set(F.x, F.y, F.z);
+        F.g.rotation.y = Math.atan2(P.x - F.x, P.z - F.z);
+        F.cloth.emissive.set("#3a2a5a");
+      }
+      /* belarrak: ORAINEAN mina */
+      if (ING.grassMat) ING.grassMat.emissiveIntensity = phase ? 0.6 + Math.sin(time * 4) * 0.15 : 0.04;
+      for (const G of ING.grass) {
+        G.k = mix(G.k, 1, 1 - Math.exp(-dt * 1.5));
+        G.g.scale.setScalar(0.3 + 0.7 * G.k);
+        G.hurtT = Math.max(0, G.hurtT - dt);
+        if (phase === 1 && G.hurtT <= 0 && Math.hypot(P.x - G.x, P.z - G.z) < G.r && P.y < 1 && !respawnTimer) {
+          G.hurtT = 1.2;
+          playerHit(1, G.x, G.z);
+          notifyOnce("amets-belarrak", L("Amets-belarrak! ORAINEAN mina; IRAGANEAN (uda), belar hutsak dira."), "");
+        }
+      }
+    }
+    /* --- 3. fasea: HAREAK (ohean eserita; SEASKA) --- */
+    if (ING.state === "sit") {
+      ING.x = mix(ING.x, ING.bed.x, 1 - Math.exp(-dt * 2));
+      ING.z = mix(ING.z, ING.bed.z, 1 - Math.exp(-dt * 2));
+      ty = mix(ING.y, 2.2, 1 - Math.exp(-dt * 2));
+      ING.crush = Math.min(1, ING.crush + dt / 13);
+      /* hare-haizea: ohetik urrun bultzaka */
+      const bx = P.x - ING.bed.x,
+        bz = P.z - ING.bed.z,
+        bd = Math.hypot(bx, bz) || 1,
+        push = bd < 9 ? 3.4 * (1 - bd / 9) + 1.2 : 0;
+      P.wx = (bx / bd) * push;
+      P.wz = (bz / bd) * push;
+      if (Math.random() < dt * 30) fxBurst(ING.bed.x + (Math.random() - 0.5) * 8, 0.4 + Math.random() * 2, ING.bed.z + (Math.random() - 0.5) * 8, { n: 1, speed: 3, up: 0.4, life: 0.8, size: 0.14, color: "#e8d6a8", grav: 0.3, drag: 0.5 });
+      if (ING.crush >= 1) {
+        ING.crush = 0.35;
+        playerHit(1, ING.bed.x, ING.bed.z);
+        shake(0.6);
+        notify(L("Amesgaiztoak estutu zaitu! SEASKA, azkar (◀ ▶ ◀ ▶ ◀)!"), "", 3);
+      }
+    } else if (ING.state === "lull") {
+      P.wx = P.wz = 0;
+      ty = mix(ING.y, 0.8, 1 - Math.exp(-dt * 3));
+      ING.x = mix(ING.x, ING.bed.x + 3.2, 1 - Math.exp(-dt * 2));
+      ING.z = mix(ING.z, ING.bed.z + 2.5, 1 - Math.exp(-dt * 2));
+      if (Math.random() < dt * 2) damageNumber({ x: ING.x, y: ty + 4.2, z: ING.z, H: 0.4 }, "z z", "#d9c8ff");
+      if (t > 7) {
+        ING.state = "sit";
+        ING.t = 0;
+      }
+    } else if (ING.phase === 3 && ING.state === "count") {
+      P.wx = P.wz = 0;
+      ING.lullBoth = true;
+    } else if (ING.phase !== 3) {
+      P.wx = P.wz = 0;
+    }
+    /* itxura */
+    ING.y = ty;
+    ING.g.position.set(ING.x, ty, ING.z);
+    ING.src.x = ING.x;
+    ING.src.y = ty;
+    ING.src.z = ING.z;
+    ING.g.rotation.y = Math.atan2(P.x - ING.x, P.z - ING.z);
+    const sc = ING.phase === 3 ? 1.55 : 1;
+    ING.scale = mix(ING.scale, sc, 1 - Math.exp(-dt * 2));
+    ING.g.scale.setScalar(ING.scale);
+    const counting = ING.state === "count",
+      asleep = ING.state === "lull";
+    for (const e of ING.eyes) {
+      e.scale.y = asleep ? 0.15 : counting ? 0.6 + Math.abs(Math.sin(t * 8)) * 0.6 : 1.35;
+      e.material.color.set(ING.phase === 2 && ING.reveal > 0.05 ? "#ffd36a" : counting ? "#c9b6ff" : "#f3ecff");
+    }
+    ING.cloth.emissive.set(ING.flash > 0 ? "#ffffff" : ING.phase === 2 && ING.reveal > 0.05 ? "#a07a20" : "#2a1450");
+    ING.cloth.emissiveIntensity = ING.flash > 0 ? 1.8 : 0.5;
+    for (const [i, A] of ING.arms.entries()) A.rotation.x = ING.state === "diveWind" ? -1.6 : ING.state === "sit" ? -0.6 + Math.sin(t * 3 + i) * 0.2 : Math.sin(t * 2 + i * 2) * 0.25;
+    ING.aura.material.opacity = 0.35 + Math.sin(t * 3) * 0.1;
+    /* murgiltzearen itzala */
+    ING.shadow.material.opacity = ING.state === "diveWind" ? 0.25 + 0.4 * Math.min(1, t / 1.1) : 0;
+    if (ING.dive) ING.shadow.position.set(ING.dive.x, 0.06, ING.dive.z);
+  }
+  /* amesgaiztoaren neurgailua: binjeta morea (game.js-ko binjetatik) */
+  const ingumaVignette = () => (BOSS.on && BOSS.kind === "inguma" && ING.state === "sit" && ING.crush > 0.15 ? `inset 0 0 ${70 + 170 * ING.crush}px #3a0a5ab0` : "");
+  /* bossReset-etik (bizitzak amaituta): ohera itzuli, lo */
+  function ingumaReset() {
+    if (!(BOSS.on && BOSS.kind === "inguma" && !BOSS.dead)) return;
+    BOSS.on = false;
+    P.wx = P.wz = 0;
+    grassClear();
+    for (const F of ING.fakes) (F.g.visible = false), (F.alive = true);
+    Object.assign(ING, { state: "sleep", t: 0, phase: 0, crush: 0, scale: 1, dive: null, lullBoth: false });
+    ING.g.scale.setScalar(1);
+    ING.shadow.material.opacity = 0;
+    bossBar(null);
+  }
+  BOSSK.inguma = {
+    vulnerable: () => ING.state === "count" || ING.state === "lull",
+    weak: () => ({ x: ING.x, y: ING.y + 3.9 * ING.scale, z: ING.z }),
+    center: () => ({ x: ING.x, y: ING.y, z: ING.z, h: 4.5 * ING.scale, r: 2.6 }),
+    hit: (n) => ingumaHit(n),
+    stagger: () => ingumaStagger(),
+    dust: (x, y, z) => ingumaDust(x, y, z),
+    /* hiru Inguma: ENTZUN gabe, fijazioak ez du benetakoa salatzen */
+    noLock: () => ING.state === "float2" && ING.reveal < 0.05,
+    dustAim: () => [{ x: ING.x, y: ING.y, z: ING.z }, ...ING.fakes.filter((F) => F.alive && F.g.visible).map((F) => ({ x: F.x, y: F.y, z: F.z }))],
+  };
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -25867,6 +27557,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     /* herria: etxe-izenak eta ateak; Amaiurren etxea (ITURRALDE) barrutik */
     herriaInit();
     buildEtxea();
+    /* zazpigarrena: AMETSA (Amaiurren ametsa, Ingumaren etxea) */
+    buildAmetsa();
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -26389,13 +28081,14 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       sun.intensity = mix(1.8, 1.95, phaseBlend);
       ambient.intensity = mix(0.86, 0.95, phaseBlend) * (scene.environment ? 0.55 : 1);
       scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
-      /* zeruan ez dago gaurik (hodeien gainean, eguzkia beti) */
+      /* zeruan ez dago gaurik (hodeien gainean, eguzkia beti); ametsean, beti gaua */
       if (ZONES[ZONE.cur].sky) {
-        DAY.k = 0;
+        DAY.k = ZONES[ZONE.cur].dream ? 1 : 0;
         DAY.tw = 0;
       }
       dayVisuals();
-      if (ZONES[ZONE.cur].sky) skyVisuals();
+      if (ZONES[ZONE.cur].dream) dreamVisuals();
+      else if (ZONES[ZONE.cur].sky) skyVisuals();
     } else {
       sun.color.set(phaseBlend > 0.5 ? "#8fa9cc" : "#c08c5c");
       sun.intensity = 0.38;
@@ -26434,6 +28127,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (HN) return { kind: "hearth", label: L("ATSEDEN"), fn: () => hearthRest(HN) };
     const HA = homeActionNear();
     if (HA) return HA;
+    const AA = ametsaActionNear();
+    if (AA) return AA;
     const SC = shortcutNear();
     if (SC) return SC;
     const MN = mirrorNear();
@@ -26709,6 +28404,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       KeyC: chainFire,
       KeyV: hornBlow,
       KeyX: bombThrow,
+      KeyZ: dustThrow,
       KeyB: txalaOpen,
       KeyT: lockToggle,
       Tab: lockToggle,
@@ -27036,6 +28732,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       skyDragonUpdate(dt);
       pouchesUpdate(dt);
       deiaUpdate(dt);
+      hautsaUpdate(dt);
       proUpdate(dt);
       if (ZONE.cur === "ibarra") {
         hubUpdate(dt);
@@ -27063,7 +28760,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       lowBeat = 0;
       SND.thud();
     }
-    $("vignette").style.boxShadow = low ? `inset 0 0 ${110 + 50 * Math.abs(Math.sin(time * 3.3))}px #b0102ea6` : "";
+    $("vignette").style.boxShadow = low ? `inset 0 0 ${110 + 50 * Math.abs(Math.sin(time * 3.3))}px #b0102ea6` : ingumaVignette();
     if (frame % 15 === 0) coachUpdate();
     if (time > 75 && !keysFaded) {
       keysFaded = true;
@@ -27336,6 +29033,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (hasBomb() && TXB.n > 0 && (crackNear(11) || (BOSS.on && BOSS.bombAim && BOSS.bombAim()))) return ["bomb", L("TXIMISTA"), "cyan", bombThrow];
     /* ENTZUN behar den lekuan (ezkutuko harriak) */
     if (saved.rhythms.includes("entzun") && TXALA.reveal <= 0 && platforms.some((s) => s.hidden && Math.hypot(s.x - P.x, s.z - P.z) < 18)) return ["txala", L("TXALAPARTA"), "violet", txalaOpen];
+    /* IZAR-HAUTSA: izar-lainoa, ate-zainak, ametseko etsaiak edo Inguma */
+    if (hasDust() && dustUseful()) return ["dust", L("IZARRAK"), "violet", dustThrow];
     return null;
   }
   function ctxUpdate() {
@@ -27361,6 +29060,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (hasChain()) opts.push([L("SUGAARREN KATEA") + kb(" · C"), chainFire]);
     if (hasHorn()) opts.push([L("HAIZE-ADARRA") + kb(" · V"), hornBlow]);
     if (hasBomb()) opts.push([L("TXIMISTARRIA") + kb(" · X"), bombThrow]);
+    if (hasDust()) opts.push([L("IZAR-HAUTSA") + kb(" · Z"), dustThrow]);
     opts.push([L("FINKATU") + kb(" · T"), lockToggle]);
     opts.push([L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)]);
     const Z = zoneHere();
@@ -27377,6 +29077,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
         (hasWings() ? L("ENARA: jauzi bikoitza eta eutsi JAUZIari — planeatu; haize-zutabeek gora eramaten zaituzte.") + "\n\n" : "") +
         (saved.items.includes("ispilua") ? L("EGUZKI-ISPILUA: argi-zutabe batean, eutsi SORGINKERIAri eta apuntatu. Iraganean eguzkia, orainean ilargia. Ispilu-harriak: BIRATU.") + "\n\n" : "") +
+        (hasDust() ? L("IZAR-HAUTSA: bota, eta gaueko izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, izar-plataformak; airean, izar-eskailerak.") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",
@@ -27424,6 +29125,26 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       window.__game = {
         P,
         saved,
+        DGA,
+        AM,
+        ING,
+        HAUTS,
+        DUST_GATES,
+        BERTSOAK,
+        dustThrow,
+        dustUseful,
+        starPlatform,
+        inMist,
+        bertsoCount,
+        seaskaEffect,
+        seaskaReady,
+        ametsaEnter,
+        ametsaWake,
+        ametsaSeaska,
+        ametsaActionNear,
+        ingumaStart,
+        ingumaFinale,
+        ingumaLullaby,
         SHAFTS,
         MIRRORS,
         CRYSTALS,

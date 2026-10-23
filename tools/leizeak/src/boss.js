@@ -30,6 +30,8 @@
     /* itzulitako harkaitza: etsai nagusia zorabiatu (baldin badaki) */
     stagger: () => bk() && bk().stagger && bk().stagger(),
     canStagger: () => BOSS.on && !!bk() && !!bk().stagger,
+    /* fijazioa ezin (adib. Inguma eta haren kopiak, ENTZUN gabe) */
+    noLock: () => !!bk() && !!bk().noLock && bk().noLock(),
     ring: {
       live: () => BOSS.on && !!bk() && !!bk().ring && bk().ring.live(),
       pos: () => bk().ring.pos(),
@@ -233,6 +235,7 @@
     jentilReset();
     odeiReset();
     zbReset();
+    ingumaReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;

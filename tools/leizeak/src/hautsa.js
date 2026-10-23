@@ -55,6 +55,15 @@
         d = Math.hypot(dx, dz);
       if (d < bd && d > 0.5 && (dx * fx + dz * fz) / d > 0.6 && Math.abs(e.y - P.y) < 4) (bd = d), (best = e);
     }
+    /* etsai nagusia (eta haren kopiak): BOSSK[kind].dustAim() → [{x, y, z}] */
+    const BK = BOSS.on && BOSSK[BOSS.kind];
+    if (BK && BK.dustAim)
+      for (const c of BK.dustAim()) {
+        const dx = c.x - P.x,
+          dz = c.z - P.z,
+          d = Math.hypot(dx, dz);
+        if (d < (best ? bd : 14) && d > 0.5 && (dx * fx + dz * fz) / d > 0.55 && Math.abs(c.y - P.y) < 7) (bd = d), (best = c);
+      }
     if (best && !inMist(tx, ty + 0.5, tz)) {
       tx = best.x;
       tz = best.z;
@@ -281,6 +290,14 @@
       }
     }
     gatesUpdate(dt);
+  }
+  /* IZARRAK botoia (ctxPower): hautsak zerbait egingo luke hemen? */
+  function dustUseful() {
+    const grp = ZONES[ZONE.cur].group;
+    if (HAUTS.mists.some((M) => M.group === grp && Math.abs(P.x - M.x) < M.w / 2 + 5 && Math.abs(P.z - M.z) < M.d / 2 + 5)) return true;
+    if (DUST_GATES.some((G) => G.group === grp && G.t <= 0 && Math.hypot(G.x - P.x, G.z - P.z) < 9)) return true;
+    if (BOSS.on && BOSSK[BOSS.kind] && BOSSK[BOSS.kind].dust) return true;
+    return ZONE.cur === "ametsa" && ENEMIES.some((e) => e.state !== "dead" && !(e.counting > 0) && Math.hypot(e.x - P.x, e.z - P.z) < 10);
   }
   function hautsaReset() {
     for (const p of HAUTS.plats.slice()) starPlatformRemove(p);

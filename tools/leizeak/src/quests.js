@@ -353,6 +353,7 @@
     );
   }
   function talkTxomin(N, f) {
+    if (seaskaTalk(N, f)) return;
     if (!f("txomin"))
       return talk(
         N,

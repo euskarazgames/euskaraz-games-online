@@ -1795,6 +1795,10 @@
   /* @include film.js */
   /* @include deiak.js */
   /* @include prologoa.js */
+  /* @include hautsa.js */
+  /* @include seaska.js */
+  /* @include ametsa.js */
+  /* @include inguma.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -2234,6 +2238,8 @@
     /* herria: etxe-izenak eta ateak; Amaiurren etxea (ITURRALDE) barrutik */
     herriaInit();
     buildEtxea();
+    /* zazpigarrena: AMETSA (Amaiurren ametsa, Ingumaren etxea) */
+    buildAmetsa();
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -2756,13 +2762,14 @@
       sun.intensity = mix(1.8, 1.95, phaseBlend);
       ambient.intensity = mix(0.86, 0.95, phaseBlend) * (scene.environment ? 0.55 : 1);
       scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
-      /* zeruan ez dago gaurik (hodeien gainean, eguzkia beti) */
+      /* zeruan ez dago gaurik (hodeien gainean, eguzkia beti); ametsean, beti gaua */
       if (ZONES[ZONE.cur].sky) {
-        DAY.k = 0;
+        DAY.k = ZONES[ZONE.cur].dream ? 1 : 0;
         DAY.tw = 0;
       }
       dayVisuals();
-      if (ZONES[ZONE.cur].sky) skyVisuals();
+      if (ZONES[ZONE.cur].dream) dreamVisuals();
+      else if (ZONES[ZONE.cur].sky) skyVisuals();
     } else {
       sun.color.set(phaseBlend > 0.5 ? "#8fa9cc" : "#c08c5c");
       sun.intensity = 0.38;
@@ -2801,6 +2808,8 @@
     if (HN) return { kind: "hearth", label: L("ATSEDEN"), fn: () => hearthRest(HN) };
     const HA = homeActionNear();
     if (HA) return HA;
+    const AA = ametsaActionNear();
+    if (AA) return AA;
     const SC = shortcutNear();
     if (SC) return SC;
     const MN = mirrorNear();
@@ -3076,6 +3085,7 @@
       KeyC: chainFire,
       KeyV: hornBlow,
       KeyX: bombThrow,
+      KeyZ: dustThrow,
       KeyB: txalaOpen,
       KeyT: lockToggle,
       Tab: lockToggle,
@@ -3403,6 +3413,7 @@
       skyDragonUpdate(dt);
       pouchesUpdate(dt);
       deiaUpdate(dt);
+      hautsaUpdate(dt);
       proUpdate(dt);
       if (ZONE.cur === "ibarra") {
         hubUpdate(dt);
@@ -3430,7 +3441,7 @@
       lowBeat = 0;
       SND.thud();
     }
-    $("vignette").style.boxShadow = low ? `inset 0 0 ${110 + 50 * Math.abs(Math.sin(time * 3.3))}px #b0102ea6` : "";
+    $("vignette").style.boxShadow = low ? `inset 0 0 ${110 + 50 * Math.abs(Math.sin(time * 3.3))}px #b0102ea6` : ingumaVignette();
     if (frame % 15 === 0) coachUpdate();
     if (time > 75 && !keysFaded) {
       keysFaded = true;
@@ -3703,6 +3714,8 @@
     if (hasBomb() && TXB.n > 0 && (crackNear(11) || (BOSS.on && BOSS.bombAim && BOSS.bombAim()))) return ["bomb", L("TXIMISTA"), "cyan", bombThrow];
     /* ENTZUN behar den lekuan (ezkutuko harriak) */
     if (saved.rhythms.includes("entzun") && TXALA.reveal <= 0 && platforms.some((s) => s.hidden && Math.hypot(s.x - P.x, s.z - P.z) < 18)) return ["txala", L("TXALAPARTA"), "violet", txalaOpen];
+    /* IZAR-HAUTSA: izar-lainoa, ate-zainak, ametseko etsaiak edo Inguma */
+    if (hasDust() && dustUseful()) return ["dust", L("IZARRAK"), "violet", dustThrow];
     return null;
   }
   function ctxUpdate() {
@@ -3728,6 +3741,7 @@
     if (hasChain()) opts.push([L("SUGAARREN KATEA") + kb(" · C"), chainFire]);
     if (hasHorn()) opts.push([L("HAIZE-ADARRA") + kb(" · V"), hornBlow]);
     if (hasBomb()) opts.push([L("TXIMISTARRIA") + kb(" · X"), bombThrow]);
+    if (hasDust()) opts.push([L("IZAR-HAUTSA") + kb(" · Z"), dustThrow]);
     opts.push([L("FINKATU") + kb(" · T"), lockToggle]);
     opts.push([L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)]);
     const Z = zoneHere();
@@ -3744,6 +3758,7 @@
         (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
         (hasWings() ? L("ENARA: jauzi bikoitza eta eutsi JAUZIari — planeatu; haize-zutabeek gora eramaten zaituzte.") + "\n\n" : "") +
         (saved.items.includes("ispilua") ? L("EGUZKI-ISPILUA: argi-zutabe batean, eutsi SORGINKERIAri eta apuntatu. Iraganean eguzkia, orainean ilargia. Ispilu-harriak: BIRATU.") + "\n\n" : "") +
+        (hasDust() ? L("IZAR-HAUTSA: bota, eta gaueko izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, izar-plataformak; airean, izar-eskailerak.") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",
@@ -3791,6 +3806,26 @@
       window.__game = {
         P,
         saved,
+        DGA,
+        AM,
+        ING,
+        HAUTS,
+        DUST_GATES,
+        BERTSOAK,
+        dustThrow,
+        dustUseful,
+        starPlatform,
+        inMist,
+        bertsoCount,
+        seaskaEffect,
+        seaskaReady,
+        ametsaEnter,
+        ametsaWake,
+        ametsaSeaska,
+        ametsaActionNear,
+        ingumaStart,
+        ingumaFinale,
+        ingumaLullaby,
         SHAFTS,
         MIRRORS,
         CRYSTALS,

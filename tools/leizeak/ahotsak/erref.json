@@ -4,20 +4,46 @@
   "text": "Ibarrako txalapartak gauez jotzen du, eta nik bakarrik entzuten dut haren deia.",
   "instruct": "female, young adult, low pitch",
   "seed": 1051,
-  "f0": 234.5
+  "f0": 234.5,
+  "speed": 0.93,
+  "post": {
+   "pauses": 0.14
+  }
  },
  "irati": {
   "wav": "erref/irati.flac",
   "text": "Txalapartak bi ahots ditu, ahizpa: batak galdetzen du, eta besteak erantzuten du beti.",
   "instruct": "female, teenager, high pitch",
   "seed": 1051,
-  "f0": 295.5
+  "f0": 295.5,
+  "speed": 0.92,
+  "post": {
+   "pauses": 0.16
+  }
  },
  "gaueko": {
   "wav": "erref/gaueko.flac",
-  "text": "Gaua nirea da, eta ilunpean ibiltzen direnak ere nireak dira, sorgin txikia.",
-  "instruct": "male, elderly, very low pitch",
-  "seed": 1034,
-  "f0": 110.7
+  "text": "Gaua… nirea da. Eta ilunpean ibiltzen direnak… nireak dira. Sorgin txikia.",
+  "instruct": "male, middle-aged, low pitch",
+  "seed": 53,
+  "f0": 158.7,
+  "speed": 0.88,
+  "post": {
+   "pauses": 0.3,
+   "pitch": 0.9,
+   "sub": 0.28
+  }
+ },
+ "inguma": {
+  "wav": "erref/inguma.flac",
+  "text": "Ixo… lo egin, sorgin txikia. Ametsean, denbora ez da igarotzen. Eta zu… nirea zara.",
+  "instruct": "female, elderly, very low pitch",
+  "seed": 53,
+  "f0": 210.7,
+  "speed": 0.9,
+  "post": {
+   "pauses": 0.22,
+   "pitch": 0.93
+  }
  }
 }

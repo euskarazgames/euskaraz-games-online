@@ -24,7 +24,7 @@
   }
   function lockCandidates() {
     const list = ENEMIES.filter((e) => e.state !== "dead" && e.state !== "spawn" && Math.hypot(e.x - P.x, e.z - P.z) < 24 && Math.abs(e.y - P.y) < 8);
-    if (BOSS.on && BOSS.lockable && !BOSS.dead) list.push(BOSS.lockable);
+    if (BOSS.on && BOSS.lockable && !BOSS.dead && !BOSS.noLock()) list.push(BOSS.lockable);
     return list;
   }
   function lockPos(t) {
@@ -36,7 +36,7 @@
   }
   function lockValid(t) {
     if (!t) return false;
-    if (t.boss) return BOSS.on && !BOSS.dead;
+    if (t.boss) return BOSS.on && !BOSS.dead && !BOSS.noLock();
     return t.state !== "dead" && ENEMIES.includes(t) && Math.hypot(t.x - P.x, t.z - P.z) < 28;
   }
   function lockToggle() {

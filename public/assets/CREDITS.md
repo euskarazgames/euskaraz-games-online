@@ -57,7 +57,7 @@ eta soinu guztiak joko honetarako sortu dira (prozeduralak).
 
 ## LEIZEEN DEIA · ahotsak (sintetikoak)
 
-`voice/leizeak/*.mp3`: Amaiur, Irati eta Gaueko pertsonaien ahotsak, euskaraz, **sintetikoak**:
+`voice/leizeak/*.mp3`: Amaiur, Irati, Gaueko eta Inguma pertsonaien ahotsak, euskaraz, **sintetikoak**:
 [OmniVoice](https://github.com/k2-fsa/OmniVoice) ereduarekin sortuak (VoiceStudio-ren motorra). Ahots
 bakoitza "voice design" moduan diseinatu zen (generoa, adina eta tonua bakarrik); ez da inor klonatu.
 Lerroak eta sortzeko scripta: `tools/leizeak/ahotsak/` (`lerroak.json`, `sortu.py`, `erref/`).

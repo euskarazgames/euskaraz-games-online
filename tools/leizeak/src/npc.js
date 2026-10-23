@@ -259,6 +259,10 @@
         ],
         () => flagSet("irati-lamia"),
       );
+    /* zazpigarren atala: seaska-kanta (seaska.js) */
+    if (f("irati-herensuge") && seaskaIrati(N, f)) return;
+    if (f("irati-inguma")) return talk(N, [["IRATI", "Anboto… zazpi argi berde, eta Gaueko zain. Ez dakit zer naizen, Amaiur. Baina txalapartak bi ahots ditu: elkarrekin joango gara."]]);
+    if (f("seaska-kanta")) return talk(N, [["IRATI", "Gauez, Iturralden: ohean, AMETSERA. Eta gogoratu: benetako Iratik ez du inoiz zure izena oihukatzen."]]);
     if (f("irati-herensuge")) return talk(N, [["IRATI", f("inguma-ametsa") ? "Amets gaizto bat? Ingumak nire ahotsa egin zuen? … Amonak kantu bat zekien, ohe ondoan kantatzeko. Gogoratu nahi dut, Amaiur." : "Argi bakarra falta da, gorria. Gaur gauean, lo egin etxean, Iturralden: sutondoa piztuta, eta kantu bat ohe ondoan."]]);
     if (f("irati-odei")) return talk(N, [["IRATI", "Herensugea… hodeien beste aldean. Zeruan, Odeiren hodei zuria zain duzu, ortzadarraren muturrean. Kontuz haren suarekin, Amaiur."]]);
     if (f("irati-errolan") && !f("ortzadarra")) return talk(N, [["IRATI", "Jentilen zerua… hodeien gainean. Harrespilako jentil zaharrak badaki nola igo: galdetu iezaiozu."]]);
@@ -350,6 +354,7 @@
   }
   function talkKattalin(N, f) {
     if (kattalinNight(N, f)) return;
+    if (seaskaTalk(N, f)) return;
     if (!f("kattalin"))
       return talk(
         N,
@@ -380,6 +385,7 @@
     return talk(N, [["KATTALIN", ["Harrespilan jentil zahar bat bizi da, harrizkoa. Galdetu iezaiozu Mariri buruz.", "Andere… nire amona. Sorgina zen, zu bezala. Ehun urte dira desagertu zela.", "Gure aitonek esaten zuten: izena duen guztia bada."][Math.floor(time) % 3]]]);
   }
   function talkJentil(N, f) {
+    if (seaskaTalk(N, f)) return;
     if (!f("jentil"))
       return talk(
         N,

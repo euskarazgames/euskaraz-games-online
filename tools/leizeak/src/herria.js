@@ -214,7 +214,7 @@
     { flag: "errolan", name: "TXIMISTA-HARRIA", text: "Errolanen ekaitz-harriaren zati bat. Eskuan, oraindik epel dago.", kind: "tximista" },
     { flag: "odei", name: "EURI-URA", text: "Odeiren lehen euri goxoa, beirazko ontzi batean. Argiak ortzadarra egiten du barruan.", kind: "euria" },
     { flag: "herensugea", name: "HERENSUGE-EZKATA", text: "Herensugearen ezkata bat, urrezkoa. Sutan jarrita ere, hotz; eskuan, bihotz baten taupadak.", kind: "ezkata" },
-    { flag: "inguma", name: "?", text: "Hutsik oraindik. Inguma, amets gaiztoen jauna.", kind: "?" },
+    { flag: "inguma", name: "AMONAREN HAUTS-ZORROA", text: "Hutsik, baina barruan izar-hauts pixka bat geratzen da: gauez, distira egiten du. Seaska-kanta, ahopean, beti.", kind: "zorroa" },
   ];
   function mementoMesh(kind) {
     const g = new T.Group();
@@ -250,6 +250,17 @@
       sc.scale.set(1, 1.35, 0.3);
       sc.position.y = 0.2;
       g.add(sc);
+    } else if (kind === "zorroa") {
+      /* hauts-zorroa: larruzko poltsa txikia, lokarria eta izar-distira */
+      const bag = new T.Mesh(new T.SphereGeometry(0.13, 12, 10), material("#7a5a3a"));
+      bag.scale.set(1, 1.15, 1);
+      bag.position.y = 0.14;
+      const neck = new T.Mesh(new T.CylinderGeometry(0.04, 0.07, 0.08, 10), material("#6a4a2a"));
+      neck.position.y = 0.3;
+      const glow = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#d9c8ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.6 }));
+      glow.position.y = 0.36;
+      glow.scale.setScalar(0.4);
+      g.add(bag, neck, glow);
     } else if (kind === "euria") {
       const jar = new T.Mesh(new T.CylinderGeometry(0.12, 0.12, 0.3, 12), new T.MeshStandardMaterial({ color: "#bfe6ff", transparent: true, opacity: 0.45, roughness: 0.1, emissive: new T.Color("#5fb8e8"), emissiveIntensity: 0.4 }));
       jar.position.y = 0.15;
@@ -518,9 +529,10 @@
         return say(
           [
             ["· · ·", "Amets bat. Iturralde, baina hutsik. Sutondoa itzalita. Txalapartak, urrunean, erritmo okerra jotzen du: atzekoz aurrera.", "", P.x, P.z, P.y],
-            ["???", "Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten. Entzun: «Amaiur…»", "", P.x, P.z, P.y + 2],
-            ["AMAIUR", "Irati? Ez… Zu ez zara Irati.", "", P.x, P.z, P.y],
-            ["INGUMA", "Inguma naiz. Eta gaur ez zaitut eramango. Laster, bai. Lo ona, sorgin txikia.", "", P.x, P.z, P.y + 2],
+            ["IRATI?", "Amaiur… Amaiur, esnatu. Ni naiz… Irati.", "", P.x, P.z, P.y + 2, null, "c7_p1"],
+            ["AMAIUR", "Irati? Ez… Zu ez zara Irati.", "", P.x, P.z, P.y, null, "c7_p2"],
+            ["INGUMA", "Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten.", "", P.x, P.z, P.y + 2, null, "c7_p3"],
+            ["INGUMA", "Inguma naiz. Gaur ez zaitut eramango. Laster… bai. Lo ona, sorgin txikia.", "", P.x, P.z, P.y + 2, null, "c7_p4"],
           ],
           () => {
             title(msg, "");
@@ -531,7 +543,10 @@
       title(msg, "");
       notify(L("Ondo lo egin duzu. Arnasa beteta."), "", 3);
     };
-    dialog(L("OHEA"), L("Lo egin?"), "", L("Amaren mantaren usaina. Kanpoan, txalapartak urrunean."), "", [
+    /* SEASKA-KANTA eta hauts-zorroa eskuan: Ingumaren ametsera (seaska.js) */
+    const dream = seaskaReady();
+    dialog(L("OHEA"), dream ? L("Ingumaren ametsa") : L("Lo egin?"), "", dream ? L("Hauts-zorroa eskuan, seaska-kanta ahopean. Lo egin, eta Ingumaren ametsera jaitsi?") : L("Amaren mantaren usaina. Kanpoan, txalapartak urrunean."), "", [
+      ...(dream ? [[L("AMETSERA"), () => setTimeout(ametsaEnter, 0)]] : []),
       [L("EGUNSENTIRA ARTE"), () => sleepTo(0.28, L("EGUN ON!"))],
       [L("ILUNABARRERA ARTE"), () => sleepTo(0.73, L("ARRATSALDE ON!"))],
       [L("EZ ORAIN"), () => {}],
@@ -549,7 +564,9 @@
   }
   function homeIrati() {
     const f = (k) => saved.flags.includes(k);
-    const t = f("herensugea")
+    const t = f("inguma")
+      ? L("Iratiren marrazkia: zazpi argi berde mendi baten gainean. Behean, bi ahizpa eskutik… eta haien itzala, bakarra, ilargi azpian. Lehen ez zegoen hor.")
+      : f("herensugea")
       ? L("Iratiren marrazkia, berriro: sei argi berde eta zazpigarrena, gorria. Behean, bi ahizpa… eta herensuge urre txiki bat, hegan, haien gainean.")
       : f("odei")
       ? L("Marrazkiaren ondoan, Iratiren idazkera: «Zazpi argi, eta behean bi ahizpa». Bost argi berde dira orain. Hutsuneetan, euri-tanta txiki batzuk: Iratik margotu zituen?")
@@ -580,4 +597,11 @@
       notify(L("Etxean. Sutondoan atseden; ohean, eguna edo gaua; apalean, zaindarien oroitzapenak."), "", 6);
     }
   };
-  DGE.objective = () => ["Etxean: sutondoa (atseden), ohea (eguna edo gaua), oroitzapenak. Irten atetik (hegoan).", [DGE.exitArch.x, DGE.exitArch.z, 0]];
+  DGE.objective = () => {
+    const f = (k) => saved.flags.includes(k);
+    /* zazpigarren atala: ohea (lehen amets gaiztoa, gero AMETSERA) eta, esnatu ondoren, kanpora */
+    if (DGE.bed && f("irati-herensuge") && !f("inguma-ametsa")) return ["Ohean lo egin, sutondoa piztuta.", [DGE.bed.x, DGE.bed.z, 0]];
+    if (DGE.bed && seaskaReady()) return ["Ohean: AMETSERA (Ingumaren ametsa).", [DGE.bed.x, DGE.bed.z, 0]];
+    if (f("inguma") && !f("irati-inguma")) return ["Irten kanpora (hegoko atea): Anboto aldera begiratu.", [DGE.exitArch.x, DGE.exitArch.z, 0]];
+    return ["Etxean: sutondoa (atseden), ohea (eguna edo gaua), oroitzapenak. Irten atetik (hegoan).", [DGE.exitArch.x, DGE.exitArch.z, 0]];
+  };

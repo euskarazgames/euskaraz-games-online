@@ -96,6 +96,8 @@
   /* elkarrizketak eszena gisa: [nor, testua, "", x, z, y] */
   let CINE_AFTER = null;
   function say(shots, after) {
+    /* ahotsak (sh[7]) aurrez kargatu: planoa hasten denerako prest egon daitezen */
+    voicePreload(shots.map((s) => s[7]));
     scenes.push(shots);
     CINE_AFTER = after || null;
     playScene(scenes.length - 1);
@@ -143,6 +145,17 @@
     if (!flag("irati-odei")) return ["Itzuli herrira: Iratiri Odeiren berri eman.", [0, 41, 0]];
     if (!flag("herensugea")) return ["JENTILEN ZERUA: ortzadarretik igo, eta Odeiren hodei zuriak SUGE-MENDIRA eramango zaitu (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
     if (!flag("irati-herensuge")) return ["Plazan: Iratiri Herensugearen berri eman.", [0, 41, 0]];
+    /* zazpigarren atala: Inguma (seaska.js, ametsa.js) */
+    if (!flag("inguma-ametsa")) return ["Iturralden lo egin (ohea), sutondoa piztuta.", [28, 31, 0]];
+    if (!flag("seaska")) return ["Plazan: Iratiri ametsaren berri eman.", [0, 41, 0]];
+    if (!flag("seaska-kanta")) {
+      const B = BERTSOAK.find((b) => !flag(b.flag));
+      if (!B) return ["Plazan: Irati, hiru bertsoekin.", [0, 41, 0]];
+      const at = { "bertso-belar": [-15.5, 28.5, 0], "bertso-hare": [8.2, 78, -7.2], "bertso-izar": [46, -64, 9] }[B.flag];
+      return ["Seaska-kantaren bertsoak (" + bertsoCount() + "/3): " + B.who + (B.flag === "bertso-izar" && DAY.k < 0.5 ? " — gauez." : "."), at];
+    }
+    if (!flag("inguma")) return ["Iturralden, ohean: AMETSERA (Ingumaren ametsa).", [28, 31, 0]];
+    if (!flag("irati-inguma")) return ["Irten kanpora: Anboto aldera begiratu.", [28, 31, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {
@@ -172,7 +185,7 @@
         ["IRATI", "Amaiur! Basajaunen orroa entzun dugu herritik… baina ez zen haserrea. Askatu duzu!", "", 0, 41, 0],
         ["· · ·", "Bat-batean, zerua argitzen da. Suzko bola bat, Anbotoko aldetik, itsaso aldera hegan.", "", 10, -120, 79, [0, 4, 34]],
         ["IRATI", "Mariren sua… baina Mari ez doa haren barruan. Norbaitek darama.", "", 0, 41, 0],
-        ["GAUEKO", "Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik.", "", P.x, P.z, 0],
+        ["GAUEKO", "Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik.", "", P.x, P.z, 0, null, "st_g1"],
         ["AMAIUR", "Gaueko… ez zinen desagertu.", "", P.x, P.z, 0],
         ["IRATI", "Ez gaude bakarrik, Amaiur. Basajaun zurekin dago orain. Eta herri osoa.", "", 0, 41, 0],
       ],
@@ -265,7 +278,7 @@
         ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala. Eta izen bat esan zuen: Anboto.", "", P.x, P.z, 0],
         ["· · ·", "Une horretan, Anboto aldetik, hodei beltz bat jaitsi da harana estaltzera. Haren barruan, zazpi argi.", "", 20, -170, 120, [0, 30, 40]],
         ["· · ·", "Hiru argi berde: Basajaun, Lamia, Tartalo. Beste lauak gorri, taupaka, bihotz gaiztotuak bezala.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean, ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan.", "", P.x, P.z, 0],
+        ["GAUEKO", "Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean… ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan.", "", P.x, P.z, 0, null, "st_g3"],
         ["IRATI", "Ez entzun. Beldur da: herriak berriro jotzen du gauez, eta erritmoa indartzen ari da.", "", 0, 41, 0],
         ["AMAIUR", "Orrazia, adarra, sua… eta zuek. Anbotora noa.", "", P.x, P.z, 0],
       ],
@@ -291,7 +304,7 @@
         ["IRATI", "Amaiur! Gau osoan harrespilako harriek dardara egin dute… eta gero, trumoi bat, zerua garbi zegoen arren.", "", 0, 41, 0],
         ["AMAIUR", "Errolan, jentilen azkena. Aske dago. Ekaitz bat zeraman bularrean.", "", P.x, P.z, 0],
         ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Laugarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan, nire hiru zaindari gogorrenak zain daude.", "", P.x, P.z, 0],
+        ["GAUEKO", "Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan… nire hiru zaindari gogorrenak zain daude.", "", P.x, P.z, 0, null, "st_g4"],
         ["IRATI", "Ez gaude bakarrik: herriak berriro jotzen du txalaparta, gauez eta egunez.", "", 0, 41, 0],
         ["AMAIUR", "Jentilen zerura, beraz. Hodeien gainera.", "", P.x, P.z, 0],
       ],
@@ -319,7 +332,7 @@
         ["IRATI", "Amaiur! Gaur euria egin du, eta euri goxoa zen, ez kazkabarra. Txalapartak lasaiago jotzen du.", "", 0, 41, 0],
         ["AMAIUR", "Odei aske dago. Trumoi bat zeraman bihotzean, Errolanek bezala.", "", P.x, P.z, 0],
         ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Bosgarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten, eta Ingumak ametsetan harrapatzen ditu ausartenak ere.", "", P.x, P.z, 0],
+        ["GAUEKO", "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere.", "", P.x, P.z, 0, null, "st_g5"],
         ["IRATI", "Ez dago bakarrik, Gaueko. Herri osoak jotzen du berarekin.", "", 0, 41, 0],
         ["AMAIUR", "Bi falta. Gero, Anbotora.", "", P.x, P.z, 0],
       ],
@@ -347,7 +360,7 @@
         ["IRATI", "Amaiur! Herensuge bat herriaren gainean, hegan! Haurrak oihuka atera dira… baina zuri begira zegoen, ez guri.", "", 0, 41, 0],
         ["AMAIUR", "Zazpi buru zituen, eta sei gezurrak ziren. Orain bat bakarra du: berea.", "", P.x, P.z, 0],
         ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Seigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Sei. Esna zaude oraindik, sorgin txikia? Laster lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: INGUMA.", "", P.x, P.z, 0],
+        ["GAUEKO", "Sei. Esna zaude oraindik, sorgin txikia? Laster… lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: Inguma.", "", P.x, P.z, 0, null, "st_g6"],
         ["IRATI", "Gaur gauean, ez itzali sutondoa, Amaiur. Nire amonak esaten zuen: Ingumaren aurka, kanta bat ohe ondoan.", "", 0, 41, 0],
         ["AMAIUR", "Kanta bat… Bat falta. Gero, Anbotora.", "", P.x, P.z, 0],
       ],

@@ -485,7 +485,7 @@
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { makilak: "≋", giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀" };
+  const ICONS = { makilak: "≋", giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀", bertsoa: "♪", hautsa: "✧" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "makilak") {
@@ -573,6 +573,31 @@
         ray.position.set(Math.cos(a) * 0.56, Math.sin(a) * 0.56, 0);
         ray.rotation.z = a - PI / 2;
         g.add(ray);
+      }
+    } else if (icon === "bertsoa") {
+      /* seaska-kantaren bertsoa: hiru nota-buru eta zurtoinak, distiratsu */
+      for (let i = 0; i < 3; i++) {
+        const head = new T.Mesh(new T.SphereGeometry(0.11, 10, 8), material("#e6dcff", 0.9));
+        head.scale.set(1.3, 0.9, 0.8);
+        head.position.set((i - 1) * 0.3, -0.25 + Math.sin(i * 2) * 0.12, 0);
+        const st = new T.Mesh(new T.CylinderGeometry(0.018, 0.018, 0.5, 5), material("#e6dcff", 0.9));
+        st.position.set((i - 1) * 0.3 + 0.12, head.position.y + 0.25, 0);
+        g.add(head, st);
+      }
+    } else if (icon === "hautsa") {
+      /* amonaren hauts-zorroa: larruzko poltsa eta izar-hautsa ahotik */
+      const bag = new T.Mesh(new T.SphereGeometry(0.3, 14, 10), material("#7a5a3a"));
+      bag.scale.set(1, 1.1, 1);
+      const neck = new T.Mesh(new T.CylinderGeometry(0.08, 0.15, 0.18, 10), material("#6a4a2a"));
+      neck.position.y = 0.36;
+      const tie = new T.Mesh(new T.TorusGeometry(0.1, 0.025, 5, 14), material("#c9a86a", 0.3));
+      tie.position.y = 0.36;
+      tie.rotation.x = PI / 2;
+      g.add(bag, neck, tie);
+      for (let i = 0; i < 6; i++) {
+        const st = new T.Mesh(new T.OctahedronGeometry(0.05, 0), material("#fff1a8", 2));
+        st.position.set(Math.cos(i * 1.7) * 0.18, 0.5 + i * 0.09, Math.sin(i * 1.7) * 0.18);
+        g.add(st);
       }
     } else if (icon === "sugarra") {
       const rod = new T.Mesh(new T.CylinderGeometry(0.04, 0.05, 1.2, 8), material("#4a4a4a", 0.2));

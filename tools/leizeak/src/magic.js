@@ -278,10 +278,10 @@
         boltImpact(b, b.x, b.y, b.z, false);
         if (!b.big || hitB.fireOnly || hitB.bombOnly) gone = true;
       }
-      /* itzalen proiektilak: izpiak suntsitzen ditu */
+      /* itzalen proiektilak: izpiak suntsitzen ditu (itzulitakoak ez: orain zureak dira) */
       for (let j = SHOTS.length - 1; j >= 0 && !gone; j--) {
         const s = SHOTS[j];
-        if (Math.hypot(s.x - b.x, s.y - b.y, s.z - b.z) < (b.big ? 1.4 : 0.85)) {
+        if (!s.back && Math.hypot(s.x - b.x, s.y - b.y, s.z - b.z) < (b.big ? 1.4 : 0.85)) {
           fxBurst(s.x, s.y, s.z, { n: 10, speed: 4, life: 0.3, size: 0.25, color: "#ffffff", grav: 0 });
           SND.clang();
           scene.remove(s.m);
@@ -396,7 +396,7 @@
         e.vz += (dz / (d || 1)) * 7;
       }
       for (let j = SHOTS.length - 1; j >= 0; j--)
-        if (Math.hypot(SHOTS[j].x - P.x, SHOTS[j].z - P.z) < 3.6) {
+        if (!SHOTS[j].back && Math.hypot(SHOTS[j].x - P.x, SHOTS[j].z - P.z) < 3.6) {
           fxBurst(SHOTS[j].x, SHOTS[j].y, SHOTS[j].z, { n: 8, speed: 3, life: 0.3, size: 0.2, color: "#ffffff", grav: 0 });
           scene.remove(SHOTS[j].m);
           SHOTS.splice(j, 1);

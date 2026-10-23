@@ -141,8 +141,26 @@ nagusiaren aurka. Ateak, giltzak eta itzulerak gela-zentral baten inguruan (bide
   kristalen gela (zutabe batek bide zuzena ixten du: hiru kristal, hiru bide; giltza nagusia) →
   Herensugea: buruak txandaka (2 + 2 + 2 + 1); argia begietara, ALDARATU hozka, su-bolak EZKUTUAz
   itzuli → burua lurrera → eztarriko itzal-harria. Azken buruak bi argiak behar ditu, segidan.
+- **AMETSA** (IZAR-HAUTSA eta SEASKA): Herensugearen ondoren, etxean lo → lehen amets gaiztoa (Ingumak
+  Iratiren ahotsa egiten du) → Irati: herri-konjuru zaharra (Ingumak dena kontatu behar du: zeruko izarrak,
+  lurreko belarrak, itsasoko hareak) eta amonaren seaska-kantaren hiru bertso: Kattalin (belarrak), Txomin
+  (hareak), jentil zaharra GAUEZ (izarrak) → SEASKA erritmoa (◀ ▶ ◀ ▶ ◀) eta amonaren hauts-zorroa → ohean
+  AMETSERA (zinema) → ohe-uhartea (sutondoa; ohe erraldoian ESNATU) → izar-lainoa: hautsak izar-plataformak
+  sortzen ditu (hiru gehienez, bost segundoz) → izar-eskailerak: jauzian, airean bota → goiko uhartetxoa
+  (giltza); mendebaldean ENTZUN → ezkutuko harriak (arnasa-zatia) → mamuen sukaldea (MAMUAK: desagertu eta
+  atzean agertzen dira; hautsarekin KONTATZEN geratzen dira, kalte bikoitza) → ate-zainen zubia (hautsa →
+  kontatzen hasten dira → pasa, amaitu aurretik; tartean, izar-lainoa) → sehaskaren uhartea (dei faltsua:
+  "Irati"-k zure izena oihukatzen du, baina benetako Iratik ez du inoiz oihukatzen; amets-gaiztoa; SEASKA
+  sehaskaren ondoan → giltza nagusia) → INGUMA, hiru fase, seaska-kantaren hiru bertsoak:
+  ZERUAN IZARRAK (goian hegan: izar-euria EZKUTUAz itzuli → zorabiatuta; murgiltzean itzala lurrean, alde
+  egin; nekatuta behean → hautsa → kontatzen → zauritu), LURREAN BELARRAK (hiru Inguma: ENTZUN → benetakoa
+  urre-distiraz eta orduan bakarrik FINKATU daiteke; faltsuak, hautsarekin, mamu; amets-belarrek ORAINEAN
+  mina) eta ITSASOAN HAREAK (ohean eserita, amesgaiztoa betetzen, hare-haizeak bultzaka: SEASKA → lokartuta
+  → hautsa → kalte bikoitza) → esnatu (egunsentia, Iratiren deia) → kanpoan: Anboton zazpigarren argia
+  berde eta Gauekoren ahotsa ("Zure ahizpa… nirekin dago").
 - Mitologia: Tartalo ilunpean ikusten duen begi bakarreko artzain erraldoia (argiak itsutzen du),
-  lamiak eta urrezko orrazia, Gaueko gauaren espiritua, Mari Anboton. Istorioa eta gelak originalak.
+  lamiak eta urrezko orrazia, Gaueko gauaren espiritua, Mari Anboton, Inguma amets gaiztoen izakia (lo
+  daudenen bularrean esertzen da; herri-konjuruak dena kontatzera behartzen du). Istorioa eta gelak originalak.
 
 ## 5c. Generoaren ideia orokorrak (gure eran)
 3D abentura klasikoen konbentzio orokorrak hartzen dira (mekanika-ideiak, ez edukia: ez maparik, ez
@@ -222,8 +240,14 @@ Ideia orokorrak bakarrik (ez beste jokoen edukirik, ez interfazerik, ez testurik
   garaia ("BASAJAUNEN LEIZEA / 07:12 · IRAGANA").
 - **AHOTSAK** (`ahotsak.js`, `tools/leizeak/ahotsak/`) → ahots sintetikoak (OmniVoice, euskaraz; inor ez
   da klonatu: pertsonaia bakoitza generoz, adinez eta tonuz diseinatua). Euskarazko Whisper batek lerro
-  bakoitza transkribatzen du eta argia ez bada berriro sortzen da. Jokoan: Iratiri oihartzun-iragazkia,
-  Gaueko baxuago eta erreberberazioarekin; hitz egitean musika jaisten da. Audiorik gabe, testua bakarrik.
+  bakoitza transkribatzen du (jokalariak entzungo duen katearen ondoren) eta argia ez bada berriro sortzen da.
+  Antzezpena: esaldien arteko eten luzeagoak (pertsonaia bakoitzak berea), abiadura neurtua eta testuetan
+  etenak (…). GAUEKO (v2): ahots sakona baina garbia, astiro; fitxategian oktaba bat beherako geruza eta
+  tonua apur bat jaitsita (formanteak gordeta), eta jokoan distortsiorik gabe: presentzia, oihartzun laburra
+  eta erreberberazio neurritsua (lehen, abiadura moteldua eta distortsioa: telefonoan ia ez zen ulertzen).
+  INGUMA: emakume zahar baten ahots oso baxua, tonua jaitsita, eta jokoan dardara (atzerapen modulatua) eta
+  erreberberazio luzea; ametseko "IRATI?" Iratiren tinbrearekin, Ingumaren iragazkiarekin. IRATI oihartzun-
+  harritik (banda estua, oihartzun leuna), AMAIUR hurbil. Hitz egitean musika jaisten da. Audiorik gabe, testua.
 - **Kamera** → BULTZADAn ez dago FOV-kolperik; kamerak malguki kritikoki moteldua erabiltzen du
   (azelerazioa zerotik hasten da), eta aurrera-begiratzeak abiadura mugatua du.
 

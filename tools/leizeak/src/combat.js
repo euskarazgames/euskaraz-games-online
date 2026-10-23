@@ -970,6 +970,14 @@
         return true;
       }
     }
+    /* izarra (Inguma): hegan dagoen jaurtitzailea jo */
+    if (s.star && BOSS.canStagger()) {
+      const c = BOSS.center();
+      if (Math.hypot(c.x - s.x, c.z - s.z) < (c.r || 2.6) && s.y > c.y - 1.5 && s.y < c.y + (c.h || 4)) {
+        BOSS.stagger();
+        return true;
+      }
+    }
     return false;
   }
   function shotsUpdate(dt) {
@@ -1007,6 +1015,15 @@
           d = Math.hypot(dx, dz) || 1;
         s.vx = mix(s.vx, (dx / d) * s.sp, dt * 2);
         s.vz = mix(s.vz, (dz / d) * s.sp, dt * 2);
+      }
+      /* itzulitako izarra: jaurtitzailearengana gidatua (hegan dabil) */
+      if (s.back && s.star && s.from) {
+        const hx = s.from.x - s.x,
+          hz = s.from.z - s.z,
+          hd = Math.hypot(hx, hz) || 1;
+        s.vx = mix(s.vx, (hx / hd) * s.sp, Math.min(1, dt * 6));
+        s.vz = mix(s.vz, (hz / hd) * s.sp, Math.min(1, dt * 6));
+        s.y = mix(s.y, s.from.y + 1, Math.min(1, dt * 4));
       }
       s.x += s.vx * dt;
       s.z += s.vz * dt;

@@ -3,8 +3,10 @@
      Lerroen testua lerroak.json-etik dator (build-ean txertatua): azpitituluak beti daude.
      Audioa /assets/voice/leizeak/<id>.mp3 da, behar denean kargatua; ez badago (lineaz kanpo,
      fitxategirik gabe…), testua bakarrik. Web Audio iragazkiak pertsonaiaren arabera:
-     IRATI oihartzun-harritik (banda estua eta oihartzuna), GAUEKO ilunpetik (baxuagoa, motelago,
-     erreberberazio luzea), AMAIUR hurbil eta lehor. Hitz egiten den bitartean musika jaisten da.
+     IRATI oihartzun-harritik (banda estua eta oihartzun leuna), GAUEKO ilunpetik (fitxategian bertan
+     oktaba bat beherako geruza eta eten luzeak; hemen presentzia, oihartzun laburra eta erreberberazioa,
+     distortsiorik eta abiadura-aldaketarik gabe: argi entzun behar da), INGUMA ametsetik (ahots
+     dardaratsua, modulatutako atzerapena), AMAIUR hurbil eta lehor. Hitz egitean musika jaisten da.
      ================================================================== */
   const VOICE_LINES = /* @json ../ahotsak/lerroak.json */;
   const VOICE = { base: "/assets/voice/leizeak/", buf: new Map(), wait: new Map(), cur: null, an: null, data: null, chains: {}, level: 0 };
@@ -35,7 +37,7 @@
   const voiceReady = (id) => VOICE.buf.has(id) || !SND.ctx;
   /* pertsonaia bakoitzaren katea (behin sortua) → analizatzailea → bus nagusia */
   function voiceChain(who) {
-    const k = who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") || who.startsWith("INGUMA") ? "gaueko" : "dry";
+    const k = who.startsWith("INGUMA") || who === "IRATI?" ? "inguma" : who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") ? "gaueko" : "dry";
     if (VOICE.chains[k]) return VOICE.chains[k];
     const ctx = SND.ctx,
       N = SND.voiceNodes();
@@ -57,15 +59,15 @@
         fb = ctx.createGain(),
         wet = ctx.createGain();
       hp.type = "highpass";
-      hp.frequency.value = 240;
+      hp.frequency.value = 180;
       pk.type = "peaking";
       pk.frequency.value = 2300;
-      pk.gain.value = 4;
+      pk.gain.value = 3;
       lp.type = "lowpass";
-      lp.frequency.value = 6200;
+      lp.frequency.value = 7200;
       dl.delayTime.value = 0.17;
-      fb.gain.value = 0.28;
-      wet.gain.value = 0.32;
+      fb.gain.value = 0.2;
+      wet.gain.value = 0.2;
       input.connect(hp).connect(pk).connect(lp);
       lp.connect(VOICE.an);
       lp.connect(dl);
@@ -74,31 +76,58 @@
       send.gain.value = 0.3;
       lp.connect(send);
     } else if (k === "gaueko") {
-      /* ilunpetik: baxuak indartuta, distortsio leuna eta erreberberazio handia */
-      const ls = ctx.createBiquadFilter(),
-        ws = ctx.createWaveShaper(),
-        lp = ctx.createBiquadFilter();
+      /* ilunpetik, baina argi: baxu leunak, presentzia (kontsonanteak), oihartzun labur bat eta
+         erreberberazio neurritsua. Sakontasuna fitxategian dago (oktaba beherako geruza). */
+      const hp = ctx.createBiquadFilter(),
+        ls = ctx.createBiquadFilter(),
+        pk = ctx.createBiquadFilter(),
+        lp = ctx.createBiquadFilter(),
+        dl = ctx.createDelay(1),
+        wet = ctx.createGain();
+      hp.type = "highpass";
+      hp.frequency.value = 55;
       ls.type = "lowshelf";
-      ls.frequency.value = 200;
-      ls.gain.value = 6;
-      const c = new Float32Array(512);
-      for (let i = 0; i < 512; i++) {
-        const x = (i / 511) * 2 - 1;
-        c[i] = Math.tanh(x * 1.6) / Math.tanh(1.6);
-      }
-      ws.curve = c;
+      ls.frequency.value = 160;
+      ls.gain.value = 2;
+      pk.type = "peaking";
+      pk.frequency.value = 2600;
+      pk.Q.value = 1;
+      pk.gain.value = 3;
       lp.type = "lowpass";
-      lp.frequency.value = 5200;
-      input.connect(ls).connect(ws).connect(lp);
+      lp.frequency.value = 9500;
+      dl.delayTime.value = 0.095;
+      wet.gain.value = 0.14;
+      input.connect(hp).connect(ls).connect(pk).connect(lp);
       lp.connect(VOICE.an);
-      send.gain.value = 0.75;
+      lp.connect(dl).connect(wet).connect(VOICE.an);
+      send.gain.value = 0.35;
       lp.connect(send);
+    } else if (k === "inguma") {
+      /* ametsetik: ahotsa dardaraka (atzerapen modulatua) eta erreberberazio luzea */
+      const hp = ctx.createBiquadFilter(),
+        dl = ctx.createDelay(0.1),
+        lfo = ctx.createOscillator(),
+        depth = ctx.createGain(),
+        wet = ctx.createGain();
+      hp.type = "highpass";
+      hp.frequency.value = 140;
+      dl.delayTime.value = 0.012;
+      lfo.frequency.value = 0.7;
+      depth.gain.value = 0.004;
+      lfo.connect(depth).connect(dl.delayTime);
+      lfo.start();
+      wet.gain.value = 0.55;
+      input.connect(hp);
+      hp.connect(VOICE.an);
+      hp.connect(dl).connect(wet).connect(VOICE.an);
+      send.gain.value = 0.6;
+      hp.connect(send);
     } else {
       input.connect(VOICE.an);
       send.gain.value = 0.1;
       input.connect(send);
     }
-    return (VOICE.chains[k] = { input, rate: k === "gaueko" ? 0.92 : 1 });
+    return (VOICE.chains[k] = { input, rate: 1 });
   }
   /* jo: iraupena (s) itzultzen du; 0 audiorik ez badago */
   function voicePlay(id) {

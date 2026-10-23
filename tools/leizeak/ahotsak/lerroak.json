@@ -1,11 +1,11 @@
 {
   "pro_g1": [
     "GAUEKO",
-    "Jo, txalaparta. Jo, eta deitu iezaiozu."
+    "Jo, txalaparta… Jo. Eta deitu iezaiozu."
   ],
   "pro_g2": [
     "GAUEKO",
-    "Zazpi leize. Zazpi zaindari. Eta sorgin bakar bat."
+    "Zazpi leize. Zazpi zaindari… Eta sorgin bakar bat."
   ],
   "pro_i1": [
     "IRATI",
@@ -57,7 +57,7 @@
   ],
   "pro_g3": [
     "GAUEKO",
-    "Ahizpak elkarrekin, berriro. Zein polita."
+    "Ahizpak elkarrekin… berriro. Zein polita."
   ],
   "pro_i9": [
     "IRATI",
@@ -69,11 +69,11 @@
   ],
   "pro_g4": [
     "GAUEKO",
-    "Hor zaude, sorgin txikia."
+    "Hor zaude… sorgin txikia."
   ],
   "pro_g5": [
     "GAUEKO",
-    "Ikusten zaitut."
+    "Ikusten… zaitut."
   ],
   "pro_i11": [
     "IRATI",
@@ -109,7 +109,7 @@
   ],
   "pro_g6": [
     "GAUEKO",
-    "Zatoz, sorgin. Leizeek zure izena dakite."
+    "Zatoz, sorgin. Leizeek… zure izena dakite."
   ],
   "dei_i1": [
     "IRATI",
@@ -141,7 +141,7 @@
   ],
   "dz_tartalo2": [
     "GAUEKO",
-    "Ilunpea nire etxea da, sorgin. Ongi etorri."
+    "Ilunpea nire etxea da, sorgin. Ongi… etorri."
   ],
   "dz_tartalo3": [
     "IRATI",
@@ -169,10 +169,138 @@
   ],
   "dz_herensuge2": [
     "GAUEKO",
-    "Zazpi buru, zazpi gezur. Zein da egia, sorgin?"
+    "Zazpi buru. Zazpi gezur… Zein da egia, sorgin?"
   ],
   "dz_herensuge3": [
     "IRATI",
     "Argiak erakutsiko dizu. Beti erakusten du."
+  ],
+  "c7_i1": [
+    "IRATI",
+    "Inguma… Amonak ez zuen inoiz haren izena ozen esaten."
+  ],
+  "c7_a1": [
+    "AMAIUR",
+    "Nire ametsetan sartu da. Zure ahotsa egiten zuen, Irati."
+  ],
+  "c7_i2": [
+    "IRATI",
+    "Orduan, entzun ondo: Ingumak dena kontatu behar du. Izarrak, belarrak, hareak… Kontatzen ari den bitartean, ezin du inor ukitu."
+  ],
+  "c7_i3": [
+    "IRATI",
+    "Amonaren seaska-kantak hiru bertso zituen. Bat Kattalinek daki, bestea Txominek. Hirugarrena… jentil zaharrak, gauez, izarren azpian."
+  ],
+  "c7_i4": [
+    "IRATI",
+    "Hiru bertsoak. Orain, kantatu nirekin: txalapartak gogoratuko du."
+  ],
+  "c7_i5": [
+    "IRATI",
+    "Eta hau: amonaren hauts-zorroa. Izar-hautsa. Bota Ingumari, eta kontatzen hasiko da."
+  ],
+  "c7_a2": [
+    "AMAIUR",
+    "Gaur gauean lo egingo dut. Eta haren ametsean sartuko naiz."
+  ],
+  "c7_i6": [
+    "IRATI",
+    "Ez fidatu nire ahotsaz ametsean, Amaiur. Benetako Iratik ez du inoiz zure izena oihukatzen."
+  ],
+  "c7_n1": [
+    "INGUMA",
+    "Ongi etorri nire etxera, sorgin txikia. Hemen, denbora ez da igarotzen."
+  ],
+  "c7_f1": [
+    "IRATI?",
+    "Amaiur! Amaiur, hemen nago! Etorri, azkar!"
+  ],
+  "c7_a3": [
+    "AMAIUR",
+    "Irati ez da inoiz oihuka aritzen. Zu ez zara bera."
+  ],
+  "c7_n2": [
+    "INGUMA",
+    "Azkarra zara. Baina ametsean… dena da nirea."
+  ],
+  "c7_n3": [
+    "INGUMA",
+    "Lo zaude, Amaiur. Eta lo dagoenak… ez du borrokatzen."
+  ],
+  "c7_a4": [
+    "AMAIUR",
+    "Zeruan izarrak. Lurrean belarrak. Itsasoan hareak. Kontatu, Inguma!"
+  ],
+  "c7_n4": [
+    "INGUMA",
+    "Bat, bi, hiru… Ez! Ez dut kontatu nahi!"
+  ],
+  "c7_n5": [
+    "INGUMA",
+    "Zure ahizpa ere hemen dago, ametsen azpian. Entzun!"
+  ],
+  "c7_n6": [
+    "INGUMA",
+    "Seaska-kanta… Ez! Ez kantatu hori!"
+  ],
+  "c7_n7": [
+    "INGUMA",
+    "Lo… lo egingo dut… betiko…"
+  ],
+  "c7_i7": [
+    "IRATI",
+    "Amaiur. Esnatu. Egunsentia da. Zazpigarren argia… berdea."
+  ],
+  "c7_a5": [
+    "AMAIUR",
+    "Zazpi zaindari aske. Orain, Gaueko."
+  ],
+  "c7_g1": [
+    "GAUEKO",
+    "Zazpi argi… Ondo, sorgin. Etorri Anbotora. Zure ahizpa… nirekin dago."
+  ],
+  "c7_a6": [
+    "AMAIUR",
+    "Irati…?"
+  ],
+  "c7_i8": [
+    "IRATI",
+    "Amaiur… ez dakit nola esan. Oihartzun bat baino gehiago naiz. Eta Gauekok badaki."
+  ],
+  "st_g1": [
+    "GAUEKO",
+    "Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik."
+  ],
+  "st_g3": [
+    "GAUEKO",
+    "Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean… ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan."
+  ],
+  "st_g4": [
+    "GAUEKO",
+    "Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan… nire hiru zaindari gogorrenak zain daude."
+  ],
+  "st_g5": [
+    "GAUEKO",
+    "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere."
+  ],
+  "st_g6": [
+    "GAUEKO",
+    "Sei. Esna zaude oraindik, sorgin txikia? Laster… lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: Inguma."
+  ],
+  "c7_p1": [
+    "IRATI?",
+    "Amaiur… Amaiur, esnatu. Ni naiz… Irati."
+  ],
+  "c7_p2": [
+    "AMAIUR",
+    "Irati? Ez… Zu ez zara Irati."
+  ],
+  "c7_p3": [
+    "INGUMA",
+    "Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten."
+  ],
+  "c7_p4": [
+    "INGUMA",
+    "Inguma naiz. Gaur ez zaitut eramango. Laster… bai. Lo ona, sorgin txikia."
   ]
 }

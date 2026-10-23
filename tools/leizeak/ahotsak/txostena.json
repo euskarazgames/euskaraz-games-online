@@ -1,17 +1,17 @@
 {
  "pro_g1": {
   "who": "GAUEKO",
-  "cer": 0.086,
-  "seed": 103468,
-  "dur": 2.15,
-  "asr": "Jo txalaparta, jo eta deitu ez zaiozu."
+  "cer": 0.0,
+  "seed": 5300,
+  "dur": 3.4,
+  "asr": "Jo, txalaparta, jo, eta deitu iezaiozu."
  },
  "pro_g2": {
   "who": "GAUEKO",
   "cer": 0.021,
-  "seed": 103406,
-  "dur": 3.0,
-  "asr": "Zazpi leize, zazpi zaindari, eta zorgin bakar bat."
+  "seed": 5300,
+  "dur": 4.39,
+  "asr": "Zazpi leize, zazpi zaindari eta zorgin bakar bat."
  },
  "pro_i1": {
   "who": "IRATI",
@@ -268,43 +268,43 @@
  "pro_g3": {
   "who": "GAUEKO",
   "cer": 0.026,
-  "seed": 103400,
-  "dur": 2.51,
-  "asr": "Aizpak elkarrekin berriro, zein polita."
+  "seed": 5300,
+  "dur": 3.7,
+  "asr": "Aizpak elkarrekin, berriro, zein polita."
  },
  "pro_g4": {
   "who": "GAUEKO",
   "cer": 0.043,
-  "seed": 103400,
-  "dur": 1.78,
+  "seed": 5300,
+  "dur": 2.32,
   "asr": "Hor zaude, zorgin txikia."
  },
  "pro_g5": {
   "who": "GAUEKO",
   "cer": 0.0,
-  "seed": 103400,
-  "dur": 1.4,
+  "seed": 5300,
+  "dur": 2.06,
   "asr": "Ikusten zaitut."
  },
  "pro_g6": {
   "who": "GAUEKO",
   "cer": 0.026,
-  "seed": 103400,
-  "dur": 2.51,
-  "asr": "Zatoz orgin, leizeek zure izena dakite."
+  "seed": 5300,
+  "dur": 3.7,
+  "asr": "Zatoz zorgin, leizeek zure izena dakite."
  },
  "dz_tartalo2": {
   "who": "GAUEKO",
   "cer": 0.0,
-  "seed": 103400,
-  "dur": 2.62,
-  "asr": "Ilunpea nire etxea da sorgin, ongi etorri."
+  "seed": 5300,
+  "dur": 4.09,
+  "asr": "Ilunpea nire etxea da, sorgin, ongi, etorri."
  },
  "dz_herensuge2": {
   "who": "GAUEKO",
   "cer": 0.024,
-  "seed": 103400,
-  "dur": 2.47,
+  "seed": 5300,
+  "dur": 3.91,
   "asr": "Zazpi buru, zazpi gezur, zein da egia zorgin?"
  }
 }

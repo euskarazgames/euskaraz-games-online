@@ -12,6 +12,8 @@ horren tinbrearekin sortzen dira, ahotsa koherentea izan dadin.
 --asr: euskarazko Whisper eredua (CTranslate2; adib. xezpeleta/whisper-medium-eu-ct2). Emanez gero,
 lerro bakoitza transkribatu eta testuarekin alderatzen da (CER); txarra bada, beste hazi batekin
 berriro sortzen da. Lerroak: lerroak.json · erreferentziak: erref/<pertsonaia>.flac + erref.json.
+erref.json-en, pertsonaia bakoitzak: speed (antzezpenaren abiadura) eta post (pauses: esaldien arteko eten
+gutxienekoa, s; pitch: tonua, formanteak gordeta; sub: oktaba bat beherako geruzaren bolumena).
 Lizentziak: OmniVoice kodea Apache-2.0; aurrez entrenatutako pisuak CC-BY-NC (merkataritzaz kanpo).
 """
 import argparse, json, pathlib, re, subprocess, sys, tempfile, unicodedata
@@ -72,9 +74,43 @@ def main():
         hyp = ' '.join(s.text for s in segs).strip()
         return edits(norm(text), norm(hyp)) / max(1, len(norm(text))), hyp
 
+    def pauses(w, min_pause):
+        """Barneko isiluneak luzatu (gutxienez min_pause s): esaldien arteko eten dramatikoak."""
+        if not min_pause:
+            return w
+        sr, hop = 24000, 240
+        rms = np.sqrt(np.convolve(w ** 2, np.ones(hop) / hop, mode='same'))
+        quiet = rms < 0.04 * (rms.max() or 1)
+        edges = np.flatnonzero(np.diff(quiet.astype(np.int8))) + 1
+        bounds = [0] + list(edges) + [len(w)]
+        out = []
+        for st, en in zip(bounds[:-1], bounds[1:]):
+            if quiet[st] and st > 0 and en < len(w) and en - st > 0.05 * sr:
+                need = int(min_pause * sr) - (en - st)
+                if need > 0:
+                    mid = (st + en) // 2
+                    out += [w[st:mid], np.zeros(need, np.float32), w[mid:en]]
+                    continue
+            out.append(w[st:en])
+        return np.concatenate(out)
+
+    def post(w, P):
+        """Pertsonaiaren katea: isiluneak, tonua (formanteak gordeta) eta oktaba bat beherako geruza."""
+        w, _ = librosa.effects.trim(w, top_db=38)
+        w = pauses(w, P.get('pauses', 0))
+        pitch, sub = P.get('pitch', 1.0), P.get('sub', 0)
+        if pitch != 1.0 or sub:
+            with tempfile.TemporaryDirectory() as td:
+                i, o = f'{td}/i.wav', f'{td}/o.wav'
+                sf.write(i, w, 24000)
+                main = f'rubberband=pitch={pitch}:formant=preserved' if pitch != 1.0 else 'anull'
+                fc = f'[0:a]asplit=2[a][b];[a]{main}[m];[b]rubberband=pitch={pitch * 0.5}:formant=preserved,volume={sub}[s];[m][s]amix=inputs=2:normalize=0' if sub else f'[0:a]{main}'
+                subprocess.run(['ffmpeg', '-loglevel', 'error', '-y', '-i', i, '-filter_complex', fc, '-ar', '24000', '-ac', '1', o], check=True)
+                w, _ = sf.read(o, dtype='float32')
+        return w.astype(np.float32)
+
     def save(lid, who, wav, cer, seed, hyp):
-        # isiltasuna moztu, betegarri txikia eta bolumena berdindu
-        wav, _ = librosa.effects.trim(wav, top_db=38)
+        # betegarri txikia eta bolumena berdindu (katea post()-en aplikatua)
         pad = np.zeros(int(0.06 * 24000), np.float32)
         wav = np.concatenate([pad, wav, pad])
         rms = float(np.sqrt(np.mean(wav ** 2))) or 1e-4
@@ -89,10 +125,12 @@ def main():
     for lid, (who, text) in lines.items():
         if (only and lid not in only) or (not a.force and not only and (OUT / f'{lid}.mp3').exists()):
             continue
-        if who.lower() not in refs:
+        # "IRATI?": Inguma Iratiren ahotsa egiten (Iratiren tinbrea; jokoan, Ingumaren iragazkia)
+        key = who.lower().rstrip('?')
+        if key not in refs:
             print('erreferentziarik ez:', who, file=sys.stderr)
             continue
-        todo.setdefault(who.lower(), []).append(lid)
+        todo.setdefault(key, []).append(lid)
     for key, ids in todo.items():
         R = refs[key]
         if key not in prompts:
@@ -107,11 +145,12 @@ def main():
                 seed = R.get('seed', 7) * 100 + k * 31 + i
                 torch.manual_seed(seed)
                 texts = [lines[l][1] for l in chunk]
-                # berriro saiatzean, denbora pixka bat gehiago: azken hitzak ez dira galtzen
-                sp = a.speed * (0.92 if k else 1.0)
+                # pertsonaiaren abiadura; berriro saiatzean, denbora pixka bat gehiago (azken hitzak ez galtzeko)
+                sp = a.speed * R.get('speed', 1.0) * (0.92 if k else 1.0)
                 wavs = model.generate(text=texts, language=['eu'] * len(chunk), voice_clone_prompt=[prompts[key]] * len(chunk), speed=[sp] * len(chunk))
                 for lid, w in zip(chunk, wavs):
-                    w = w.astype(np.float32)
+                    # katearen ondoren egiaztatu: jokalariak entzungo duena
+                    w = post(w.astype(np.float32), R.get('post', {}))
                     cer, hyp = check(lines[lid][1], w)
                     print(f'{lid:9s} {key:7s} saiakera {k} CER {cer:.3f} | {hyp}', flush=True)
                     # hobea bada, berehala gorde (prozesua eten arren, aurrerapena ez da galtzen)
