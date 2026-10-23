@@ -1817,6 +1817,7 @@
   /* @include ametsa.js */
   /* @include inguma.js */
   /* @include aurpegia.js */
+  /* @include izenburua.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -2991,6 +2992,7 @@
     if (!ready) return;
     started = true;
     paused = false;
+    titleLeave();
     $("start").hidden = true;
     $("hud").hidden = false;
     $("pause").hidden = false;
@@ -3085,9 +3087,7 @@
   }
   function translate() {
     document.documentElement.lang = language;
-    $("premise").textContent =
-      "Erlojua hautsi zenetik urtebetera, Ibarrako txalapartak gauez jotzen hasi dira, inork ukitu gabe.\nMari isildu da. Haren leizeak itxita daude.\nZu Amaiur zara, sorgina. Deia entzun duzu.";
-    $("play").textContent = saved.flags.includes("intro") || saved.flags.includes("pro-0") ? "JARRAITU →" : "DEIARI ERANTZUN →";
+    $("play").textContent = saved.flags.includes("intro") || saved.flags.includes("pro-0") ? "JARRAITU" : "DEIARI ERANTZUN";
     $("helpBtn").textContent = "NOLA JOKATU";
     $("phaseBtn").textContent = "ALDATU";
     $("jumpBtn").textContent = "JAUZI";
@@ -3138,6 +3138,11 @@
     };
     addEventListener("keydown", (e) => {
       if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"].includes(e.code)) e.preventDefault();
+      /* azala: Enter / zuriunea → DEIARI ERANTZUN (botoia fokuan ez badago ere) */
+      if (!started && ready && !e.repeat && ["Enter", "Space"].includes(e.code) && $("overlay").hidden && !$("start").hidden && document.activeElement?.tagName !== "BUTTON") {
+        start();
+        return;
+      }
       if (FILM.on) {
         if (e.code === "Escape") filmSkip();
         return;
@@ -3529,11 +3534,9 @@
       drawGuide();
       occlusionUpdate(raw);
     } else if (!started) {
-      /* izenburua: herria eta harana goitik, astiro biraka */
+      /* izenburua (izenburua.js): Amaiur muinoan, ilunabarrean, zazpi deiak zeruan */
       let t = now * 0.000035;
-      camera.position.set(46 + Math.sin(t) * 10, 30, 78 + Math.cos(t) * 6);
-      camera.lookAt(0, 2, 18);
-      sea.material.uniforms.clock.value = now * 0.0004;
+      titleUpdate(raw);
       if (mixer) mixer.update(raw);
       if (ZONE.cur === "ibarra") npcsUpdate(raw);
       birds.forEach((b, i) => b.position.set(Math.cos(t + i) * 35, 22 + (i % 3), -20 + Math.sin(t + i) * 30));
@@ -3851,6 +3854,7 @@
     if (new URLSearchParams(location.search).has("test"))
       window.__game = {
         P,
+        TITLE,
         saved,
         DGA,
         AM,
@@ -4118,6 +4122,7 @@
           if (TXALA.on) txalaClose();
           started = true;
           paused = false;
+          titleLeave();
           $("overlay").hidden = true;
           $("start").hidden = true;
           $("hud").hidden = false;

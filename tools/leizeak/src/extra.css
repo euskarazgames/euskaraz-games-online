@@ -39,7 +39,6 @@
 #life small{font-size:9px;color:#dcecf2}
 #magicStatus{color:#c8f6f2;text-shadow:0 1px 3px #071a2a,0 0 10px #071a2acc}
 #touchActions button{font-size:8.5px;letter-spacing:0}
-@media(max-width:600px){h1{font-size:13vw}.eyebrow{font-size:9px;letter-spacing:.24em}}
 @media(pointer:coarse) and (max-height:520px){#stick:after{top:auto;bottom:-15px;left:50%;transform:translateX(-50%)}}
 @media(pointer:coarse) and (orientation:portrait){#goal{max-width:58%}#subtitle{bottom:296px}#prompt{bottom:auto;top:276px}}
 @media(pointer:coarse){#keys{display:none}}
@@ -233,3 +232,32 @@ body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{v
 @media(pointer:coarse) and (orientation:portrait){#deiaRing{top:168px;padding:7px 12px 7px 10px;font-size:11px;gap:8px}#deiaRing b{font-size:10px;letter-spacing:.12em}}
 #portrait.inguma{background:radial-gradient(ellipse at 50% 40%,#2a1450,#07030f 72%)}#portrait .i1{fill:#140a24}#portrait .i2{fill:#f3ecff}#portrait .i3{fill:#4a2a7a;stroke:#4a2a7a}
 /* HUD isila: aldatzean agertu, gero desagertu */#goal,#place,#phaseHud{transition:opacity .9s}#goal.quiet,#place.quiet{opacity:0}#phaseHud.quiet{opacity:.28}
+
+/* ---- IZENBURUA (azala): blasoia (lauburua, zazpi izar, txalaparta-makila gurutzatuak), urrezko
+   letrak (Cinzel), "DEIARI ERANTZUN" taupaka behean. Atzean, 3D eszena (izenburua.js). ---- */
+#start{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;padding:max(4vh,18px) 6vw max(3.5vh,16px);text-align:center;background:radial-gradient(ellipse 85% 75% at 50% 45%,transparent 50%,#060c18a8 100%),linear-gradient(180deg,#070d1ac8 0%,#070d1a40 30%,transparent 46%,transparent 64%,#070d1a70 82%,#070d1aee 100%)}
+#logo{position:relative;display:flex;flex-direction:column;align-items:center;animation:lzLogo 2.2s cubic-bezier(.2,.7,.2,1) both}
+#emblem{width:clamp(78px,15vh,138px);height:auto;filter:drop-shadow(0 4px 14px #000c) drop-shadow(0 0 22px #ffcf7a33);animation:lzEmblem 2.4s ease-out both}
+#logoOver{display:flex;align-items:center;gap:14px;margin:.7em 0 .35em;font:600 clamp(10px,1.2vw,13px)/1 Cinzel,Georgia,serif;letter-spacing:.42em;color:#ecd39c;text-shadow:0 1px 8px #000c}
+#logoOver i{display:block;width:clamp(30px,6vw,90px);height:1px;background:linear-gradient(90deg,transparent,#ecd39c)}
+#logoOver i:last-child{background:linear-gradient(90deg,#ecd39c,transparent)}
+#start h1{position:relative;margin:0;font:900 clamp(44px,8vw,116px)/1.02 Cinzel,Georgia,serif;letter-spacing:.04em;white-space:nowrap;background:linear-gradient(100deg,transparent 42%,#fffbe9d8 50%,transparent 58%) 160% 0/250% 100% no-repeat,linear-gradient(180deg,#fff8dc 8%,#f3d27a 40%,#b9852c 56%,#f8e3a0 74%,#8b5a1b 96%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1px #4a2e0c;filter:drop-shadow(0 3px 0 #2b1906) drop-shadow(0 0 22px #000c);animation:lzShine 7s ease-in-out 2.4s infinite}
+#start h1 span{display:inline;font:inherit;letter-spacing:inherit;margin:0 0 0 .3em;color:inherit}
+#logoTag{display:flex;align-items:center;gap:12px;margin-top:.55em;font:600 clamp(9px,1.05vw,12px)/1 Cinzel,Georgia,serif;letter-spacing:.36em;color:#f4e2b8;text-shadow:0 1px 6px #000;animation:lzFade 1.4s ease 1.2s both}
+#logoTag::before,#logoTag::after{content:"";width:clamp(24px,4vw,60px);height:1px;background:#ecd39c88}
+#startActions{display:flex;flex-direction:column;align-items:center;gap:6px;margin:auto 0 8px;animation:lzFade 1.2s ease 2s both}
+#start #play{background:none;border:0;padding:12px 22px;font:700 clamp(13px,1.45vw,17px)/1 Cinzel,Georgia,serif;letter-spacing:.3em;color:#fff6dc;text-shadow:0 0 14px #ffcf7aaa,0 2px 6px #000;animation:lzPulse 2.4s ease-in-out infinite}
+#start #play::before,#start #play::after{content:"◆";font-size:.6em;color:#f0c869;margin:0 .9em;vertical-align:.2em}
+#start #play:hover,#start #play:focus-visible{color:#fff;text-shadow:0 0 22px #ffd98c,0 2px 6px #000;animation:none;outline:0}
+#start #helpBtn{background:none;border:0;padding:6px 12px;font:600 clamp(9px,1vw,11px)/1 Cinzel,Georgia,serif;letter-spacing:.3em;color:#cfd9de;opacity:.8}
+#start #helpBtn:hover,#start #helpBtn:focus-visible{opacity:1;color:#fff;outline:0}
+#startFooter{width:100%;display:flex;justify-content:space-between;align-items:center;font:600 9px/1 Cinzel,Georgia,serif;letter-spacing:.24em;color:#aebfca;animation:lzFade 1s ease 2.4s both}
+#startFooter button{padding:7px 11px;font-size:9px;background:#0d1a2a99;border-color:#ffffff30}
+@keyframes lzLogo{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes lzEmblem{from{opacity:0;transform:rotate(-30deg) scale(.7)}to{opacity:1;transform:none}}
+@keyframes lzShine{0%,70%{background-position:160% 0,0 0}100%{background-position:-60% 0,0 0}}
+@keyframes lzFade{from{opacity:0}to{opacity:1}}
+@keyframes lzPulse{0%,100%{opacity:.6}50%{opacity:1}}
+@media(max-width:600px){#start h1{font-size:15vw;line-height:1.04;white-space:normal}#start h1 span{display:block;margin:0}#emblem{width:26vw}#logo{margin-top:3vh}#logoOver{letter-spacing:.3em}#logoTag{letter-spacing:.2em;gap:8px;font-size:9px}}
+@media(max-height:520px){#start{padding:12px 6vw 10px}#emblem{width:clamp(60px,14vh,90px)}#start h1{font-size:clamp(40px,6.4vw,72px)}#logoOver{margin:.5em 0 .2em}#startActions{margin:auto 0 2px;gap:2px}}
+@media(prefers-reduced-motion:reduce){#logo,#emblem,#start h1,#logoTag,#startActions,#startFooter,#start #play{animation:none}}

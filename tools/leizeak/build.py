@@ -14,6 +14,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 HERE = pathlib.Path(__file__).resolve().parent
 SRC = HERE / 'src'
 MODELS = HERE / 'models'
+FONTS = HERE / 'fonts'
 OUT = ROOT / 'public/games/leizeak.html'
 VENDOR_SRC = ROOT / 'public/games/oihartzun.html'
 VENDOR_START = '<script>/**\n * @license\n * Copyright 2010-2021 Three.js Authors'
@@ -68,9 +69,19 @@ def include(text):
     return re.sub(r'/\* @json ([\w./-]+) \*/', lambda m: json.dumps(json.loads((SRC / m.group(1)).read_text(encoding='utf-8')), ensure_ascii=False, separators=(',', ':')), text)
 
 
+def font_faces():
+    """Izenburuko letra-tipoa (Cinzel, SIL OFL 1.1: fonts/OFL-Cinzel.txt) base64-z txertatuta:
+    fitxategi bakarra, sarerik gabe ere bai. Ez badago, Georgia (CSS-ko ordezkoa)."""
+    f = FONTS / 'cinzel.woff2'
+    if not f.exists():
+        return ''
+    return ('@font-face{font-family:"Cinzel";src:url(data:font/woff2;base64,%s) format("woff2");'
+            'font-weight:400 900;font-display:swap}\n' % base64.b64encode(f.read_bytes()).decode())
+
+
 def assemble():
     head = (SRC / 'head.html').read_text(encoding='utf-8')
-    css = (SRC / 'extra.css').read_text(encoding='utf-8')
+    css = font_faces() + (SRC / 'extra.css').read_text(encoding='utf-8')
     head = head.replace('</style></head>', '</style><style id="lz2">\n' + css + '\n</style></head>', 1)
     body = (SRC / 'extra_body.html').read_text(encoding='utf-8')
     head = head.replace('<div id="fatal" hidden></div>', body + '<div id="fatal" hidden></div>', 1)
