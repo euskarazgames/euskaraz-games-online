@@ -127,7 +127,7 @@
       send.gain.value = 0.1;
       input.connect(send);
     }
-    return (VOICE.chains[k] = { input, rate: 1 });
+    return (VOICE.chains[k] = { input, rate: 1, deep: k === "gaueko" });
   }
   /* jo: iraupena (s) itzultzen du; 0 audiorik ez badago */
   function voicePlay(id) {
@@ -149,7 +149,8 @@
         SND.duck(false);
       }
     };
-    SND.duck(true);
+    /* Gauekoren ahots baxua musikaren baxuarekin lehiatzen da: musika gehiago jaitsi */
+    SND.duck(true, C.deep ? 0.07 : 0.15);
     return dur;
   }
   function voiceStop() {

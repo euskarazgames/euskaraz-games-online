@@ -1038,10 +1038,11 @@
       voiceNodes() {
         return ctx ? { master, verbIn } : null;
       },
-      duck(on) {
+      /* lv: musikaren maila hitz egitean (ahots baxuentzat, Gauekorentzat, are baxuago) */
+      duck(on, lv = 0.15) {
         if (!ctx) return;
         const t = ctx.currentTime;
-        mus.gain.setTargetAtTime(on ? 0.15 : 0.42, t, on ? 0.08 : 0.7);
+        mus.gain.setTargetAtTime(on ? lv : 0.42, t, on ? 0.08 : 0.7);
         amb.gain.setTargetAtTime(on ? 0.12 : 0.32, t, on ? 0.08 : 0.7);
       },
       setMuted(m) {
@@ -3566,6 +3567,7 @@
     Object.assign(c, { t: 0, full: L(sh[1], sh[2]), shown: 0, lastN: -1, typing: true, doneT: 0, voice: sh[7] || null, vOn: !sh[7], vEnd: 0, vT0: 0 });
     const cin = $("cinema"),
       intr = call && /^(GAUEKO|INGUMA)/.test(sh[0]);
+    c.intr = intr;
     cin.classList.toggle("deia", call);
     cin.classList.toggle("intrusion", intr);
     $("cineTag").textContent = call ? (intr ? "OIHARTZUN-DEIA · ▶ ▶ ▶ ▶ · ?" : "OIHARTZUN-DEIA · ◀ ◀ ▶") : "LEIZEEN DEIA";
@@ -3631,8 +3633,9 @@
     sea.material.uniforms.clock.value += dt;
     if (ZONE.cur === "ibarra") mariUpdate(dt);
     music(dt);
-    /* ahotsa: kargatuta dagoenean hasi (gehienez 0.8 s itxaron; bestela testua bakarrik) */
-    if (!c.vOn && (voiceReady(c.voice) || c.t > 0.8)) {
+    /* ahotsa: kargatuta dagoenean hasi (gehienez 0.8 s itxaron; bestela testua bakarrik).
+       Gauekoren sarreran, interferentzia amaitu arte itxaron: ahotsa estatikoaren gainetik ez */
+    if (!c.vOn && c.t >= (c.intr ? 0.4 : 0) && (voiceReady(c.voice) || c.t > 0.8)) {
       c.vOn = true;
       c.vEnd = voicePlay(c.voice);
       c.vT0 = c.t;
