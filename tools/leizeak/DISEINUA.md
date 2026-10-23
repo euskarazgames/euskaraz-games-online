@@ -245,8 +245,10 @@ Ideia orokorrak bakarrik (ez beste jokoen edukirik, ez interfazerik, ez testurik
   etenak (…). GAUEKO (v2): ahots sakona baina garbia, astiro; fitxategian oktaba bat beherako geruza eta
   tonua apur bat jaitsita (formanteak gordeta), eta jokoan distortsiorik gabe: presentzia, oihartzun laburra
   eta erreberberazio neurritsua (lehen, abiadura moteldua eta distortsioa: telefonoan ia ez zen ulertzen).
-  INGUMA: emakume zahar baten ahots oso baxua, tonua jaitsita, eta jokoan dardara (atzerapen modulatua) eta
-  erreberberazio luzea; ametseko "IRATI?" Iratiren tinbrearekin, Ingumaren iragazkiarekin. IRATI oihartzun-
+  INGUMA: emakume zahar baten ahots oso baxua, tonua jaitsita, eta jokoan dardara leuna (atzerapen modulatua),
+  presentzia eta erreberberazio neurritsua (lehen dardara gehiegi: mugikorrean % 15eko akatsa; orain % 5);
+  ametseko "IRATI?" Iratiren tinbrearekin, Ingumaren iragazkiarekin. Neurketa (Whisper, jokoko katea eta
+  mugikor-bozgorailua, CER batez beste): Gaueko % 4 (lehen % 24-35), Irati % 2.4, Amaiur % 1.8, Inguma % 5. IRATI oihartzun-
   harritik (banda estua, oihartzun leuna), AMAIUR hurbil. Hitz egitean musika jaisten da. Audiorik gabe, testua.
 - **Kamera** → BULTZADAn ez dago FOV-kolperik; kamerak malguki kritikoki moteldua erabiltzen du
   (azelerazioa zerotik hasten da), eta aurrera-begiratzeak abiadura mugatua du.
