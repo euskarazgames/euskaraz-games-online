@@ -340,7 +340,7 @@
     TXALA.spots.push(AM.txala);
     DGA.bigChest = chest("aE-bigkey", AE(-5.5), 0, -110, PI / 4, { t: "bigkey" }, { hidden: !isCleared("aD-seaska") });
     DGA.hearthE = sutondoa("aE-su", AE(-7), 0, -120.5, 1.6, 1.6);
-    stoppedClock(AE(12), 9, -122, 2.6);
+    stoppedClock(AE(15), 10, -106, 2.6);
     floater("kandela", AE(-10), 4, -108, 1.3);
     /* ---- M5 → M6: zubia eta ate handia ---- */
     quiltBridge(AE(0), -130, 4, 10, 0, "aE");
@@ -409,12 +409,16 @@
     hearthsUpdate(dt);
     ingumaUpdate(dt);
     const R = DGA.rooms;
+    /* kameraren ondoan dauden apaingarriak ezkutatu (ez dezatela ikuspegia estali) */
+    const camNear = (g, r) => g.position.distanceToSquared(camera.position) < r * r;
     for (const F of AM.floaters) {
       F.g.position.y = F.y0 + Math.sin(time * 0.7 + F.ph) * 0.35;
       F.g.rotation.y += dt * F.spin;
+      F.g.visible = !camNear(F.g, 6);
     }
     for (const C of AM.clocks) {
       C.g.position.y = C.y0 + Math.sin(time * 0.5 + C.ph) * 0.5;
+      C.g.visible = !camNear(C.g, 9);
       /* orratzak dardaraka: denbora ez da igarotzen */
       C.hand1.rotation.z = -2.2 + Math.sin(time * 9 + C.ph) * 0.02;
     }

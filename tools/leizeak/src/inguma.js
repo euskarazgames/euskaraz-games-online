@@ -12,6 +12,18 @@
                             SEASKA (txalaparta) → lokartu eta lurrera → zauritu (hautsarekin, bikoitza).
      ================================================================== */
   const ING = { g: null, body: null, eyes: [], smile: null, arms: [], state: "sleep", t: 0, hp: 0, phase: 0, x: 0, y: 7, z: 0, ang: 0, dive: null, fakes: [], realI: 0, reveal: 0, grass: [], crush: 0, scale: 1, seenIntro: false, said: {}, shotT: 2.5, src: { x: 0, y: 0, z: 0, era: -1 }, bed: null, grassMat: null, grassGeo: null, shadow: null, meter: null, flash: 0, swap: 0, stats: { counts: 0, lull: 0 } };
+  /* erretratua (elkarrizketa-panela): kaputxa morea, bi begi zurbil handi eta irribarre mehea */
+  Object.assign(PORTRAITS, {
+    inguma:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><path class="i1" d="M6 120c4-34 16-62 44-70 28 8 40 36 44 70z"/>' +
+      '<path class="i3" d="M22 72c0-30 12-50 28-57 16 7 28 27 28 57-8-8-18-12-28-12s-20 4-28 12z"/>' +
+      '<ellipse class="i1" cx="50" cy="67" rx="17" ry="21"/>' +
+      '<g class="eyes"><ellipse class="i2" cx="42" cy="62" rx="4.2" ry="6"/><ellipse class="i2" cx="58" cy="62" rx="4.2" ry="6"/></g>' +
+      '<path class="mouth i2" d="M37 77q13 8 26 0q-13 3-26 0z"/>' +
+      '<path class="i3" d="M30 104q-4 8-10 13M70 104q4 8 10 13M38 108q-1 6-4 10M62 108q1 6 4 10" stroke-width="2" fill="none"/></svg>',
+  });
+  PORTRAIT_OF.INGUMA = "inguma";
+  PORTRAIT_OF["IRATI?"] = "unknown";
   const ING_HP = 10,
     ING_R = 2.4;
   /* ametseko hitzak (jokoa gelditu gabe): ahotsa eta azpititulua */
@@ -23,9 +35,10 @@
     notify(who + ": " + L(text), "", 4.5);
   }
   /* --------------------------- eraikitzea --------------------------- */
-  function ingumaMesh(fake) {
+  function ingumaMesh() {
     const g = new T.Group(),
-      cloth = new T.MeshStandardMaterial({ color: "#120a1f", emissive: new T.Color(fake ? "#3a2a5a" : "#2a1450"), emissiveIntensity: 0.5, roughness: 0.9, side: T.DoubleSide, transparent: !!fake, opacity: fake ? 0.85 : 1 });
+      /* kopiak benetakoaren berdinak (ENTZUN edo izarrak dira seinale bakarrak) */
+      cloth = new T.MeshStandardMaterial({ color: "#120a1f", emissive: new T.Color("#2a1450"), emissiveIntensity: 0.5, roughness: 0.9, side: T.DoubleSide });
     /* kapa: behealdea zarpail (uhinak), goian estua */
     const prof = [];
     for (let i = 0; i <= 12; i++) {
@@ -108,12 +121,12 @@
     BP.add(bed);
     solids.push({ x: R.x, z: R.z - 9, r: 2.2, h: 1.4, y: 0, pillar: true });
     ING.bed = { x: R.x, z: R.z - 9, g: bed, mound };
-    const M = ingumaMesh(false);
+    const M = ingumaMesh();
     Object.assign(ING, M);
     ING.g.position.set(R.x, 7, R.z - 9);
     BP.add(ING.g);
     for (let i = 0; i < 2; i++) {
-      const F = ingumaMesh(true);
+      const F = ingumaMesh();
       F.g.visible = false;
       BP.add(F.g);
       ING.fakes.push({ ...F, x: R.x, y: 3, z: R.z, alive: true, t: 0 });
@@ -210,7 +223,7 @@
       for (const F of ING.fakes) Object.assign(F, { alive: true, t: 0 });
       grassSpawn();
       bark("c7_n5");
-      notify(L("Hiru Inguma! ENTZUN (txalaparta): benetakoa distiratuko da. Amets-belarrak: IRAGANEAN ez dute minik egiten."), "", 7);
+      notify(L("Hiru Inguma! Benetakoak bakarrik botatzen ditu izarrak — edo ENTZUN (txalaparta): urre-distira. Amets-belarrak: IRAGANEAN ez dute minik egiten."), "", 7);
     } else {
       ING.state = "sit";
       ING.t = 0;
@@ -239,12 +252,12 @@
   }
   /* itzulitako izarra: zorabiatuta (hautsarentzat leihoa) */
   function ingumaStagger() {
-    if (ING.phase !== 1 || ING.state === "count") return;
+    if (ING.phase === 3 || ING.state === "count") return;
     ING.state = "stagger";
     ING.t = 0;
     SND.clang(0.7);
     fxBurst(ING.x, ING.y + 2, ING.z, { n: 30, speed: 4, life: 0.6, size: 0.3, color: "#fff1a8", grav: 2 });
-    notifyOnce("inguma-zorabiatu", L("Bere izarrak itzuli zaizkio! Zorabiatuta: IZAR-HAUTSA orain!"), "");
+    notifyOnce("inguma-zorabiatu", L("Bere izarra itzuli zaio! Zorabiatuta: IZAR-HAUTSA orain!"), "");
   }
   /* faltsua lehertu: mamu bat */
   function fakePop(F) {
@@ -399,8 +412,8 @@
         if (ING.phase === 2) ING.realI = Math.floor(Math.random() * 3);
       }
     }
-    /* --- 2. fasea: BELARRAK (hiru Inguma, ENTZUN) --- */
-    if (ING.state === "float2" || (ING.phase === 2 && ING.state === "count")) {
+    /* --- 2. fasea: BELARRAK (hiru Inguma, ENTZUN; kopiak eta belarrak egoera guztietan) --- */
+    if (ING.phase === 2) {
       ING.reveal = TXALA.reveal > 0 ? 1 : Math.max(0, ING.reveal - dt * 0.5);
       ING.swap += dt;
       if (ING.swap > 7 && ING.state === "float2") {
@@ -417,6 +430,16 @@
         ING.x = mix(ING.x, slots[ING.realI][0], 1 - Math.exp(-dt * 2.5));
         ING.z = mix(ING.z, slots[ING.realI][1], 1 - Math.exp(-dt * 2.5));
         ty = mix(ING.y, 3 + Math.sin(t * 1.6) * 0.4, 1 - Math.exp(-dt * 2.5));
+        /* izarrak benetakoak bakarrik botatzen ditu (beste seinale bat); itzuliz gero, zorabiatuta */
+        ING.shotT -= dt;
+        if (ING.shotT <= 0) {
+          ING.shotT = 3.2;
+          const a = Math.atan2(P.x - ING.x, P.z - ING.z);
+          shoot(ING.src, Math.sin(a), Math.cos(a), 0.8);
+          const S = SHOTS[SHOTS.length - 1];
+          S.star = true;
+          S.m.material = material("#fff1a8", 1.4);
+        }
       }
       let j = 0;
       for (let i = 0; i < 3; i++) {
@@ -432,7 +455,7 @@
         F.y = 3 + Math.sin(t * 1.6 + i) * 0.4;
         F.g.position.set(F.x, F.y, F.z);
         F.g.rotation.y = Math.atan2(P.x - F.x, P.z - F.z);
-        F.cloth.emissive.set("#3a2a5a");
+        F.cloth.emissive.set("#2a1450");
       }
       /* belarrak: ORAINEAN mina */
       if (ING.grassMat) ING.grassMat.emissiveIntensity = phase ? 0.6 + Math.sin(time * 4) * 0.15 : 0.04;

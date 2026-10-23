@@ -153,9 +153,9 @@ nagusiaren aurka. Ateak, giltzak eta itzulerak gela-zentral baten inguruan (bide
   "Irati"-k zure izena oihukatzen du, baina benetako Iratik ez du inoiz oihukatzen; amets-gaiztoa; SEASKA
   sehaskaren ondoan → giltza nagusia) → INGUMA, hiru fase, seaska-kantaren hiru bertsoak:
   ZERUAN IZARRAK (goian hegan: izar-euria EZKUTUAz itzuli → zorabiatuta; murgiltzean itzala lurrean, alde
-  egin; nekatuta behean → hautsa → kontatzen → zauritu), LURREAN BELARRAK (hiru Inguma: ENTZUN → benetakoa
-  urre-distiraz eta orduan bakarrik FINKATU daiteke; faltsuak, hautsarekin, mamu; amets-belarrek ORAINEAN
-  mina) eta ITSASOAN HAREAK (ohean eserita, amesgaiztoa betetzen, hare-haizeak bultzaka: SEASKA → lokartuta
+  egin; nekatuta behean → hautsa → kontatzen → zauritu), LURREAN BELARRAK (hiru Inguma: benetakoak bakarrik
+  botatzen ditu izarrak, eta ENTZUN → urre-distiraz, orduan bakarrik FINKATU daiteke; faltsuak, hautsarekin,
+  mamu; amets-belarrek ORAINEAN mina) eta ITSASOAN HAREAK (ohean eserita, amesgaiztoa betetzen, hare-haizeak bultzaka: SEASKA → lokartuta
   → hautsa → kalte bikoitza) → esnatu (egunsentia, Iratiren deia) → kanpoan: Anboton zazpigarren argia
   berde eta Gauekoren ahotsa ("Zure ahizpa… nirekin dago").
 - Mitologia: Tartalo ilunpean ikusten duen begi bakarreko artzain erraldoia (argiak itsutzen du),

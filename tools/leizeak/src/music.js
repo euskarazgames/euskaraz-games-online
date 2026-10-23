@@ -436,6 +436,8 @@
             if (on("solo")) soloNote(m - 12, t, len * MZ.step);
           }
       }
+      /* ametsa: musika-kutxa, astiro (seaska-kanta zaharra akordeen gainean) */
+      if (ZONES[ZONE.cur].dream && lv <= 1 && s % 4 === 0) bell(mf(C.pad[[0, 2, 3, 2, 1, 3, 2, 0][(bar * 4 + s / 4) % 8]] + 24), t, 0.02, MZ.era);
       /* oraina: izotz-distirak esplorazioan */
       if (phase && lv <= 1 && (s === 0 || s === 8) && ((n * 7) % 5) < 3) bell(mf(C.pad[(bar + s / 8) % 4] + 24), t + 0.01, 0.016, MZ.era);
     }
