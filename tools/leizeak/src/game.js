@@ -1818,6 +1818,8 @@
   /* @include inguma.js */
   /* @include aurpegia.js */
   /* @include izenburua.js */
+  /* @include oroitzapenak.js */
+  /* @include anboto.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -2804,11 +2806,13 @@
       scene.fog.color.copy(ATMO.fogPast).lerp(ATMO.fogNow, phaseBlend);
       /* zeruan ez dago gaurik (hodeien gainean, eguzkia beti); ametsean, beti gaua */
       if (ZONES[ZONE.cur].sky) {
-        DAY.k = ZONES[ZONE.cur].dream ? 1 : 0;
-        DAY.tw = 0;
+        /* Anboto: ekaitz-gaua, egunsentira (AN.dawn) */
+        DAY.k = ZONES[ZONE.cur].anboto ? 1 - AN.dawn * 0.9 : ZONES[ZONE.cur].dream ? 1 : 0;
+        DAY.tw = ZONES[ZONE.cur].anboto ? 4 * DAY.k * (1 - DAY.k) : 0;
       }
       dayVisuals();
       if (ZONES[ZONE.cur].dream) dreamVisuals();
+      else if (ZONES[ZONE.cur].anboto) anbotoVisuals();
       else if (ZONES[ZONE.cur].sky) skyVisuals();
     } else {
       sun.color.set(phaseBlend > 0.5 ? "#8fa9cc" : "#c08c5c");
@@ -2835,6 +2839,8 @@
     if (RING.on && ringReach()) return { kind: "talk", label: L("ERANTZUN"), fn: deiaAnswer };
     const PA = proActionNear();
     if (PA) return PA;
+    const AB = anbotoActionNear();
+    if (AB) return AB;
     const N = npcNear();
     if (N) return { kind: "talk", label: L("HITZ EGIN"), fn: () => talkTo(N) };
     const OC = odeiCloudNear();
@@ -3469,6 +3475,7 @@
       } else {
         dungeonUpdate(dt);
         bossUpdate(dt);
+        anbotoUpdate(dt);
       }
     }
     music(dt);
@@ -3855,6 +3862,17 @@
       window.__game = {
         P,
         TITLE,
+        AN,
+        OROIT,
+        FACE,
+        faceWorld,
+        faceCam,
+        faceLook,
+        film,
+        oroitPlay,
+        oroitLog,
+        anbotoStart,
+        anbotoDuel,
         saved,
         DGA,
         AM,

@@ -231,9 +231,10 @@
         ZAZPI.t = -1;
         ZAZPI.turn = false;
         if (ZAZPI.g) ZAZPI.g.visible = false;
-        title("JARRAITZEKO…", "");
         notify(L("Zazpi zaindariak aske. Anbotoko hodeian, zazpi argi berde… eta Gaueko zain, Irati ere bai."), "", 8);
         hud();
+        /* zazpigarren oroitzapena: Irati Anboton (probetan, window.__oroit ezarrita bakarrik) */
+        if (!saved.flags.includes("oroit-7") && (!OROIT_TEST || window.__oroit)) setTimeout(() => oroitPlay(6), 1200);
       },
     );
   }

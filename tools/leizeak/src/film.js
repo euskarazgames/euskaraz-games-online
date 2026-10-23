@@ -2,9 +2,10 @@
      ZINEMA · plano zinematografikoak: letterbox-a, kamera-bidaiak, kokapen- eta ordu-errotuluak
      (makinaz idatziak), azpitituluak eta ahotsak, beltzera urtzeak eta izenburu-txartela.
      Mundua geldi dago (logikarik ez), baina ura, zerua, partikulak eta animazioak bizirik.
-     Plano bakoitza: { d, cam:[A,B], look:[A,B]|P, up, fov, cap:[lerroak], say:"id", text:[nor,testua],
+     Plano bakoitza: { d, cam:[A,B], look:[A,B]|P, up, fov, cap:[lerroak], say:"id", vfx, night, text:[nor,testua],
        fade:"in"|"out"|"black", title:[handia, txikia], on(), tick(dt,k) } — A/B funtzioak izan daitezke.
        up: kameraren "gora" (adib. ohean etzanda dagoen aurpegia zuzen ikusteko); bestela munduko Y.
+       vfx: ahotsaren katea (ahotsak.js: "oroit", "dry"…); night: gau-maila (0..1) planoan.
      SALTATU (botoia edo Esc): amaierako deia (after) zuzenean; hark ezartzen du egoera.
      ================================================================== */
   const FILM = { on: false, list: null, i: -1, t: 0, sh: null, after: null, capFull: "", capN: 0, vEnd: 0, vOn: false, A: null, B: null, LA: null, LB: null };
@@ -47,6 +48,8 @@
     FILM.LA = vec(Array.isArray(lk[0]) || typeof lk[0] === "function" ? lk[0] : lk);
     FILM.LB = vec(Array.isArray(lk[0]) || typeof lk[0] === "function" ? lk[1] || lk[0] : lk);
     FILM.U = s.up ? vec(s.up).normalize() : null;
+    /* s.night: planoaren gau-maila (oroitzapenak: gaua ala eguna, uneko orduaz aparte) */
+    FILM.night = s.night ?? null;
     if (s.cap) {
       FILM.capFull = s.cap.join("\n");
       FILM.capN = 0;
@@ -110,7 +113,7 @@
     /* ahotsa: kargatuta dagoenean hasi (gehienez 0.8 s itxaron; bestela testua bakarrik) */
     if (!FILM.vOn && (voiceReady(s.say) || FILM.t > 0.8)) {
       FILM.vOn = true;
-      const d = voicePlay(s.say);
+      const d = voicePlay(s.say, s.vfx);
       FILM.vEnd = d ? FILM.t + d : 0;
     }
     if (FILM.capN < FILM.capFull.length) {
@@ -123,6 +126,7 @@
       $("filmFade").style.opacity = 1;
     }
     if (mixer) mixer.update(dt);
+    oroitActorsTick(dt);
     time += dt;
     eraVisuals();
     if (ZONE.cur === "ibarra") {
@@ -142,6 +146,7 @@
     voiceStop();
     if (FILM.key) FILM.key.intensity = 0;
     camera.up.set(0, 1, 0);
+    FILM.night = null;
     FILM.on = false;
     FILM.sh = null;
     FILM.outT = 0;

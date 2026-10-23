@@ -36,8 +36,9 @@
   /* kargatuta dago (edo ez dago eta ez da egongo)? */
   const voiceReady = (id) => VOICE.buf.has(id) || !SND.ctx;
   /* pertsonaia bakoitzaren katea (behin sortua) → analizatzailea → bus nagusia */
-  function voiceChain(who) {
-    const k = who.startsWith("INGUMA") || who === "IRATI?" ? "inguma" : who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") ? "gaueko" : "dry";
+  function voiceChain(who, fx) {
+    /* fx: planoaren katea (zinema): "oroit" (oroitzapena), "dry" (hurbil, adib. Irati bizirik), "irati"… */
+    const k = fx || (who.startsWith("INGUMA") || who === "IRATI?" ? "inguma" : who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") ? "gaueko" : who === "MARI" ? "mari" : "dry");
     if (VOICE.chains[k]) return VOICE.chains[k];
     const ctx = SND.ctx,
       N = SND.voiceNodes();
@@ -103,31 +104,60 @@
       send.gain.value = 0.35;
       lp.connect(send);
     } else if (k === "inguma") {
-      /* ametsetik: ahotsa dardaraka (atzerapen modulatu leuna), presentzia eta erreberberazio neurritsua.
-         (Lehen dardara eta erreberberazio gehiegi: mugikorrean % 15eko akatsa; orain % 5) */
+      /* ametsetik: presentzia, oihartzun motz bikoitza (ametseko gela) eta erreberberazio neurritsua.
+         (v3: atzerapen modulaturik gabe — dardarak ahotsa metaliko/robotiko egiten zuen) */
       const hp = ctx.createBiquadFilter(),
         pk = ctx.createBiquadFilter(),
-        dl = ctx.createDelay(0.1),
-        lfo = ctx.createOscillator(),
-        depth = ctx.createGain(),
-        wet = ctx.createGain();
+        dl = ctx.createDelay(0.5),
+        dl2 = ctx.createDelay(0.5),
+        wet = ctx.createGain(),
+        wet2 = ctx.createGain();
       hp.type = "highpass";
-      hp.frequency.value = 140;
+      hp.frequency.value = 120;
       pk.type = "peaking";
       pk.frequency.value = 2500;
       pk.Q.value = 1;
-      pk.gain.value = 3;
-      dl.delayTime.value = 0.012;
-      lfo.frequency.value = 0.7;
-      depth.gain.value = 0.003;
-      lfo.connect(depth).connect(dl.delayTime);
-      lfo.start();
-      wet.gain.value = 0.3;
+      pk.gain.value = 2.5;
+      dl.delayTime.value = 0.11;
+      dl2.delayTime.value = 0.23;
+      wet.gain.value = 0.16;
+      wet2.gain.value = 0.09;
       input.connect(hp).connect(pk);
       pk.connect(VOICE.an);
       pk.connect(dl).connect(wet).connect(VOICE.an);
-      send.gain.value = 0.3;
+      pk.connect(dl2).connect(wet2).connect(VOICE.an);
+      send.gain.value = 0.34;
       pk.connect(send);
+    } else if (k === "oroit") {
+      /* oroitzapena: urrutiko eta epela (goi-muturrak leunduta), gela handi baten erreberberazioa */
+      const hp = ctx.createBiquadFilter(),
+        lp = ctx.createBiquadFilter();
+      hp.type = "highpass";
+      hp.frequency.value = 110;
+      lp.type = "lowpass";
+      lp.frequency.value = 5200;
+      input.connect(hp).connect(lp);
+      lp.connect(VOICE.an);
+      send.gain.value = 0.42;
+      lp.connect(send);
+    } else if (k === "mari") {
+      /* Mari: mendiaren barrutik — sakona eta zabala, oihartzun luze leun batekin */
+      const hp = ctx.createBiquadFilter(),
+        ls = ctx.createBiquadFilter(),
+        dl = ctx.createDelay(1),
+        wet = ctx.createGain();
+      hp.type = "highpass";
+      hp.frequency.value = 70;
+      ls.type = "lowshelf";
+      ls.frequency.value = 200;
+      ls.gain.value = 1.5;
+      dl.delayTime.value = 0.32;
+      wet.gain.value = 0.12;
+      input.connect(hp).connect(ls);
+      ls.connect(VOICE.an);
+      ls.connect(dl).connect(wet).connect(VOICE.an);
+      send.gain.value = 0.45;
+      ls.connect(send);
     } else {
       input.connect(VOICE.an);
       send.gain.value = 0.1;
@@ -136,12 +166,12 @@
     return (VOICE.chains[k] = { input, rate: 1, deep: k === "gaueko" });
   }
   /* jo: iraupena (s) itzultzen du; 0 audiorik ez badago */
-  function voicePlay(id) {
+  function voicePlay(id, fx) {
     voiceStop();
     const b = VOICE.buf.get(id),
       ctx = SND.ctx;
     if (!b || !ctx || muted) return 0;
-    const C = voiceChain(voiceLine(id)[0]),
+    const C = voiceChain(voiceLine(id)[0], fx),
       src = ctx.createBufferSource();
     src.buffer = b;
     src.playbackRate.value = C.rate;

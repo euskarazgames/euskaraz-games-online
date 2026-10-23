@@ -302,5 +302,173 @@
   "c7_p4": [
     "INGUMA",
     "Inguma naiz. Gaur ez zaitut eramango. Laster… bai. Lo ona, sorgin txikia."
+  ],
+  "o1_i1": [
+    "IRATI",
+    "Txomin itsasoan dago, eta ekaitza dator! Kanpaia jo behar dut!"
+  ],
+  "o1_a1": [
+    "AMAIUR",
+    "Irati, ez! Gaua da. Amonak esan zuen: gauez, ez irten."
+  ],
+  "o1_i2": [
+    "IRATI",
+    "Itsasoak ez daki zer ordu den, Amaiur. Nik joko dut; zuk, itxaron."
+  ],
+  "o1_g1": [
+    "GAUEKO",
+    "Gaua… gauekoentzat da."
+  ],
+  "o2_n1": [
+    "AMONA",
+    "Txalapartak bi ahots ditu, neskatoak: batak galdetzen du, eta besteak erantzuten du."
+  ],
+  "o2_n2": [
+    "AMONA",
+    "Eta gogoratu beti: eguna egunekoentzat, gaua gauekoentzat. Gauez, etxean."
+  ],
+  "o2_i1": [
+    "IRATI",
+    "Eta gauez txalaparta jotzen badugu, amona?"
+  ],
+  "o2_n3": [
+    "AMONA",
+    "Orduan, Gaueko dantzara etorriko da. Eta Gauekok ez daki gelditzen."
+  ],
+  "o3_a1": [
+    "AMAIUR",
+    "Ez dut utziko joaten. Denbora gelditu behar badut ere."
+  ],
+  "o3_a2": [
+    "AMAIUR",
+    "Egun bera, behin eta berriz. Eta irratian, haren ahotsa."
+  ],
+  "o3_i1": [
+    "IRATI",
+    "Utzi joaten, Amaiur. Erlojua zure eskuetan dago."
+  ],
+  "o4_m1": [
+    "MARI",
+    "Zazpi urte, zazpi dei. Nire ahotsa zazpitan zatituko dut, haiei eusteko."
+  ],
+  "o4_n1": [
+    "ANDERE",
+    "Mari, zure sua nik eramango dut zeruan. Neskatoek ez dute jakin behar."
+  ],
+  "o5_m1": [
+    "MARI",
+    "Basajaun, Lamia, Tartalo, Errolan, Odei, Herensugea eta Inguma: bakoitzak urte bat gordeko du."
+  ],
+  "o5_m2": [
+    "MARI",
+    "Ahizpak etorriko dira: bata egunetik, bestea gauetik. Orduan, itzuli urteak."
+  ],
+  "o5_g1": [
+    "GAUEKO",
+    "Zazpi zaindari… eta zazpi itzal. Urteak gauarenak dira, Mari."
+  ],
+  "o6_g1": [
+    "GAUEKO",
+    "Lehen, herriak gaua errespetatzen zuen: argizaiolak, kantuak, isiltasuna."
+  ],
+  "o6_g2": [
+    "GAUEKO",
+    "Gero, ahaztu egin ninduten. Gaua beldurra baino ez zen. Eta beldurrak itzalak egiten ditu."
+  ],
+  "o6_i1": [
+    "IRATI",
+    "Gaueko… zergatik nauzu hemen?"
+  ],
+  "o6_g3": [
+    "GAUEKO",
+    "Ez zaitut harrapatu, neska. Itsasotik atera zintudan. Gauak bereak zaintzen ditu."
+  ],
+  "o7_i1": [
+    "IRATI",
+    "Zazpi urte kontatu ditut ilunpean, Amaiur. Zazpi argi: bat, urte bakoitzeko."
+  ],
+  "o7_i2": [
+    "IRATI",
+    "Ez naiz oihartzun bat. Bizirik nago. Gaueko ez da nire kartzelaria: nire zaindaria da."
+  ],
+  "o7_i3": [
+    "IRATI",
+    "Baina gauak ez du ezer itzultzen debalde. Txalapartak bi ahots behar ditu."
+  ],
+  "f_i1": [
+    "IRATI",
+    "Zazpi argiak berde daude. Anboton nago, Mariren etxean. Etorri nire bila, Amaiur."
+  ],
+  "f_a1": [
+    "AMAIUR",
+    "Nola iritsiko naiz? Anboto hodeien gainean dago."
+  ],
+  "f_n1": [
+    "ANDERE",
+    "Amaiur, laztana. Igo nirekin. Sua da, baina ez du erretzen."
+  ],
+  "f_a2": [
+    "AMAIUR",
+    "Amona…! Bizirik zaude!"
+  ],
+  "f_g1": [
+    "GAUEKO",
+    "Iritsi zara, sorgin. Zazpi urte, zazpi zaindari… eta orain, zu."
+  ],
+  "f_g2": [
+    "GAUEKO",
+    "Zure ahizpa gauak atera zuen itsasotik. Eta gauak ez du ezer debalde itzultzen."
+  ],
+  "f_a3": [
+    "AMAIUR",
+    "Orduan, txalapartak erabakiko du. Galdetu, Gaueko. Nik erantzungo dizut."
+  ],
+  "f_g3": [
+    "GAUEKO",
+    "Ondo… Baina gauak luzeagoak dira."
+  ],
+  "f_g4": [
+    "GAUEKO",
+    "Zazpi kolpe. Zazpi urte. Bakarrik ezin duzu."
+  ],
+  "f_i2": [
+    "IRATI",
+    "Ez dago bakarrik! Txalapartak bi ahots ditu!"
+  ],
+  "f_m1": [
+    "MARI",
+    "Ahizpak: bata egunetik, bestea gauetik. Galdera eta erantzuna."
+  ],
+  "f_m2": [
+    "MARI",
+    "Gaueko: gaua zurea da, betiko. Baina urteak haienak dira."
+  ],
+  "f_g5": [
+    "GAUEKO",
+    "Gaua… nirea. Eta errespetatuko dute?"
+  ],
+  "f_a4": [
+    "AMAIUR",
+    "Gauero, argizaiola bat zure izenean. Eta txalaparta, egunez."
+  ],
+  "f_g6": [
+    "GAUEKO",
+    "Ituna da, sorgin txikia. Zoaz… zure ahizparekin."
+  ],
+  "f_i3": [
+    "IRATI",
+    "Amaiur… zure eskua epela da."
+  ],
+  "f_a5": [
+    "AMAIUR",
+    "Zazpi urte, Irati. Zazpi urte deika."
+  ],
+  "f_i4": [
+    "IRATI",
+    "Eta zazpi urte erantzuten. Goazen etxera."
+  ],
+  "f_n2": [
+    "ANDERE",
+    "Egunsentia da, neskatoak. Herriak txalaparta jo nahi du."
   ]
 }

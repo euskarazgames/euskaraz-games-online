@@ -34,6 +34,7 @@
     kaia: ["KAIA", "Txalupa izotzean harrapatuta dago."],
     badia: ["BADIA IZOZTUA", "Itsasoak ere eutsi dio arnasari."],
     zuloa: ["LEIZE-ZULOA", "Ibaia lurrak irensten du hemen. Hondotik, norbaitek kantatzen duela dirudi."],
+    gailurra: ["ANBOTOKO GAILURRA", "Mariren etxea. Hodeien gainean, ekaitza; azpian, harana lo."],
   };
   /* zona baterako eraikitzen: taldea eta zerrendak "globalak" bihurtu */
   function zoneBuild(id) {

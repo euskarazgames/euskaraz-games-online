@@ -261,3 +261,11 @@ body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{v
 @media(max-width:600px){#start h1{font-size:15vw;line-height:1.04;white-space:normal}#start h1 span{display:block;margin:0}#emblem{width:26vw}#logo{margin-top:3vh}#logoOver{letter-spacing:.3em}#logoTag{letter-spacing:.2em;gap:8px;font-size:9px}}
 @media(max-height:520px){#start{padding:12px 6vw 10px}#emblem{width:clamp(60px,14vh,90px)}#start h1{font-size:clamp(40px,6.4vw,72px)}#logoOver{margin:.5em 0 .2em}#startActions{margin:auto 0 2px;gap:2px}}
 @media(prefers-reduced-motion:reduce){#logo,#emblem,#start h1,#logoTag,#startActions,#startFooter,#start #play{animation:none}}
+
+/* txalaparta bi ahotsez (Anboto): Iratiren kolpeak (▶), urdin argiz eta izenarekin */
+#txSeq i.ir{border-style:dashed;border-color:#9fe8ffaa;position:relative}
+#txSeq i.ir::after{content:"IRATI";position:absolute;top:100%;margin-top:3px;font:600 7px system-ui;letter-spacing:.12em;color:#9fe8ff}
+/* oroitzapenak: sepia, bineta eta pikor leuna (zinemaren gainean) */
+body.oroit #view{filter:sepia(.62) saturate(.72) contrast(1.06) brightness(.94)}
+body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 52%,#1a0f06c0 100%);animation:oroitFlick 3.2s steps(8) infinite}
+@keyframes oroitFlick{0%,100%{opacity:.92}40%{opacity:1}70%{opacity:.86}}

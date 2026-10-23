@@ -110,6 +110,7 @@
   /* --------------------------- helburuak --------------------------- */
   function objective() {
     if (PRO.on) return proObjective();
+    if (ZONE.cur === "anboto") return anbotoObjective();
     const d = (x, z) => Math.round(Math.hypot(P.x - x, P.z - z));
     const DG = DGS[ZONE.cur];
     if (DG && DG.objective) return DG.objective();
@@ -156,6 +157,8 @@
     }
     if (!flag("inguma")) return ["Iturralden, ohean: AMETSERA (Ingumaren ametsa).", [28, 31, 0]];
     if (!flag("irati-inguma")) return ["Irten kanpora: Anboto aldera begiratu.", [28, 31, 0]];
+    /* azken atala: Anboto (anboto.js) */
+    if (!flag("anboto")) return ["Plazan: Irati. Anbotora, Mariren etxera.", [0, 41, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {

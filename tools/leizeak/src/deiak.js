@@ -124,6 +124,8 @@
   const CALL_TEST = new URLSearchParams(location.search).has("test");
   function zoneEntered(id) {
     if (!FILM.on) locCaption(id);
+    /* zaindari bat askatu ondoren, haranean: haren oroitzapena (oroitzapenak.js) */
+    oroitCheck(id);
     /* Inguma garaituta: etxetik irtetean, zazpigarren argia (seaska.js) */
     if (id === "ibarra" && saved.flags.includes("inguma") && !saved.flags.includes("irati-inguma")) setTimeout(ingumaFinale, 1400);
     const lines = ZONE_CALLS[id];

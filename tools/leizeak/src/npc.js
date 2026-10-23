@@ -261,7 +261,21 @@
       );
     /* zazpigarren atala: seaska-kanta (seaska.js) */
     if (f("irati-herensuge") && seaskaIrati(N, f)) return;
-    if (f("irati-inguma")) return talk(N, [["IRATI", "Anboto… zazpi argi berde, eta Gaueko zain. Ez dakit zer naizen, Amaiur. Baina txalapartak bi ahots ditu: elkarrekin joango gara."]]);
+    /* amaieraren ondoren: Irati bizirik, plazan */
+    if (f("anboto"))
+      return talk(N, [
+        [
+          "IRATI",
+          [
+            "Gauero argizaiola bat pizten dugu Gauekorentzat. Ez du inoiz eskerrik ematen… baina ilunpea leunagoa da.",
+            "Zazpi urte galdu ditut, Amaiur. Baina txalapartak gogoratzen nau. Jo nirekin, plazan, nahi duzunean.",
+            "Amonaren sua Anboton dago orain, Mariren etxean. Gauez, mendi-gailurrean, argi bat ikusten da.",
+            "Txomin zahartu egin da… baina ezagutu nau. Kaian, kanpaiaren ondoan, negarrez egon gara biok.",
+          ][Math.floor(time) % 4],
+        ],
+      ]);
+    /* zazpigarren argiaren ondoren: Anbotora (anboto.js) */
+    if (f("irati-inguma")) return anbotoStart();
     if (f("seaska-kanta")) return talk(N, [["IRATI", "Gauez, Iturralden: ohean, AMETSERA. Eta gogoratu: benetako Iratik ez du inoiz zure izena oihukatzen."]]);
     if (f("irati-herensuge")) return talk(N, [["IRATI", f("inguma-ametsa") ? "Amets gaizto bat? Ingumak nire ahotsa egin zuen? … Amonak kantu bat zekien, ohe ondoan kantatzeko. Gogoratu nahi dut, Amaiur." : "Argi bakarra falta da, gorria. Gaur gauean, lo egin etxean, Iturralden: sutondoa piztuta, eta kantu bat ohe ondoan."]]);
     if (f("irati-odei")) return talk(N, [["IRATI", "Herensugea… hodeien beste aldean. Zeruan, Odeiren hodei zuria zain duzu, ortzadarraren muturrean. Kontuz haren suarekin, Amaiur."]]);

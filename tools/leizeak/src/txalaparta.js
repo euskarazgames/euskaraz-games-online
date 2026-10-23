@@ -107,6 +107,8 @@
     if (!TXALA.on || TXALA.closeT > 0) return;
     const C = TXALA.call;
     if (C && C.phase !== "answer") return;
+    /* bi ahotsez (anboto.js): ▶ kolpeak Iratirenak dira — jokalariak ◀ bakarrik */
+    if (C && C.duet && C.seq[C.i] === "R") return;
     SND.tok(side);
     TXALA.flash[side === "L" ? 0 : 1] = 1;
     padFlash(side);
@@ -148,9 +150,10 @@
     }
   }
   /* deia (ikasi edo harri-danbor bati erantzun) */
-  function txalaCall(seq, title, msg, onDone) {
+  function txalaCall(seq, title, msg, onDone, opts = {}) {
     txalaShow("call");
-    TXALA.call = { seq, onDone, phase: "listen", i: 0, t: -0.6, beat: 0 };
+    /* opts.duet: ▶ kolpeak beste ahots batek jotzen ditu (Irati); opts.onBeat: deiaren kolpe bakoitzean */
+    TXALA.call = { seq, onDone, phase: "listen", i: 0, t: -0.6, beat: 0, duet: !!opts.duet, onBeat: opts.onBeat || null };
     $("txTitle").textContent = title;
     $("txMsg").textContent = msg || L("Entzun…");
     txalaSeqDots(seq, 0, "call");
@@ -200,6 +203,7 @@
         const s = C.seq[C.beat];
         SND.tok(s, true);
         padFlash(s);
+        if (C.onBeat) C.onBeat(s);
         for (const sp of TXALA.spots) if (sp.group === ZONES[ZONE.cur].group && Math.hypot(sp.x - P.x, sp.z - P.z) < 16) sp.planks[s === "L" ? 0 : 2].position.y = 1.25;
         C.beat++;
         txalaSeqDots(C.seq, C.beat, "call");
@@ -210,6 +214,25 @@
         C.lastT = time;
         $("txMsg").textContent = L("Zure txanda! Errepikatu.");
         txalaSeqDots(C.seq, 0, "ok");
+      }
+    }
+    /* bi ahotsez: Iratiren txanda (▶), 0.3 s-ra bakarrik jotzen du */
+    if (C.phase === "answer" && C.duet && C.i < C.seq.length && C.seq[C.i] === "R") {
+      if (C.autoT == null) C.autoT = C.t + 0.3;
+      else if (C.t >= C.autoT) {
+        C.autoT = null;
+        SND.tok("R");
+        TXALA.flash[1] = 1;
+        padFlash("R");
+        fxRing(P.x + Math.sin(P.angle) * 0.85, P.y + 1.2, P.z + Math.cos(P.angle) * 0.85, "#9fe8ff", 2.6, 0.45);
+        C.i++;
+        C.lastT = time;
+        txalaSeqDots(C.seq, C.i, "ok");
+        if (C.i >= C.seq.length) {
+          $("txMsg").textContent = L("Bi ahots, oihartzun bakar bat!");
+          TXALA.closeT = 0.001;
+          C.success = true;
+        }
       }
     }
     if (C.phase === "answer" && C.i > 0 && time - C.lastT > 3) {
@@ -226,8 +249,9 @@
     el.classList.add("hit");
   }
   function txalaSeqDots(seq, n, kind) {
+    const duet = TXALA.call && TXALA.call.duet;
     $("txSeq").innerHTML = seq
-      .map((s, i) => `<i class="${i < n ? (kind === "bad" && i === n ? "bad" : kind === "call" ? "lit" : "ok") : ""} ${s === "L" ? "l" : "r"}">${s === "L" ? "◀" : "▶"}</i>`)
+      .map((s, i) => `<i class="${i < n ? (kind === "bad" && i === n ? "bad" : kind === "call" ? "lit" : "ok") : ""} ${s === "L" ? "l" : "r"}${duet && s === "R" ? " ir" : ""}">${s === "L" ? "◀" : "▶"}</i>`)
       .join("");
   }
   /* --------------------------- erritmoen eragina --------------------------- */

@@ -168,7 +168,7 @@
   /* eraVisuals-etik (kanpoan): argia, lainoa, zerua eta itsasoa gauerako */
   function dayVisuals() {
     /* hitzaurrean eta zinema-planoetan, gaua argiagoa (ilargi-argia): pertsonaiak ondo ikusteko */
-    const k = DAY.k * (PRO.on || FILM.on ? 0.8 : 1),
+    const k = (FILM.on && FILM.night != null ? FILM.night : DAY.k) * (PRO.on || FILM.on ? 0.8 : 1),
       tw = DAY.tw;
     sun.color.lerp(DUSK_COL, tw * 0.55).lerp(MOON_COL, k);
     sun.intensity *= mix(1, 0.16, k) * (1 - tw * 0.2);
