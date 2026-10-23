@@ -155,9 +155,34 @@
         { d: 4.6, cam: [[2, 5, 45], [1, 6.5, 41]], look: [[8, 30, -60], [8, 60, -96]], cap: null, say: "pro_g1", tick: (dt, k) => proEyesOpen(k) },
         { d: 4.4, cam: [[1, 6.5, 41], [-2, 12, 26]], look: [[8, 60, -96], [8, 64, -96]], say: "pro_g2", tick: () => proEyesOpen(1) },
         { d: 5.2, cam: [[11, 7, 43], [15.5, 4.4, 38.5]], look: [S.x, 2.6, S.z], cap: ["ITURRALDE · 03:40", "BI AHIZPAREN ETXEA. BAT BAKARRIK LO."], fade: "out", on: () => PRO.eyes && (PRO.eyes.visible = false) },
+        /* Amaiur aurkezpena: lehen planoa, lo (ilargi-argia aurpegian), eta begiak irekitzen */
+        {
+          d: 4.4,
+          fade: "in",
+          key: "#c4d6ff",
+          cap: ["AMAIUR", "LO DAGO. HARRIAK DEITUKO DIO."],
+          on: () => {
+            proBedroom();
+            FACE.force = "closed";
+          },
+          cam: [() => faceCam(1.75, 0.35, 0.3), () => faceCam(1.2, 0.22, 0.1)],
+          look: [faceLook, faceLook], up: faceUp,
+          tick: (dt) => proStoneRing(dt, true),
+        },
+        {
+          d: 3.8,
+          key: "#c4d6ff",
+          cap: ["AMAIUR · ITURRALDEKO SORGINA", "IRATIREN AHIZPA"],
+          on: () => {
+            FACE.force = null;
+            FACE.blinkT = 2.6;
+          },
+          cam: [() => faceCam(1.2, 0.22, 0.1), () => faceCam(0.98, 0.16, -0.06)],
+          look: [faceLook, faceLook], up: faceUp,
+          tick: (dt) => proStoneRing(dt, true),
+        },
         {
           d: 5.4,
-          fade: "in",
           cap: null,
           on: () => proBedroom(),
           cam: [() => [DGE.bed.x + 4.6, 4.4, DGE.bed.z + 5], () => [DGE.bed.x + 3.6, 3.5, DGE.bed.z + 3.4]],
@@ -167,6 +192,7 @@
       ],
       () => {
         if (PRO.eyes) PRO.eyes.visible = false;
+        FACE.force = null;
         flagSet("pro-0");
         proHouse(true);
       },

@@ -2,8 +2,9 @@
      ZINEMA · plano zinematografikoak: letterbox-a, kamera-bidaiak, kokapen- eta ordu-errotuluak
      (makinaz idatziak), azpitituluak eta ahotsak, beltzera urtzeak eta izenburu-txartela.
      Mundua geldi dago (logikarik ez), baina ura, zerua, partikulak eta animazioak bizirik.
-     Plano bakoitza: { d, cam:[A,B], look:[A,B]|P, fov, cap:[lerroak], say:"id", text:[nor,testua],
+     Plano bakoitza: { d, cam:[A,B], look:[A,B]|P, up, fov, cap:[lerroak], say:"id", text:[nor,testua],
        fade:"in"|"out"|"black", title:[handia, txikia], on(), tick(dt,k) } — A/B funtzioak izan daitezke.
+       up: kameraren "gora" (adib. ohean etzanda dagoen aurpegia zuzen ikusteko); bestela munduko Y.
      SALTATU (botoia edo Esc): amaierako deia (after) zuzenean; hark ezartzen du egoera.
      ================================================================== */
   const FILM = { on: false, list: null, i: -1, t: 0, sh: null, after: null, capFull: "", capN: 0, vEnd: 0, vOn: false, A: null, B: null, LA: null, LB: null };
@@ -45,6 +46,7 @@
     const lk = s.look || [P.x, P.y + 1.2, P.z];
     FILM.LA = vec(Array.isArray(lk[0]) || typeof lk[0] === "function" ? lk[0] : lk);
     FILM.LB = vec(Array.isArray(lk[0]) || typeof lk[0] === "function" ? lk[1] || lk[0] : lk);
+    FILM.U = s.up ? vec(s.up).normalize() : null;
     if (s.cap) {
       FILM.capFull = s.cap.join("\n");
       FILM.capN = 0;
@@ -81,6 +83,12 @@
       camera.fov = s.fov;
       camera.updateProjectionMatrix();
     }
+    /* s.key: pertsonaiaren argia (kolorea edo true): kameraren ondoan, gora apur bat — aurpegia ondo ikusteko */
+    if (s.key && !FILM.key) {
+      FILM.key = new T.PointLight("#ffe2c0", 0, 7, 1.6);
+      scene.add(FILM.key);
+    }
+    if (FILM.key && s.key) FILM.key.color.set(typeof s.key === "string" ? s.key : "#ffe2c0");
   }
   function filmUpdate(dt) {
     const s = FILM.sh;
@@ -90,8 +98,14 @@
       e = easeIO(k);
     camera.position.lerpVectors(FILM.A, FILM.B, e);
     const look = new T.Vector3().lerpVectors(FILM.LA, FILM.LB, e);
+    if (FILM.U) camera.up.copy(FILM.U);
+    else camera.up.set(0, 1, 0);
     camera.lookAt(look);
     CAM.cineLook = look;
+    if (FILM.key) {
+      FILM.key.intensity = mix(FILM.key.intensity, s.key ? 1.7 : 0, 1 - Math.exp(-dt * 6));
+      FILM.key.position.set(camera.position.x, camera.position.y + 0.7, camera.position.z);
+    }
     if (s.tick) s.tick(dt, k);
     /* ahotsa: kargatuta dagoenean hasi (gehienez 0.8 s itxaron; bestela testua bakarrik) */
     if (!FILM.vOn && (voiceReady(s.say) || FILM.t > 0.8)) {
@@ -126,6 +140,8 @@
   function filmEnd() {
     if (!FILM.on) return;
     voiceStop();
+    if (FILM.key) FILM.key.intensity = 0;
+    camera.up.set(0, 1, 0);
     FILM.on = false;
     FILM.sh = null;
     FILM.outT = 0;

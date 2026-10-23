@@ -232,3 +232,4 @@ body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{v
 @media(max-width:600px){#locCap{font-size:10px;right:14px;top:64px}}
 @media(pointer:coarse) and (orientation:portrait){#deiaRing{top:168px;padding:7px 12px 7px 10px;font-size:11px;gap:8px}#deiaRing b{font-size:10px;letter-spacing:.12em}}
 #portrait.inguma{background:radial-gradient(ellipse at 50% 40%,#2a1450,#07030f 72%)}#portrait .i1{fill:#140a24}#portrait .i2{fill:#f3ecff}#portrait .i3{fill:#4a2a7a;stroke:#4a2a7a}
+/* HUD isila: aldatzean agertu, gero desagertu */#goal,#place,#phaseHud{transition:opacity .9s}#goal.quiet,#place.quiet{opacity:0}#phaseHud.quiet{opacity:.28}

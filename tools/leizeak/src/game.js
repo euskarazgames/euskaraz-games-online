@@ -1648,17 +1648,30 @@
      KODEK-ERRETRATUAK (SVG) · idazmakina-testua · irakaspen testuingurukoak
      ================================================================== */
   const PORTRAITS = {
+    /* Amaiur (aurpegia.js-ko aurpegiaren berdina): txapel morea zinta laranja eta belarritakoarekin,
+       ile beltza kopetilekin, begi anbarrak distiraz, pikortak eta masailetako gorrixka */
     witch:
-      '<svg viewBox="0 0 100 120" aria-hidden="true"><path class="p2" d="M10 120c3-17 18-27 40-28 22 1 37 11 40 28z"/>' +
-      '<path class="p3" d="M27 50c-6 22-3 42 7 56l8-36zM73 50c6 22 3 42-7 56l-8-36z"/>' +
-      '<ellipse class="p1" cx="50" cy="69" rx="16.5" ry="20"/>' +
-      '<path class="p3" d="M33 60c4-9 12-12 17-12s14 3 17 12c-6-5-11-6-17-6s-11 1-17 6z"/>' +
-      '<g class="eyes"><ellipse class="p4" cx="43.5" cy="68" rx="2.3" ry="2.8"/><ellipse class="p4" cx="56.5" cy="68" rx="2.3" ry="2.8"/></g>' +
-      '<path class="p3" d="M40 62.5l7 .8M60 62.5l-7 .8" stroke-width="1.6" stroke-linecap="round" fill="none"/>' +
-      '<path class="mouth p4" d="M45.5 80.5q4.5 2.6 9 0q-4.5 1.2-9 0z"/>' +
-      '<ellipse class="p2" cx="50" cy="49" rx="40" ry="7.5"/>' +
-      '<path class="p2" d="M24 47q26-7 52 0l-7-6q-6-22 11-37q-27 6-36 40z"/>' +
-      '<path class="p5" d="M27 45.5q23-6 46 0" fill="none" stroke-width="2.4"/></svg>',
+      '<svg viewBox="0 0 100 120" aria-hidden="true">' +
+      '<path fill="#3a3672" d="M8 120c3-19 17-29 42-31 25 2 39 12 42 31z"/><path fill="#5753a6" d="M31 93q19 10 38 0l-3 9q-16 7-32 0z"/>' +
+      '<rect fill="#e2b08c" x="44" y="80" width="12" height="11"/>' +
+      '<path fill="#1c1b25" d="M28 58c-4 17-2 29 6 38l6-31zM72 58c4 17 2 29-6 38l-6-31z"/>' +
+      '<ellipse fill="#f2c8a6" cx="50" cy="66" rx="19.5" ry="21.5"/>' +
+      '<path fill="#1c1b25" d="M30.5 60c1.5-12 9.5-19.5 19.5-19.5S68 48 69.5 60c-3.5-3.6-7.5-5.6-11.6-6.2l-2.6 4.6-2.8-5.2q-3-.3-6 .2l-2.4 5-2.6-4.4c-4.4 1.2-8 3.2-11 6z"/>' +
+      '<g fill="#e8857e" opacity=".42"><ellipse cx="37.5" cy="73" rx="5.4" ry="3.2"/><ellipse cx="62.5" cy="73" rx="5.4" ry="3.2"/></g>' +
+      '<g fill="#a5603f" opacity=".75"><circle cx="39" cy="71" r=".75"/><circle cx="41.6" cy="72.6" r=".65"/><circle cx="36.6" cy="72.4" r=".6"/><circle cx="61" cy="71" r=".75"/><circle cx="58.4" cy="72.6" r=".65"/><circle cx="63.4" cy="72.4" r=".6"/><circle cx="48.4" cy="70.4" r=".5"/><circle cx="51.6" cy="70.4" r=".5"/></g>' +
+      '<g class="eyes"><ellipse fill="#fbf6ef" cx="42" cy="64.5" rx="4.7" ry="5.5"/><ellipse fill="#fbf6ef" cx="58" cy="64.5" rx="4.7" ry="5.5"/>' +
+      '<circle fill="#a35f27" cx="42.4" cy="65.2" r="3.5"/><circle fill="#a35f27" cx="57.6" cy="65.2" r="3.5"/>' +
+      '<circle fill="#e9b85a" opacity=".55" cx="42.4" cy="64.2" r="2"/><circle fill="#e9b85a" opacity=".55" cx="57.6" cy="64.2" r="2"/>' +
+      '<circle fill="#1a0d08" cx="42.4" cy="65.2" r="1.6"/><circle fill="#1a0d08" cx="57.6" cy="65.2" r="1.6"/>' +
+      '<circle fill="#fff" cx="41" cy="63.6" r="1.05"/><circle fill="#fff" cx="56.2" cy="63.6" r="1.05"/></g>' +
+      '<path stroke="#20110b" stroke-width="1.5" fill="none" stroke-linecap="round" d="M37.2 62.6q4.8-4.4 9.6 0M53.2 62.6q4.8-4.4 9.6 0M37.4 62.4l-1.6-1.4M62.6 62.4l1.6-1.4"/>' +
+      '<path stroke="#3b2216" stroke-width="1.4" fill="none" stroke-linecap="round" d="M37 56.4q5-3.2 9.4-.2M53.6 56.2q4.4-3 9.4.2"/>' +
+      '<path stroke="#c48a68" stroke-width=".9" fill="none" stroke-linecap="round" d="M50.4 68.4q1.2 2.4-.8 3.4"/>' +
+      '<path class="mouth" fill="#8a3a36" d="M45.6 77.6q4.4 2.8 8.8 0q-4.4 1.4-8.8 0z"/>' +
+      '<ellipse fill="#454199" cx="50" cy="46.5" rx="43" ry="8.5"/>' +
+      '<path fill="#5853b4" d="M25 45.5q25-8.5 50 0l-8.4-7.6q-4-25 10.4-36.9q-31 6.4-42 44.5z"/>' +
+      '<path fill="#e07a34" d="M27.4 42.4q22.6-6.8 45.2 0l-1.8 4.6q-20.8-5.2-41.6 0z"/>' +
+      '<rect fill="none" stroke="#cdd6de" stroke-width="1.7" x="44.6" y="37.8" width="10.8" height="7.6" rx="1.2"/></svg>',
     radio:
       '<svg viewBox="0 0 100 120" aria-hidden="true"><path class="p2" d="M12 120c4-18 17-26 38-27 21 1 34 9 38 27z"/>' +
       '<path class="p3" d="M30 46c-9 18-8 46 2 66l10-40zM70 46c9 18 8 46-2 66l-10-40z"/>' +
@@ -1696,6 +1709,7 @@
     if (COACH.cur === id) return true;
     coachHide();
     COACH.cur = id;
+    COACH.t0 = time;
     COACH.btn = mobile ? btn : null;
     $("coachKey").textContent = mobile ? "" : key;
     $("coachKey").hidden = mobile || !key;
@@ -1722,6 +1736,8 @@
     /* hitzaurreko irakaspenak (pro-*) ez ordezkatu */
     if (PRO.on && COACH.cur && COACH.cur.startsWith("pro-")) return;
     const fight = !!ROOM.fight || ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 16);
+    /* irakaspenak ez dira pantailan geratzen: 7 s eta kitto (hitzaurrekoak ekintzaren zain) */
+    if (COACH.cur && !COACH.cur.startsWith("pro-") && time - (COACH.t0 || 0) > 7) coachDone(COACH.cur);
     if (ATK.n && COACH.cur === "attack") coachDone("attack");
     if (MAG.charging && COACH.cur === "charge") coachDone("charge");
     if (P.travel >= 4) coachDone("move");
@@ -1800,6 +1816,7 @@
   /* @include seaska.js */
   /* @include ametsa.js */
   /* @include inguma.js */
+  /* @include aurpegia.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -1812,9 +1829,28 @@
     } catch {}
   }
   function notify(a, b, d = 6) {
-    $("subtitle").textContent = L(a, b);
-    subTimer = d;
+    const s = L(a, b);
+    $("subtitle").textContent = s;
+    /* irakurtzeko adina bakarrik (2.2-4.5 s): mezuak ez dira pantailan geratzen */
+    subTimer = Math.min(d, clamp(1.6 + s.length / 26, 2.2, 4.5));
     $("subtitle").style.opacity = 1;
+  }
+  /* HUD ISILA: helburua, lekua eta garaia aldatzean agertzen dira, eta 7 s-ren buruan desagertu
+     (zenbakiak, distantziak adibidez, ez dira aldaketatzat hartzen) */
+  const HUDQ = { goal: "", place: "", phaseHud: "", t: { goal: 0, place: 0, phaseHud: 0 } };
+  function hudShow(id, text) {
+    const k = String(text).replace(/[\d.,]+/g, "#");
+    if (HUDQ[id] === k) return;
+    HUDQ[id] = k;
+    HUDQ.t[id] = 7;
+    $(id).classList.remove("quiet");
+  }
+  function hudQuiet(dt) {
+    for (const id in HUDQ.t) {
+      if (HUDQ.t[id] <= 0) continue;
+      HUDQ.t[id] -= dt;
+      if (HUDQ.t[id] <= 0) $(id).classList.add("quiet");
+    }
   }
   function title(a, b) {
     $("chapterTitle").textContent = L(a, b);
@@ -2190,6 +2226,8 @@
     });
     actor.scale.setScalar(1.15);
     hero.add(actor);
+    /* aurpegi berria (aurpegia.js): begi handiak, bekainak, pikortak; kliskak eta ahoa */
+    faceBuild();
     mixer = new T.AnimationMixer(actor);
     models.mage.actions = {};
     for (const a of models.mage.animations) models.mage.actions[a.name] = mixer.clipAction(a);
@@ -3268,6 +3306,8 @@
       : ROOM.fight && !ROOM.fight.boss
         ? L("Garaitu itzalak") + " · " + enemiesAlive()
         : objective()[0];
+    hudShow("goal", $("goal").textContent);
+    hudShow("place", $("chapter").textContent + "|" + $("placeName").textContent);
     $("hearts").textContent = "● ".repeat(Math.max(0, P.hp)) + "○ ".repeat(Math.max(0, P.maxHp - P.hp));
     $("craftBtn").hidden = true;
     $("dashDot").textContent = P.dashReady ? "◆" : "◇";
@@ -3429,6 +3469,7 @@
     music(dt);
     subTimer -= dt;
     titleTimer -= dt;
+    hudQuiet(dt);
     if (subTimer <= 0) $("subtitle").style.opacity = 0;
     if (titleTimer <= 0) $("chapterTitle").style.opacity = 0;
     shiftFlash = Math.max(0, shiftFlash - dt * 2.8);
@@ -3444,7 +3485,8 @@
     }
     $("vignette").style.boxShadow = low ? `inset 0 0 ${110 + 50 * Math.abs(Math.sin(time * 3.3))}px #b0102ea6` : ingumaVignette();
     if (frame % 15 === 0) coachUpdate();
-    if (time > 75 && !keysFaded) {
+    /* teklen laguntza: lehen 20 s-etan bakarrik (gero menuan) */
+    if (time > 20 && !keysFaded) {
       keysFaded = true;
       $("keys").style.opacity = 0;
     }
@@ -3458,6 +3500,7 @@
     if (window.__hold) return; /* probetarako: fotogramaz fotograma grabatzeko */
     const raw = Math.min(0.12, (now - last) / 1000);
     last = now;
+    faceUpdate(raw);
     if (FILM.on) filmUpdate(raw);
     else if (cinematic) {
       updateCinema(raw);
