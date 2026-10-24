@@ -253,6 +253,46 @@ Ideia orokorrak bakarrik (ez beste jokoen edukirik, ez interfazerik, ez testurik
 - **Kamera** → BULTZADAn ez dago FOV-kolperik; kamerak malguki kritikoki moteldua erabiltzen du
   (azelerazioa zerotik hasten da), eta aurrera-begiratzeak abiadura mugatua du.
 
+## 5i. Istorio osoa: zazpi argiak (biblia)
+Erabiltzailearen eskaera: istorio handiagoa, azala abentura epikoen erara, intro argiagoa (Amaiurren
+aurpegia ondo ikusita), eszenatoki zabalagoa eta ahots naturalak. Ideia orokorrak bakarrik, gure eran.
+
+**Aurrekariak (OIHARTZUN-etik).** Zazpi urte lehenago, ekaitz-gau batean, Iratik kaiko kanpaia jo zuen,
+Txomin itsasotik deitzeko — gauez, amonak debekatua ("eguna egunekoentzat, gaua gauekoentzat").
+Itsasoak eraman zuen. Amaiurrek, minez, denbora gelditu zuen: herria begizta batean, irratian
+Iratiren ahotsa. Duela urte bat erlojua hautsi zuen (OIHARTZUN-en amaiera).
+
+**Egia, pixkanaka (zazpi oroitzapen, `oroitzapenak.js`).** Zaindari bat askatu eta haranera itzultzean,
+iraganeko eszena bat (sepia, ahotsak): I KANPAIA · II AMONA (txalapartaren bi ahotsak: batak galdetu,
+besteak erantzun) · III ERLOJUA · IV MARI ISILDU ZEN GAUA (zazpi urte geldituak gauak irentsi zituen;
+Marik ahotsa zazpitan zatitu zuen; ANDERE sorginak, amonak, haren sua zerura eraman zuen) · V ZAZPI
+ZAINDARIAK (bakoitzak urte bat gorde; Gauekok zazpi itzal bidali) · VI GAUEKO (herriak gaua ahaztu
+zuen; Gauekok ez zuen Irati harrapatu: itsasotik atera zuen) · VII AHIZPAK (Irati bizirik Anboton;
+zazpi argiak bere zazpi urteak dira; "txalapartak bi ahots behar ditu"). Egunkarian gordetzen dira.
+
+**Bihurguneak.** (1) Iratiren oihartzuna ez da mamua: Irati bizirik dago. (2) Amona eta Andere bat dira
+(ahots bera; Amaiurrek "Amona!" esaten dio suzko bolari). (3) Gaueko ez da gaizkilea: gauaren zaindaria
+da, ahaztua; ez du ezer debalde itzultzen. (4) Konponbidea ez da borroka: txalaparta, bi ahotsez.
+
+**Azken atala: ANBOTO (`anboto.js`).** Plazan Iratiren deia → Andereren suzko bola → Anbotoko gailurra
+(Mariren leizea, zazpi zutarri, Gaueko itzal erraldoia, ekaitza). DUELUA harrizko txalapartan, galdera-
+erantzuna: lau kolpe, bost kolpe eta zazpi kolpe BI AHOTSEZ (Amaiurrek ◀, Iratik ▶ berez — bakarrik
+ezin da). Huts egitean ez dago porrotik: Gauekok berriro galdetzen du. Amaiera: zazpi urteak leizera,
+Mariren ahotsa itzuli, ituna ("gaua zurea, urteak haienak"; gauero argizaiola bat Gauekori), Irati
+leizetik bizirik, egunsentia, epilogoa plazan (bi ahizpak txalapartan) eta AMAIERA. Gero, haran librea:
+Irati herrian, bizirik.
+
+**Ahotsak (v3).** Ahots-diseinua (generoa, adina, tonua; inor ez da klonatu). Pertsonaia bakoitzeko
+erreferentzia naturalena (UTMOS) eta lerro bakoitzeko hautagai onena (UTMOS + Whisper CER). Ez dago
+tonu-aldaketarik, oktaba beherako geruzarik ezta isilune txertaturik ere (horiek "robot" soinua ematen
+zuten). Jokoan, kate arinak: IRATI oihartzun-harritik, GAUEKO ilunpetik (oihartzun laburra), INGUMA
+ametsetik (oihartzun bikoitza, dardararik gabe), MARI mendiaren barrutik, oroitzapenak urrutiko eta epel.
+
+**Azala eta eszenatokia.** Azala (`izenburua.js`): blasoia (lauburua, zazpi izar, txalaparta-makila
+gurutzatuak), urrezko letrak (Cinzel, OFL), Amaiur itsasertzeko harkaitz batean urre-orduan eta zazpi
+argi-zutabe horizontean. Haranean, kamera urrunago eta angelu zabalagoa; plaza garbiago (apaingarri
+gutxiago, bideak libre).
+
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da
 neurgarriak diren helburuekin: errore 0 kargan eta ibilbide osoan (bot-probak), 60 fps

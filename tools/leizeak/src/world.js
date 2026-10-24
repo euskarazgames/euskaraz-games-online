@@ -137,8 +137,8 @@
     /* hitzaurrean ez (bere errotuluak ditu); lehen benetako bisitan agertuko da */
     if (!AREA.seen.has(id) && !PRO.on) {
       AREA.seen.add(id);
-      title(A[0], A[0]);
-      if (A[1]) notify(A[1], "", 4);
+      /* mezu bakarra (izena eta deskribapen laburra elkarrekin), une batez eta desagertu */
+      areaTitle(A[0], A[1]);
     }
     questCheck();
     hud();

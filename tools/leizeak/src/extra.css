@@ -269,3 +269,7 @@ body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{v
 body.oroit #view{filter:sepia(.62) saturate(.72) contrast(1.06) brightness(.94)}
 body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 52%,#1a0f06c0 100%);animation:oroitFlick 3.2s steps(8) infinite}
 @keyframes oroitFlick{0%,100%{opacity:.92}40%{opacity:1}70%{opacity:.86}}
+
+/* gune-txartela: izena eta deskribapen laburra elkarrekin (ez bi mezu) */
+#chapterTitle em{display:block;margin-top:10px;font:italic 15px/1.45 Georgia,serif;letter-spacing:0;color:#e8eef0d9;max-width:min(520px,80vw);margin-left:auto;margin-right:auto;white-space:normal}
+@media(max-height:520px){#chapterTitle{top:30%;font-size:28px}#chapterTitle em{font-size:12px;margin-top:6px}}

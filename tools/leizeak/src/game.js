@@ -514,10 +514,12 @@
     return true;
   }
   function camFrame() {
-    const portrait = innerHeight > innerWidth;
+    const portrait = innerHeight > innerWidth,
+      /* haranean (kanpoan, zabal): kamera urrunago eta angelu zabalagoa — espazio gehiago ikusteko */
+      open = ZONE.cur === "ibarra" ? 1 : 0;
     return {
-      k: (portrait ? 1.95 : mobile ? 1.12 : 1) * CAM.user,
-      fov: portrait ? 50 : 44,
+      k: (portrait ? 1.95 : mobile ? 1.12 : 1) * CAM.user * (1 + 0.14 * open),
+      fov: (portrait ? 50 : 44) + 4 * open,
       lift: portrait ? 5.5 : mobile ? 1.2 : 0,
       fight: portrait ? 0.86 : 0.74,
       /* kameraren altuera (angelua): baxuagoa → zerua eta urruneko uharteak ikusten dira */
@@ -1859,6 +1861,18 @@
     $("chapterTitle").textContent = L(a, b);
     titleTimer = 3.6;
     $("chapterTitle").style.opacity = 1;
+  }
+  /* gune berria: izena eta deskribapena txartel bakarrean (lehen bisitan bakarrik) */
+  function areaTitle(name, desc) {
+    const el = $("chapterTitle");
+    el.textContent = name;
+    if (desc) {
+      const d = document.createElement("em");
+      d.textContent = L(desc);
+      el.appendChild(d);
+    }
+    titleTimer = 3.4;
+    el.style.opacity = 1;
   }
   function clearInput() {
     jumpHeld = false;
@@ -3869,6 +3883,8 @@
         faceCam,
         faceLook,
         film,
+        notify,
+        title,
         oroitPlay,
         oroitLog,
         anbotoStart,

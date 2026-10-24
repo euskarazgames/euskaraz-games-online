@@ -550,16 +550,12 @@
     model("building_grain", -44, gy(-44, 14), 14, 5.2, 0.4);
     /* txalaparta plazan (Pello eta Peio) */
     TXALA.spots.push(txalapartaMesh(0, 0, 30.5, 0, "herria"));
-    /* merkatua eta apaingarriak */
-    model("tent", -10, 0, 28, 3.4, 0.4);
-    model("tent", 13, 0, 29, 3, -0.3);
-    for (const [bx, bz] of [[-12, 31], [-11, 32.6], [15, 32], [21, 40], [-20, 41], [30, 38], [-28, 44], [24, 25]]) HUB.barrels.push(breakable("barrel", bx, gy(bx, bz), bz));
-    for (const [bx, bz] of [[-13.6, 29.5], [15.2, 30.2], [22.6, 39.4], [-20, 30]]) HUB.barrels.push(breakable("crate_A_big", bx, gy(bx, bz), bz));
+    /* merkatua eta apaingarriak: gutxi eta plazaren ertzetan (plaza zabal eta garbi, bideak libre) */
+    model("tent", -11, 0, 27, 3.4, 0.4);
+    for (const [bx, bz] of [[-13.4, 30.6], [21, 40], [-20, 41], [30, 38]]) HUB.barrels.push(breakable("barrel", bx, gy(bx, bz), bz));
+    for (const [bx, bz] of [[-14.6, 29], [22.6, 39.4]]) HUB.barrels.push(breakable("crate_A_big", bx, gy(bx, bz), bz));
     FLAGS.push(model("flag_red", 4, 0, 25, 4.2, 0.2), model("flag_yellow", -6, 0, 47, 3.6, 2.8), model("flag_green", 9.5, 0, 46.5, 3.4, -2.6));
-    model("wheelbarrow", 19, 0, 36, 1.5, 0.8);
-    model("sack", 12, 0, 27, 0.8, 0.5);
-    model("crate_open", 27.5, 0, 40.5, 1.1, 0.3);
-    model("bucket_water", 10.8, 0, 33.8, 0.7, 0);
+    model("wheelbarrow", 19.6, 0, 36.6, 1.5, 0.8);
     model("target", -27.5, 0, 31, 2.2, -1.2);
     /* ------------------------------ PORTUA ------------------------------ */
     /* harrizko eskailera itsaslabarrean behera, egurrezko kaia eta badia (orainean izoztua) */

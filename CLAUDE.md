@@ -8,7 +8,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   `pilota`, `zesta`, `artzain` ("Kirol" motorra), `basoa`, `itsas` ("Solid" motorra),
   `oihartzun` (bi garaiko plataforma-jokoa; `elur.html` haren aurreko bertsioa da) eta
   `leizeak` (LEIZEEN DEIA, OIHARTZUN II: Ibarra harana, txalaparta eta zazpi leize — Basajaun, Lamia, Tartalo,
-  Jentilbaratza/Errolan, Jentilen zerua/Odei, Herensugearen haitzuloa/Herensugea, Ametsa/Inguma).
+  Jentilbaratza/Errolan, Jentilen zerua/Odei, Herensugearen haitzuloa/Herensugea, Ametsa/Inguma — eta
+  azken atala, Anboto: Gaueko eta Irati; istorioaren biblia DISEINUA.md 5i atalean).
   OIHARTZUN-ek `?test` parametroarekin `window.__game` proba-kakoa erakusten du.
   OIHARTZUN-en iturburua: `tools/oihartzun/src/` (game.js, combat.js, magic.js, ascent.js, story.js,
   runes.js…). Ez editatu `public/games/oihartzun.html` zuzenean: `python3 tools/oihartzun/build.py`
@@ -24,12 +25,16 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   deiak.js (OIHARTZUN-DEIAK: Iratiren deiak, DEITU · IRATI), prologoa.js (hitzaurrea: erronka bakoitzak
   tresna bat irakasten du; partida berrietan bakarrik), hautsa.js (IZAR-HAUTSA: kontatzen, izar-plataformak,
   ate-zainak), seaska.js (seaska-kantaren hiru bertsoak, SEASKA, ametsera/esnatu, zazpigarren argia),
-  ametsa.js (AMETSA: zazpigarren leizea), inguma.js (Inguma)…). Ez editatu `public/games/leizeak.html` zuzenean:
+  ametsa.js (AMETSA: zazpigarren leizea), inguma.js (Inguma), aurpegia.js (Amaiurren aurpegia: maskara,
+  kliskak, ahoa), izenburua.js (azala: harkaitza, zazpi argi-zutabe, kamera), oroitzapenak.js (zazpi
+  oroitzapen, sepia), anboto.js (azken atala: Anbotoko gailurra, txalaparta-duelua bi ahotsez, amaiera)…).
+  Azaleko letra-tipoa: `tools/leizeak/fonts/cinzel.woff2` (SIL OFL; build-ean base64). Ez editatu `public/games/leizeak.html` zuzenean:
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
   Ahotsak: `tools/leizeak/ahotsak/lerroak.json` (testuak; build-ean txertatzen dira azpititulu gisa) →
-  `sortu.py` (OmniVoice, CPU) → `public/assets/voice/leizeak/<id>.mp3`. Ahots sintetikoak bakarrik
-  (erref/: diseinatutako erreferentziak); ez klonatu inoren ahotsik. Lizentziak: `public/assets/CREDITS.md`.
+  `sortu.py` (OmniVoice, CPU; v3: lerro bakoitzeko hautagai onena UTMOS + Whisper CER, tonu-aldaketarik
+  gabe) → `public/assets/voice/leizeak/<id>.mp3`. Ahots sintetikoak bakarrik (erref/: diseinatutako
+  erreferentziak); ez klonatu inoren ahotsik. Lizentziak: `public/assets/CREDITS.md`.
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
 - `public/assets/{tex,sky,covers}` — testurak, zeruak eta atariko irudiak. Kredituak: `public/assets/CREDITS.md`.
 - `public/garena`, `public/ataria`, `src/ataria.js` — GARENA katalogoa (jokoetatik aparte).
@@ -68,4 +73,5 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_herria.js http://127.0.0.1:8091
 NODE_PATH=$(npm root -g) node tools/test/leizeak_herensuge.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_prologoa.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_ametsa.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_anboto.js http://127.0.0.1:8091/games/leizeak.html
 ```
