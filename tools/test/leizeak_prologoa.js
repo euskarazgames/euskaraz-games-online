@@ -148,6 +148,8 @@ const { launch } = require('./_browser');
   const dashSafe = await ev(() => { const g = __game, b = g.PRO.beams[1]; g.teleport(b.x + 2.5, b.z, 0); g.P.angle = -Math.PI / 2; g.dash(); let caught = false; for (let i = 0; i < 20; i++) { const bb = g.PRO.beams[1]; g.P.x = bb.x; g.P.z = bb.z; g.tick(1 / 120); caught = caught || g.PRO.catchT > 0; if (g.P.dashT <= 0) break; } return { caught, dashT: g.P.dashT }; });
   ok(!dashSafe.caught, 'BULTZADAn begiradak ez du ikusten', S(dashSafe));
   await T(240);
+  /* begiradek berriro harrapatu badute (beren bidea jokoaren denboraren araberakoa da), askatu arte itxaron */
+  for (let i = 0; i < 12 && (await ev(() => __game.PRO.catchT > 0)); i++) await T(40);
   await tp(2.4, 31.8, 0, -Math.PI / 2);
   await T(4);
   ok((await flags()).includes('pro-kalea'), 'plazara iritsita (pro-kalea)');
