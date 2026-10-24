@@ -239,17 +239,19 @@ Ideia orokorrak bakarrik (ez beste jokoen edukirik, ez interfazerik, ez testurik
 - **Kokapen-errotuluak** → zona-aldaketa bakoitzean, goian eskuinean, makinaz: zonaren izena, ordua eta
   garaia ("BASAJAUNEN LEIZEA / 07:12 · IRAGANA").
 - **AHOTSAK** (`ahotsak.js`, `tools/leizeak/ahotsak/`) → ahots sintetikoak (OmniVoice, euskaraz; inor ez
-  da klonatu: pertsonaia bakoitza generoz, adinez eta tonuz diseinatua). Euskarazko Whisper batek lerro
-  bakoitza transkribatzen du (jokalariak entzungo duen katearen ondoren) eta argia ez bada berriro sortzen da.
-  Antzezpena: esaldien arteko eten luzeagoak (pertsonaia bakoitzak berea), abiadura neurtua eta testuetan
-  etenak (…). GAUEKO (v2): ahots sakona baina garbia, astiro; fitxategian oktaba bat beherako geruza eta
-  tonua apur bat jaitsita (formanteak gordeta), eta jokoan distortsiorik gabe: presentzia, oihartzun laburra
-  eta erreberberazio neurritsua (lehen, abiadura moteldua eta distortsioa: telefonoan ia ez zen ulertzen).
-  INGUMA: emakume zahar baten ahots oso baxua, tonua jaitsita, eta jokoan dardara leuna (atzerapen modulatua),
-  presentzia eta erreberberazio neurritsua (lehen dardara gehiegi: mugikorrean % 15eko akatsa; orain % 5);
-  ametseko "IRATI?" Iratiren tinbrearekin, Ingumaren iragazkiarekin. Neurketa (Whisper, jokoko katea eta
-  mugikor-bozgorailua, CER batez beste): Gaueko % 4 (lehen % 24-35), Irati % 2.4, Amaiur % 1.8, Inguma % 5. IRATI oihartzun-
-  harritik (banda estua, oihartzun leuna), AMAIUR hurbil. Hitz egitean musika jaisten da. Audiorik gabe, testua.
+  da klonatu: pertsonaia bakoitza generoz, adinez eta tonuz diseinatua): AMAIUR, IRATI, GAUEKO, INGUMA,
+  ANDERE (amona) eta MARI. **v3, naturaltasuna**: pertsonaia bakoitzeko erreferentzia naturalena (UTMOS22)
+  eta lerro bakoitzeko hautagai batzuetatik onena: naturaltasuna (UTMOS22, 1-5) eta argitasuna (euskarazko
+  Whisper, CER), puntuazioa = MOS − 8·max(0, CER − 0.03). Fitxategian ez dago prozesaketarik: v2-ko
+  tonu-aldaketak, oktaba beherako geruzak eta isilune txertatuek "robot" soinua ematen zuten. Esaldi askoko
+  lerroetan esaldi-muga bakoitzari denbora ematen zaio (`--pause`; bestela azken hitzak galtzen ziren:
+  "…Orain, Gaueko", "…Ni naiz… Irati"). Jokoan, kate arinak bakarrik (tonua ukitu gabe): IRATI
+  oihartzun-harritik (banda estua, oihartzun leuna), GAUEKO ilunpetik (oihartzun laburra, distortsiorik
+  gabe), INGUMA ametsetik (oihartzun bikoitza, dardararik gabe), MARI mendiaren barrutik, oroitzapenak
+  urrutiko eta epel; AMAIUR hurbil. Ametseko "IRATI?" Iratiren tinbrearekin, Ingumaren katearekin.
+  Neurketa (118 lerro; UTMOS batez beste v2 → v3): Gaueko 2.09 → 3.72, Irati 2.64 → 3.76, Amaiur
+  3.36 → 3.76, Inguma 2.39 → 3.77; Andere 3.55 eta Mari 3.80 (berriak). Lerro guztiak ≥ 3.37; Whisper
+  CER batez beste % 1.1. Hitz egitean musika jaisten da. Audiorik gabe, testua.
 - **Kamera** → BULTZADAn ez dago FOV-kolperik; kamerak malguki kritikoki moteldua erabiltzen du
   (azelerazioa zerotik hasten da), eta aurrera-begiratzeak abiadura mugatua du.
 
