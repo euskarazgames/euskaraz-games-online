@@ -29,6 +29,21 @@ header{position:sticky;top:0;z-index:20;padding:15px 20px;border-bottom:1px soli
 #exitGame{position:absolute;z-index:95;top:calc(10px + env(safe-area-inset-top));left:calc(10px + env(safe-area-inset-left));border:1px solid #ffffff3a;background:#050806cc;color:#fff;border-radius:999px;padding:10px 13px;font-size:9px;font-weight:950;letter-spacing:.12em;backdrop-filter:blur(8px)}
 footer{border-top:1px solid #ffffff20;padding:25px 20px;color:#78827c;font-size:9px;letter-spacing:.16em}
 @media(max-width:900px){.grid,.sports{grid-template-columns:1fr}.card{min-height:66svh}.sport{min-height:300px}}
+/* HERRI KIROLAK: mobile sport picker viewport and touch fix */
+@media(max-width:700px){
+  #selector{align-items:flex-start;justify-content:flex-start;overflow:auto;-webkit-overflow-scrolling:touch;
+    padding:calc(76px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom))}
+  #selector.show{display:block}
+  #selector .sel{width:100%;max-height:none;overflow:visible}
+  #selector .seltop{margin-bottom:18px;gap:15px}
+  #selector .seltop h2{font-size:clamp(40px,11vw,64px)}
+  #selector .close{flex-shrink:0}
+  #selector .sports{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:13px!important}
+  #selector .sport{width:100%;min-width:0;min-height:205px;padding:19px 22px;
+    visibility:visible!important;opacity:1!important;transform:none!important}
+  #selector .sport h3{font-size:clamp(28px,8vw,36px)}
+  #selector .sport button{min-height:48px;touch-action:manipulation}
+}
 </style></head><body>
 <div id="splash" aria-label="Euskaraz Games sarrera">
   <div class="splash-inner">
@@ -73,7 +88,7 @@ function egGameHtml(key,room,lang){
  let html=decodeUtf8(PACK[key]);
  const boot='<scr'+'ipt>'
   +'window.__EG_GAME='+JSON.stringify(key)+';'
-  +'window.__EG_ROOM='+JSON.stringify('')+';'
+  +'window.__EG_ROOM='+JSON.stringify(room||'')+';'
   +'window.__EG_LANG='+JSON.stringify(lang||'')+';'
   +'</scr'+'ipt>';
  return html.replace(/<head([^>]*)>/i,m=>m+boot);
@@ -104,6 +119,6 @@ const splash=document.getElementById('splash');const hide=()=>splash.classList.a
 const __egQ=new URLSearchParams(location.search);
 const __egGame=__egQ.get('game'),__egRoom=__egQ.get('room'),__egLang=__egQ.get('lang')||'';
 if(['pilota','zesta','artzain'].includes(__egGame)){
- hide();setTimeout(()=>launch(__egGame,'',__egLang),120);
+ hide();setTimeout(()=>launch(__egGame,__egRoom||'',__egLang),120);
 }else setTimeout(hide,1250);
 </script></body></html>
