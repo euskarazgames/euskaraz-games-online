@@ -62,6 +62,19 @@ const { launch } = require('./_browser');
   }
   const log = await ev(() => __game.oroitLog());
   ok(/OROITZAPENAK · 7 \/ 7/.test(log) && /AHIZPAK/.test(log), 'egunkarian zazpi oroitzapen');
+  /* Iturralden: oroigarrien apala → GOGORATU (eszena haranean, gero etxera itzuli) */
+  await ev(() => { const g = __game; g.homeEnter(); for (let i = 0; i < 240; i++) { g.tick(1 / 120); g.zoneFadeUpdate(1 / 120); } });
+  ok(await ev(() => __game.ZONE.cur === 'etxea'), 'Iturralden');
+  await ev(() => __game.homeMementos());
+  const labels = await ev(() => [...document.querySelectorAll('#choices button')].map((b) => b.textContent));
+  ok(labels.filter((t) => /GOGORATU/.test(t)).length === 7, 'apalean: zazpi GOGORATU', labels.join(' | '));
+  await ev(() => [...document.querySelectorAll('#choices button')].find((b) => /GOGORATU · III/.test(b.textContent)).click());
+  await page.waitForTimeout(100);
+  ok(await ev(() => __game.FILM.on && __game.ZONE.cur === 'ibarra'), 'oroitzapena berriro (haranean)');
+  await playFilm();
+  ok(await ev(() => __game.ZONE.cur === 'etxea' && !__game.FILM.on), 'etxera itzulita');
+  await ev(() => { const g = __game; g.teleport(g.DGE.exitArch.x, g.DGE.exitArch.z + 3.6, 0); for (let i = 0; i < 240; i++) { g.tick(1 / 120); g.zoneFadeUpdate(1 / 120); } });
+  ok(await ev(() => __game.ZONE.cur === 'ibarra'), 'kanpora (haranera)');
 
   /* ---------------- 2 · plazan Irati → Anbotora ---------------- */
   let obj = await ev(() => __game.objective());

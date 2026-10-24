@@ -22387,12 +22387,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function homeMementos() {
     const got = MEMENTOS.filter((M) => saved.flags.includes(M.flag));
+    /* ikusitako oroitzapenak berriro (oroitzapenak.js): oroigarri bakoitza, bere eszena */
+    const again = OROIT_LIST.map((O, i) => (oroitSeen(i) ? [L("GOGORATU · ") + O.n, () => setTimeout(() => oroitPlay(i), 0)] : null)).filter(Boolean);
     dialog(
       L("ITURRALDE"),
       L("OROITZAPENAK · ") + got.length + " / 7",
       "",
       MEMENTOS.map((M) => (saved.flags.includes(M.flag) ? "◆ " + M.name + " — " + M.text : "◇ " + M.text)).join("\n\n"),
       "",
+      again.length ? [...again, [L("ITXI"), () => {}]] : null,
     );
   }
   function homeIrati() {
@@ -28122,6 +28125,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function oroitPlay(i, after) {
     if (FILM.on || cinematic) return false;
     const O = OROIT_LIST[i];
+    /* etxetik (Iturralde, oroigarriak) ere bai: eszena haranean dago — zona une batez aldatu */
+    const back = ZONE.cur !== "ibarra" ? ZONE.cur : null;
+    if (back) zoneActivate("ibarra");
     const shots = oroitShots(i);
     /* lehen planoa: oroitzapenaren txartela (zenbakia, izena eta noiz) */
     shots[0].title = ["OROITZAPENA · " + O.n, O.name + " — " + O.when];
@@ -28131,6 +28137,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     SND.memory();
     film(shots, () => {
       oroitEnd();
+      if (back) zoneActivate(back);
       if (!saved.flags.includes("oroit-" + (i + 1))) flagSet("oroit-" + (i + 1));
       notify(L("Oroitzapena egunkarian gorde da: ") + O.name + " (" + saved.flags.filter((f) => f.startsWith("oroit-")).length + " / 7)", "", 4);
       hud();
@@ -30738,6 +30745,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         houseKnock,
         houseDoorNear,
         homeEnter,
+        homeMementos,
         homeSleep,
         homeActionNear,
         GLIDE,

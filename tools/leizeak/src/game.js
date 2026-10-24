@@ -3939,6 +3939,7 @@
         houseKnock,
         houseDoorNear,
         homeEnter,
+        homeMementos,
         homeSleep,
         homeActionNear,
         GLIDE,

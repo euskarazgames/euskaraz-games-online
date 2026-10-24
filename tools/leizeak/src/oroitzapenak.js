@@ -287,6 +287,9 @@
   function oroitPlay(i, after) {
     if (FILM.on || cinematic) return false;
     const O = OROIT_LIST[i];
+    /* etxetik (Iturralde, oroigarriak) ere bai: eszena haranean dago — zona une batez aldatu */
+    const back = ZONE.cur !== "ibarra" ? ZONE.cur : null;
+    if (back) zoneActivate("ibarra");
     const shots = oroitShots(i);
     /* lehen planoa: oroitzapenaren txartela (zenbakia, izena eta noiz) */
     shots[0].title = ["OROITZAPENA · " + O.n, O.name + " — " + O.when];
@@ -296,6 +299,7 @@
     SND.memory();
     film(shots, () => {
       oroitEnd();
+      if (back) zoneActivate(back);
       if (!saved.flags.includes("oroit-" + (i + 1))) flagSet("oroit-" + (i + 1));
       notify(L("Oroitzapena egunkarian gorde da: ") + O.name + " (" + saved.flags.filter((f) => f.startsWith("oroit-")).length + " / 7)", "", 4);
       hud();

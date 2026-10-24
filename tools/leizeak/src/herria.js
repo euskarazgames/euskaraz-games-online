@@ -554,12 +554,15 @@
   }
   function homeMementos() {
     const got = MEMENTOS.filter((M) => saved.flags.includes(M.flag));
+    /* ikusitako oroitzapenak berriro (oroitzapenak.js): oroigarri bakoitza, bere eszena */
+    const again = OROIT_LIST.map((O, i) => (oroitSeen(i) ? [L("GOGORATU · ") + O.n, () => setTimeout(() => oroitPlay(i), 0)] : null)).filter(Boolean);
     dialog(
       L("ITURRALDE"),
       L("OROITZAPENAK · ") + got.length + " / 7",
       "",
       MEMENTOS.map((M) => (saved.flags.includes(M.flag) ? "◆ " + M.name + " — " + M.text : "◇ " + M.text)).join("\n\n"),
       "",
+      again.length ? [...again, [L("ITXI"), () => {}]] : null,
     );
   }
   function homeIrati() {
