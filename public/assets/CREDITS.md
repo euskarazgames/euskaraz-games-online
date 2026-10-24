@@ -64,7 +64,7 @@ Blasoia (lauburua, zazpi izar eta txalaparta-makila gurutzatuak) joko honetarako
 
 ## LEIZEEN DEIA · ahotsak (sintetikoak)
 
-`voice/leizeak/*.mp3`: Amaiur, Irati, Gaueko eta Inguma pertsonaien ahotsak, euskaraz, **sintetikoak**:
+`voice/leizeak/*.mp3`: Amaiur, Irati, Gaueko, Inguma, Andere (amona) eta Mari pertsonaien ahotsak, euskaraz, **sintetikoak**:
 [OmniVoice](https://github.com/k2-fsa/OmniVoice) ereduarekin sortuak (VoiceStudio-ren motorra). Ahots
 bakoitza "voice design" moduan diseinatu zen (generoa, adina eta tonua bakarrik); ez da inor klonatu.
 Lerroak eta sortzeko scripta: `tools/leizeak/ahotsak/` (`lerroak.json`, `sortu.py`, `erref/`).
@@ -75,3 +75,6 @@ Lerroak eta sortzeko scripta: `tools/leizeak/ahotsak/` (`lerroak.json`, `sortu.p
   Meta Platforms, Inc., All Rights Reserved. Based on Meta Llama 3.
 - Egiaztapena: [xezpeleta/whisper-medium-eu](https://huggingface.co/xezpeleta/whisper-medium-eu) (Apache-2.0)
   euskarazko transkripzioarekin, lerro bakoitzaren argitasuna neurtzeko.
+- Naturaltasuna: UTMOS22 "strong" ([prj-beatrice/utmos22-torch-native](https://huggingface.co/prj-beatrice/utmos22-torch-native),
+  MIT; SpeechMOS eta UTMOS22-n oinarritua), hautagai naturalena aukeratzeko. Bi ereduak lokalean bakarrik
+  erabiltzen dira; ez dira jokoarekin banatzen.

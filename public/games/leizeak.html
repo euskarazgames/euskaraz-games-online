@@ -27988,8 +27988,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* ------------------------------ eszenak ------------------------------ */
   const OSH = (o) => ({ vfx: "oroit", ...o });
   function oroitShots(i) {
-    const P0 = { x: P.x, y: P.y, z: P.z },
-      dock = { x: 8, y: -7.2, z: 80.5 },
+    const dock = { x: 8, y: -7.2, z: 80.5 },
       sp = TXALA.spots[0];
     switch (i) {
       case 0: /* KANPAIA */
@@ -28069,15 +28068,18 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         return [
           OSH({ d: 5.4, fade: "in", night: 0.75, say: "o5_m1", cam: [[60, 40, 40], [20, 46, 0]], look: [[-10, 10, -130], [-40, 20, -140]], on: () => {
             if (!ZAZPI.g) zazpiBuild();
-            zazpiColors(0);
+            zazpiColors(7); /* zaindariek gordetako urteak: argi berdeak */
             ZAZPI.g.visible = true;
             ZAZPI.t = 2;
           }, tick: (dt) => zazpiUpdate(dt) }),
           OSH({ d: 5.2, night: 0.75, say: "o5_m2", cam: [[20, 46, 0], [10, 50, -20]], look: [20, 125, -170], tick: (dt) => zazpiUpdate(dt) }),
           OSH({ d: 5.2, night: 0.95, say: "o5_g1", fade: "out", cam: [[2, 7, 60], [0, 10, 54]], look: [[8, 40, -70], [8, 62, -96]], tick: (dt, k) => {
             proEyesOpen(k);
-            zazpiColors(k > 0.5 ? 0 : 0);
-            for (const L0 of ZAZPI.lights) L0.core.material.color.set(k > 0.55 ? "#ff2a1a" : "#3dff8a");
+            /* Gauekoren itzalak: zazpi argiak gorri bihurtzen dira */
+            if (k > 0.55 && ZAZPI.green) {
+              zazpiColors(0);
+              SND.stinger(false);
+            }
           } }),
         ];
       case 5: /* GAUEKO */
