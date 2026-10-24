@@ -78,7 +78,8 @@
       lp.connect(send);
     } else if (k === "gaueko") {
       /* ilunpetik, baina argi: baxu leunak, presentzia (kontsonanteak), oihartzun labur bat eta
-         erreberberazio neurritsua. Sakontasuna fitxategian dago (oktaba beherako geruza). */
+         erreberberazio neurritsua. (v3: sakontasuna ahotsarena berarena da; fitxategian ez dago
+         tonu-aldaketarik ezta oktaba beherako geruzarik ere — robot soinua ematen zuten) */
       const hp = ctx.createBiquadFilter(),
         ls = ctx.createBiquadFilter(),
         pk = ctx.createBiquadFilter(),

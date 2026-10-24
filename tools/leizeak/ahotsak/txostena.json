@@ -1000,20 +1000,65 @@
  },
  "f_n1": {
   "who": "ANDERE",
-  "mos": 2.85,
+  "mos": 3.28,
   "cer": 0.019,
-  "cand": 0,
-  "seed": 4100,
-  "dur": 4.0,
+  "cand": 1,
+  "seed": 4131,
+  "dur": 3.85,
   "asr": "Amaiur lastana, igo nirekin, sua da, baina ez du erretzen."
  },
  "f_n2": {
   "who": "ANDERE",
-  "mos": 3.34,
+  "mos": 3.4,
+  "cer": 0.0,
+  "cand": 1,
+  "seed": 4131,
+  "dur": 3.7,
+  "asr": "Egunsentia da, neskatoak, herriak txalaparta jo nahi du."
+ },
+ "o4_m1": {
+  "who": "MARI",
+  "mos": 3.83,
+  "cer": 0.029,
+  "cand": 0,
+  "seed": 3100,
+  "dur": 4.92,
+  "asr": "Zazpi urte, zazpi dei, nire ahotsa zazpitzen zatituko dut, haiei eusteko."
+ },
+ "o5_m1": {
+  "who": "MARI",
+  "mos": 3.5,
+  "cer": 0.023,
+  "cand": 0,
+  "seed": 3100,
+  "dur": 6.39,
+  "asr": "Basa jaun, lamia, tartalo, errolan, hodei, herensugea eta inguma, bakoitzak urte bat gordeko du."
+ },
+ "o5_m2": {
+  "who": "MARI",
+  "mos": 3.66,
+  "cer": 0.042,
+  "cand": 0,
+  "seed": 3100,
+  "dur": 5.3,
+  "asr": "Aizpak etorriko dira, bata egunetik, besteak hauetik, orduan, itzuli urteak."
+ },
+ "f_m1": {
+  "who": "MARI",
+  "mos": 3.91,
+  "cer": 0.034,
+  "cand": 1,
+  "seed": 3131,
+  "dur": 4.47,
+  "asr": "Aispak, bata egunetik, bestea gauetik, galdera eta erantzuna."
+ },
+ "f_m2": {
+  "who": "MARI",
+  "mos": 4.08,
   "cer": 0.0,
   "cand": 0,
-  "seed": 4100,
-  "dur": 3.43,
-  "asr": "Egunsentia da, neskatoak, herriak txalaparta jo nahi du."
+  "seed": 3100,
+  "dur": 4.09,
+  "asr": "Gaueko, gaua zurea da, betiko, baina urteak haienak dira."
  }
 }
