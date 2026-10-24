@@ -86,6 +86,20 @@ window.egInviteUrl=egInviteUrl;
 
 function egGameHtml(key,room,lang){
  let html=decodeUtf8(PACK[key]);
+ // Herri Pilota: the sole grid item has absolutely-positioned children.
+ // An auto-width grid with auto margins collapses to min-content (0px) on iOS Safari.
+ // Set an explicit responsive width so the career card remains visible and clickable.
+ if(key==='pilota'){
+  const menuWidthFix='<style id="eg-pilota-menu-width-fix">'+
+   '#mode.hp8Home .hp8-home{width:100%;max-width:980px;margin-inline:auto}'+
+   '#mode.hp8Home .hp8-mode-grid{width:100%!important;max-width:760px!important;min-width:0;'+
+   'grid-template-columns:minmax(0,1fr)!important;margin-inline:auto;align-self:stretch}'+
+   '#mode.hp8Home .hp8-mode-card{width:100%;min-width:0;display:block}'+
+   '@media(max-width:700px){#mode.hp8Home .hp8-mode-grid{max-width:100%!important}'+
+   '#mode.hp8Home .hp8-mode-card{min-height:260px}}'+
+   '</style>';
+  html=html.replace(/<\/head>/i,menuWidthFix+'</head>');
+ }
  const boot='<scr'+'ipt>'
   +'window.__EG_GAME='+JSON.stringify(key)+';'
   +'window.__EG_ROOM='+JSON.stringify(room||'')+';'
