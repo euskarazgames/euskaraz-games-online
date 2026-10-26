@@ -470,5 +470,45 @@
   "f_n2": [
     "ANDERE",
     "Egunsentia da, neskatoak. Herriak txalaparta jo nahi du."
+  ],
+  "hp_n1": [
+    "ANDERE",
+    "Ekaitza! Gaueko ez gaitu gora utziko… Amaiur, mendiak bide bat du barrutik. Igo zuk!"
+  ],
+  "hp_a1": [
+    "AMAIUR",
+    "Mendiaren barrutik, beraz. Isilik, eta itzalean."
+  ],
+  "hp_i1": [
+    "IRATI",
+    "Amaiur, entzuten nauzu? Leize hauek Gauekoren itzalek zaintzen dituzte. Ez zaitzatela ikusi."
+  ],
+  "hp_i2": [
+    "IRATI",
+    "Kriseiluaren argia haien begirada da. Ez sartu bertan: itxaron, eta pasatu bizkarretik."
+  ],
+  "hp_i3": [
+    "IRATI",
+    "Nire oihartzuna zurekin dago. Goiko izkinan, haien urratsak entzungo dituzu."
+  ],
+  "hp_i4": [
+    "IRATI",
+    "Ate ondoko hori ez da mugituko. Makilaz hormari jo: tok, tok. Hotsera joango da."
+  ],
+  "hp_i5": [
+    "IRATI",
+    "Atzetik hurbiltzen bazara, oharkabean, lo egin dezake. Isil-isilik."
+  ],
+  "hp_i6": [
+    "IRATI",
+    "Hari horiek oraingo izotza dira. Iraganean ez daude."
+  ],
+  "hp_i7": [
+    "IRATI",
+    "Hor da atea. Gailurra gainean dago, Amaiur. Entzuten dizut."
+  ],
+  "hp_g1": [
+    "GAUEKO",
+    "Ikusten zaitut, sorgin. Nire etxean zaude."
   ]
 }

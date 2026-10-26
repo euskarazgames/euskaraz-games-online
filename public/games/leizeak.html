@@ -290,10 +290,56 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 #chapterTitle em{display:block;margin-top:10px;font:italic 15px/1.45 Georgia,serif;letter-spacing:0;color:#e8eef0d9;max-width:min(520px,80vw);margin-left:auto;margin-right:auto;white-space:normal}
 @media(max-height:520px){#chapterTitle{top:30%;font-size:28px}#chapterTitle em{font-size:12px;margin-top:6px}}
 
+/* SIGILOA: oihartzun-radarra (goian eskuinean, mapa txikiaren ordez) eta alarma-bannerra (goian erdian, txikia) */
+#map.sig{display:none!important}
+#radar{position:absolute;right:24px;bottom:24px;width:136px;height:136px;border-radius:50%;box-shadow:0 0 22px #00121488;pointer-events:none}
+#sigBanner{position:absolute;left:50%;top:16px;transform:translateX(-50%);padding:5px 14px;border-radius:14px;font:800 12px/1 system-ui;letter-spacing:.2em;color:#fff3df;border:1px solid #ffffff44;pointer-events:none;font-variant-numeric:tabular-nums}
+#sigBanner.p1{background:#5a0f0fcc;border-color:#ff6a4a;color:#ffd9cf;animation:sigPulse .8s ease-in-out infinite}
+#sigBanner.p2{background:#4a3a0ccc;border-color:#ffd36a}
+#sigBanner.p3{background:#0c2a44cc;border-color:#7fb8e6}
+@keyframes sigPulse{50%{box-shadow:0 0 18px #ff3a1a88}}
+@media(pointer:coarse) and (orientation:landscape){#radar{top:52px;bottom:auto;right:12px;width:92px;height:92px}#sigBanner{top:10px;font-size:10px;padding:4px 10px}}
+@media(pointer:coarse) and (orientation:portrait){#radar{top:110px;bottom:auto;right:14px;width:96px;height:96px}#sigBanner{top:64px}}
+@media (prefers-reduced-motion: reduce){#sigBanner.p1{animation:none}}
+
+/* MEZUAK (v2): txikiago, gardenago eta ertzetan — eszena ez estaltzeko. Elkarrizketa- eta dei-panela
+   erdian eta estuago; banda beltzak meheago. */
+#chapterTitle{font-size:30px;top:15%;text-shadow:0 2px 10px #0b2236aa}
+#chapterTitle em{font-size:13px;margin-top:6px}
+#subtitle{font:16px/1.45 Georgia,serif;width:min(520px,62vw);padding:6px 16px;bottom:92px;background:linear-gradient(90deg,transparent,#0d2c4788,transparent)}
+#coach{font:600 12px/1.3 system-ui;padding:6px 13px 6px 6px;gap:9px;background:#0f2c42c4;box-shadow:0 6px 20px #0007}
+#coach .k{min-width:28px;height:26px;padding:0 8px;font-size:12px}
+#goal{font-size:11px;padding:6px 10px;max-width:250px;line-height:1.5}
+#place{font-size:22px}
+#phaseHud.quiet{opacity:.18}
+#waypoint{padding:4px 9px;font-size:10px;background:#112e46b8}
+#locCap{font-size:10px;top:66px}
+#codec{left:0;right:0;margin:0 auto;width:min(680px,92vw);padding:12px 16px;gap:14px;bottom:4%}
+#cineText{font-size:17px;margin:8px 0}
+#cineTop{height:6%}
+#cinema{background:linear-gradient(#020a12d9 0 6%,transparent 6% 72%,#020a1299 100%)}
+#cinema.deia{background:linear-gradient(#01080dcc 0 6%,transparent 6% 72%,#01080d99 100%)}
+#cinema.deia #portrait{width:84px;min-height:84px;height:84px}
+#cinema.deia #deiaWave{width:150px;height:26px;top:10px;right:14px}
+@media(max-height:520px){
+  #chapterTitle{font-size:20px;top:14%}
+  #chapterTitle em{font-size:11px;margin-top:4px}
+  #subtitle{font-size:13px;width:auto;max-width:46%;bottom:14px;padding:4px 12px}
+  #coach{font-size:11px;padding:5px 11px 5px 5px}
+  #goal{font-size:9.5px;max-width:42%;padding:5px 8px}
+  #place{font-size:16px}
+  #codec{padding:8px 12px;gap:10px;bottom:3%}
+  #cineText{font-size:13.5px;margin:5px 0}
+  #cinema.deia #portrait{width:58px;min-height:58px;height:58px}
+  #cinema.deia #deiaWave{display:none}
+}
+@media(pointer:coarse) and (orientation:landscape){#coach{top:52px;bottom:auto}}
+@media(pointer:coarse) and (orientation:portrait){#chapterTitle{font-size:22px;top:22%}#subtitle{font-size:14px}#coach{font-size:11px;top:176px}}
+
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>LEIZEEN DEIA<small id="loadLabel">Txalapartak gauez jotzen du…</small><i><b id="loadBar"></b></i></div></div>
 <section id="start"><div id="logo"><svg id="emblem" viewBox="-130 -130 260 260" aria-hidden="true"><defs><linearGradient id="lzG" gradientUnits="userSpaceOnUse" x1="0" y1="-120" x2="0" y2="120"><stop offset="0" stop-color="#fff3c4"/><stop offset=".36" stop-color="#f0c869"/><stop offset=".56" stop-color="#b38026"/><stop offset=".76" stop-color="#f6dc8e"/><stop offset="1" stop-color="#7a4e14"/></linearGradient><linearGradient id="lzW" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4319"/><stop offset=".5" stop-color="#c88f45"/><stop offset="1" stop-color="#5a3612"/></linearGradient><path id="lzHead" d="M0 0A30 30 0 0 1 0-60A15 15 0 0 1 0-30A15 15 0 0 0 0 0Z"/><path id="lzStar" d="M0-9L2.2-2.2 9 0 2.2 2.2 0 9-2.2 2.2-9 0-2.2-2.2Z"/></defs><g stroke="#2b1906" stroke-width="2.5"><rect x="-7" y="-128" width="14" height="256" rx="7" fill="url(#lzW)" transform="rotate(38)"/><rect x="-7" y="-128" width="14" height="256" rx="7" fill="url(#lzW)" transform="rotate(-38)"/></g><circle r="101" fill="#0b1626" fill-opacity=".72" stroke="url(#lzG)" stroke-width="7"/><circle r="89" fill="none" stroke="#e9cf96" stroke-opacity=".55" stroke-width="1.6"/><g fill="#fff6d8"><use href="#lzStar" transform="rotate(0) translate(0 -101)"/><use href="#lzStar" transform="rotate(51) translate(0 -101)"/><use href="#lzStar" transform="rotate(103) translate(0 -101)"/><use href="#lzStar" transform="rotate(154) translate(0 -101)"/><use href="#lzStar" transform="rotate(206) translate(0 -101)"/><use href="#lzStar" transform="rotate(257) translate(0 -101)"/><use href="#lzStar" transform="rotate(309) translate(0 -101)"/></g><g fill="url(#lzG)" stroke="#3a240a" stroke-width="2.2"><use href="#lzHead"/><use href="#lzHead" transform="rotate(90)"/><use href="#lzHead" transform="rotate(180)"/><use href="#lzHead" transform="rotate(270)"/></g></svg><div id="logoOver"><i></i>OIHARTZUN · II<i></i></div><h1>LEIZEEN<span>DEIA</span></h1><div id="logoTag">ZAZPI LEIZE · AHIZPA BAT · DEI BAT</div></div><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>© EUSKARAZ GAMES</span><div><button id="credits">KREDITUAK</button> <button id="reset">↺</button></div></div></section>
 <div id="top"><button id="camBtn" aria-label="Kamera">⤢</button><button id="audio">♫</button><button id="quality" aria-label="Kalitatea">HD</button><button id="pause" hidden>Ⅱ</button></div>
-<div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="coins">0</b><small id="coinLab"></small></div><div id="keyBox" hidden><b id="keyN">0</b><small id="keyLab"></small></div><div id="bombBox" hidden><b id="bombN">●●●</b><small id="bombLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
+<div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="coins">0</b><small id="coinLab"></small></div><div id="keyBox" hidden><b id="keyN">0</b><small id="keyLab"></small></div><div id="bombBox" hidden><b id="bombN">●●●</b><small id="bombLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><canvas id="radar" width="220" height="220" hidden aria-label="Oihartzun-radarra"></canvas><div id="sigBanner" hidden></div><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
 <div id="touch"><div id="stick"><i id="knob"></i></div><div id="touchActions"><button id="weaveBtn"></button><button id="recallBtn" aria-label="Finkatu"></button><button id="phaseBtn"></button><button id="dashBtn">BULTZADA</button><button id="jumpBtn"></button><button id="useBtn"></button><button id="attackBtn"></button><button id="craftBtn"></button><button id="rotateBtn" aria-label="Biratu"></button></div></div>
 <section id="cinema" hidden><div id="cineTop"><span id="cineTag">LEIZEEN DEIA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><canvas id="deiaWave" width="240" height="40" aria-hidden="true"></canvas><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="katea" hidden></div><div id="shieldHint" hidden></div><div id="zoneFade"></div><div id="itemGet" hidden role="dialog" aria-live="polite"><div class="ig"><div id="getIcon"></div><h2 id="getName"></h2><p id="getText"></p><small id="getMore">JARRAITU ›</small></div></div><div id="txala" hidden><div class="tx"><header><b id="txTitle"></b><button id="txClose" aria-label="Itxi">✕</button></header><div id="txSeq"></div><p id="txMsg"></p><div id="txPads"><button id="txL"><span>◀</span>EZKERRA<small>← · J</small></button><button id="txR"><span>▶</span>ESKUINA<small>→ · K</small></button></div><div id="txKnown"></div></div></div><div id="film" hidden><div id="filmFade"></div><div class="bar t"><button id="filmSkip">SALTATU →</button></div><div class="bar b"></div><div id="filmCap" aria-live="polite"></div><div id="filmTitle" hidden><b id="filmTitleBig"></b><small id="filmTitleSmall"></small></div><div id="filmSub" hidden><span id="filmWho"></span><span id="filmLine"></span></div></div><button id="deiaRing" hidden><i></i><b>OIHARTZUN-DEIA</b><span id="deiaFrom"></span><small id="deiaKey">ERANTZUN</small></button><div id="beamAlert" hidden>IKUSI ZAITU</div><div id="locCap" hidden aria-live="polite"></div>
 <div id="fatal" hidden></div>
@@ -4405,6 +4451,31 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     CAM.yaw = Math.round(CAM.yawS / TAU) * TAU;
     notify("Kamera zentratuta", "Cámara centrada", 1.2);
   }
+  /* KAMERA-MODUA: GOITIK (zaintza-kamera: goitik eta hurbil, angelu finkoa, inguruko guztia ikusten da)
+     edo ATZETIK (klasikoa, zeruerdia ikusten da). HORMA-IKUSPEGIA: hormari itsatsita, kamera
+     baxu eta alboan, ertzetik haratago begiratzeko. Jokalariak menuan aukeratzen du (O tekla ere). */
+  CAM.mode = "goitik";
+  CAM.wallView = true;
+  try {
+    const m = localStorage.getItem("leizeak-kamera");
+    if (m === "goitik" || m === "atzetik") CAM.mode = m;
+    CAM.wallView = localStorage.getItem("leizeak-horma") !== "0";
+  } catch {}
+  function camModeSave() {
+    try {
+      localStorage.setItem("leizeak-kamera", CAM.mode);
+      localStorage.setItem("leizeak-horma", CAM.wallView ? "1" : "0");
+    } catch {}
+  }
+  function camModeToggle() {
+    CAM.mode = CAM.mode === "goitik" ? "atzetik" : "goitik";
+    camModeSave();
+    notify(CAM.mode === "goitik" ? "KAMERA · GOITIK (zaintza)" : "KAMERA · ATZETIK (klasikoa)", "", 1.8);
+  }
+  /* GOITIK: kameraren norabidea (ATZETIK-en berdina: kontrolak aldatu gabe) */
+  const CAM_AZ = Math.atan2(15.5, 23),
+    CAM_AZS = Math.sin(CAM_AZ),
+    CAM_AZC = Math.cos(CAM_AZ);
   /* keinuak pantailan (ez botoietan): hatz batek biratu (ezker-eskuin) eta hurbildu (gora-behera);
      bi hatzek atximurka hurbildu; bi ukitu azkar: zentratu. Saguan: eskuineko botoia + gurpila. */
   const CAMG = { ptrs: new Map(), pinch: 0, lastTap: 0 };
@@ -4454,13 +4525,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function camFrame() {
     const portrait = innerHeight > innerWidth,
-      /* haranean (kanpoan, zabal): kamera urrunago eta angelu zabalagoa — espazio gehiago ikusteko */
-      open = ZONE.cur === "ibarra" ? 1 : 0;
+      G = CAM.mode === "goitik",
+      /* haranean (ATZETIK, kanpoan, zabal): angelu zabalagoa — espazio gehiago ikusteko */
+      open = ZONE.cur === "ibarra" && !G ? 1 : 0;
     return {
-      k: (portrait ? 1.95 : mobile ? 1.12 : 1) * CAM.user * (1 + 0.14 * open),
-      fov: (portrait ? 50 : 44) + 4 * open,
-      lift: portrait ? 5.5 : mobile ? 1.2 : 0,
-      fight: portrait ? 0.86 : 0.74,
+      /* hurbilago (lehen: bertikalean 1.95, mugikorrean 1.12) */
+      k: (portrait ? (G ? 1.42 : 1.7) : mobile ? (G ? 1 : 1.02) : G ? 1 : 0.9) * CAM.user * (1 + 0.08 * open),
+      fov: (portrait ? 50 : G ? 42 : 44) + 2 * open,
+      lift: portrait ? (G ? 3 : 5.5) : mobile ? 1.2 : 0,
+      fight: G ? 0.92 : portrait ? 0.86 : 0.74,
       /* kameraren altuera (angelua): baxuagoa → zerua eta urruneko uharteak ikusten dira */
       h: portrait ? 12 : 13.5,
     };
@@ -6146,9 +6219,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (!started || paused || cinematic || TXALA.on) return;
     /* hitzaurreko irakaspenak (pro-*) ez ordezkatu */
     if (PRO.on && COACH.cur && COACH.cur.startsWith("pro-")) return;
-    const fight = !!ROOM.fight || ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 16);
-    /* irakaspenak ez dira pantailan geratzen: 7 s eta kitto (hitzaurrekoak ekintzaren zain) */
-    if (COACH.cur && !COACH.cur.startsWith("pro-") && time - (COACH.t0 || 0) > 7) coachDone(COACH.cur);
+    const fight = !!ROOM.fight || ENEMIES.some((e) => e.state !== "dead" && !sigCalm(e) && Math.hypot(e.x - P.x, e.z - P.z) < 16);
+    /* irakaspenak ez dira pantailan geratzen: 5 s eta kitto (hitzaurrekoak ekintzaren zain) */
+    if (COACH.cur && !COACH.cur.startsWith("pro-") && time - (COACH.t0 || 0) > 5) coachDone(COACH.cur);
     if (ATK.n && COACH.cur === "attack") coachDone("attack");
     if (MAG.charging && COACH.cur === "charge") coachDone("charge");
     if (P.travel >= 4) coachDone("move");
@@ -6821,19 +6894,21 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     /* SAGUZARRA (6. leizea): biraka, gero murgilka; argiak lurrera botatzen du */
     bat: { hp: 2, speed: 5.4, r: 0.62, dmg: 1, mass: 0.45, S: 1, H: 1.15 },
     mamua: { hp: 3, speed: 3.4, r: 0.68, dmg: 1, mass: 0.7, S: 1, H: 1.3 },
+    /* ZAINDARIA (sigiloa.js): Gauekoren itzal-zaindaria, kriseiluarekin */
+    zaindari: { hp: 4, speed: 4.3, r: 0.8, dmg: 1, mass: 1.4, S: 1.5, H: 1.25 },
   };
   const ERA_COL = ["#ffb85c", "#7fe9ff", "#c98bff"];
   const ATK = { n: 0, t: 9, dir: 0, waveCd: 0, lungeT: 0, hold: false };
   const NUMS = [];
   let combatMat = null;
   function combatLevel() {
-    return ROOM.fight || BOSS.on || ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 26) ? 2 : 1;
+    return ROOM.fight || BOSS.on || ENEMIES.some((e) => e.state !== "dead" && !sigCalm(e) && Math.hypot(e.x - P.x, e.z - P.z) < 26) ? 2 : 1;
   }
   function enemiesAlive() {
     return ENEMIES.filter((e) => e.state !== "dead").length;
   }
   /* --------------------------- hezurdurak (KayKit, animatuak) --------------------------- */
-  const SKEL_OF = { grunt: ["skel_minion", 1.32], eye: ["skel_mage", 1.32], brute: ["skel_warrior", 1.62] };
+  const SKEL_OF = { grunt: ["skel_minion", 1.32], eye: ["skel_mage", 1.32], brute: ["skel_warrior", 1.62], zaindari: ["skel_warrior", 1.42] };
   const SKEL_TINT = ["#f0d6ae", "#c4ddf0", "#dccbf5"];
   function skelMesh(type, era) {
     const def = SKEL_OF[type];
@@ -7340,6 +7415,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) meleeHit(e, e.D.dmg);
           if (e.t > 0.22) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "recover" && e.t > 0.6) (e.state = "chase"), (e.t = 0);
+      } else if (e.type === "zaindari") {
+        /* sigiloa.js: bidea, susmoa, ehiza eta loa */
+        [want, wx, wz] = zainAI(e, dt, d, ux, uz);
       } else if (e.type === "bat") {
         /* SAGUZARRA: Amaiurren inguruan biraka; abisua (garrasia) eta murgilka (ALDARATU daiteke) */
         if (e.state === "hover") {
@@ -7484,6 +7562,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       }
       /* haranean (gaueko itzalak): lurraren gainean, ez ibaian ez herrian */
       if (e.terrain) [nx, nz] = terrainStep(e, nx, nz);
+      /* zaindariak: hormetan zehar ez (irristatu) */
+      if (e.type === "zaindari") [nx, nz] = sigWallPush(nx, nz, e.D.r * 0.8);
       /* gelaren barruan (hormaren kontra jo: zezena zorabiatuta) */
       if (I) {
         let out = false;
@@ -7636,6 +7716,16 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         break;
       case "stun":
         (name = "Hit_A"), (ts = 0.5);
+        break;
+      /* zaindariak (sigiloa.js): geldi begira, lo (lurrean etzanda) eta esnatu (lurretik altxatu) */
+      case "look":
+        (name = "Idle_Combat"), (ts = 0.65);
+        break;
+      case "sleep":
+        (name = "Death_C_Skeletons"), (ts = 1.1), (once = true);
+        break;
+      case "wake":
+        (name = "Spawn_Ground_Skeletons"), (ts = 2.85), (once = true);
         break;
     }
     if (e.hitT > 0 && (e.state === "chase" || e.state === "hover" || e.state === "recover")) (name = "Hit_A"), (ts = 1.8), (once = true);
@@ -12754,11 +12844,112 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const p = lockPos(LOCK.target),
       th = Math.atan2(p.x - P.x, p.z - P.z),
       base = Math.atan2(15.5, 23);
-    let want = th + PI - base;
-    want += Math.round((CAM.yaw - want) / TAU) * TAU;
-    CAM.yaw += (want - CAM.yaw) * (1 - Math.exp(-dt * 2.6));
+    /* GOITIK: kamera ez da biratzen (biak goitik ikusten dira); ATZETIK: helburuari begira */
+    if (CAM.mode !== "goitik" || BOSS.on) {
+      let want = th + PI - base;
+      want += Math.round((CAM.yaw - want) / TAU) * TAU;
+      CAM.yaw += (want - CAM.yaw) * (1 - Math.exp(-dt * 2.6));
+    }
     look.x = mix(look.x, (look.x + p.x) / 2, 0.4 * LOCK.k);
     look.z = mix(look.z, (look.z + p.z) / 2, 0.4 * LOCK.k);
+  }
+  /* ==================================================================
+     KAMERA · HORMA (diseinu propioa; abentura-joko klasikoen ideia orokorra)
+     Hormari edo kutxa-pila bati bizkarra emanez gero (makila hormarantz une batez), Amaiur itsatsita
+     geratzen da: alboetara bakarrik mugitzen da, eta kamera baxu eta alboan jartzen da, hormaren
+     ertzetik haratago begira (izkinaren atzean dagoena ikusteko). Makila hormatik urruntzean, jauzian
+     edo ertzetik irtetean, askatu. Menuan itzal daiteke (HORMA-IKUSPEGIA).
+     ================================================================== */
+  const HORMA = { on: false, push: 0, k: 0, s: null, nx: 0, nz: 1, tx: 1, tz: 0, side: 1, at: 0, ext: 1 };
+  /* plataforma-kaxa baten aurpegirik hurbilena: normala (kanporantz), ukitzailea eta ertzetarako tartea */
+  function wallFace(s, x, z) {
+    const [lx, lz] = local(s, x, z),
+      hx = s.w / 2,
+      hz = s.d / 2,
+      c = Math.cos(s.rot || 0),
+      n = Math.sin(s.rot || 0),
+      /* lokaletik mundura: dx = lx·c + lz·n, dz = −lx·n + lz·c */
+      W = (ax, az) => [ax * c + az * n, -ax * n + az * c];
+    if (Math.abs(lx) - hx > Math.abs(lz) - hz) {
+      const [nx, nz] = W(Math.sign(lx) || 1, 0),
+        [tx, tz] = W(0, 1);
+      return { nx, nz, tx, tz, at: lz, ext: hz, dist: Math.abs(lx) - hx };
+    }
+    const [nx, nz] = W(0, Math.sign(lz) || 1),
+      [tx, tz] = W(1, 0);
+    return { nx, nz, tx, tz, at: lx, ext: hx, dist: Math.abs(lz) - hz };
+  }
+  /* makila → hormaren luzeran bakarrik (astiro: isilik) */
+  function hormaDir(d) {
+    const s = d.x * HORMA.tx + d.z * HORMA.tz;
+    if (Math.abs(s) > 0.2) HORMA.side = Math.sign(s);
+    return { x: HORMA.tx * s * 0.45, z: HORMA.tz * s * 0.45 };
+  }
+  function hormaOn(s, f) {
+    HORMA.on = true;
+    HORMA.s = s;
+    HORMA.push = 0;
+    Object.assign(HORMA, { nx: f.nx, nz: f.nz, tx: f.tx, tz: f.tz, at: f.at, ext: f.ext, side: f.at >= 0 ? 1 : -1 });
+    P.vx = P.vz = 0;
+    SND.tok("L", true, 0.22);
+    coach("horma", "", "HORMARI ITSATSITA: alboetara mugitu · ertzean, kamerak izkinaren atzera begiratzen du", "", null, "HORMARI ITSATSITA: makila alboetara · ertzean, izkinaren atzera begiratu", "");
+  }
+  function hormaOff() {
+    HORMA.on = false;
+    HORMA.s = null;
+    HORMA.push = 0;
+  }
+  function hormaUpdate(dt, d, len) {
+    const can =
+      CAM.wallView && started && P.grounded && !P.riding && !P.climb && P.dashT <= 0 && !LOCK.target && !CRAFT.on && !CRAFT.held && !MAG.charging && !MIR.on && ZONE.cur !== "ibarra" && !ivyNear(1.8);
+    const raw = direction();
+    if (!HORMA.on) {
+      const s = P.wallS;
+      if (can && s && s.wall && !s.bars) {
+        const f = wallFace(s, P.x, P.z),
+          into = -(raw.x * f.nx + raw.z * f.nz);
+        if (into > 0.6 && f.dist < 0.6) {
+          HORMA.push += dt;
+          if (HORMA.push > 0.28) hormaOn(s, f);
+        } else HORMA.push = 0;
+      } else HORMA.push = Math.max(0, HORMA.push - dt * 2);
+    } else {
+      const f = wallFace(HORMA.s, P.x, P.z),
+        away = raw.x * f.nx + raw.z * f.nz;
+      if (!can || away > 0.55 || f.dist > 0.8 || Math.abs(f.at) > f.ext + 0.4 || jumpBuffer > 0) hormaOff();
+      else {
+        Object.assign(HORMA, { nx: f.nx, nz: f.nz, tx: f.tx, tz: f.tz, at: f.at, ext: f.ext });
+        /* geldirik: bizkarra hormari */
+        if (len < 0.12) {
+          const a = Math.atan2(f.nx, f.nz);
+          P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 10);
+        }
+        /* ertzera iritsita: ikasia */
+        if (f.ext - f.at * HORMA.side < 1.2) coachDone("horma");
+      }
+    }
+    HORMA.k = mix(HORMA.k, HORMA.on ? 1 : 0, 1 - Math.exp(-dt * (HORMA.on ? 4.5 : 7)));
+    if (HORMA.k < 0.002) HORMA.k = 0;
+  }
+  /* kamera: baxu, hormatik apur bat aldenduta eta atzerago; begirada ertzerantz (ertzetik gertu,
+     izkinatik haratago) */
+  function hormaCamera(dt, target, look) {
+    if (HORMA.k <= 0) return;
+    const k = HORMA.k * HORMA.k * (3 - 2 * HORMA.k),
+      sd = HORMA.side,
+      tx = HORMA.tx * sd,
+      tz = HORMA.tz * sd,
+      edge = clamp(1 - (HORMA.ext - HORMA.at * sd) / 6, 0, 1),
+      out = 3.8 + 1.4 * edge,
+      cx = P.x + HORMA.nx * out - tx * 4.2,
+      cz = P.z + HORMA.nz * out - tz * 4.2,
+      cy = P.y + 4.4,
+      lo = 0.8 + 2.6 * edge,
+      lx = P.x + tx * 7.5 + HORMA.nx * lo,
+      lz = P.z + tz * 7.5 + HORMA.nz * lo,
+      ly = P.y + 0.5;
+    target.set(mix(target.x, cx, k), mix(target.y, cy, k), mix(target.z, cz, k));
+    look.set(mix(look.x, lx, k), mix(look.y, ly, k), mix(look.z, lz, k));
   }
   /* ==================================================================
      SUGAARREN KATEA · lehen leizeko tresna (C tekla edo KATEA botoia)
@@ -14672,6 +14863,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function objective() {
     if (PRO.on) return proObjective();
     if (ZONE.cur === "anboto") return anbotoObjective();
+    if (ZONE.cur === "harpeak") return harpeakObjective();
     const d = (x, z) => Math.round(Math.hypot(P.x - x, P.z - z));
     const DG = DGS[ZONE.cur];
     if (DG && DG.objective) return DG.objective();
@@ -24629,7 +24821,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
      distortsiorik eta abiadura-aldaketarik gabe: argi entzun behar da), INGUMA ametsetik (dardara
      leuna, modulatutako atzerapena eta presentzia: beldurgarria, baina ulergarria), AMAIUR hurbil eta lehor. Hitz egitean musika jaisten da.
      ================================================================== */
-  const VOICE_LINES = {"pro_g1":["GAUEKO","Jo, txalaparta… Jo. Eta deitu iezaiozu."],"pro_g2":["GAUEKO","Zazpi leize. Zazpi zaindari… Eta sorgin bakar bat."],"pro_i1":["IRATI","Amaiur. Entzuten didazu? Ez esan ezer. Entzun bakarrik."],"pro_a1":["AMAIUR","Irati…? Harriaren barruan zaude?"],"pro_i2":["IRATI","Oihartzun bat naiz. Zuk gogoratzen nauzun bitartean, hemen nago."],"pro_i3":["IRATI","Hiru gau dira txalapartak bakarrik jotzen duela. Ez da Mari. Norbaitek deitzen zaitu."],"pro_a2":["AMAIUR","Gaueko."],"pro_i4":["IRATI","Isilik. Ilunpean, izenek belarriak dituzte."],"pro_i5":["IRATI","Lehenik, argia. Piztu sutondoa zure sorginkeriaz."],"pro_i6":["IRATI","Hori da. Orain, begiratu gora, ganbarara. Nire makilak han daude oraindik."],"pro_i6b":["IRATI","Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."],"pro_i7":["IRATI","Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ez ahaztu."],"pro_a3":["AMAIUR","Atea izoztuta dago."],"pro_i8":["IRATI","Gauekoren negua da. Baina gogoratu udako atea, zabalik. Gogoratu, eta zeharkatu."],"pro_g3":["GAUEKO","Ahizpak elkarrekin… berriro. Zein polita."],"pro_i9":["IRATI","Kontuz. Gauekoren begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."],"pro_i10":["IRATI","Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."],"pro_g4":["GAUEKO","Hor zaude… sorgin txikia."],"pro_g5":["GAUEKO","Ikusten… zaitut."],"pro_i11":["IRATI","Plazan, itzalak txalapartaren inguruan. Begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira."],"pro_i12":["IRATI","Finkatu bat, eta jo. Gero, hurrengoa."],"pro_i13":["IRATI","Begira, Amaiur. Egunsentia."],"pro_a4":["AMAIUR","Irati… ikusten zaitut."],"pro_i14":["IRATI","Ez naiz mamua. Oihartzuna naiz, eta egunsentian argiago entzuten naiz."],"pro_i15":["IRATI","Mari isildu egin da, eta haren leizeak itxi. Gauekoren itzalak izakiak gaiztotzen ari dira. Basajaun lehena."],"pro_i16":["IRATI","Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni hemen egongo naiz."],"pro_a5":["AMAIUR","Oraingoan ez zaitut galduko."],"pro_g6":["GAUEKO","Zatoz, sorgin. Leizeek… zure izena dakite."],"dei_i1":["IRATI","Hemen nago, Amaiur. Zer behar duzu?"],"dei_i2":["IRATI","Kontuz ibili, Amaiur."],"dz_leizea1":["IRATI","Basajaunen leizea. Basoaren bihotza da, Amaiur. Itzalak barruan daude."],"dz_leizea2":["IRATI","Sutegiak itzalita? Badakizu zer egin. Eta gogoratu: begien kolorea, garaia."],"dz_lamia1":["IRATI","Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."],"dz_lamia2":["IRATI","Izotza orainekoa da. Iraganean, ura dabil. Bilatu bidea bietan."],"dz_tartalo1":["IRATI","Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."],"dz_tartalo2":["GAUEKO","Ilunpea nire etxea da, sorgin. Ongi… etorri."],"dz_tartalo3":["IRATI","Ez entzun. Argia da hemen zure armarik onena."],"dz_jentil1":["IRATI","Jentilbaratza. Jentilak harri bihurtu ziren, zeruan argi bitxi bat ikusi zutenean."],"dz_jentil2":["IRATI","Harri hauek gogoratzen dute. Entzun, eta jo."],"dz_zerua1":["IRATI","Hodeien gainean zaude, Amaiur. Ez begiratu behera."],"dz_zerua2":["IRATI","Haizeak gora eramango zaitu. Fidatu enararen hegoez."],"dz_herensuge1":["IRATI","Herensugearen haitzuloa. Beroa sentitzen dut hemendik ere."],"dz_herensuge2":["GAUEKO","Zazpi buru. Zazpi gezur… Zein da egia, sorgin?"],"dz_herensuge3":["IRATI","Argiak erakutsiko dizu. Beti erakusten du."],"c7_i1":["IRATI","Inguma… Amonak ez zuen inoiz haren izena ozen esaten."],"c7_a1":["AMAIUR","Nire ametsetan sartu da. Zure ahotsa egiten zuen, Irati."],"c7_i2":["IRATI","Orduan, entzun ondo: Ingumak dena kontatu behar du. Izarrak, belarrak, hareak… Kontatzen ari den bitartean, ezin du inor ukitu."],"c7_i3":["IRATI","Amonaren seaska-kantak hiru bertso zituen. Bat Kattalinek daki, bestea Txominek. Hirugarrena… jentil zaharrak, gauez, izarren azpian."],"c7_i4":["IRATI","Hiru bertsoak. Orain, kantatu nirekin: txalapartak gogoratuko du."],"c7_i5":["IRATI","Eta hau: amonaren hauts-zorroa. Izar-hautsa. Bota Ingumari, eta kontatzen hasiko da."],"c7_a2":["AMAIUR","Gaur gauean lo egingo dut. Eta haren ametsean sartuko naiz."],"c7_i6":["IRATI","Ez fidatu nire ahotsaz ametsean, Amaiur. Benetako Iratik ez du inoiz zure izena oihukatzen."],"c7_n1":["INGUMA","Ongi etorri nire etxera, sorgin txikia. Hemen, denbora ez da igarotzen."],"c7_f1":["IRATI?","Amaiur! Amaiur, hemen nago! Etorri, azkar!"],"c7_a3":["AMAIUR","Irati ez da inoiz oihuka aritzen. Zu ez zara bera."],"c7_n2":["INGUMA","Azkarra zara. Baina ametsean… dena da nirea."],"c7_n3":["INGUMA","Lo zaude, Amaiur. Eta lo dagoenak… ez du borrokatzen."],"c7_a4":["AMAIUR","Zeruan izarrak. Lurrean belarrak. Itsasoan hareak. Kontatu, Inguma!"],"c7_n4":["INGUMA","Bat, bi, hiru… Ez! Ez dut kontatu nahi!"],"c7_n5":["INGUMA","Zure ahizpa ere hemen dago, ametsen azpian. Entzun!"],"c7_n6":["INGUMA","Seaska-kanta… Ez! Ez kantatu hori!"],"c7_n7":["INGUMA","Lo… lo egingo dut… betiko…"],"c7_i7":["IRATI","Amaiur. Esnatu. Egunsentia da. Zazpigarren argia… berdea."],"c7_a5":["AMAIUR","Zazpi zaindari aske. Orain, Gaueko."],"c7_g1":["GAUEKO","Zazpi argi… Ondo, sorgin. Etorri Anbotora. Zure ahizpa… nirekin dago."],"c7_a6":["AMAIUR","Irati…?"],"c7_i8":["IRATI","Amaiur… ez dakit nola esan. Oihartzun bat baino gehiago naiz. Eta Gauekok badaki."],"st_g1":["GAUEKO","Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik."],"st_g3":["GAUEKO","Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean… ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan."],"st_g4":["GAUEKO","Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan… nire hiru zaindari gogorrenak zain daude."],"st_g5":["GAUEKO","Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere."],"st_g6":["GAUEKO","Sei. Esna zaude oraindik, sorgin txikia? Laster… lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: Inguma."],"c7_p1":["IRATI?","Amaiur… Amaiur, esnatu. Ni naiz… Irati."],"c7_p2":["AMAIUR","Irati? Ez… Zu ez zara Irati."],"c7_p3":["INGUMA","Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten."],"c7_p4":["INGUMA","Inguma naiz. Gaur ez zaitut eramango. Laster… bai. Lo ona, sorgin txikia."],"o1_i1":["IRATI","Txomin itsasoan dago, eta ekaitza dator! Kanpaia jo behar dut!"],"o1_a1":["AMAIUR","Irati, ez! Gaua da. Amonak esan zuen: gauez, ez irten."],"o1_i2":["IRATI","Itsasoak ez daki zer ordu den, Amaiur. Nik joko dut; zuk, itxaron."],"o1_g1":["GAUEKO","Gaua… gauekoentzat da."],"o2_n1":["AMONA","Txalapartak bi ahots ditu, neskatoak: batak galdetzen du, eta besteak erantzuten du."],"o2_n2":["AMONA","Eta gogoratu beti: eguna egunekoentzat, gaua gauekoentzat. Gauez, etxean."],"o2_i1":["IRATI","Eta gauez txalaparta jotzen badugu, amona?"],"o2_n3":["AMONA","Orduan, Gaueko dantzara etorriko da. Eta Gauekok ez daki gelditzen."],"o3_a1":["AMAIUR","Ez dut utziko joaten. Denbora gelditu behar badut ere."],"o3_a2":["AMAIUR","Egun bera, behin eta berriz. Eta irratian, haren ahotsa."],"o3_i1":["IRATI","Utzi joaten, Amaiur. Erlojua zure eskuetan dago."],"o4_m1":["MARI","Zazpi urte, zazpi dei. Nire ahotsa zazpitan zatituko dut, haiei eusteko."],"o4_n1":["ANDERE","Mari, zure sua nik eramango dut zeruan. Neskatoek ez dute jakin behar."],"o5_m1":["MARI","Basajaun, Lamia, Tartalo, Errolan, Odei, Herensugea eta Inguma: bakoitzak urte bat gordeko du."],"o5_m2":["MARI","Ahizpak etorriko dira: bata egunetik, bestea gauetik. Orduan, itzuli urteak."],"o5_g1":["GAUEKO","Zazpi zaindari… eta zazpi itzal. Urteak gauarenak dira, Mari."],"o6_g1":["GAUEKO","Lehen, herriak gaua errespetatzen zuen: argizaiolak, kantuak, isiltasuna."],"o6_g2":["GAUEKO","Gero, ahaztu egin ninduten. Gaua beldurra baino ez zen. Eta beldurrak itzalak egiten ditu."],"o6_i1":["IRATI","Gaueko… zergatik nauzu hemen?"],"o6_g3":["GAUEKO","Ez zaitut harrapatu, neska. Itsasotik atera zintudan. Gauak bereak zaintzen ditu."],"o7_i1":["IRATI","Zazpi urte kontatu ditut ilunpean, Amaiur. Zazpi argi: bat, urte bakoitzeko."],"o7_i2":["IRATI","Ez naiz oihartzun bat. Bizirik nago. Gaueko ez da nire kartzelaria: nire zaindaria da."],"o7_i3":["IRATI","Baina gauak ez du ezer itzultzen debalde. Txalapartak bi ahots behar ditu."],"f_i1":["IRATI","Zazpi argiak berde daude. Anboton nago, Mariren etxean. Etorri nire bila, Amaiur."],"f_a1":["AMAIUR","Nola iritsiko naiz? Anboto hodeien gainean dago."],"f_n1":["ANDERE","Amaiur, laztana. Igo nirekin. Sua da, baina ez du erretzen."],"f_a2":["AMAIUR","Amona…! Bizirik zaude!"],"f_g1":["GAUEKO","Iritsi zara, sorgin. Zazpi urte, zazpi zaindari… eta orain, zu."],"f_g2":["GAUEKO","Zure ahizpa gauak atera zuen itsasotik. Eta gauak ez du ezer debalde itzultzen."],"f_a3":["AMAIUR","Orduan, txalapartak erabakiko du. Galdetu, Gaueko. Nik erantzungo dizut."],"f_g3":["GAUEKO","Ondo… Baina gauak luzeagoak dira."],"f_g4":["GAUEKO","Zazpi kolpe. Zazpi urte. Bakarrik ezin duzu."],"f_i2":["IRATI","Ez dago bakarrik! Txalapartak bi ahots ditu!"],"f_m1":["MARI","Ahizpak: bata egunetik, bestea gauetik. Galdera eta erantzuna."],"f_m2":["MARI","Gaueko: gaua zurea da, betiko. Baina urteak haienak dira."],"f_g5":["GAUEKO","Gaua… nirea. Eta errespetatuko dute?"],"f_a4":["AMAIUR","Gauero, argizaiola bat zure izenean. Eta txalaparta, egunez."],"f_g6":["GAUEKO","Ituna da, sorgin txikia. Zoaz… zure ahizparekin."],"f_i3":["IRATI","Amaiur… zure eskua epela da."],"f_a5":["AMAIUR","Zazpi urte, Irati. Zazpi urte deika."],"f_i4":["IRATI","Eta zazpi urte erantzuten. Goazen etxera."],"f_n2":["ANDERE","Egunsentia da, neskatoak. Herriak txalaparta jo nahi du."]};
+  const VOICE_LINES = {"pro_g1":["GAUEKO","Jo, txalaparta… Jo. Eta deitu iezaiozu."],"pro_g2":["GAUEKO","Zazpi leize. Zazpi zaindari… Eta sorgin bakar bat."],"pro_i1":["IRATI","Amaiur. Entzuten didazu? Ez esan ezer. Entzun bakarrik."],"pro_a1":["AMAIUR","Irati…? Harriaren barruan zaude?"],"pro_i2":["IRATI","Oihartzun bat naiz. Zuk gogoratzen nauzun bitartean, hemen nago."],"pro_i3":["IRATI","Hiru gau dira txalapartak bakarrik jotzen duela. Ez da Mari. Norbaitek deitzen zaitu."],"pro_a2":["AMAIUR","Gaueko."],"pro_i4":["IRATI","Isilik. Ilunpean, izenek belarriak dituzte."],"pro_i5":["IRATI","Lehenik, argia. Piztu sutondoa zure sorginkeriaz."],"pro_i6":["IRATI","Hori da. Orain, begiratu gora, ganbarara. Nire makilak han daude oraindik."],"pro_i6b":["IRATI","Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."],"pro_i7":["IRATI","Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ez ahaztu."],"pro_a3":["AMAIUR","Atea izoztuta dago."],"pro_i8":["IRATI","Gauekoren negua da. Baina gogoratu udako atea, zabalik. Gogoratu, eta zeharkatu."],"pro_g3":["GAUEKO","Ahizpak elkarrekin… berriro. Zein polita."],"pro_i9":["IRATI","Kontuz. Gauekoren begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."],"pro_i10":["IRATI","Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."],"pro_g4":["GAUEKO","Hor zaude… sorgin txikia."],"pro_g5":["GAUEKO","Ikusten… zaitut."],"pro_i11":["IRATI","Plazan, itzalak txalapartaren inguruan. Begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira."],"pro_i12":["IRATI","Finkatu bat, eta jo. Gero, hurrengoa."],"pro_i13":["IRATI","Begira, Amaiur. Egunsentia."],"pro_a4":["AMAIUR","Irati… ikusten zaitut."],"pro_i14":["IRATI","Ez naiz mamua. Oihartzuna naiz, eta egunsentian argiago entzuten naiz."],"pro_i15":["IRATI","Mari isildu egin da, eta haren leizeak itxi. Gauekoren itzalak izakiak gaiztotzen ari dira. Basajaun lehena."],"pro_i16":["IRATI","Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni hemen egongo naiz."],"pro_a5":["AMAIUR","Oraingoan ez zaitut galduko."],"pro_g6":["GAUEKO","Zatoz, sorgin. Leizeek… zure izena dakite."],"dei_i1":["IRATI","Hemen nago, Amaiur. Zer behar duzu?"],"dei_i2":["IRATI","Kontuz ibili, Amaiur."],"dz_leizea1":["IRATI","Basajaunen leizea. Basoaren bihotza da, Amaiur. Itzalak barruan daude."],"dz_leizea2":["IRATI","Sutegiak itzalita? Badakizu zer egin. Eta gogoratu: begien kolorea, garaia."],"dz_lamia1":["IRATI","Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."],"dz_lamia2":["IRATI","Izotza orainekoa da. Iraganean, ura dabil. Bilatu bidea bietan."],"dz_tartalo1":["IRATI","Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."],"dz_tartalo2":["GAUEKO","Ilunpea nire etxea da, sorgin. Ongi… etorri."],"dz_tartalo3":["IRATI","Ez entzun. Argia da hemen zure armarik onena."],"dz_jentil1":["IRATI","Jentilbaratza. Jentilak harri bihurtu ziren, zeruan argi bitxi bat ikusi zutenean."],"dz_jentil2":["IRATI","Harri hauek gogoratzen dute. Entzun, eta jo."],"dz_zerua1":["IRATI","Hodeien gainean zaude, Amaiur. Ez begiratu behera."],"dz_zerua2":["IRATI","Haizeak gora eramango zaitu. Fidatu enararen hegoez."],"dz_herensuge1":["IRATI","Herensugearen haitzuloa. Beroa sentitzen dut hemendik ere."],"dz_herensuge2":["GAUEKO","Zazpi buru. Zazpi gezur… Zein da egia, sorgin?"],"dz_herensuge3":["IRATI","Argiak erakutsiko dizu. Beti erakusten du."],"c7_i1":["IRATI","Inguma… Amonak ez zuen inoiz haren izena ozen esaten."],"c7_a1":["AMAIUR","Nire ametsetan sartu da. Zure ahotsa egiten zuen, Irati."],"c7_i2":["IRATI","Orduan, entzun ondo: Ingumak dena kontatu behar du. Izarrak, belarrak, hareak… Kontatzen ari den bitartean, ezin du inor ukitu."],"c7_i3":["IRATI","Amonaren seaska-kantak hiru bertso zituen. Bat Kattalinek daki, bestea Txominek. Hirugarrena… jentil zaharrak, gauez, izarren azpian."],"c7_i4":["IRATI","Hiru bertsoak. Orain, kantatu nirekin: txalapartak gogoratuko du."],"c7_i5":["IRATI","Eta hau: amonaren hauts-zorroa. Izar-hautsa. Bota Ingumari, eta kontatzen hasiko da."],"c7_a2":["AMAIUR","Gaur gauean lo egingo dut. Eta haren ametsean sartuko naiz."],"c7_i6":["IRATI","Ez fidatu nire ahotsaz ametsean, Amaiur. Benetako Iratik ez du inoiz zure izena oihukatzen."],"c7_n1":["INGUMA","Ongi etorri nire etxera, sorgin txikia. Hemen, denbora ez da igarotzen."],"c7_f1":["IRATI?","Amaiur! Amaiur, hemen nago! Etorri, azkar!"],"c7_a3":["AMAIUR","Irati ez da inoiz oihuka aritzen. Zu ez zara bera."],"c7_n2":["INGUMA","Azkarra zara. Baina ametsean… dena da nirea."],"c7_n3":["INGUMA","Lo zaude, Amaiur. Eta lo dagoenak… ez du borrokatzen."],"c7_a4":["AMAIUR","Zeruan izarrak. Lurrean belarrak. Itsasoan hareak. Kontatu, Inguma!"],"c7_n4":["INGUMA","Bat, bi, hiru… Ez! Ez dut kontatu nahi!"],"c7_n5":["INGUMA","Zure ahizpa ere hemen dago, ametsen azpian. Entzun!"],"c7_n6":["INGUMA","Seaska-kanta… Ez! Ez kantatu hori!"],"c7_n7":["INGUMA","Lo… lo egingo dut… betiko…"],"c7_i7":["IRATI","Amaiur. Esnatu. Egunsentia da. Zazpigarren argia… berdea."],"c7_a5":["AMAIUR","Zazpi zaindari aske. Orain, Gaueko."],"c7_g1":["GAUEKO","Zazpi argi… Ondo, sorgin. Etorri Anbotora. Zure ahizpa… nirekin dago."],"c7_a6":["AMAIUR","Irati…?"],"c7_i8":["IRATI","Amaiur… ez dakit nola esan. Oihartzun bat baino gehiago naiz. Eta Gauekok badaki."],"st_g1":["GAUEKO","Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik."],"st_g3":["GAUEKO","Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean… ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan."],"st_g4":["GAUEKO","Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan… nire hiru zaindari gogorrenak zain daude."],"st_g5":["GAUEKO","Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere."],"st_g6":["GAUEKO","Sei. Esna zaude oraindik, sorgin txikia? Laster… lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: Inguma."],"c7_p1":["IRATI?","Amaiur… Amaiur, esnatu. Ni naiz… Irati."],"c7_p2":["AMAIUR","Irati? Ez… Zu ez zara Irati."],"c7_p3":["INGUMA","Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten."],"c7_p4":["INGUMA","Inguma naiz. Gaur ez zaitut eramango. Laster… bai. Lo ona, sorgin txikia."],"o1_i1":["IRATI","Txomin itsasoan dago, eta ekaitza dator! Kanpaia jo behar dut!"],"o1_a1":["AMAIUR","Irati, ez! Gaua da. Amonak esan zuen: gauez, ez irten."],"o1_i2":["IRATI","Itsasoak ez daki zer ordu den, Amaiur. Nik joko dut; zuk, itxaron."],"o1_g1":["GAUEKO","Gaua… gauekoentzat da."],"o2_n1":["AMONA","Txalapartak bi ahots ditu, neskatoak: batak galdetzen du, eta besteak erantzuten du."],"o2_n2":["AMONA","Eta gogoratu beti: eguna egunekoentzat, gaua gauekoentzat. Gauez, etxean."],"o2_i1":["IRATI","Eta gauez txalaparta jotzen badugu, amona?"],"o2_n3":["AMONA","Orduan, Gaueko dantzara etorriko da. Eta Gauekok ez daki gelditzen."],"o3_a1":["AMAIUR","Ez dut utziko joaten. Denbora gelditu behar badut ere."],"o3_a2":["AMAIUR","Egun bera, behin eta berriz. Eta irratian, haren ahotsa."],"o3_i1":["IRATI","Utzi joaten, Amaiur. Erlojua zure eskuetan dago."],"o4_m1":["MARI","Zazpi urte, zazpi dei. Nire ahotsa zazpitan zatituko dut, haiei eusteko."],"o4_n1":["ANDERE","Mari, zure sua nik eramango dut zeruan. Neskatoek ez dute jakin behar."],"o5_m1":["MARI","Basajaun, Lamia, Tartalo, Errolan, Odei, Herensugea eta Inguma: bakoitzak urte bat gordeko du."],"o5_m2":["MARI","Ahizpak etorriko dira: bata egunetik, bestea gauetik. Orduan, itzuli urteak."],"o5_g1":["GAUEKO","Zazpi zaindari… eta zazpi itzal. Urteak gauarenak dira, Mari."],"o6_g1":["GAUEKO","Lehen, herriak gaua errespetatzen zuen: argizaiolak, kantuak, isiltasuna."],"o6_g2":["GAUEKO","Gero, ahaztu egin ninduten. Gaua beldurra baino ez zen. Eta beldurrak itzalak egiten ditu."],"o6_i1":["IRATI","Gaueko… zergatik nauzu hemen?"],"o6_g3":["GAUEKO","Ez zaitut harrapatu, neska. Itsasotik atera zintudan. Gauak bereak zaintzen ditu."],"o7_i1":["IRATI","Zazpi urte kontatu ditut ilunpean, Amaiur. Zazpi argi: bat, urte bakoitzeko."],"o7_i2":["IRATI","Ez naiz oihartzun bat. Bizirik nago. Gaueko ez da nire kartzelaria: nire zaindaria da."],"o7_i3":["IRATI","Baina gauak ez du ezer itzultzen debalde. Txalapartak bi ahots behar ditu."],"f_i1":["IRATI","Zazpi argiak berde daude. Anboton nago, Mariren etxean. Etorri nire bila, Amaiur."],"f_a1":["AMAIUR","Nola iritsiko naiz? Anboto hodeien gainean dago."],"f_n1":["ANDERE","Amaiur, laztana. Igo nirekin. Sua da, baina ez du erretzen."],"f_a2":["AMAIUR","Amona…! Bizirik zaude!"],"f_g1":["GAUEKO","Iritsi zara, sorgin. Zazpi urte, zazpi zaindari… eta orain, zu."],"f_g2":["GAUEKO","Zure ahizpa gauak atera zuen itsasotik. Eta gauak ez du ezer debalde itzultzen."],"f_a3":["AMAIUR","Orduan, txalapartak erabakiko du. Galdetu, Gaueko. Nik erantzungo dizut."],"f_g3":["GAUEKO","Ondo… Baina gauak luzeagoak dira."],"f_g4":["GAUEKO","Zazpi kolpe. Zazpi urte. Bakarrik ezin duzu."],"f_i2":["IRATI","Ez dago bakarrik! Txalapartak bi ahots ditu!"],"f_m1":["MARI","Ahizpak: bata egunetik, bestea gauetik. Galdera eta erantzuna."],"f_m2":["MARI","Gaueko: gaua zurea da, betiko. Baina urteak haienak dira."],"f_g5":["GAUEKO","Gaua… nirea. Eta errespetatuko dute?"],"f_a4":["AMAIUR","Gauero, argizaiola bat zure izenean. Eta txalaparta, egunez."],"f_g6":["GAUEKO","Ituna da, sorgin txikia. Zoaz… zure ahizparekin."],"f_i3":["IRATI","Amaiur… zure eskua epela da."],"f_a5":["AMAIUR","Zazpi urte, Irati. Zazpi urte deika."],"f_i4":["IRATI","Eta zazpi urte erantzuten. Goazen etxera."],"f_n2":["ANDERE","Egunsentia da, neskatoak. Herriak txalaparta jo nahi du."],"hp_n1":["ANDERE","Ekaitza! Gaueko ez gaitu gora utziko… Amaiur, mendiak bide bat du barrutik. Igo zuk!"],"hp_a1":["AMAIUR","Mendiaren barrutik, beraz. Isilik, eta itzalean."],"hp_i1":["IRATI","Amaiur, entzuten nauzu? Leize hauek Gauekoren itzalek zaintzen dituzte. Ez zaitzatela ikusi."],"hp_i2":["IRATI","Kriseiluaren argia haien begirada da. Ez sartu bertan: itxaron, eta pasatu bizkarretik."],"hp_i3":["IRATI","Nire oihartzuna zurekin dago. Goiko izkinan, haien urratsak entzungo dituzu."],"hp_i4":["IRATI","Ate ondoko hori ez da mugituko. Makilaz hormari jo: tok, tok. Hotsera joango da."],"hp_i5":["IRATI","Atzetik hurbiltzen bazara, oharkabean, lo egin dezake. Isil-isilik."],"hp_i6":["IRATI","Hari horiek oraingo izotza dira. Iraganean ez daude."],"hp_i7":["IRATI","Hor da atea. Gailurra gainean dago, Amaiur. Entzuten dizut."],"hp_g1":["GAUEKO","Ikusten zaitut, sorgin. Nire etxean zaude."]};
   const VOICE = { base: "/assets/voice/leizeak/", buf: new Map(), wait: new Map(), cur: null, an: null, data: null, chains: {}, level: 0 };
   const voiceLine = (id) => VOICE_LINES[id] || ["", ""];
   function voiceLoad(id) {
@@ -25131,6 +25323,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   const CALL_TEST = new URLSearchParams(location.search).has("test");
   function zoneEntered(id) {
     if (!FILM.on) locCaption(id);
+    /* ANBOTOKO HARPEAK: zaindariak eta radarra (harpeak.js, sigiloa.js) */
+    harpeakEntered(id);
     /* zaindari bat askatu ondoren, haranean: haren oroitzapena (oroitzapenak.js) */
     oroitCheck(id);
     /* Inguma garaituta: etxetik irtetean, zazpigarren argia (seaska.js) */
@@ -28397,6 +28591,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
           MARI.m.visible = false;
           MARI.m.scale.setScalar(1);
         }
+        /* Gauekoren ekaitzak suzko bola bota du: lehenik mendiaren barrutik (harpeak.js) */
+        if (!flag("harpeak")) return harpeakStart();
         anbotoBuild();
         AN.stage = "arrive";
         AN.dawn = 0;
@@ -28631,9 +28827,1002 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     });
     if (N.halo) N.halo.visible = false;
   }
+  /* ==================================================================
+     SIGILOA · Gauekoren itzal-zaindariak (diseinu propioa; sigilu-jokoen ideia orokorrak, gure eran)
+     · ZAINDARIA: itzal bat kriseilu batekin. Bide bat egiten du (puntuz puntu) eta geldialdietan
+       inguruari begiratzen dio. Haren argi-konoa lurrean ikusten da (hormek mozten dute): barruan
+       bazaude, susmoa hazten da (?) — beteta: IKUSI ZAITU (!) eta ALARMA.
+     · ALARMA: ALERTA (zaindariak ehizan, itzal gehiago lurretik) → IHESA (bilatzen) → ZAINTZA
+       (begirada zabalagoa) → lasai. Ikusten ez zaituzten bitartean, kontagailua jaisten da.
+     · OIHARTZUN-RADARRA: Iratiren oihartzunak zaindariak eta haien begiradak erakusten ditu
+       (goiko eskuinean). Alarman, Gauekoren zaratak itsutzen du.
+     · TOK-TOK: makilaz hormari jo → hurbileko zaindariak hotsera datoz (bidea libre).
+       LOTARAZI: zaindari baten atzean, oharkabean → lo (une batez).
+       ITZAL-ZOKOAK: ilunpean, geldi edo astiro, ia ez zaituzte ikusten. Korrika: hotsa.
+     · BEGI-HARRIAK: Gauekoren harrizko begi finkoak, biraka (ezin dira lotarazi).
+     · ARGI-HARIAK: orainaren izotz-hariak; ukituz gero, alarma. Iraganean ez daude.
+     ================================================================== */
+  const SIG_ALERT = 14,
+    SIG_EVADE = 10,
+    SIG_CAUTION = 12;
+  const SIG = { zone: null, guards: [], eyes: [], threads: [], hides: [], defs: [], phase: 0, t: 0, last: null, alarms: 0, sleeps: 0, knocks: 0, knockCd: 0, noiseCd: 0, walls: [], circles: [], rT: 0, ping: 0, warned: 0, cv: null };
+  /* zaindariak (eta haien hezurdura) ez dira lasai dauden bitartean borroka-musika/irakaspenetan sartzen */
+  function sigCalm(e) {
+    return e.type === "zaindari" && SIG.phase !== 1;
+  }
+  /* ------------------------------ ikusmena: hormak ------------------------------ */
+  /* gunearen hormak (LOS): horma-plataformak (garaiak) eta zutabeak; ateak irekita daudenean ez */
+  function sigWallsCollect() {
+    SIG.walls = platforms.filter((s) => s.wall && !s.bars && s.y - (s.bottom ?? s.y - 2) > 1.4);
+    SIG.circles = solids.filter((o) => o.pillar && o.r >= 0.6 && o.h >= 2);
+  }
+  function rayRect(s, ox, oz, dx, dz, maxT) {
+    if (s.off) return maxT;
+    const c = Math.cos(s.rot || 0),
+      n = Math.sin(s.rot || 0),
+      [lx, lz] = local(s, ox, oz),
+      ux = dx * c - dz * n,
+      uz = dx * n + dz * c;
+    let t0 = 0,
+      t1 = maxT;
+    for (const [p, u, h] of [
+      [lx, ux, s.w / 2],
+      [lz, uz, s.d / 2],
+    ]) {
+      if (Math.abs(u) < 1e-9) {
+        if (p < -h || p > h) return maxT;
+        continue;
+      }
+      let a = (-h - p) / u,
+        b = (h - p) / u;
+      if (a > b) [a, b] = [b, a];
+      t0 = Math.max(t0, a);
+      t1 = Math.min(t1, b);
+      if (t0 > t1) return maxT;
+    }
+    return t0 > 0 ? t0 : maxT;
+  }
+  /* izpia (xz): lehen oztoporaino zenbat (gehienez maxT) */
+  function sigRay(ox, oz, dx, dz, maxT) {
+    let t = maxT;
+    for (const s of SIG.walls) {
+      if (Math.abs(s.x - ox) > t + (s.w + s.d) * 0.5 + 1 || Math.abs(s.z - oz) > t + (s.w + s.d) * 0.5 + 1) continue;
+      t = Math.min(t, rayRect(s, ox, oz, dx, dz, t));
+    }
+    for (const o of SIG.circles) {
+      const fx = o.x - ox,
+        fz = o.z - oz,
+        b = fx * dx + fz * dz;
+      if (b < 0 || b - o.r > t) continue;
+      const q = fx * fx + fz * fz - b * b;
+      if (q > o.r * o.r) continue;
+      t = Math.min(t, b - Math.sqrt(o.r * o.r - q));
+    }
+    return Math.max(0, t);
+  }
+  /* Amaiur ezkutuan: itzal-zoko batean eta astiro (korrika edo erasoan, ez) */
+  function sigHidden() {
+    if (Math.hypot(P.vx, P.vz) > 4.5 || MAG.charging || ATK.t < 0.4) return false;
+    return SIG.hides.some((h) => Math.hypot(P.x - h.x, P.z - h.z) < h.r);
+  }
+  /* ------------------------------ zaindaria ------------------------------ */
+  let SIG_TEX = null;
+  function sigTextures() {
+    if (SIG_TEX) return SIG_TEX;
+    /* konoa: erdian argi, ertzean itzaltzen */
+    const c = document.createElement("canvas");
+    c.width = c.height = 64;
+    const g = c.getContext("2d"),
+      gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, "#ffffff");
+    gr.addColorStop(0.75, "#ffffffaa");
+    gr.addColorStop(1, "#ffffff00");
+    g.fillStyle = gr;
+    g.fillRect(0, 0, 64, 64);
+    const mk = (ch, col) => {
+      const m = document.createElement("canvas");
+      m.width = m.height = 64;
+      const x = m.getContext("2d");
+      x.font = "900 54px Georgia";
+      x.textAlign = "center";
+      x.textBaseline = "middle";
+      x.lineWidth = 7;
+      x.strokeStyle = "#140c08";
+      x.strokeText(ch, 32, 35);
+      x.fillStyle = col;
+      x.fillText(ch, 32, 35);
+      return new T.CanvasTexture(m);
+    };
+    SIG_TEX = { cone: new T.CanvasTexture(c), q: mk("?", "#ffd36a"), x: mk("!", "#ff4a3a"), z: mk("z", "#bfe0ff") };
+    return SIG_TEX;
+  }
+  const SIG_N = 16;
+  function sigCone(parent) {
+    const geo = new T.BufferGeometry(),
+      pos = new Float32Array((SIG_N + 2) * 3),
+      uv = new Float32Array((SIG_N + 2) * 2),
+      idx = [];
+    for (let i = 0; i < SIG_N; i++) idx.push(0, i + 1, i + 2);
+    geo.setAttribute("position", new T.BufferAttribute(pos, 3).setUsage(T.DynamicDrawUsage));
+    geo.setAttribute("uv", new T.BufferAttribute(uv, 2).setUsage(T.DynamicDrawUsage));
+    geo.setIndex(idx);
+    const m = new T.Mesh(geo, new T.MeshBasicMaterial({ color: "#2fb4ff", map: sigTextures().cone, transparent: true, opacity: 0.38, depthWrite: false, side: T.DoubleSide, fog: false }));
+    m.frustumCulled = false;
+    m.renderOrder = 2;
+    parent.add(m);
+    /* ertza: konoaren forma irakurgarri lur argian ere */
+    const eg = new T.BufferGeometry();
+    eg.setAttribute("position", new T.BufferAttribute(new Float32Array((SIG_N + 3) * 3), 3).setUsage(T.DynamicDrawUsage));
+    const edge = new T.LineLoop(eg, new T.LineBasicMaterial({ color: "#2fb4ff", transparent: true, opacity: 0.7, depthWrite: false, fog: false }));
+    edge.frustumCulled = false;
+    edge.renderOrder = 3;
+    m.add(edge);
+    m.userData.edge = edge;
+    return m;
+  }
+  /* konoaren kolorea (eta ertzarena) */
+  function sigConeColor(m, col, op) {
+    m.material.color.set(col);
+    m.material.opacity = op;
+    m.userData.edge.material.color.set(col);
+    m.userData.edge.material.opacity = Math.min(1, op * 2);
+  }
+  /* konoaren erpinak: lurrean (gurasoa: auraren plano etzana — x lokala = x, y lokala = −z),
+     izpi bakoitza lehen hormaraino */
+  function sigConeSet(m, ox, oz, dir, fov, range) {
+    const pos = m.geometry.attributes.position,
+      uv = m.geometry.attributes.uv;
+    pos.setXYZ(0, 0, 0, 0.03);
+    uv.setXY(0, 0.5, 0.5);
+    const ep = m.userData.edge.geometry.attributes.position;
+    ep.setXYZ(0, 0, 0, 0.04);
+    for (let i = 0; i <= SIG_N; i++) {
+      const a = dir - fov + (2 * fov * i) / SIG_N,
+        dx = Math.sin(a),
+        dz = Math.cos(a),
+        r = sigRay(ox, oz, dx, dz, range);
+      pos.setXYZ(i + 1, dx * r, -dz * r, 0.03);
+      ep.setXYZ(i + 1, dx * r, -dz * r, 0.04);
+      uv.setXY(i + 1, 0.5 + (dx * r) / (2 * range), 0.5 - (dz * r) / (2 * range));
+    }
+    ep.setXYZ(SIG_N + 2, 0, 0, 0.04);
+    pos.needsUpdate = uv.needsUpdate = ep.needsUpdate = true;
+  }
+  function zainMake(def, temp) {
+    const D = EN_DEF.zaindari,
+      M = enemyMesh("zaindari", -1),
+      y = def.y || 0,
+      e = { type: "zaindari", era: -1, x: def.x, z: def.z, y, vx: 0, vz: 0, hp: D.hp, max: D.hp, state: "look", t: 0, cd: 1, dir: def.a ?? 0, flash: 0, stun: 0, hitT: 0, blinkCd: 99, room: def.room || null, K: 1, H: D.H, ...M, D };
+    e.g.position.set(e.x, y, e.z);
+    e.g.rotation.y = e.dir;
+    e.spawnLen = 0;
+    /* Gauekoren itzala: gorputz iluna, urrezko begiak eta kriseilua */
+    e.body.color.set("#6d7594");
+    if (e.rigid) e.rigid.color.set("#6d7594");
+    e.eye.color.set("#ffcf7a");
+    if (e.shine) e.shine.material.color.set("#ffcf7a");
+    e.aura.material.color.set("#9fd8ff");
+    const lamp = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffd79a", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.85 }));
+    lamp.scale.setScalar(1.5);
+    lamp.position.set(0.5, 1.3, 0.55);
+    e.g.add(lamp);
+    const T0 = sigTextures(),
+      mark = new T.Sprite(new T.SpriteMaterial({ map: T0.q, transparent: true, depthTest: false, opacity: 0 }));
+    mark.scale.setScalar(1.15);
+    mark.position.y = 3.25;
+    mark.renderOrder = 10;
+    e.g.add(mark);
+    e.zain = { def, temp: !!temp, mode: "patrol", i: 0, wait: 0, sus: 0, target: null, lookDir: e.dir, lookBase: e.dir, lookT: 0, modeT: 0, sleepT: 0, see: 0, seeNow: false, cone: sigCone(e.aura), mark, markK: "", markT: 0, lamp, range: def.range || 9.5, fov: def.fov || 0.62, coneT: Math.random() * 0.05 };
+    ENEMIES.push(e);
+    SIG.guards.push(e);
+    enAnim(e, "Idle_Combat", 0.7);
+    return e;
+  }
+  /* BEGI-HARRIA: zutabe bat urrezko begi batekin, biraka */
+  function sigEye(def) {
+    const g = new T.Group();
+    g.position.set(def.x, def.y || 0, def.z);
+    BP.add(g);
+    const col = obj(new T.CylinderGeometry(0.55, 0.75, 3.2, 7), rockMaterial(), g);
+    col.position.y = 1.6;
+    const head = obj(new T.DodecahedronGeometry(0.75, 0), rockMaterial(), g);
+    head.position.y = 3.5;
+    const eye = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffcf7a", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.95 }));
+    eye.scale.set(1.3, 0.55, 1);
+    eye.position.y = 3.55;
+    g.add(eye);
+    const flat = new T.Group();
+    flat.rotation.x = -PI / 2;
+    flat.position.set(def.x, (def.y || 0) + 0.05, def.z);
+    BP.add(flat);
+    const E = { ...def, g, head, eye, cone: sigCone(flat), dir: def.base, sus: 0, range: def.range || 11, fov: def.fov || 0.32 };
+    solids.push({ x: def.x, z: def.z, r: 0.75, h: 4, y: def.y || 0, pillar: true });
+    SIG.eyes.push(E);
+    return E;
+  }
+  /* ARGI-HARIA: izotz-hari bat bi hormen artean (orainean bakarrik) */
+  function sigThread(ax, az, bx, bz, y) {
+    const len = Math.hypot(bx - ax, bz - az),
+      m = obj(new T.CylinderGeometry(0.035, 0.035, len, 5), new T.MeshBasicMaterial({ color: "#bff6ff", transparent: true, opacity: 0.9, blending: T.AdditiveBlending, depthWrite: false }));
+    m.position.set((ax + bx) / 2, y, (az + bz) / 2);
+    /* zilindroaren ardatza (Y) etzanda, A→B norabidean */
+    m.rotation.order = "YXZ";
+    m.rotation.set(PI / 2, Math.atan2(bx - ax, bz - az), 0);
+    m.castShadow = false;
+    const th = { ax, az, bx, bz, y, m };
+    SIG.threads.push(th);
+    return th;
+  }
+  /* ------------------------------ gunea ------------------------------ */
+  /* gunean sartzean: zaindariak sortu (enterZone-k etsaiak garbitzen ditu) eta hormak bildu */
+  function sigStart(zone, defs) {
+    SIG.zone = zone;
+    SIG.defs = defs;
+    sigWallsCollect();
+    sigReset();
+    $("radar").hidden = false;
+    $("map").classList.add("sig");
+  }
+  function sigStop() {
+    if (!SIG.zone) return;
+    SIG.zone = null;
+    /* etsaiak enterZone-k garbitzen ditu */
+    SIG.guards.length = 0;
+    SIG.phase = 0;
+    $("radar").hidden = true;
+    $("sigBanner").hidden = true;
+    $("map").classList.remove("sig");
+  }
+  /* zaindariak beren bideetara (hasieran eta kontrol-puntura itzultzean) */
+  function sigReset() {
+    for (const e of SIG.guards)
+      if (ENEMIES.includes(e)) {
+        removeEnemy(e);
+        ENEMIES.splice(ENEMIES.indexOf(e), 1);
+      }
+    SIG.guards.length = 0;
+    SIG.phase = 0;
+    SIG.t = 0;
+    SIG.last = null;
+    for (const d of SIG.defs) if (!(d.flag && saved.flags.includes(d.flag))) zainMake(d);
+    for (const E of SIG.eyes) E.sus = 0;
+    $("sigBanner").hidden = true;
+  }
+  function sigRespawn() {
+    if (SIG.zone && ZONE.cur === SIG.zone) sigReset();
+  }
+  /* ------------------------------ alarma ------------------------------ */
+  function sigSpotted(e, x = P.x, z = P.z) {
+    const fresh = SIG.phase !== 1;
+    SIG.phase = 1;
+    SIG.t = SIG_ALERT;
+    SIG.last = { x, z };
+    if (e && e.zain) {
+      e.zain.markK = "x";
+      e.zain.markT = 1.6;
+    }
+    for (const g of SIG.guards) {
+      const Z = g.zain;
+      if (!Z || g.state === "dead" || Z.mode === "sleep" || Z.mode === "wake") continue;
+      if (Z.mode !== "hunt") Object.assign(Z, { mode: "hunt", lookT: 0, lookBase: g.dir, modeT: 0 });
+    }
+    if (!fresh) return;
+    SIG.alarms++;
+    SND.stinger(true);
+    SND.static(0.6);
+    shake(0.2);
+    haptic(40);
+    /* Gaueko: lehen alarman eta, gero, txandaka */
+    if (SIG.alarms % 2 === 1) voicePlay(SIG.alarms === 1 ? "hp_g1" : "pro_g4");
+    if (SIG.alarms === 1) notify("IKUSI ZAITUZTE! Ezkutatu eta itxaron: begiratzen ez dizuten bitartean, alarma jaisten da.", "", 4);
+    sigReinforce();
+  }
+  /* indargarriak: bi itzal lurretik, Amaiurren gelan (8-11 m-ra) */
+  function sigReinforce() {
+    const R = ROOM.cur && ROOM.cur.zone === ZONE.cur ? ROOM.cur : null;
+    let n = 0;
+    for (let k = 0; k < 24 && n < 2; k++) {
+      const a = (k / 24) * TAU + 0.4,
+        r = 8 + (k % 3) * 1.5,
+        x = P.x + Math.cos(a) * r,
+        z = P.z + Math.sin(a) * r;
+      if (R && (Math.abs(x - R.x) > R.w / 2 - 2 || Math.abs(z - R.z) > R.d / 2 - 2)) continue;
+      if (SIG.walls.some((s) => contains(s, x, z, 0.9)) || solids.some((o) => Math.hypot(x - o.x, z - o.z) < o.r + 1)) continue;
+      if (!support(x, z, P.y + 1)) continue;
+      const e = zainMake({ x, z, y: P.y, a: Math.atan2(P.x - x, P.z - z), path: [[x, z, 2]], room: R, range: 10 }, true);
+      Object.assign(e.zain, { mode: "wake" });
+      e.state = "wake";
+      e.t = 0;
+      fxRing(x, P.y + 0.05, z, "#6d28c9", 2.4, 0.6);
+      fxBurst(x, P.y + 0.3, z, { n: 18, speed: 2.5, up: 3, life: 0.8, size: 0.32, color: "#1a1030", grav: 2 });
+      n++;
+    }
+  }
+  /* zarata: hurbileko zaindariak (lasai edo susmoz) hotsera */
+  function sigNoise(x, z, r) {
+    for (const e of SIG.guards) {
+      const Z = e.zain;
+      if (!Z || e.state === "dead" || Z.mode === "sleep" || Z.mode === "wake" || Z.mode === "hunt") continue;
+      if (Math.hypot(e.x - x, e.z - z) > r) continue;
+      Object.assign(Z, { mode: "suspect", target: { x, z }, lookT: 0, modeT: 0, markK: "q", markT: 1.4 });
+      Z.sus = Math.max(Z.sus, 0.36);
+    }
+  }
+  function sigKnock() {
+    if (SIG.knockCd > 0) return;
+    SIG.knockCd = 1.4;
+    SIG.knocks++;
+    SND.tok("L", true, 0.9);
+    setTimeout(() => SND.tok("L", true, 0.8), 170);
+    fxRing(P.x, P.y + 1, P.z, "#ffe0a8", 2.2, 0.35);
+    sigNoise(P.x, P.z, 9.5);
+    coachDone("tok");
+  }
+  function sigSleep(e) {
+    const Z = e.zain;
+    if (!Z || Z.mode === "sleep") return;
+    Object.assign(Z, { mode: "sleep", sleepT: 45, sus: 0, markK: "z", markT: 99 });
+    e.state = "sleep";
+    e.t = 0;
+    e.vx = e.vz = 0;
+    SIG.sleeps++;
+    SND.chime();
+    fxBurst(e.x, e.y + 1.6, e.z, { n: 18, speed: 1.2, up: 1.5, life: 1.4, size: 0.3, color: "#bfe0ff", grav: -0.5 });
+    animate("Spellcast_Raise");
+    coachDone("lotarazi");
+  }
+  /* ------------------------------ ekintzak ------------------------------ */
+  function sigActionNear() {
+    if (!SIG.zone || ZONE.cur !== SIG.zone || !P.grounded) return null;
+    for (const e of SIG.guards) {
+      const Z = e.zain;
+      if (!Z || e.state === "dead" || Z.mode === "sleep" || Z.mode === "wake" || Z.mode === "hunt" || e.state === "wind" || e.state === "lunge") continue;
+      const dx = P.x - e.x,
+        dz = P.z - e.z;
+      if (Math.hypot(dx, dz) > 2.4 || Math.abs(P.y - e.y) > 1.2) continue;
+      /* atzetik (begiradaren kontrako aldean) eta oraindik ikusi gabe */
+      if (angDiff(Math.atan2(dx, dz), Z.lookDir) > 1.75 && Z.sus < 0.7) return { kind: "attack", label: L("LOTARAZI"), fn: () => sigSleep(e) };
+    }
+    if (SIG.phase === 1 || SIG.knockCd > 0) return null;
+    for (const s of SIG.walls) {
+      if (s.off || Math.abs(s.x - P.x) > s.w + s.d || Math.abs(s.z - P.z) > s.w + s.d) continue;
+      const [lx, lz] = local(s, P.x, P.z);
+      if (Math.max(Math.abs(lx) - s.w / 2, Math.abs(lz) - s.d / 2) < 1.15) return { kind: "txala", label: L("TOK-TOK"), fn: sigKnock };
+    }
+    return null;
+  }
+  /* ------------------------------ AI (combat.js-eko enemyUpdate-tik) ------------------------------ */
+  /* itzultzen du: [abiadura, norabidea x, z] */
+  function zainAI(e, dt, d, ux, uz) {
+    const Z = e.zain;
+    if (!Z) return [0, 0, 0];
+    Z.modeT += dt;
+    /* jo dutenean: esnatu eta alarma */
+    if (e.hitT > 0 && Z.mode !== "hunt") {
+      if (Z.mode === "sleep" || Z.mode === "wake") Z.mode = "patrol";
+      sigSpotted(e);
+    }
+    /* erasoa (ehizan) */
+    if (e.state === "stun") {
+      if (e.t > 1.2) (e.state = "chase"), (e.t = 0);
+      return [0, 0, 0];
+    }
+    if (e.state === "wind") {
+      e.dir = Z.lookDir = Math.atan2(e.lx, e.lz);
+      if (e.t > 0.5) (e.state = "lunge"), (e.t = 0);
+      return [0, 0, 0];
+    }
+    if (e.state === "lunge") {
+      e.vx = e.lx * 10;
+      e.vz = e.lz * 10;
+      if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) meleeHit(e, e.D.dmg);
+      if (e.t > 0.22) (e.state = "recover"), (e.t = 0);
+      return [0, 0, 0];
+    }
+    if (e.state === "recover") {
+      if (e.t > 0.6) (e.state = "chase"), (e.t = 0);
+      return [0, 0, 0];
+    }
+    const go = (tx, tz, sp) => {
+      const dx = tx - e.x,
+        dz = tz - e.z;
+      e.state = "chase";
+      e.dir = Z.lookDir = Math.atan2(dx, dz);
+      return [sp, dx, dz];
+    };
+    const look = (amp, rate) => {
+      e.state = "look";
+      Z.lookT += dt;
+      Z.lookDir = Z.lookBase + Math.sin(Z.lookT * rate) * amp;
+      e.dir = Z.lookDir;
+      return [0, 0, 0];
+    };
+    const arrive = (tx, tz) => Math.hypot(tx - e.x, tz - e.z) < 0.6;
+    const path = Z.def.path;
+    switch (Z.mode) {
+      case "sleep":
+        e.state = "sleep";
+        Z.sleepT -= dt;
+        if (Z.sleepT <= 0) {
+          Z.mode = "wake";
+          e.state = "wake";
+          e.t = 0;
+          Z.markK = "";
+        }
+        return [0, 0, 0];
+      case "wake":
+        e.state = "wake";
+        if (e.t > 1.3) {
+          e.t = 0;
+          if (Z.temp || SIG.phase === 1) Object.assign(Z, { mode: "hunt", lookT: 0, lookBase: e.dir, modeT: 0 });
+          else Object.assign(Z, { mode: "suspect", target: { x: e.x, z: e.z }, lookT: 0, lookBase: e.dir, modeT: 0, markK: "q", markT: 2 });
+        }
+        return [0, 0, 0];
+      case "patrol": {
+        if (Z.wait > 0) {
+          Z.wait -= dt;
+          return look(0.85, 1.25);
+        }
+        const p = path[Z.i % path.length];
+        if (arrive(p[0], p[1])) {
+          Z.wait = p[2] ?? 2;
+          Z.lookBase = p[3] ?? e.dir;
+          Z.lookT = 0;
+          Z.i = (Z.i + 1) % path.length;
+          return [0, 0, 0];
+        }
+        return go(p[0], p[1], SIG.phase === 3 ? 2.4 : 1.9);
+      }
+      case "suspect": {
+        const T0 = Z.target || { x: e.x, z: e.z };
+        if (!arrive(T0.x, T0.z) && Z.modeT < 7) return go(T0.x, T0.z, 2.7);
+        if (Z.lookT === 0) Z.lookBase = e.dir;
+        const r = look(1.1, 1.6);
+        if (Z.lookT > 3.4) Object.assign(Z, { mode: "return", modeT: 0, markK: "" });
+        return r;
+      }
+      case "return": {
+        /* bideko punturik hurbilenera, gero ohiko bidea */
+        let bi = 0,
+          bd = 1e9;
+        path.forEach((p, i) => {
+          const dd = Math.hypot(p[0] - e.x, p[1] - e.z);
+          if (dd < bd) (bd = dd), (bi = i);
+        });
+        if (bd < 0.6 || Z.modeT > 12) {
+          Object.assign(Z, { mode: "patrol", i: bi, wait: 0.6, lookT: 0, lookBase: e.dir });
+          return [0, 0, 0];
+        }
+        return go(path[bi][0], path[bi][1], 2.2);
+      }
+      case "hunt": {
+        if (Z.seeNow) {
+          if (d < 2.4 && Math.abs(P.y - e.y) < 1.4 && e.t > 0.25) {
+            e.state = "wind";
+            e.t = 0;
+            e.lx = ux;
+            e.lz = uz;
+            e.atk0 = time;
+            SND.screech && SND.screech();
+            return [0, 0, 0];
+          }
+          return go(P.x, P.z, 4.3);
+        }
+        const L0 = SIG.last || { x: e.x, z: e.z };
+        if (!arrive(L0.x, L0.z) && Z.modeT < 9) return go(L0.x, L0.z, 4);
+        if (Z.lookT === 0) Z.lookBase = e.dir;
+        return look(1.3, 2);
+      }
+      case "search": {
+        if (!Z.target || arrive(Z.target.x, Z.target.z) || Z.modeT > 5) {
+          if (Z.wait > 0) {
+            Z.wait -= dt;
+            return look(0.9, 1.8);
+          }
+          const L0 = SIG.last || { x: e.x, z: e.z },
+            a = Math.random() * TAU,
+            r = 2 + Math.random() * 5.5;
+          Z.target = { x: L0.x + Math.cos(a) * r, z: L0.z + Math.sin(a) * r };
+          Z.modeT = 0;
+          Z.wait = 1.4;
+          Z.lookT = 0;
+          Z.lookBase = e.dir;
+          return [0, 0, 0];
+        }
+        return go(Z.target.x, Z.target.z, 3);
+      }
+    }
+    return [0, 0, 0];
+  }
+  /* hormetatik kanpora (zaindariak ez dira hormetan sartzen; irristatu) */
+  function sigWallPush(nx, nz, r) {
+    for (const s of SIG.walls) {
+      if (s.off || Math.abs(s.x - nx) > s.w + s.d + r || Math.abs(s.z - nz) > s.w + s.d + r) continue;
+      const [lx, lz] = local(s, nx, nz),
+        hx = s.w / 2 + r,
+        hz = s.d / 2 + r;
+      if (Math.abs(lx) >= hx || Math.abs(lz) >= hz) continue;
+      const c = Math.cos(s.rot || 0),
+        n = Math.sin(s.rot || 0);
+      let ax = lx,
+        az = lz;
+      if (hx - Math.abs(lx) < hz - Math.abs(lz)) ax = Math.sign(lx || 1) * hx;
+      else az = Math.sign(lz || 1) * hz;
+      nx = s.x + ax * c + az * n;
+      nz = s.z - ax * n + az * c;
+    }
+    return [nx, nz];
+  }
+  /* ------------------------------ eguneraketa ------------------------------ */
+  function sigUpdate(dt) {
+    if (!SIG.zone) return;
+    if (ZONE.cur !== SIG.zone) return sigStop();
+    SIG.knockCd = Math.max(0, SIG.knockCd - dt);
+    SIG.noiseCd = Math.max(0, SIG.noiseCd - dt);
+    /* korrika edo bultzadan: hotsa */
+    const sp = Math.hypot(P.vx, P.vz);
+    if (P.grounded && sp > 9 && SIG.noiseCd <= 0) {
+      SIG.noiseCd = 0.35;
+      sigNoise(P.x, P.z, P.dashT > 0 ? 5.5 : 6.5);
+    }
+    let anySee = false;
+    for (let i = SIG.guards.length - 1; i >= 0; i--) {
+      const e = SIG.guards[i],
+        Z = e.zain;
+      if (!ENEMIES.includes(e)) {
+        SIG.guards.splice(i, 1);
+        continue;
+      }
+      if (e.state === "dead") {
+        Z.cone.visible = false;
+        Z.mark.material.opacity = 0;
+        continue;
+      }
+      /* begirada */
+      const awake = Z.mode !== "sleep" && Z.mode !== "wake",
+        hunt = Z.mode === "hunt",
+        dx = P.x - e.x,
+        dz = P.z - e.z,
+        d = Math.hypot(dx, dz) || 1;
+      let see = 0;
+      if (awake && !respawnTimer && started && Math.abs(P.y - e.y) < 3) {
+        const R = Z.range * (SIG.phase === 3 ? 1.2 : 1) * (hunt ? 1.25 : 1) * (sigHidden() ? 0.28 : 1),
+          near = d < (hunt ? 5 : 1.6);
+        if (d < R && (near || angDiff(Math.atan2(dx, dz), Z.lookDir) < Z.fov * (hunt ? 1.3 : 1)) && sigRay(e.x, e.z, dx / d, dz / d, d) > d - 0.35) see = 1 - (0.6 * d) / R;
+      }
+      Z.seeNow = see > 0;
+      if (see > 0 && hunt) anySee = true;
+      if (see > 0 && !hunt && awake) {
+        Z.sus += dt * (0.95 + 1.9 * see) * (SIG.phase === 3 || SIG.phase === 2 ? 1.4 : 1);
+        if (Z.sus >= 1) {
+          sigSpotted(e);
+          anySee = true;
+        } else if (Z.sus > 0.35 && (Z.mode === "patrol" || Z.mode === "return")) Object.assign(Z, { mode: "suspect", target: { x: P.x, z: P.z }, lookT: 0, modeT: 0, markK: "q", markT: 1.6 });
+        else if (Z.mode === "suspect") Z.target = { x: P.x, z: P.z };
+      } else Z.sus = Math.max(0, Z.sus - dt * 0.3);
+      /* konoa (20 Hz inguru, mailakatuta) */
+      Z.coneT -= dt;
+      Z.cone.visible = awake;
+      if (awake && Z.coneT <= 0) {
+        Z.coneT = 0.05;
+        sigConeSet(Z.cone, e.x, e.z, Z.lookDir, Z.fov * (hunt ? 1.3 : 1), Z.range * (hunt ? 1.25 : 1) * (SIG.phase === 3 ? 1.2 : 1));
+      }
+      const col = hunt ? "#ff3a2a" : Z.mode === "suspect" || Z.sus > 0.2 ? "#ffb21a" : "#2fb4ff";
+      sigConeColor(Z.cone, col, hunt ? 0.46 : 0.36 + Z.sus * 0.12);
+      Z.lamp.material.color.set(hunt ? "#ff8a6a" : "#ffd79a");
+      /* ikurra buruaren gainean (?, !, z) */
+      Z.markT -= dt;
+      const want = Z.markK && (Z.markT > 0 || Z.mode === "suspect" || Z.mode === "sleep") ? 1 : 0;
+      if (Z.markK) Z.mark.material.map = sigTextures()[Z.markK];
+      Z.mark.material.opacity = mix(Z.mark.material.opacity, want, 1 - Math.exp(-dt * 10));
+      Z.mark.position.y = Z.mode === "sleep" ? 1.2 + Math.sin(time * 2) * 0.15 : 3.25 + Math.max(0, Z.markT - 1) * 0.6;
+    }
+    /* begi-harriak */
+    for (const E of SIG.eyes) {
+      E.dir = E.base + Math.sin(time * (E.sp || 0.45) + (E.ph || 0)) * (E.sweep || 0.9);
+      E.head.rotation.y = E.dir;
+      const dx = P.x - E.x,
+        dz = P.z - E.z,
+        d = Math.hypot(dx, dz) || 1;
+      const see = !respawnTimer && Math.abs(P.y - (E.y || 0)) < 3 && d < E.range * (sigHidden() ? 0.3 : 1) && angDiff(Math.atan2(dx, dz), E.dir) < E.fov && sigRay(E.x, E.z, dx / d, dz / d, d) > d - 0.35;
+      E.sus = see ? E.sus + dt * 2.2 : Math.max(0, E.sus - dt * 0.5);
+      if (E.sus >= 1 && SIG.phase !== 1) sigSpotted(null);
+      if (see && SIG.phase === 1) anySee = true;
+      sigConeSet(E.cone, E.x, E.z, E.dir, E.fov, E.range);
+      sigConeColor(E.cone, E.sus > 0.05 ? "#ff5a2a" : "#ffb21a", 0.34 + E.sus * 0.2);
+      E.eye.material.color.set(E.sus > 0.05 ? "#ff6a3a" : "#ffcf7a");
+    }
+    /* argi-hariak (orainean bakarrik) */
+    for (const th of SIG.threads) {
+      const on = phase === 1;
+      th.m.visible = on;
+      if (!on) continue;
+      th.m.material.opacity = 0.65 + Math.sin(time * 9 + th.ax) * 0.25;
+      const vx = th.bx - th.ax,
+        vz = th.bz - th.az,
+        L2 = vx * vx + vz * vz,
+        k = clamp(((P.x - th.ax) * vx + (P.z - th.az) * vz) / L2, 0, 1),
+        dd = Math.hypot(th.ax + vx * k - P.x, th.az + vz * k - P.z);
+      if (dd < 0.38 && P.y < th.y + 0.25 && P.y > th.y - 1.6 && SIG.phase !== 1) {
+        fxBurst(P.x, th.y, P.z, { n: 20, speed: 3, life: 0.5, size: 0.25, color: "#bff6ff", grav: 1 });
+        sigSpotted(null);
+      }
+    }
+    /* faseak */
+    if (SIG.phase === 1) {
+      if (anySee) {
+        SIG.t = SIG_ALERT;
+        SIG.last = { x: P.x, z: P.z };
+      } else SIG.t -= dt;
+      if (SIG.t <= 0) {
+        SIG.phase = 2;
+        SIG.t = SIG_EVADE;
+        for (const e of SIG.guards) if (e.zain.mode === "hunt") Object.assign(e.zain, { mode: "search", target: null, modeT: 0, wait: 0 });
+      }
+    } else if (SIG.phase === 2) {
+      SIG.t -= dt;
+      if (SIG.t <= 0) {
+        SIG.phase = 3;
+        SIG.t = SIG_CAUTION;
+        for (const e of SIG.guards) if (e.zain.mode === "search") Object.assign(e.zain, { mode: "return", modeT: 0, markK: "" });
+        /* indargarriak itzalera itzultzen dira */
+        for (const e of SIG.guards.filter((g) => g.zain.temp)) {
+          fxBurst(e.x, e.y + 0.6, e.z, { n: 16, speed: 2, up: 1, life: 0.7, size: 0.3, color: "#1a1030", grav: -1 });
+          e.hp = 0;
+          killEnemy(e);
+        }
+      }
+    } else if (SIG.phase === 3) {
+      SIG.t -= dt;
+      if (SIG.t <= 0) SIG.phase = 0;
+    }
+    /* bannerra */
+    const B = $("sigBanner");
+    B.hidden = !SIG.phase;
+    if (SIG.phase) {
+      B.className = "p" + SIG.phase;
+      B.textContent = ["", "ALERTA", "IHESA", "ZAINTZA"][SIG.phase] + "  " + Math.max(0, SIG.t).toFixed(1);
+    }
+    SIG.rT -= dt;
+    if (SIG.rT <= 0) {
+      SIG.rT = 1 / 15;
+      sigRadar();
+    }
+  }
+  /* ------------------------------ OIHARTZUN-RADARRA ------------------------------ */
+  function sigRadar() {
+    const cv = $("radar");
+    if (!cv || cv.hidden) return;
+    const c = cv.getContext("2d"),
+      W = cv.width,
+      H2 = W / 2,
+      S = H2 / 24,
+      az = CAM_AZ + (CAM.yawS || 0),
+      ca = Math.cos(az),
+      sa = Math.sin(az),
+      X = (x, z) => H2 + ((x - P.x) * ca - (z - P.z) * sa) * S,
+      Y = (x, z) => H2 + ((x - P.x) * sa + (z - P.z) * ca) * S;
+    c.clearRect(0, 0, W, W);
+    c.save();
+    c.beginPath();
+    c.arc(H2, H2, H2 - 1, 0, TAU);
+    c.clip();
+    c.fillStyle = "#061a1cdd";
+    c.fillRect(0, 0, W, W);
+    if (SIG.phase === 1) {
+      /* Gauekoren zarata: radarra itsu */
+      for (let i = 0; i < 260; i++) {
+        c.fillStyle = Math.random() < 0.5 ? "#2a3a3a" : "#0f1d1e";
+        c.fillRect(Math.random() * W, Math.random() * W, 3, 2);
+      }
+      c.fillStyle = "#ff8a6a";
+      c.font = "bold 13px system-ui";
+      c.textAlign = "center";
+      c.fillText("OIHARTZUNIK EZ", H2, H2 + 4);
+      c.restore();
+      return;
+    }
+    /* oihartzun-uhina (txalapartaren taupada) */
+    SIG.ping = (SIG.ping + 1 / 15 / 1.6) % 1;
+    c.strokeStyle = `rgba(127,227,201,${0.5 * (1 - SIG.ping)})`;
+    c.lineWidth = 2;
+    c.beginPath();
+    c.arc(H2, H2, SIG.ping * H2, 0, TAU);
+    c.stroke();
+    /* hormak */
+    c.fillStyle = "#3f6e6a";
+    for (const s of SIG.walls) {
+      if (s.off || Math.hypot(s.x - P.x, s.z - P.z) > 40 + (s.w + s.d) / 2) continue;
+      const cr = Math.cos(s.rot || 0),
+        sr = Math.sin(s.rot || 0),
+        pts = [
+          [-s.w / 2, -s.d / 2],
+          [s.w / 2, -s.d / 2],
+          [s.w / 2, s.d / 2],
+          [-s.w / 2, s.d / 2],
+        ].map(([lx, lz]) => [s.x + lx * cr + lz * sr, s.z - lx * sr + lz * cr]);
+      c.beginPath();
+      pts.forEach(([x, z], i) => (i ? c.lineTo(X(x, z), Y(x, z)) : c.moveTo(X(x, z), Y(x, z))));
+      c.closePath();
+      c.fill();
+    }
+    /* begiradak eta zaindariak */
+    const wedge = (x, z, dir, fov, r, col) => {
+      c.fillStyle = col;
+      c.beginPath();
+      c.moveTo(X(x, z), Y(x, z));
+      for (let i = 0; i <= 8; i++) {
+        const a = dir - fov + (2 * fov * i) / 8;
+        c.lineTo(X(x + Math.sin(a) * r, z + Math.cos(a) * r), Y(x + Math.sin(a) * r, z + Math.cos(a) * r));
+      }
+      c.closePath();
+      c.fill();
+    };
+    for (const e of SIG.guards) {
+      if (e.state === "dead") continue;
+      const Z = e.zain,
+        asleep = Z.mode === "sleep" || Z.mode === "wake";
+      if (!asleep) wedge(e.x, e.z, Z.lookDir, Z.fov, Z.range, Z.mode === "suspect" ? "#ffd36a40" : "#9fd8ff38");
+      c.fillStyle = asleep ? "#7f9fbf" : Z.mode === "suspect" ? "#ffd36a" : "#ff5a4a";
+      c.beginPath();
+      c.arc(X(e.x, e.z), Y(e.x, e.z), 4, 0, TAU);
+      c.fill();
+    }
+    for (const E of SIG.eyes) {
+      wedge(E.x, E.z, E.dir, E.fov, E.range, "#ffcf7a40");
+      c.fillStyle = "#ffcf7a";
+      c.fillRect(X(E.x, E.z) - 3, Y(E.x, E.z) - 3, 6, 6);
+    }
+    /* Amaiur */
+    const pa = P.angle,
+      fx = Math.sin(pa),
+      fz = Math.cos(pa);
+    c.fillStyle = "#ffffff";
+    c.beginPath();
+    c.moveTo(X(P.x + fx * 1.4, P.z + fz * 1.4), Y(P.x + fx * 1.4, P.z + fz * 1.4));
+    c.lineTo(X(P.x - fx * 0.7 + fz * 0.8, P.z - fz * 0.7 - fx * 0.8), Y(P.x - fx * 0.7 + fz * 0.8, P.z - fz * 0.7 - fx * 0.8));
+    c.lineTo(X(P.x - fx * 0.7 - fz * 0.8, P.z - fz * 0.7 + fx * 0.8), Y(P.x - fx * 0.7 - fz * 0.8, P.z - fz * 0.7 + fx * 0.8));
+    c.closePath();
+    c.fill();
+    c.restore();
+    c.strokeStyle = "#7fe3c9aa";
+    c.lineWidth = 2;
+    c.beginPath();
+    c.arc(H2, H2, H2 - 1.5, 0, TAU);
+    c.stroke();
+  }
+  /* ==================================================================
+     ANBOTOKO HARPEAK · sigilu-leizea (diseinu propioa), ANBOTOren gailurraren aurrean
+     Gauekoren ekaitzak Andereren suzko bola bota du mendi-magalean: Amaiurrek mendiaren barrutik
+     igo behar du, Gauekoren itzal-zaindarien artean, ikusia izan gabe (sigiloa.js).
+       A Suzko bolaren zuloa ... lurreratzea; Iratiren deia (oihartzun-radarra)
+       B Zaintza-gela .......... zaindari bat joan-etorrian: itxaron eta pasatu bizkarretik
+       C Kutxen harpea ......... bi zaindari eta begi-harri bat: TOK-TOK eta LOTARAZI
+       D Hari-pasabidea ........ izotz-hariak (orainean): jauzi edo iraganera
+       E Gauekoren ataria ...... bi zaindari, begi-harria eta atea → GAILURRA (anboto.js)
+     Gela bakoitza kontrol-puntu bat da. Kamera: GOITIK eta HORMA (kamera.js).
+     Probetan: window.__game.HK, harpeakStart(), harpeakEnd().
+     ================================================================== */
+  const KX = 3300;
+  ZONES.harpeak = { name: "ANBOTOKO HARPEAK", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
+  const DGK = {
+    id: "harpeak",
+    num: "08",
+    entry: { x: KX, y: 0, z: 5, a: PI },
+    /* atzera bueltarik ez (ekaitza): irteera-arkua erabili gabe */
+    exitArch: { x: KX, z: 900 },
+    exitTo: () => ({ x: 0, y: 0, z: 41, a: 0, cp: true }),
+    bigKey: "",
+    bossDoor: "",
+    lights: [],
+    torches: [],
+    rooms: {},
+    torchCol: ["#ffb36b", "#9fb8ff"],
+    fog: [12, 72],
+    update: (dt) => harpeakUpdate(dt),
+  };
+  const HK = { defs: [], gate: null, called: [], embers: [], t0: 0, gateWarn: 0, exitZ: -166.5, ending: false };
+  /* gela bakoitzaren sarrera (kontrol-puntua) eta Iratiren deia */
+  const HK_ROOMS = {
+    hB: { cp: [KX, -20.5], call: ["hp_i2", "hp_i3"] },
+    hC: { cp: [KX + 6, -56.5], call: ["hp_i4", "hp_i5"] },
+    hD: { cp: [KX - 6, -98.5], call: ["hp_i6"] },
+    hE: { cp: [KX - 6, -134.5], call: ["hp_i7"] },
+  };
+  function buildHarpeak() {
+    dungeonBegin(DGK);
+    const E = (x) => KX + x;
+    /* ---- A: suzko bolaren zuloa ---- */
+    room("hkA", E(0), 0, 30, 24, { area: "hA", name: "SUZKO BOLAREN ZULOA", desc: "Ekaitzak hemen bota zaitu. Mendiaren barrua: Gauekoren bidea.", doors: { n: 0 }, fog: [10, 60] });
+    for (const [x, z, s, r] of [[E(-4), 3, 0.7, 0.3], [E(5), 1, 0.9, 1.4], [E(-9), -4, 0.6, 2.1], [E(8), -6, 0.55, 0.8], [E(1), 8, 0.6, 2.6]]) bprop(s > 0.65 ? "rubble_large" : "rubble_half", x, 0, z, DS * s, r);
+    /* zuloa sabaian: ekaitzaren argia goitik */
+    const shaft = obj(new T.CylinderGeometry(3.2, 4.6, 26, 16, 1, true), new T.MeshBasicMaterial({ color: "#9fb8ff", transparent: true, opacity: 0.08, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide, fog: false }));
+    shaft.position.set(E(0), 13, 3);
+    shaft.castShadow = false;
+    HK.shaft = shaft;
+    for (const [x, z] of [[E(-1.5), 4.5], [E(1.8), 2.4], [E(0.4), 5.8], [E(-2.6), 1.6]]) HK.embers.push({ x, z, fl: glow(x, 0.4, z, "#ff9a4a", 1.6), ph: x * 3 + z });
+    bprop("banner_patternB_red", E(-9), 0, -11.2, DS * 0.8, 0);
+    bprop("banner_patternB_red", E(9), 0, -11.2, DS * 0.8, 0);
+    corridor(E(0), -15, 6, 6, "z");
+    /* ---- B: zaintza-gela (zaindari bat joan-etorrian) ---- */
+    const B = room("hkB", E(0), -33, 30, 30, { area: "hB", name: "ZAINTZA-GELA", desc: "Kriseilu bat, joan-etorrian. Haren argia, haren begirada.", doors: { s: 0, n: 6 }, fog: [11, 64] });
+    for (const [x, z] of [[E(-7), -40], [E(7), -40]]) {
+      bprop("pillar_decorated", x, 0, z, DS * 0.9, 0);
+      solids.push({ x, z, r: 1.3, h: 6, y: 0, pillar: true });
+    }
+    hkHide(E(-12.2), -21.5, 2);
+    hkHide(E(12.4), -44.8, 2);
+    HK.defs.push({ x: E(-10), z: -30, a: PI / 2, room: B, path: [[E(-10), -30, 2.6, 0], [E(10), -30, 2.6, 0]] });
+    corridor(E(6), -51, 6, 6, "z");
+    /* ---- C: kutxen harpea (bi zaindari, begi-harria) ---- */
+    const C = room("hkC", E(0), -72, 30, 36, { area: "hC", name: "KUTXEN HARPEA", desc: "Itzalak eta harrizko begi bat. Hormek hitz egiten dute: TOK-TOK.", doors: { s: 6, n: -6 }, fog: [11, 66] });
+    for (const [x, z] of [[E(-7), -64], [E(7), -64], [E(-7), -80], [E(7), -80]]) coverBlock(x, z, 6, 1.4, 2.4, 0, "crates");
+    for (const [x, z, r] of [[E(-13), -60, 0.4], [E(13.2), -75, 1.2], [E(-12.8), -71, 2.2]]) bprop("barrel_large", x, 0, z, DS * 0.75, r);
+    hkHide(E(-12.6), -56.8, 2);
+    hkHide(E(12.6), -87.2, 2);
+    HK.defs.push({ x: E(-11), z: -58, a: PI / 2, room: C, path: [[E(-11), -58, 1.6, PI / 2], [E(11), -58, 1.6, PI], [E(11), -86, 1.6, -PI / 2], [E(-11), -86, 1.6, 0]] });
+    /* iparreko atearen zaindaria: ez da mugitzen (TOK-TOK hotsera bakarrik) */
+    HK.eyeC = sigEye({ x: E(0), z: -72, base: 0, sweep: 1.25, sp: 0.42, range: 10.5, fov: 0.3 });
+    HK.defs.push({ x: E(-6), z: -85.6, a: 0, room: C, path: [[E(-6), -85.6, 9, 0]] });
+    corridor(E(-6), -93, 6, 6, "z");
+    /* ---- D: hari-pasabidea (izotz-hariak orainean) ---- */
+    const D = room("hkD", E(-6), -111, 18, 30, { area: "hD", name: "HARI-PASABIDEA", desc: "Izotz-hariak, orainean bakarrik. Iraganean, bidea libre.", doors: { s: 0, n: 0 }, fog: [10, 60] });
+    for (const [z, y] of [[-102, 0.75], [-110, 1.5], [-118, 0.75]]) sigThread(E(-14.2), z, E(2.2), z, y);
+    for (const [x, z] of [[E(-14.4), -106], [E(2.4), -114]]) hkHide(x, z, 1.6);
+    HK.defs.push({ x: E(-1), z: -100, a: PI, room: D, range: 8.5, path: [[E(-1), -100, 2, PI], [E(-1), -122, 2, 0]] });
+    corridor(E(-6), -129, 6, 6, "z");
+    /* ---- E: Gauekoren ataria ---- */
+    const Ee = room("hkE", E(0), -147, 30, 30, { area: "hE", name: "GAUEKOREN ATARIA", desc: "Atea, gailurrera. Begirada guztiak hemen.", doors: { s: -6, n: 0 }, fog: [12, 70] });
+    for (const [x, z] of [[E(-5), -147], [E(5), -147]]) {
+      bprop("pillar_decorated", x, 0, z, DS * 0.9, 0);
+      solids.push({ x, z, r: 1.3, h: 6, y: 0, pillar: true });
+    }
+    hkHide(E(-12.6), -150, 2);
+    hkHide(E(12.6), -136, 1.8);
+    HK.defs.push({ x: E(-11), z: -140, a: PI / 2, room: Ee, path: [[E(-11), -140, 2, PI / 2], [E(11), -140, 2, -PI / 2]] });
+    HK.defs.push({ x: E(8), z: -155, a: 0, room: Ee, path: [[E(8), -155, 3.2, 0], [E(-8), -155, 3.2, 0]] });
+    HK.eyeE = sigEye({ x: E(12), z: -158, base: -PI / 2 - 0.35, sweep: 0.75, sp: 0.5, ph: 1.2, range: 12, fov: 0.28 });
+    HK.gate = door("hE-n", E(0), -162, 0, 0, "bars", "hkE");
+    corridor(E(0), -165, 6, 6, "z");
+    /* gailurrerako argia */
+    const up = obj(new T.CylinderGeometry(2.6, 2.6, 16, 14, 1, true), new T.MeshBasicMaterial({ color: "#ffd9a8", transparent: true, opacity: 0.12, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide, fog: false }));
+    up.position.set(E(0), 8, -166.5);
+    up.castShadow = false;
+    HK.up = up;
+    dungeonEnd(DGK);
+  }
+  /* ITZAL-ZOKOA: ilunpe-orban bat lurrean (ezkutalekua) */
+  function hkHide(x, z, r) {
+    const m = obj(new T.PlaneGeometry(r * 2.4, r * 2.4), new T.MeshBasicMaterial({ map: glowTexture, color: "#000000", transparent: true, opacity: 0.85, depthWrite: false }));
+    m.rotation.x = -PI / 2;
+    m.position.set(x, 0.04, z);
+    m.castShadow = false;
+    const rim = obj(new T.RingGeometry(r * 0.94, r, 32), new T.MeshBasicMaterial({ color: "#7fb8e6", transparent: true, opacity: 0.18, depthWrite: false }));
+    rim.rotation.x = -PI / 2;
+    rim.position.set(x, 0.05, z);
+    SIG.hides.push({ x, z, r, zone: "harpeak" });
+  }
+  /* ------------------------------ sarrera eta eguneraketa ------------------------------ */
+  function harpeakEntered(id) {
+    if (id !== "harpeak") return;
+    SIG.hides = SIG.hides.filter((h) => h.zone === "harpeak");
+    sigStart("harpeak", HK.defs);
+  }
+  function harpeakUpdate(dt) {
+    if (SIG.zone !== "harpeak") harpeakEntered("harpeak");
+    for (const e of HK.embers) e.fl.material.opacity = 0.45 + Math.sin(time * 9 + e.ph) * 0.15;
+    if (HK.shaft) HK.shaft.material.opacity = 0.07 + Math.max(0, Math.sin(time * 0.7)) * 0.04;
+    if (HK.up) HK.up.material.opacity = 0.1 + Math.sin(time * 1.6) * 0.03;
+    /* gela berria: kontrol-puntua eta (behin) Iratiren deia */
+    const R = HK_ROOMS[AREA.cur];
+    if (R && !HK.called.includes(AREA.cur) && !cinematic && !FILM.on) {
+      HK.called.push(AREA.cur);
+      saved.cp = { zone: "harpeak", x: R.cp[0], y: 0, z: R.cp[1] };
+      persist();
+      if (!(CALL_TEST && !window.__calls)) setTimeout(() => ZONE.cur === "harpeak" && !RING.on && SIG.phase !== 1 && deiaRing("IRATI", R.call, null, 5), 900);
+    }
+    /* irakaspenak: TOK-TOK hormaren ondoan, LOTARAZI zaindari baten atzean */
+    if (frame % 20 === 0 && !cinematic) {
+      const A = sigActionNear();
+      if (A && A.label === L("LOTARAZI")) coach("lotarazi", "E", "LOTARAZI: atzetik, oharkabean — E", "", "useBtn", "LOTARAZI: atzetik, oharkabean — EKIN", "");
+      else if (A && AREA.cur === "hC") coach("tok", "E", "TOK-TOK: hormaren ondoan, E — zaindaria hotsera dator", "", "useBtn", "TOK-TOK: hormaren ondoan, EKIN — zaindaria hotsera", "");
+    }
+    /* atea: hurbiltzean irekitzen da, alarman ez */
+    const G = HK.gate;
+    if (G && !G.open && Math.hypot(P.x - G.x, P.z - G.z) < 5.5) {
+      if (SIG.phase === 1) {
+        if (time - HK.gateWarn > 6) {
+          HK.gateWarn = time;
+          notify("Atea ez da irekiko… ikusten zaituzten bitartean.", "", 3);
+        }
+      } else {
+        openDoor(G);
+        SND.echo(0.6);
+      }
+    }
+    /* irteera: gailurrera */
+    if (!HK.ending && P.z < HK.exitZ && Math.abs(P.x - KX) < 3.2) harpeakEnd();
+  }
+  /* ------------------------------ istorioa ------------------------------ */
+  /* ANBOTOra bidean (anbotoFlight): Gauekoren ekaitzak suzko bola bota du */
+  function harpeakStart() {
+    HK.called.length = 0;
+    HK.ending = false;
+    HK.t0 = time;
+    SIG.alarms = SIG.sleeps = SIG.knocks = 0;
+    saved.cp = { zone: "harpeak", x: DGK.entry.x, y: 0, z: DGK.entry.z };
+    enterZone("harpeak", { ...DGK.entry, cp: true }, true);
+    const E = (x) => KX + x;
+    film(
+      [
+        {
+          d: 3.6,
+          fade: "in",
+          cap: ["ANBOTOKO HARPEAK", "MENDIAREN BARRUA · 04:12"],
+          cam: [[E(9), 13, 13], [E(6), 9, 10]],
+          look: [[E(0), 0.5, 3], [E(0), 1, 3]],
+          on: () => {
+            shake(0.5);
+            SND.thunder && SND.thunder();
+            fxBurst(E(0), 1, 3, { n: 60, speed: 7, up: 4, life: 1.2, size: 0.4, color: "#ffb347", grav: 5 });
+            animate("Jump_Land");
+          },
+        },
+        { d: 4.6, say: "hp_n1", cam: [[E(-4), 2, 9], [E(-3), 3.5, 8]], look: [E(0), 6, -2] },
+        { d: 4.2, say: "hp_a1", key: "#ffd9b0", cam: [() => faceCam(2.2, 0.3, 0.5), () => faceCam(1.6, 0.2, 0.25)], look: [faceLook, faceLook] },
+      ],
+      () => {
+        animate("Idle");
+        hud();
+        if (!(CALL_TEST && !window.__calls)) setTimeout(() => ZONE.cur === "harpeak" && deiaRing("IRATI", ["hp_i1"], null, 3), 700);
+      },
+    );
+  }
+  function harpeakEnd() {
+    if (HK.ending) return;
+    HK.ending = true;
+    const secs = Math.round(time - HK.t0),
+      rank = SIG.alarms === 0 ? "ITZALA" : SIG.alarms <= 2 ? "OIHARTZUNA" : "EKAITZA";
+    flagSet("harpeak");
+    saved.harpeak = { alarms: SIG.alarms, sleeps: SIG.sleeps, knocks: SIG.knocks, secs, rank };
+    persist();
+    film(
+      [
+        {
+          d: 3.4,
+          fade: "out",
+          cap: ["GAILURRERA", rank + " · " + L("alarmak: ") + SIG.alarms + " · " + L("lo: ") + SIG.sleeps],
+          cam: [[KX + 5, 4, -158], [KX + 3, 9, -160]],
+          look: [[KX, 3, -166], [KX, 12, -168]],
+          tick: (dt, k) => {
+            hero.position.y = P.y + k * 6;
+          },
+        },
+      ],
+      () => {
+        anbotoBuild();
+        AN.stage = "arrive";
+        AN.dawn = 0;
+        anbotoArrive();
+        enterZone("anboto", { ...AN_SPAWN }, true);
+      },
+    );
+  }
+  function harpeakObjective() {
+    const E = (x) => KX + x,
+      a = AREA.cur;
+    if (SIG.phase === 1) return ["IKUSI ZAITUZTE! Ezkutatu: itzalean, haien begiradatik kanpo.", null];
+    if (a === "hA" || !a) return ["Mendiaren barrutik, gailurrera. Iparrera, itzalean.", [E(0), -16, 0]];
+    if (a === "hB") return ["Zaindariaren bizkarretik: iparreko atera.", [E(6), -50, 0]];
+    if (a === "hC") return ["Iparreko atea: zaindaria hotsera erakarri (TOK-TOK).", [E(-6), -92, 0]];
+    if (a === "hD") return ["Izotz-hariak: jauzi, edo iraganera (garaia).", [E(-6), -128, 0]];
+    return ["Gauekoren ataria: atea, gailurrera.", [E(0), -164, 0]];
+  }
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
+    /* SIGILOA: alarman, borroka-musika */
+    if (SIG.phase === 1) return 2;
     return typeof combatLevel === "function" ? combatLevel() : 1;
   }
   let stepAcc = 0;
@@ -28645,18 +29834,18 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function notify(a, b, d = 6) {
     const s = L(a, b);
     $("subtitle").textContent = s;
-    /* irakurtzeko adina bakarrik (2.2-4.5 s): mezuak ez dira pantailan geratzen */
-    subTimer = Math.min(d, clamp(1.6 + s.length / 26, 2.2, 4.5));
+    /* irakurtzeko adina bakarrik (1.8-3.6 s): mezuak ez dira pantailan geratzen */
+    subTimer = Math.min(d, clamp(1.4 + s.length / 30, 1.8, 3.6));
     $("subtitle").style.opacity = 1;
   }
-  /* HUD ISILA: helburua, lekua eta garaia aldatzean agertzen dira, eta 7 s-ren buruan desagertu
+  /* HUD ISILA: helburua, lekua eta garaia aldatzean agertzen dira, eta 5 s-ren buruan desagertu
      (zenbakiak, distantziak adibidez, ez dira aldaketatzat hartzen) */
   const HUDQ = { goal: "", place: "", phaseHud: "", t: { goal: 0, place: 0, phaseHud: 0 } };
   function hudShow(id, text) {
     const k = String(text).replace(/[\d.,]+/g, "#");
     if (HUDQ[id] === k) return;
     HUDQ[id] = k;
-    HUDQ.t[id] = 7;
+    HUDQ.t[id] = 5;
     $(id).classList.remove("quiet");
   }
   function hudQuiet(dt) {
@@ -28668,7 +29857,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   }
   function title(a, b) {
     $("chapterTitle").textContent = L(a, b);
-    titleTimer = 3.6;
+    titleTimer = 2.8;
     $("chapterTitle").style.opacity = 1;
   }
   /* gune berria: izena eta deskribapena txartel bakarrean (lehen bisitan bakarrik) */
@@ -28680,7 +29869,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       d.textContent = L(desc);
       el.appendChild(d);
     }
-    titleTimer = 3.4;
+    titleTimer = 2.8;
     el.style.opacity = 1;
   }
   function clearInput() {
@@ -29105,6 +30294,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     buildEtxea();
     /* zazpigarrena: AMETSA (Amaiurren ametsa, Ingumaren etxea) */
     buildAmetsa();
+    /* azken atalaren aurrekoa: ANBOTOKO HARPEAK (sigilu-leizea) */
+    buildHarpeak();
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -29195,6 +30386,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const cp = checkpoint();
     if (cp.zone !== ZONE.cur) enterZone(cp.zone, cp, true);
     else teleport(cp.x, cp.z, cp.y);
+    /* sigilo-gunean: zaindariak beren bideetara, alarma itzalita */
+    sigRespawn();
     P.hp = P.maxHp;
     damageTime = 1;
     saved.deaths++;
@@ -29309,6 +30502,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     trails.push({ m, life: 0.3 });
   }
   function move(dt) {
+    P.wallS = null;
     groundGrace = P.grounded ? 0.14 : Math.max(0, groundGrace - dt);
     jumpBuffer = Math.max(0, jumpBuffer - dt);
     heuraTick(dt);
@@ -29317,6 +30511,12 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     let d = direction(),
       len = Math.hypot(d.x, d.z),
       surf = !!(input.keys.ShiftLeft || input.keys.ShiftRight) || (mobile && Math.hypot(input.x, input.z) > 0.88);
+    /* HORMA: hormari itsatsita, alboetara bakarrik (kamera.js) */
+    if (HORMA.on) {
+      d = hormaDir(d);
+      len = Math.hypot(d.x, d.z);
+      surf = false;
+    }
     /* eraikitzean: pieza eskuan → geldirik; mugitzen hasiz gero, eraikuntza-modutik irten */
     if (CRAFT.on && !CRAFT.held && len > 0.3) craftExit();
     /* eskuan pieza bat edo EGUZKI-ISPILUA altxatuta: geldirik (makilak apuntatzen du) */
@@ -29426,6 +30626,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       const sy = topY(s, nx, nz);
       if (contains(s, nx, nz, 0.18) && !contains(s, px, pz, 0.18) && py < sy - 0.32 && py + 1.8 > (s.bottom ?? sy - 0.5)) {
         P.wallGrace = s.slick ? 0 : 0.15;
+        P.wallS = s;
         const wn = Math.hypot(px - s.x, pz - s.z) || 1;
         P.wallX = (px - s.x) / wn;
         P.wallZ = (pz - s.z) / wn;
@@ -29494,11 +30695,12 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       const a = Math.atan2(d.x, d.z);
       P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 18);
     }
+    hormaUpdate(dt, d, len);
     hero.position.set(P.x, P.y + riderY(), P.z);
     hero.rotation.y = mix(hero.rotation.y, hero.rotation.y + Math.atan2(Math.sin(P.angle - hero.rotation.y), Math.cos(P.angle - hero.rotation.y)), Math.min(1, dt * 30));
     hero.visible = damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0;
     /* finkatuta eta mugitzen: alboetara (strafe) edo atzeraka */
-    let run = "Running_A";
+    let run = HORMA.on ? "Walking_A" : "Running_A";
     if (lockT && len > 0.15) {
       const fx = Math.sin(P.angle),
         fz = Math.cos(P.angle),
@@ -29660,6 +30862,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   function actionHere() {
     if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer || P.climb) return null;
     if (RING.on && ringReach()) return { kind: "talk", label: L("ERANTZUN"), fn: deiaAnswer };
+    /* SIGILOA: LOTARAZI (zaindari baten atzean) edo TOK-TOK (hormaren ondoan) */
+    const SG = sigActionNear();
+    if (SG) return SG;
     const PA = proActionNear();
     if (PA) return PA;
     const AB = anbotoActionNear();
@@ -29751,7 +30956,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       /* Odei (zeruan): kamera urrunago, begirada gorago; planeatzean ere urrunago */
       cloud = BOSS.on && BOSS.kind === "odei",
       dragon = BOSS.on && BOSS.kind === "zazpi",
-      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : dragon ? 1.38 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
+      /* GOITIK (etsai nagusirik gabe): goitik eta hurbil — kanpoan 52°, leizean 57° (gela gehiena ikusgai) */
+      goitik = CAM.mode === "goitik" && !BOSS.on;
+    CAM.gk = mix(CAM.gk ?? (goitik ? 1 : 0), goitik ? 1 : 0, 1 - Math.exp(-dt * 3));
+    const pitch = mix(0.9, 1.0, CAM.inside),
+      gd = mix(21, 22, CAM.inside),
+      ghz = Math.cos(pitch) * gd,
+      offset = new T.Vector3(mix(mix(15.5, 10, CAM.inside), ghz * CAM_AZS, CAM.gk), mix(mix(F.h, 18.5, CAM.inside), Math.sin(pitch) * gd, CAM.gk), mix(mix(23, 15, CAM.inside), ghz * CAM_AZC, CAM.gk)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : dragon ? 1.38 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
     lockCamera(dt, look);
     /* etsai nagusia: biak enkoadratu (finkatu gabe ere) */
     CAM.bossK = mix(CAM.bossK || 0, BOSS.on && !LOCK.target ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -29784,6 +30995,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const target = look.clone().add(offset);
     /* haranean: muinoek eta mendi-hegalek ez dezatela Amaiur estali */
     if (ZONE.cur === "ibarra") camTerrainLift(look, target);
+    /* HORMA: hormari itsatsita, kamera baxu eta alboan (ertzetik haratago) — kamera.js */
+    hormaCamera(dt, target, look);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) {
       CAM.pos = camera.position.clone();
       CAM.vel = new T.Vector3();
@@ -29891,6 +31104,15 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
             notify(L("Laguntza: denbora motelago eta BULTZADA luzeago."), "", 4);
           },
         ],
+        [L("KAMERA: ") + (CAM.mode === "goitik" ? "GOITIK" : "ATZETIK") + kb(" · O"), camModeToggle],
+        [
+          L("HORMA-IKUSPEGIA: ") + (CAM.wallView ? "BAI" : "EZ"),
+          () => {
+            CAM.wallView = !CAM.wallView;
+            camModeSave();
+            notify(CAM.wallView ? "Hormari itsatsita: kamera ertzetik begira." : "Horma-ikuspegia itzalita.", "", 2.2);
+          },
+        ],
         [L("KONTROL-PUNTURA"), returnCheckpoint],
         [
           L("MENURA"),
@@ -29962,6 +31184,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       KeyK: attack,
       KeyH: powerMenu,
       KeyL: questLog,
+      KeyO: camModeToggle,
       KeyE: interact,
       Escape: pause,
     };
@@ -30275,6 +31498,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       txalaUpdate(dt);
       runePuzzlesUpdate(dt);
       enemyUpdate(dt);
+      sigUpdate(dt);
       roomsUpdate(dt);
       doorsUpdate(dt);
       lootUpdate(dt);
@@ -30939,6 +32163,20 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         magicReset,
         returnCheckpoint,
         cinematicState: () => cinematic,
+        CAM,
+        HORMA,
+        SIG,
+        HK,
+        DGK,
+        camModeToggle,
+        harpeakStart,
+        harpeakEnd,
+        sigSpotted,
+        sigKnock,
+        sigSleep,
+        sigActionNear,
+        sigNoise,
+        sigReset,
         PRO,
         FILM,
         RING,

@@ -212,6 +212,8 @@
           MARI.m.visible = false;
           MARI.m.scale.setScalar(1);
         }
+        /* Gauekoren ekaitzak suzko bola bota du: lehenik mendiaren barrutik (harpeak.js) */
+        if (!flag("harpeak")) return harpeakStart();
         anbotoBuild();
         AN.stage = "arrive";
         AN.dawn = 0;

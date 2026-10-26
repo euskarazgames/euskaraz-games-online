@@ -466,6 +466,31 @@
     CAM.yaw = Math.round(CAM.yawS / TAU) * TAU;
     notify("Kamera zentratuta", "Cámara centrada", 1.2);
   }
+  /* KAMERA-MODUA: GOITIK (zaintza-kamera: goitik eta hurbil, angelu finkoa, inguruko guztia ikusten da)
+     edo ATZETIK (klasikoa, zeruerdia ikusten da). HORMA-IKUSPEGIA: hormari itsatsita, kamera
+     baxu eta alboan, ertzetik haratago begiratzeko. Jokalariak menuan aukeratzen du (O tekla ere). */
+  CAM.mode = "goitik";
+  CAM.wallView = true;
+  try {
+    const m = localStorage.getItem("leizeak-kamera");
+    if (m === "goitik" || m === "atzetik") CAM.mode = m;
+    CAM.wallView = localStorage.getItem("leizeak-horma") !== "0";
+  } catch {}
+  function camModeSave() {
+    try {
+      localStorage.setItem("leizeak-kamera", CAM.mode);
+      localStorage.setItem("leizeak-horma", CAM.wallView ? "1" : "0");
+    } catch {}
+  }
+  function camModeToggle() {
+    CAM.mode = CAM.mode === "goitik" ? "atzetik" : "goitik";
+    camModeSave();
+    notify(CAM.mode === "goitik" ? "KAMERA · GOITIK (zaintza)" : "KAMERA · ATZETIK (klasikoa)", "", 1.8);
+  }
+  /* GOITIK: kameraren norabidea (ATZETIK-en berdina: kontrolak aldatu gabe) */
+  const CAM_AZ = Math.atan2(15.5, 23),
+    CAM_AZS = Math.sin(CAM_AZ),
+    CAM_AZC = Math.cos(CAM_AZ);
   /* keinuak pantailan (ez botoietan): hatz batek biratu (ezker-eskuin) eta hurbildu (gora-behera);
      bi hatzek atximurka hurbildu; bi ukitu azkar: zentratu. Saguan: eskuineko botoia + gurpila. */
   const CAMG = { ptrs: new Map(), pinch: 0, lastTap: 0 };
@@ -515,13 +540,15 @@
   }
   function camFrame() {
     const portrait = innerHeight > innerWidth,
-      /* haranean (kanpoan, zabal): kamera urrunago eta angelu zabalagoa — espazio gehiago ikusteko */
-      open = ZONE.cur === "ibarra" ? 1 : 0;
+      G = CAM.mode === "goitik",
+      /* haranean (ATZETIK, kanpoan, zabal): angelu zabalagoa — espazio gehiago ikusteko */
+      open = ZONE.cur === "ibarra" && !G ? 1 : 0;
     return {
-      k: (portrait ? 1.95 : mobile ? 1.12 : 1) * CAM.user * (1 + 0.14 * open),
-      fov: (portrait ? 50 : 44) + 4 * open,
-      lift: portrait ? 5.5 : mobile ? 1.2 : 0,
-      fight: portrait ? 0.86 : 0.74,
+      /* hurbilago (lehen: bertikalean 1.95, mugikorrean 1.12) */
+      k: (portrait ? (G ? 1.42 : 1.7) : mobile ? (G ? 1 : 1.02) : G ? 1 : 0.9) * CAM.user * (1 + 0.08 * open),
+      fov: (portrait ? 50 : G ? 42 : 44) + 2 * open,
+      lift: portrait ? (G ? 3 : 5.5) : mobile ? 1.2 : 0,
+      fight: G ? 0.92 : portrait ? 0.86 : 0.74,
       /* kameraren altuera (angelua): baxuagoa → zerua eta urruneko uharteak ikusten dira */
       h: portrait ? 12 : 13.5,
     };
@@ -1737,9 +1764,9 @@
     if (!started || paused || cinematic || TXALA.on) return;
     /* hitzaurreko irakaspenak (pro-*) ez ordezkatu */
     if (PRO.on && COACH.cur && COACH.cur.startsWith("pro-")) return;
-    const fight = !!ROOM.fight || ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 16);
-    /* irakaspenak ez dira pantailan geratzen: 7 s eta kitto (hitzaurrekoak ekintzaren zain) */
-    if (COACH.cur && !COACH.cur.startsWith("pro-") && time - (COACH.t0 || 0) > 7) coachDone(COACH.cur);
+    const fight = !!ROOM.fight || ENEMIES.some((e) => e.state !== "dead" && !sigCalm(e) && Math.hypot(e.x - P.x, e.z - P.z) < 16);
+    /* irakaspenak ez dira pantailan geratzen: 5 s eta kitto (hitzaurrekoak ekintzaren zain) */
+    if (COACH.cur && !COACH.cur.startsWith("pro-") && time - (COACH.t0 || 0) > 5) coachDone(COACH.cur);
     if (ATK.n && COACH.cur === "attack") coachDone("attack");
     if (MAG.charging && COACH.cur === "charge") coachDone("charge");
     if (P.travel >= 4) coachDone("move");
@@ -1791,6 +1818,7 @@
   /* @include adarra.js */
   /* @include txalaparta.js */
   /* @include lockon.js */
+  /* @include kamera.js */
   /* @include chain.js */
   /* @include npc.js */
   /* @include dungeon.js */
@@ -1822,9 +1850,13 @@
   /* @include izenburua.js */
   /* @include oroitzapenak.js */
   /* @include anboto.js */
+  /* @include sigiloa.js */
+  /* @include harpeak.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
+    /* SIGILOA: alarman, borroka-musika */
+    if (SIG.phase === 1) return 2;
     return typeof combatLevel === "function" ? combatLevel() : 1;
   }
   let stepAcc = 0;
@@ -1836,18 +1868,18 @@
   function notify(a, b, d = 6) {
     const s = L(a, b);
     $("subtitle").textContent = s;
-    /* irakurtzeko adina bakarrik (2.2-4.5 s): mezuak ez dira pantailan geratzen */
-    subTimer = Math.min(d, clamp(1.6 + s.length / 26, 2.2, 4.5));
+    /* irakurtzeko adina bakarrik (1.8-3.6 s): mezuak ez dira pantailan geratzen */
+    subTimer = Math.min(d, clamp(1.4 + s.length / 30, 1.8, 3.6));
     $("subtitle").style.opacity = 1;
   }
-  /* HUD ISILA: helburua, lekua eta garaia aldatzean agertzen dira, eta 7 s-ren buruan desagertu
+  /* HUD ISILA: helburua, lekua eta garaia aldatzean agertzen dira, eta 5 s-ren buruan desagertu
      (zenbakiak, distantziak adibidez, ez dira aldaketatzat hartzen) */
   const HUDQ = { goal: "", place: "", phaseHud: "", t: { goal: 0, place: 0, phaseHud: 0 } };
   function hudShow(id, text) {
     const k = String(text).replace(/[\d.,]+/g, "#");
     if (HUDQ[id] === k) return;
     HUDQ[id] = k;
-    HUDQ.t[id] = 7;
+    HUDQ.t[id] = 5;
     $(id).classList.remove("quiet");
   }
   function hudQuiet(dt) {
@@ -1859,7 +1891,7 @@
   }
   function title(a, b) {
     $("chapterTitle").textContent = L(a, b);
-    titleTimer = 3.6;
+    titleTimer = 2.8;
     $("chapterTitle").style.opacity = 1;
   }
   /* gune berria: izena eta deskribapena txartel bakarrean (lehen bisitan bakarrik) */
@@ -1871,7 +1903,7 @@
       d.textContent = L(desc);
       el.appendChild(d);
     }
-    titleTimer = 3.4;
+    titleTimer = 2.8;
     el.style.opacity = 1;
   }
   function clearInput() {
@@ -2296,6 +2328,8 @@
     buildEtxea();
     /* zazpigarrena: AMETSA (Amaiurren ametsa, Ingumaren etxea) */
     buildAmetsa();
+    /* azken atalaren aurrekoa: ANBOTOKO HARPEAK (sigilu-leizea) */
+    buildHarpeak();
     BP = null;
     zoneActivate(DGS[saved.zone] ? saved.zone : "ibarra");
     const sp = spawnPoint();
@@ -2386,6 +2420,8 @@
     const cp = checkpoint();
     if (cp.zone !== ZONE.cur) enterZone(cp.zone, cp, true);
     else teleport(cp.x, cp.z, cp.y);
+    /* sigilo-gunean: zaindariak beren bideetara, alarma itzalita */
+    sigRespawn();
     P.hp = P.maxHp;
     damageTime = 1;
     saved.deaths++;
@@ -2500,6 +2536,7 @@
     trails.push({ m, life: 0.3 });
   }
   function move(dt) {
+    P.wallS = null;
     groundGrace = P.grounded ? 0.14 : Math.max(0, groundGrace - dt);
     jumpBuffer = Math.max(0, jumpBuffer - dt);
     heuraTick(dt);
@@ -2508,6 +2545,12 @@
     let d = direction(),
       len = Math.hypot(d.x, d.z),
       surf = !!(input.keys.ShiftLeft || input.keys.ShiftRight) || (mobile && Math.hypot(input.x, input.z) > 0.88);
+    /* HORMA: hormari itsatsita, alboetara bakarrik (kamera.js) */
+    if (HORMA.on) {
+      d = hormaDir(d);
+      len = Math.hypot(d.x, d.z);
+      surf = false;
+    }
     /* eraikitzean: pieza eskuan → geldirik; mugitzen hasiz gero, eraikuntza-modutik irten */
     if (CRAFT.on && !CRAFT.held && len > 0.3) craftExit();
     /* eskuan pieza bat edo EGUZKI-ISPILUA altxatuta: geldirik (makilak apuntatzen du) */
@@ -2617,6 +2660,7 @@
       const sy = topY(s, nx, nz);
       if (contains(s, nx, nz, 0.18) && !contains(s, px, pz, 0.18) && py < sy - 0.32 && py + 1.8 > (s.bottom ?? sy - 0.5)) {
         P.wallGrace = s.slick ? 0 : 0.15;
+        P.wallS = s;
         const wn = Math.hypot(px - s.x, pz - s.z) || 1;
         P.wallX = (px - s.x) / wn;
         P.wallZ = (pz - s.z) / wn;
@@ -2685,11 +2729,12 @@
       const a = Math.atan2(d.x, d.z);
       P.angle += Math.atan2(Math.sin(a - P.angle), Math.cos(a - P.angle)) * Math.min(1, dt * 18);
     }
+    hormaUpdate(dt, d, len);
     hero.position.set(P.x, P.y + riderY(), P.z);
     hero.rotation.y = mix(hero.rotation.y, hero.rotation.y + Math.atan2(Math.sin(P.angle - hero.rotation.y), Math.cos(P.angle - hero.rotation.y)), Math.min(1, dt * 30));
     hero.visible = damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0;
     /* finkatuta eta mugitzen: alboetara (strafe) edo atzeraka */
-    let run = "Running_A";
+    let run = HORMA.on ? "Walking_A" : "Running_A";
     if (lockT && len > 0.15) {
       const fx = Math.sin(P.angle),
         fz = Math.cos(P.angle),
@@ -2851,6 +2896,9 @@
   function actionHere() {
     if (!started || cinematic || GET.on || TXALA.on || CRAFT.on || respawnTimer || P.climb) return null;
     if (RING.on && ringReach()) return { kind: "talk", label: L("ERANTZUN"), fn: deiaAnswer };
+    /* SIGILOA: LOTARAZI (zaindari baten atzean) edo TOK-TOK (hormaren ondoan) */
+    const SG = sigActionNear();
+    if (SG) return SG;
     const PA = proActionNear();
     if (PA) return PA;
     const AB = anbotoActionNear();
@@ -2942,7 +2990,13 @@
       /* Odei (zeruan): kamera urrunago, begirada gorago; planeatzean ere urrunago */
       cloud = BOSS.on && BOSS.kind === "odei",
       dragon = BOSS.on && BOSS.kind === "zazpi",
-      offset = new T.Vector3(mix(15.5, 10, CAM.inside), mix(F.h, 18.5, CAM.inside), mix(23, 15, CAM.inside)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : dragon ? 1.38 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
+      /* GOITIK (etsai nagusirik gabe): goitik eta hurbil — kanpoan 52°, leizean 57° (gela gehiena ikusgai) */
+      goitik = CAM.mode === "goitik" && !BOSS.on;
+    CAM.gk = mix(CAM.gk ?? (goitik ? 1 : 0), goitik ? 1 : 0, 1 - Math.exp(-dt * 3));
+    const pitch = mix(0.9, 1.0, CAM.inside),
+      gd = mix(21, 22, CAM.inside),
+      ghz = Math.cos(pitch) * gd,
+      offset = new T.Vector3(mix(mix(15.5, 10, CAM.inside), ghz * CAM_AZS, CAM.gk), mix(mix(F.h, 18.5, CAM.inside), Math.sin(pitch) * gd, CAM.gk), mix(mix(23, 15, CAM.inside), ghz * CAM_AZC, CAM.gk)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : dragon ? 1.38 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
     lockCamera(dt, look);
     /* etsai nagusia: biak enkoadratu (finkatu gabe ere) */
     CAM.bossK = mix(CAM.bossK || 0, BOSS.on && !LOCK.target ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -2975,6 +3029,8 @@
     const target = look.clone().add(offset);
     /* haranean: muinoek eta mendi-hegalek ez dezatela Amaiur estali */
     if (ZONE.cur === "ibarra") camTerrainLift(look, target);
+    /* HORMA: hormari itsatsita, kamera baxu eta alboan (ertzetik haratago) — kamera.js */
+    hormaCamera(dt, target, look);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) {
       CAM.pos = camera.position.clone();
       CAM.vel = new T.Vector3();
@@ -3082,6 +3138,15 @@
             notify(L("Laguntza: denbora motelago eta BULTZADA luzeago."), "", 4);
           },
         ],
+        [L("KAMERA: ") + (CAM.mode === "goitik" ? "GOITIK" : "ATZETIK") + kb(" · O"), camModeToggle],
+        [
+          L("HORMA-IKUSPEGIA: ") + (CAM.wallView ? "BAI" : "EZ"),
+          () => {
+            CAM.wallView = !CAM.wallView;
+            camModeSave();
+            notify(CAM.wallView ? "Hormari itsatsita: kamera ertzetik begira." : "Horma-ikuspegia itzalita.", "", 2.2);
+          },
+        ],
         [L("KONTROL-PUNTURA"), returnCheckpoint],
         [
           L("MENURA"),
@@ -3153,6 +3218,7 @@
       KeyK: attack,
       KeyH: powerMenu,
       KeyL: questLog,
+      KeyO: camModeToggle,
       KeyE: interact,
       Escape: pause,
     };
@@ -3466,6 +3532,7 @@
       txalaUpdate(dt);
       runePuzzlesUpdate(dt);
       enemyUpdate(dt);
+      sigUpdate(dt);
       roomsUpdate(dt);
       doorsUpdate(dt);
       lootUpdate(dt);
@@ -4130,6 +4197,20 @@
         magicReset,
         returnCheckpoint,
         cinematicState: () => cinematic,
+        CAM,
+        HORMA,
+        SIG,
+        HK,
+        DGK,
+        camModeToggle,
+        harpeakStart,
+        harpeakEnd,
+        sigSpotted,
+        sigKnock,
+        sigSleep,
+        sigActionNear,
+        sigNoise,
+        sigReset,
         PRO,
         FILM,
         RING,

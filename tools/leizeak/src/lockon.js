@@ -82,9 +82,12 @@
     const p = lockPos(LOCK.target),
       th = Math.atan2(p.x - P.x, p.z - P.z),
       base = Math.atan2(15.5, 23);
-    let want = th + PI - base;
-    want += Math.round((CAM.yaw - want) / TAU) * TAU;
-    CAM.yaw += (want - CAM.yaw) * (1 - Math.exp(-dt * 2.6));
+    /* GOITIK: kamera ez da biratzen (biak goitik ikusten dira); ATZETIK: helburuari begira */
+    if (CAM.mode !== "goitik" || BOSS.on) {
+      let want = th + PI - base;
+      want += Math.round((CAM.yaw - want) / TAU) * TAU;
+      CAM.yaw += (want - CAM.yaw) * (1 - Math.exp(-dt * 2.6));
+    }
     look.x = mix(look.x, (look.x + p.x) / 2, 0.4 * LOCK.k);
     look.z = mix(look.z, (look.z + p.z) / 2, 0.4 * LOCK.k);
   }

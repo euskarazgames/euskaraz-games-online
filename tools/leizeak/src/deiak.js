@@ -124,6 +124,8 @@
   const CALL_TEST = new URLSearchParams(location.search).has("test");
   function zoneEntered(id) {
     if (!FILM.on) locCaption(id);
+    /* ANBOTOKO HARPEAK: zaindariak eta radarra (harpeak.js, sigiloa.js) */
+    harpeakEntered(id);
     /* zaindari bat askatu ondoren, haranean: haren oroitzapena (oroitzapenak.js) */
     oroitCheck(id);
     /* Inguma garaituta: etxetik irtetean, zazpigarren argia (seaska.js) */

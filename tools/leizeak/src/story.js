@@ -111,6 +111,7 @@
   function objective() {
     if (PRO.on) return proObjective();
     if (ZONE.cur === "anboto") return anbotoObjective();
+    if (ZONE.cur === "harpeak") return harpeakObjective();
     const d = (x, z) => Math.round(Math.hypot(P.x - x, P.z - z));
     const DG = DGS[ZONE.cur];
     if (DG && DG.objective) return DG.objective();

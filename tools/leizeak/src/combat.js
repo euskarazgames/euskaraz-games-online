@@ -17,19 +17,21 @@
     /* SAGUZARRA (6. leizea): biraka, gero murgilka; argiak lurrera botatzen du */
     bat: { hp: 2, speed: 5.4, r: 0.62, dmg: 1, mass: 0.45, S: 1, H: 1.15 },
     mamua: { hp: 3, speed: 3.4, r: 0.68, dmg: 1, mass: 0.7, S: 1, H: 1.3 },
+    /* ZAINDARIA (sigiloa.js): Gauekoren itzal-zaindaria, kriseiluarekin */
+    zaindari: { hp: 4, speed: 4.3, r: 0.8, dmg: 1, mass: 1.4, S: 1.5, H: 1.25 },
   };
   const ERA_COL = ["#ffb85c", "#7fe9ff", "#c98bff"];
   const ATK = { n: 0, t: 9, dir: 0, waveCd: 0, lungeT: 0, hold: false };
   const NUMS = [];
   let combatMat = null;
   function combatLevel() {
-    return ROOM.fight || BOSS.on || ENEMIES.some((e) => e.state !== "dead" && Math.hypot(e.x - P.x, e.z - P.z) < 26) ? 2 : 1;
+    return ROOM.fight || BOSS.on || ENEMIES.some((e) => e.state !== "dead" && !sigCalm(e) && Math.hypot(e.x - P.x, e.z - P.z) < 26) ? 2 : 1;
   }
   function enemiesAlive() {
     return ENEMIES.filter((e) => e.state !== "dead").length;
   }
   /* --------------------------- hezurdurak (KayKit, animatuak) --------------------------- */
-  const SKEL_OF = { grunt: ["skel_minion", 1.32], eye: ["skel_mage", 1.32], brute: ["skel_warrior", 1.62] };
+  const SKEL_OF = { grunt: ["skel_minion", 1.32], eye: ["skel_mage", 1.32], brute: ["skel_warrior", 1.62], zaindari: ["skel_warrior", 1.42] };
   const SKEL_TINT = ["#f0d6ae", "#c4ddf0", "#dccbf5"];
   function skelMesh(type, era) {
     const def = SKEL_OF[type];
@@ -536,6 +538,9 @@
           if (d < e.D.r + 0.55 && Math.abs(P.y - e.y) < 1.4) meleeHit(e, e.D.dmg);
           if (e.t > 0.22) (e.state = "recover"), (e.t = 0);
         } else if (e.state === "recover" && e.t > 0.6) (e.state = "chase"), (e.t = 0);
+      } else if (e.type === "zaindari") {
+        /* sigiloa.js: bidea, susmoa, ehiza eta loa */
+        [want, wx, wz] = zainAI(e, dt, d, ux, uz);
       } else if (e.type === "bat") {
         /* SAGUZARRA: Amaiurren inguruan biraka; abisua (garrasia) eta murgilka (ALDARATU daiteke) */
         if (e.state === "hover") {
@@ -680,6 +685,8 @@
       }
       /* haranean (gaueko itzalak): lurraren gainean, ez ibaian ez herrian */
       if (e.terrain) [nx, nz] = terrainStep(e, nx, nz);
+      /* zaindariak: hormetan zehar ez (irristatu) */
+      if (e.type === "zaindari") [nx, nz] = sigWallPush(nx, nz, e.D.r * 0.8);
       /* gelaren barruan (hormaren kontra jo: zezena zorabiatuta) */
       if (I) {
         let out = false;
@@ -832,6 +839,16 @@
         break;
       case "stun":
         (name = "Hit_A"), (ts = 0.5);
+        break;
+      /* zaindariak (sigiloa.js): geldi begira, lo (lurrean etzanda) eta esnatu (lurretik altxatu) */
+      case "look":
+        (name = "Idle_Combat"), (ts = 0.65);
+        break;
+      case "sleep":
+        (name = "Death_C_Skeletons"), (ts = 1.1), (once = true);
+        break;
+      case "wake":
+        (name = "Spawn_Ground_Skeletons"), (ts = 2.85), (once = true);
         break;
     }
     if (e.hitT > 0 && (e.state === "chase" || e.state === "hover" || e.state === "recover")) (name = "Hit_A"), (ts = 1.8), (once = true);
