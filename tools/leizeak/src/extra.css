@@ -283,7 +283,8 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 #sigBanner.p3{background:#0c2a44cc;border-color:#7fb8e6}
 @keyframes sigPulse{50%{box-shadow:0 0 18px #ff3a1a88}}
 @media(pointer:coarse) and (orientation:landscape){#radar{top:52px;bottom:auto;right:12px;width:92px;height:92px}#sigBanner{top:10px;font-size:10px;padding:4px 10px}}
-@media(pointer:coarse) and (orientation:portrait){#radar{top:110px;bottom:auto;right:14px;width:96px;height:96px}#sigBanner{top:64px}}
+@media(pointer:coarse) and (orientation:portrait){#radar{top:122px;bottom:auto;left:14px;right:auto;width:84px;height:84px}#sigBanner{top:64px}body.sig #chapterTitle{top:28%}}
+@media(pointer:coarse) and (orientation:landscape){body.sig #locCap{right:118px}}
 @media (prefers-reduced-motion: reduce){#sigBanner.p1{animation:none}}
 
 /* MEZUAK (v2): txikiago, gardenago eta ertzetan — eszena ez estaltzeko. Elkarrizketa- eta dei-panela

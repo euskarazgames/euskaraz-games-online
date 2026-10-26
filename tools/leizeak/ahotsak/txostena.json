@@ -1072,5 +1072,25 @@
   "seed": 3100,
   "dur": 4.09,
   "asr": "Gaueko, gaua zurea da, betiko, baina urteak haienak dira."
+ },
+ "hp_n1": {
+  "who": "ANDERE",
+  "text": "Ekaitza! Gaueko ez gaitu gora utziko… Amaiur, mendiak bide bat du barrutik. Igo zuk!",
+  "mos": 3.3,
+  "cer": 0.0,
+  "cand": 1,
+  "seed": 4131,
+  "dur": 6.37,
+  "asr": "Ekaitza, gaueko ez gaitu gora utziko, amaiur, mendiak bide bat du barrutik, igo zuk."
+ },
+ "hp_a1": {
+  "who": "AMAIUR",
+  "text": "Mendiaren barrutik, beraz. Isilik, eta itzalean.",
+  "mos": 3.74,
+  "cer": 0.0,
+  "cand": 1,
+  "seed": 103431,
+  "dur": 2.64,
+  "asr": "Mendiaren barrutik, beraz, isilik eta itzalean."
  }
 }

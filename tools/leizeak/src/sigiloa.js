@@ -233,6 +233,7 @@
     sigReset();
     $("radar").hidden = false;
     $("map").classList.add("sig");
+    document.body.classList.add("sig");
   }
   function sigStop() {
     if (!SIG.zone) return;
@@ -243,6 +244,7 @@
     $("radar").hidden = true;
     $("sigBanner").hidden = true;
     $("map").classList.remove("sig");
+    document.body.classList.remove("sig");
   }
   /* zaindariak beren bideetara (hasieran eta kontrol-puntura itzultzean) */
   function sigReset() {

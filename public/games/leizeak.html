@@ -299,7 +299,8 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 #sigBanner.p3{background:#0c2a44cc;border-color:#7fb8e6}
 @keyframes sigPulse{50%{box-shadow:0 0 18px #ff3a1a88}}
 @media(pointer:coarse) and (orientation:landscape){#radar{top:52px;bottom:auto;right:12px;width:92px;height:92px}#sigBanner{top:10px;font-size:10px;padding:4px 10px}}
-@media(pointer:coarse) and (orientation:portrait){#radar{top:110px;bottom:auto;right:14px;width:96px;height:96px}#sigBanner{top:64px}}
+@media(pointer:coarse) and (orientation:portrait){#radar{top:122px;bottom:auto;left:14px;right:auto;width:84px;height:84px}#sigBanner{top:64px}body.sig #chapterTitle{top:28%}}
+@media(pointer:coarse) and (orientation:landscape){body.sig #locCap{right:118px}}
 @media (prefers-reduced-motion: reduce){#sigBanner.p1{animation:none}}
 
 /* MEZUAK (v2): txikiago, gardenago eta ertzetan — eszena ez estaltzeko. Elkarrizketa- eta dei-panela
@@ -4461,6 +4462,12 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (m === "goitik" || m === "atzetik") CAM.mode = m;
     CAM.wallView = localStorage.getItem("leizeak-horma") !== "0";
   } catch {}
+  /* hitzaurretik hasten denak ez du "kamera berria" oharrik behar */
+  function camNoticeSeen() {
+    try {
+      localStorage.setItem("leizeak-kamera-oharra", "1");
+    } catch {}
+  }
   function camModeSave() {
     try {
       localStorage.setItem("leizeak-kamera", CAM.mode);
@@ -6190,6 +6197,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* euM/esM: ukipen-pantailarako testua, teklatuaren aipamenik gabe */
   function coach(id, key, eu, es, btn, euM, esM) {
     if (COACH.seen.has(id) || cinematic || GET.on || TXALA.on) return false;
+    /* mezu bat aldi bakoitzean: gune-izenburua agertzen den bitartean, irakaspena zain (hitzaurrekoak ez) */
+    if (titleTimer > 0 && !id.startsWith("pro-") && COACH.cur !== id) return false;
     if (COACH.cur === id) return true;
     coachHide();
     COACH.cur = id;
@@ -29065,6 +29074,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     sigReset();
     $("radar").hidden = false;
     $("map").classList.add("sig");
+    document.body.classList.add("sig");
   }
   function sigStop() {
     if (!SIG.zone) return;
@@ -29075,6 +29085,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     $("radar").hidden = true;
     $("sigBanner").hidden = true;
     $("map").classList.remove("sig");
+    document.body.classList.remove("sig");
   }
   /* zaindariak beren bideetara (hasieran eta kontrol-puntura itzultzean) */
   function sigReset() {
@@ -31104,10 +31115,19 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     updateWorld(0);
     AREA.cur = "";
     hud();
-    if (!flag("intro")) prologueStart();
-    else {
+    if (!flag("intro")) {
+      camNoticeSeen();
+      prologueStart();
+    } else {
       title(ZONES[ZONE.cur].name, "");
       notify(L("Bideak zure urratsak gogoratzen ditu."), "", 3);
+      /* kamera berria: behin, aukera non dagoen (lehendik jokatzen zutenentzat) */
+      try {
+        if (!localStorage.getItem("leizeak-kamera-oharra")) {
+          localStorage.setItem("leizeak-kamera-oharra", "1");
+          setTimeout(() => started && !FILM.on && notify(L("KAMERA BERRIA: GOITIK. Menuan (‖) ATZETIK aukera daiteke; hatzarekin biratu eta hurbildu."), "", 4.5), 3400);
+        }
+      } catch {}
     }
   }
   function help() {

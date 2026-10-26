@@ -476,6 +476,12 @@
     if (m === "goitik" || m === "atzetik") CAM.mode = m;
     CAM.wallView = localStorage.getItem("leizeak-horma") !== "0";
   } catch {}
+  /* hitzaurretik hasten denak ez du "kamera berria" oharrik behar */
+  function camNoticeSeen() {
+    try {
+      localStorage.setItem("leizeak-kamera-oharra", "1");
+    } catch {}
+  }
   function camModeSave() {
     try {
       localStorage.setItem("leizeak-kamera", CAM.mode);
@@ -1735,6 +1741,8 @@
   /* euM/esM: ukipen-pantailarako testua, teklatuaren aipamenik gabe */
   function coach(id, key, eu, es, btn, euM, esM) {
     if (COACH.seen.has(id) || cinematic || GET.on || TXALA.on) return false;
+    /* mezu bat aldi bakoitzean: gune-izenburua agertzen den bitartean, irakaspena zain (hitzaurrekoak ez) */
+    if (titleTimer > 0 && !id.startsWith("pro-") && COACH.cur !== id) return false;
     if (COACH.cur === id) return true;
     coachHide();
     COACH.cur = id;
@@ -3103,10 +3111,19 @@
     updateWorld(0);
     AREA.cur = "";
     hud();
-    if (!flag("intro")) prologueStart();
-    else {
+    if (!flag("intro")) {
+      camNoticeSeen();
+      prologueStart();
+    } else {
       title(ZONES[ZONE.cur].name, "");
       notify(L("Bideak zure urratsak gogoratzen ditu."), "", 3);
+      /* kamera berria: behin, aukera non dagoen (lehendik jokatzen zutenentzat) */
+      try {
+        if (!localStorage.getItem("leizeak-kamera-oharra")) {
+          localStorage.setItem("leizeak-kamera-oharra", "1");
+          setTimeout(() => started && !FILM.on && notify(L("KAMERA BERRIA: GOITIK. Menuan (‖) ATZETIK aukera daiteke; hatzarekin biratu eta hurbildu."), "", 4.5), 3400);
+        }
+      } catch {}
     }
   }
   function help() {
