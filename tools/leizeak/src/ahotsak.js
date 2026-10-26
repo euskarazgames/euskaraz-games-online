@@ -36,6 +36,7 @@
   /* kargatuta dago (edo ez dago eta ez da egongo)? */
   const voiceReady = (id) => VOICE.buf.has(id) || !SND.ctx;
   /* pertsonaia bakoitzaren katea (behin sortua) → analizatzailea → bus nagusia */
+  /* v4: oihartzun eta erreberberazio gutxiago (ahotsa hurbilago eta naturalago, "prozesatu" gabe) */
   function voiceChain(who, fx) {
     /* fx: planoaren katea (zinema): "oroit" (oroitzapena), "dry" (hurbil, adib. Irati bizirik), "irati"… */
     const k = fx || (who.startsWith("INGUMA") || who === "IRATI?" ? "inguma" : who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") ? "gaueko" : who === "MARI" ? "mari" : "dry");
@@ -59,22 +60,24 @@
         dl = ctx.createDelay(1),
         fb = ctx.createGain(),
         wet = ctx.createGain();
+      /* v4: banda zabalagoa eta oihartzun bakarra (atzeraelikadurarik gabe): "irratia" baino gehiago,
+         ahots bat harritik — naturalago */
       hp.type = "highpass";
-      hp.frequency.value = 180;
+      hp.frequency.value = 130;
       pk.type = "peaking";
-      pk.frequency.value = 2300;
-      pk.gain.value = 3;
+      pk.frequency.value = 2400;
+      pk.gain.value = 2;
       lp.type = "lowpass";
-      lp.frequency.value = 7200;
+      lp.frequency.value = 9800;
       dl.delayTime.value = 0.17;
-      fb.gain.value = 0.2;
-      wet.gain.value = 0.2;
+      fb.gain.value = 0;
+      wet.gain.value = 0.11;
       input.connect(hp).connect(pk).connect(lp);
       lp.connect(VOICE.an);
       lp.connect(dl);
       dl.connect(fb).connect(dl);
       dl.connect(wet).connect(VOICE.an);
-      send.gain.value = 0.3;
+      send.gain.value = 0.18;
       lp.connect(send);
     } else if (k === "gaueko") {
       /* ilunpetik, baina argi: baxu leunak, presentzia (kontsonanteak), oihartzun labur bat eta
@@ -98,11 +101,11 @@
       lp.type = "lowpass";
       lp.frequency.value = 9500;
       dl.delayTime.value = 0.095;
-      wet.gain.value = 0.14;
+      wet.gain.value = 0.08;
       input.connect(hp).connect(ls).connect(pk).connect(lp);
       lp.connect(VOICE.an);
       lp.connect(dl).connect(wet).connect(VOICE.an);
-      send.gain.value = 0.35;
+      send.gain.value = 0.24;
       lp.connect(send);
     } else if (k === "inguma") {
       /* ametsetik: presentzia, oihartzun motz bikoitza (ametseko gela) eta erreberberazio neurritsua.
@@ -121,13 +124,13 @@
       pk.gain.value = 2.5;
       dl.delayTime.value = 0.11;
       dl2.delayTime.value = 0.23;
-      wet.gain.value = 0.16;
-      wet2.gain.value = 0.09;
+      wet.gain.value = 0.1;
+      wet2.gain.value = 0.055;
       input.connect(hp).connect(pk);
       pk.connect(VOICE.an);
       pk.connect(dl).connect(wet).connect(VOICE.an);
       pk.connect(dl2).connect(wet2).connect(VOICE.an);
-      send.gain.value = 0.34;
+      send.gain.value = 0.24;
       pk.connect(send);
     } else if (k === "oroit") {
       /* oroitzapena: urrutiko eta epela (goi-muturrak leunduta), gela handi baten erreberberazioa */
@@ -139,7 +142,7 @@
       lp.frequency.value = 5200;
       input.connect(hp).connect(lp);
       lp.connect(VOICE.an);
-      send.gain.value = 0.42;
+      send.gain.value = 0.32;
       lp.connect(send);
     } else if (k === "mari") {
       /* Mari: mendiaren barrutik — sakona eta zabala, oihartzun luze leun batekin */
@@ -157,7 +160,7 @@
       input.connect(hp).connect(ls);
       ls.connect(VOICE.an);
       ls.connect(dl).connect(wet).connect(VOICE.an);
-      send.gain.value = 0.45;
+      send.gain.value = 0.34;
       ls.connect(send);
     } else {
       input.connect(VOICE.an);

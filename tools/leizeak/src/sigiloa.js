@@ -117,14 +117,14 @@
     geo.setAttribute("position", new T.BufferAttribute(pos, 3).setUsage(T.DynamicDrawUsage));
     geo.setAttribute("uv", new T.BufferAttribute(uv, 2).setUsage(T.DynamicDrawUsage));
     geo.setIndex(idx);
-    const m = new T.Mesh(geo, new T.MeshBasicMaterial({ color: "#2fb4ff", map: sigTextures().cone, transparent: true, opacity: 0.38, depthWrite: false, side: T.DoubleSide, fog: false }));
+    const m = new T.Mesh(geo, new T.MeshBasicMaterial({ color: "#ffd36a", map: sigTextures().cone, transparent: true, opacity: 0.38, depthWrite: false, side: T.DoubleSide, fog: false }));
     m.frustumCulled = false;
     m.renderOrder = 2;
     parent.add(m);
     /* ertza: konoaren forma irakurgarri lur argian ere */
     const eg = new T.BufferGeometry();
     eg.setAttribute("position", new T.BufferAttribute(new Float32Array((SIG_N + 3) * 3), 3).setUsage(T.DynamicDrawUsage));
-    const edge = new T.LineLoop(eg, new T.LineBasicMaterial({ color: "#2fb4ff", transparent: true, opacity: 0.7, depthWrite: false, fog: false }));
+    const edge = new T.LineLoop(eg, new T.LineBasicMaterial({ color: "#ffd36a", transparent: true, opacity: 0.7, depthWrite: false, fog: false }));
     edge.frustumCulled = false;
     edge.renderOrder = 3;
     m.add(edge);
@@ -564,7 +564,8 @@
       Z.seeNow = see > 0;
       if (see > 0 && hunt) anySee = true;
       if (see > 0 && !hunt && awake) {
-        Z.sus += dt * (0.95 + 1.9 * see) * (SIG.phase === 3 || SIG.phase === 2 ? 1.4 : 1);
+        /* LAGUNTZA moduan, susmoa astiroago */
+        Z.sus += dt * (0.95 + 1.9 * see) * (SIG.phase === 3 || SIG.phase === 2 ? 1.4 : 1) * (saved.assist ? 0.6 : 1);
         if (Z.sus >= 1) {
           sigSpotted(e);
           anySee = true;
@@ -578,8 +579,9 @@
         Z.coneT = 0.05;
         sigConeSet(Z.cone, e.x, e.z, Z.lookDir, Z.fov * (hunt ? 1.3 : 1), Z.range * (hunt ? 1.25 : 1) * (SIG.phase === 3 ? 1.2 : 1));
       }
-      const col = hunt ? "#ff3a2a" : Z.mode === "suspect" || Z.sus > 0.2 ? "#ffb21a" : "#2fb4ff";
-      sigConeColor(Z.cone, col, hunt ? 0.46 : 0.36 + Z.sus * 0.12);
+      /* kriseiluaren argia: lasai horixka, susmoz laranja, ehizan gorria */
+      const col = hunt ? "#ff3a2a" : Z.mode === "suspect" || Z.sus > 0.2 ? "#ff9a1a" : "#ffd36a";
+      sigConeColor(Z.cone, col, hunt ? 0.5 : 0.42 + Z.sus * 0.1);
       Z.lamp.material.color.set(hunt ? "#ff8a6a" : "#ffd79a");
       /* ikurra buruaren gainean (?, !, z) */
       Z.markT -= dt;
@@ -596,11 +598,12 @@
         dz = P.z - E.z,
         d = Math.hypot(dx, dz) || 1;
       const see = !respawnTimer && Math.abs(P.y - (E.y || 0)) < 3 && d < E.range * (sigHidden() ? 0.3 : 1) && angDiff(Math.atan2(dx, dz), E.dir) < E.fov && sigRay(E.x, E.z, dx / d, dz / d, d) > d - 0.35;
-      E.sus = see ? E.sus + dt * 2.2 : Math.max(0, E.sus - dt * 0.5);
+      E.sus = see ? E.sus + dt * 2.2 * (saved.assist ? 0.6 : 1) : Math.max(0, E.sus - dt * 0.5);
       if (E.sus >= 1 && SIG.phase !== 1) sigSpotted(null);
       if (see && SIG.phase === 1) anySee = true;
       sigConeSet(E.cone, E.x, E.z, E.dir, E.fov, E.range);
-      sigConeColor(E.cone, E.sus > 0.05 ? "#ff5a2a" : "#ffb21a", 0.34 + E.sus * 0.2);
+      /* begi-harria: urrezko begirada estua (Gaueko), ikusten bazaitu gorri */
+      sigConeColor(E.cone, E.sus > 0.05 ? "#ff3a2a" : "#ffe9a0", 0.3 + E.sus * 0.25);
       E.eye.material.color.set(E.sus > 0.05 ? "#ff6a3a" : "#ffcf7a");
     }
     /* argi-hariak (orainean bakarrik) */
@@ -733,7 +736,7 @@
       if (e.state === "dead") continue;
       const Z = e.zain,
         asleep = Z.mode === "sleep" || Z.mode === "wake";
-      if (!asleep) wedge(e.x, e.z, Z.lookDir, Z.fov, Z.range, Z.mode === "suspect" ? "#ffd36a40" : "#9fd8ff38");
+      if (!asleep) wedge(e.x, e.z, Z.lookDir, Z.fov, Z.range, Z.mode === "suspect" ? "#ff9a1a50" : "#ffd36a3a");
       c.fillStyle = asleep ? "#7f9fbf" : Z.mode === "suspect" ? "#ffd36a" : "#ff5a4a";
       c.beginPath();
       c.arc(X(e.x, e.z), Y(e.x, e.z), 4, 0, TAU);

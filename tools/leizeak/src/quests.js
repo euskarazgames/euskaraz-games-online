@@ -398,7 +398,7 @@
       L("EGUNKARIA"),
       L("Eginkizunak eta misterioak"),
       "",
-      L("ISTORIOA") + "\n" + objective()[0] + "\n\n" + L("BESTE EGINKIZUNAK") + "\n" + side.join("\n") + "\n\n" + L("Arnasa-zatiak: ") + pieces + " · " + L("Txanponak: ") + saved.coins + (f("andere") ? "\n\n" + L("ANDERE: «Gaueko ez dago erlojuan. Zazpigarren leizean itxaroten du, Anboton.»") : "") + (oroitLog() ? "\n\n" + oroitLog() : ""),
+      L("ISTORIOA") + "\n" + objective()[0] + "\n\n" + L("BESTE EGINKIZUNAK") + "\n" + side.join("\n") + "\n\n" + L("Arnasa-zatiak: ") + pieces + " · " + L("Txanponak: ") + saved.coins + (f("andere") ? "\n\n" + L("ANDERE: «Gaueko ez dago erlojuan. Zazpigarren leizean itxaroten du, Anboton.»") : "") + (oroitLog() ? "\n\n" + oroitLog() : "") + harpeakLog(),
       "",
       [[L("ITXI"), () => {}]],
     );

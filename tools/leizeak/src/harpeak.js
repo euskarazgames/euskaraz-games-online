@@ -25,6 +25,8 @@
     torches: [],
     rooms: {},
     torchCol: ["#ffb36b", "#9fb8ff"],
+    /* mendiaren barrua: harri iluna eta hotza (piezen kolorea) */
+    tint: "#7f8aa6",
     fog: [12, 72],
     update: (dt) => harpeakUpdate(dt),
   };
@@ -43,11 +45,22 @@
     room("hkA", E(0), 0, 30, 24, { area: "hA", name: "SUZKO BOLAREN ZULOA", desc: "Ekaitzak hemen bota zaitu. Mendiaren barrua: Gauekoren bidea.", doors: { n: 0 }, fog: [10, 60] });
     for (const [x, z, s, r] of [[E(-4), 3, 0.7, 0.3], [E(5), 1, 0.9, 1.4], [E(-9), -4, 0.6, 2.1], [E(8), -6, 0.55, 0.8], [E(1), 8, 0.6, 2.6]]) bprop(s > 0.65 ? "rubble_large" : "rubble_half", x, 0, z, DS * s, r);
     /* zuloa sabaian: ekaitzaren argia goitik */
-    const shaft = obj(new T.CylinderGeometry(3.2, 4.6, 26, 16, 1, true), new T.MeshBasicMaterial({ color: "#9fb8ff", transparent: true, opacity: 0.08, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide, fog: false }));
-    shaft.position.set(E(0), 13, 3);
+    const shaft = obj(new T.CylinderGeometry(1.6, 2.6, 14, 16, 1, true), new T.MeshBasicMaterial({ color: "#9fb8ff", transparent: true, opacity: 0.04, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide, fog: false }));
+    shaft.position.set(E(0), 7, 3);
     shaft.castShadow = false;
     HK.shaft = shaft;
+    /* lurrean, ekaitzaren argi-orbana */
+    const pool = obj(new T.PlaneGeometry(7, 7), new T.MeshBasicMaterial({ map: glowTexture, color: "#9fb8ff", transparent: true, opacity: 0.35, blending: T.AdditiveBlending, depthWrite: false }));
+    pool.rotation.x = -PI / 2;
+    pool.position.set(E(0), 0.05, 3);
+    pool.castShadow = false;
+    HK.pool = pool;
     for (const [x, z] of [[E(-1.5), 4.5], [E(1.8), 2.4], [E(0.4), 5.8], [E(-2.6), 1.6]]) HK.embers.push({ x, z, fl: glow(x, 0.4, z, "#ff9a4a", 1.6), ph: x * 3 + z });
+    /* suzko bolaren arrastoa: lur erre bat */
+    const scorch = obj(new T.PlaneGeometry(9, 9), new T.MeshBasicMaterial({ map: glowTexture, color: "#000000", transparent: true, opacity: 0.7, depthWrite: false }));
+    scorch.rotation.x = -PI / 2;
+    scorch.position.set(E(0), 0.03, 3.4);
+    scorch.castShadow = false;
     bprop("banner_patternB_red", E(-9), 0, -11.2, DS * 0.8, 0);
     bprop("banner_patternB_red", E(9), 0, -11.2, DS * 0.8, 0);
     corridor(E(0), -15, 6, 6, "z");
@@ -117,8 +130,16 @@
   }
   function harpeakUpdate(dt) {
     if (SIG.zone !== "harpeak") harpeakEntered("harpeak");
+    /* mendiaren barrua: ilunagoa (zuziak, kriseiluak eta Amaiurren argia bakarrik) — itzalak garrantzitsu */
+    ambient.intensity = 0.24;
+    sun.intensity = 0.26;
+    playerLight.intensity = 1.6;
     for (const e of HK.embers) e.fl.material.opacity = 0.45 + Math.sin(time * 9 + e.ph) * 0.15;
-    if (HK.shaft) HK.shaft.material.opacity = 0.07 + Math.max(0, Math.sin(time * 0.7)) * 0.04;
+    /* ekaitza goian: tximisten distira zulotik */
+    HK.flash = Math.max(0, (HK.flash || 0) - dt * 2.5);
+    if (Math.random() < dt * 0.08) HK.flash = 1;
+    if (HK.shaft) HK.shaft.material.opacity = 0.035 + HK.flash * 0.12;
+    if (HK.pool) HK.pool.material.opacity = 0.3 + HK.flash * 0.5;
     if (HK.up) HK.up.material.opacity = 0.1 + Math.sin(time * 1.6) * 0.03;
     /* gela berria: kontrol-puntua eta (behin) Iratiren deia */
     const R = HK_ROOMS[AREA.cur];
@@ -224,4 +245,12 @@
     if (a === "hC") return ["Iparreko atea: zaindaria hotsera erakarri (TOK-TOK).", [E(-6), -92, 0]];
     if (a === "hD") return ["Izotz-hariak: jauzi, edo iraganera (garaia).", [E(-6), -128, 0]];
     return ["Gauekoren ataria: atea, gailurrera.", [E(0), -164, 0]];
+  }
+  /* egunkarian: sigilu-leizearen emaitza (izenburua, alarmak, lo eta denbora) */
+  function harpeakLog() {
+    const R = saved.harpeak;
+    if (!R) return "";
+    const mm = Math.floor(R.secs / 60),
+      ss = String(R.secs % 60).padStart(2, "0");
+    return "\n\n" + L("ANBOTOKO HARPEAK") + " · " + R.rank + "\n   " + L("Alarmak: ") + R.alarms + " · " + L("Lo: ") + R.sleeps + " · " + L("TOK-TOK: ") + R.knocks + " · " + mm + ":" + ss;
   }

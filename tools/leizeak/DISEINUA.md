@@ -295,6 +295,52 @@ gurutzatuak), urrezko letrak (Cinzel, OFL), Amaiur itsasertzeko harkaitz batean 
 argi-zutabe horizontean. Haranean, kamera urrunago eta angelu zabalagoa; plaza garbiago (apaingarri
 gutxiago, bideak libre).
 
+## 5j. Kamera, sigiloa eta ANBOTOKO HARPEAK (gure eran, V)
+
+Sigilu-joko klasikoen ideia orokorrak (goiko kamera, begirada-konoak, alarma-faseak, radarra,
+izkinatik begiratzea, hotsa erakartzeko kolpea), gure kode, eredu eta istorioarekin berregin dira;
+ez da beste jokoen edukirik erabili (ez maparik, ez pertsonaiarik, ez interfazerik, ez soinurik).
+
+**Kamera (`game.js`, `kamera.js`).** Bi modu, jokalariak aukeratuta (menuan KAMERA, edo O tekla):
+- **GOITIK** (lehenetsia): goitik eta hurbil, angelu finkoa (kontrolak ATZETIK-en berdinak): kanpoan
+  52°, leizean 57°; gela gehiena ikusten da eta etsaien begiradak lurrean irakurtzen dira. Haranean
+  ~22 m (lehen ~31-35 m); bertikalean ere hurbilago. Etsai nagusiekin, ATZETIK-era (handiak dira).
+- **ATZETIK** (klasikoa): lehengoa, baina hurbilago (mahaigainean ×0.9, bertikalean 1.7 lehengo 1.95-en
+  ordez). Hatzarekin biratu/hurbildu eta ⤢ botoia, bietan.
+- **HORMA** (HORMA-IKUSPEGIA, menuan itzal daiteke): hormari edo kutxa-pila bati bizkarra emanez gero
+  (makila hormarantz une batez), Amaiur itsatsita geratzen da, alboetara bakarrik eta isilik mugitzen
+  da, eta kamera baxu eta alboan jartzen da, ertzetik haratago begira (izkinaren atzean zer dagoen).
+  Makila hormatik urrundu, jauzi edo ertzetik irten: askatu.
+
+**Sigiloa (`sigiloa.js`).**
+- **Itzal-zaindariak** (Gauekoren itzalak, kriseiluarekin): bidea puntuz puntu eta geldialdietan
+  inguruari begira. Haren argi-konoa lurrean (hormek eta zutabeek mozten dute): lasai horixka, susmoz
+  laranja (?), ehizan gorria (!). Konoan sartuz gero susmoa hazten da (urrutian astiro, gertu azkar);
+  beteta: IKUSI ZAITU → **ALERTA** (14 s, ikusten zaituzten bitartean berriro hasten da): zaindariak
+  ehizan eta bi itzal gehiago lurretik; gero **IHESA** (10 s, bilatzen) eta **ZAINTZA** (12 s, begirada
+  zabalagoa). Alarman borroka-musika; zaindariak SORGINKERIAz garaitu daitezke ere.
+- **Oihartzun-radarra** (Iratiren oihartzuna): hormak, zaindariak eta haien begiradak, kameraren
+  norabidean; alarman, Gauekoren zaratak itsutzen du (OIHARTZUNIK EZ).
+- **TOK-TOK** (hormaren ondoan): makilaz jo → hurbileko zaindariak hotsera (bidea libre).
+  **LOTARAZI**: zaindari baten atzean, oharkabean → lo (45 s). **Itzal-zokoak**: ilunpean, astiro,
+  ia ez zaituzte ikusten. Korrika eta bultzadan: hotsa.
+- **Begi-harriak** (zutabe bat urrezko begi batekin, biraka, ezin dira lotarazi) eta **izotz-hariak**
+  (orainean bakarrik: jauzi gainetik edo iraganera aldatu).
+
+**ANBOTOKO HARPEAK (`harpeak.js`, 08).** ANBOTOren gailurraren aurreko atala: Plazan Iratirekin hitz
+egin ondoren, Andereren suzko bola Gauekoren ekaitzak jotzen du eta Amaiur mendiaren barrura erortzen
+da. Gailurrera iristeko, bost gela, bakoitza kontrol-puntu bat eta Iratiren dei batekin:
+A **Suzko bolaren zuloa** (lurreratzea, radarra) · B **Zaintza-gela** (zaindari bat joan-etorrian:
+itxaron eta bizkarretik) · C **Kutxen harpea** (bi zaindari, begi-harri bat; ate ondokoa TOK-TOKekin
+erakarri edo bestea LOTARAZI) · D **Hari-pasabidea** (izotz-hariak eta zaindari bat) · E **Gauekoren
+ataria** (bi zaindari eta begi-harria; atea ez da alarman irekitzen). Amaieran, emaitza: alarmak, lo
+eta denbora, eta izenburu bat (ITZALA alarmarik gabe, OIHARTZUNA 1-2, EKAITZA). Giroa: harri iluna eta
+hotza, zuziak eta kriseiluen argi-orbanak (itzala garrantzitsu).
+
+**Mezuak (v2).** Izenburuak, abisuak eta irakaspenak txikiago, gardenago eta ertzetan; denbora
+gutxiago (abisuak 1.8-3.6 s, izenburuak 2.8 s, irakaspenak 5 s, HUD isila 5 s). Elkarrizketa- eta
+dei-panela erdian eta estuago (gehienez 680 px), erretratu txikiagoa eta banda beltz meheagoak.
+
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da
 neurgarriak diren helburuekin: errore 0 kargan eta ibilbide osoan (bot-probak), 60 fps

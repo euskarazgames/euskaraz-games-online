@@ -9,7 +9,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   `oihartzun` (bi garaiko plataforma-jokoa; `elur.html` haren aurreko bertsioa da) eta
   `leizeak` (LEIZEEN DEIA, OIHARTZUN II: Ibarra harana, txalaparta eta zazpi leize — Basajaun, Lamia, Tartalo,
   Jentilbaratza/Errolan, Jentilen zerua/Odei, Herensugearen haitzuloa/Herensugea, Ametsa/Inguma — eta
-  azken atala, Anboto: Gaueko eta Irati; istorioaren biblia DISEINUA.md 5i atalean).
+  azken atala, Anboto: Gaueko eta Irati, ANBOTOKO HARPEAK sigilu-leizearen ondoren; istorioaren biblia
+  DISEINUA.md 5i atalean, kamera eta sigiloa 5j-n).
   OIHARTZUN-ek `?test` parametroarekin `window.__game` proba-kakoa erakusten du.
   OIHARTZUN-en iturburua: `tools/oihartzun/src/` (game.js, combat.js, magic.js, ascent.js, story.js,
   runes.js…). Ez editatu `public/games/oihartzun.html` zuzenean: `python3 tools/oihartzun/build.py`
@@ -27,7 +28,10 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   ate-zainak), seaska.js (seaska-kantaren hiru bertsoak, SEASKA, ametsera/esnatu, zazpigarren argia),
   ametsa.js (AMETSA: zazpigarren leizea), inguma.js (Inguma), aurpegia.js (Amaiurren aurpegia: maskara,
   kliskak, ahoa), izenburua.js (azala: harkaitza, zazpi argi-zutabe, kamera), oroitzapenak.js (zazpi
-  oroitzapen, sepia), anboto.js (azken atala: Anbotoko gailurra, txalaparta-duelua bi ahotsez, amaiera)…).
+  oroitzapen, sepia), anboto.js (azken atala: Anbotoko gailurra, txalaparta-duelua bi ahotsez, amaiera),
+  kamera.js (HORMA: hormari itsatsita, izkinatik begiratu; GOITIK/ATZETIK moduak game.js-en),
+  sigiloa.js (itzal-zaindariak, argi-konoak, ALERTA/IHESA/ZAINTZA, oihartzun-radarra, TOK-TOK, LOTARAZI,
+  begi-harriak, izotz-hariak), harpeak.js (ANBOTOKO HARPEAK: sigilu-leizea, gailurraren aurretik)…).
   Azaleko letra-tipoa: `tools/leizeak/fonts/cinzel.woff2` (SIL OFL; build-ean base64). Ez editatu `public/games/leizeak.html` zuzenean:
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
@@ -74,4 +78,5 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_herensuge.js http://127.0.0.1:8
 NODE_PATH=$(npm root -g) node tools/test/leizeak_prologoa.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_ametsa.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_anboto.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_harpeak.js http://127.0.0.1:8091/games/leizeak.html
 ```

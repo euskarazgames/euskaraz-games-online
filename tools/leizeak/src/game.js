@@ -2664,6 +2664,23 @@
         const wn = Math.hypot(px - s.x, pz - s.z) || 1;
         P.wallX = (px - s.x) / wn;
         P.wallZ = (pz - s.z) / wn;
+        /* hormak eta kutxak: irristatu (makila zeiharka hormaren kontra: luzeran jarraitu, ez gelditu) */
+        if (s.wall) {
+          const f = wallFace(s, px, pz),
+            dn = (nx - px) * f.nx + (nz - pz) * f.nz,
+            sx = nx - f.nx * Math.min(0, dn),
+            sz = nz - f.nz * Math.min(0, dn);
+          if (!platforms.some((o) => o.wall && !o.off && (o.phase === -1 || o.phase === phase) && contains(o, sx, sz, 0.18) && !contains(o, px, pz, 0.18))) {
+            nx = sx;
+            nz = sz;
+            const vn = P.vx * f.nx + P.vz * f.nz;
+            if (vn < 0) {
+              P.vx -= f.nx * vn;
+              P.vz -= f.nz * vn;
+            }
+            continue;
+          }
+        }
         nx = px;
         nz = pz;
         P.vx = P.vz = 0;
@@ -4211,6 +4228,7 @@
         sigActionNear,
         sigNoise,
         sigReset,
+        sigRay,
         PRO,
         FILM,
         RING,
