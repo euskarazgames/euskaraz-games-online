@@ -46,7 +46,7 @@
   }
   function hormaUpdate(dt, d, len) {
     const can =
-      CAM.wallView && started && P.grounded && !P.riding && !P.climb && P.dashT <= 0 && !LOCK.target && !CRAFT.on && !CRAFT.held && !MAG.charging && !MIR.on && ZONE.cur !== "ibarra" && !ivyNear(1.8);
+      CAM.wallView && started && !BEGI.on && P.grounded && !P.riding && !P.climb && P.dashT <= 0 && !LOCK.target && !CRAFT.on && !CRAFT.held && !MAG.charging && !MIR.on && ZONE.cur !== "ibarra" && !ivyNear(1.8);
     const raw = direction();
     if (!HORMA.on) {
       const s = P.wallS;

@@ -1092,5 +1092,65 @@
   "seed": 103431,
   "dur": 2.64,
   "asr": "Mendiaren barrutik, beraz, isilik eta itzalean."
+ },
+ "hp_i1": {
+  "who": "IRATI",
+  "text": "Amaiur, entzuten nauzu? Leize hauek Gauekoren itzalek zaintzen dituzte. Ez zaitzatela ikusi.",
+  "mos": 4.01,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 100000,
+  "dur": 5.3,
+  "asr": "Amaiur, entzuten nauzu, leize hauek gauekoren itzalek zaintzen dituzte, ez zaitzatela ikusi."
+ },
+ "hp_i2": {
+  "who": "IRATI",
+  "text": "Kriseiluaren argia haien begirada da. Ez sartu bertan: itxaron, eta pasatu bizkarretik.",
+  "mos": 3.82,
+  "cer": 0.012,
+  "cand": 0,
+  "seed": 100000,
+  "dur": 4.88,
+  "asr": "Krisailuaren argia haien begirada da, ez sartu bertan, itxaron eta pasatu bizkarretik."
+ },
+ "hp_i3": {
+  "who": "IRATI",
+  "text": "Nire oihartzuna zurekin dago. Goiko izkinan, haien urratsak entzungo dituzu.",
+  "mos": 3.4,
+  "cer": 0.014,
+  "cand": 0,
+  "seed": 100000,
+  "dur": 4.19,
+  "asr": "Nire oihartzuna zurekin dago, goiko izkinean haien urratsak entzungo dituzu."
+ },
+ "hp_i4": {
+  "who": "IRATI",
+  "text": "Ate ondoko hori ez da mugituko. Makilaz hormari jo: tok, tok. Hotsera joango da.",
+  "mos": 4.11,
+  "cer": 0.027,
+  "cand": 0,
+  "seed": 100000,
+  "dur": 4.32,
+  "asr": "Ate ondoko hori ez da mugituko, makila zormari jo, tok tok, hotsera joango da."
+ },
+ "hp_i5": {
+  "who": "IRATI",
+  "text": "Atzetik hurbiltzen bazara, oharkabean, lo egin dezake. Isil-isilik.",
+  "mos": 3.66,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 100000,
+  "dur": 3.34,
+  "asr": "Atzetik hurbiltzen bazara oharkabean lo egin dezake, isil isilik."
+ },
+ "hp_i6": {
+  "who": "IRATI",
+  "text": "Hari horiek oraingo izotza dira. Iraganean ez daude.",
+  "mos": 3.97,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 100000,
+  "dur": 2.68,
+  "asr": "Hari horiek oraingo izotza dira, iraganean ez daude."
  }
 }
