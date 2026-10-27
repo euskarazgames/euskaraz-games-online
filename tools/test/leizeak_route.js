@@ -15,7 +15,8 @@ const { launch } = require('./_browser');
   const ev = (f, a) => page.evaluate(f, a);
   const wait = (ms) => page.waitForTimeout(ms);
   /* baldintza bete arte itxaron (render motelean jokoaren erlojua erreala baino motelagoa da) */
-  const until = async (f, ms = 15000, a) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await ev(f, a)) return true; await wait(120); } return false; };
+  /* denbora errealean itxaron: makina kargatuta (jokoa ~0.1×) ere bai */
+  const until = async (f, ms = 45000, a) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await ev(f, a)) return true; await wait(120); } return false; };
   const shot = async (n) => { if (shots) await page.screenshot({ path: `${shots}/${n}.png` }); };
   /* eszena osoa saltatu (eta ondorengo eszenak ere) */
   const skipScenes = async () => { for (let i = 0; i < 6; i++) { if (!(await ev(() => !!__game.cinematicState()))) break; await ev(() => __game.endScene()); await wait(120); } };

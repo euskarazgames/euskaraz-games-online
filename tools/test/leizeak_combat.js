@@ -12,7 +12,8 @@ const { launch } = require('./_browser');
   const ok = (c, msg) => { console.log((c ? 'OK   ' : 'HUTS ') + msg); if (!c) fails++; };
   const ev = (f, a) => page.evaluate(f, a);
   const wait = (ms) => page.waitForTimeout(ms);
-  const until = async (f, ms = 15000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await ev(f)) return true; await wait(100); } return false; };
+  /* denbora errealean itxaron: makina kargatuta (jokoa ~0.1×) ere bai */
+  const until = async (f, ms = 45000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await ev(f)) return true; await wait(100); } return false; };
   await page.goto(url + (url.includes('?') ? '&' : '?') + 'test', { waitUntil: 'load' });
   await page.waitForFunction(() => window.__game, null, { timeout: 120000 });
   await ev(() => { localStorage.clear(); __game.saved.flags.push('intro'); __game.renderer.setPixelRatio(0.5); __game.renderer.shadowMap.enabled = false; });
