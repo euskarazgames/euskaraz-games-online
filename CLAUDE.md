@@ -37,8 +37,9 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
   Ahotsak: `tools/leizeak/ahotsak/lerroak.json` (testuak; build-ean txertatzen dira azpititulu gisa) →
-  `sortu.py` (OmniVoice, CPU; v3: lerro bakoitzeko hautagai onena UTMOS + Whisper CER, tonu-aldaketarik
-  gabe) → `public/assets/voice/leizeak/<id>.mp3`. Ahots sintetikoak bakarrik (erref/: diseinatutako
+  `sortu.py` (OmniVoice, CPU; v4: lerro bakoitzeko hautagai onena UTMOS + Whisper CER, tonu-aldaketarik
+  gabe; `--pause` esaldi-mugetan; hobea denean bakarrik gainidazten du; `--k-start`/`--seed-off` eten
+  ondoren jarraitzeko) → `public/assets/voice/leizeak/<id>.mp3`. Ahots sintetikoak bakarrik (erref/: diseinatutako
   erreferentziak); ez klonatu inoren ahotsik. Lizentziak: `public/assets/CREDITS.md`.
 - `public/assets/egfx.js` — grafiko modulu partekatua (CC0 testurak, zeruak, ura, mendiak).
 - `public/assets/{tex,sky,covers}` — testurak, zeruak eta atariko irudiak. Kredituak: `public/assets/CREDITS.md`.
