@@ -30,11 +30,11 @@
  "pro_a1": {
   "who": "AMAIUR",
   "text": "Irati…? Harriaren barruan zaude?",
-  "mos": 3.39,
+  "mos": 3.45,
   "cer": 0.0,
-  "cand": 2,
-  "seed": 103462,
-  "dur": 1.93,
+  "cand": 1,
+  "seed": 103931,
+  "dur": 2.17,
   "asr": "Irati, harriaren barruan zaude?"
  },
  "pro_i2": {
@@ -66,12 +66,13 @@
  },
  "pro_i5": {
   "who": "IRATI",
-  "mos": 3.44,
-  "cer": 0.043,
+  "text": "Lehenik, argia. Piztu sutondoa zure sorginkeriaz.",
+  "mos": 3.64,
+  "cer": 0.022,
   "cand": 0,
-  "seed": 100000,
+  "seed": 100500,
   "dur": 2.72,
-  "asr": "Lehenik argia, piztu zut ondoa zure sorginkeriaz."
+  "asr": "Lehenik, argia, piztu zutondoa zure sorginkeriaz."
  },
  "pro_i6": {
   "who": "IRATI",
@@ -84,11 +85,12 @@
  },
  "pro_i6b": {
   "who": "IRATI",
-  "mos": 3.4,
+  "text": "Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro.",
+  "mos": 3.62,
   "cer": 0.0,
-  "cand": 1,
-  "seed": 100031,
-  "dur": 3.28,
+  "cand": 2,
+  "seed": 100564,
+  "dur": 3.43,
   "asr": "Ganbara garaiegi dago jauzi batentzat, airean jauzi berriro."
  },
  "pro_i7": {
@@ -129,12 +131,13 @@
  },
  "pro_i11": {
   "who": "IRATI",
-  "mos": 3.41,
-  "cer": 0.0,
-  "cand": 0,
-  "seed": 100006,
-  "dur": 5.5,
-  "asr": "Plazan itzalak txalapartaren inguruan, begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira."
+  "text": "Plazan, itzalak txalapartaren inguruan. Begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira.",
+  "mos": 3.71,
+  "cer": 0.01,
+  "cand": 1,
+  "seed": 100533,
+  "dur": 6.05,
+  "asr": "Plazan, itzalak txalapartaren inguruan, begiak urrezkoak baituzte iraganean bakarrik zauritzen dira."
  },
  "pro_i12": {
   "who": "IRATI",
@@ -210,11 +213,12 @@
  },
  "dz_leizea2": {
   "who": "IRATI",
-  "mos": 3.41,
+  "text": "Sutegiak itzalita? Badakizu zer egin. Eta gogoratu: begien kolorea, garaia.",
+  "mos": 3.84,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100012,
-  "dur": 4.19,
+  "seed": 100504,
+  "dur": 4.41,
   "asr": "Sutegiak itzalita, badakizu zer egin, eta gogoratu, begien kolorea garaia."
  },
  "dz_lamia1": {
@@ -228,11 +232,12 @@
  },
  "dz_lamia2": {
   "who": "IRATI",
-  "mos": 3.46,
+  "text": "Izotza orainekoa da. Iraganean, ura dabil. Bilatu bidea bietan.",
+  "mos": 3.67,
   "cer": 0.0,
-  "cand": 0,
-  "seed": 100012,
-  "dur": 3.45,
+  "cand": 1,
+  "seed": 100535,
+  "dur": 3.9,
   "asr": "Izotza orainekoa da, iraganean ura dabil, bilatu bidea bietan."
  },
  "dz_tartalo1": {
@@ -427,11 +432,12 @@
  },
  "c7_i4": {
   "who": "IRATI",
-  "mos": 3.47,
+  "text": "Hiru bertsoak. Orain, kantatu nirekin: txalapartak gogoratuko du.",
+  "mos": 3.95,
   "cer": 0.0,
-  "cand": 0,
-  "seed": 100024,
-  "dur": 3.47,
+  "cand": 2,
+  "seed": 100566,
+  "dur": 3.83,
   "asr": "Hiru bertsoak, orain kantatu nirekin, txalapartak gogoratuko du."
  },
  "c7_i5": {
@@ -473,11 +479,12 @@
  },
  "c7_i8": {
   "who": "IRATI",
-  "mos": 3.49,
+  "text": "Amaiur… ez dakit nola esan. Oihartzun bat baino gehiago naiz. Eta Gauekok badaki.",
+  "mos": 3.52,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100030,
-  "dur": 4.34,
+  "seed": 100506,
+  "dur": 4.79,
   "asr": "Amaiur ez dakit nola esan, oihartzun bat baino gehiago naiz, eta gauekok badaki."
  },
  "c7_p1": {
@@ -676,11 +683,12 @@
  },
  "st_g5": {
   "who": "GAUEKO",
-  "mos": 3.44,
+  "text": "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere.",
+  "mos": 3.54,
   "cer": 0.007,
-  "cand": 1,
-  "seed": 105131,
-  "dur": 9.06,
+  "cand": 0,
+  "seed": 105600,
+  "dur": 9.49,
   "asr": "Bost, ondo dabil zure txalaparta, sorgin, baina herensujeak ez du kanpairik entzuten, eta ingumak ametsetan harrapatzen ditu ausartenak ere."
  },
  "st_g6": {
@@ -829,11 +837,12 @@
  },
  "o6_i1": {
   "who": "IRATI",
-  "mos": 3.45,
+  "text": "Gaueko… zergatik nauzu hemen?",
+  "mos": 3.65,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100036,
-  "dur": 1.63,
+  "seed": 100508,
+  "dur": 1.76,
   "asr": "Gaueko, zergatik nauzu hemen?"
  },
  "o7_i1": {
@@ -921,11 +930,12 @@
  },
  "o3_a2": {
   "who": "AMAIUR",
-  "mos": 3.47,
+  "text": "Egun bera, behin eta berriz. Eta irratian, haren ahotsa.",
+  "mos": 3.8,
   "cer": 0.0,
   "cand": 0,
-  "seed": 103412,
-  "dur": 2.98,
+  "seed": 103902,
+  "dur": 3.36,
   "asr": "Egun bera, behin eta berriz, eta irratian, haren ahotsa."
  },
  "f_a1": {
@@ -975,11 +985,12 @@
  },
  "o2_n1": {
   "who": "AMONA",
-  "mos": 3.47,
+  "text": "Txalapartak bi ahots ditu, neskatoak: batak galdetzen du, eta besteak erantzuten du.",
+  "mos": 3.5,
   "cer": 0.0,
   "cand": 0,
-  "seed": 4100,
-  "dur": 5.13,
+  "seed": 4600,
+  "dur": 5.09,
   "asr": "Txalapartak bi ahots ditu, neskatoak, batak galdetzen du, eta besteak erantzuten du."
  },
  "o2_n2": {
@@ -1021,11 +1032,12 @@
  },
  "f_n2": {
   "who": "ANDERE",
-  "mos": 3.4,
+  "text": "Egunsentia da, neskatoak. Herriak txalaparta jo nahi du.",
+  "mos": 3.63,
   "cer": 0.0,
-  "cand": 1,
-  "seed": 4131,
-  "dur": 3.7,
+  "cand": 2,
+  "seed": 4662,
+  "dur": 3.92,
   "asr": "Egunsentia da, neskatoak, herriak txalaparta jo nahi du."
  },
  "o4_m1": {
