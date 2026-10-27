@@ -62,6 +62,7 @@ def main():
     ap.add_argument('--temp', type=float, default=0.5, help='2. hautagaitik aurrera: klase-tenperatura')
     ap.add_argument('--slow', type=float, default=0.93, help='2. hautagaitik aurrera: abiadura-biderkatzailea (denbora gehiago: azken hitzak ez galtzeko)')
     ap.add_argument('--pause', type=float, default=0.0, help='esaldi-muga bakoitzeko denbora gehigarria (s; adib. 0.3): ereduak puntuazioari ia denborarik ez dio ematen, eta esaldi askoko lerroetan hitzak galtzen ziren')
+    ap.add_argument('--seed-off', type=int, default=0, help='hazien desplazamendua (aurreko pasada batean probatutako hautagaiak ez errepikatzeko)')
     ap.add_argument('--batch', type=int, default=6, help='pertsonaia bereko lerroak batera (CPU-n azkarrago)')
     ap.add_argument('--kbps', default='64k')
     a = ap.parse_args()
@@ -157,7 +158,7 @@ def main():
             cfg = OmniVoiceGenerationConfig(class_temperature=0.0 if k == 0 else a.temp)
             for i in range(0, len(pending), a.batch):
                 chunk = pending[i:i + a.batch]
-                seed = R.get('seed', 7) * 100 + k * 31 + i
+                seed = R.get('seed', 7) * 100 + k * 31 + i + a.seed_off
                 torch.manual_seed(seed)
                 sp = R.get('speed', 1.0) * (a.slow if k else 1.0)
                 texts = [lines[l][1] for l in chunk]

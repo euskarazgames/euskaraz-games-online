@@ -286,6 +286,7 @@
       /* ordezko eredu prozeduralak bere geometriak ditu (KayKit klonek iturriarekin partekatzen dituzte) */
       if (!e.skel && n.isMesh && n !== e.shield) n.geometry.dispose();
     });
+    if (e.zain) zainDispose(e);
   }
   function clearEnemies() {
     for (const e of ENEMIES) removeEnemy(e);

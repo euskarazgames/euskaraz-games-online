@@ -307,7 +307,7 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 #cinema.deia #portrait{width:84px;min-height:84px;height:84px}
 #cinema.deia #deiaWave{width:150px;height:26px;top:10px;right:14px}
 @media(max-height:520px){
-  #chapterTitle{font-size:20px;top:14%}
+  #chapterTitle{font-size:20px;top:27%}
   #chapterTitle em{font-size:11px;margin-top:4px}
   #subtitle{font-size:13px;width:auto;max-width:46%;bottom:14px;padding:4px 12px}
   #coach{font-size:11px;padding:5px 11px 5px 5px}
@@ -320,3 +320,9 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 }
 @media(pointer:coarse) and (orientation:landscape){#coach{top:52px;bottom:auto}}
 @media(pointer:coarse) and (orientation:portrait){#chapterTitle{font-size:22px;top:22%}#subtitle{font-size:14px;bottom:300px;width:86vw}#coach{font-size:11px;top:176px}#cineText{font-size:14.5px;margin:6px 0}#goal{max-width:58%;font-size:10px}#place{font-size:18px}#cinema.deia #portrait{width:60px;min-height:60px;height:60px}#cinema.deia #deiaWave{display:none}}
+/* BEGIRATU: begi-botoia (piztuta: urrezkoa) eta lehen pertsonaren ertz ilunak */
+#lookBtn{display:inline-grid;place-items:center}
+#lookBtn svg{display:block}
+#top button.on{background:#e2b271;color:#1c3b50;border-color:#e2b271}
+body.begi #vignette{box-shadow:inset 0 0 22vmin 5vmin #02080cb8;transition:box-shadow .3s}
+body.begi #keys,body.begi #waypoint{opacity:.2}

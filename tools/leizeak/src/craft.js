@@ -403,6 +403,7 @@
       /* pieza ez bada: sagu-klika = erasoa (mahaigainean) */
       if (e.pointerType === "mouse") {
         if (!CRAFT.on) {
+          begiOff();
           ATK.hold = true;
           attack();
         }

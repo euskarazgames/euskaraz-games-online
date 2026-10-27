@@ -29,7 +29,8 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   ametsa.js (AMETSA: zazpigarren leizea), inguma.js (Inguma), aurpegia.js (Amaiurren aurpegia: maskara,
   kliskak, ahoa), izenburua.js (azala: harkaitza, zazpi argi-zutabe, kamera), oroitzapenak.js (zazpi
   oroitzapen, sepia), anboto.js (azken atala: Anbotoko gailurra, txalaparta-duelua bi ahotsez, amaiera),
-  kamera.js (HORMA: hormari itsatsita, izkinatik begiratu; GOITIK/ATZETIK moduak game.js-en),
+  kamera.js (HORMA: hormari itsatsita, izkinatik begiratu; BEGIRATU: lehen pertsona; GOITIK/ATZETIK
+  moduak eta gelen angeluak game.js-en),
   sigiloa.js (itzal-zaindariak, argi-konoak, ALERTA/IHESA/ZAINTZA, oihartzun-radarra, TOK-TOK, LOTARAZI,
   begi-harriak, izotz-hariak), harpeak.js (ANBOTOKO HARPEAK: sigilu-leizea, gailurraren aurretik)…).
   Azaleko letra-tipoa: `tools/leizeak/fonts/cinzel.woff2` (SIL OFL; build-ean base64). Ez editatu `public/games/leizeak.html` zuzenean:

@@ -220,7 +220,22 @@
     m.rotation.order = "YXZ";
     m.rotation.set(PI / 2, Math.atan2(bx - ax, bz - az), 0);
     m.castShadow = false;
-    const th = { ax, az, bx, bz, y, m };
+    /* altuera irakurgarri goitik ere: haren itzala lurrean (azpian) eta izotz-kristal bat muturretan */
+    const h = Math.atan2(bx - ax, bz - az),
+      floor = obj(new T.PlaneGeometry(0.3, len), new T.MeshBasicMaterial({ color: "#06121c", transparent: true, opacity: 0.55, depthWrite: false }));
+    floor.position.set((ax + bx) / 2, 0.045, (az + bz) / 2);
+    floor.rotation.order = "YXZ";
+    floor.rotation.set(-PI / 2, h, 0);
+    floor.castShadow = false;
+    const parts = [m, floor];
+    for (const [x, z] of [[ax, az], [bx, bz]]) {
+      const c = obj(new T.OctahedronGeometry(0.26, 0), new T.MeshBasicMaterial({ color: "#dffaff" }));
+      c.position.set(x, y, z);
+      c.scale.set(1, 1.5, 1);
+      c.castShadow = false;
+      parts.push(c);
+    }
+    const th = { ax, az, bx, bz, y, m, parts };
     SIG.threads.push(th);
     return th;
   }
@@ -310,6 +325,25 @@
       fxBurst(x, P.y + 0.3, z, { n: 18, speed: 2.5, up: 3, life: 0.8, size: 0.32, color: "#1a1030", grav: 2 });
       n++;
     }
+  }
+  /* removeEnemy-tik: konoaren geometriak, ertza, kriseilua eta ikurra (konoaren materiala aurarekin doa) */
+  function zainDispose(e) {
+    const Z = e.zain,
+      c = Z.cone;
+    c.geometry.dispose();
+    c.userData.edge.geometry.dispose();
+    c.userData.edge.material.dispose();
+    Z.lamp.material.dispose();
+    Z.mark.material.dispose();
+  }
+  function sigVanish(e) {
+    fxBurst(e.x, e.y + 0.8, e.z, { n: 22, speed: 1.6, up: 1.4, life: 0.9, size: 0.34, color: "#1a1030", grav: -1.2 });
+    fxRing(e.x, e.y + 0.05, e.z, "#6d28c9", 1.8, 0.45);
+    removeEnemy(e);
+    const i = ENEMIES.indexOf(e);
+    if (i >= 0) ENEMIES.splice(i, 1);
+    const j = SIG.guards.indexOf(e);
+    if (j >= 0) SIG.guards.splice(j, 1);
   }
   /* zarata: hurbileko zaindariak (lasai edo susmoz) hotsera */
   function sigNoise(x, z, r) {
@@ -600,7 +634,8 @@
         dz = P.z - E.z,
         d = Math.hypot(dx, dz) || 1;
       const see = !respawnTimer && Math.abs(P.y - (E.y || 0)) < 3 && d < E.range * (sigHidden() ? 0.3 : 1) && angDiff(Math.atan2(dx, dz), E.dir) < E.fov && sigRay(E.x, E.z, dx / d, dz / d, d) > d - 0.35;
-      E.sus = see ? E.sus + dt * 2.2 * (saved.assist ? 0.6 : 1) : Math.max(0, E.sus - dt * 0.5);
+      /* mugatuta: luzaroan ikusi ondoren ere, ihesaldian ez du alarma berriz piztu behar ikusi gabe */
+      E.sus = see ? Math.min(1.2, E.sus + dt * 2.2 * (saved.assist ? 0.6 : 1)) : Math.max(0, E.sus - dt * 0.5);
       if (E.sus >= 1 && SIG.phase !== 1) sigSpotted(null);
       if (see && SIG.phase === 1) anySee = true;
       sigConeSet(E.cone, E.x, E.z, E.dir, E.fov, E.range);
@@ -611,7 +646,7 @@
     /* argi-hariak (orainean bakarrik) */
     for (const th of SIG.threads) {
       const on = phase === 1;
-      th.m.visible = on;
+      for (const o of th.parts) o.visible = on;
       if (!on) continue;
       th.m.material.opacity = 0.65 + Math.sin(time * 9 + th.ax) * 0.25;
       const vx = th.bx - th.ax,
@@ -641,12 +676,8 @@
         SIG.phase = 3;
         SIG.t = SIG_CAUTION;
         for (const e of SIG.guards) if (e.zain.mode === "search") Object.assign(e.zain, { mode: "return", modeT: 0, markK: "" });
-        /* indargarriak itzalera itzultzen dira */
-        for (const e of SIG.guards.filter((g) => g.zain.temp)) {
-          fxBurst(e.x, e.y + 0.6, e.z, { n: 16, speed: 2, up: 1, life: 0.7, size: 0.3, color: "#1a1030", grav: -1 });
-          e.hp = 0;
-          killEnemy(e);
-        }
+        /* indargarriak itzalera itzultzen dira (ez da hilketa: ez kolperik, ez saririk) */
+        for (const e of SIG.guards.filter((g) => g.zain.temp && g.state !== "dead")) sigVanish(e);
       }
     } else if (SIG.phase === 3) {
       SIG.t -= dt;
@@ -673,7 +704,8 @@
       W = cv.width,
       H2 = W / 2,
       S = H2 / 24,
-      az = CAM_AZ + (CAM.yawS || 0),
+      /* kameraren norabidean (lehen pertsonan: begiradarena) */
+      az = BEGI.k > 0.5 ? BEGI.yaw + PI : CAM_AZ + (CAM.yawS || 0),
       ca = Math.cos(az),
       sa = Math.sin(az),
       X = (x, z) => H2 + ((x - P.x) * ca - (z - P.z) * sa) * S,

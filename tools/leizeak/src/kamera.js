@@ -96,3 +96,72 @@
     target.set(mix(target.x, cx, k), mix(target.y, cy, k), mix(target.z, cz, k));
     look.set(mix(look.x, lx, k), mix(look.y, ly, k), mix(look.z, lz, k));
   }
+  /* ==================================================================
+     BEGIRATU (lehen pertsona; diseinu propioa): Amaiurren begietatik inguruari begiratu, geldirik.
+     I tekla edo begi-botoia (berriz sakatuta, itzuli); makilak, hatzak edo saguaren eskuineko botoiak
+     begirada biratzen du. Jauzia, bultzada, erasoa, kolpe bat edo eszena bat: itzuli (Amaiur begiratzen
+     zuen norabidera begira).
+     ================================================================== */
+  const BEGI = { on: false, k: 0, yaw: 0, pitch: 0 };
+  function begiCan() {
+    return started && !paused && !cinematic && !FILM.on && !GET.on && !TXALA.on && !CRAFT.on && !CRAFT.held && !MIR.on && P.grounded && !P.riding && !P.climb && P.dashT <= 0 && !respawnTimer && damageTime <= 0 && CHAIN.state === "idle";
+  }
+  function begiToggle() {
+    if (BEGI.on) return begiOff();
+    if (!begiCan()) return;
+    if (HORMA.on) hormaOff();
+    LOCK.target = null;
+    Object.assign(BEGI, { on: true, yaw: P.angle, pitch: -0.06 });
+    P.vx = P.vz = 0;
+    SND.click();
+    $("lookBtn").classList.add("on");
+    document.body.classList.add("begi");
+    coach("begiratu", "I", "BEGIRATU: makilaz inguruan begiratu · I berriz: itzuli", "", null, "BEGIRATU: makilaz edo hatzaz begiratu · begia berriz: itzuli", "");
+  }
+  function begiOff() {
+    if (!BEGI.on) return;
+    BEGI.on = false;
+    $("lookBtn").classList.remove("on");
+    document.body.classList.remove("begi");
+    coachDone("begiratu");
+  }
+  /* hatza edo sagua (pixelak): eskuinera arrastatu → eskuinera begiratu */
+  function begiLook(dx, dy) {
+    BEGI.yaw -= dx * 0.0062;
+    BEGI.pitch = clamp(BEGI.pitch - dy * 0.005, -0.8, 0.62);
+  }
+  /* tick-etik, move() aurretik: makila → begirada (Amaiur ere biratzen da) */
+  function begiUpdate(dt) {
+    if (BEGI.on && !begiCan()) begiOff();
+    if (BEGI.on) {
+      const r = stickRaw();
+      BEGI.yaw -= r.x * dt * 2.2;
+      BEGI.pitch = clamp(BEGI.pitch - r.z * dt * 1.5, -0.8, 0.62);
+      P.angle = BEGI.yaw;
+      P.vx = P.vz = 0;
+    }
+    BEGI.k = mix(BEGI.k, BEGI.on ? 1 : 0, 1 - Math.exp(-dt * (BEGI.on ? 7 : 9)));
+    if (BEGI.k < 0.002) BEGI.k = 0;
+  }
+  /* eszenak, deiak, txalaparta…: lehen pertsona utzi eta Amaiur berriz ikusgai (begizta nagusitik) */
+  function begiGuard() {
+    if (!BEGI.on && !BEGI.k) return;
+    if (FILM.on || cinematic || GET.on || TXALA.on || !started) {
+      begiOff();
+      BEGI.k = 0;
+      hero.visible = true;
+    }
+  }
+  /* kamera: begien altueran, aurrera apur bat (burua ez ikusteko); begirada yaw/pitch norabidean */
+  function begiCamera(target, look) {
+    if (BEGI.k <= 0) return;
+    const k = BEGI.k * BEGI.k * (3 - 2 * BEGI.k),
+      fx = Math.sin(BEGI.yaw),
+      fz = Math.cos(BEGI.yaw),
+      cp = Math.cos(BEGI.pitch),
+      ey = P.y + 1.62,
+      cx = P.x + fx * 0.22,
+      cz = P.z + fz * 0.22;
+    target.set(mix(target.x, cx, k), mix(target.y, ey, k), mix(target.z, cz, k));
+    look.set(mix(look.x, cx + fx * cp * 10, k), mix(look.y, ey + Math.sin(BEGI.pitch) * 10, k), mix(look.z, cz + fz * cp * 10, k));
+  }

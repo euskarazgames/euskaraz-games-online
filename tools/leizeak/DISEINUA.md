@@ -311,6 +311,11 @@ ez da beste jokoen edukirik erabili (ez maparik, ez pertsonaiarik, ez interfazer
   (makila hormarantz une batez), Amaiur itsatsita geratzen da, alboetara bakarrik eta isilik mugitzen
   da, eta kamera baxu eta alboan jartzen da, ertzetik haratago begira (izkinaren atzean zer dagoen).
   Makila hormatik urrundu, jauzi edo ertzetik irten: askatu.
+- **BEGIRATU** (lehen pertsona; I tekla edo begi-botoia): Amaiurren begietatik, geldirik; makilak, hatzak
+  edo saguaren eskuineko botoiak begirada biratzen du (Amaiur ere bai). Jauzia, bultzada, erasoa, kolpe bat,
+  eszena edo deia: itzuli. Astinduak leunago eta radarra begiradaren norabidean.
+- **Gelaren angelua** (GOITIK; `room(..., {cam: {pitch, d}})`): gela batzuek beren angelua dute, leunki
+  aldatzen dena gela batetik bestera — harpeetan C eta E garaiago (gela osoa), D baxuago (harien altuera).
 
 **Sigiloa (`sigiloa.js`).**
 - **Itzal-zaindariak** (Gauekoren itzalak, kriseiluarekin): bidea puntuz puntu eta geldialdietan
@@ -325,7 +330,8 @@ ez da beste jokoen edukirik erabili (ez maparik, ez pertsonaiarik, ez interfazer
   **LOTARAZI**: zaindari baten atzean, oharkabean → lo (45 s). **Itzal-zokoak**: ilunpean, astiro,
   ia ez zaituzte ikusten. Korrika eta bultzadan: hotsa.
 - **Begi-harriak** (zutabe bat urrezko begi batekin, biraka, ezin dira lotarazi) eta **izotz-hariak**
-  (orainean bakarrik: jauzi gainetik edo iraganera aldatu).
+  (orainean bakarrik: jauzi gainetik edo iraganera aldatu; muturretan izotz-kristalak eta lurrean haien
+  itzala, altuera goitik ere irakurtzeko).
 
 **ANBOTOKO HARPEAK (`harpeak.js`, 08).** ANBOTOren gailurraren aurreko atala: Plazan Iratirekin hitz
 egin ondoren, Andereren suzko bola Gauekoren ekaitzak jotzen du eta Amaiur mendiaren barrura erortzen

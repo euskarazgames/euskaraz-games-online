@@ -186,6 +186,39 @@ const { launch } = require('./_browser');
   ok(!(await ev(() => __game.HORMA.on)), 'HORMA-IKUSPEGIA itzalita: ez itsatsi');
   await ev(() => { __game.CAM.wallView = true; });
 
+  /* 10b · BEGIRATU: lehen pertsona (I): Amaiurren begietatik, makilak begirada biratzen du, geldirik */
+  await ev(() => __game.sigReset());
+  await sleepAll([]);
+  await tp(KX, -24);
+  await T(20);
+  await ev(() => __game.begiToggle());
+  await T(120);
+  const fp = await ev(() => { const g = __game; g.CAM.trauma = 0; for (let i = 0; i < 30; i++) g.draw(); const c = g.camera.position; return { on: g.BEGI.on, k: +g.BEGI.k.toFixed(2), hero: g.hero.visible, eye: +Math.hypot(c.x - g.P.x, c.y - g.P.y - 1.62, c.z - g.P.z).toFixed(2), fov: +g.camera.fov.toFixed(0), btn: document.getElementById('lookBtn').classList.contains('on') }; });
+  ok(fp.on && fp.k > 0.9 && !fp.hero && fp.btn, 'BEGIRATU: lehen pertsona (Amaiur ezkutuan, begia piztuta)', S(fp));
+  ok(fp.eye < 0.6 && fp.fov > 55, 'kamera begien altueran', S(fp));
+  const fpA = await ev(() => ({ x: __game.P.x, z: __game.P.z, yaw: __game.BEGI.yaw }));
+  await walk(1, 0, 60);
+  const fpB = await ev(() => ({ x: __game.P.x, z: __game.P.z, yaw: __game.BEGI.yaw, angle: __game.P.angle }));
+  ok(Math.hypot(fpB.x - fpA.x, fpB.z - fpA.z) < 0.01 && Math.abs(fpB.yaw - fpA.yaw) > 0.3 && Math.abs(fpB.angle - fpB.yaw) < 1e-6, 'makilak begirada biratzen du, Amaiur geldirik', S({ mugitu: +Math.hypot(fpB.x - fpA.x, fpB.z - fpA.z).toFixed(3), biraketa: +(fpB.yaw - fpA.yaw).toFixed(2) }));
+  await ev(() => window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyI' })));
+  await ev(() => window.dispatchEvent(new KeyboardEvent('keyup', { code: 'KeyI' })));
+  await T(120);
+  ok(await ev(() => !__game.BEGI.on && __game.BEGI.k === 0 && __game.hero.visible), 'I berriz: itzuli (Amaiur ikusgai)');
+  await ev(() => __game.begiToggle());
+  await T(30);
+  await ev(() => { window.dispatchEvent(new KeyboardEvent('keydown', { code: 'Space' })); window.dispatchEvent(new KeyboardEvent('keyup', { code: 'Space' })); });
+  await T(10);
+  ok(await ev(() => !__game.BEGI.on && !__game.P.grounded), 'jauzia: lehen pertsonatik irten eta jauzi');
+  await T(160);
+  /* gela batzuek beren angelua dute: D baxuagoa (harien altuera), B lehenetsia */
+  const camPitch = () => ev(() => { const g = __game; for (let i = 0; i < 60; i++) { g.tick(1 / 120); g.draw(); } const c = g.camera.position, h = g.hero.position; return +(Math.atan2(c.y - h.y, Math.hypot(c.x - h.x, c.z - h.z)) * 180 / Math.PI).toFixed(0); });
+  const pB = await camPitch();
+  await tp(KX - 6, -104);
+  await T(20);
+  const pD = await camPitch();
+  ok(pD < pB - 8, 'D gela: kamera baxuagoa (harien altuera irakurgarri)', S({ B: pB, D: pD }));
+  ok(await ev(() => __game.SIG.threads.every((t) => t.parts.length === 4)), 'hariak: itzala lurrean eta kristalak muturretan');
+
   /* 11 · ataria: alarman atea itxita; lasai, ireki; gailurrera */
   await ev(() => __game.sigReset());
   await sleepAll([]);

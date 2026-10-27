@@ -125,7 +125,7 @@
   /* doors: { n|s|e|w: offset (gelaren erditik, metroetan) } — hutsunea 6 m */
   function room(id, x, z, w, d, opts = {}) {
     const y = opts.y || 0;
-    const R = { id, x, z, w, d, y, zone: BDG.id, area: opts.area, waves: opts.waves, diff: opts.diff, hpK: opts.hpK, fightText: opts.fightText, fog: opts.fog, onWin: opts.onWin, sides: {} };
+    const R = { id, x, z, w, d, y, zone: BDG.id, area: opts.area, waves: opts.waves, diff: opts.diff, hpK: opts.hpK, fightText: opts.fightText, fog: opts.fog, onWin: opts.onWin, cam: opts.cam, sides: {} };
     ROOMS.push(R);
     BDG.rooms[id] = R;
     if (opts.area) ROOMS_AREA[opts.area] = [opts.name, opts.desc || ""];

@@ -323,7 +323,7 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 #cinema.deia #portrait{width:84px;min-height:84px;height:84px}
 #cinema.deia #deiaWave{width:150px;height:26px;top:10px;right:14px}
 @media(max-height:520px){
-  #chapterTitle{font-size:20px;top:14%}
+  #chapterTitle{font-size:20px;top:27%}
   #chapterTitle em{font-size:11px;margin-top:4px}
   #subtitle{font-size:13px;width:auto;max-width:46%;bottom:14px;padding:4px 12px}
   #coach{font-size:11px;padding:5px 11px 5px 5px}
@@ -336,10 +336,16 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 }
 @media(pointer:coarse) and (orientation:landscape){#coach{top:52px;bottom:auto}}
 @media(pointer:coarse) and (orientation:portrait){#chapterTitle{font-size:22px;top:22%}#subtitle{font-size:14px;bottom:300px;width:86vw}#coach{font-size:11px;top:176px}#cineText{font-size:14.5px;margin:6px 0}#goal{max-width:58%;font-size:10px}#place{font-size:18px}#cinema.deia #portrait{width:60px;min-height:60px;height:60px}#cinema.deia #deiaWave{display:none}}
+/* BEGIRATU: begi-botoia (piztuta: urrezkoa) eta lehen pertsonaren ertz ilunak */
+#lookBtn{display:inline-grid;place-items:center}
+#lookBtn svg{display:block}
+#top button.on{background:#e2b271;color:#1c3b50;border-color:#e2b271}
+body.begi #vignette{box-shadow:inset 0 0 22vmin 5vmin #02080cb8;transition:box-shadow .3s}
+body.begi #keys,body.begi #waypoint{opacity:.2}
 
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>LEIZEEN DEIA<small id="loadLabel">Txalapartak gauez jotzen du…</small><i><b id="loadBar"></b></i></div></div>
 <section id="start"><div id="logo"><svg id="emblem" viewBox="-130 -130 260 260" aria-hidden="true"><defs><linearGradient id="lzG" gradientUnits="userSpaceOnUse" x1="0" y1="-120" x2="0" y2="120"><stop offset="0" stop-color="#fff3c4"/><stop offset=".36" stop-color="#f0c869"/><stop offset=".56" stop-color="#b38026"/><stop offset=".76" stop-color="#f6dc8e"/><stop offset="1" stop-color="#7a4e14"/></linearGradient><linearGradient id="lzW" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4319"/><stop offset=".5" stop-color="#c88f45"/><stop offset="1" stop-color="#5a3612"/></linearGradient><path id="lzHead" d="M0 0A30 30 0 0 1 0-60A15 15 0 0 1 0-30A15 15 0 0 0 0 0Z"/><path id="lzStar" d="M0-9L2.2-2.2 9 0 2.2 2.2 0 9-2.2 2.2-9 0-2.2-2.2Z"/></defs><g stroke="#2b1906" stroke-width="2.5"><rect x="-7" y="-128" width="14" height="256" rx="7" fill="url(#lzW)" transform="rotate(38)"/><rect x="-7" y="-128" width="14" height="256" rx="7" fill="url(#lzW)" transform="rotate(-38)"/></g><circle r="101" fill="#0b1626" fill-opacity=".72" stroke="url(#lzG)" stroke-width="7"/><circle r="89" fill="none" stroke="#e9cf96" stroke-opacity=".55" stroke-width="1.6"/><g fill="#fff6d8"><use href="#lzStar" transform="rotate(0) translate(0 -101)"/><use href="#lzStar" transform="rotate(51) translate(0 -101)"/><use href="#lzStar" transform="rotate(103) translate(0 -101)"/><use href="#lzStar" transform="rotate(154) translate(0 -101)"/><use href="#lzStar" transform="rotate(206) translate(0 -101)"/><use href="#lzStar" transform="rotate(257) translate(0 -101)"/><use href="#lzStar" transform="rotate(309) translate(0 -101)"/></g><g fill="url(#lzG)" stroke="#3a240a" stroke-width="2.2"><use href="#lzHead"/><use href="#lzHead" transform="rotate(90)"/><use href="#lzHead" transform="rotate(180)"/><use href="#lzHead" transform="rotate(270)"/></g></svg><div id="logoOver"><i></i>OIHARTZUN · II<i></i></div><h1>LEIZEEN<span>DEIA</span></h1><div id="logoTag">ZAZPI LEIZE · AHIZPA BAT · DEI BAT</div></div><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>© EUSKARAZ GAMES</span><div><button id="credits">KREDITUAK</button> <button id="reset">↺</button></div></div></section>
-<div id="top"><button id="camBtn" aria-label="Kamera">⤢</button><button id="audio">♫</button><button id="quality" aria-label="Kalitatea">HD</button><button id="pause" hidden>Ⅱ</button></div>
+<div id="top"><button id="lookBtn" aria-label="Begiratu (lehen pertsona)"><svg viewBox="0 0 24 14" width="17" height="10" aria-hidden="true"><path d="M1 7C4 2.2 8 0.8 12 0.8S20 2.2 23 7C20 11.8 16 13.2 12 13.2S4 11.8 1 7Z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7" r="3.2" fill="currentColor"/></svg></button><button id="camBtn" aria-label="Kamera">⤢</button><button id="audio">♫</button><button id="quality" aria-label="Kalitatea">HD</button><button id="pause" hidden>Ⅱ</button></div>
 <div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="coins">0</b><small id="coinLab"></small></div><div id="keyBox" hidden><b id="keyN">0</b><small id="keyLab"></small></div><div id="bombBox" hidden><b id="bombN">●●●</b><small id="bombLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><canvas id="radar" width="220" height="220" hidden aria-label="Oihartzun-radarra"></canvas><div id="sigBanner" hidden></div><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
 <div id="touch"><div id="stick"><i id="knob"></i></div><div id="touchActions"><button id="weaveBtn"></button><button id="recallBtn" aria-label="Finkatu"></button><button id="phaseBtn"></button><button id="dashBtn">BULTZADA</button><button id="jumpBtn"></button><button id="useBtn"></button><button id="attackBtn"></button><button id="craftBtn"></button><button id="rotateBtn" aria-label="Biratu"></button></div></div>
 <section id="cinema" hidden><div id="cineTop"><span id="cineTag">LEIZEEN DEIA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><canvas id="deiaWave" width="240" height="40" aria-hidden="true"></canvas><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="katea" hidden></div><div id="shieldHint" hidden></div><div id="zoneFade"></div><div id="itemGet" hidden role="dialog" aria-live="polite"><div class="ig"><div id="getIcon"></div><h2 id="getName"></h2><p id="getText"></p><small id="getMore">JARRAITU ›</small></div></div><div id="txala" hidden><div class="tx"><header><b id="txTitle"></b><button id="txClose" aria-label="Itxi">✕</button></header><div id="txSeq"></div><p id="txMsg"></p><div id="txPads"><button id="txL"><span>◀</span>EZKERRA<small>← · J</small></button><button id="txR"><span>▶</span>ESKUINA<small>→ · K</small></button></div><div id="txKnown"></div></div></div><div id="film" hidden><div id="filmFade"></div><div class="bar t"><button id="filmSkip">SALTATU →</button></div><div class="bar b"></div><div id="filmCap" aria-live="polite"></div><div id="filmTitle" hidden><b id="filmTitleBig"></b><small id="filmTitleSmall"></small></div><div id="filmSub" hidden><span id="filmWho"></span><span id="filmLine"></span></div></div><button id="deiaRing" hidden><i></i><b>OIHARTZUN-DEIA</b><span id="deiaFrom"></span><small id="deiaKey">ERANTZUN</small></button><div id="beamAlert" hidden>IKUSI ZAITU</div><div id="locCap" hidden aria-live="polite"></div>
@@ -4504,6 +4510,11 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       dy = e.clientY - q.y;
     q.x = e.clientX;
     q.y = e.clientY;
+    /* lehen pertsonan: hatz batek (edo saguak) begirada biratzen du */
+    if (BEGI.on) {
+      if (CAMG.ptrs.size < 2) begiLook(dx, dy);
+      return true;
+    }
     if (CAMG.ptrs.size >= 2) {
       const [a, b] = [...CAMG.ptrs.values()],
         d = Math.hypot(a.x - b.x, a.y - b.y);
@@ -7172,6 +7183,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       /* ordezko eredu prozeduralak bere geometriak ditu (KayKit klonek iturriarekin partekatzen dituzte) */
       if (!e.skel && n.isMesh && n !== e.shield) n.geometry.dispose();
     });
+    if (e.zain) zainDispose(e);
   }
   function clearEnemies() {
     for (const e of ENEMIES) removeEnemy(e);
@@ -9301,6 +9313,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       /* pieza ez bada: sagu-klika = erasoa (mahaigainean) */
       if (e.pointerType === "mouse") {
         if (!CRAFT.on) {
+          begiOff();
           ATK.hold = true;
           attack();
         }
@@ -12961,6 +12974,75 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     look.set(mix(look.x, lx, k), mix(look.y, ly, k), mix(look.z, lz, k));
   }
   /* ==================================================================
+     BEGIRATU (lehen pertsona; diseinu propioa): Amaiurren begietatik inguruari begiratu, geldirik.
+     I tekla edo begi-botoia (berriz sakatuta, itzuli); makilak, hatzak edo saguaren eskuineko botoiak
+     begirada biratzen du. Jauzia, bultzada, erasoa, kolpe bat edo eszena bat: itzuli (Amaiur begiratzen
+     zuen norabidera begira).
+     ================================================================== */
+  const BEGI = { on: false, k: 0, yaw: 0, pitch: 0 };
+  function begiCan() {
+    return started && !paused && !cinematic && !FILM.on && !GET.on && !TXALA.on && !CRAFT.on && !CRAFT.held && !MIR.on && P.grounded && !P.riding && !P.climb && P.dashT <= 0 && !respawnTimer && damageTime <= 0 && CHAIN.state === "idle";
+  }
+  function begiToggle() {
+    if (BEGI.on) return begiOff();
+    if (!begiCan()) return;
+    if (HORMA.on) hormaOff();
+    LOCK.target = null;
+    Object.assign(BEGI, { on: true, yaw: P.angle, pitch: -0.06 });
+    P.vx = P.vz = 0;
+    SND.click();
+    $("lookBtn").classList.add("on");
+    document.body.classList.add("begi");
+    coach("begiratu", "I", "BEGIRATU: makilaz inguruan begiratu · I berriz: itzuli", "", null, "BEGIRATU: makilaz edo hatzaz begiratu · begia berriz: itzuli", "");
+  }
+  function begiOff() {
+    if (!BEGI.on) return;
+    BEGI.on = false;
+    $("lookBtn").classList.remove("on");
+    document.body.classList.remove("begi");
+    coachDone("begiratu");
+  }
+  /* hatza edo sagua (pixelak): eskuinera arrastatu → eskuinera begiratu */
+  function begiLook(dx, dy) {
+    BEGI.yaw -= dx * 0.0062;
+    BEGI.pitch = clamp(BEGI.pitch - dy * 0.005, -0.8, 0.62);
+  }
+  /* tick-etik, move() aurretik: makila → begirada (Amaiur ere biratzen da) */
+  function begiUpdate(dt) {
+    if (BEGI.on && !begiCan()) begiOff();
+    if (BEGI.on) {
+      const r = stickRaw();
+      BEGI.yaw -= r.x * dt * 2.2;
+      BEGI.pitch = clamp(BEGI.pitch - r.z * dt * 1.5, -0.8, 0.62);
+      P.angle = BEGI.yaw;
+      P.vx = P.vz = 0;
+    }
+    BEGI.k = mix(BEGI.k, BEGI.on ? 1 : 0, 1 - Math.exp(-dt * (BEGI.on ? 7 : 9)));
+    if (BEGI.k < 0.002) BEGI.k = 0;
+  }
+  /* eszenak, deiak, txalaparta…: lehen pertsona utzi eta Amaiur berriz ikusgai (begizta nagusitik) */
+  function begiGuard() {
+    if (!BEGI.on && !BEGI.k) return;
+    if (FILM.on || cinematic || GET.on || TXALA.on || !started) {
+      begiOff();
+      BEGI.k = 0;
+      hero.visible = true;
+    }
+  }
+  /* kamera: begien altueran, aurrera apur bat (burua ez ikusteko); begirada yaw/pitch norabidean */
+  function begiCamera(target, look) {
+    if (BEGI.k <= 0) return;
+    const k = BEGI.k * BEGI.k * (3 - 2 * BEGI.k),
+      fx = Math.sin(BEGI.yaw),
+      fz = Math.cos(BEGI.yaw),
+      cp = Math.cos(BEGI.pitch),
+      ey = P.y + 1.62,
+      cx = P.x + fx * 0.22,
+      cz = P.z + fz * 0.22;
+    target.set(mix(target.x, cx, k), mix(target.y, ey, k), mix(target.z, cz, k));
+    look.set(mix(look.x, cx + fx * cp * 10, k), mix(look.y, ey + Math.sin(BEGI.pitch) * 10, k), mix(look.z, cz + fz * cp * 10, k));
+  }
+  /* ==================================================================
      SUGAARREN KATEA · lehen leizeko tresna (C tekla edo KATEA botoia)
      Suge-buruko katea jaurti:
        · suge-eraztun batera → Amaiur harantz tiratzen du (amildegiak gurutzatu);
@@ -13889,7 +13971,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* doors: { n|s|e|w: offset (gelaren erditik, metroetan) } — hutsunea 6 m */
   function room(id, x, z, w, d, opts = {}) {
     const y = opts.y || 0;
-    const R = { id, x, z, w, d, y, zone: BDG.id, area: opts.area, waves: opts.waves, diff: opts.diff, hpK: opts.hpK, fightText: opts.fightText, fog: opts.fog, onWin: opts.onWin, sides: {} };
+    const R = { id, x, z, w, d, y, zone: BDG.id, area: opts.area, waves: opts.waves, diff: opts.diff, hpK: opts.hpK, fightText: opts.fightText, fog: opts.fog, onWin: opts.onWin, cam: opts.cam, sides: {} };
     ROOMS.push(R);
     BDG.rooms[id] = R;
     if (opts.area) ROOMS_AREA[opts.area] = [opts.name, opts.desc || ""];
@@ -29061,7 +29143,22 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     m.rotation.order = "YXZ";
     m.rotation.set(PI / 2, Math.atan2(bx - ax, bz - az), 0);
     m.castShadow = false;
-    const th = { ax, az, bx, bz, y, m };
+    /* altuera irakurgarri goitik ere: haren itzala lurrean (azpian) eta izotz-kristal bat muturretan */
+    const h = Math.atan2(bx - ax, bz - az),
+      floor = obj(new T.PlaneGeometry(0.3, len), new T.MeshBasicMaterial({ color: "#06121c", transparent: true, opacity: 0.55, depthWrite: false }));
+    floor.position.set((ax + bx) / 2, 0.045, (az + bz) / 2);
+    floor.rotation.order = "YXZ";
+    floor.rotation.set(-PI / 2, h, 0);
+    floor.castShadow = false;
+    const parts = [m, floor];
+    for (const [x, z] of [[ax, az], [bx, bz]]) {
+      const c = obj(new T.OctahedronGeometry(0.26, 0), new T.MeshBasicMaterial({ color: "#dffaff" }));
+      c.position.set(x, y, z);
+      c.scale.set(1, 1.5, 1);
+      c.castShadow = false;
+      parts.push(c);
+    }
+    const th = { ax, az, bx, bz, y, m, parts };
     SIG.threads.push(th);
     return th;
   }
@@ -29151,6 +29248,25 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       fxBurst(x, P.y + 0.3, z, { n: 18, speed: 2.5, up: 3, life: 0.8, size: 0.32, color: "#1a1030", grav: 2 });
       n++;
     }
+  }
+  /* removeEnemy-tik: konoaren geometriak, ertza, kriseilua eta ikurra (konoaren materiala aurarekin doa) */
+  function zainDispose(e) {
+    const Z = e.zain,
+      c = Z.cone;
+    c.geometry.dispose();
+    c.userData.edge.geometry.dispose();
+    c.userData.edge.material.dispose();
+    Z.lamp.material.dispose();
+    Z.mark.material.dispose();
+  }
+  function sigVanish(e) {
+    fxBurst(e.x, e.y + 0.8, e.z, { n: 22, speed: 1.6, up: 1.4, life: 0.9, size: 0.34, color: "#1a1030", grav: -1.2 });
+    fxRing(e.x, e.y + 0.05, e.z, "#6d28c9", 1.8, 0.45);
+    removeEnemy(e);
+    const i = ENEMIES.indexOf(e);
+    if (i >= 0) ENEMIES.splice(i, 1);
+    const j = SIG.guards.indexOf(e);
+    if (j >= 0) SIG.guards.splice(j, 1);
   }
   /* zarata: hurbileko zaindariak (lasai edo susmoz) hotsera */
   function sigNoise(x, z, r) {
@@ -29441,7 +29557,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         dz = P.z - E.z,
         d = Math.hypot(dx, dz) || 1;
       const see = !respawnTimer && Math.abs(P.y - (E.y || 0)) < 3 && d < E.range * (sigHidden() ? 0.3 : 1) && angDiff(Math.atan2(dx, dz), E.dir) < E.fov && sigRay(E.x, E.z, dx / d, dz / d, d) > d - 0.35;
-      E.sus = see ? E.sus + dt * 2.2 * (saved.assist ? 0.6 : 1) : Math.max(0, E.sus - dt * 0.5);
+      /* mugatuta: luzaroan ikusi ondoren ere, ihesaldian ez du alarma berriz piztu behar ikusi gabe */
+      E.sus = see ? Math.min(1.2, E.sus + dt * 2.2 * (saved.assist ? 0.6 : 1)) : Math.max(0, E.sus - dt * 0.5);
       if (E.sus >= 1 && SIG.phase !== 1) sigSpotted(null);
       if (see && SIG.phase === 1) anySee = true;
       sigConeSet(E.cone, E.x, E.z, E.dir, E.fov, E.range);
@@ -29452,7 +29569,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     /* argi-hariak (orainean bakarrik) */
     for (const th of SIG.threads) {
       const on = phase === 1;
-      th.m.visible = on;
+      for (const o of th.parts) o.visible = on;
       if (!on) continue;
       th.m.material.opacity = 0.65 + Math.sin(time * 9 + th.ax) * 0.25;
       const vx = th.bx - th.ax,
@@ -29482,12 +29599,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         SIG.phase = 3;
         SIG.t = SIG_CAUTION;
         for (const e of SIG.guards) if (e.zain.mode === "search") Object.assign(e.zain, { mode: "return", modeT: 0, markK: "" });
-        /* indargarriak itzalera itzultzen dira */
-        for (const e of SIG.guards.filter((g) => g.zain.temp)) {
-          fxBurst(e.x, e.y + 0.6, e.z, { n: 16, speed: 2, up: 1, life: 0.7, size: 0.3, color: "#1a1030", grav: -1 });
-          e.hp = 0;
-          killEnemy(e);
-        }
+        /* indargarriak itzalera itzultzen dira (ez da hilketa: ez kolperik, ez saririk) */
+        for (const e of SIG.guards.filter((g) => g.zain.temp && g.state !== "dead")) sigVanish(e);
       }
     } else if (SIG.phase === 3) {
       SIG.t -= dt;
@@ -29514,7 +29627,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       W = cv.width,
       H2 = W / 2,
       S = H2 / 24,
-      az = CAM_AZ + (CAM.yawS || 0),
+      /* kameraren norabidean (lehen pertsonan: begiradarena) */
+      az = BEGI.k > 0.5 ? BEGI.yaw + PI : CAM_AZ + (CAM.yawS || 0),
       ca = Math.cos(az),
       sa = Math.sin(az),
       X = (x, z) => H2 + ((x - P.x) * ca - (z - P.z) * sa) * S,
@@ -29617,7 +29731,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
        C Kutxen harpea ......... bi zaindari eta begi-harri bat: TOK-TOK eta LOTARAZI
        D Hari-pasabidea ........ izotz-hariak (orainean): jauzi edo iraganera
        E Gauekoren ataria ...... bi zaindari, begi-harria eta atea → GAILURRA (anboto.js)
-     Gela bakoitza kontrol-puntu bat da. Kamera: GOITIK eta HORMA (kamera.js).
+     Gela bakoitza kontrol-puntu bat da. Kamera: GOITIK eta HORMA (kamera.js); C eta E garaiago (gela
+     osoa), D baxuago (harien altuera irakurgarri). BEGIRATU (lehen pertsona) leku guztietan.
      Probetan: window.__game.HK, harpeakStart(), harpeakEnd().
      ================================================================== */
   const KX = 3300;
@@ -29685,7 +29800,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     HK.defs.push({ x: E(-10), z: -30, a: PI / 2, room: B, path: [[E(-10), -30, 2.6, 0], [E(10), -30, 2.6, 0]] });
     corridor(E(6), -51, 6, 6, "z");
     /* ---- C: kutxen harpea (bi zaindari, begi-harria) ---- */
-    const C = room("hkC", E(0), -72, 30, 36, { area: "hC", name: "KUTXEN HARPEA", desc: "Itzalak eta harrizko begi bat. Hormek hitz egiten dute: TOK-TOK.", doors: { s: 6, n: -6 }, fog: [11, 66] });
+    const C = room("hkC", E(0), -72, 30, 36, { area: "hC", name: "KUTXEN HARPEA", desc: "Itzalak eta harrizko begi bat. Hormek hitz egiten dute: TOK-TOK.", doors: { s: 6, n: -6 }, fog: [11, 66], cam: { pitch: 1.06, d: 24.5 } });
     for (const [x, z] of [[E(-7), -64], [E(7), -64], [E(-7), -80], [E(7), -80]]) coverBlock(x, z, 6, 1.4, 2.4, 0, "crates");
     for (const [x, z, r] of [[E(-13), -60, 0.4], [E(13.2), -75, 1.2], [E(-12.8), -71, 2.2]]) bprop("barrel_large", x, 0, z, DS * 0.75, r);
     hkHide(E(-12.6), -56.8, 2);
@@ -29696,13 +29811,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     HK.defs.push({ x: E(-6), z: -85.6, a: 0, room: C, path: [[E(-6), -85.6, 9, 0]] });
     corridor(E(-6), -93, 6, 6, "z");
     /* ---- D: hari-pasabidea (izotz-hariak orainean) ---- */
-    const D = room("hkD", E(-6), -111, 18, 30, { area: "hD", name: "HARI-PASABIDEA", desc: "Izotz-hariak, orainean bakarrik. Iraganean, bidea libre.", doors: { s: 0, n: 0 }, fog: [10, 60] });
+    const D = room("hkD", E(-6), -111, 18, 30, { area: "hD", name: "HARI-PASABIDEA", desc: "Izotz-hariak, orainean bakarrik. Iraganean, bidea libre.", doors: { s: 0, n: 0 }, fog: [10, 60], cam: { pitch: 0.74, d: 18.5 } });
     for (const [z, y] of [[-102, 0.75], [-110, 1.5], [-118, 0.75]]) sigThread(E(-14.2), z, E(2.2), z, y);
     for (const [x, z] of [[E(-14.4), -106], [E(2.4), -114]]) hkHide(x, z, 1.6);
     HK.defs.push({ x: E(-1), z: -100, a: PI, room: D, range: 8.5, path: [[E(-1), -100, 2, PI], [E(-1), -122, 2, 0]] });
     corridor(E(-6), -129, 6, 6, "z");
     /* ---- E: Gauekoren ataria ---- */
-    const Ee = room("hkE", E(0), -147, 30, 30, { area: "hE", name: "GAUEKOREN ATARIA", desc: "Atea, gailurrera. Begirada guztiak hemen.", doors: { s: -6, n: 0 }, fog: [12, 70] });
+    const Ee = room("hkE", E(0), -147, 30, 30, { area: "hE", name: "GAUEKOREN ATARIA", desc: "Atea, gailurrera. Begirada guztiak hemen.", doors: { s: -6, n: 0 }, fog: [12, 70], cam: { pitch: 1.08, d: 25 } });
     for (const [x, z] of [[E(-5), -147], [E(5), -147]]) {
       bprop("pillar_decorated", x, 0, z, DS * 0.9, 0);
       solids.push({ x, z, r: 1.3, h: 6, y: 0, pillar: true });
@@ -30513,17 +30628,22 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     $("phaseMark").style.background = phase ? "#9ae3e555" : "#f1c58166";
     if (immediate) phaseBlend = phase;
   }
-  function direction() {
+  /* makila (teklak edo ukipena), pantailako ardatzetan: x eskuinera, z behera */
+  function stickRaw() {
     let x =
         (input.keys.KeyD || input.keys.ArrowRight ? 1 : 0) -
         (input.keys.KeyA || input.keys.ArrowLeft ? 1 : 0) +
         input.x,
       z = (input.keys.KeyS || input.keys.ArrowDown ? 1 : 0) - (input.keys.KeyW || input.keys.ArrowUp ? 1 : 0) + input.z;
-    let n = Math.hypot(x, z);
+    const n = Math.hypot(x, z);
     if (n > 1) {
       x /= n;
       z /= n;
     }
+    return { x, z };
+  }
+  function direction() {
+    const { x, z } = stickRaw();
     /* makila → mundua, kameraren biraketaren arabera ("gora" = kameratik urrun) */
     const wx = x * 0.83 + z * 0.557,
       wz = -x * 0.557 + z * 0.83;
@@ -30561,6 +30681,12 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (HORMA.on) {
       d = hormaDir(d);
       len = Math.hypot(d.x, d.z);
+      surf = false;
+    }
+    /* BEGIRATU: lehen pertsonan geldirik (makilak begirada biratzen du — kamera.js) */
+    if (BEGI.on) {
+      d = { x: 0, z: 0 };
+      len = 0;
       surf = false;
     }
     /* eraikitzean: pieza eskuan → geldirik; mugitzen hasiz gero, eraikuntza-modutik irten */
@@ -30761,7 +30887,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     hormaUpdate(dt, d, len);
     hero.position.set(P.x, P.y + riderY(), P.z);
     hero.rotation.y = mix(hero.rotation.y, hero.rotation.y + Math.atan2(Math.sin(P.angle - hero.rotation.y), Math.cos(P.angle - hero.rotation.y)), Math.min(1, dt * 30));
-    hero.visible = damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0;
+    hero.visible = BEGI.k < 0.5 && (damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0);
     /* finkatuta eta mugitzen: alboetara (strafe) edo atzeraka */
     let run = HORMA.on ? "Walking_A" : "Running_A";
     if (lockT && len > 0.15) {
@@ -31022,8 +31148,13 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       /* GOITIK (etsai nagusirik gabe): goitik eta hurbil — kanpoan 52°, leizean 57° (gela gehiena ikusgai) */
       goitik = CAM.mode === "goitik" && !BOSS.on;
     CAM.gk = mix(CAM.gk ?? (goitik ? 1 : 0), goitik ? 1 : 0, 1 - Math.exp(-dt * 3));
-    const pitch = mix(0.9, 1.0, CAM.inside),
-      gd = mix(21, 22, CAM.inside),
+    /* gela batzuek beren angelua dute (GOITIK; dungeon.js-eko room(..., {cam})): estuetan baxuago eta
+       hurbilago (altuerak irakurgarri), handietan garaiago (gela osoa) — leunki, gela batetik bestera */
+    const RC = goitik && ROOM.cur && ROOM.cur.zone === ZONE.cur ? ROOM.cur.cam : null;
+    if (RC) CAM.rc = RC;
+    CAM.rk = mix(CAM.rk || 0, RC ? 1 : 0, 1 - Math.exp(-dt * 2.2));
+    const pitch = mix(mix(0.9, 1.0, CAM.inside), CAM.rc ? CAM.rc.pitch : 1, CAM.rk),
+      gd = mix(mix(21, 22, CAM.inside), CAM.rc ? CAM.rc.d : 22, CAM.rk),
       ghz = Math.cos(pitch) * gd,
       offset = new T.Vector3(mix(mix(15.5, 10, CAM.inside), ghz * CAM_AZS, CAM.gk), mix(mix(F.h, 18.5, CAM.inside), Math.sin(pitch) * gd, CAM.gk), mix(mix(23, 15, CAM.inside), ghz * CAM_AZC, CAM.gk)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : dragon ? 1.38 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
     lockCamera(dt, look);
@@ -31060,6 +31191,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (ZONE.cur === "ibarra") camTerrainLift(look, target);
     /* HORMA: hormari itsatsita, kamera baxu eta alboan (ertzetik haratago) — kamera.js */
     hormaCamera(dt, target, look);
+    /* BEGIRATU: Amaiurren begietatik */
+    begiCamera(target, look);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) {
       CAM.pos = camera.position.clone();
       CAM.vel = new T.Vector3();
@@ -31076,7 +31209,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       CAM.pos[k] = target[k] + (ch + tmp) * ex;
     }
     camera.position.copy(CAM.pos);
-    const sh = CAM.trauma * CAM.trauma;
+    /* lehen pertsonan, astinduak leunago (begien altueran zorabiatzen du) */
+    const sh = CAM.trauma * CAM.trauma * (1 - 0.8 * BEGI.k);
     if (sh > 0.0005) {
       const q = CAM.shakeT * 31;
       camera.position.x += Math.sin(q * 1.7) * sh * 0.9;
@@ -31084,7 +31218,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       camera.position.z += Math.sin(q * 1.3 + 2) * sh * 0.9;
     }
     camera.lookAt(look);
-    const fov = F.fov + CAM.fovKick;
+    const fov = mix(F.fov, 64, BEGI.k) + CAM.fovKick;
     if (Math.abs(camera.fov - fov) > 0.02) {
       camera.fov = fov;
       camera.updateProjectionMatrix();
@@ -31125,7 +31259,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       try {
         if (!localStorage.getItem("leizeak-kamera-oharra")) {
           localStorage.setItem("leizeak-kamera-oharra", "1");
-          setTimeout(() => started && !FILM.on && notify(L("KAMERA BERRIA: GOITIK. Menuan (‖) ATZETIK aukera daiteke; hatzarekin biratu eta hurbildu."), "", 4.5), 3400);
+          setTimeout(() => started && !FILM.on && notify(L("KAMERA BERRIA: GOITIK (menuan ‖, ATZETIK) · begia: lehen pertsonan begiratu"), "", 4.5), 3400);
         }
       } catch {}
     }
@@ -31141,7 +31275,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         "GARAIA (Q): URREA iragana (uda), URDINA oraina (negua). Plataforma batzuk garai batean bakarrik daude, eta itzal bakoitza bere begien koloreko garaian bakarrik zauritzen da.\n\n" +
         "TXALAPARTA (B): bi makila, EZKERRA eta ESKUINA. Espirituek erritmo bat jotzen dute; zuk errepikatu. Ikasitako erritmoak edonon jo daitezke: ESNATU (◀ ◀ ▶) jentil-harriak altxatzen ditu, ENTZUN (▶ ◀ ▶ ▶) ezkutukoa erakusten du.\n\n" +
         "LEIZEAN: giltza txikiek ateak irekitzen dituzte; giltza nagusiak, ate handia. Kutxa bakoitzak zerbait du. Lehen leizearen tresna: SUGAARREN KATEA (C) — suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.\n\n" +
-        "ESKU MAGIKOA (G): kaxak arrastatu, biratu eta pilatu. Lau ARNASA-ZATIrekin, arnasa bat gehiago.",
+        "ESKU MAGIKOA (G): kaxak arrastatu, biratu eta pilatu. Lau ARNASA-ZATIrekin, arnasa bat gehiago.\n\n" +
+        "KAMERA: GOITIK (lehenetsia) edo ATZETIK (O edo menua); hatzarekin edo saguaren eskuineko botoiarekin biratu eta hurbildu. BEGIRATU (I edo begia): Amaiurren begietatik, geldirik. HORMA: hormaren kontra une batez → itsatsita, eta izkinatik begiratu.\n\n" +
+        "SIGILOA (Gauekoren itzalak): haien argi-konoetatik kanpo, itzal-zokoetan eta astiro. TOK-TOK (E hormaren ondoan) hotsera erakartzen ditu; LOTARAZI (E atzetik) lotan uzten ditu. Ikusiz gero: ezkutatu eta itxaron.",
       "",
     );
   }
@@ -31204,7 +31340,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* tekla-zerrenda: hitzaurrean, ikasitako tresnak bakarrik */
   function keysRender() {
     const has = (k) => saved.items.includes(k);
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ["I", "begiratu"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
   }
@@ -31257,6 +31393,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       KeyH: powerMenu,
       KeyL: questLog,
       KeyO: camModeToggle,
+      KeyI: begiToggle,
       KeyE: interact,
       Escape: pause,
     };
@@ -31294,6 +31431,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         return;
       }
       if (!e.repeat && actions[e.code]) {
+        /* lehen pertsonan: ekintza batek itzultzen du (begiratu, garaia, ekin eta menuek ez) */
+        if (BEGI.on && !["KeyI", "KeyQ", "KeyE", "KeyO", "KeyL", "KeyH", "Escape"].includes(e.code)) begiOff();
         if (e.code === "Space") jumpHeld = true;
         actions[e.code]();
       }
@@ -31363,6 +31502,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     };
     $("quality").textContent = quality ? "HD" : "ARIN";
     /* ⤢: distantzia aurrezarriak (hurbil · ertaina · urrun) eta kamera zentratu */
+    /* begia: BEGIRATU (lehen pertsona, kamera.js) */
+    $("lookBtn").onclick = () => begiToggle();
     $("camBtn").onclick = () => {
       camLevel = (camLevel + 1) % 3;
       CAM.user = CAM_LEVELS[camLevel];
@@ -31562,6 +31703,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       }
     } else {
       updateWorld(dt);
+      begiUpdate(dt);
       if (!TXALA.on) move(dt);
       magicUpdate(dt);
       bombsUpdate(dt);
@@ -31632,6 +31774,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const raw = Math.min(0.12, (now - last) / 1000);
     last = now;
     faceUpdate(raw);
+    begiGuard();
     if (FILM.on) filmUpdate(raw);
     else if (cinematic) {
       updateCinema(raw);
@@ -31857,6 +32000,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         el.setPointerCapture(e.pointerId);
         if (id === "jumpBtn") jumpHeld = true;
         if (id === "attackBtn") ATK.hold = true;
+        if (BEGI.on && id !== "useBtn" && id !== "phaseBtn") begiOff();
         fn();
         el.classList.add("pressed");
       };
@@ -32237,6 +32381,10 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         cinematicState: () => cinematic,
         CAM,
         HORMA,
+        BEGI,
+        begiToggle,
+        begiOff,
+        cameraUpdate,
         SIG,
         HK,
         DGK,

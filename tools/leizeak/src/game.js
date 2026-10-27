@@ -518,6 +518,11 @@
       dy = e.clientY - q.y;
     q.x = e.clientX;
     q.y = e.clientY;
+    /* lehen pertsonan: hatz batek (edo saguak) begirada biratzen du */
+    if (BEGI.on) {
+      if (CAMG.ptrs.size < 2) begiLook(dx, dy);
+      return true;
+    }
     if (CAMG.ptrs.size >= 2) {
       const [a, b] = [...CAMG.ptrs.values()],
         d = Math.hypot(a.x - b.x, a.y - b.y);
@@ -2509,17 +2514,22 @@
     $("phaseMark").style.background = phase ? "#9ae3e555" : "#f1c58166";
     if (immediate) phaseBlend = phase;
   }
-  function direction() {
+  /* makila (teklak edo ukipena), pantailako ardatzetan: x eskuinera, z behera */
+  function stickRaw() {
     let x =
         (input.keys.KeyD || input.keys.ArrowRight ? 1 : 0) -
         (input.keys.KeyA || input.keys.ArrowLeft ? 1 : 0) +
         input.x,
       z = (input.keys.KeyS || input.keys.ArrowDown ? 1 : 0) - (input.keys.KeyW || input.keys.ArrowUp ? 1 : 0) + input.z;
-    let n = Math.hypot(x, z);
+    const n = Math.hypot(x, z);
     if (n > 1) {
       x /= n;
       z /= n;
     }
+    return { x, z };
+  }
+  function direction() {
+    const { x, z } = stickRaw();
     /* makila → mundua, kameraren biraketaren arabera ("gora" = kameratik urrun) */
     const wx = x * 0.83 + z * 0.557,
       wz = -x * 0.557 + z * 0.83;
@@ -2557,6 +2567,12 @@
     if (HORMA.on) {
       d = hormaDir(d);
       len = Math.hypot(d.x, d.z);
+      surf = false;
+    }
+    /* BEGIRATU: lehen pertsonan geldirik (makilak begirada biratzen du — kamera.js) */
+    if (BEGI.on) {
+      d = { x: 0, z: 0 };
+      len = 0;
       surf = false;
     }
     /* eraikitzean: pieza eskuan → geldirik; mugitzen hasiz gero, eraikuntza-modutik irten */
@@ -2757,7 +2773,7 @@
     hormaUpdate(dt, d, len);
     hero.position.set(P.x, P.y + riderY(), P.z);
     hero.rotation.y = mix(hero.rotation.y, hero.rotation.y + Math.atan2(Math.sin(P.angle - hero.rotation.y), Math.cos(P.angle - hero.rotation.y)), Math.min(1, dt * 30));
-    hero.visible = damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0;
+    hero.visible = BEGI.k < 0.5 && (damageTime <= 0 || Math.floor(damageTime * 15) % 2 === 0);
     /* finkatuta eta mugitzen: alboetara (strafe) edo atzeraka */
     let run = HORMA.on ? "Walking_A" : "Running_A";
     if (lockT && len > 0.15) {
@@ -3018,8 +3034,13 @@
       /* GOITIK (etsai nagusirik gabe): goitik eta hurbil — kanpoan 52°, leizean 57° (gela gehiena ikusgai) */
       goitik = CAM.mode === "goitik" && !BOSS.on;
     CAM.gk = mix(CAM.gk ?? (goitik ? 1 : 0), goitik ? 1 : 0, 1 - Math.exp(-dt * 3));
-    const pitch = mix(0.9, 1.0, CAM.inside),
-      gd = mix(21, 22, CAM.inside),
+    /* gela batzuek beren angelua dute (GOITIK; dungeon.js-eko room(..., {cam})): estuetan baxuago eta
+       hurbilago (altuerak irakurgarri), handietan garaiago (gela osoa) — leunki, gela batetik bestera */
+    const RC = goitik && ROOM.cur && ROOM.cur.zone === ZONE.cur ? ROOM.cur.cam : null;
+    if (RC) CAM.rc = RC;
+    CAM.rk = mix(CAM.rk || 0, RC ? 1 : 0, 1 - Math.exp(-dt * 2.2));
+    const pitch = mix(mix(0.9, 1.0, CAM.inside), CAM.rc ? CAM.rc.pitch : 1, CAM.rk),
+      gd = mix(mix(21, 22, CAM.inside), CAM.rc ? CAM.rc.d : 22, CAM.rk),
       ghz = Math.cos(pitch) * gd,
       offset = new T.Vector3(mix(mix(15.5, 10, CAM.inside), ghz * CAM_AZS, CAM.gk), mix(mix(F.h, 18.5, CAM.inside), Math.sin(pitch) * gd, CAM.gk), mix(mix(23, 15, CAM.inside), ghz * CAM_AZC, CAM.gk)).multiplyScalar(CAM.zoom * F.k * (BOSS.on ? (tall ? 1.5 : cloud ? 1.4 : dragon ? 1.38 : 1.25) : 1) * (P.riding ? 1.16 : 1) * (1 + 0.16 * GLIDE.k));
     lockCamera(dt, look);
@@ -3056,6 +3077,8 @@
     if (ZONE.cur === "ibarra") camTerrainLift(look, target);
     /* HORMA: hormari itsatsita, kamera baxu eta alboan (ertzetik haratago) — kamera.js */
     hormaCamera(dt, target, look);
+    /* BEGIRATU: Amaiurren begietatik */
+    begiCamera(target, look);
     if (!CAM.pos || CAM.pos.distanceTo(camera.position) > 4) {
       CAM.pos = camera.position.clone();
       CAM.vel = new T.Vector3();
@@ -3072,7 +3095,8 @@
       CAM.pos[k] = target[k] + (ch + tmp) * ex;
     }
     camera.position.copy(CAM.pos);
-    const sh = CAM.trauma * CAM.trauma;
+    /* lehen pertsonan, astinduak leunago (begien altueran zorabiatzen du) */
+    const sh = CAM.trauma * CAM.trauma * (1 - 0.8 * BEGI.k);
     if (sh > 0.0005) {
       const q = CAM.shakeT * 31;
       camera.position.x += Math.sin(q * 1.7) * sh * 0.9;
@@ -3080,7 +3104,7 @@
       camera.position.z += Math.sin(q * 1.3 + 2) * sh * 0.9;
     }
     camera.lookAt(look);
-    const fov = F.fov + CAM.fovKick;
+    const fov = mix(F.fov, 64, BEGI.k) + CAM.fovKick;
     if (Math.abs(camera.fov - fov) > 0.02) {
       camera.fov = fov;
       camera.updateProjectionMatrix();
@@ -3121,7 +3145,7 @@
       try {
         if (!localStorage.getItem("leizeak-kamera-oharra")) {
           localStorage.setItem("leizeak-kamera-oharra", "1");
-          setTimeout(() => started && !FILM.on && notify(L("KAMERA BERRIA: GOITIK. Menuan (‖) ATZETIK aukera daiteke; hatzarekin biratu eta hurbildu."), "", 4.5), 3400);
+          setTimeout(() => started && !FILM.on && notify(L("KAMERA BERRIA: GOITIK (menuan ‖, ATZETIK) · begia: lehen pertsonan begiratu"), "", 4.5), 3400);
         }
       } catch {}
     }
@@ -3137,7 +3161,9 @@
         "GARAIA (Q): URREA iragana (uda), URDINA oraina (negua). Plataforma batzuk garai batean bakarrik daude, eta itzal bakoitza bere begien koloreko garaian bakarrik zauritzen da.\n\n" +
         "TXALAPARTA (B): bi makila, EZKERRA eta ESKUINA. Espirituek erritmo bat jotzen dute; zuk errepikatu. Ikasitako erritmoak edonon jo daitezke: ESNATU (◀ ◀ ▶) jentil-harriak altxatzen ditu, ENTZUN (▶ ◀ ▶ ▶) ezkutukoa erakusten du.\n\n" +
         "LEIZEAN: giltza txikiek ateak irekitzen dituzte; giltza nagusiak, ate handia. Kutxa bakoitzak zerbait du. Lehen leizearen tresna: SUGAARREN KATEA (C) — suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.\n\n" +
-        "ESKU MAGIKOA (G): kaxak arrastatu, biratu eta pilatu. Lau ARNASA-ZATIrekin, arnasa bat gehiago.",
+        "ESKU MAGIKOA (G): kaxak arrastatu, biratu eta pilatu. Lau ARNASA-ZATIrekin, arnasa bat gehiago.\n\n" +
+        "KAMERA: GOITIK (lehenetsia) edo ATZETIK (O edo menua); hatzarekin edo saguaren eskuineko botoiarekin biratu eta hurbildu. BEGIRATU (I edo begia): Amaiurren begietatik, geldirik. HORMA: hormaren kontra une batez → itsatsita, eta izkinatik begiratu.\n\n" +
+        "SIGILOA (Gauekoren itzalak): haien argi-konoetatik kanpo, itzal-zokoetan eta astiro. TOK-TOK (E hormaren ondoan) hotsera erakartzen ditu; LOTARAZI (E atzetik) lotan uzten ditu. Ikusiz gero: ezkutatu eta itxaron.",
       "",
     );
   }
@@ -3200,7 +3226,7 @@
   /* tekla-zerrenda: hitzaurrean, ikasitako tresnak bakarrik */
   function keysRender() {
     const has = (k) => saved.items.includes(k);
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ["I", "begiratu"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
   }
@@ -3253,6 +3279,7 @@
       KeyH: powerMenu,
       KeyL: questLog,
       KeyO: camModeToggle,
+      KeyI: begiToggle,
       KeyE: interact,
       Escape: pause,
     };
@@ -3290,6 +3317,8 @@
         return;
       }
       if (!e.repeat && actions[e.code]) {
+        /* lehen pertsonan: ekintza batek itzultzen du (begiratu, garaia, ekin eta menuek ez) */
+        if (BEGI.on && !["KeyI", "KeyQ", "KeyE", "KeyO", "KeyL", "KeyH", "Escape"].includes(e.code)) begiOff();
         if (e.code === "Space") jumpHeld = true;
         actions[e.code]();
       }
@@ -3359,6 +3388,8 @@
     };
     $("quality").textContent = quality ? "HD" : "ARIN";
     /* ⤢: distantzia aurrezarriak (hurbil · ertaina · urrun) eta kamera zentratu */
+    /* begia: BEGIRATU (lehen pertsona, kamera.js) */
+    $("lookBtn").onclick = () => begiToggle();
     $("camBtn").onclick = () => {
       camLevel = (camLevel + 1) % 3;
       CAM.user = CAM_LEVELS[camLevel];
@@ -3558,6 +3589,7 @@
       }
     } else {
       updateWorld(dt);
+      begiUpdate(dt);
       if (!TXALA.on) move(dt);
       magicUpdate(dt);
       bombsUpdate(dt);
@@ -3628,6 +3660,7 @@
     const raw = Math.min(0.12, (now - last) / 1000);
     last = now;
     faceUpdate(raw);
+    begiGuard();
     if (FILM.on) filmUpdate(raw);
     else if (cinematic) {
       updateCinema(raw);
@@ -3853,6 +3886,7 @@
         el.setPointerCapture(e.pointerId);
         if (id === "jumpBtn") jumpHeld = true;
         if (id === "attackBtn") ATK.hold = true;
+        if (BEGI.on && id !== "useBtn" && id !== "phaseBtn") begiOff();
         fn();
         el.classList.add("pressed");
       };
@@ -4233,6 +4267,10 @@
         cinematicState: () => cinematic,
         CAM,
         HORMA,
+        BEGI,
+        begiToggle,
+        begiOff,
+        cameraUpdate,
         SIG,
         HK,
         DGK,

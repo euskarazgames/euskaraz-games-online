@@ -7,7 +7,8 @@
        C Kutxen harpea ......... bi zaindari eta begi-harri bat: TOK-TOK eta LOTARAZI
        D Hari-pasabidea ........ izotz-hariak (orainean): jauzi edo iraganera
        E Gauekoren ataria ...... bi zaindari, begi-harria eta atea → GAILURRA (anboto.js)
-     Gela bakoitza kontrol-puntu bat da. Kamera: GOITIK eta HORMA (kamera.js).
+     Gela bakoitza kontrol-puntu bat da. Kamera: GOITIK eta HORMA (kamera.js); C eta E garaiago (gela
+     osoa), D baxuago (harien altuera irakurgarri). BEGIRATU (lehen pertsona) leku guztietan.
      Probetan: window.__game.HK, harpeakStart(), harpeakEnd().
      ================================================================== */
   const KX = 3300;
@@ -75,7 +76,7 @@
     HK.defs.push({ x: E(-10), z: -30, a: PI / 2, room: B, path: [[E(-10), -30, 2.6, 0], [E(10), -30, 2.6, 0]] });
     corridor(E(6), -51, 6, 6, "z");
     /* ---- C: kutxen harpea (bi zaindari, begi-harria) ---- */
-    const C = room("hkC", E(0), -72, 30, 36, { area: "hC", name: "KUTXEN HARPEA", desc: "Itzalak eta harrizko begi bat. Hormek hitz egiten dute: TOK-TOK.", doors: { s: 6, n: -6 }, fog: [11, 66] });
+    const C = room("hkC", E(0), -72, 30, 36, { area: "hC", name: "KUTXEN HARPEA", desc: "Itzalak eta harrizko begi bat. Hormek hitz egiten dute: TOK-TOK.", doors: { s: 6, n: -6 }, fog: [11, 66], cam: { pitch: 1.06, d: 24.5 } });
     for (const [x, z] of [[E(-7), -64], [E(7), -64], [E(-7), -80], [E(7), -80]]) coverBlock(x, z, 6, 1.4, 2.4, 0, "crates");
     for (const [x, z, r] of [[E(-13), -60, 0.4], [E(13.2), -75, 1.2], [E(-12.8), -71, 2.2]]) bprop("barrel_large", x, 0, z, DS * 0.75, r);
     hkHide(E(-12.6), -56.8, 2);
@@ -86,13 +87,13 @@
     HK.defs.push({ x: E(-6), z: -85.6, a: 0, room: C, path: [[E(-6), -85.6, 9, 0]] });
     corridor(E(-6), -93, 6, 6, "z");
     /* ---- D: hari-pasabidea (izotz-hariak orainean) ---- */
-    const D = room("hkD", E(-6), -111, 18, 30, { area: "hD", name: "HARI-PASABIDEA", desc: "Izotz-hariak, orainean bakarrik. Iraganean, bidea libre.", doors: { s: 0, n: 0 }, fog: [10, 60] });
+    const D = room("hkD", E(-6), -111, 18, 30, { area: "hD", name: "HARI-PASABIDEA", desc: "Izotz-hariak, orainean bakarrik. Iraganean, bidea libre.", doors: { s: 0, n: 0 }, fog: [10, 60], cam: { pitch: 0.74, d: 18.5 } });
     for (const [z, y] of [[-102, 0.75], [-110, 1.5], [-118, 0.75]]) sigThread(E(-14.2), z, E(2.2), z, y);
     for (const [x, z] of [[E(-14.4), -106], [E(2.4), -114]]) hkHide(x, z, 1.6);
     HK.defs.push({ x: E(-1), z: -100, a: PI, room: D, range: 8.5, path: [[E(-1), -100, 2, PI], [E(-1), -122, 2, 0]] });
     corridor(E(-6), -129, 6, 6, "z");
     /* ---- E: Gauekoren ataria ---- */
-    const Ee = room("hkE", E(0), -147, 30, 30, { area: "hE", name: "GAUEKOREN ATARIA", desc: "Atea, gailurrera. Begirada guztiak hemen.", doors: { s: -6, n: 0 }, fog: [12, 70] });
+    const Ee = room("hkE", E(0), -147, 30, 30, { area: "hE", name: "GAUEKOREN ATARIA", desc: "Atea, gailurrera. Begirada guztiak hemen.", doors: { s: -6, n: 0 }, fog: [12, 70], cam: { pitch: 1.08, d: 25 } });
     for (const [x, z] of [[E(-5), -147], [E(5), -147]]) {
       bprop("pillar_decorated", x, 0, z, DS * 0.9, 0);
       solids.push({ x, z, r: 1.3, h: 6, y: 0, pillar: true });
