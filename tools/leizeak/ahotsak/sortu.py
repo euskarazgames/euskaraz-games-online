@@ -62,6 +62,7 @@ def main():
     ap.add_argument('--temp', type=float, default=0.5, help='2. hautagaitik aurrera: klase-tenperatura')
     ap.add_argument('--slow', type=float, default=0.93, help='2. hautagaitik aurrera: abiadura-biderkatzailea (denbora gehiago: azken hitzak ez galtzeko)')
     ap.add_argument('--pause', type=float, default=0.0, help='esaldi-muga bakoitzeko denbora gehigarria (s; adib. 0.3): ereduak puntuazioari ia denborarik ez dio ematen, eta esaldi askoko lerroetan hitzak galtzen ziren')
+    ap.add_argument('--k-start', type=int, default=0, help='lehen hautagaiaren zenbakia (aurreko pasada eten batean probatutakoak saltatzeko)')
     ap.add_argument('--seed-off', type=int, default=0, help='hazien desplazamendua (aurreko pasada batean probatutako hautagaiak ez errepikatzeko)')
     ap.add_argument('--batch', type=int, default=6, help='pertsonaia bereko lerroak batera (CPU-n azkarrago)')
     ap.add_argument('--kbps', default='64k')
@@ -152,7 +153,7 @@ def main():
                 best[lid] = {'mos': prev['mos'], 'cer': prev['cer'], 'k': prev.get('cand', -1), 'seed': prev.get('seed'), 'hyp': prev.get('asr', '')}
         ok = lambda l: l in best and best[l]['mos'] >= a.mos_ok and best[l]['cer'] <= a.cer_ok
         pending = [l for l in ids if not ok(l)]
-        for k in range(a.cands):
+        for k in range(a.k_start, a.cands):
             if not pending:
                 break
             cfg = OmniVoiceGenerationConfig(class_temperature=0.0 if k == 0 else a.temp)
