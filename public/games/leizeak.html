@@ -12878,8 +12878,8 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* ==================================================================
      KAMERA · HORMA (diseinu propioa; abentura-joko klasikoen ideia orokorra)
      Hormari edo kutxa-pila bati bizkarra emanez gero (makila hormarantz une batez), Amaiur itsatsita
-     geratzen da: alboetara bakarrik mugitzen da, eta kamera baxu eta alboan jartzen da, hormaren
-     ertzetik haratago begira (izkinaren atzean dagoena ikusteko). Makila hormatik urruntzean, jauzian
+     geratzen da: alboetara bakarrik mugitzen da (isilik), eta ertzera hurbiltzean kamerak izkinaren
+     atzera begiratzen du (hormaren beste aldean dagoena ikusteko). Makila hormatik urruntzean, jauzian
      edo ertzetik irtetean, askatu. Menuan itzal daiteke (HORMA-IKUSPEGIA).
      ================================================================== */
   const HORMA = { on: false, push: 0, k: 0, s: null, nx: 0, nz: 1, tx: 1, tz: 0, side: 1, at: 0, ext: 1 };
@@ -12907,6 +12907,24 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     if (Math.abs(s) > 0.2) HORMA.side = Math.sign(s);
     return { x: HORMA.tx * s * 0.45, z: HORMA.tz * s * 0.45 };
   }
+  /* kutxa-pilen zirkulu-talkek (solids) blokearen aurpegia baino lehen gelditzen dute Amaiur: ukitu ez
+     arren, hormarik hurbilena (0.5 m baino gutxiago, aurpegiaren parean eta altuera berean) */
+  function hormaNear() {
+    let best = null,
+      bd = 0.5;
+    for (const s of platforms) {
+      if (!s.wall || s.off || s.bars || (s.phase !== -1 && s.phase !== phase)) continue;
+      const R = s.w / 2 + s.d / 2 + 1;
+      if (Math.abs(s.x - P.x) > R || Math.abs(s.z - P.z) > R) continue;
+      if (P.y >= s.y - 0.32 || P.y + 1.8 <= (s.bottom ?? s.y - 0.5)) continue;
+      const f = wallFace(s, P.x, P.z);
+      if (f.dist >= 0 && f.dist < bd && Math.abs(f.at) <= f.ext) {
+        bd = f.dist;
+        best = s;
+      }
+    }
+    return best;
+  }
   function hormaOn(s, f) {
     HORMA.on = true;
     HORMA.s = s;
@@ -12926,7 +12944,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       CAM.wallView && started && !BEGI.on && P.grounded && !P.riding && !P.climb && P.dashT <= 0 && !LOCK.target && !CRAFT.on && !CRAFT.held && !MAG.charging && !MIR.on && ZONE.cur !== "ibarra" && !ivyNear(1.8);
     const raw = direction();
     if (!HORMA.on) {
-      const s = P.wallS;
+      const s = P.wallS || (can && Math.hypot(raw.x, raw.z) > 0.6 ? hormaNear() : null);
       if (can && s && s.wall && !s.bars) {
         const f = wallFace(s, P.x, P.z),
           into = -(raw.x * f.nx + raw.z * f.nz);
@@ -12953,23 +12971,32 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     HORMA.k = mix(HORMA.k, HORMA.on ? 1 : 0, 1 - Math.exp(-dt * (HORMA.on ? 4.5 : 7)));
     if (HORMA.k < 0.002) HORMA.k = 0;
   }
-  /* kamera: baxu, hormatik apur bat aldenduta eta atzerago; begirada ertzerantz (ertzetik gertu,
-     izkinatik haratago) */
+  /* kamera: hormaren erdian, ohikoa (gela osoa ikusten da); ertzera hurbildu ahala (azken 3.8 m),
+     atzetik eta kanpotik, diagonalean, IZKINAREN ATZERA begira (hormaren beste aldera, ertzetik
+     haratago). Amaiur beti koadroan: begirada ez da haren norabidetik biratzen ikuspegi horizontalaren
+     (pantaila bertikalean estuagoa) % 62 baino gehiago */
   function hormaCamera(dt, target, look) {
-    if (HORMA.k <= 0) return;
-    const k = HORMA.k * HORMA.k * (3 - 2 * HORMA.k),
-      sd = HORMA.side,
-      tx = HORMA.tx * sd,
+    const sd = HORMA.side,
+      e = HORMA.k > 0 ? clamp(1 - (HORMA.ext - HORMA.at * sd - 0.3) / 3.5, 0, 1) : 0;
+    HORMA.e = mix(HORMA.e || 0, e, 1 - Math.exp(-dt * 4));
+    const w = HORMA.k * HORMA.e,
+      k = w * w * (3 - 2 * w);
+    if (k <= 0.001) return;
+    const tx = HORMA.tx * sd,
       tz = HORMA.tz * sd,
-      edge = clamp(1 - (HORMA.ext - HORMA.at * sd) / 6, 0, 1),
-      out = 3.8 + 1.4 * edge,
-      cx = P.x + HORMA.nx * out - tx * 4.2,
-      cz = P.z + HORMA.nz * out - tz * 4.2,
-      cy = P.y + 4.4,
-      lo = 0.8 + 2.6 * edge,
-      lx = P.x + tx * 7.5 + HORMA.nx * lo,
-      lz = P.z + tz * 7.5 + HORMA.nz * lo,
-      ly = P.y + 0.5;
+      cx = P.x + HORMA.nx * 6 - tx * 6,
+      cz = P.z + HORMA.nz * 6 - tz * 6,
+      cy = P.y + 6.5,
+      bx = P.x + tx * 6 - HORMA.nx * 3,
+      bz = P.z + tz * 6 - HORMA.nz * 3,
+      hf = Math.atan(Math.tan((camera.fov * PI) / 360) * camera.aspect),
+      aP = Math.atan2(P.x - cx, P.z - cz),
+      aB = Math.atan2(bx - cx, bz - cz),
+      a = aP + clamp(Math.atan2(Math.sin(aB - aP), Math.cos(aB - aP)), -0.62 * hf, 0.62 * hf),
+      r = Math.hypot(bx - cx, bz - cz),
+      lx = cx + Math.sin(a) * r,
+      lz = cz + Math.cos(a) * r,
+      ly = P.y + 0.9;
     target.set(mix(target.x, cx, k), mix(target.y, cy, k), mix(target.z, cz, k));
     look.set(mix(look.x, lx, k), mix(look.y, ly, k), mix(look.z, lz, k));
   }

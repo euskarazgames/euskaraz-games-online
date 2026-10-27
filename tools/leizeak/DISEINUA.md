@@ -308,9 +308,10 @@ ez da beste jokoen edukirik erabili (ez maparik, ez pertsonaiarik, ez interfazer
 - **ATZETIK** (klasikoa): lehengoa, baina hurbilago (mahaigainean ×0.9, bertikalean 1.7 lehengo 1.95-en
   ordez). Hatzarekin biratu/hurbildu eta ⤢ botoia, bietan.
 - **HORMA** (HORMA-IKUSPEGIA, menuan itzal daiteke): hormari edo kutxa-pila bati bizkarra emanez gero
-  (makila hormarantz une batez), Amaiur itsatsita geratzen da, alboetara bakarrik eta isilik mugitzen
-  da, eta kamera baxu eta alboan jartzen da, ertzetik haratago begira (izkinaren atzean zer dagoen).
-  Makila hormatik urrundu, jauzi edo ertzetik irten: askatu.
+  (makila hormarantz une batez), Amaiur itsatsita geratzen da eta alboetara bakarrik eta isilik mugitzen
+  da. Hormaren erdian kamera ohikoa da; ertzera hurbiltzean (azken ~4 m), atzetik eta kanpotik
+  diagonalean jartzen da, IZKINAREN ATZERA begira (hormaren beste aldean zer dagoen), eta Amaiur beti
+  koadroan geratzen da (pantaila bertikalean ere). Makila hormatik urrundu, jauzi edo ertzetik irten: askatu.
 - **BEGIRATU** (lehen pertsona; I tekla edo begi-botoia): Amaiurren begietatik, geldirik; makilak, hatzak
   edo saguaren eskuineko botoiak begirada biratzen du (Amaiur ere bai). Jauzia, bultzada, erasoa, kolpe bat,
   eszena edo deia: itzuli. Astinduak leunago eta radarra begiradaren norabidean.

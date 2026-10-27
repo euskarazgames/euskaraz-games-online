@@ -1116,12 +1116,12 @@
  "hp_i3": {
   "who": "IRATI",
   "text": "Nire oihartzuna zurekin dago. Goiko izkinan, haien urratsak entzungo dituzu.",
-  "mos": 3.4,
-  "cer": 0.014,
-  "cand": 0,
-  "seed": 100000,
-  "dur": 4.19,
-  "asr": "Nire oihartzuna zurekin dago, goiko izkinean haien urratsak entzungo dituzu."
+  "mos": 3.77,
+  "cer": 0.027,
+  "cand": 2,
+  "seed": 103062,
+  "dur": 4.3,
+  "asr": "Nire oihartzuna zurekin dago, goikoizkinean haien urratsak entzungo dituzu."
  },
  "hp_i4": {
   "who": "IRATI",
@@ -1152,5 +1152,25 @@
   "seed": 100000,
   "dur": 2.68,
   "asr": "Hari horiek oraingo izotza dira, iraganean ez daude."
+ },
+ "hp_i7": {
+  "who": "IRATI",
+  "text": "Hor da atea. Gailurra gainean dago, Amaiur. Entzuten dizut.",
+  "mos": 3.62,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 100000,
+  "dur": 3.51,
+  "asr": "Hor da atea, gailurra gainean dago, amaiur, entzuten dizut."
+ },
+ "hp_g1": {
+  "who": "GAUEKO",
+  "text": "Ikusten zaitut, sorgin. Nire etxean zaude.",
+  "mos": 3.76,
+  "cer": 0.026,
+  "cand": 0,
+  "seed": 105100,
+  "dur": 2.59,
+  "asr": "Ikusten zaitut, zorgin, nire etxean zaude."
  }
 }
