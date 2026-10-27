@@ -12974,7 +12974,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* kamera: hormaren erdian, ohikoa (gela osoa ikusten da); ertzera hurbildu ahala (azken 3.8 m),
      atzetik eta kanpotik, diagonalean, IZKINAREN ATZERA begira (hormaren beste aldera, ertzetik
      haratago). Amaiur beti koadroan: begirada ez da haren norabidetik biratzen ikuspegi horizontalaren
-     (pantaila bertikalean estuagoa) % 62 baino gehiago */
+     % 62 baino gehiago (pantaila bertikalean, estuagoa, % 50) */
   function hormaCamera(dt, target, look) {
     const sd = HORMA.side,
       e = HORMA.k > 0 ? clamp(1 - (HORMA.ext - HORMA.at * sd - 0.3) / 3.5, 0, 1) : 0;
@@ -12989,14 +12989,17 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       cy = P.y + 6.5,
       bx = P.x + tx * 6 - HORMA.nx * 3,
       bz = P.z + tz * 6 - HORMA.nz * 3,
+      portrait = innerHeight > innerWidth,
       hf = Math.atan(Math.tan((camera.fov * PI) / 360) * camera.aspect),
+      lim = (portrait ? 0.5 : 0.62) * hf,
       aP = Math.atan2(P.x - cx, P.z - cz),
       aB = Math.atan2(bx - cx, bz - cz),
-      a = aP + clamp(Math.atan2(Math.sin(aB - aP), Math.cos(aB - aP)), -0.62 * hf, 0.62 * hf),
+      a = aP + clamp(Math.atan2(Math.sin(aB - aP), Math.cos(aB - aP)), -lim, lim),
       r = Math.hypot(bx - cx, bz - cz),
       lx = cx + Math.sin(a) * r,
       lz = cz + Math.cos(a) * r,
-      ly = P.y + 0.9;
+      /* mugikorrean botoiak behean: Amaiur gorago koadroan (begirada beherago) */
+      ly = P.y + 0.9 - (portrait ? 2.6 : mobile ? 0.8 : 0);
     target.set(mix(target.x, cx, k), mix(target.y, cy, k), mix(target.z, cz, k));
     look.set(mix(look.x, lx, k), mix(look.y, ly, k), mix(look.z, lz, k));
   }
