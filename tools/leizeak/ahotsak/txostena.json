@@ -1087,13 +1087,13 @@
  },
  "hp_n1": {
   "who": "ANDERE",
-  "text": "Ekaitza! Gaueko ez gaitu gora utziko… Amaiur, mendiak bide bat du barrutik. Igo zuk!",
-  "mos": 3.3,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 4131,
-  "dur": 6.37,
-  "asr": "Ekaitza, gaueko ez gaitu gora utziko, amaiur, mendiak bide bat du barrutik, igo zuk."
+  "text": "Ekaitza… Gaueko ez gaitu gora utziko. Amaiur, mendiak bide bat du barrutik. Igo zuk.",
+  "mos": 3.35,
+  "cer": 0.013,
+  "cand": 2,
+  "seed": 9162,
+  "dur": 6.2,
+  "asr": "Ekaitza gauekoez gaitu gora utziko, Amaiur mendiak bide bat du barrutik, igo zuk."
  },
  "hp_a1": {
   "who": "AMAIUR",

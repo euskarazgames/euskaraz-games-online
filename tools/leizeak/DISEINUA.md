@@ -250,8 +250,11 @@ Ideia orokorrak bakarrik (ez beste jokoen edukirik, ez interfazerik, ez testurik
   gabe), INGUMA ametsetik (oihartzun bikoitza, dardararik gabe), MARI mendiaren barrutik, oroitzapenak
   urrutiko eta epel; AMAIUR hurbil. Ametseko "IRATI?" Iratiren tinbrearekin, Ingumaren katearekin.
   Neurketa (118 lerro; UTMOS batez beste v2 → v3): Gaueko 2.09 → 3.72, Irati 2.64 → 3.76, Amaiur
-  3.36 → 3.76, Inguma 2.39 → 3.77; Andere 3.55 eta Mari 3.80 (berriak). Lerro guztiak ≥ 3.37; Whisper
-  CER batez beste % 1.1. Hitz egitean musika jaisten da. Audiorik gabe, testua.
+  3.36 → 3.76, Inguma 2.39 → 3.77; Andere 3.55 eta Mari 3.80 (berriak). **v4** (128 lerro, harpeetako
+  hamarrak barne): esaldi-mugetako etenekin (`--pause 0.3`) lerro ahulenen pasada berria (16tik 13
+  hobetu, adib. 3.47 → 3.95) eta lerro zailetan esaldi laburragoak; batez beste 3.77 (Irati 3.80,
+  Amaiur 3.78, Inguma 3.77, Gaueko 3.72, Mari 3.80, Andere 3.54), lerro guztiak ≥ 3.35; Whisper CER
+  batez beste % 1.1. Hitz egitean musika jaisten da. Audiorik gabe, testua.
 - **Kamera** → BULTZADAn ez dago FOV-kolperik; kamerak malguki kritikoki moteldua erabiltzen du
   (azelerazioa zerotik hasten da), eta aurrera-begiratzeak abiadura mugatua du.
 
