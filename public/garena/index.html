@@ -893,6 +893,31 @@ const PLATFORMS=[
   ];
 */
 const CATALOG_FEEDS=["/garena/api/catalog"];
+const GARENA_LATEST_NEWS_URL="/garena/api/news";
+let freshNews=[];
+function mergeLiveNews(){
+ if(!freshNews.length)return;
+ const seen=new Set();
+ items=[...freshNews,...items].filter(x=>{
+  if(!x||!x.url||!x.title||seen.has(x.url))return false;
+  seen.add(x.url);return true;
+ });
+}
+async function loadLatestNews(){
+ try{
+  const r=await fetch(GARENA_LATEST_NEWS_URL,{cache:"no-store"});
+  if(!r.ok)throw new Error("news HTTP "+r.status);
+  const j=await r.json();
+  const news=(Array.isArray(j.items)?j.items:[]).filter(x=>x&&x.url&&x.title);
+  if(news.length){
+   freshNews=news;
+   mergeLiveNews();
+   renderFeatured();
+   renderCards();
+  }
+ }catch(e){console.warn("GARENA news refresh: ",e?.message||e)}
+}
+
 
 const SEED=[
 {title:"ETB1 ON",source:"ETB ON",category:"live",url:"https://etbon.eus/etb-1",eu:"ETB1 zuzenean",es:"ETB1 en directo",type:"stream"},
@@ -975,7 +1000,7 @@ function applyLang(){
   document.querySelectorAll("[data-eu][data-es]").forEach(el=>el.textContent=el.dataset[lang]);
   $("#langBtn").textContent=lang==="eu"?"ES":"EU";
   $("#search").placeholder=lang==="eu"?"Bilatu edukia edo plataforma":"Buscar contenido o plataforma";
-  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); updateLocalizedLinks(); renderCards();
+  renderChips(); renderPlatforms(); renderFeatured(); renderRanking(); syncTikTabs(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); updateLocalizedLinks(); renderCards();
 }
 function renderPlatforms(){
   $("#platformGrid").innerHTML=PLATFORMS.map(([n,euUrl,esUrl,euDesc,esDesc,color])=>`<a class="platform" style="--pc:${color}" href="${lang==="eu"?euUrl:esUrl}" rel="noopener"><span>${lang==="eu"?"IREKI":"ABRIR"} ↗</span><div><strong>${n}</strong><small>${lang==="eu"?euDesc:esDesc}</small></div></a>`).join("");
@@ -1576,7 +1601,7 @@ async function loadFeeds(){
     const seen=new Set(), all=[...merged,...SEED].filter(x=>{const k=(x.url||"")+"|"+(x.title||"");if(seen.has(k))return false;seen.add(k);return true});
     items=all; cacheGarenaCatalog(merged); $("#status").textContent=(lang==="eu"?`Katalogoa eguneratuta · ${new Date().toLocaleTimeString("eu-ES",{hour:"2-digit",minute:"2-digit"})}`:`Catálogo actualizado · ${new Date().toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})}`);
   }else {const restored=restoreGarenaCatalog(); $("#status").textContent=restored?(lang==="eu"?"Azken katalogo erabilgarria":"Último catálogo disponible"):(lang==="eu"?"Tokiko kopia erabilita":"Usando copia local");}
-  renderFeatured(); rememberShelfRotation(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderSocial(); renderCards();
+  mergeLiveNews(); renderFeatured(); rememberShelfRotation(); if(!$("#tikOverlay")?.classList.contains("open"))renderTik(true); renderTikPreview(); renderCards();
 }
 document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
   btn.onclick=()=>{
@@ -1625,10 +1650,11 @@ $("#langBtn").onclick=()=>{lang=lang==="eu"?"es":"eu";localStorage.setItem("atar
 $("#favToggle").onclick=()=>{showFavs=!showFavs;$("#favToggle").style.background=showFavs?"var(--accent)":"#111116";$("#favToggle").style.color=showFavs?"#090909":"#fff";renderCards()};
 $("#search").addEventListener("input",renderCards);
 
-restoreGarenaCatalog(); applyLang(); loadFeeds(); loadRanking();
+restoreGarenaCatalog(); applyLang(); loadLatestNews(); loadFeeds(); loadRanking();
 setInterval(()=>{if(!document.hidden)loadFeeds()},60*1000);
+setInterval(()=>{if(!document.hidden)loadLatestNews()},90*1000);
 setInterval(()=>{if(!document.hidden)loadRanking()},15*60*1000);
-document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadRanking()}});
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){loadFeeds();loadLatestNews();loadRanking()}});
 </script>
 </body>
 </html>
