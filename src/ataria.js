@@ -209,6 +209,7 @@ export async function handleNewsApi(request){
   if(!r.ok)throw new Error("ORAIN HTTP "+r.status);
   items=parseHtml(await r.text(),source);
   if(!items.length)throw new Error("No articles parsed");
+  await enrichNewsImages(items);
   // In listing HTML, most items have real images; avoid slowing response for missing thumbnails.
  }catch(e){error=String(e).slice(0,120)}
  const body=JSON.stringify({items,checkedAt:new Date().toISOString(),status:items.length?"ok":"source_error",error});
