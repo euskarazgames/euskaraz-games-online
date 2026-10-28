@@ -7,7 +7,7 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
 - `public/games/<jokoa>.html` — zazpi joko, fitxategi bakarrekoak, three.js r128:
   `pilota`, `zesta`, `artzain` ("Kirol" motorra), `basoa`, `itsas` ("Solid" motorra),
   `oihartzun` (bi garaiko plataforma-jokoa; `elur.html` haren aurreko bertsioa da) eta
-  `leizeak` (LEIZEEN DEIA, OIHARTZUN II: Ibarra harana, txalaparta eta zazpi leize — Basajaun, Lamia, Tartalo,
+  `leizeak` (LEIZEEN DEIA: Ibarra harana, txalaparta eta zazpi leize — Basajaun, Lamia, Tartalo,
   Jentilbaratza/Errolan, Jentilen zerua/Odei, Herensugearen haitzuloa/Herensugea, Ametsa/Inguma — eta
   azken atala, Anboto: Gaueko eta Irati, ANBOTOKO HARPEAK sigilu-leizearen ondoren; istorioaren biblia
   DISEINUA.md 5i atalean, kamera eta sigiloa 5j-n).

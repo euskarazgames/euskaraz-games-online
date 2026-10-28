@@ -486,8 +486,8 @@
   function proTitle() {
     film(
       [
-        { d: 7.5, cap: null, cam: [[6, 4, 46], [10, 26, 70]], look: [[0, 3, 30], [10, 30, -110]], title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
-        { d: 4.5, cam: [[10, 26, 70], [11, 28, 72]], look: [10, 30, -110], say: "pro_g6", fade: "out", title: ["LEIZEEN DEIA", "OIHARTZUN II"] },
+        { d: 7.5, cap: null, cam: [[6, 4, 46], [10, 26, 70]], look: [[0, 3, 30], [10, 30, -110]], title: ["LEIZEEN DEIA"] },
+        { d: 4.5, cam: [[10, 26, 70], [11, 28, 72]], look: [10, 30, -110], say: "pro_g6", fade: "out", title: ["LEIZEEN DEIA"] },
       ],
       proEnd,
     );

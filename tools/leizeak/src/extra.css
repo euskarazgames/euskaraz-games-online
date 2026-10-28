@@ -238,9 +238,6 @@ body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{v
 #start{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;padding:max(4vh,18px) 6vw max(3.5vh,16px);text-align:center;background:radial-gradient(ellipse 85% 75% at 50% 45%,transparent 50%,#060c18a8 100%),linear-gradient(180deg,#070d1ac8 0%,#070d1a40 30%,transparent 46%,transparent 64%,#070d1a70 82%,#070d1aee 100%)}
 #logo{position:relative;display:flex;flex-direction:column;align-items:center;animation:lzLogo 2.2s cubic-bezier(.2,.7,.2,1) both}
 #emblem{width:clamp(78px,15vh,138px);height:auto;filter:drop-shadow(0 4px 14px #000c) drop-shadow(0 0 22px #ffcf7a33);animation:lzEmblem 2.4s ease-out both}
-#logoOver{display:flex;align-items:center;gap:14px;margin:.7em 0 .35em;font:600 clamp(10px,1.2vw,13px)/1 Cinzel,Georgia,serif;letter-spacing:.42em;color:#ecd39c;text-shadow:0 1px 8px #000c}
-#logoOver i{display:block;width:clamp(30px,6vw,90px);height:1px;background:linear-gradient(90deg,transparent,#ecd39c)}
-#logoOver i:last-child{background:linear-gradient(90deg,#ecd39c,transparent)}
 #start h1{position:relative;margin:0;font:900 clamp(44px,8vw,116px)/1.02 Cinzel,Georgia,serif;letter-spacing:.04em;white-space:nowrap;background:linear-gradient(100deg,transparent 42%,#fffbe9d8 50%,transparent 58%) 160% 0/250% 100% no-repeat,linear-gradient(180deg,#fff8dc 8%,#f3d27a 40%,#b9852c 56%,#f8e3a0 74%,#8b5a1b 96%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1px #4a2e0c;filter:drop-shadow(0 3px 0 #2b1906) drop-shadow(0 0 22px #000c);animation:lzShine 7s ease-in-out 2.4s infinite}
 #start h1 span{display:inline;font:inherit;letter-spacing:inherit;margin:0 0 0 .3em;color:inherit}
 #logoTag{display:flex;align-items:center;gap:12px;margin-top:.55em;font:600 clamp(9px,1.05vw,12px)/1 Cinzel,Georgia,serif;letter-spacing:.36em;color:#f4e2b8;text-shadow:0 1px 6px #000;animation:lzFade 1.4s ease 1.2s both}
@@ -258,8 +255,8 @@ body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{v
 @keyframes lzShine{0%,70%{background-position:160% 0,0 0}100%{background-position:-60% 0,0 0}}
 @keyframes lzFade{from{opacity:0}to{opacity:1}}
 @keyframes lzPulse{0%,100%{opacity:.6}50%{opacity:1}}
-@media(max-width:600px){#start h1{font-size:15vw;line-height:1.04;white-space:normal}#start h1 span{display:block;margin:0}#emblem{width:26vw}#logo{margin-top:3vh}#logoOver{letter-spacing:.3em}#logoTag{letter-spacing:.2em;gap:8px;font-size:9px}}
-@media(max-height:520px){#start{padding:12px 6vw 10px}#emblem{width:clamp(60px,14vh,90px)}#start h1{font-size:clamp(40px,6.4vw,72px)}#logoOver{margin:.5em 0 .2em}#startActions{margin:auto 0 2px;gap:2px}}
+@media(max-width:600px){#start h1{font-size:15vw;line-height:1.04;white-space:normal}#start h1 span{display:block;margin:0}#emblem{width:26vw}#logo{margin-top:3vh}#logoTag{letter-spacing:.2em;gap:8px;font-size:9px}}
+@media(max-height:520px){#start{padding:12px 6vw 10px}#emblem{width:clamp(60px,14vh,90px)}#start h1{font-size:clamp(40px,6.4vw,72px)}#startActions{margin:auto 0 2px;gap:2px}}
 @media(prefers-reduced-motion:reduce){#logo,#emblem,#start h1,#logoTag,#startActions,#startFooter,#start #play{animation:none}}
 
 /* txalaparta bi ahotsez (Anboto): Iratiren kolpeak (▶), urdin argiz eta izenarekin */

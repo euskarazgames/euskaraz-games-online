@@ -1,4 +1,4 @@
-# OIHARTZUN II · LEIZEEN DEIA — diseinu-analisia eta bide-orria
+# LEIZEEN DEIA — diseinu-analisia eta bide-orria
 
 Joko berria, OIHARTZUN-en unibertsoan eta haren motorraren gainean. Helburua: 3D abentura-joko
 handien kalitate-zutabeetan aurrera egitea (Metacritic-en 90+ lortzen dutenenak), eta ez beste joko

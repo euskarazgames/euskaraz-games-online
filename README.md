@@ -70,7 +70,7 @@ hilketan eta gero eta biziagoak diren etsai-olatuak.
   fisikarekin), `tools/test/oihartzun_combat.js` (bot batek arenak urrunetik gainditzen ditu),
   `tools/test/oihartzun_boss.js` (azken etsai osoa eta azken bihurgunea), `tools/test/errcheck.js`.
 
-## LEIZEEN DEIA (OIHARTZUN II)
+## LEIZEEN DEIA
 OIHARTZUN-en unibertsoko abentura berria eta originala (`public/games/leizeak.html`): ez du beste
 jokoen edukirik erabiltzen; istorioa, pertsonaiak, mailak, mekanikak eta musika joko honetarako
 sortu dira, euskal mitologiatik abiatuta (Mari, Basajaun, jentilak, Gaueko, Sugaar). Diseinu-analisia

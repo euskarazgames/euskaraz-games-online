@@ -42,7 +42,7 @@ Poly Haven: https://polyhaven.com/license · ambientCG: https://ambientcg.com/li
 `tools/oihartzun/models/build_models.mjs` scriptak murrizten ditu (behar diren animazioak, sare kuantizatuak,
 hezurduren animazio partekatuak). KayKit: https://kaylousberg.com · lizentzia CC0.
 
-## LEIZEEN DEIA (OIHARTZUN II) · modeloak (CC0)
+## LEIZEEN DEIA · modeloak (CC0)
 
 | Modeloa | Iturria | Jatorrizko materiala |
 |---|---|---|

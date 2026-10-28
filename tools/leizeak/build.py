@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LEIZEEN DEIA (OIHARTZUN II) muntatu: tools/leizeak/src/* → public/games/leizeak.html
+"""LEIZEEN DEIA muntatu: tools/leizeak/src/* → public/games/leizeak.html
 
 Iturburu irakurgarria src/ karpetan dago (game.js, head.html, extra.css...).
 three.js r128 + GLTFLoader OIHARTZUN-en fitxategitik ateratzen dira ("vendor" blokea); modeloak
