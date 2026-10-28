@@ -3,10 +3,7 @@ const SOURCES = [
   { id:'primeran-docs', name:'PRIMERAN · Dokumentalak', url:'https://primeran.eus/api/v1/pages/dokumentalak-p', origin:'https://primeran.eus', kind:'api', base:'docs' },
   { id:'etbon', name:'ETB ON', url:'https://etbon.eus/api/v1/home', origin:'https://etbon.eus', kind:'api', base:'entertainment' },
   { id:'guau', name:'GUAU', url:'https://guau.eus/api/v1/home', origin:'https://guau.eus', kind:'api', base:'audio' },
-  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/azken-berriak/', origin:'https://orain.eus', kind:'html', base:'news' },
-
-  { id:'eitb-news', name:'EITB Albisteak', url:'https://www.eitb.eus/eu/albisteak/', origin:'https://www.eitb.eus', kind:'html', base:'news', ttl:120 },  { id:'kirolak', name:'KIROLAK EITB', url:'https://kirolakeitb.eus/eu/', origin:'https://kirolakeitb.eus', kind:'html', base:'sports' },
-  { id:'makusi', name:'MAKUSI', url:'https://makusi.eus/', origin:'https://makusi.eus', kind:'makusi', base:'kids' },
+  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/azken-berriak/', origin:'https://orain.eus', kind:'html', base:'news' },  { id:'makusi', name:'MAKUSI', url:'https://makusi.eus/', origin:'https://makusi.eus', kind:'makusi', base:'kids' },
   { id:'gaztea', name:'Gaztea', url:'https://www.gaztea.eus/', origin:'https://www.gaztea.eus', kind:'html', base:'audio' }
 ];
 
@@ -157,6 +154,7 @@ async function enrichNewsImages(items){
 async function readSource(source){
   try{
     const r=await fetch(source.url,{
+      signal:AbortSignal.timeout(6500),
       headers:{
         accept:source.kind==='api'?'application/json':'text/html',
         'accept-language':'eu-ES,es;q=0.9,en;q=0.7',
@@ -167,7 +165,7 @@ async function readSource(source){
     if(!r.ok)throw new Error('HTTP '+r.status);
     const text=await r.text();
     const items=source.kind==='api'?parseApi(text,source):source.kind==='makusi'?parseMakusi(text,source):parseHtml(text,source);
-    if(source.id==='orain'||source.id==='eitb-news')await enrichNewsImages(items);
+    if(source.id==='orain')await enrichNewsImages(items);
     if(!items.length)throw new Error('empty source');
     return {id:source.id,name:source.name,items,fetchedAt:new Date().toISOString(),status:'ok'};
   }catch(e){
@@ -187,7 +185,9 @@ module.exports=async function handler(req,res){
   if(req.method!=='GET'&&req.method!=='HEAD'){
     res.statusCode=405;res.setHeader('Allow','GET, HEAD');return res.end('Method Not Allowed');
   }
-  const parts=await Promise.all(SOURCES.map(readSource));
+  const scope=new URL(req.url||"/api/catalog","https://garena.local").searchParams.get("scope");
+  const selected=scope==="news"?SOURCES.filter(x=>x.id==="orain"):SOURCES;
+  const parts=await Promise.all(selected.map(readSource));
   const body={items:merge(parts),sources:parts.map(p=>({id:p.id,name:p.name,fetchedAt:p.fetchedAt,status:p.status,count:p.items.length})),checkedAt:new Date().toISOString(),contentRefreshMinutes:15};
   res.statusCode=200;
   res.setHeader('Content-Type','application/json; charset=utf-8');
