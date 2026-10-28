@@ -1,4 +1,4 @@
-import { handleAtariaApi } from "./ataria.js";
+import { handleAtariaApi, handleNewsApi } from "./ataria.js";
 import { DurableObject } from "cloudflare:workers";
 
 function validRoom(v) {
@@ -20,6 +20,7 @@ function sendJson(ws, obj) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if(url.pathname==="/garena/api/news")return handleNewsApi(request);
 if (url.pathname === "/ataria/api/catalog" || url.pathname === "/garena/api/catalog") {
       return handleAtariaApi(request);
     }
