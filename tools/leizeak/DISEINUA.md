@@ -354,7 +354,11 @@ labe-kupula, ingudea… eta aurreko tailerra libre). Amaiur, poniak, oiloak eta 
 hormetan sartzen, eta teilatuetan ezin da egon; lehengo zirkulu txikia proiektil eta bonbentzat geratzen
 da. Zubiak eta hondakinak zeharkatzen dira: harrizko zubiaren muturretan oholtza laua (ibai-ertzean lurra
 jaisten zen eta koska batek sarrera ixten zuen). Gari-soroa txikiagoa eta jasoa (0.77 m): ertza
-solidoa, gainera jauzi batez.
+solidoa, gainera jauzi batez. Gardentasuna: etxe bat Amaiur benetan estaltzen duenean bakarrik gardentzen
+da: lehenik etxearen kaxa biratua (teilatu-hegalak barne) kameratik Amaiurrengana doan zuzenean, eta
+gero izpiak etxearen benetako geometriaren kontra (bularra, burua, belaunak). Lehen erdiko zirkulu
+batekin: herriko 706 puntutan, 7 aldiz etxeak Amaiur estaltzen zuen gardendu gabe eta 13 aldiz
+gardentzen zen ezer estali gabe; orain 0 eta 0.
 
 **Mezuak (v2).** Izenburuak, abisuak eta irakaspenak txikiago, gardenago eta ertzetan; denbora
 gutxiago (abisuak 1.8-3.6 s, izenburuak 2.8 s, irakaspenak 5 s, HUD isila 5 s). Elkarrizketa- eta

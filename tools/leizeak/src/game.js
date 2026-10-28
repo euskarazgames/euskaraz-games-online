@@ -2126,7 +2126,14 @@
          etsaiak ez dira hormetan sartzen (hormen oinplanoa, ez teilatu-hegalak; teilatuan ezin da egon) */
       const r = Math.min(size.x, size.z) * s * 0.36;
       solids.push({ x, z, r, h: height, y, pillar: true, shapes });
-      if (name !== "tent") occluder(m, x, y, z, Math.max(size.x, size.z) * s * 0.42, height);
+      if (name !== "tent") {
+        /* gardentzeko: modelo osoaren kaxa biratua (teilatu-hegalak barne) */
+        const c = Math.cos(angle),
+          n = Math.sin(angle),
+          ox = ((bb.min.x + bb.max.x) / 2) * s,
+          oz = ((bb.min.z + bb.max.z) / 2) * s;
+        occluder(m, x, y, z, Math.max(size.x, size.z) * s * 0.42, height, { x: x + ox * c + oz * n, z: z - ox * n + oz * c, w: size.x * s, d: size.z * s, rot: angle });
+      }
     }
     return m;
   }
@@ -2162,6 +2169,11 @@
         o = { x: x + lx * c + lz * n, z: z - lx * n + lz * c };
       return q.r ? { ...o, r: q.r * k } : { ...o, w: q.w * k, d: q.d * k, rot: angle };
     });
+  }
+  /* KHR_mesh_quantization: posizio normalizatuak (r128-k ez ditu irakurtzean normalizatzen) */
+  function posK(pos) {
+    const A = pos.array;
+    return !pos.normalized ? 1 : A instanceof Int16Array ? 1 / 32767 : A instanceof Int8Array ? 1 / 127 : A instanceof Uint16Array ? 1 / 65535 : A instanceof Uint8Array ? 1 / 255 : 1;
   }
   /* eraikin baten oinplanoa gorputzaren altueran (0.25–2.2 m): kaxa, munduan biratuta. Triangeluak
      banda horretara mozten dira (horma lau batek erpinak behean eta goian baino ez ditu) */
@@ -2201,9 +2213,7 @@
       const g = n.geometry,
         pos = g.attributes.position,
         idx = g.index,
-        /* KHR_mesh_quantization: posizio normalizatuak (r128-k ez ditu irakurtzean normalizatzen) */
-        A = pos.array,
-        k = !pos.normalized ? 1 : A instanceof Int16Array ? 1 / 32767 : A instanceof Int8Array ? 1 / 127 : A instanceof Uint16Array ? 1 / 65535 : A instanceof Uint8Array ? 1 / 255 : 1,
+        k = posK(pos),
         N = idx ? idx.count : pos.count;
       for (let i = 0; i + 2 < N; i += 3) {
         for (let j = 0; j < 3; j++) tri[j].fromBufferAttribute(pos, idx ? idx.getX(i + j) : i + j).multiplyScalar(k).applyMatrix4(n.matrixWorld);
@@ -4210,6 +4220,8 @@
         odeiCloudNear,
         iratiHerensuge,
         HOUSE,
+        OCC,
+        occlusionUpdate,
         DGE,
         POUCHES,
         houseKnock,

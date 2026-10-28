@@ -1,5 +1,6 @@
 // LEIZEEN DEIA: herriko eraikinak solidoak (Amaiur ez da hormetan sartzen, teilatuan ere ez), gari-soroa
-// (ertza solidoa, gainean ibil daiteke) eta harrizko zubia (zeharkatzen da).
+// (ertza solidoa, gainean ibil daiteke), harrizko zubia (zeharkatzen da) eta gardentasuna (etxea Amaiur
+// estaltzen duenean bakarrik).
 // Erabili: NODE_PATH=$(npm root -g) node tools/test/leizeak_eraikinak.js http://127.0.0.1:8091/games/leizeak.html
 // Jokoaren begizta geldirik (__hold) eta tick-ak eskuz: emaitza berdina makina azkar zein motelean.
 const { launch } = require('./_browser');
@@ -148,6 +149,45 @@ const { launch } = require('./_browser');
   /* ATEA JO oraindik eskura (etxe baten atean) */
   const knock = await ev(() => { const g = __game, H = g.HOUSE.list.find((h) => !h.sealed); g.teleport(H.x, H.z, H.y); for (let i = 0; i < 6; i++) g.tick(1 / 120); const a = g.actionHere(); return a ? a.label : null; });
   ok(!!knock, 'atearen aurrean: ekintza eskura', knock);
+
+  /* 6 · gardentasuna: etxea Amaiur estaltzen duenean bakarrik gardentzen da (atzean bai; aurrean, ez bera
+     ez ondokoak) */
+  const occ = await ev((shapes) => {
+    const g = __game, list = g.OCC.filter((o) => o.box), out = { n: list.length, behind: 0, front: 0, bad: [] };
+    const inBox = (B, x, z) => { const c = Math.cos(B.rot), n = Math.sin(B.rot), ex = x - B.x, ez = z - B.z; return Math.abs(ex * c - ez * n) < B.w / 2 && Math.abs(ex * n + ez * c) < B.d / 2; };
+    const settle = () => { for (let i = 0; i < 40; i++) { g.cameraUpdate(1 / 15); g.occlusionUpdate(1 / 15); } };
+    const place = (x, z) => { g.teleport(x, z, g.gy(x, z)); g.P.vx = g.P.vz = 0; for (let i = 0; i < 4; i++) g.tick(1 / 120); settle(); };
+    const others = (o) => list.filter((q) => q !== o && q.k > 0.5).length;
+    /* kamerarako norabidea, neurtuta */
+    place(-3, 30);
+    const v = [g.camera.position.x - g.P.x, g.camera.position.z - g.P.z], L = Math.hypot(v[0], v[1]), f = [v[0] / L, v[1] / L];
+    for (const [i, o] of list.entries()) {
+      /* atzean: etxearen erditik kameraren kontrako aldera, hormatik 0.4 m-ra (etxea erdian geratzen da) */
+      const B = o.box;
+      let bx = B.x, bz = B.z;
+      for (let k = 0; k < 200 && shapes.some((Q) => __inside(Q, bx, bz, 0.4)); k++) { bx -= f[0] * 0.1; bz -= f[1] * 0.1; }
+      if (g.riverW(bx, bz) < 1.5 || Math.hypot(bx - B.x, bz - B.z) > Math.hypot(B.w, B.d) / 2 + 1) continue;
+      place(bx, bz);
+      out.behind++;
+      if (o.k < 0.9 || others(o)) out.bad.push(['atzean', i, +o.k.toFixed(2), others(o)]);
+    }
+    for (const [i, o] of list.entries()) {
+      const B = o.box, c = Math.cos(B.rot), n = Math.sin(B.rot);
+      let w = null;
+      for (const [ax, az, h] of [[c, -n, B.w / 2], [-c, n, B.w / 2], [n, c, B.d / 2], [-n, -c, B.d / 2]]) { const sc = ax * f[0] + az * f[1]; if (!w || sc > w.sc) w = { sc, ax, az, h }; }
+      /* kamerari begira dagoen hormaren aurrean, formetatik 0.35 m-ra */
+      let x = B.x + w.ax * w.h, z = B.z + w.az * w.h;
+      for (let k = 0; k < 40 && shapes.some((Q) => __inside(Q, x, z, 0.35)); k++) { x += w.ax * 0.1; z += w.az * 0.1; }
+      for (let k = 0; k < 40 && !shapes.some((Q) => __inside(Q, x - w.ax * 0.1, z - w.az * 0.1, 0.35)); k++) { x -= w.ax * 0.1; z -= w.az * 0.1; }
+      /* teilatupean (errementariaren tailerra) gardentzea zuzena da */
+      if (g.riverW(x, z) < 1.5 || inBox(B, x, z)) continue;
+      place(x, z);
+      out.front++;
+      if (o.k > 0.1 || others(o)) out.bad.push(['aurrean', i, +o.k.toFixed(2), others(o)]);
+    }
+    return out;
+  }, shapes);
+  ok(occ.n >= 12 && occ.behind >= 10 && occ.front >= 10 && occ.bad.length === 0, 'etxeak estaltzen dutenean bakarrik gardentzen dira', S(occ));
 
   console.log(errs.length ? 'ERROREAK:\n' + errs.slice(0, 5).join('\n') : 'ERRORERIK EZ');
   console.log(fails ? 'HUTSAK: ' + fails : 'DENA ONDO');

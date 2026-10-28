@@ -348,8 +348,76 @@
   }
   /* kamera eta Amaiurren artean dauden etxe eta zuhaitzak gardendu (materiala lehen aldian klonatzen da) */
   const OCC = [];
-  function occluder(root, x, y, z, r, h) {
-    OCC.push({ root, x, y, z, r, h, k: 0, mats: null, group: BP });
+  function occluder(root, x, y, z, r, h, box = null) {
+    OCC.push({ root, x, y, z, r, h, box, k: 0, mats: null, group: BP });
+  }
+  /* etxeak: lehenik kaxa biratua (teilatu-hegalak barne) kameratik Amaiurrengana doan zuzenean dagoen;
+     gero benetako geometria, izpiekin (bularra, burua eta belaunak): kaxaren izkina hutsek (teilatuaren
+     gainean) ez dute gardentzen */
+  const OCC_RC = new T.Raycaster(),
+    OCC_D = new T.Vector3(),
+    OCC_MAT = new T.MeshBasicMaterial({ side: T.DoubleSide });
+  function occRays(o) {
+    const out = [];
+    o.root.updateMatrixWorld(true);
+    o.root.traverse((n) => {
+      if (!n.isMesh) return;
+      const pos = n.geometry.attributes.position,
+        k = posK(pos),
+        arr = new Float32Array(pos.count * 3);
+      for (let i = 0; i < pos.count; i++) {
+        arr[i * 3] = pos.getX(i) * k;
+        arr[i * 3 + 1] = pos.getY(i) * k;
+        arr[i * 3 + 2] = pos.getZ(i) * k;
+      }
+      const g = new T.BufferGeometry();
+      g.setAttribute("position", new T.BufferAttribute(arr, 3));
+      if (n.geometry.index) g.setIndex(n.geometry.index);
+      const m = new T.Mesh(g, OCC_MAT);
+      m.matrixAutoUpdate = false;
+      m.matrixWorld.copy(n.matrixWorld);
+      out.push(m);
+    });
+    return out;
+  }
+  function rayOccludes(o, tx, ty, tz) {
+    o.rays = o.rays || occRays(o);
+    for (const dy of [0, 0.55, -0.6]) {
+      OCC_D.set(tx, ty + dy, tz).sub(camera.position);
+      const L = OCC_D.length();
+      if (L < 1) continue;
+      OCC_RC.set(camera.position, OCC_D.multiplyScalar(1 / L));
+      OCC_RC.far = L - 0.35;
+      if (OCC_RC.intersectObjects(o.rays, false).length) return true;
+    }
+    return false;
+  }
+  function boxOccludes(o, cx, cy, cz, tx, ty, tz) {
+    const B = o.box,
+      c = Math.cos(B.rot),
+      n = Math.sin(B.rot),
+      ax = cx - B.x,
+      az = cz - B.z,
+      dx = tx - cx,
+      dy = ty - cy,
+      dz = tz - cz,
+      L = Math.hypot(dx, dy, dz) || 1;
+    let t0 = 0,
+      t1 = 1 - 0.35 / L;
+    const slab = (a, d, lo, hi) => {
+      if (Math.abs(d) < 1e-6) {
+        if (a < lo || a > hi) t1 = -1;
+        return;
+      }
+      const u = (lo - a) / d,
+        v = (hi - a) / d;
+      t0 = Math.max(t0, Math.min(u, v));
+      t1 = Math.min(t1, Math.max(u, v));
+    };
+    slab(ax * c - az * n, dx * c - dz * n, -B.w / 2 - 0.3, B.w / 2 + 0.3);
+    slab(ax * n + az * c, dx * n + dz * c, -B.d / 2 - 0.3, B.d / 2 + 0.3);
+    slab(cy, dy, o.y, o.y + o.h);
+    return t0 < t1;
   }
   function hubOcclusion(dt, tx, ty, tz) {
     const cx = camera.position.x,
@@ -364,7 +432,8 @@
       if (o.group !== grp) continue;
       let want = 0;
       const t = ((o.x - cx) * dx + (o.z - cz) * dz) / L2;
-      if (t > 0 && t < 1) {
+      if (o.box) want = boxOccludes(o, cx, cy, cz, tx, ty - 0.6, tz) && rayOccludes(o, tx, ty, tz) ? 1 : 0;
+      else if (t > 0 && t < 1) {
         const qx = cx + dx * t - o.x,
           qz = cz + dz * t - o.z;
         if (qx * qx + qz * qz < (o.r + 0.9) ** 2 && cy + (ty - cy) * t < o.y + o.h) want = 1;
