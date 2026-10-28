@@ -4,10 +4,7 @@ const SOURCES = [
   { id:'primeran-docs', name:'PRIMERAN · Dokumentalak', url:'https://primeran.eus/api/v1/pages/dokumentalak-p', origin:'https://primeran.eus', kind:'api', base:'docs' },
   { id:'etbon', name:'ETB ON', url:'https://etbon.eus/api/v1/home', origin:'https://etbon.eus', kind:'api', base:'entertainment' },
   { id:'guau', name:'GUAU', url:'https://guau.eus/api/v1/home', origin:'https://guau.eus', kind:'api', base:'audio' },
-  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/azken-berriak/', origin:'https://orain.eus', kind:'html', base:'news', ttl:60 },
-
-  { id:'eitb-news', name:'EITB Albisteak', url:'https://www.eitb.eus/eu/albisteak/', origin:'https://www.eitb.eus', kind:'html', base:'news', ttl:120 },  { id:'kirolak', name:'KIROLAK EITB', url:'https://kirolakeitb.eus/eu/', origin:'https://kirolakeitb.eus', kind:'html', base:'sports' },
-  { id:'makusi', name:'MAKUSI', url:'https://makusi.eus/', origin:'https://makusi.eus', kind:'makusi', base:'kids' },
+  { id:'orain', name:'ORAIN', url:'https://orain.eus/eu/azken-berriak/', origin:'https://orain.eus', kind:'html', base:'news', ttl:60 },  { id:'makusi', name:'MAKUSI', url:'https://makusi.eus/', origin:'https://makusi.eus', kind:'makusi', base:'kids' },
   { id:'gaztea', name:'Gaztea', url:'https://www.gaztea.eus/', origin:'https://www.gaztea.eus', kind:'html', base:'audio' },
 ];
 
@@ -166,7 +163,7 @@ async function readSource(source, request){
   const origin=new URL(request.url).origin;
   const ttl=Number(source.ttl||TTL);
   const cache=caches.default;
-  const key=new Request(`${origin}/garena/__cache/v5/${source.id}`);
+  const key=new Request(`${origin}/garena/__cache/v6/${source.id}`);
   const hit=await cache.match(key);
   if(hit){
     const cached=await hit.json();
@@ -174,11 +171,11 @@ async function readSource(source, request){
     if(age < ttl*1000 && Array.isArray(cached.items) && cached.items.length) return {...cached,status:'cache'};
   }
   try{
-    const res=await fetch(source.url,{headers:{accept:source.kind==='api'?'application/json':'text/html','user-agent':'GARENA/1.0 (+EITB public directory)'},cf:{cacheTtl:ttl,cacheEverything:true}});
+    const res=await fetch(source.url,{signal:AbortSignal.timeout(5500),headers:{accept:source.kind==='api'?'application/json':'text/html','user-agent':'GARENA/1.0 (+EITB public directory)'},cf:{cacheTtl:Math.min(ttl,180),cacheEverything:true}});
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const text=await res.text();
     const items=source.kind==='api'?parseApi(text,source):source.kind==='makusi'?parseMakusi(text,source):parseHtml(text,source);
-    if(source.id==='orain'||source.id==='eitb-news')await enrichNewsImages(items);
+    if(source.id==='orain')await enrichNewsImages(items);
     if(!items.length)throw new Error('empty source');
     const fresh={id:source.id,name:source.name,items,fetchedAt:new Date().toISOString(),status:'eguneratuta'};
     await cache.put(key,Response.json(fresh,{headers:{'cache-control':'public,max-age=604800'}}));
@@ -201,4 +198,19 @@ export async function handleAtariaApi(request){
   const parts=await Promise.all(SOURCES.map(s=>readSource(s,request)));
   const body={items:merge(parts),sources:parts.map(({items,...rest})=>({...rest,count:items.length})),checkedAt:new Date().toISOString(),refreshMinutes:1,contentRefreshMinutes:15};
   return new Response(request.method==='HEAD'?null:JSON.stringify(body),{headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff'}});
+}
+
+export async function handleNewsApi(request){
+ if(!["GET","HEAD"].includes(request.method))return new Response("Method Not Allowed",{status:405});
+ const source=SOURCES.find(x=>x.id==="orain");
+ let items=[],error="";
+ try{
+  const r=await fetch(source.url,{signal:AbortSignal.timeout(5800),headers:{accept:"text/html"},cf:{cacheTtl:90,cacheEverything:true}});
+  if(!r.ok)throw new Error("ORAIN HTTP "+r.status);
+  items=parseHtml(await r.text(),source);
+  if(!items.length)throw new Error("No articles parsed");
+  // In listing HTML, most items have real images; avoid slowing response for missing thumbnails.
+ }catch(e){error=String(e).slice(0,120)}
+ const body=JSON.stringify({items,checkedAt:new Date().toISOString(),status:items.length?"ok":"source_error",error});
+ return new Response(request.method==="HEAD"?null:body,{status:items.length?200:503,headers:{"content-type":"application/json; charset=utf-8","cache-control":"public,max-age=60,s-maxage=90,stale-while-revalidate=60"}});
 }
