@@ -328,8 +328,12 @@
         yb = deck((i + 1) / N);
       rampP(x, z0 + (dir * len * i) / N, ya, x, z0 + (dir * len * (i + 1)) / N, yb, w, i < N / 2 ? "herria" : "iparra", Math.min(ya, yb) - 0.75);
     }
-    const ext = 1.6,
-      L = len + ext * 2,
+    const ext = 1.6;
+    /* muturretan, oholtza laua harri-luzapenaren gainean: ibai-ertzean lurra jaisten da (−0.5 m) eta,
+       hori gabe, koska batek zubiaren sarrera itxi egiten zuen */
+    rampP(x, z0 - dir * ext, 0, x, z0, 0, w, "herria", -1.5);
+    rampP(x, z1, 0, x, z1 + dir * ext, 0, w, "iparra", -1.5);
+    const L = len + ext * 2,
       top = (s) => deck((s - ext) / len),
       shape = new T.Shape(),
       M = 28;
@@ -546,8 +550,13 @@
     const mill = model("building_watermill_red", 30, 0, -12, 9, PI);
     HUB.wheel = mill.getObjectByName("building_watermill_wheel_red");
     HOUSES.push({ m: mill, x: 30, z: -12 });
-    /* garaia (aleak gordetzeko etxola) soroen ondoan */
-    model("building_grain", -44, gy(-44, 14), 14, 5.2, 0.4);
+    /* gari-soroa (hexagonoa) soroen ondoan: apur bat jasoa (0.77 m) — gainean ibil daiteke (jauzi batez),
+       ertzak solidoak (lehen 25 m zituen eta ondoko etxea irensten zuen) */
+    {
+      const g0 = gy(-44, 14);
+      model("building_grain", -44, g0, 14, 1.6, 0.4);
+      platforms.push({ x: -44, z: 14, y: g0 + 0.77, bottom: g0 - 1, rx: 3.9, rz: 3.9, phase: -1, safe: true });
+    }
     /* txalaparta plazan (Pello eta Peio) */
     TXALA.spots.push(txalapartaMesh(0, 0, 30.5, 0, "herria"));
     /* merkatua eta apaingarriak: gutxi eta plazaren ertzetan (plaza zabal eta garbi, bideak libre) */

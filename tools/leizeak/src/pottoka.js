@@ -86,6 +86,13 @@
   }
   /* lurraren gainean (ez ibaian; herrian bai) */
   function ponyStep(nx, nz) {
+    /* eraikinak: hormaren luzeran irristatu (ez zeharkatu) */
+    for (const o of solids)
+      if (o.shapes)
+        for (const B of o.shapes) {
+          const q = shapePush(B, nx, nz, 0.9);
+          if (q) [nx, nz] = q;
+        }
     const ty = nightGround(nx, nz, POTT.y);
     if (walkSD(nx, nz) < 0.8 || riverW(nx, nz) < 0.8 || ty - POTT.y > 0.7) return false;
     POTT.x = nx;

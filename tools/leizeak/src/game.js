@@ -2109,6 +2109,9 @@
       size = bb.getSize(new T.Vector3());
     const s = height / (name.startsWith("rock_") ? Math.max(size.x, size.z) : size.y);
     m.scale.multiplyScalar(s);
+    /* eraikinak eta dendak: hormen oinplanoa (biratu aurretik, tokiko ardatzetan) */
+    const solid = (name.startsWith("building_") && !NO_SOLID.includes(name)) || name === "tent",
+      shapes = solid ? bodyShapes(name, m, bb.min.y * s, x, z, angle, height) : null;
     m.position.set(x, y - bb.min.y * s, z);
     m.rotation.y = angle;
     parent.add(m);
@@ -2118,12 +2121,138 @@
         n.receiveShadow = true;
       }
     });
-    if (name.startsWith("building_") && name !== "building_destroyed" && name !== "building_bridge_A") {
+    if (solid) {
+      /* zirkulua (r): proiektil, bonba eta begiradentzat (lehen bezala); formak (shapes): Amaiur eta
+         etsaiak ez dira hormetan sartzen (hormen oinplanoa, ez teilatu-hegalak; teilatuan ezin da egon) */
       const r = Math.min(size.x, size.z) * s * 0.36;
-      solids.push({ x, z, r, h: height, y, pillar: true });
-      occluder(m, x, y, z, Math.max(size.x, size.z) * s * 0.42, height);
+      solids.push({ x, z, r, h: height, y, pillar: true, shapes });
+      if (name !== "tent") occluder(m, x, y, z, Math.max(size.x, size.z) * s * 0.42, height);
     }
     return m;
+  }
+  /* zubiak eta hondakinak zeharkatzen dira; gari-soroa plataforma bat da (ibarra.js) */
+  const NO_SOLID = ["building_destroyed", "building_bridge_A", "building_grain"];
+  /* forma irregularrak, eskuz (tokiko metroak, h altuerarako): errementaria — aurreko tailerra libre
+     (Maddi ingudearen ondoan) */
+  const BODY_SHAPES = {
+    building_blacksmith_red: {
+      h: 7.5,
+      shapes: [
+        { x: -2.8, z: -1, w: 4.6, d: 6.2 } /* teilatu gorriko etxola */,
+        { x: 1.7, z: -0.8, r: 3.2 } /* labe-kupula */,
+        { x: 1.5, z: 2.2, w: 3.4, d: 1.6 } /* labearen aurrealdea */,
+        { x: 0.25, z: 4.15, w: 1.7, d: 1.7 } /* ingudea */,
+        { x: 4.5, z: 2.5, w: 1.6, d: 1 } /* ur-askia */,
+        { x: -4.3, z: 2.2, r: 0.55 } /* ontzia */,
+      ],
+    },
+  };
+  function bodyShapes(name, m, y0, x, z, angle, height) {
+    const D = BODY_SHAPES[name];
+    if (!D) {
+      const b = bodyBox(m, y0, x, z, angle);
+      return b ? [b] : null;
+    }
+    const k = height / D.h,
+      c = Math.cos(angle),
+      n = Math.sin(angle);
+    return D.shapes.map((q) => {
+      const lx = q.x * k,
+        lz = q.z * k,
+        o = { x: x + lx * c + lz * n, z: z - lx * n + lz * c };
+      return q.r ? { ...o, r: q.r * k } : { ...o, w: q.w * k, d: q.d * k, rot: angle };
+    });
+  }
+  /* eraikin baten oinplanoa gorputzaren altueran (0.25–2.2 m): kaxa, munduan biratuta. Triangeluak
+     banda horretara mozten dira (horma lau batek erpinak behean eta goian baino ez ditu) */
+  function bodyBox(m, y0, x, z, angle) {
+    m.updateMatrixWorld(true);
+    const lo = y0 + 0.25,
+      hi = y0 + 2.2,
+      tri = [new T.Vector3(), new T.Vector3(), new T.Vector3()];
+    let x0 = 1e9,
+      x1 = -1e9,
+      z0 = 1e9,
+      z1 = -1e9;
+    const add = (px, pz) => {
+      x0 = Math.min(x0, px);
+      x1 = Math.max(x1, px);
+      z0 = Math.min(z0, pz);
+      z1 = Math.max(z1, pz);
+    };
+    /* poligonoa y ≥ lo eta y ≤ hi planoetara moztu (Sutherland–Hodgman), eta haren XZ puntuak gehitu */
+    const clip = (poly, keep, at) => {
+      const out = [];
+      for (let i = 0; i < poly.length; i++) {
+        const a = poly[i],
+          b = poly[(i + 1) % poly.length],
+          ia = keep(a[1]),
+          ib = keep(b[1]);
+        if (ia) out.push(a);
+        if (ia !== ib) {
+          const t = (at - a[1]) / (b[1] - a[1]);
+          out.push([a[0] + (b[0] - a[0]) * t, at, a[2] + (b[2] - a[2]) * t]);
+        }
+      }
+      return out;
+    };
+    m.traverse((n) => {
+      if (!n.isMesh) return;
+      const g = n.geometry,
+        pos = g.attributes.position,
+        idx = g.index,
+        /* KHR_mesh_quantization: posizio normalizatuak (r128-k ez ditu irakurtzean normalizatzen) */
+        A = pos.array,
+        k = !pos.normalized ? 1 : A instanceof Int16Array ? 1 / 32767 : A instanceof Int8Array ? 1 / 127 : A instanceof Uint16Array ? 1 / 65535 : A instanceof Uint8Array ? 1 / 255 : 1,
+        N = idx ? idx.count : pos.count;
+      for (let i = 0; i + 2 < N; i += 3) {
+        for (let j = 0; j < 3; j++) tri[j].fromBufferAttribute(pos, idx ? idx.getX(i + j) : i + j).multiplyScalar(k).applyMatrix4(n.matrixWorld);
+        const ya = Math.min(tri[0].y, tri[1].y, tri[2].y),
+          yb = Math.max(tri[0].y, tri[1].y, tri[2].y);
+        if (yb < lo || ya > hi) continue;
+        let poly = tri.map((p) => [p.x, p.y, p.z]);
+        if (ya < lo) poly = clip(poly, (y) => y >= lo, lo);
+        if (yb > hi) poly = clip(poly, (y) => y <= hi, hi);
+        for (const p of poly) add(p[0], p[2]);
+      }
+    });
+    if (x0 > x1) return null;
+    const cx = (x0 + x1) / 2,
+      cz = (z0 + z1) / 2,
+      c = Math.cos(angle),
+      n = Math.sin(angle);
+    return { x: x + cx * c + cz * n, z: z - cx * n + cz * c, w: x1 - x0, d: z1 - z0, rot: angle };
+  }
+  /* forma batetik kanpora (zirkulua edo kaxa biratua; erradioa r): [x, z, normalaren x, z] edo null */
+  function shapePush(B, x, z, r) {
+    if (!B.r) return boxPush(B, x, z, r);
+    const dx = x - B.x,
+      dz = z - B.z,
+      d = Math.hypot(dx, dz),
+      R = B.r + r;
+    if (d >= R) return null;
+    const ux = d > 1e-4 ? dx / d : 1,
+      uz = d > 1e-4 ? dz / d : 0;
+    return [B.x + ux * R, B.z + uz * R, ux, uz];
+  }
+  /* kaxa biratu batetik kanpora (erradioa r): [x, z, normalaren x, z] edo null (kanpoan bazegoen) */
+  function boxPush(B, x, z, r) {
+    const c = Math.cos(B.rot),
+      n = Math.sin(B.rot),
+      ex = x - B.x,
+      ez = z - B.z,
+      lx = ex * c - ez * n,
+      lz = ex * n + ez * c,
+      hx = B.w / 2 + r,
+      hz = B.d / 2 + r;
+    if (Math.abs(lx) >= hx || Math.abs(lz) >= hz) return null;
+    let ax = lx,
+      az = lz,
+      wx = 0,
+      wz = 0;
+    if (hx - Math.abs(lx) < hz - Math.abs(lz)) wx = Math.sign((ax = Math.sign(lx || 1) * hx));
+    else wz = Math.sign((az = Math.sign(lz || 1) * hz));
+    return [B.x + ax * c + az * n, B.z - ax * n + az * c, wx * c + wz * n, -wx * n + wz * c];
   }
   function bridge(x, z, y, w, d, p, moving = false) {
     let group = new T.Group();
@@ -2664,6 +2793,18 @@
     // Raised platforms have sides. Falling through an absent platform is intentional.
     for (const o of solids) {
       const top = o.y + (phase === 0 || o.pillar ? o.h : o.h * 0.19);
+      /* eraikinak: hormen formak (zirkulua beste sistementzat) */
+      if (o.shapes) {
+        if (py < top - 0.2)
+          for (const B of o.shapes) {
+            const q = shapePush(B, nx, nz, 0.27);
+            if (q) {
+              [nx, nz, P.wallX, P.wallZ] = q;
+              P.wallGrace = 0.15;
+            }
+          }
+        continue;
+      }
       let dx = nx - o.x,
         dz = nz - o.z,
         dd = Math.hypot(dx, dz);

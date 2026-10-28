@@ -175,6 +175,13 @@
           h.x += (dx / d) * Math.min(d, sp * dt);
           h.z += (dz / d) * Math.min(d, sp * dt);
           h.a = Math.atan2(dx, dz);
+          /* etxeetan ez sartu (hormaren luzeran irristatu) */
+          for (const o of solids)
+            if (o.shapes)
+              for (const B of o.shapes) {
+                const q = shapePush(B, h.x, h.z, 0.3);
+                if (q) [h.x, h.z] = q;
+              }
         }
         const hop = d > 0.15 && h.peck <= 0 ? Math.abs(Math.sin(LIFE.t * (h.run > 0 ? 22 : 11) + i)) * 0.06 : 0,
           pitch = h.peck > 0 ? Math.max(0, Math.sin(LIFE.t * 14 + i)) * 0.7 : 0;

@@ -676,6 +676,13 @@
         nz = e.z + e.vz * dt;
       /* eraikinak saihestu */
       for (const o of solids) {
+        if (o.shapes) {
+          for (const B of o.shapes) {
+            const q = shapePush(B, nx, nz, e.D.r);
+            if (q) [nx, nz] = q;
+          }
+          continue;
+        }
         const ox = nx - o.x,
           oz = nz - o.z,
           od = Math.hypot(ox, oz);

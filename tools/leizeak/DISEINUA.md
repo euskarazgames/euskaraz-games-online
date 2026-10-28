@@ -347,6 +347,15 @@ ataria** (bi zaindari eta begi-harria; atea ez da alarman irekitzen). Amaieran, 
 eta denbora, eta izenburu bat (ITZALA alarmarik gabe, OIHARTZUNA 1-2, EKAITZA). Giroa: harri iluna eta
 hotza, zuziak eta kriseiluen argi-orbanak (itzala garrantzitsu).
 
+**Eraikin solidoak.** Herriko etxe, eliza, taberna, errota, putzu, errementari-tegi eta dendek hormen
+oinplanoa dute talkarako (`model()` → `bodyShapes`: modeloaren triangeluak gorputzaren altuerara
+mozten dira, 0.25–2.2 m, eta haien kaxa biratua; forma irregularrak eskuz, adib. errementaria: etxola,
+labe-kupula, ingudea… eta aurreko tailerra libre). Amaiur, poniak, oiloak eta gaueko itzalak ez dira
+hormetan sartzen, eta teilatuetan ezin da egon; lehengo zirkulu txikia proiektil eta bonbentzat geratzen
+da. Zubiak eta hondakinak zeharkatzen dira: harrizko zubiaren muturretan oholtza laua (ibai-ertzean lurra
+jaisten zen eta koska batek sarrera ixten zuen). Gari-soroa txikiagoa eta jasoa (0.77 m): ertza
+solidoa, gainera jauzi batez.
+
 **Mezuak (v2).** Izenburuak, abisuak eta irakaspenak txikiago, gardenago eta ertzetan; denbora
 gutxiago (abisuak 1.8-3.6 s, izenburuak 2.8 s, irakaspenak 5 s, HUD isila 5 s). Elkarrizketa- eta
 dei-panela erdian eta estuago (gehienez 680 px), erretratu txikiagoa eta banda beltz meheagoak.

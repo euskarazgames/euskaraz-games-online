@@ -81,4 +81,5 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_prologoa.js http://127.0.0.1:80
 NODE_PATH=$(npm root -g) node tools/test/leizeak_ametsa.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_anboto.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_harpeak.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_eraikinak.js http://127.0.0.1:8091/games/leizeak.html
 ```
