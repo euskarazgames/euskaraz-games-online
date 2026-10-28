@@ -575,8 +575,8 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
 
 .heroSectionBtn.sareakHero{background:linear-gradient(135deg,#147bbf,#0c477b);text-decoration:none}
 
-.sareakAccess{display:flex;min-height:90px;margin-top:12px;justify-content:space-between;gap:14px;align-items:center;text-decoration:none}
-.sareakAccess strong{display:block;font-size:16px}.sareakAccess small{display:block;opacity:.8;margin-top:4px}
+.feedbackAccess{display:flex;min-height:90px;margin-top:12px;justify-content:space-between;gap:14px;align-items:center;text-decoration:none}
+.feedbackAccess strong{display:block;font-size:16px}.feedbackAccess small{display:block;opacity:.8;margin-top:4px}
 .officialSocialLinks{padding-top:22px}.officialSocialLinks h3{margin:8px 0 12px;font-size:20px}.officialSocialGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.officialSocialGrid a{padding:13px 15px;border:1px solid rgba(255,255,255,.21);background:rgba(13,87,151,.34);border-radius:15px;font-weight:800;font-size:12px;display:flex;align-items:center;min-height:48px}
 
 
@@ -776,7 +776,7 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
     <div><p class="kicker" data-eu="ZURE PLATAFORMAK, GERTUAGO" data-es="TUS PLATAFORMAS, MÁS CERCA">ZURE PLATAFORMAK, GERTUAGO</p><h2 data-eu="Sarbide ofizialak" data-es="Accesos oficiales">Sarbide ofizialak</h2></div>
   </div>
   <div class="platforms" id="platformGrid"></div>
-  <a href="#sareak" class="platform sareakAccess" aria-label="Sareak: Iritzia eman" style="--pc:#1379c4"><span data-eu="SAREAK ↗" data-es="REDES ↗">SAREAK ↗</span><div><strong data-eu="Sareak: Iritzia eman" data-es="Redes: Dar tu opinión">Sareak: Iritzia eman</strong><small data-eu="Postak, YouTube TOP 50 eta iritzia eman" data-es="Posts, TOP 50 de YouTube y dar tu opinión">Postak, YouTube TOP 50 eta iritzia eman</small></div></a>
+  <a href="https://www.eitb.eus/es/contacto/" class="platform feedbackAccess" aria-label="Iritzia eman / Dar tu opinión" style="--pc:#1379c4" target="_blank" rel="noopener noreferrer"><span data-eu="IREKI ↗" data-es="ABRIR ↗">IREKI ↗</span><div><strong data-eu="Iritzia eman" data-es="Dar tu opinión">Iritzia eman</strong><small data-eu="EITBrekin harremanetan jarri" data-es="Contactar con EITB">EITBrekin harremanetan jarri</small></div></a>
 </section>
 
 <section class="section" id="zuzenekoak">
@@ -829,19 +829,7 @@ a.tikButton{display:inline-flex;align-items:center;justify-content:center;text-d
   </div>
 </section>
 
-<section class="section socialSection" id="sareak">
-  <div class="socialHead">
-    <div>
-      <p class="kicker" data-eu="ZEITB · SAREETAN" data-es="ZEITB · EN REDES">ZEITB · SAREETAN</p>
-      <h2 data-eu="Sareak" data-es="Redes">Sareak</h2>
-    </div>
-    <a class="feedbackBtn" href="https://www.eitb.eus/es/contacto/" target="_blank" rel="noopener" data-eu="Iritzia eman ↗" data-es="Dar tu opinión ↗">Iritzia eman ↗</a>
-  </div>
-  <p class="socialLead" data-eu="Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta." data-es="Instagram, TikTok, X y YouTube: las redes oficiales de las marcas ZEITB, organizadas por plataforma.">Instagram, TikTok, X eta YouTube: ZEITB marken sare ofizialak, sareka antolatuta.</p>
-  
 
-  
-<div class="officialSocialLinks"><h3 data-eu="EITBren sare ofizialak" data-es="Redes oficiales de EITB">EITBren sare ofizialak</h3><div class="officialSocialGrid"><a href="https://www.instagram.com/eitb/" target="_blank" rel="noopener noreferrer">EITB · Instagram ↗</a><a href="https://www.instagram.com/etb_zuzenekoak/" target="_blank" rel="noopener noreferrer">ETBko Zuzenekoak · Instagram ↗</a><a href="https://www.tiktok.com/@etb_zuzenekoak" target="_blank" rel="noopener noreferrer">ETBko Zuzenekoak · TikTok ↗</a><a href="https://www.youtube.com/@eitb" target="_blank" rel="noopener noreferrer">EITB · YouTube ↗</a><a href="https://x.com/eitb" target="_blank" rel="noopener noreferrer">EITB · X ↗</a><a href="https://x.com/eitbalbisteak" target="_blank" rel="noopener noreferrer">EITB Albisteak · X ↗</a><a href="https://x.com/eitbkirolak" target="_blank" rel="noopener noreferrer">EITB Kirolak · X ↗</a><a href="https://x.com/gaztea" target="_blank" rel="noopener noreferrer">Gaztea · X ↗</a></div></div></section>
 
 </main>
 
@@ -1605,7 +1593,6 @@ async function loadFeeds(){
 }
 document.querySelectorAll(".heroSectionBtn").forEach(btn=>{
   btn.onclick=()=>{
-    if(btn.dataset.heroSection==="sareak"){document.getElementById("sareak")?.scrollIntoView({behavior:"smooth",block:"start"});return;}
     active=btn.dataset.heroCat||"all";
     activeSubtype=btn.dataset.heroSubtype||null;
     showFavs=false;
