@@ -12,7 +12,9 @@
       "/mundu-jolastuak/original/*",
       "/health",
       "/ataria/api/*",
-      "/garena/api/*"
+      "/garena/api/*",
+      "/",
+      "/index.html"
     ]
   },
   "durable_objects": {
