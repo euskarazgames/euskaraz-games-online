@@ -598,7 +598,7 @@
     /* ur-hautsa (iraganean) */
     HUB.pit = { x, z, fall, mist: 0 };
     /* zuloaren atzean harkaitzak (mendebaldeko hegala) */
-    for (const [a, hh, sd] of [[2.1, 16, 31], [2.7, 21, 32], [3.3, 24, 33], [3.9, 19, 34], [4.5, 13, 35]]) rockPillar(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5), gy(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5)) + hh, sd, 0.6);
+    for (const [a, hh, sd] of [[2.1, 16, 31], [2.7, 21, 32], [3.3, 24, 33], [3.9, 19, 34], [4.5, 13, 35]]) rockPillar(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5), gy(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5)) + hh, sd, 0.6, null, "zuloa");
   }
   /* leize-zuloa: iraganean ur-hautsa gora; orainean isilik */
   function pitUpdate(dt) {
@@ -610,7 +610,7 @@
     const a = (Math.random() - 0.5) * 1.7;
     fxBurst(H.x + Math.cos(a) * (PIT.r - 1.2), RIVER_Y - 2.5 - Math.random() * 3, H.z + Math.sin(a) * (PIT.r - 1.2), { n: 2, speed: 0.5, up: 2.4, life: 1.5, size: 0.9, color: "#e6f4f8", grav: -0.4, drag: 1.2 });
   }
-  /* arroilako harkaitzak ibaiaren ertzean (ibaitik kanpo; talka-zirkuluarekin) */
+  /* arroilako harkaitzak ibaiaren ertzean (ibaitik kanpo; solidoak, rockPillar) */
   function riverRocks(x0, x1, side, hMin, hMax, seed, step = 6.5) {
     const s0 = riverS(x0),
       s1 = riverS(x1);
@@ -623,8 +623,7 @@
         x = cx + -tz * side * off,
         z = cz + tx * side * off,
         h = hMin + (((s * 53) % 7) / 6) * (hMax - hMin);
-      rockPillar(x, z, Math.max(gy(x, z), 0) + h, s);
-      solids.push({ x, z, r: r * 0.9, h: 80, y: -12, pillar: true });
+      rockPillar(x, z, Math.max(gy(x, z), 0) + h, s, 0.52, null, "arroila");
     }
   }
   /* mendi-hegaletako harkaitz-bandak (ingeradatik kanpo) */
@@ -636,24 +635,17 @@
         wm = 1 - a[2] - a[3];
       if (wm < 0.7) continue;
       s++;
+      /* kanporantz: ertzaren normalaren noranzkoa neurtuta (haranaren barrualdea ez) */
       const tl = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1,
         out = 3 + ((s * 13) % 6),
-        x = a[0] + ((b[1] - a[1]) / tl) * out * VAL_OUT,
-        z = a[1] - ((b[0] - a[0]) / tl) * out * VAL_OUT;
+        nx = (b[1] - a[1]) / tl,
+        nz = -(b[0] - a[0]) / tl,
+        sg = valleySD(a[0] + nx * 2, a[1] + nz * 2) < valleySD(a[0] - nx * 2, a[1] - nz * 2) ? 1 : -1,
+        x = a[0] + nx * out * sg,
+        z = a[1] + nz * out * sg;
       if (Math.hypot(x - PIT.x, z - PIT.z) < 26) continue;
-      rockPillar(x, z, gy(x, z) + 4 + ((s * 29) % 9), s, 0.55);
+      rockPillar(x, z, gy(x, z) + 4 + ((s * 29) % 9), s, 0.55, null, "hegala");
     }
-  }
-  /* ingeradaren kanpoko norabidea (erlojuaren norabidean doa: eskuinera kanpoa) */
-  let VAL_OUT = 1;
-  function valleyOrient() {
-    let area = 0;
-    for (let i = 0; i < VAL.length; i++) {
-      const a = VAL[i],
-        b = VAL[(i + 1) % VAL.length];
-      area += a[0] * b[1] - b[0] * a[1];
-    }
-    VAL_OUT = area > 0 ? -1 : 1;
   }
   /* geometriak batu (posizioa, normala, uv): dei bakarra */
   function mergeGeos(geos) {
@@ -740,7 +732,6 @@
   /* lurraren plataforma (haran osoa) eta ibaiaren izotza (orainean) */
   function valleyGround() {
     buildHeights();
-    valleyOrient();
     valleyMesh();
     const W = HG.x1 - HG.x0,
       D = HG.z1 - HG.z0;

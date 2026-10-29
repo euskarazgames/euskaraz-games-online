@@ -10564,7 +10564,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     /* ur-hautsa (iraganean) */
     HUB.pit = { x, z, fall, mist: 0 };
     /* zuloaren atzean harkaitzak (mendebaldeko hegala) */
-    for (const [a, hh, sd] of [[2.1, 16, 31], [2.7, 21, 32], [3.3, 24, 33], [3.9, 19, 34], [4.5, 13, 35]]) rockPillar(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5), gy(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5)) + hh, sd, 0.6);
+    for (const [a, hh, sd] of [[2.1, 16, 31], [2.7, 21, 32], [3.3, 24, 33], [3.9, 19, 34], [4.5, 13, 35]]) rockPillar(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5), gy(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5)) + hh, sd, 0.6, null, "zuloa");
   }
   /* leize-zuloa: iraganean ur-hautsa gora; orainean isilik */
   function pitUpdate(dt) {
@@ -10576,7 +10576,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const a = (Math.random() - 0.5) * 1.7;
     fxBurst(H.x + Math.cos(a) * (PIT.r - 1.2), RIVER_Y - 2.5 - Math.random() * 3, H.z + Math.sin(a) * (PIT.r - 1.2), { n: 2, speed: 0.5, up: 2.4, life: 1.5, size: 0.9, color: "#e6f4f8", grav: -0.4, drag: 1.2 });
   }
-  /* arroilako harkaitzak ibaiaren ertzean (ibaitik kanpo; talka-zirkuluarekin) */
+  /* arroilako harkaitzak ibaiaren ertzean (ibaitik kanpo; solidoak, rockPillar) */
   function riverRocks(x0, x1, side, hMin, hMax, seed, step = 6.5) {
     const s0 = riverS(x0),
       s1 = riverS(x1);
@@ -10589,8 +10589,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         x = cx + -tz * side * off,
         z = cz + tx * side * off,
         h = hMin + (((s * 53) % 7) / 6) * (hMax - hMin);
-      rockPillar(x, z, Math.max(gy(x, z), 0) + h, s);
-      solids.push({ x, z, r: r * 0.9, h: 80, y: -12, pillar: true });
+      rockPillar(x, z, Math.max(gy(x, z), 0) + h, s, 0.52, null, "arroila");
     }
   }
   /* mendi-hegaletako harkaitz-bandak (ingeradatik kanpo) */
@@ -10602,24 +10601,17 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         wm = 1 - a[2] - a[3];
       if (wm < 0.7) continue;
       s++;
+      /* kanporantz: ertzaren normalaren noranzkoa neurtuta (haranaren barrualdea ez) */
       const tl = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1,
         out = 3 + ((s * 13) % 6),
-        x = a[0] + ((b[1] - a[1]) / tl) * out * VAL_OUT,
-        z = a[1] - ((b[0] - a[0]) / tl) * out * VAL_OUT;
+        nx = (b[1] - a[1]) / tl,
+        nz = -(b[0] - a[0]) / tl,
+        sg = valleySD(a[0] + nx * 2, a[1] + nz * 2) < valleySD(a[0] - nx * 2, a[1] - nz * 2) ? 1 : -1,
+        x = a[0] + nx * out * sg,
+        z = a[1] + nz * out * sg;
       if (Math.hypot(x - PIT.x, z - PIT.z) < 26) continue;
-      rockPillar(x, z, gy(x, z) + 4 + ((s * 29) % 9), s, 0.55);
+      rockPillar(x, z, gy(x, z) + 4 + ((s * 29) % 9), s, 0.55, null, "hegala");
     }
-  }
-  /* ingeradaren kanpoko norabidea (erlojuaren norabidean doa: eskuinera kanpoa) */
-  let VAL_OUT = 1;
-  function valleyOrient() {
-    let area = 0;
-    for (let i = 0; i < VAL.length; i++) {
-      const a = VAL[i],
-        b = VAL[(i + 1) % VAL.length];
-      area += a[0] * b[1] - b[0] * a[1];
-    }
-    VAL_OUT = area > 0 ? -1 : 1;
   }
   /* geometriak batu (posizioa, normala, uv): dei bakarra */
   function mergeGeos(geos) {
@@ -10706,7 +10698,6 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
   /* lurraren plataforma (haran osoa) eta ibaiaren izotza (orainean) */
   function valleyGround() {
     buildHeights();
-    valleyOrient();
     valleyMesh();
     const W = HG.x1 - HG.x0,
       D = HG.z1 - HG.z0;
@@ -10967,8 +10958,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
 
   /* ------------------------- harkaitzak (sare bakarrean) ------------------------- */
   const ROCKBATCH = [];
-  /* harri-zutabe zakarra (seaStack bezalakoa) baina bilduta: dei gutxi */
-  function rockPillar(x, z, h, seed, rTop = 0.52) {
+  /* harri-zutabe zakarra (seaStack bezalakoa) baina bilduta: dei gutxi. Solidoa da, bere ingeradarekin
+     (gorputzaren altueran); top: gainean plataforma badu (uhartetxoak), hortik gora ez da bultzatzen */
+  function rockPillar(x, z, h, seed, rTop = 0.52, top = null, kind = "") {
     const r = 4.5 + ((seed * 37) % 5),
       Hh = h + 12,
       geo = new T.CylinderGeometry(r * rTop, r, Hh, 12, 7);
@@ -10983,6 +10975,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     }
     geo.rotateY(seed);
     geo.translate(x, -11.5 + Hh / 2, z);
+    const g0 = Math.min(gy(x, z), top ?? 1e9),
+      shape = radialShape(new T.Mesh(geo), g0 - 1, top ?? g0 + 2.5, x, z);
+    if (shape) solids.push({ x, z, r: shape.rmin * 0.9, h: top === null ? 80 : top + 12, y: -12, pillar: true, shapes: [shape], rock: kind });
     ROCKBATCH.push(geo.toNonIndexed());
     return r;
   }
@@ -11191,7 +11186,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     riverRocks(-14, -34, 1, 2.5, 5, 51, 9);
     riverRocks(-58, -74, 1, 2, 4.5, 61, 8);
     /* ibaiko uhartetxoa (izotzean bakarrik iristen da; oihartzun-harria gainean) */
-    rockPillar(-50, -28.5, -0.9, 30, 0.85);
+    rockPillar(-50, -28.5, -0.9, 30, 0.85, -0.4, "uhartea");
     platforms.push({ x: -50, z: -28.5, y: -0.4, bottom: -2, rx: 3.4, rz: 3.4, phase: -1, safe: true, area: "ibaia" });
     /* zubia: harrizko arkua */
     stoneBridge(0, -19, -38, 5, 1.7);
@@ -11199,7 +11194,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     mountain(142, -28, 32, 50, 1.2, 0.78);
     /* harkaitz-horma ur-jauziaren inguruan (leizearen ahoa erdian geratzen da) */
     for (const [sx, sz, sh, seed] of [[104, -42, 18, 4], [105, -16, 7, 5], [106, -28.5, 22, 15], [109, -35, 22, 10], [109, -22, 17, 20], [113, -46, 24, 2], [114, -12, 9, 25], [118, -33, 26, 9], [118, -23, 21, 4], [122, -40, 28, 12], [123, -15, 14, 30]])
-      rockPillar(sx, sz, sh, seed);
+      rockPillar(sx, sz, sh, seed, 0.52, null, "urjauzia");
     const ft = fallTexture();
     ft.repeat.set(2, 1.4);
     const fall = obj(new T.PlaneGeometry(9, 17), new T.MeshBasicMaterial({ map: ft, color: "#cdeef5", transparent: true, opacity: 0.7, depthWrite: false, side: T.DoubleSide }));
@@ -11300,7 +11295,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     platforms.push({ x: PORT.bay.x, z: PORT.bay.z, y: -8.4, bottom: -9, rx: PORT.bay.rx + 0.5, rz: PORT.bay.rz + 0.5, phase: 1, area: "badia", safe: false, slick: true, ice: true });
     /* izotz-uhartetxoa badian (Txominen sarea) */
     HUB.islet = { x: 25, z: 100 };
-    rockPillar(26.5, 101.5, -7.8, 10, 0.8);
+    rockPillar(26.5, 101.5, -7.8, 10, 0.8, -7.3, "uhartea");
     platforms.push({ x: 26.5, z: 101.5, y: -7.3, bottom: -9, rx: 3.3, rz: 3.3, phase: -1, area: "badia", safe: true });
     /* ------------------------------ ZELAIAK ------------------------------ */
     for (let i = 0; i < 6; i++) model("fence_wood_straight", HUB.pen.x - 6 + i * 2.3, 0, HUB.pen.z + 5, 1.3, PI / 2);
@@ -11352,8 +11347,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     solids.push({ x: -6, z: -182, r: 34, h: 80, y: -9, pillar: true });
     wallBlock(-6, -143, 60, 4, 0, 5, 30, false);
     for (const [sx, sz, sh, seed] of [[-31, -147, 20, 2], [-24, -149, 27, 5], [-17, -146, 24, 7], [5, -146, 23, 1], [12, -149, 28, 4], [19, -146, 19, 8], [-6, -151, 30, 3], [-14, -153, 34, 6], [2, -153, 32, 9]]) {
-      rockPillar(sx, sz, sh, seed);
-      solids.push({ x: sx, z: sz, r: 4.2, h: sh + 12, y: -9, pillar: true });
+      rockPillar(sx, sz, sh, seed, 0.52, null, "ataria");
     }
     box(-10.5, 5 + 4, -140, 2.2, 8, 2.6, material("#56544c"));
     box(-1.5, 5 + 4, -140, 2.2, 8, 2.6, material("#56544c"));
@@ -11416,8 +11410,7 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     mountain(-76, -162, 34, 64, 2.4, 0.5);
     solids.push({ x: -76, z: -162, r: 28, h: 80, y: -9, pillar: true });
     for (const [sx, sz, sh, seed] of [[-84, -136, 26, 3], [-77, -139, 30, 5], [-63, -138, 28, 1], [-56, -134, 22, 6], [-88, -128, 21, 9]]) {
-      rockPillar(sx, sz, sh, seed);
-      solids.push({ x: sx, z: sz, r: 4, h: sh + 12, y: -9, pillar: true });
+      rockPillar(sx, sz, sh, seed, 0.52, null, "ataria");
     }
     wallBlock(-70, -132.4, 26, 2, 0, 12, 20, false);
     box(-74, 12 + 3.6, -130.6, 2, 7.2, 2.4, material("#4e4b44"));
@@ -28635,6 +28628,9 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         m = obj(new T.DodecahedronGeometry(1.4 + (i % 3) * 0.7, 0), rockMaterial());
       m.position.set(ANX + Math.cos(a) * r * 1.05, 0.6, Math.sin(a) * r * 0.9 + 1);
       m.rotation.set(i, i * 1.7, 0);
+      /* solidoak: benetako ingerada (gailurraren ertzean sartzen dira) */
+      const sh = radialShape(m, 0.1, 2.6, m.position.x, m.position.z);
+      if (sh) solids.push({ x: m.position.x, z: m.position.z, r: sh.rmin * 0.9, h: 0.6 + 1.4 + (i % 3) * 0.7, y: 0, pillar: true, shapes: [sh] });
     }
     /* Mariren leizea: bi zutabe, ataria eta ahoa (barruan, argi epela amaieran) */
     const mz = -11.2;
@@ -30349,11 +30345,14 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       size = bb.getSize(new T.Vector3());
     const s = height / (name.startsWith("rock_") ? Math.max(size.x, size.z) : size.y);
     m.scale.multiplyScalar(s);
-    /* eraikinak eta dendak: hormen oinplanoa (biratu aurretik, tokiko ardatzetan) */
+    /* eraikinak eta dendak: hormen oinplanoa (biratu aurretik, tokiko ardatzetan); hesiak eta tresnak: kaxa */
     const solid = (name.startsWith("building_") && !NO_SOLID.includes(name)) || name === "tent",
-      shapes = solid ? bodyShapes(name, m, bb.min.y * s, x, z, angle, height) : null;
+      prop = PROP_SOLID.includes(name),
+      shapes = solid ? bodyShapes(name, m, bb.min.y * s, x, z, angle, height) : prop ? [bodyBox(m, bb.min.y * s, x, z, angle)].filter(Boolean) : null,
+      tall = size.y * s;
     m.position.set(x, y - bb.min.y * s, z);
     m.rotation.y = angle;
+    if (name.startsWith("rock_")) rockSolid(m, bb, s, x, y, z, angle, tall);
     parent.add(m);
     m.traverse((n) => {
       if (n.isMesh) {
@@ -30375,10 +30374,34 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         occluder(m, x, y, z, Math.max(size.x, size.z) * s * 0.42, height, { x: x + ox * c + oz * n, z: z - ox * n + oz * c, w: size.x * s, d: size.z * s, rot: angle });
       }
     }
+    if (prop && shapes.length) {
+      /* gainetik jauzi daiteke (hesiak baxuak dira); ondoak: gainean egon daiteke */
+      const B = shapes[0];
+      solids.push({ x: B.x, z: B.z, r: Math.min(B.w, B.d) / 2, h: tall, y, pillar: true, shapes });
+      if (name === "tree_single_A_cut") platforms.push({ x: B.x, z: B.z, y: y + tall, bottom: y, w: B.w, d: B.d, rot: B.rot, phase: -1, safe: true });
+    }
     return m;
+  }
+  /* harkaitz bat (KayKit): benetako ingerada gorputzaren altueran eta gailurra plataforma (gainera igo daiteke) */
+  function rockSolid(m, bb, s, x, y, z, angle, tall) {
+    const c = Math.cos(angle),
+      n = Math.sin(angle),
+      ox = ((bb.min.x + bb.max.x) / 2) * s,
+      oz = ((bb.min.z + bb.max.z) / 2) * s,
+      cx = x + ox * c + oz * n,
+      cz = z - ox * n + oz * c,
+      body = radialShape(m, y + 0.2, y + Math.min(2.2, tall - 0.05), cx, cz),
+      crown = radialShape(m, y + tall - 0.45, y + tall - 0.05, cx, cz),
+      top = y + tall - 0.12;
+    if (!body) return;
+    solids.push({ x: cx, z: cz, r: body.rmin * 0.9, h: top - y, y, pillar: true, shapes: [body] });
+    const cr = crown ? (crown.rad.reduce((a, b) => a + b, 0) / RAD_N) * 0.8 : 0;
+    if (cr > 0.25) platforms.push({ x: cx, z: cz, y: top, bottom: y, rx: cr, rz: cr, phase: -1, safe: true });
   }
   /* zubiak eta hondakinak zeharkatzen dira; gari-soroa plataforma bat da (ibarra.js) */
   const NO_SOLID = ["building_destroyed", "building_bridge_A", "building_grain"];
+  /* herriko hesiak eta tresnak: oinplanoa (kaxa) gorputzaren altueran; baxuen gainetik jauzi daiteke */
+  const PROP_SOLID = ["fence_wood_straight", "fence_stone_straight", "resource_lumber", "wheelbarrow", "target", "flag_red", "flag_yellow", "flag_green", "tree_single_A_cut"];
   /* forma irregularrak, eskuz (tokiko metroak, h altuerarako): errementaria — aurreko tailerra libre
      (Maddi ingudearen ondoan) */
   const BODY_SHAPES = {
@@ -30415,24 +30438,11 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
     const A = pos.array;
     return !pos.normalized ? 1 : A instanceof Int16Array ? 1 / 32767 : A instanceof Int8Array ? 1 / 127 : A instanceof Uint16Array ? 1 / 65535 : A instanceof Uint8Array ? 1 / 255 : 1;
   }
-  /* eraikin baten oinplanoa gorputzaren altueran (0.25–2.2 m): kaxa, munduan biratuta. Triangeluak
-     banda horretara mozten dira (horma lau batek erpinak behean eta goian baino ez ditu) */
-  function bodyBox(m, y0, x, z, angle) {
+  /* modelo baten triangeluak altuera-banda batera moztuta (y ∈ [lo, hi], Sutherland–Hodgman): cb(poligonoa),
+     puntuak [x, y, z] (horma lau batek erpinak behean eta goian baino ez ditu: horregatik moztu) */
+  function bandPolys(m, lo, hi, cb) {
     m.updateMatrixWorld(true);
-    const lo = y0 + 0.25,
-      hi = y0 + 2.2,
-      tri = [new T.Vector3(), new T.Vector3(), new T.Vector3()];
-    let x0 = 1e9,
-      x1 = -1e9,
-      z0 = 1e9,
-      z1 = -1e9;
-    const add = (px, pz) => {
-      x0 = Math.min(x0, px);
-      x1 = Math.max(x1, px);
-      z0 = Math.min(z0, pz);
-      z1 = Math.max(z1, pz);
-    };
-    /* poligonoa y ≥ lo eta y ≤ hi planoetara moztu (Sutherland–Hodgman), eta haren XZ puntuak gehitu */
+    const tri = [new T.Vector3(), new T.Vector3(), new T.Vector3()];
     const clip = (poly, keep, at) => {
       const out = [];
       for (let i = 0; i < poly.length; i++) {
@@ -30463,7 +30473,22 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
         let poly = tri.map((p) => [p.x, p.y, p.z]);
         if (ya < lo) poly = clip(poly, (y) => y >= lo, lo);
         if (yb > hi) poly = clip(poly, (y) => y <= hi, hi);
-        for (const p of poly) add(p[0], p[2]);
+        if (poly.length) cb(poly);
+      }
+    });
+  }
+  /* eraikin baten oinplanoa gorputzaren altueran (0.25–2.2 m): kaxa, munduan biratuta */
+  function bodyBox(m, y0, x, z, angle) {
+    let x0 = 1e9,
+      x1 = -1e9,
+      z0 = 1e9,
+      z1 = -1e9;
+    bandPolys(m, y0 + 0.25, y0 + 2.2, (poly) => {
+      for (const p of poly) {
+        x0 = Math.min(x0, p[0]);
+        x1 = Math.max(x1, p[0]);
+        z0 = Math.min(z0, p[2]);
+        z1 = Math.max(z1, p[2]);
       }
     });
     if (x0 > x1) return null;
@@ -30473,8 +30498,61 @@ const MAGE="Z2xURgIAAABA9AcAFAYCAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6ImdsVEYtVHJh
       n = Math.sin(angle);
     return { x: x + cx * c + cz * n, z: z - cx * n + cz * c, w: x1 - x0, d: z1 - z0, rot: angle };
   }
-  /* forma batetik kanpora (zirkulua edo kaxa biratua; erradioa r): [x, z, normalaren x, z] edo null */
+  /* harkaitzak: forma izarduna — erdigunetik RAD_N norabidetan, banda horretako ertzik urrunena (benetako
+     ingerada; zirkulu batek koskak eta irtenguneak galtzen zituen) */
+  const RAD_N = 48,
+    RAD_DIR = Array.from({ length: RAD_N }, (_, k) => [Math.cos((k / RAD_N) * TAU), Math.sin((k / RAD_N) * TAU)]);
+  function radialShape(m, lo, hi, cx, cz) {
+    const rad = new Float32Array(RAD_N);
+    bandPolys(m, lo, hi, (poly) => {
+      for (let i = 0; i < poly.length; i++) {
+        const a = poly[i],
+          b = poly[(i + 1) % poly.length],
+          ax = a[0] - cx,
+          az = a[2] - cz,
+          ex = b[0] - a[0],
+          ez = b[2] - a[2];
+        for (let k = 0; k < RAD_N; k++) {
+          const [dx, dz] = RAD_DIR[k],
+            den = dx * ez - dz * ex;
+          if (Math.abs(den) < 1e-9) continue;
+          const d = (ax * ez - az * ex) / den,
+            t = (ax * dz - az * dx) / den;
+          if (d > rad[k] && t >= 0 && t <= 1) rad[k] = d;
+        }
+      }
+    });
+    /* norabide hutsak (zenbakizko hutsuneak): ondokoen artean */
+    if (!rad.some((v) => v > 0)) return null;
+    for (let k = 0; k < RAD_N; k++) {
+      if (rad[k] > 0) continue;
+      let a = 1,
+        b = 1;
+      while (!(rad[(k - a + RAD_N) % RAD_N] > 0)) a++;
+      while (!(rad[(k + b) % RAD_N] > 0)) b++;
+      rad[k] = (rad[(k - a + RAD_N) % RAD_N] * b + rad[(k + b) % RAD_N] * a) / (a + b);
+    }
+    return { x: cx, z: cz, rad, rmax: Math.max(...rad), rmin: Math.min(...rad) };
+  }
+  /* harkaitz baten ingerada norabide batean (tarteko norabideak lerroan) */
+  function radAt(B, ang) {
+    const f = (((ang / TAU) * RAD_N) % RAD_N + RAD_N) % RAD_N,
+      i = Math.floor(f);
+    return B.rad[i] + (B.rad[(i + 1) % RAD_N] - B.rad[i]) * (f - i);
+  }
+  /* forma batetik kanpora (zirkulua, kaxa biratua edo harkaitza; erradioa r): [x, z, normalaren x, z] edo null */
   function shapePush(B, x, z, r) {
+    if (B.rad) {
+      const dx = x - B.x,
+        dz = z - B.z,
+        d = Math.hypot(dx, dz);
+      if (d >= B.rmax + r) return null;
+      const R = radAt(B, Math.atan2(dz, dx)) + r;
+      if (d >= R) return null;
+      const ux = d > 1e-4 ? dx / d : 1,
+        uz = d > 1e-4 ? dz / d : 0;
+      return [B.x + ux * R, B.z + uz * R, ux, uz];
+    }
     if (!B.r) return boxPush(B, x, z, r);
     const dx = x - B.x,
       dz = z - B.z,

@@ -36,7 +36,8 @@ const { launch } = require('./_browser');
   });
 
   /* 1 · eraikinak: forma bakoitzera lau aldetatik ibili (hormaren kontra 1.5 s); inoiz ez barruan */
-  const shapes = await ev(() => __game.ZONES.ibarra.solids.filter((o) => o.shapes).flatMap((o) => o.shapes.map((B) => ({ ...B, y: o.y }))));
+  /* eraikinak eta herriko tresnak (harkaitzak: leizeak_harkaitzak.js) */
+  const shapes = await ev(() => __game.ZONES.ibarra.solids.filter((o) => o.shapes && !o.shapes[0].rad).flatMap((o) => o.shapes.map((B) => ({ ...B, y: o.y, top: o.y + o.h }))));
   ok(shapes.length >= 20, 'herriko eraikinek formak dituzte (hormen oinplanoa)', shapes.length);
   const big = shapes.filter((B) => !B.r && B.w * B.d > 20).length;
   ok(big >= 12, 'etxeak, eliza, taberna, errota: kaxa osoak', big);
@@ -59,7 +60,8 @@ const { launch } = require('./_browser');
           g.input.x = 0.83 * mx - 0.557 * mz;
           g.input.z = 0.557 * mx + 0.83 * mz;
           g.tick(1 / 120);
-          if (__inside(B, g.P.x, g.P.z, 0.2)) { out.deep.push([si, +g.P.x.toFixed(2), +g.P.z.toFixed(2)]); break; }
+          /* hesi baxuen gainetik (aldapan edo jauzian) ez da sartzea */
+          if (__inside(B, g.P.x, g.P.z, 0.2) && g.P.y < B.top - 0.35) { out.deep.push([si, +g.P.x.toFixed(2), +g.P.z.toFixed(2), +g.P.y.toFixed(2), +B.top.toFixed(2)]); break; }
           minD = Math.min(minD, L);
         }
         g.input.x = g.input.z = 0;

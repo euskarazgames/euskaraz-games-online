@@ -36,6 +36,9 @@
         m = obj(new T.DodecahedronGeometry(1.4 + (i % 3) * 0.7, 0), rockMaterial());
       m.position.set(ANX + Math.cos(a) * r * 1.05, 0.6, Math.sin(a) * r * 0.9 + 1);
       m.rotation.set(i, i * 1.7, 0);
+      /* solidoak: benetako ingerada (gailurraren ertzean sartzen dira) */
+      const sh = radialShape(m, 0.1, 2.6, m.position.x, m.position.z);
+      if (sh) solids.push({ x: m.position.x, z: m.position.z, r: sh.rmin * 0.9, h: 0.6 + 1.4 + (i % 3) * 0.7, y: 0, pillar: true, shapes: [sh] });
     }
     /* Mariren leizea: bi zutabe, ataria eta ahoa (barruan, argi epela amaieran) */
     const mz = -11.2;

@@ -248,8 +248,9 @@
 
   /* ------------------------- harkaitzak (sare bakarrean) ------------------------- */
   const ROCKBATCH = [];
-  /* harri-zutabe zakarra (seaStack bezalakoa) baina bilduta: dei gutxi */
-  function rockPillar(x, z, h, seed, rTop = 0.52) {
+  /* harri-zutabe zakarra (seaStack bezalakoa) baina bilduta: dei gutxi. Solidoa da, bere ingeradarekin
+     (gorputzaren altueran); top: gainean plataforma badu (uhartetxoak), hortik gora ez da bultzatzen */
+  function rockPillar(x, z, h, seed, rTop = 0.52, top = null, kind = "") {
     const r = 4.5 + ((seed * 37) % 5),
       Hh = h + 12,
       geo = new T.CylinderGeometry(r * rTop, r, Hh, 12, 7);
@@ -264,6 +265,9 @@
     }
     geo.rotateY(seed);
     geo.translate(x, -11.5 + Hh / 2, z);
+    const g0 = Math.min(gy(x, z), top ?? 1e9),
+      shape = radialShape(new T.Mesh(geo), g0 - 1, top ?? g0 + 2.5, x, z);
+    if (shape) solids.push({ x, z, r: shape.rmin * 0.9, h: top === null ? 80 : top + 12, y: -12, pillar: true, shapes: [shape], rock: kind });
     ROCKBATCH.push(geo.toNonIndexed());
     return r;
   }
@@ -472,7 +476,7 @@
     riverRocks(-14, -34, 1, 2.5, 5, 51, 9);
     riverRocks(-58, -74, 1, 2, 4.5, 61, 8);
     /* ibaiko uhartetxoa (izotzean bakarrik iristen da; oihartzun-harria gainean) */
-    rockPillar(-50, -28.5, -0.9, 30, 0.85);
+    rockPillar(-50, -28.5, -0.9, 30, 0.85, -0.4, "uhartea");
     platforms.push({ x: -50, z: -28.5, y: -0.4, bottom: -2, rx: 3.4, rz: 3.4, phase: -1, safe: true, area: "ibaia" });
     /* zubia: harrizko arkua */
     stoneBridge(0, -19, -38, 5, 1.7);
@@ -480,7 +484,7 @@
     mountain(142, -28, 32, 50, 1.2, 0.78);
     /* harkaitz-horma ur-jauziaren inguruan (leizearen ahoa erdian geratzen da) */
     for (const [sx, sz, sh, seed] of [[104, -42, 18, 4], [105, -16, 7, 5], [106, -28.5, 22, 15], [109, -35, 22, 10], [109, -22, 17, 20], [113, -46, 24, 2], [114, -12, 9, 25], [118, -33, 26, 9], [118, -23, 21, 4], [122, -40, 28, 12], [123, -15, 14, 30]])
-      rockPillar(sx, sz, sh, seed);
+      rockPillar(sx, sz, sh, seed, 0.52, null, "urjauzia");
     const ft = fallTexture();
     ft.repeat.set(2, 1.4);
     const fall = obj(new T.PlaneGeometry(9, 17), new T.MeshBasicMaterial({ map: ft, color: "#cdeef5", transparent: true, opacity: 0.7, depthWrite: false, side: T.DoubleSide }));
@@ -581,7 +585,7 @@
     platforms.push({ x: PORT.bay.x, z: PORT.bay.z, y: -8.4, bottom: -9, rx: PORT.bay.rx + 0.5, rz: PORT.bay.rz + 0.5, phase: 1, area: "badia", safe: false, slick: true, ice: true });
     /* izotz-uhartetxoa badian (Txominen sarea) */
     HUB.islet = { x: 25, z: 100 };
-    rockPillar(26.5, 101.5, -7.8, 10, 0.8);
+    rockPillar(26.5, 101.5, -7.8, 10, 0.8, -7.3, "uhartea");
     platforms.push({ x: 26.5, z: 101.5, y: -7.3, bottom: -9, rx: 3.3, rz: 3.3, phase: -1, area: "badia", safe: true });
     /* ------------------------------ ZELAIAK ------------------------------ */
     for (let i = 0; i < 6; i++) model("fence_wood_straight", HUB.pen.x - 6 + i * 2.3, 0, HUB.pen.z + 5, 1.3, PI / 2);
@@ -633,8 +637,7 @@
     solids.push({ x: -6, z: -182, r: 34, h: 80, y: -9, pillar: true });
     wallBlock(-6, -143, 60, 4, 0, 5, 30, false);
     for (const [sx, sz, sh, seed] of [[-31, -147, 20, 2], [-24, -149, 27, 5], [-17, -146, 24, 7], [5, -146, 23, 1], [12, -149, 28, 4], [19, -146, 19, 8], [-6, -151, 30, 3], [-14, -153, 34, 6], [2, -153, 32, 9]]) {
-      rockPillar(sx, sz, sh, seed);
-      solids.push({ x: sx, z: sz, r: 4.2, h: sh + 12, y: -9, pillar: true });
+      rockPillar(sx, sz, sh, seed, 0.52, null, "ataria");
     }
     box(-10.5, 5 + 4, -140, 2.2, 8, 2.6, material("#56544c"));
     box(-1.5, 5 + 4, -140, 2.2, 8, 2.6, material("#56544c"));
@@ -697,8 +700,7 @@
     mountain(-76, -162, 34, 64, 2.4, 0.5);
     solids.push({ x: -76, z: -162, r: 28, h: 80, y: -9, pillar: true });
     for (const [sx, sz, sh, seed] of [[-84, -136, 26, 3], [-77, -139, 30, 5], [-63, -138, 28, 1], [-56, -134, 22, 6], [-88, -128, 21, 9]]) {
-      rockPillar(sx, sz, sh, seed);
-      solids.push({ x: sx, z: sz, r: 4, h: sh + 12, y: -9, pillar: true });
+      rockPillar(sx, sz, sh, seed, 0.52, null, "ataria");
     }
     wallBlock(-70, -132.4, 26, 2, 0, 12, 20, false);
     box(-74, 12 + 3.6, -130.6, 2, 7.2, 2.4, material("#4e4b44"));

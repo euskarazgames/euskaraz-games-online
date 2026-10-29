@@ -360,6 +360,15 @@ gero izpiak etxearen benetako geometriaren kontra (bularra, burua, belaunak). Le
 batekin: herriko 706 puntutan, 7 aldiz etxeak Amaiur estaltzen zuen gardendu gabe eta 13 aldiz
 gardentzen zen ezer estali gabe; orain 0 eta 0.
 
+**Harkaitz solidoak.** Haraneko harkaitz guztiek benetako ingerada dute talkarako (forma izarduna:
+erdigunetik 48 norabidetan, gorputzaren altuerako ertzik urrunena — `radialShape`; lehen zirkulu txiki bat
+edo ezer ez): harri-zutabeak (arroila, ur-jauzia, leizeen ateak, uhartetxoak, mendi-hegalak), KayKit
+harkaitzak (gailurra plataforma: gainera igo daiteke) eta Anbotoko ertzekoak. Mendi-hegaletako 29
+harkaitzak haranaren barrura jartzen ziren (ingeradaren noranzkoa alderantziz): ur-jauziaren aurrean eta
+Basajaunen atean zeuden, eta Amaiurrek zeharkatzen zituen. Orain kanpora (ertz bakoitzean neurtuta), eta
+haranean 0-4 m sartzen dira gehienez. Hesiak, egurra, orga, jomuga, banderak eta ondoak ere solidoak:
+baxuen gainetik jauzi daiteke, eta ondoen gainean egon. Proba: `leizeak_harkaitzak.js`.
+
 **Mezuak (v2).** Izenburuak, abisuak eta irakaspenak txikiago, gardenago eta ertzetan; denbora
 gutxiago (abisuak 1.8-3.6 s, izenburuak 2.8 s, irakaspenak 5 s, HUD isila 5 s). Elkarrizketa- eta
 dei-panela erdian eta estuago (gehienez 680 px), erretratu txikiagoa eta banda beltz meheagoak.

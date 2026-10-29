@@ -2109,11 +2109,14 @@
       size = bb.getSize(new T.Vector3());
     const s = height / (name.startsWith("rock_") ? Math.max(size.x, size.z) : size.y);
     m.scale.multiplyScalar(s);
-    /* eraikinak eta dendak: hormen oinplanoa (biratu aurretik, tokiko ardatzetan) */
+    /* eraikinak eta dendak: hormen oinplanoa (biratu aurretik, tokiko ardatzetan); hesiak eta tresnak: kaxa */
     const solid = (name.startsWith("building_") && !NO_SOLID.includes(name)) || name === "tent",
-      shapes = solid ? bodyShapes(name, m, bb.min.y * s, x, z, angle, height) : null;
+      prop = PROP_SOLID.includes(name),
+      shapes = solid ? bodyShapes(name, m, bb.min.y * s, x, z, angle, height) : prop ? [bodyBox(m, bb.min.y * s, x, z, angle)].filter(Boolean) : null,
+      tall = size.y * s;
     m.position.set(x, y - bb.min.y * s, z);
     m.rotation.y = angle;
+    if (name.startsWith("rock_")) rockSolid(m, bb, s, x, y, z, angle, tall);
     parent.add(m);
     m.traverse((n) => {
       if (n.isMesh) {
@@ -2135,10 +2138,34 @@
         occluder(m, x, y, z, Math.max(size.x, size.z) * s * 0.42, height, { x: x + ox * c + oz * n, z: z - ox * n + oz * c, w: size.x * s, d: size.z * s, rot: angle });
       }
     }
+    if (prop && shapes.length) {
+      /* gainetik jauzi daiteke (hesiak baxuak dira); ondoak: gainean egon daiteke */
+      const B = shapes[0];
+      solids.push({ x: B.x, z: B.z, r: Math.min(B.w, B.d) / 2, h: tall, y, pillar: true, shapes });
+      if (name === "tree_single_A_cut") platforms.push({ x: B.x, z: B.z, y: y + tall, bottom: y, w: B.w, d: B.d, rot: B.rot, phase: -1, safe: true });
+    }
     return m;
+  }
+  /* harkaitz bat (KayKit): benetako ingerada gorputzaren altueran eta gailurra plataforma (gainera igo daiteke) */
+  function rockSolid(m, bb, s, x, y, z, angle, tall) {
+    const c = Math.cos(angle),
+      n = Math.sin(angle),
+      ox = ((bb.min.x + bb.max.x) / 2) * s,
+      oz = ((bb.min.z + bb.max.z) / 2) * s,
+      cx = x + ox * c + oz * n,
+      cz = z - ox * n + oz * c,
+      body = radialShape(m, y + 0.2, y + Math.min(2.2, tall - 0.05), cx, cz),
+      crown = radialShape(m, y + tall - 0.45, y + tall - 0.05, cx, cz),
+      top = y + tall - 0.12;
+    if (!body) return;
+    solids.push({ x: cx, z: cz, r: body.rmin * 0.9, h: top - y, y, pillar: true, shapes: [body] });
+    const cr = crown ? (crown.rad.reduce((a, b) => a + b, 0) / RAD_N) * 0.8 : 0;
+    if (cr > 0.25) platforms.push({ x: cx, z: cz, y: top, bottom: y, rx: cr, rz: cr, phase: -1, safe: true });
   }
   /* zubiak eta hondakinak zeharkatzen dira; gari-soroa plataforma bat da (ibarra.js) */
   const NO_SOLID = ["building_destroyed", "building_bridge_A", "building_grain"];
+  /* herriko hesiak eta tresnak: oinplanoa (kaxa) gorputzaren altueran; baxuen gainetik jauzi daiteke */
+  const PROP_SOLID = ["fence_wood_straight", "fence_stone_straight", "resource_lumber", "wheelbarrow", "target", "flag_red", "flag_yellow", "flag_green", "tree_single_A_cut"];
   /* forma irregularrak, eskuz (tokiko metroak, h altuerarako): errementaria — aurreko tailerra libre
      (Maddi ingudearen ondoan) */
   const BODY_SHAPES = {
@@ -2175,24 +2202,11 @@
     const A = pos.array;
     return !pos.normalized ? 1 : A instanceof Int16Array ? 1 / 32767 : A instanceof Int8Array ? 1 / 127 : A instanceof Uint16Array ? 1 / 65535 : A instanceof Uint8Array ? 1 / 255 : 1;
   }
-  /* eraikin baten oinplanoa gorputzaren altueran (0.25–2.2 m): kaxa, munduan biratuta. Triangeluak
-     banda horretara mozten dira (horma lau batek erpinak behean eta goian baino ez ditu) */
-  function bodyBox(m, y0, x, z, angle) {
+  /* modelo baten triangeluak altuera-banda batera moztuta (y ∈ [lo, hi], Sutherland–Hodgman): cb(poligonoa),
+     puntuak [x, y, z] (horma lau batek erpinak behean eta goian baino ez ditu: horregatik moztu) */
+  function bandPolys(m, lo, hi, cb) {
     m.updateMatrixWorld(true);
-    const lo = y0 + 0.25,
-      hi = y0 + 2.2,
-      tri = [new T.Vector3(), new T.Vector3(), new T.Vector3()];
-    let x0 = 1e9,
-      x1 = -1e9,
-      z0 = 1e9,
-      z1 = -1e9;
-    const add = (px, pz) => {
-      x0 = Math.min(x0, px);
-      x1 = Math.max(x1, px);
-      z0 = Math.min(z0, pz);
-      z1 = Math.max(z1, pz);
-    };
-    /* poligonoa y ≥ lo eta y ≤ hi planoetara moztu (Sutherland–Hodgman), eta haren XZ puntuak gehitu */
+    const tri = [new T.Vector3(), new T.Vector3(), new T.Vector3()];
     const clip = (poly, keep, at) => {
       const out = [];
       for (let i = 0; i < poly.length; i++) {
@@ -2223,7 +2237,22 @@
         let poly = tri.map((p) => [p.x, p.y, p.z]);
         if (ya < lo) poly = clip(poly, (y) => y >= lo, lo);
         if (yb > hi) poly = clip(poly, (y) => y <= hi, hi);
-        for (const p of poly) add(p[0], p[2]);
+        if (poly.length) cb(poly);
+      }
+    });
+  }
+  /* eraikin baten oinplanoa gorputzaren altueran (0.25–2.2 m): kaxa, munduan biratuta */
+  function bodyBox(m, y0, x, z, angle) {
+    let x0 = 1e9,
+      x1 = -1e9,
+      z0 = 1e9,
+      z1 = -1e9;
+    bandPolys(m, y0 + 0.25, y0 + 2.2, (poly) => {
+      for (const p of poly) {
+        x0 = Math.min(x0, p[0]);
+        x1 = Math.max(x1, p[0]);
+        z0 = Math.min(z0, p[2]);
+        z1 = Math.max(z1, p[2]);
       }
     });
     if (x0 > x1) return null;
@@ -2233,8 +2262,61 @@
       n = Math.sin(angle);
     return { x: x + cx * c + cz * n, z: z - cx * n + cz * c, w: x1 - x0, d: z1 - z0, rot: angle };
   }
-  /* forma batetik kanpora (zirkulua edo kaxa biratua; erradioa r): [x, z, normalaren x, z] edo null */
+  /* harkaitzak: forma izarduna — erdigunetik RAD_N norabidetan, banda horretako ertzik urrunena (benetako
+     ingerada; zirkulu batek koskak eta irtenguneak galtzen zituen) */
+  const RAD_N = 48,
+    RAD_DIR = Array.from({ length: RAD_N }, (_, k) => [Math.cos((k / RAD_N) * TAU), Math.sin((k / RAD_N) * TAU)]);
+  function radialShape(m, lo, hi, cx, cz) {
+    const rad = new Float32Array(RAD_N);
+    bandPolys(m, lo, hi, (poly) => {
+      for (let i = 0; i < poly.length; i++) {
+        const a = poly[i],
+          b = poly[(i + 1) % poly.length],
+          ax = a[0] - cx,
+          az = a[2] - cz,
+          ex = b[0] - a[0],
+          ez = b[2] - a[2];
+        for (let k = 0; k < RAD_N; k++) {
+          const [dx, dz] = RAD_DIR[k],
+            den = dx * ez - dz * ex;
+          if (Math.abs(den) < 1e-9) continue;
+          const d = (ax * ez - az * ex) / den,
+            t = (ax * dz - az * dx) / den;
+          if (d > rad[k] && t >= 0 && t <= 1) rad[k] = d;
+        }
+      }
+    });
+    /* norabide hutsak (zenbakizko hutsuneak): ondokoen artean */
+    if (!rad.some((v) => v > 0)) return null;
+    for (let k = 0; k < RAD_N; k++) {
+      if (rad[k] > 0) continue;
+      let a = 1,
+        b = 1;
+      while (!(rad[(k - a + RAD_N) % RAD_N] > 0)) a++;
+      while (!(rad[(k + b) % RAD_N] > 0)) b++;
+      rad[k] = (rad[(k - a + RAD_N) % RAD_N] * b + rad[(k + b) % RAD_N] * a) / (a + b);
+    }
+    return { x: cx, z: cz, rad, rmax: Math.max(...rad), rmin: Math.min(...rad) };
+  }
+  /* harkaitz baten ingerada norabide batean (tarteko norabideak lerroan) */
+  function radAt(B, ang) {
+    const f = (((ang / TAU) * RAD_N) % RAD_N + RAD_N) % RAD_N,
+      i = Math.floor(f);
+    return B.rad[i] + (B.rad[(i + 1) % RAD_N] - B.rad[i]) * (f - i);
+  }
+  /* forma batetik kanpora (zirkulua, kaxa biratua edo harkaitza; erradioa r): [x, z, normalaren x, z] edo null */
   function shapePush(B, x, z, r) {
+    if (B.rad) {
+      const dx = x - B.x,
+        dz = z - B.z,
+        d = Math.hypot(dx, dz);
+      if (d >= B.rmax + r) return null;
+      const R = radAt(B, Math.atan2(dz, dx)) + r;
+      if (d >= R) return null;
+      const ux = d > 1e-4 ? dx / d : 1,
+        uz = d > 1e-4 ? dz / d : 0;
+      return [B.x + ux * R, B.z + uz * R, ux, uz];
+    }
     if (!B.r) return boxPush(B, x, z, r);
     const dx = x - B.x,
       dz = z - B.z,
