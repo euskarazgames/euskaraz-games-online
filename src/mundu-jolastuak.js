@@ -76,3 +76,13 @@ export async function handleMunduProxy(request) {
     return new HTMLRewriter().on("html",new EuskaraLang()).on("head",new EuskaraHead()).transform(response);
   return response;
 }
+
+class HomeEntry {
+  element(el) {
+    el.append('<a href="/mundu-jolastuak/" aria-label="Mundu Jolastuak: 31 joko berri" style="position:fixed;left:16px;bottom:17px;z-index:99999;display:inline-flex;align-items:center;gap:7px;border:1px solid #f5a768;background:#211b1d;color:#ffab67;padding:10px 15px;border-radius:99px;box-shadow:0 8px 30px #0008;font:800 12px/1.3 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.045em;text-decoration:none">🎮 MUNDU JOLASTUAK · 31 JOKO</a>',{html:true});
+  }
+}
+export function addMunduLink(response) {
+  if (!response.ok || !/text\/html/i.test(response.headers.get("content-type") || "")) return response;
+  return new HTMLRewriter().on("body",new HomeEntry()).transform(response);
+}
