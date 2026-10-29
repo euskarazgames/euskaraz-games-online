@@ -889,6 +889,13 @@ function decorateRock(p, rng) {
 
 /* ----- level generator ----- */
 const gen = { rng: null, x: 0, y: 0, chapter: 0, since: 0, n: 0, lastPaint: -99 };
+// Euskaraz Games: pertsonaiaren benetako abiadura eta tinta-baliabideak doitzeko mailak.
+const EG_MODE = {
+  lasaia:{label:"LASAIA",speed0:5.5,speedStep:0.35,speedMax:8.7,inkMax:130,inkPerUnit:3.5,lives:3},
+  arrunta:{label:"ARRUNTA",speed0:6.3,speedStep:0.45,speedMax:10.2,inkMax:100,inkPerUnit:4.6,lives:3},
+  ausarta:{label:"AUSARTA",speed0:7.0,speedStep:0.55,speedMax:12,inkMax:80,inkPerUnit:5.5,lives:2}
+};
+let egMode="arrunta";
 const speedFor = ch => Math.min(CFG.speedMax, CFG.speed0 + ch * CFG.speedStep);
 function jumpReach(speed, dy) {
   const v0 = CFG.jumpV, tUp = v0 / CFG.gUp, hMax = v0 * v0 / (2 * CFG.gUp);
@@ -1548,8 +1555,8 @@ function gameOver() {
   S.mode = 'over'; S.overT = 0;
   const d = Math.floor(S.dist);
   if (d > S.bestDist) { S.bestDist = d; try { localStorage.setItem('inkfox.best', String(d)); } catch (e) {} }
-  ui.over.querySelector('.stats').textContent = `${d} m  ·  ${S.drops} drops  ·  gate ${S.chapter}`;
-  ui.over.querySelector('.best').textContent = `best ${S.bestDist} m`;
+  ui.over.querySelector('.stats').textContent = `${d} m · ${S.drops} tinta-tanta · ${S.chapter}. atea`;
+  ui.over.querySelector('.best').textContent = `onena: ${S.bestDist} m`;
   ui.over.classList.add('on');
   ui.hud.classList.remove('on');
 }
@@ -1762,9 +1769,9 @@ async function boot() {
   S.mode = 'title'; S.titleAt = performance.now();
   ui.press.classList.remove('hidden');
   if (matchMedia('(pointer: coarse)').matches) {
-    document.querySelector('#title .hint').innerHTML = '<b>TAP LEFT</b> jump &nbsp;·&nbsp; <b>HOLD RIGHT</b> to paint a stroke';
-    ui.press.textContent = 'tap to begin';
-    ui.over.querySelector('.press').textContent = 'tap to paint again';
+    document.querySelector('#title .hint').innerHTML = '<b>EZKERRA UKITU</b> salto egiteko · <b>EUTSI ESKUINARI</b> margotzeko';
+    ui.press.textContent = 'ukitu hasteko';
+    ui.over.querySelector('.press').textContent = 'ukitu berriro margotzeko';
   }
   document.getElementById('load').style.opacity = 0;
   if (S.demo) { S.mode = 'play'; ui.title.classList.add('hidden'); ui.hud.classList.add('on'); }
@@ -1775,7 +1782,34 @@ async function boot() {
     resume() { TEST.frozen = false; last = performance.now(); },
   };
 }
-boot().catch(err => { console.error(err); document.querySelector('#title .press').textContent = 'failed to load: ' + err.message; document.querySelector('#title .press').classList.remove('hidden'); });
+
+// Hiru jokatzeko modu erreal: abiadura, tinta-kontsumoa eta bizitzak.
+const egDifficultyBox=document.createElement("div");
+egDifficultyBox.id="eg-ink-difficulty";
+egDifficultyBox.innerHTML="<span>ZAILTASUNA</span>";
+const styleEg=document.createElement("style");
+styleEg.textContent="#eg-ink-difficulty{position:fixed;z-index:190;right:12px;top:10px;background:#1d1820e6;padding:10px;border:1px solid #f6a16a88;border-radius:12px;color:#ffbd84;box-shadow:0 8px 24px #0009;font:800 11px system-ui}#eg-ink-difficulty span{display:block;margin-bottom:8px}#eg-ink-difficulty button{border:1px solid #765e52;background:#34313a;color:white;border-radius:8px;margin-right:5px;padding:7px 9px;cursor:pointer;font-weight:800}#eg-ink-difficulty button[aria-pressed=true]{background:#f6a16a;color:#23150e}#eg-ink-difficulty[hidden]{display:none!important}@media(max-width:550px){#eg-ink-difficulty{right:5px;top:4px;padding:5px}#eg-ink-difficulty button{font-size:10px;padding:5px}}";
+document.head.appendChild(styleEg);
+for(const name of ["lasaia","arrunta","ausarta"]){
+  const b=document.createElement("button");b.type="button";b.textContent=EG_MODE[name].label;b.dataset.mode=name;
+  b.setAttribute("aria-pressed",String(name===egMode));
+  b.addEventListener("pointerdown",event=>event.stopPropagation());
+  b.addEventListener("click",event=>{
+    event.preventDefault();event.stopPropagation();
+    if(S.mode!=="title")return;
+    egMode=name;
+    const mode=EG_MODE[name];
+    for(const key of ["speed0","speedStep","speedMax","inkMax","inkPerUnit","lives"])CFG[key]=mode[key];
+    S.ink=CFG.inkMax;S.lives=CFG.lives;
+    for(const button of egDifficultyBox.querySelectorAll("button"))button.setAttribute("aria-pressed",String(button.dataset.mode===name));
+  });
+  egDifficultyBox.appendChild(b);
+}
+document.body.appendChild(egDifficultyBox);
+ui.title.addEventListener("pointerdown",()=>{egDifficultyBox.hidden=true});
+addEventListener("keydown",event=>{if(S.mode==="title"&&(event.code==="Space"||event.code==="Enter"))egDifficultyBox.hidden=true});
+
+boot().catch(err => { console.error(err); document.querySelector('#title .press').textContent = 'Ezin izan da kargatu: ' + err.message; document.querySelector('#title .press').classList.remove('hidden'); });
 </script>
 <script src="../brand/gamepad.js"></script>
 </body>
