@@ -34,9 +34,11 @@ for(const g of games){
     const info=await frame.evaluate(()=>({
       canvas:!!document.querySelector("canvas"),
       touch:!!document.querySelector("#eg-touch"),
-      lang:document.documentElement.lang
+      lang:document.documentElement.lang,
+      difficulties:document.querySelectorAll("#eg-difficulty button, #eg-ink-difficulty button").length
     }));
     canvas=info.canvas;touch=info.touch;
+    if(["space-mower","ink-fox"].includes(g.slug))assert.equal(info.difficulties,3,g.slug+": three playable difficulties missing");
     assert.equal(info.lang,"eu","Game document lang must be eu");
     assert(touch,"Touch controls should load on coarse pointer browser");
   }catch(e){errors.push("Frame inspection: "+String(e).slice(0,250));status="error"}
