@@ -71,6 +71,8 @@
       if (CRAFT.on) craftExit();
       LOCK.target = null;
       zoneActivate(id);
+      /* nabigazio-sareak (bi garaiak), pantaila beltzean */
+      navPrepare(id);
       teleport(spawn.x, spawn.z, spawn.y);
       if (spawn.a !== undefined) P.angle = spawn.a;
       CAM.pos = null;
@@ -565,6 +567,8 @@
     const B = { kind, x, y, z, m, hp: 1, broken: false, zone: ZONE.cur, r: 0.75, h, buildZone: BP };
     occluder(m, x, y, z, 0.7, h);
     solids.push((B.solid = { x, z, r: 0.7, h, y }));
+    /* fisika (Jolt): upelak eta kaxak bultzatu daitezke (bestela, geldi) */
+    if (PHYS_KIND[kind]) B.item = physItem(kind, m, x, y, z, B.solid, { B });
     BREAKABLES.push(B);
     return B;
   }
@@ -572,6 +576,9 @@
   const breakHit = (B, x, y, z, r) => (B.hitTest ? B.hitTest(x, y, z, r) : Math.hypot(B.x - x, B.z - z) < r + B.r && Math.abs(y - (B.y + 0.8)) < 2);
   function breakOne(B) {
     B.broken = true;
+    /* fisika (Jolt): apurtutakoaren zatiak (egurra, harria, izotza) */
+    if (PHYS.ok) physDebris(B.x, B.y + (B.h ? B.h * 0.45 : 0.8), B.z, debrisColor(B), B.custom ? 8 : 10);
+    if (B.item) physDrop(B.item);
     if (B.custom) return B.custom();
     B.m.visible = false;
     B.solid.r = 0;

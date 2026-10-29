@@ -37,7 +37,7 @@ const { launch } = require('./_browser');
 
   /* 1 · eraikinak: forma bakoitzera lau aldetatik ibili (hormaren kontra 1.5 s); inoiz ez barruan */
   /* eraikinak eta herriko tresnak (harkaitzak: leizeak_harkaitzak.js) */
-  const shapes = await ev(() => __game.ZONES.ibarra.solids.filter((o) => o.shapes && !o.shapes[0].rad).flatMap((o) => o.shapes.map((B) => ({ ...B, y: o.y, top: o.y + o.h }))));
+  const shapes = await ev(() => __game.ZONES.ibarra.solids.filter((o) => o.shapes && !o.shapes[0].rad && !o.dyn).flatMap((o) => o.shapes.map((B) => ({ ...B, y: o.y, top: o.y + o.h }))));
   ok(shapes.length >= 20, 'herriko eraikinek formak dituzte (hormen oinplanoa)', shapes.length);
   const big = shapes.filter((B) => !B.r && B.w * B.d > 20).length;
   ok(big >= 12, 'etxeak, eliza, taberna, errota: kaxa osoak', big);

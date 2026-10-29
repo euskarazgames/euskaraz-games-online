@@ -84,6 +84,18 @@
     /* zaldiz edo etortzen: talka-gorputzik ez (r < 0: inoiz ez du bultzatzen) */
     POTT.solid.r = P.riding || POTT.state === "come" ? -1 : 0.85;
   }
+  /* zubiaren oholtza: plataforma bat (ez lurra, ez izotza, ez horma) puntu honetan; ertzetan tarte
+     txikiarekin (arkuaren zatien arteko junturan support()-ek ez du ezer aurkitzen) */
+  function deckAt(x, z, feet) {
+    let best = null,
+      by = -1e9;
+    for (const s of platforms) {
+      if (s.off || s.ground || s.ice || s.wall || (s.phase !== -1 && s.phase !== phase) || !contains(s, x, z, 0.15)) continue;
+      const y = topY(s, x, z);
+      if (y <= feet + 0.4 && y > by) (best = s), (by = y);
+    }
+    return best;
+  }
   /* lurraren gainean (ez ibaian; herrian bai) */
   function ponyStep(nx, nz) {
     /* eraikinak: hormaren luzeran irristatu (ez zeharkatu) */
@@ -93,8 +105,12 @@
           const q = shapePush(B, nx, nz, 0.9);
           if (q) [nx, nz] = q;
         }
-    const ty = nightGround(nx, nz, POTT.y);
-    if (walkSD(nx, nz) < 0.8 || riverW(nx, nz) < 0.8 || ty - POTT.y > 0.7) return false;
+    /* zubiaren oholtza (plataforma): ibaiaren gainetik pasa daiteke */
+    const d0 = deckAt(nx, nz, POTT.y + 1.2),
+      s = d0 || support(nx, nz, POTT.y + 1.2),
+      deck = !!d0,
+      ty = s ? topY(s, nx, nz) : gy(nx, nz);
+    if (walkSD(nx, nz) < 0.8 || (!deck && riverW(nx, nz) < 0.8) || ty - POTT.y > 0.7) return false;
     POTT.x = nx;
     POTT.z = nz;
     POTT.y = ty;
@@ -168,8 +184,10 @@
         sp = POTT.graze > 0 ? 0 : 1.6;
       }
     } else if (POTT.state === "come") {
-      tx = P.x;
-      tz = P.z;
+      /* nabigazio-sarea (Recast): etxeak, harkaitzak eta ibaia inguratu (zubitik) */
+      const c = navCorner(POTT, P.x, P.y, P.z);
+      tx = c ? c[0] : P.x;
+      tz = c ? c[1] : P.z;
       sp = dp > 6 ? 11 : 4;
       if (dp < 2.6) {
         POTT.state = "idle";

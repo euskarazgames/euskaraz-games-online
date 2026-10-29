@@ -1865,6 +1865,9 @@
   /* @include anboto.js */
   /* @include sigiloa.js */
   /* @include harpeak.js */
+  /* @include nabi.js */
+  /* @include fisika.js */
+  /* @include ik.js */
   function musicLevel() {
     if (!started || cinematic) return 0;
     if (BOSS.on || MINI.e || MINI.other) return 3;
@@ -2511,6 +2514,8 @@
     hero.add(actor);
     /* aurpegi berria (aurpegia.js): begi handiak, bekainak, pikortak; kliskak eta ahoa */
     faceBuild();
+    /* IK (ik.js): begirada eta oinak */
+    IK.hero = ikRig(actor, null, { feet: true });
     mixer = new T.AnimationMixer(actor);
     models.mage.actions = {};
     for (const a of models.mage.animations) models.mage.actions[a.name] = mixer.clipAction(a);
@@ -2722,6 +2727,8 @@
     hud();
   }
   function setPhaseVisual(immediate = false) {
+    /* fisika: gune/garai honetako mundu estatikoa */
+    physSync();
     for (const b of eraBuildings) {
       b.past.visible = phase === 0;
       b.present.visible = phase === 1;
@@ -2884,7 +2891,7 @@
     if (ZONE.cur === "ibarra") [nx, nz] = terrainCollide(px, pz, py, nx, nz);
     // Raised platforms have sides. Falling through an absent platform is intentional.
     for (const o of solids) {
-      const top = o.y + (phase === 0 || o.pillar ? o.h : o.h * 0.19);
+      const top = o.y + (phase === 0 || o.pillar || o.dyn ? o.h : o.h * 0.19);
       /* eraikinak: hormen formak (zirkulua beste sistementzat) */
       if (o.shapes) {
         if (py < top - 0.2)
@@ -2893,6 +2900,8 @@
             if (q) {
               [nx, nz, P.wallX, P.wallZ] = q;
               P.wallGrace = 0.15;
+              /* gorputz dinamikoa (Jolt): bultzatu */
+              if (o.dyn) physPush(o, -q[2], -q[3], -(P.vx * q[2] + P.vz * q[3]));
             }
           }
         continue;
@@ -2910,6 +2919,8 @@
         P.wallZ = dz / dd;
         nx = o.x + (dx / dd) * (o.r + 0.27);
         nz = o.z + (dz / dd) * (o.r + 0.27);
+        /* gorputz dinamikoa (Jolt): Amaiurren abiadura haren norabidean */
+        if (o.dyn) physPush(o, -dx / dd, -dz / dd, -(P.vx * dx + P.vz * dz) / dd);
       }
     }
     for (const s of platforms) {
@@ -3835,6 +3846,7 @@
       roomsUpdate(dt);
       doorsUpdate(dt);
       lootUpdate(dt);
+      physUpdate(dt);
       craftUpdate(dt);
       hornUpdate(dt);
       fansUpdate(dt);
@@ -3936,6 +3948,8 @@
     shieldHintUpdate(raw);
     SND.update();
     atmoUpdate(raw);
+    /* IK (ik.js): animazioaren gainean, marraztu aurretik */
+    ikUpdate(raw);
     sky.position.copy(camera.position);
     renderer.render(scene, camera);
   }
@@ -4236,12 +4250,18 @@
     for (const n of models.props.scene.children) PROP[n.name] = n;
     $("loadLabel").textContent = L("Harana eta leizea…");
     await egReady;
+    await navInit();
     build();
+    /* nabigazio-sareak (Recast): harana eta hasierako gunea, kargan */
+    navPrepare("ibarra");
+    if (ZONE.cur !== "ibarra") navPrepare();
     ready = true;
     translate();
     $("loadBar").style.width = "100%";
     $("loading").hidden = true;
     requestAnimationFrame(loop);
+    /* fisika (Jolt) beranduago, jokoa martxan dagoela: ez du karga atzeratzen */
+    if (!/[?&]fisika=0/.test(location.search)) setTimeout(physLoad, 250);
     if (new URLSearchParams(location.search).has("test"))
       window.__game = {
         P,
@@ -4280,6 +4300,26 @@
         ingumaStart,
         ingumaFinale,
         ingumaLullaby,
+        IK,
+        ikUpdate,
+        ikTwoBone,
+        PHYS,
+        HARRI,
+        LOOT,
+        breakOne,
+        chestNear,
+        physLoad,
+        physPush,
+        physBlast,
+        physDebris,
+        physSync,
+        NAV,
+        navMeshFor,
+        navPrepare,
+        navPath,
+        navCorner,
+        navGeometry,
+        navDebug,
         SHAFTS,
         MIRRORS,
         CRYSTALS,
@@ -4568,12 +4608,14 @@
           shieldHintUpdate(dt);
           atmoUpdate(dt);
           if (mixer) mixer.update(0);
+          ikUpdate(dt);
           sky.position.copy(camera.position);
           renderer.render(scene, camera);
         },
         draw: () => {
           cameraUpdate(1);
           drawGuide();
+          ikUpdate(1 / 60);
           renderer.render(scene, camera);
         },
       };

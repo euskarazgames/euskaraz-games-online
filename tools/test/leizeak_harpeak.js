@@ -191,8 +191,9 @@ const { launch } = require('./_browser');
   ok(await ev(() => __game.HORMA.on && __game.HORMA.s && Math.abs(__game.HORMA.s.z + 64) < 0.01), 'HORMA: kutxa-pilari ere itsatsi (kutxaren parean)', S(await ev(() => ({ on: __game.HORMA.on, z: +__game.P.z.toFixed(2) }))));
   /* ertzera: kamera izkinaren atzera (baxuago eta diagonalean), Amaiur koadroan */
   await walk(1, 0, 50);
-  await T(120);
-  const hc = await ev(() => { const g = __game; for (let i = 0; i < 20; i++) g.draw(); const c = g.camera.position, P = g.P, v = new c.constructor(P.x, P.y + 1, P.z).project(g.camera); return { on: g.HORMA.on, e: +(g.HORMA.e || 0).toFixed(2), pitch: +(Math.atan2(c.y - P.y, Math.hypot(c.x - P.x, c.z - P.z)) * 180 / Math.PI).toFixed(0), sx: +v.x.toFixed(2), sy: +v.y.toFixed(2) }; });
+  /* gelaren kamera (C: garaiago) eta HORMA-ren nahasketa finkatu arte: fotograma-kontaketaren menpe ez */
+  await T(240);
+  const hc = await ev(() => { const g = __game; for (let i = 0; i < 40; i++) g.draw(); const c = g.camera.position, P = g.P, v = new c.constructor(P.x, P.y + 1, P.z).project(g.camera); return { on: g.HORMA.on, e: +(g.HORMA.e || 0).toFixed(2), pitch: +(Math.atan2(c.y - P.y, Math.hypot(c.x - P.x, c.z - P.z)) * 180 / Math.PI).toFixed(0), sx: +v.x.toFixed(2), sy: +v.y.toFixed(2) }; });
   ok(hc.on && hc.e > 0.5 && hc.pitch < 45 && Math.abs(hc.sx) < 0.9 && Math.abs(hc.sy) < 0.9, 'ertzean: kamera izkinaren atzera, Amaiur koadroan', S(hc));
   await walk(0, 1, 40);
 

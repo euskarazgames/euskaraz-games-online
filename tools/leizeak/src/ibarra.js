@@ -567,6 +567,8 @@
     model("tent", -11, 0, 27, 3.4, 0.4);
     for (const [bx, bz] of [[-13.4, 30.6], [21, 40], [-20, 41], [30, 38]]) HUB.barrels.push(breakable("barrel", bx, gy(bx, bz), bz));
     for (const [bx, bz] of [[-14.6, 29], [22.6, 39.4]]) HUB.barrels.push(breakable("crate_A_big", bx, gy(bx, bz), bz));
+    /* fisika (Jolt): harri biribilak eta harri-kuboa ipar-zelaietan (fisika.js) */
+    physValley();
     FLAGS.push(model("flag_red", 4, 0, 25, 4.2, 0.2), model("flag_yellow", -6, 0, 47, 3.6, 2.8), model("flag_green", 9.5, 0, 46.5, 3.4, -2.6));
     model("wheelbarrow", 19.6, 0, 36.6, 1.5, 0.8);
     model("target", -27.5, 0, 31, 2.2, -1.2);

@@ -67,9 +67,11 @@
       for (const c of models.mage.animations) acts[c.name] = mixer.clipAction(c);
       if (models.skel_minion) for (const c of models.skel_minion.animations) if (/Chop|Taunt/.test(c.name)) acts[c.name] = mixer.clipAction(c);
       const N = { ...D, g, root, mixer, acts, cur: "", t: Math.random() * 3, y: ny, hx: D.x, hz: D.z };
+      /* IK (ik.js): Amaiurri begiratu ondotik pasatzean */
+      N.ik = ikRig(root, N);
       npcAnim(N, D.stone ? "Idle" : "Idle");
       if (D.stone) mixer.timeScale = 0.25;
-      N.solid = { x: D.x, z: D.z, r: D.stone ? 1.6 : 0.6, h: 2, y: N.y, pillar: true };
+      N.solid = { x: D.x, z: D.z, r: D.stone ? 1.6 : 0.6, h: 2, y: N.y, pillar: true, mov: !D.stone };
       solids.push(N.solid);
       if (D.ghost) N.halo = glow(D.x, 1.3, D.z, "#9fd8ff", 4.5);
       NPCS.push(N);

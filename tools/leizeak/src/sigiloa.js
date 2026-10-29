@@ -431,8 +431,8 @@
       return [0, 0, 0];
     }
     const go = (tx, tz, sp) => {
-      const dx = tx - e.x,
-        dz = tz - e.z;
+      /* nabigazio-sarea (Recast): hormak eta kutxak inguratu, ez haien kontra irristatu */
+      const [dx, dz] = navToward(e, tx, e.y, tz);
       e.state = "chase";
       e.dir = Z.lookDir = Math.atan2(dx, dz);
       return [sp, dx, dz];

@@ -374,6 +374,43 @@ QUANTIZE modua, erpinen ordena aldatu gabe: `models/meshopt.mjs`); deskodetzaile
 MIT, WASM barruan) build-ean txertatzen da eta `loader.setMeshoptDecoder`-ek erabiltzen du. Modeloak 5,9 → 4,1 MB;
 HTMLa 7,6 → 5,9 MB (gzip: 3,1 → 2,6 MB). Talkak (`posK`, `bandPolys`, `radialShape`) eta Amaiurren aurpegia berdin.
 
+**Nabigazioa (Recast & Detour).** `nabi.js`: gune bakoitzerako nabigazio-sare bat, jokoaren talka-datu berberetatik
+(ez marrazkitik): plataformen gainazalak (kaxak, elipseak, arrapalak; haraneko lurra HG sarean laginduta, ibaia eta
+izotza kanpo) eta alboak, eta solido finkoak prisma gisa beren altueran (kaxak, zirkuluak, harkaitzen ingerada
+izarduna). Agentearen erradioa 0,85 m (zaindaria 0,8, grunt 0,85, pottoka 0,9), koska 0,45 m, malda 50°.
+Haranekoa kargan (~0,3-0,5 s; bi garaietan bera), beste guneetakoa zonara sartzean, fundidoan (bi garaiak,
+30-80 ms bakoitza); ate bat ireki/itxi bada, berria hurrengo unean (bitartean, zaharra). Erabiltzaileak:
+zaindariak (`go()`: susmoa, ehiza, bilaketa, itzulera), grunt eta brute ehizan (gelatik kanpoko izkinarik ez),
+gaueko itzalak eta pottoka (deitzean: zubitik, etxeak eta harkaitzak inguratuz). Pottokak eta itzalek zubiaren
+oholtza erabil dezakete (`deckAt`: arkuaren zatien arteko junturan ere). Recast ez badago, jokabide zaharra.
+Neurketak (`leizeak_nabigazioa.js`): pottoka ibaiaz bestaldetik 4,6 s-tan (lehen: trabatuta), itzala harkaitz
+baten atzetik 1,9 s (3,9), zaindaria kutxa-horma baten atzera 4 s (lehen: ez zen iristen).
+
+**Fisika (Jolt Physics).** `fisika.js`: mundu estatikoa gune eta garai bakoitzean, nabigazioaren talka-datu
+berberetatik (`navGeometry(..., true)`: lur osoa, ibai-ohea eta izotza barne) MeshShape bakarrean; zonara
+sartzean bi garaiak (fundidoan). Gorputz dinamikoak: herriko eta leizeetako upelak eta kaxak (bultzatu, eztandek
+hegan bidali), ipar-zelaietako hiru harri biribil (lehen bultzadara arte geldi; aldapan behera, 5,5 m/s-tik
+gora min ematen dute eta etsaiak zapaltzen dituzte; lehenaren azpian jentilen txanponak) eta harri-kuboa
+(aurpegiz aurpegi bultzatu; gainean egon daiteke: plataforma mugikorra). Puzzlea: zutabea 5,6 m (jauzi
+bikoitzak 4,85 m ematen ditu; labaina, hormako jauzirik ez) → kuboa ondora, igo eta goian kutxa (30 txanpon).
+Apurtzean zatiak (egurra, harria, izotza), gehienez 60, 3-4 s-tan desagertzen dira. Amaiur eta etsaiak ez daude
+Jolt-en: haien talka-sistemak gorputz dinamikoak solido gisa ikusten ditu (ezin dira zeharkatu) eta abiadura
+itzultzen die (`physPush`). Jolt (~1 MB gzip) jokoa martxan dagoela kargatzen da (`/assets/vendor/jolt-physics.js`);
+`?fisika=0` edo kargatu ezin bada, jokabide zaharra. Proba: `leizeak_fisika.js`.
+
+**Lurra (Terrain3D-ren ideiak).** Haraneko lurraren shaderrean (`haran.js`, `TERRAIN_GLSL`): belarra errepikapenik
+gabe (zarata leunak bi desplazamendu nahasten ditu, WebGL2-n `textureGrad`, mip-josturarik gabe; normala ere bai),
+makro-aldaketa (orban argi/ilunak eta belar lehorragoa) eta altueraren araberako nahasketak (`hblend`: harria,
+ibai-ertza eta goiko elurra ertz garbiekin, testuren distiratik). `w = 0` denean ez da ezer nahasten (lehen
+saiakeran harriaren proiekzio luzatua lur lauan agertzen zen). `?gfx=0`: erpin-koloreak, lehen bezala.
+
+**IK (ozz-animation-en ideiak).** `ik.js`, fotograma bakoitzean animazioaren ondoren: BEGIRADA — burua (eta
+bularra %25) helburura, mugekin (±65°, -30°/+25°); Amaiur: finkatutako etsaia, hurbileko herritarra edo kutxa;
+herritarrek Amaiurri begiratzen diote geldi daudenean. OINAK — bi hezurreko IK analitikoa (kosinuen legea,
+belauna aurrera), oin bakoitza bere lurraren altueran (plataforma edo gy), aldaka jaisten da beheko oinak
+heltzeko; lurrean eta astiro bakarrik. Animaziorik gabe berriz marraztean ez da metatzen (aurreko jarrera
+itzultzen da). Hezur-izenak: three.js-k puntuak kentzen ditu ("upperleg.l" → "upperlegl"). Proba: `leizeak_ik.js`.
+
 **Mezuak (v2).** Izenburuak, abisuak eta irakaspenak txikiago, gardenago eta ertzetan; denbora
 gutxiago (abisuak 1.8-3.6 s, izenburuak 2.8 s, irakaspenak 5 s, HUD isila 5 s). Elkarrizketa- eta
 dei-panela erdian eta estuago (gehienez 680 px), erretratu txikiagoa eta banda beltz meheagoak.

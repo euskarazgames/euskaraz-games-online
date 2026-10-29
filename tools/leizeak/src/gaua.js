@@ -448,8 +448,12 @@
   }
   /* combat.js-ko enemyUpdate-tik: haranean lurraren gainean ibili (ez ibaian, ez herrian) */
   function terrainStep(e, nx, nz) {
-    const ty = nightGround(nx, nz, e.y);
-    if (walkSD(nx, nz) < 0.6 || riverW(nx, nz) < 0.8 || ty - e.y > 0.6 || !nightWild(nx, nz)) return [e.x, e.z];
+    /* zubiaren oholtza (plataforma): ibaiaren gainetik pasa daiteke */
+    const d0 = deckAt(nx, nz, e.y + 1.2),
+      s = d0 || support(nx, nz, e.y + 1.2),
+      deck = !!d0,
+      ty = s ? topY(s, nx, nz) : gy(nx, nz);
+    if (walkSD(nx, nz) < 0.6 || (!deck && riverW(nx, nz) < 0.8) || ty - e.y > 0.6 || !nightWild(nx, nz)) return [e.x, e.z];
     e.y = ty;
     return [nx, nz];
   }

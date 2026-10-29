@@ -57,11 +57,19 @@ eta soinu guztiak joko honetarako sortu dira (prozeduralak).
 
 ## LEIZEEN DEIA · liburutegiak (kode irekia)
 
-Jokoaren HTMLan txertatuta (`tools/leizeak/vendor/`, bertsioak eta jatorria `vendor/README.md`-n):
+Jokoaren HTMLan txertatuta (`tools/leizeak/vendor/`; Jolt aparte, `public/assets/vendor/`), bertsioak eta jatorria `tools/leizeak/vendor/README.md`-n:
 
 | Liburutegia | Egilea | Lizentzia | Zertarako |
 |---|---|---|---|
 | [meshoptimizer](https://github.com/zeux/meshoptimizer) (deskodetzailea, `meshopt_decoder.js`) | Arseny Kapoulkine | MIT | modeloak trinkotuta (EXT_meshopt_compression) |
+| [Recast & Detour](https://github.com/recastnavigation/recastnavigation) | Mikko Mononen eta laguntzaileak | zlib | nabigazio-sareak eta bide-bilaketa (`nabi.js`) |
+| [recast-navigation-js](https://github.com/isaac-mason/recast-navigation-js) (`@recast-navigation/core`, `/generators`, `/wasm` 0.43.1; `recast-navigation.js` bilduma) | Isaac Mason | MIT | Recast & Detour WASM-en, JavaScript-etik |
+| [Jolt Physics](https://github.com/jrouwe/JoltPhysics) / [JoltPhysics.js](https://github.com/jrouwe/JoltPhysics.js) 1.1.1 (`/assets/vendor/jolt-physics.js`, beranduago kargatua) | Jorrit Rouwe | MIT | fisika: upelak, harri biribilak, harri-kuboa, zatiak (`fisika.js`) |
+
+Ideia orokorrak, kodea kopiatu gabe (gure inplementazioa): lurraren testura-nahasketa altueraren arabera
+eta errepikapenik gabeko laginketa ([Terrain3D](https://github.com/TokisanGames/Terrain3D) bezalako
+lur-sistemetan ohikoak) eta begiradaren eta bi hezurreko IK-ren teknikak
+([ozz-animation](https://github.com/guillaumeblanc/ozz-animation)-ek bezala).
 
 ## LEIZEEN DEIA · izenburuko letra-tipoa
 

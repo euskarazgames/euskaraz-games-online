@@ -59,6 +59,8 @@ def vendor_block():
     v += '/*PROPS*/;const PROPS_GLB="' + b64('props.glb') + '";/*PROPS-END*/'
     # modeloak meshoptimizer-ekin trinkotuta daude (models/meshopt.mjs): deskodetzailea (MIT), WASM barruan
     v += ';\n' + (HERE / 'vendor/meshopt_decoder.js').read_text(encoding='utf-8')
+    # nabigazio-sareak (Recast & Detour, zlib; recast-navigation-js, MIT): RecastNav globala, WASM barruan
+    v += ';\n' + (HERE / 'vendor/recast-navigation.js').read_text(encoding='utf-8')
     return v
 
 

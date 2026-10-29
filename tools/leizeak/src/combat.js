@@ -526,9 +526,9 @@
         if (e.state === "chase") {
           /* urrun badago, lasterka (esprinta); hurbil, kontuz */
           want = e.D.speed * K * (d > 6 ? 1.5 : 1);
-          wx = ux;
-          wz = uz;
-          e.dir = Math.atan2(ux, uz);
+          /* nabigazio-sarea: oztoporen bat tartean badago, inguratu (hurbil, zuzenean) */
+          [wx, wz] = d > 2.6 ? navToward(e, P.x, P.y, P.z, I) : [ux, uz];
+          e.dir = Math.atan2(wx, wz);
           if (d < 2.6 && e.t > 0.3) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), (e.atk0 = time);
         } else if (e.state === "wind") {
           e.dir = Math.atan2(e.lx, e.lz);
@@ -631,9 +631,8 @@
       } else if (e.type === "brute") {
         if (e.state === "chase") {
           want = e.D.speed * K;
-          wx = ux;
-          wz = uz;
-          e.dir = Math.atan2(ux, uz);
+          [wx, wz] = d > 3 ? navToward(e, P.x, P.y, P.z, I) : [ux, uz];
+          e.dir = Math.atan2(wx, wz);
           e.cd -= dt * K;
           if (e.cd <= 0 && d > 3 && d < 12) (e.state = "wind"), (e.t = 0), (e.lx = ux), (e.lz = uz), (e.atk0 = time), telegraph(e);
           else if (d < 2.2 && e.t > 0.5) (e.state = "wind"), (e.t = 0.4), (e.lx = ux), (e.lz = uz), (e.atk0 = time), telegraph(e);
@@ -689,6 +688,7 @@
         if (od < o.r + e.D.r && od > 0.001) {
           nx = o.x + (ox / od) * (o.r + e.D.r);
           nz = o.z + (oz / od) * (o.r + e.D.r);
+          if (o.dyn) physPush(o, -ox / od, -oz / od, -(e.vx * ox + e.vz * oz) / od);
         }
       }
       /* haranean (gaueko itzalak): lurraren gainean, ez ibaian ez herrian */

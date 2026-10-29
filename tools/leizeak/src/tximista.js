@@ -220,6 +220,8 @@
     hitStop = Math.max(hitStop, 0.04);
     SND.thunder();
     bombBreak(x, y, z, BOMB_R);
+    /* fisika (Jolt): upelak, harriak eta zatiak hegan */
+    physBlast(x, y, z, BOMB_R + 3.5);
     for (const e of ENEMIES) {
       if (e.state === "dead" || e.state === "spawn") continue;
       const dx = e.x - x,

@@ -405,6 +405,28 @@
   }
 
   /* ------------------------------ lurraren sarea ------------------------------ */
+  /* lurraren GLSL laguntzaileak (Terrain3D-ren ideia orokorrak, gure eran):
+     · dtSample: errepikapenik gabe (zarata leun batek bi desplazamendu nahasten ditu; WebGL2-n textureGrad,
+       mip-josturarik gabe) — 4,5 m-ko lauza ez da goitik ikusten
+     · hblend: altueraren araberako nahasketa (testuren distiratik): harria belarretik ateratzen da, ez lausotuta
+     · vnoise: balio-zarata merkea (makro-aldaketa: belar-orban argiak eta ilunak, lehorragoak) */
+  const TERRAIN_GLSL = [
+    "float tH21( vec2 p ) { p = fract( p * vec2( 123.34, 456.21 ) ); p += dot( p, p + 45.32 ); return fract( p.x * p.y ); }",
+    "float vnoise( vec2 p ) { vec2 i = floor( p ), f = fract( p ); f = f * f * ( 3.0 - 2.0 * f );",
+    "  return mix( mix( tH21( i ), tH21( i + vec2( 1.0, 0.0 ) ), f.x ), mix( tH21( i + vec2( 0.0, 1.0 ) ), tH21( i + vec2( 1.0, 1.0 ) ), f.x ), f.y ); }",
+    "vec4 dtSample( sampler2D t, vec2 uv, vec2 oa, vec2 ob, float f ) {",
+    "#if __VERSION__ >= 300",
+    "  vec2 gx = dFdx( uv ), gy = dFdy( uv );",
+    "  return mix( textureGrad( t, uv + oa, gx, gy ), textureGrad( t, uv + ob, gx, gy ), f );",
+    "#else",
+    "  return mix( texture2D( t, uv + oa ), texture2D( t, uv + ob ), f );",
+    "#endif",
+    "}",
+    /* w = 0 → A osorik, w = 1 → B osorik (beti); tartean, altuena nagusi (ertz garbiak) */
+    "float hblend( float w, float ha, float hb ) { float a = ( clamp( ha, 0.0, 1.0 ) + 0.15 ) * ( 1.0 - w ), b = ( clamp( hb, 0.0, 1.0 ) + 0.15 ) * w;",
+    "  float m = max( a, b ) - 0.12, wa = max( a - m, 0.0 ), wb = max( b - m, 0.0 ); return wb / ( wa + wb + 1e-4 ); }",
+    "float tLum( vec3 c ) { return dot( c, vec3( 0.3, 0.59, 0.11 ) ); }",
+  ].join("\n");
   function valleyMaterial() {
     const tm = terrainMaterial(),
       g = rawTex("grass_c", true),
@@ -427,12 +449,18 @@
         sh.vertexShader.replace("#include <project_vertex>", "#include <project_vertex>\n  vTW = (modelMatrix * vec4(transformed, 1.0)).xyz;\n  vTN = normalize(mat3(modelMatrix) * objectNormal);");
       sh.fragmentShader =
         "uniform float uBlend;\nuniform sampler2D uSnow;\nuniform sampler2D uSnowN;\nuniform sampler2D uCliff;\nuniform sampler2D uBank;\nvarying vec3 vTW;\nvarying vec3 vTN;\n" +
+        TERRAIN_GLSL +
+        "\n" +
         sh.fragmentShader
           .replace(
             "#include <map_fragment>",
             [
               "#ifdef USE_MAP",
-              "  vec4 texelColor = mapTexelToLinear( texture2D( map, vUv ) );",
+              /* errepikapenik gabe: zarata leunak bi desplazamendu nahasten ditu (belarra eta haren normala) */
+              "  float dtK = vnoise( vUv * 0.33 ) * 7.0, dtI = floor( dtK );",
+              "  float dtF = smoothstep( 0.3, 0.7, fract( dtK ) );",
+              "  vec2 dtA = sin( vec2( 3.0, 7.0 ) * dtI ), dtB = sin( vec2( 3.0, 7.0 ) * ( dtI + 1.0 ) );",
+              "  vec4 texelColor = mapTexelToLinear( dtSample( map, vUv, dtA, dtB, dtF ) );",
               "  vec4 snowC = mapTexelToLinear( texture2D( uSnow, vUv * 0.71 ) ) * vec4( 1.06, 1.08, 1.12, 1.0 );",
               "  vec3 tn = normalize( vTN );",
               "  float rk = smoothstep( 0.2, 0.36, 1.0 - tn.y );",
@@ -443,20 +471,26 @@
               "  float edge = 1.0 - abs( uBlend * 2.0 - 1.0 );",
               "  float sb = smoothstep( 0.2, 0.8, uBlend + ( texelColor.g - 0.18 ) * 1.6 * edge );",
               "  float hs = smoothstep( 21.0, 31.0, vTW.y + ( texelColor.g - 0.2 ) * 12.0 + uBlend * 7.0 );",
-              "  vec4 col = mix( texelColor, snowC, sb );",
-              "  col = mix( col, bankC, bank * ( 1.0 - sb * 0.6 ) );",
-              "  col = mix( col, cliffC * vec4( 0.22, 0.21, 0.19, 1.0 ), rk );",
-              "  col = mix( col, snowC, hs * ( 1.0 - rk * 0.55 ) );",
+              /* makro-aldaketa: orban argi/ilunak eta belar lehorragoa (elurrean ia ez) */
+              "  float mA = vnoise( vTW.xz * 0.021 ), mB = vnoise( vTW.xz * 0.093 + 7.3 ), mD = smoothstep( 0.56, 0.82, vnoise( vTW.xz * 0.013 + 3.1 ) );",
+              "  vec3 grassV = texelColor.rgb * mix( 0.84, 1.1, mA ) * mix( 0.95, 1.04, mB );",
+              "  grassV = mix( grassV, grassV * vec3( 1.1, 1.02, 0.78 ), mD * 0.75 );",
+              "  vec4 col = mix( vec4( grassV, texelColor.a ), snowC, sb );",
+              /* altueraren araberako nahasketak: ibai-ertza, harkaitza eta goiko elurra (ertz garbiak) */
+              "  float gH = tLum( col.rgb ) * 2.2;",
+              "  col = mix( col, bankC, hblend( bank * ( 1.0 - sb * 0.6 ), gH, tLum( bankC.rgb ) * 1.6 ) );",
+              "  col = mix( col, cliffC * vec4( 0.22, 0.21, 0.19, 1.0 ), hblend( rk, gH, tLum( cliffC.rgb ) * 1.2 ) );",
+              "  col = mix( col, snowC, hblend( hs * ( 1.0 - rk * 0.55 ), tLum( col.rgb ) * 2.0, 0.8 ) );",
               "  diffuseColor *= col;",
               "#endif",
             ].join("\n"),
           )
           .replace(
             "vec3 mapN = texture2D( normalMap, vUv ).xyz * 2.0 - 1.0;",
-            "vec3 mapN = mix( texture2D( normalMap, vUv ).xyz, texture2D( uSnowN, vUv * 0.71 ).xyz, uBlend ) * 2.0 - 1.0;",
+            "vec3 mapN = mix( dtSample( normalMap, vUv, dtA, dtB, dtF ).xyz, texture2D( uSnowN, vUv * 0.71 ).xyz, uBlend ) * 2.0 - 1.0;",
           );
     };
-    m.customProgramCacheKey = () => "eg-valley";
+    m.customProgramCacheKey = () => "eg-valley2";
     return m;
   }
   /* haraneko lurra: sare bakarra (urruneko mendi-hegalak eta itsas hondoa kanpoan) */

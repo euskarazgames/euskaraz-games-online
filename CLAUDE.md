@@ -32,7 +32,9 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   kamera.js (HORMA: hormari itsatsita, izkinatik begiratu; BEGIRATU: lehen pertsona; GOITIK/ATZETIK
   moduak eta gelen angeluak game.js-en),
   sigiloa.js (itzal-zaindariak, argi-konoak, ALERTA/IHESA/ZAINTZA, oihartzun-radarra, TOK-TOK, LOTARAZI,
-  begi-harriak, izotz-hariak), harpeak.js (ANBOTOKO HARPEAK: sigilu-leizea, gailurraren aurretik)…).
+  begi-harriak, izotz-hariak), harpeak.js (ANBOTOKO HARPEAK: sigilu-leizea, gailurraren aurretik),
+  nabi.js (NABIGAZIOA: Recast & Detour, `tools/leizeak/vendor/`), fisika.js (FISIKA: Jolt, beranduago
+  kargatua `public/assets/vendor/jolt-physics.js`-tik; `?fisika=0`), ik.js (begirada eta oinen IK)…).
   Azaleko letra-tipoa: `tools/leizeak/fonts/cinzel.woff2` (SIL OFL; build-ean base64). Ez editatu `public/games/leizeak.html` zuzenean:
   `python3 tools/leizeak/build.py` (three.js `oihartzun.html`-etik ateratzen da). Diseinua: `tools/leizeak/DISEINUA.md`.
   Joko originala da: ez erabili beste jokoen edukirik (ROMik, maparik, pertsonaiarik, musikarik).
@@ -83,4 +85,7 @@ NODE_PATH=$(npm root -g) node tools/test/leizeak_anboto.js http://127.0.0.1:8091
 NODE_PATH=$(npm root -g) node tools/test/leizeak_harpeak.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_eraikinak.js http://127.0.0.1:8091/games/leizeak.html
 NODE_PATH=$(npm root -g) node tools/test/leizeak_harkaitzak.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_nabigazioa.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_fisika.js http://127.0.0.1:8091/games/leizeak.html
+NODE_PATH=$(npm root -g) node tools/test/leizeak_ik.js http://127.0.0.1:8091/games/leizeak.html
 ```

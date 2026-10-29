@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """LEIZEEN DEIA fitxategi bakarrean (zerbitzaririk gabe irekitzeko):
-egfx.js, jokoak behar dituen testurak/zeruak eta pertsonaien ahotsak barruan, data-URI gisa.
+egfx.js, jokoak behar dituen testurak/zeruak, pertsonaien ahotsak (data-URI gisa) eta fisika (Jolt) barruan.
 
   python3 tools/leizeak/standalone.py /tmp/LEIZEEN_DEIA.html
 """
@@ -20,5 +20,9 @@ html = html.replace(tag, '<script>window.EGFX_INLINE=' + json.dumps(inline) + ';
 voices = {f.stem: 'data:audio/mpeg;base64,' + base64.b64encode(f.read_bytes()).decode() for f in sorted((R / 'assets/voice/leizeak').glob('*.mp3'))}
 if voices:
     html = html.replace('<script>window.EGFX_INLINE=', '<script>window.LEIZEAK_VOICES=' + json.dumps(voices) + ';</script>\n<script>window.EGFX_INLINE=', 1)
+# fisika (Jolt): jokoak /assets/vendor/jolt-physics.js kargatzen du; hemen barruan (JoltPhys globala)
+jolt = R / 'assets/vendor/jolt-physics.js'
+if jolt.exists():
+    html = html.replace('<script>window.EGFX_INLINE=', '<script>' + jolt.read_text(encoding='utf-8') + '</script>\n<script>window.EGFX_INLINE=', 1)
 out.write_text(html, encoding='utf-8')
 print(out, out.stat().st_size)
