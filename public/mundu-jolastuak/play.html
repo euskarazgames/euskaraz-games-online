@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="eu"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jolastu · Mundu Jolastuak</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0e1119;color:#f9f5ef}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:flex;flex-direction:column}a{color:inherit;text-decoration:none}
+header{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:11px clamp(12px,3vw,32px);background:#151820;border-bottom:1px solid #383a42;min-height:68px}
+.headleft{display:flex;gap:14px;align-items:center;min-width:0}.back{border:1px solid #494952;padding:10px 13px;border-radius:12px;font-size:13px;font-weight:800;white-space:nowrap}
+.back:hover{border-color:#ffa257}h1{font-size:clamp(16px,2vw,23px);margin:0;line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.orig{font-size:11px;color:#aaa7aa;margin-top:4px}.actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button,.button{font:800 12px system-ui,sans-serif;background:#292d37;color:white;border:1px solid #454952;border-radius:12px;padding:11px 14px;cursor:pointer}
+button:hover,.button:hover{border-color:#ffa257}.accent{background:#ffa257;color:#25140d;border-color:#ffa257}
+#stage{position:relative;min-height:300px;background:#0a1018;flex:1;overflow:hidden}
+#game{border:0;position:absolute;inset:0;width:100%;height:100%;background:#171b21}
+#loading{position:absolute;inset:0;display:grid;place-items:center;background:#1d212a;color:#f5d9b6;z-index:5;font-size:15px;font-weight:750}
+#loading.hidden{display:none}
+.panel{border-top:1px solid #363b44;background:#181b24;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;padding:13px clamp(12px,3vw,32px)}
+.panel p{font-size:12px;color:#c0bdba;margin:0;max-width:910px;line-height:1.5}
+.panel a{color:#ffc38b;text-decoration:underline}
+#help{background:#272b36;color:#f9eee0;padding:12px 22px;border-top:1px solid #555;display:none;font-size:13px;line-height:1.6}
+#help.visible{display:block}
+#help p{margin:5px 0}.warn{color:#ffb58d}#error{color:#fbd0c0}
+@media(max-width:690px){header{align-items:flex-start;flex-wrap:wrap}.headleft{width:100%}.actions{width:100%}button,.button{padding:8px 11px;font-size:11px}.panel{gap:8px}#stage{min-height:64dvh}}
+</style></head><body>
+<header>
+ <div class="headleft"><a href="./" class="back" aria-label="Bildumara itzuli">← Jokoak</a><div><h1 id="gameTitle">Jokoa kargatzen…</h1><div class="orig" id="originalTitle">Mundu Jolastuak · Euskaraz Games</div></div></div>
+ <nav class="actions" aria-label="Jokoaren aukerak">
+  <button id="helpButton" type="button" aria-expanded="false">ⓘ Laguntza</button>
+  <button id="reloadButton" type="button">↻ Berrabiarazi</button>
+  <button id="fullButton" class="accent" type="button">⛶ Pantaila osoa</button>
+  <a id="originalLink" class="button" href="https://fal-video-to-game.vercel.app/" target="_blank" rel="noopener noreferrer">Jatorrizkoa ↗</a>
+ </nav>
+</header>
+<section id="stage" aria-label="Jokoaren leihoa"><div id="loading" role="status">Jokoa kargatzen…</div>
+ <iframe id="game" title="Bideojokoa" sandbox="allow-scripts allow-pointer-lock allow-downloads allow-forms" allow="fullscreen; gamepad" allowfullscreen referrerpolicy="no-referrer"></iframe>
+</section>
+<div id="help" role="region" aria-label="Jokatzeko laguntza">
+<p><b>Jokatzeko:</b> Sakatu jokoa abiarazteko agertzen den tekla edo botoia. Askotan geziak edo WASD teklak erabiltzen dira mugitzeko eta zuriune-barra jauzi egiteko; joko bakoitzean kontrolak desberdinak izan daitezke.</p>
+<p><b>Euskararen egoera:</b> Nabigazioa eta testuzko hainbat mezu euskaratu dira. Jatorrizko jokoen irudietako, audioetako edo 3Dko zenbait testu ingelesez egon daitezke.</p>
+<p class="warn">⚠ Joko hauek batez ere teklatuarekin pentsatuak daude. Mugikorreko kontrolak ez daude joko guztietan bermatuta.</p>
+<p>Jokoak funtzionatzen ez badu, probatu <a id="fallback" target="_blank" rel="noopener noreferrer">jatorrizko bertsioa</a> edo begiratu <a id="code" target="_blank" rel="noopener noreferrer">iturburu-kodea</a>.</p>
+<p>Jatorrizko egilea: Lovis Odin · MIT lizentzia · Euskaraz Games egokitzapen esperimentala.</p>
+</div>
+<footer class="panel"><p>Bilduma esperimentala · 31 joko · <a href="https://github.com/lovisdotio/video-to-game" target="_blank" rel="noopener noreferrer">Jatorrizko proiektua</a> · euskarazko egokitzapen partziala, 2026.</p><button id="nextButton" type="button">Hurrengo jokoa →</button></footer>
+<script type="module">
+const params=new URLSearchParams(location.search),slug=params.get("joko")||"skyfarer";
+const frame=document.getElementById("game"),loading=document.getElementById("loading"),
+help=document.getElementById("help"),helpButton=document.getElementById("helpButton");
+try{
+ const response=await fetch("./jokoak.json");if(!response.ok)throw new Error("Katalogoa ezin izan da kargatu");
+ const games=await response.json(),game=games.find(g=>g.slug===slug);
+ if(!game)throw new Error("Jokoa ez da aurkitu");
+ document.title=game.title+" · Euskaraz Games";
+ document.getElementById("gameTitle").textContent=game.title;document.getElementById("originalTitle").textContent=game.original+" · "+game.category;
+ const original=document.getElementById("originalLink");original.href=game.originalUrl;
+ document.getElementById("fallback").href=game.originalUrl;document.getElementById("code").href=game.source;
+ frame.title=game.title;
+ frame.addEventListener("load",()=>loading.classList.add("hidden"),{once:true});
+ // Source assets are served by an allowlisted Worker proxy. The sandbox isolates game scripts from the main site.
+ frame.src="./original/"+encodeURIComponent(game.upstreamPath)+"/";
+ const idx=games.indexOf(game);
+ document.getElementById("nextButton").addEventListener("click",()=>location.assign("./play.html?joko="+encodeURIComponent(games[(idx+1)%games.length].slug)));
+ document.getElementById("reloadButton").addEventListener("click",()=>{loading.classList.remove("hidden");frame.src=frame.src});
+ document.getElementById("fullButton").addEventListener("click",async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(frame.requestFullscreen)await frame.requestFullscreen()}catch{}});
+ helpButton.addEventListener("click",()=>{help.classList.toggle("visible");helpButton.setAttribute("aria-expanded",String(help.classList.contains("visible")))});
+}catch(err){loading.textContent="Errorea: "+(err.message||err);help.classList.add("visible")}
+</script>
+</body></html>
