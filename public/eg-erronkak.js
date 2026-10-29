@@ -69,7 +69,7 @@ function init(){
  if(!toolbar||!player)return;
  toolbar.insertBefore(btn,toolbar.firstChild);player.appendChild(modal);
  btn.addEventListener("click",()=>toggle());
- document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&isOpen){toggle(false);ev.stopPropagation()}},true);
+ document.addEventListener("keydown",ev=>{if(ev.key==="Escape"&&isOpen){toggle(false);ev.preventDefault();ev.stopImmediatePropagation()}},true);
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 window.EGChallenges={
