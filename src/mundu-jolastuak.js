@@ -86,3 +86,39 @@ export function addMunduLink(response) {
   if (!response.ok || !/text\/html/i.test(response.headers.get("content-type") || "")) return response;
   return new HTMLRewriter().on("body",new HomeEntry()).transform(response);
 }
+
+
+// Serve archived source files locally. Original artwork is NOT in the upstream
+// GitHub tree; missing assets are requested temporarily from the public demo.
+// No arbitrary remote host or traversal path can be selected by the visitor.
+const LOCAL_GAMES_PREFIX = "/mundu-jolastuak/games/";
+const SLUG_TO_UPSTREAM = Object.fromEntries(Object.entries(ROUTES).map(([id, slug])=>[slug,id]));
+export async function handleLocalGame(request, env) {
+  if (request.method !== "GET" && request.method !== "HEAD") return new Response("Method Not Allowed",{status:405});
+  const incoming = new URL(request.url);
+  if (/%2f|%5c|%00/i.test(incoming.pathname)) return new Response("Bad path",{status:400});
+  const tail = incoming.pathname.slice(LOCAL_GAMES_PREFIX.length);
+  const parts = tail.split("/");
+  const slug = parts.shift();
+  const up = SLUG_TO_UPSTREAM[slug];
+  // A few games load the original shared controller script via ../brand/.
+  if (slug === "brand") {
+    const relative = parts.join("/");
+    if (!relative || !/^[a-z0-9_/.-]+$/i.test(relative) || relative.includes("..")) return new Response("Not Found",{status:404});
+    const target = new URL("/mundu-jolastuak/original/brand/" + relative + incoming.search, incoming.origin);
+    return handleMunduProxy(new Request(target,request));
+  }
+  if (!up) return new Response("Jokoa ez da aurkitu",{status:404});
+  if (parts.length === 1 && parts[0] === "") {
+    const target = new URL(incoming);
+    target.pathname += "index.html";
+    return Response.redirect(target.toString(),302);
+  }
+  // Worker checks real GitHub-archived HTML/JS assets before using fallback.
+  const local = await env.ASSETS.fetch(request);
+  if (local.ok) return local;
+  const relative = parts.join("/");
+  if (!relative.startsWith("assets/") || relative.includes("..") || /%2f|%5c/i.test(relative)) return local;
+  const upstream = new URL("/mundu-jolastuak/original/" + up + "/" + relative + incoming.search, incoming.origin);
+  return handleMunduProxy(new Request(upstream,request));
+}

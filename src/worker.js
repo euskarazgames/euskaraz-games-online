@@ -1,4 +1,4 @@
-import { handleMunduProxy, addMunduLink } from "./mundu-jolastuak.js";
+import { handleMunduProxy, handleLocalGame, addMunduLink } from "./mundu-jolastuak.js";
 import { handleAtariaApi, handleNewsApi } from "./ataria.js";
 import { DurableObject } from "cloudflare:workers";
 
@@ -21,6 +21,7 @@ function sendJson(ws, obj) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname.startsWith("/mundu-jolastuak/games/")) return handleLocalGame(request,env);
     if (url.pathname.startsWith("/mundu-jolastuak/original/")) return handleMunduProxy(request);
     if (url.pathname === "/" || url.pathname === "/index.html") return addMunduLink(await env.ASSETS.fetch(request));
     if(url.pathname==="/garena/api/news")return handleNewsApi(request);

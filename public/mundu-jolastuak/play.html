@@ -36,7 +36,7 @@ button:hover,.button:hover{border-color:#ffa257}.accent{background:#ffa257;color
 </section>
 <div id="help" role="region" aria-label="Jokatzeko laguntza">
 <p id="gameControls"><b>Jokatzeko:</b> Ikusi jokoaren aginduak.</p>
-<p><b>Euskararen egoera:</b> Nabigazioa eta testuzko hainbat mezu euskaratu dira. Jatorrizko jokoen irudietako, audioetako edo 3Dko zenbait testu ingelesez egon daitezke.</p>
+<p><b>Euskararen egoera:</b> Nabigazioa eta testuzko hainbat mezu euskaratu dira. Jatorrizko jokoen irudi, audio eta 3Dko zenbait testu ingelesez izan daitezke. Kodea hemen artxibatu da; jatorrizko zerbitzaritik jasotzen dira falta diren irudi eta soinuak.</p>
 <p class="warn">⚠ Joko hauek batez ere teklatuarekin pentsatuak daude. Mugikorreko kontrolak ez daude joko guztietan bermatuta.</p>
 <p>Jokoak funtzionatzen ez badu, probatu <a id="fallback" target="_blank" rel="noopener noreferrer">jatorrizko bertsioa</a> edo begiratu <a id="code" target="_blank" rel="noopener noreferrer">iturburu-kodea</a>.</p>
 <p>Jatorrizko egilea: Lovis Odin · MIT lizentzia · Euskaraz Games egokitzapen esperimentala.</p>
@@ -57,8 +57,8 @@ try{
  frame.title=game.title;
  document.getElementById("gameControls").textContent=game.controlsEu || "Jokoaren aginduak pantailan ikus daitezke.";
  frame.addEventListener("load",()=>loading.classList.add("hidden"),{once:true});
- // Source assets are served by an allowlisted Worker proxy. The sandbox isolates game scripts from the main site.
- frame.src="./original/"+encodeURIComponent(game.upstreamPath)+"/";
+ // Game source is hosted locally; any missing original artwork is fetched by the allowlisted Worker proxy. Sandboxed game scripts cannot access the portal origin.
+ frame.src="./games/"+encodeURIComponent(game.slug)+"/index.html";
  const idx=games.indexOf(game);
  document.getElementById("nextButton").addEventListener("click",()=>location.assign("./play.html?joko="+encodeURIComponent(games[(idx+1)%games.length].slug)));
  document.getElementById("reloadButton").addEventListener("click",()=>{loading.classList.remove("hidden");frame.src=frame.src});

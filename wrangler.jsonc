@@ -10,6 +10,7 @@
     "run_worker_first": [
       "/ws",
       "/mundu-jolastuak/original/*",
+      "/mundu-jolastuak/games/*",
       "/health",
       "/ataria/api/*",
       "/garena/api/*",
