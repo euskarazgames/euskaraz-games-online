@@ -71,10 +71,10 @@ jobs:
         run: |
           npm install --no-save --no-audit --no-fund playwright
           npx playwright install --with-deps chromium
-      - name: 31 jokoen nabigatzaile-proba eta pantaila-argazkiak
-        run: node scripts/smoke_mundu_browser.mjs
       - name: Euskaraz Games portada bateratuaren eta bost joko klasikoen proba
         run: node scripts/smoke_euskaraz_hub.mjs
+      - name: 31 jokoen nabigatzaile-proba eta pantaila-argazkiak
+        run: node scripts/smoke_mundu_browser.mjs
       - name: Nabigatzaileko QA txostena eta argazkiak
         if: always()
         uses: actions/upload-artifact@v4
