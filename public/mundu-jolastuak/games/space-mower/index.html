@@ -1044,13 +1044,37 @@ function impact(m) {
 // ---------------------------------------------------------------------
 const G = { state: 'loading', level: 1, score: 0, lives: 3, time: 0, target: 0.3, combo: 1, comboN: 0, comboT: 0, meteorT: 0, stateT: 0, best: 0 };
 try { G.best = +localStorage.getItem('spaceMowerBest') || 0; } catch (e) { }
+// Euskaraz Games · benetako jokatzeko hiru zailtasun maila.
+const EG_DIFFICULTY = {
+  lasaia:{name:"LASAIA",target:-0.07,time:1.35,meteor:1.35,lives:5,aimed:-0.13},
+  arrunta:{name:"ARRUNTA",target:0,time:1,meteor:1,lives:3,aimed:0},
+  ausarta:{name:"AUSARTA",target:0.08,time:0.82,meteor:0.73,lives:2,aimed:0.12}
+};
+let egDifficulty="arrunta";
+const egStyle=document.createElement("style");
+egStyle.textContent="#eg-difficulty{position:absolute;z-index:200;right:18px;top:22px;background:#131825cc;border:1px solid #ffb07888;border-radius:14px;padding:10px 12px;color:#ffe0c5;font:800 12px system-ui;box-shadow:0 4px 25px #0008}#eg-difficulty span{display:block;margin-bottom:7px;font-size:10px;letter-spacing:.08em}#eg-difficulty button{border:1px solid #725943;border-radius:7px;background:#2b2830;color:#fff;padding:8px 11px;font-weight:900;cursor:pointer;margin-right:4px}#eg-difficulty button[aria-pressed=true]{background:#ffad67;color:#20130d;border-color:#ffad67}@media(max-width:640px){#eg-difficulty{top:5px;right:5px;padding:5px}#eg-difficulty button{padding:6px;font-size:10px}}";
+document.head.appendChild(egStyle);
+const egDifficultyUi=document.createElement("div");
+egDifficultyUi.id="eg-difficulty";egDifficultyUi.innerHTML="<span>ZAILTASUNA · AUKERATU</span>";
+for(const mode of ["lasaia","arrunta","ausarta"]){
+  const b=document.createElement("button");b.textContent=EG_DIFFICULTY[mode].name;b.type="button";b.dataset.mode=mode;
+  b.setAttribute("aria-pressed",String(mode===egDifficulty));
+  b.addEventListener("pointerdown",e=>e.stopPropagation());
+  b.addEventListener("click",e=>{
+    e.stopPropagation();egDifficulty=mode;
+    for(const opt of egDifficultyUi.querySelectorAll("button"))opt.setAttribute("aria-pressed",String(opt.dataset.mode===mode));
+  });
+  egDifficultyUi.appendChild(b);
+}
+document.body.appendChild(egDifficultyUi);
 function levelParams(n) {
+  const d=EG_DIFFICULTY[egDifficulty];
   return {
-    target: Math.min(0.2 + 0.06 * (n - 1), 0.6),
-    time: 100 + 5 * Math.min(n - 1, 6),
-    meteorEvery: Math.max(1.4, 5.0 - 0.55 * (n - 1)),
-    warn: Math.max(1.15, 2.1 - 0.15 * (n - 1)),
-    aimed: Math.min(0.25 + 0.1 * (n - 1), 0.8),
+    target: Math.min(0.68,Math.max(0.13,Math.min(0.2 + 0.06 * (n - 1), 0.6)+d.target)),
+    time: Math.round((100 + 5 * Math.min(n - 1, 6))*d.time),
+    meteorEvery: Math.max(1.05,Math.max(1.4, 5.0 - 0.55 * (n - 1))*d.meteor),
+    warn: Math.max(0.95, 2.1 - 0.15 * (n - 1)),
+    aimed: Math.max(0.12,Math.min(0.95,0.25 + 0.1 * (n - 1)+d.aimed)),
   };
 }
 const keys = {};
@@ -1070,8 +1094,9 @@ function setState(s) {
   G.state = s; G.stateT = 0;
   $('title').classList.toggle('hidden', s !== 'title');
   $('hud').classList.toggle('hidden', !(s === 'play' || s === 'intro' || s === 'outro'));
+  egDifficultyUi.hidden = s !== 'title';
   if (s === 'title') {
-    $('best').textContent = G.best ? `BEST ${G.best.toLocaleString('en-US')}` : '';
+    $('best').textContent = G.best ? `ONENA ${G.best.toLocaleString('eu-ES')}` : '';
     banner('');
   }
 }
@@ -1080,12 +1105,12 @@ function banner(big, small = '') {
   $('banner').classList.toggle('hidden', !big);
 }
 function startGame() {
-  G.level = 1; G.score = 0; G.lives = 3;
+  G.level = 1; G.score = 0; G.lives = EG_DIFFICULTY[egDifficulty].lives; G.maxLives=G.lives;
   resetLevel();
   setState('intro');
   introBanner();
 }
-function introBanner() { banner(`LEVEL ${G.level}`, `Mow ${Math.round(G.target * 100)}% of the asteroid · dodge the meteors`); }
+function introBanner() { banner(`MAILA ${G.level} · ${EG_DIFFICULTY[egDifficulty].name}`, `Moztu asteroidearen %${Math.round(G.target * 100)} · saihestu meteoritoak`); }
 function resetLevel() {
   const P = levelParams(G.level);
   G.target = P.target; G.time = P.time; G.meteorT = 2.5; G.combo = 1; G.comboN = 0; G.comboT = 0;
@@ -1110,11 +1135,11 @@ function hurt() {
   gradePass.uniforms.uHit.value = 0.6;
   shake(1.0);
   updateHud(true);
-  if (G.lives <= 0) gameOver('OUT OF HELMETS');
+  if (G.lives <= 0) gameOver('KASKO GUZTIAK GALDU DITUZU');
 }
 function gameOver(reason) {
   setState('over'); G.overHint = false;
-  banner('GAME OVER', `${reason} · SCORE ${G.score.toLocaleString('en-US')}`);
+  banner('JOKOA AMAITU DA', `${reason} · PUNTUAZIOA ${G.score.toLocaleString('eu-ES')}`);
   if (G.score > G.best) { G.best = G.score; try { localStorage.setItem('spaceMowerBest', G.best); } catch (e) { } }
   Snd.set('engine', 0); Snd.set('cut', 0);
 }
@@ -1122,7 +1147,7 @@ function levelComplete() {
   const bonus = Math.round(G.time) * 50 * G.level;
   G.score += bonus;
   setState('outro');
-  banner('LAWN COMPLETE!', `+${bonus.toLocaleString('en-US')} TIME BONUS`);
+  banner('BELARRA MOZTU DUZU!', `+${bonus.toLocaleString('eu-ES')} DENBORA-SARI`);
   Snd.play('win', 0.9);
   Snd.set('cut', 0);
   for (const m of meteors) { scene.remove(m.ring); scene.remove(m.rock); }
@@ -1138,7 +1163,7 @@ function setText(id, t) { if (hudCache[id] !== t) { hudCache[id] = t; $(id).text
 function updateHud(force) {
   if (force) {
     const lives = $('lives'); lives.innerHTML = '';
-    for (let i = 0; i < 3; i++) { const im = document.createElement('img'); im.src = 'assets/icon_helmet.png'; im.alt = ''; im.onerror = () => { im.style.visibility = 'hidden'; }; if (i >= G.lives) im.className = 'lost'; lives.appendChild(im); }
+    for (let i = 0; i < G.maxLives; i++) { const im = document.createElement('img'); im.src = 'assets/icon_helmet.png'; im.alt = ''; im.onerror = () => { im.style.visibility = 'hidden'; }; if (i >= G.lives) im.className = 'lost'; lives.appendChild(im); }
     $('progTarget').style.left = '80%';
     setText('lvl', `LEVEL ${G.level}`);
   }

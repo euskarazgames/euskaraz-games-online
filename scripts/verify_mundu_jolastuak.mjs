@@ -38,6 +38,23 @@ for(const g of games){
    }
  }
 }
+// Euskaraz Games 2.0: optional progression is actual playable Basque content.
+const extraScript=read("public/eg-erronkak.js");
+const challengeLine=extraScript.match(/const challenges=(\[[^\n]+\]);/);
+assert(challengeLine,"Challenge data missing");
+const challengeData=JSON.parse(challengeLine[1]);
+assert.equal(challengeData.length,36,"31 + 5 games must have supplemental quests");
+assert.equal(new Set(challengeData.map(x=>x.id)).size,36,"Challenge game ID duplicated");
+for(const game of games)assert(challengeData.some(x=>x.id==="mj:"+game.slug),"Missing new game challenge: "+game.slug);
+for(const id of ["kc:pilota","kc:zesta","kc:artzain","bs:basoa","bs:itsas"])assert(challengeData.some(x=>x.id===id),"Missing classic challenge "+id);
+const portal=read("public/index.html");
+assert(!portal.includes('class="symbol"'),"Text-only logo required");
+assert(portal.includes('/eg-erronkak.js'),"Supplementary challenge script not loaded");
+const spaceGame=read("public/mundu-jolastuak/games/space-mower/index.html");
+assert(spaceGame.includes("EG_DIFFICULTY")&&spaceGame.includes("eg-difficulty"),"Space Mower expanded gameplay missing");
+const foxGame=read("public/mundu-jolastuak/games/ink-fox/index.html");
+assert(foxGame.includes("EG_MODE")&&foxGame.includes("eg-ink-difficulty"),"Ink Fox expanded gameplay missing");
+
 const script=read("src/mundu-jolastuak.js");
 const worker=read("src/worker.js");
 const config=read("wrangler.jsonc");

@@ -7,6 +7,7 @@ on:
     paths:
       - 'public/mundu-jolastuak/**'
       - 'public/index.html'
+      - 'public/eg-erronkak.js'
       - 'public/klasiko/**'
       - 'scripts/smoke_euskaraz_hub.mjs'
       - 'wrangler.jsonc'
@@ -35,6 +36,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: node --check public/eg-erronkak.js
       - run: node --check public/mundu-jolastuak/euskara.js
       - run: node --check public/mundu-jolastuak/touch-controls.js
       - run: node scripts/verify_mundu_jolastuak.mjs
