@@ -64,6 +64,30 @@ const translations = {
 "On":"Aktibatuta","Off":"Desaktibatuta",
 "press space to paint again":"sakatu zuriune-barra berriro margotzeko",
 };
+
+Object.assign(translations,{
+ "Press to start":"Sakatu hasteko","Start now":"Hasi orain","Click to continue":"Egin klik jarraitzeko",
+ "CLICK TO CONTINUE":"KLIK EGIN JARRAITZEKO","PRESS TO PLAY":"SAKATU JOLASTEKO",
+ "PAUSE GAME":"JOKOA PAUSATU","Press R to restart":"Sakatu R berrabiarazteko",
+ "Tap anywhere to start":"Ukitu pantaila hasteko","READY":"PREST","Ready":"Prest",
+ "GO!":"AURRERA!","FINISH!":"AMAIERA!","TIME UP":"DENBORA AGORTU DA",
+ "Time's up!":"Denbora agortu da!","MISSION":"MISIOA","OBJECTIVE":"HELBURUA",
+ "Objective":"Helburua","CHECKPOINT":"KONTROL-PUNTUA","Checkpoint":"Kontrol-puntua",
+ "NEW RECORD":"MARKA BERRIA","Score:":"Puntuazioa:","Lives:":"Bizitzak:",
+ "COLLECT":"BILDU","Collected":"Bilduta","FOUND":"AURKITUTA",
+ "EXCELLENT":"BIKAIN","GREAT!":"OSO ONDO!","PERFECT":"BIKAIN",
+ "FAILED":"HUTS EGIN DU","TRY AGAIN?":"BERRIRO SAIATU?",
+ "SOUND ON":"SOINUA AKTIBATUTA","SOUND OFF":"SOINUA ITZALITA",
+ "Touch to start":"Ukitu hasteko","Touch to play":"Ukitu jolasteko",
+ "WASD":"WASD","SHIFT":"SHIFT","SPACE":"ZURIUNE-BARRA",
+ "Press Space":"Sakatu zuriune-barra",
+ "hold shift":"eduki Shift sakatuta","Hold Shift":"Eduki Shift sakatuta",
+ "paused":"pausatuta","Paused":"Pausatuta","YOU LOST":"GALDU DUZU",
+ "Game complete!":"Jokoa osatu duzu!","Well done!":"Oso ondo!",
+ "PRESS SPACE TO RESTART":"SAKATU ZURIUNE-BARRA BERRABIARAZTEKO",
+ "press space to restart":"sakatu zuriune-barra berrabiarazteko"
+});
+
 const rx = [
   [/^Press (?:the )?space(?:bar)? to (start|play|continue)$/i,(_,v)=>"Sakatu zuriune-barra "+(v.toLowerCase()==="continue"?"jarraitzeko":v.toLowerCase()==="play"?"jolasteko":"hasteko")],
   [/^Press (?:the )?enter key to (start|continue)$/i,(_,v)=>"Sakatu Enter "+(v.toLowerCase()==="start"?"hasteko":"jarraitzeko")],
@@ -80,6 +104,28 @@ function translate(value) {
  if(!newText){for(const [pattern,repl] of rx){if(pattern.test(trim)){newText=trim.replace(pattern,repl);break}}}
  return newText===undefined?s:s.slice(0,s.indexOf(trim))+newText+s.slice(s.indexOf(trim)+trim.length);
 }
+
+/* Render-time translation for text painted into Canvas 2D, including textures
+   generated from 2D canvas for WebGL. It cannot alter baked images or audio.
+   Keep measureText and paint consistent to avoid text alignment defects. */
+try {
+  const context = globalThis.CanvasRenderingContext2D && CanvasRenderingContext2D.prototype;
+  if (context && !context.__euskarazTextPatched) {
+    for (const method of ["fillText","strokeText","measureText"]) {
+      const original = context[method];
+      if (typeof original !== "function") continue;
+      Object.defineProperty(context,method,{
+        configurable:true,writable:true,
+        value:function(input,...args) {
+          const localized = typeof input === "string" ? translate(input) : input;
+          return original.call(this,localized,...args);
+        }
+      });
+    }
+    Object.defineProperty(context,"__euskarazTextPatched",{value:true});
+  }
+} catch (error) { console.warn("Euskaraz Games: canvas localization unavailable",error); }
+
 const ignored = /^(SCRIPT|STYLE|NOSCRIPT|CODE|PRE|TEXTAREA)$/;
 function visit(node) {
  if(!node || node.nodeType!==1 || ignored.test(node.tagName||""))return;
@@ -99,10 +145,27 @@ function visit(node) {
    }
  }
 }
+// Inspect changed nodes only; rescanning the whole game every frame harms FPS.
 let pending=false;
-const ob=new MutationObserver(()=>{
- if(pending)return;pending=true;
- requestAnimationFrame(()=>{pending=false;visit(document.body || document.documentElement)});
+const dirty=new Set();
+const ob=new MutationObserver(records=>{
+ for (const record of records) {
+   if (record.type==="characterData") dirty.add(record.target);
+   if (record.type==="childList") for (const node of record.addedNodes) dirty.add(node);
+ }
+ if(pending||!dirty.size)return;
+ pending=true;
+ requestAnimationFrame(()=>{
+   pending=false;
+   const nodes=[...dirty];dirty.clear();
+   for(const node of nodes){
+     if(node.nodeType===3){
+       if(!node.parentElement || ignored.test(node.parentElement.tagName))continue;
+       const translated=translate(node.nodeValue);
+       if(translated!==node.nodeValue)node.nodeValue=translated;
+     }else if(node.nodeType===1) visit(node);
+   }
+ });
 });
 function go() {
  if(!document.body)return;
