@@ -8,7 +8,8 @@
     "upstreamPath": "O2_3D_SKYFARER",
     "originalUrl": "https://fal-video-to-game.vercel.app/O2_3D_SKYFARER/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/skyfarer/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/skyfarer/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/skyfarer/game",
+    "controlsEu": "WASD edo geziak: mugitu · Shift: korrika edo jaitsi · Zuriune-barra: jauzi; airean eutsi planeatzeko · Klik: ingurura begiratu · R: berragertu · M: soinua"
   },
   {
     "id": 2,
@@ -19,7 +20,8 @@
     "upstreamPath": "H01_TIDEBOUND_coop2",
     "originalUrl": "https://fal-video-to-game.vercel.app/H01_TIDEBOUND_coop2/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/tidebound/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/tidebound/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/tidebound/game",
+    "controlsEu": "1: bakarka · 2: elkarlanean · 1. jokalaria: A/D lemazain, W indarra · 2. jokalaria: ↑ belak tiratu, ↓ askatu, ←/→ haizeari aurre egin"
   },
   {
     "id": 3,
@@ -30,7 +32,8 @@
     "upstreamPath": "S30_STORM-SURFER",
     "originalUrl": "https://fal-video-to-game.vercel.app/S30_STORM-SURFER/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/storm-surfer/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/storm-surfer/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/storm-surfer/game",
+    "controlsEu": "Zuriune-barra: hasi eta jauzi · ←/→: olatuan biratu edo airean bira egin · Shift edo ↑: abiadura handitu · P: pausatu"
   },
   {
     "id": 4,
@@ -41,7 +44,8 @@
     "upstreamPath": "D01_SKYHOOK-RESCUE_coop2",
     "originalUrl": "https://fal-video-to-game.vercel.app/D01_SKYHOOK-RESCUE_coop2/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/skyhook-rescue/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/skyhook-rescue/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/skyhook-rescue/game",
+    "controlsEu": "1. jokalaria: WASD hegan, R igo, F jaitsi · 2. jokalaria: geziak hegan, Enter igo, eskuineko Shift jaitsi · Zuriune-barra/Enter: hasi · Gamepadak onartzen ditu"
   },
   {
     "id": 5,
@@ -52,7 +56,8 @@
     "upstreamPath": "B06_PAPER-DRAGON",
     "originalUrl": "https://fal-video-to-game.vercel.app/B06_PAPER-DRAGON/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/paper-dragon/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/paper-dragon/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/paper-dragon/game",
+    "controlsEu": "↑/↓: hegan · Zuriune-barra sakatuta: igo · ←/→: gidatu · Enter: hasi · P: pausatu · M: soinua"
   },
   {
     "id": 6,
@@ -63,7 +68,8 @@
     "upstreamPath": "B10_BUBBLE-BALLOON",
     "originalUrl": "https://fal-video-to-game.vercel.app/B10_BUBBLE-BALLOON/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/bubble-balloon/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/bubble-balloon/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/bubble-balloon/game",
+    "controlsEu": "←/→: gidatu · ↑: azkartu / jaitsi · ↓: moteldu · Zuriune-barra: putz egin · Enter: hasi · Esc: pausatu · M: soinua"
   },
   {
     "id": 7,
@@ -74,7 +80,8 @@
     "upstreamPath": "S16_KITE-RIDER",
     "originalUrl": "https://fal-video-to-game.vercel.app/S16_KITE-RIDER/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/kite-rider/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/kite-rider/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/kite-rider/game",
+    "controlsEu": "←/→: okertu eta gidatu · ↑: igo · ↓: jaitsi · Zuriune-barra edo Shift: haize-bultzada · Enter: hasi · P: pausatu"
   },
   {
     "id": 8,
@@ -85,7 +92,8 @@
     "upstreamPath": "B08_AURORA-SKIFF",
     "originalUrl": "https://fal-video-to-game.vercel.app/B08_AURORA-SKIFF/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/aurora-skiff/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/aurora-skiff/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/aurora-skiff/game",
+    "controlsEu": "←/→ edo A/D: gidatu · Zuriune-barra: haize-bolada · Enter: hasi · Esc/P: pausatu · M: soinua"
   },
   {
     "id": 9,
@@ -96,7 +104,8 @@
     "upstreamPath": "B03_GLASS-GREENHOUSE",
     "originalUrl": "https://fal-video-to-game.vercel.app/B03_GLASS-GREENHOUSE/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/glass-greenhouse/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/glass-greenhouse/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/glass-greenhouse/game",
+    "controlsEu": "Geziak, WASD edo ZQSD: mugitu · Zuriune-barra: kristala ireki, biradera erabili edo salto egin · Enter: hasi edo pausatu · M: soinua"
   },
   {
     "id": 10,
@@ -107,7 +116,8 @@
     "upstreamPath": "A14_BELL-TOWER",
     "originalUrl": "https://fal-video-to-game.vercel.app/A14_BELL-TOWER/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/bell-tower/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/bell-tower/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/bell-tower/game",
+    "controlsEu": "←/→: kulunkatu, erritmoan kanpaiak jotzeko · ↑/↓: sokan igo edo jaitsi · Urrezko sokara iritsi hurrengo solairura igotzeko · Edozein tekla: hasi"
   },
   {
     "id": 11,
@@ -118,7 +128,8 @@
     "upstreamPath": "A07_FOG-SHEPHERD",
     "originalUrl": "https://fal-video-to-game.vercel.app/A07_FOG-SHEPHERD/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/fog-shepherd/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/fog-shepherd/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/fog-shepherd/game",
+    "controlsEu": "←/→: ibili · ↑/↓: lainoan oreinak bilatu · Zuriune-barra/E: linterna altxatu, taldea deitzeko · Enter: hasi · M: soinua"
   },
   {
     "id": 12,
@@ -129,7 +140,8 @@
     "upstreamPath": "A02_PAPER-MOON-STAIRS",
     "originalUrl": "https://fal-video-to-game.vercel.app/A02_PAPER-MOON-STAIRS/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/paper-moon-stairs/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/paper-moon-stairs/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/paper-moon-stairs/game",
+    "controlsEu": "←/→: ibili · Zuriune-barra edo ↑: jauzi · Ukitu farolak izar bihurtzeko · R: berrabiarazi · M: soinua"
   },
   {
     "id": 13,
@@ -140,7 +152,8 @@
     "upstreamPath": "A09_WHALE-SONG",
     "originalUrl": "https://fal-video-to-game.vercel.app/A09_WHALE-SONG/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/whale-song/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/whale-song/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/whale-song/game",
+    "controlsEu": "WASD/geziak: igeri · Shift: bizkor igeri · Zuriune-barra/E: kantatu, baleak argi-bidea sortzeko · Enter: berriro jokatu"
   },
   {
     "id": 14,
@@ -151,7 +164,8 @@
     "upstreamPath": "A06_SKY-LIBRARY",
     "originalUrl": "https://fal-video-to-game.vercel.app/A06_SKY-LIBRARY/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/sky-library/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/sky-library/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/sky-library/game",
+    "controlsEu": "Geziak/WASD: airean igeri; klik sakatuta ere gidatu · Zuriune-barra/Shift: orrien multzoan bidaiatu · Enter: hasi · M: soinua"
   },
   {
     "id": 15,
@@ -162,7 +176,8 @@
     "upstreamPath": "A01_KINTSUGI-MOUNTAIN",
     "originalUrl": "https://fal-video-to-game.vercel.app/A01_KINTSUGI-MOUNTAIN/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/kintsugi-mountain/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/kintsugi-mountain/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/kintsugi-mountain/game",
+    "controlsEu": "←/→: ibili · Zuriune-barra/↑: jauzi · E sakatuta: zubi eta harri hautsiak urrez konpondu · Edozein tekla: hasi"
   },
   {
     "id": 16,
@@ -173,7 +188,8 @@
     "upstreamPath": "S28_SPACE-MOWER",
     "originalUrl": "https://fal-video-to-game.vercel.app/S28_SPACE-MOWER/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/space-mower/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/space-mower/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/space-mower/game",
+    "controlsEu": "↑/W: aurrera · ↓/S: frenatu edo atzera · ←/→: biratu · Shift: turboa · Zuriune-barra/Enter: hasi · M: soinua"
   },
   {
     "id": 17,
@@ -184,7 +200,8 @@
     "upstreamPath": "A13_EMBER-PATH",
     "originalUrl": "https://fal-video-to-game.vercel.app/A13_EMBER-PATH/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/ember-path/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/ember-path/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/ember-path/game",
+    "controlsEu": "←/→: ibili · Shift: korrika · Zuriune-barra/↑: jauzi · E: txingarrean putz egin sasiak erretzeko · Enter: berriro jokatu"
   },
   {
     "id": 18,
@@ -195,7 +212,8 @@
     "upstreamPath": "H02_CLOCKWORK-HEIST_4p",
     "originalUrl": "https://fal-video-to-game.vercel.app/H02_CLOCKWORK-HEIST_4p/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/clockwork-heist/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/clockwork-heist/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/clockwork-heist/game",
+    "controlsEu": "1. jokalaria: A/D mugitu, W jauzi, S palanka · 2.: geziak, ↑ jauzi, ↓ palanka · 3.: J/L, I jauzi, K palanka · 4.: teklatu numerikoko 4/6, 8 jauzi, 5 palanka · Gamepadak onartzen ditu"
   },
   {
     "id": 19,
@@ -206,7 +224,8 @@
     "upstreamPath": "B04_STARLIGHT-TRAIN",
     "originalUrl": "https://fal-video-to-game.vercel.app/B04_STARLIGHT-TRAIN/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/starlight-train/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/starlight-train/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/starlight-train/game",
+    "controlsEu": "Geziak/WASD: korrika · Zuriune-barra: jauzi; sakatuta eutsi planeatzeko · Enter: hasi · Esc: pausatu · M: soinua"
   },
   {
     "id": 20,
@@ -217,7 +236,8 @@
     "upstreamPath": "S11_DUNE-SURFER",
     "originalUrl": "https://fal-video-to-game.vercel.app/S11_DUNE-SURFER/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/dune-surfer/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/dune-surfer/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/dune-surfer/game",
+    "controlsEu": "Zuriune-barra: hasi; sakatu eta askatu jauzi egiteko · ←/→: gidatu, airean biratu · ↓: azkartu / atzerako itzulia · ↑: aurreko itzulia · M: soinua"
   },
   {
     "id": 21,
@@ -228,7 +248,8 @@
     "upstreamPath": "A10_AUTUMN-WIND",
     "originalUrl": "https://fal-video-to-game.vercel.app/A10_AUTUMN-WIND/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/autumn-wind/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/autumn-wind/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/autumn-wind/game",
+    "controlsEu": "Zuriune-barra, ↑ edo klik: jauzi · Airean sakatuta eutsi planeatzeko · ↓/Shift: beherantz jo · M: soinua"
   },
   {
     "id": 22,
@@ -239,7 +260,8 @@
     "upstreamPath": "A03_STAINED-GLASS",
     "originalUrl": "https://fal-video-to-game.vercel.app/A03_STAINED-GLASS/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/stained-glass/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/stained-glass/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/stained-glass/game",
+    "controlsEu": "←/→: korrika · Zuriune-barra/↑: jauzi · Airean sakatuta eutsi planeatzeko · Koloretako argiak bakarrik eusten dio pertsonaiari · R: azken argira itzuli"
   },
   {
     "id": 23,
@@ -250,7 +272,8 @@
     "upstreamPath": "S12_DEEP-LIGHTS",
     "originalUrl": "https://fal-video-to-game.vercel.app/S12_DEEP-LIGHTS/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/deep-lights/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/deep-lights/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/deep-lights/game",
+    "controlsEu": "WASD/geziak: itsaspekoa gidatu · Zuriune-barra/klik: argi-pultsua · Zuriune-barra: hasi · P: pausatu · M: soinua"
   },
   {
     "id": 24,
@@ -261,7 +284,8 @@
     "upstreamPath": "A12_SNOW-GLOBE",
     "originalUrl": "https://fal-video-to-game.vercel.app/A12_SNOW-GLOBE/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/snow-globe/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/snow-globe/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/snow-globe/game",
+    "controlsEu": "←/→: ibili · ↑: jauzi txikia · Zuriune-barra: munduari buelta eman (grabitatea alderantzikatu) · R: leku segurura itzuli"
   },
   {
     "id": 25,
@@ -272,7 +296,8 @@
     "upstreamPath": "A15_SUNFLOWER-SILHOUETTE",
     "originalUrl": "https://fal-video-to-game.vercel.app/A15_SUNFLOWER-SILHOUETTE/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/sunflower-silhouette/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/sunflower-silhouette/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/sunflower-silhouette/game",
+    "controlsEu": "←/→: korrika · Zuriune-barra/↑: jauzi (sakatuta, gorago) · Airean eutsi zapiarekin igotzeko · R: azken lorera itzuli"
   },
   {
     "id": 26,
@@ -283,7 +308,8 @@
     "upstreamPath": "A05_RUST-BLOOM",
     "originalUrl": "https://fal-video-to-game.vercel.app/A05_RUST-BLOOM/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/rust-bloom/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/rust-bloom/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/rust-bloom/game",
+    "controlsEu": "←/→: ibili · Zuriune-barra/↑: jauzi · J/Shift sakatuta: ura bota · Burdinazko ponpetan ura hartu · Enter: hasi"
   },
   {
     "id": 27,
@@ -294,7 +320,8 @@
     "upstreamPath": "S08_INK-FOX",
     "originalUrl": "https://fal-video-to-game.vercel.app/S08_INK-FOX/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/ink-fox/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/ink-fox/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/ink-fox/game",
+    "controlsEu": "Aurrera automatikoki doa · Zuriune-barra/↑: jauzi (sakatuta, gorago) · Shift/X/klik: tinta-pasabidea margotu · ↓: pintzela okertu · M: soinua"
   },
   {
     "id": 28,
@@ -305,7 +332,8 @@
     "upstreamPath": "A04_MIRROR-SEA",
     "originalUrl": "https://fal-video-to-game.vercel.app/A04_MIRROR-SEA/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/mirror-sea/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/mirror-sea/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/mirror-sea/game",
+    "controlsEu": "WASD/geziak: ibili · Shift: korrika · Zuriune-barra: jauzi, uhin handia sortzeko · Q/E: kamera biratu · Edozein tekla: hasi"
   },
   {
     "id": 29,
@@ -316,7 +344,8 @@
     "upstreamPath": "S17_CLOUD-SHEPHERD",
     "originalUrl": "https://fal-video-to-game.vercel.app/S17_CLOUD-SHEPHERD/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/cloud-shepherd/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/cloud-shepherd/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/cloud-shepherd/game",
+    "controlsEu": "WASD/geziak: ibili · Shift: korrika · Zuriune-barra: makilarekin hodeiak bultzatu · E: txistu egin · Enter: hasi"
   },
   {
     "id": 30,
@@ -327,7 +356,8 @@
     "upstreamPath": "S22_TRAIN-PAINTER",
     "originalUrl": "https://fal-video-to-game.vercel.app/S22_TRAIN-PAINTER/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/train-painter/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/train-painter/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/train-painter/game",
+    "controlsEu": "←/→: trenbidea bihurgunetan gidatu · ↑: abiadura handitu · ↓: frenatu eta bira estuak egin · Zuriune-barra: txistua edo hasi · P: pausatu"
   },
   {
     "id": 31,
@@ -338,6 +368,7 @@
     "upstreamPath": "A08_HOURGLASS",
     "originalUrl": "https://fal-video-to-game.vercel.app/A08_HOURGLASS/",
     "poster": "https://raw.githubusercontent.com/lovisdotio/video-to-game/main/gallery/hourglass/poster.gif",
-    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/hourglass/game"
+    "source": "https://github.com/lovisdotio/video-to-game/tree/main/gallery/hourglass/game",
+    "controlsEu": "←/→: ibili · Zuriune-barra/↑: jauzi · ↓/Shift sakatuta: harea dunatan bildu · Zuriune-barra/Enter: hasi · M: soinua"
   }
 ]
