@@ -55,6 +55,14 @@ hezurduren animazio partekatuak). KayKit: https://kaylousberg.com · lizentzia C
 deduplikatuta eta sareak kuantizatuta). Mendiak, ardiak, txalaparta, suge-eraztunak, erretratuak, musika
 eta soinu guztiak joko honetarako sortu dira (prozeduralak).
 
+## LEIZEEN DEIA · liburutegiak (kode irekia)
+
+Jokoaren HTMLan txertatuta (`tools/leizeak/vendor/`, bertsioak eta jatorria `vendor/README.md`-n):
+
+| Liburutegia | Egilea | Lizentzia | Zertarako |
+|---|---|---|---|
+| [meshoptimizer](https://github.com/zeux/meshoptimizer) (deskodetzailea, `meshopt_decoder.js`) | Arseny Kapoulkine | MIT | modeloak trinkotuta (EXT_meshopt_compression) |
+
 ## LEIZEEN DEIA · izenburuko letra-tipoa
 
 Azaleko logoa **Cinzel** letra-tipoarekin idatzita dago (Copyright 2020 The Cinzel Project Authors,

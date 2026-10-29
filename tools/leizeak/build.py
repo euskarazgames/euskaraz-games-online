@@ -57,6 +57,8 @@ def vendor_block():
     v += '/*SKEL*/;const SKEL_GLB=' + repr(skel).replace("'", '"') + ';/*SKEL-END*/'
     v += '/*NPC*/;const NPC_GLB=' + repr(npc).replace("'", '"') + ';/*NPC-END*/'
     v += '/*PROPS*/;const PROPS_GLB="' + b64('props.glb') + '";/*PROPS-END*/'
+    # modeloak meshoptimizer-ekin trinkotuta daude (models/meshopt.mjs): deskodetzailea (MIT), WASM barruan
+    v += ';\n' + (HERE / 'vendor/meshopt_decoder.js').read_text(encoding='utf-8')
     return v
 
 

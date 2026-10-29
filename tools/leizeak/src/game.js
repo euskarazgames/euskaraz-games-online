@@ -4209,6 +4209,8 @@
     controls();
     translate();
     const egReady = EG ? EG.preload(["grass", "snow", "cliff", "water", "planks"], ["dusk", "day", "night"], 8000) : Promise.resolve();
+    /* modeloak EXT_meshopt_compression-ekin (meshoptimizer, galerarik gabe): deskodetzailea build-ean txertatuta */
+    if (typeof MeshoptDecoder !== "undefined") loader.setMeshoptDecoder(MeshoptDecoder);
     const glb = (b64) => {
       const binary = atob(b64),
         bytes = new Uint8Array(binary.length);

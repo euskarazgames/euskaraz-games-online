@@ -369,6 +369,11 @@ Basajaunen atean zeuden, eta Amaiurrek zeharkatzen zituen. Orain kanpora (ertz b
 haranean 0-4 m sartzen dira gehienez. Hesiak, egurra, orga, jomuga, banderak eta ondoak ere solidoak:
 baxuen gainetik jauzi daiteke, eta ondoen gainean egon. Proba: `leizeak_harkaitzak.js`.
 
+**Modelo trinkotuak (meshoptimizer).** KayKit modeloak `EXT_meshopt_compression`-ekin daude (galerarik gabe,
+QUANTIZE modua, erpinen ordena aldatu gabe: `models/meshopt.mjs`); deskodetzailea (`vendor/meshopt_decoder.js`,
+MIT, WASM barruan) build-ean txertatzen da eta `loader.setMeshoptDecoder`-ek erabiltzen du. Modeloak 5,9 → 4,1 MB;
+HTMLa 7,6 → 5,9 MB (gzip: 3,1 → 2,6 MB). Talkak (`posK`, `bandPolys`, `radialShape`) eta Amaiurren aurpegia berdin.
+
 **Mezuak (v2).** Izenburuak, abisuak eta irakaspenak txikiago, gardenago eta ertzetan; denbora
 gutxiago (abisuak 1.8-3.6 s, izenburuak 2.8 s, irakaspenak 5 s, HUD isila 5 s). Elkarrizketa- eta
 dei-panela erdian eta estuago (gehienez 680 px), erretratu txikiagoa eta banda beltz meheagoak.

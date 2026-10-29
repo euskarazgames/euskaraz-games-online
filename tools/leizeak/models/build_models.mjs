@@ -9,6 +9,7 @@
 //   sareak kuantizatuta (KHR_mesh_quantization).
 // · npc_*.glb: herritarrak (animaziorik gabe): sorginaren (mage.glb) animazioak erabiltzen
 //   dituzte, KayKit pertsonaia guztiek Rig_Medium hezurdura bera baitute.
+// Ondoren: node meshopt.mjs (EXT_meshopt_compression, galerarik gabe; jokoak deskodetzailea txertatzen du).
 import { NodeIO } from '@gltf-transform/core';
 import { KHRMeshQuantization, KHRMaterialsEmissiveStrength, KHRTextureTransform } from '@gltf-transform/extensions';
 import { prune, dedup, quantize, mergeDocuments, unpartition, weld } from '@gltf-transform/functions';
