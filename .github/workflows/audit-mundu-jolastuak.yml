@@ -6,6 +6,10 @@ on:
   push:
     paths:
       - 'public/mundu-jolastuak/**'
+      - 'public/index.html'
+      - 'public/klasiko/**'
+      - 'scripts/smoke_euskaraz_hub.mjs'
+      - 'wrangler.jsonc'
       - 'src/mundu-jolastuak.js'
       - 'src/worker.js'
       - 'scripts/verify_mundu_jolastuak.mjs'
@@ -14,6 +18,10 @@ on:
   pull_request:
     paths:
       - 'public/mundu-jolastuak/**'
+      - 'public/index.html'
+      - 'public/klasiko/**'
+      - 'scripts/smoke_euskaraz_hub.mjs'
+      - 'wrangler.jsonc'
       - 'src/mundu-jolastuak.js'
       - 'src/worker.js'
       - 'scripts/verify_mundu_jolastuak.mjs'
@@ -65,6 +73,8 @@ jobs:
           npx playwright install --with-deps chromium
       - name: 31 jokoen nabigatzaile-proba eta pantaila-argazkiak
         run: node scripts/smoke_mundu_browser.mjs
+      - name: Euskaraz Games portada bateratuaren eta bost joko klasikoen proba
+        run: node scripts/smoke_euskaraz_hub.mjs
       - name: Nabigatzaileko QA txostena eta argazkiak
         if: always()
         uses: actions/upload-artifact@v4
