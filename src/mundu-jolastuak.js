@@ -109,11 +109,9 @@ export async function handleLocalGame(request, env) {
     return handleMunduProxy(new Request(target,request));
   }
   if (!up) return new Response("Jokoa ez da aurkitu",{status:404});
-  if (parts.length === 1 && parts[0] === "") {
-    const target = new URL(incoming);
-    target.pathname += "index.html";
-    return Response.redirect(target.toString(),302);
-  }
+  // Let Cloudflare's auto-trailing-slash asset handler resolve directory
+  // index files. Redirecting /game/ -> index.html here creates a loop when
+  // the asset handler canonicalizes index.html back to /game/.
   // Worker checks real GitHub-archived HTML/JS assets before using fallback.
   const local = await env.ASSETS.fetch(request);
   // A sandboxed iframe without allow-same-origin has an opaque "null" origin.
