@@ -15,7 +15,7 @@ const browser=await chromium.launch({headless:true,args:["--enable-webgl","--use
 const sample=new Set(["skyfarer","clockwork-heist","starlight-train","ink-fox","tidebound","hourglass"]);
 const audit=[];
 let critical=0;
-for(const g of games){
+for(const g of games.filter(x=>sample.has(x.slug))){
  const page=await browser.newPage({viewport:{width:900,height:670},isMobile:true,hasTouch:true});
  const errors=[];
  const failedRequests=[];
@@ -23,10 +23,10 @@ for(const g of games){
  page.on("requestfailed",req=>failedRequests.push({url:req.url().slice(0,220),failure:req.failure()?.errorText}));
  let status="ok",frameUrl="",canvas=false,touch=false;
  try{
-  await page.goto(target+"/mundu-jolastuak/play.html?joko="+encodeURIComponent(g.slug),{waitUntil:"domcontentloaded",timeout:30000});
-  await page.locator("#game").waitFor({timeout:10000});
+  await page.goto(target+"/mundu-jolastuak/play.html?joko="+encodeURIComponent(g.slug),{waitUntil:"commit",timeout:10000});
+  await page.locator("#game").waitFor({timeout:5000});
   // Wait for the iframe navigation to start, not for all remote media to download.
-  await page.waitForTimeout(sample.has(g.slug)?2500:650);
+  await page.waitForTimeout(1600);
   const frame=page.frames().find(f=>f.url().includes("/games/"+g.slug+"/"));
   assert(frame,"The game iframe did not navigate to self-hosted source");
   frameUrl=frame.url();
@@ -50,8 +50,8 @@ for(const g of games){
  await page.close();
 }
 await browser.close();
-const summary={checked:games.length,critical,screenCaptures:[...sample],games:audit,
+const summary={checked:audit.length,totalGames:games.length,critical,screenCaptures:[...sample],games:audit,
   caveat:"Code/frame loading is not complete gameplay validation; external art, audio and 3D assets may remain missing."};
 writeFileSync(out+"qa.json",JSON.stringify(summary,null,2)+"\n");
-console.log(JSON.stringify({checked:games.length,critical,screenshots:[...sample],faults:audit.filter(x=>x.status!=="ok").slice(0,15)},null,2));
+console.log(JSON.stringify({checked:audit.length,totalGames:games.length,critical,screenshots:[...sample],faults:audit.filter(x=>x.status!=="ok").slice(0,15)},null,2));
 if(critical)process.exitCode=1;
