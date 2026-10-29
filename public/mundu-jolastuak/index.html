@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="eu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Mundu Jolastuak: 31 WebGL joko, Euskaraz Games proiektuaren euskarazko moldaketa esperimentala.">
+<title>Mundu Jolastuak · Euskaraz Games</title>
+<style>
+:root{color-scheme:dark;--base:#0e1017;--panel:#191d27;--line:#30343e;--text:#f5f2ee;--sub:#b8b5b2;--orange:#ff9d4a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse 75% 30% at 75% -15%,#533224 0,transparent 85%),var(--base);color:var(--text);font:500 16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}button,input{font:inherit}
+header{position:sticky;top:0;z-index:100;background:#0e1017eF;backdrop-filter:blur(18px);border-bottom:1px solid #ffffff15}
+.nav{max-width:1450px;margin:auto;min-height:68px;padding:0 clamp(16px,4vw,52px);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-weight:950;letter-spacing:.08em;font-size:16px;white-space:nowrap}.brand b{color:var(--orange)}
+.go-back{border:1px solid var(--line);border-radius:40px;padding:9px 16px;color:#ddd;font-size:13px;font-weight:800}.go-back:hover{border-color:var(--orange)}
+main{max-width:1450px;margin:auto;padding:0 clamp(16px,4vw,52px) 60px}
+.hero{padding:clamp(42px,7vw,96px) 0 38px;max-width:1000px}.eyebrow{display:inline-block;color:var(--orange);font-size:12px;font-weight:900;letter-spacing:.23em;margin-bottom:13px}
+h1{margin:0 0 18px;font-size:clamp(42px,7vw,92px);line-height:1;letter-spacing:-.065em;font-weight:950}
+h1 span{color:var(--orange)}p{margin:0}.hero p{font-size:clamp(16px,2vw,20px);max-width:660px;color:#d2c6be}
+.statline{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.statline span{border:1px solid #ffffff23;border-radius:100px;padding:8px 13px;color:#e0d6cc;font-size:12px;font-weight:800}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;margin:26px 0 16px}
+.search{background:#1c2029;color:white;border:1px solid #444954;border-radius:14px;padding:14px 16px;min-width:min(340px,100%);outline:none}.search:focus{border-color:var(--orange)}.search::placeholder{color:#aeb0b6}
+.counter{font-size:13px;color:#c9c3bd;font-weight:700}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px}
+.filters button{cursor:pointer;border:1px solid #393d48;border-radius:99px;background:#20232c;color:#d7d2cd;padding:9px 15px;font-size:12px;font-weight:750;transition:.18s}
+.filters button:hover,.filters button.active{color:#17110c;background:var(--orange);border-color:var(--orange)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:20px}
+.card{background:linear-gradient(160deg,#242731,#171922);border:1px solid #ffffff12;border-radius:18px;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s;min-width:0}
+.card:hover,.card:focus-within{transform:translateY(-4px);border-color:#ff9d4a90;box-shadow:0 18px 46px #0008}
+.poster{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;background:radial-gradient(circle at 50% 30%,#5a4d46,#23242c 72%)}
+.poster img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}.card:hover .poster img{transform:scale(1.05)}
+.no{position:absolute;top:12px;left:12px;background:#0b0b11c9;border:1px solid #ffffff30;border-radius:100px;font-size:11px;font-weight:900;padding:5px 9px;font-variant-numeric:tabular-nums}
+.card-info{padding:18px 18px 19px}.type{font-size:11px;color:var(--orange);letter-spacing:.1em;text-transform:uppercase;font-weight:900}
+.card h2{font-size:21px;letter-spacing:-.035em;line-height:1.15;margin:9px 0 5px;font-weight:900}.original{color:#b5b1af;font-size:13px}
+.actions{display:flex;gap:8px;margin-top:17px}.play{background:var(--orange);color:#19110d;border-radius:10px;padding:10px 15px;font-size:13px;font-weight:900;flex:1;text-align:center}
+.source{border:1px solid #56565f;border-radius:10px;padding:10px 12px;color:#eee;font-size:13px;font-weight:700}
+.play:hover{background:#ffba7c}.source:hover{border-color:var(--orange)}
+.note{border-top:1px solid #363842;margin:54px 0 0;padding-top:24px;color:#b7b0aa;font-size:13px;max-width:950px}
+.note strong{color:#eac39d}.note a{text-decoration:underline;text-decoration-color:#ff9d4a}
+.empty{padding:50px 0;color:#d0c4ba;font-size:18px}
+@media(max-width:620px){.nav{min-height:60px}.go-back{font-size:11px}.hero{padding-top:42px}.grid{gap:13px;grid-template-columns:repeat(2,minmax(0,1fr))}.card-info{padding:13px}.card h2{font-size:17px}.source{display:none}.poster{aspect-ratio:4/3}.search{width:100%;min-width:0}}
+@media(max-width:380px){.grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><nav class="nav" aria-label="Nabigazio nagusia"><a class="brand" href="/"><b>EUSKARAZ</b> GAMES</a><a class="go-back" href="/">← Atari nagusira</a></nav></header>
+<main>
+<section class="hero" aria-labelledby="hero-title">
+<div class="eyebrow">EUSKARAZ GAMES · KOLEKZIOA</div>
+<h1 id="hero-title">MUNDU <span>JOLASTUAK.</span></h1>
+<p>31 mundu txiki. 31 jolas-esperientzia. Euskaraz jolasteko eta hizkuntza digitalean ere bizirik mantentzeko bilduma esperimentala.</p>
+<div class="statline"><span>31 JOKO</span><span>WEBGL · 3D</span><span>EUSKARAZKO NABIGAZIOA</span><span>DOAN</span></div>
+</section>
+<div class="toolbar"><input class="search" id="search" type="search" placeholder="Bilatu jokoa..." aria-label="Bilatu jokoa" autocomplete="off"><div class="counter" id="counter" aria-live="polite">31 joko</div></div>
+<div class="filters" id="filters" aria-label="Jokoen kategoriak"></div>
+<section class="grid" id="grid" aria-label="Jokoen bilduma"></section><div class="empty" id="empty" hidden>Ez da jokorik aurkitu. Probatu beste bilaketa bat.</div>
+<footer class="note"><strong>Iturriak eta lizentziak:</strong> Jatorrizko jokoak Lovis Odin-en <a href="https://github.com/lovisdotio/video-to-game" target="_blank" rel="noopener noreferrer">Video to Game</a> proiektutik datoz (MIT lizentzia). Euskaraz Games-ek izenak, nabigazioa eta testuzko interfazeen zati bat moldatu ditu. Joko batzuek oraindik ingelesezko grafikoak, testuak edo audioa izan ditzakete. Jatorrizko azpiegituraren mende daude.</footer>
+</main>
+<script type="module">
+const grid=document.getElementById("grid"),counter=document.getElementById("counter"),filters=document.getElementById("filters"),search=document.getElementById("search"),empty=document.getElementById("empty");
+let games=[],category="Guztiak";
+function make(tag,klass,txt){const el=document.createElement(tag);if(klass)el.className=klass;if(txt!==undefined)el.textContent=txt;return el;}
+function render(){
+const q=search.value.trim().toLocaleLowerCase("eu");
+const shown=games.filter(g=>(category==="Guztiak"||g.category===category)&&(!q||(g.title+" "+g.original+" "+g.category).toLocaleLowerCase("eu").includes(q)));
+grid.replaceChildren();const fragment=document.createDocumentFragment();
+for(const g of shown){
+const article=make("article","card"),picture=make("a","poster");picture.href="./play.html?joko="+encodeURIComponent(g.slug);picture.setAttribute("aria-label",g.title+" jokatu");
+const img=document.createElement("img");img.src=g.poster;img.alt=g.title+" bideojokoaren aurrebista";img.loading="lazy";img.decoding="async";picture.append(img,make("span","no",String(g.id).padStart(2,"0")));
+const info=make("div","card-info");info.append(make("div","type",g.category),make("h2","",g.title),make("p","original",g.original));
+const actions=make("div","actions"),play=make("a","play","▶ JOKATU");play.href=picture.href;
+const source=make("a","source","Kodea");source.href=g.source;source.target="_blank";source.rel="noopener noreferrer";source.title="Jatorrizko kodea";actions.append(play,source);
+info.append(actions);article.append(picture,info);fragment.append(article);
+}
+grid.append(fragment);empty.hidden=shown.length>0;counter.textContent=shown.length+" joko";
+}
+function renderFilters(){
+const cats=["Guztiak",...new Set(games.map(x=>x.category))];filters.replaceChildren();
+for(const c of cats){const b=make("button",c===category?"active":"",c);b.type="button";b.setAttribute("aria-pressed",String(c===category));b.addEventListener("click",()=>{category=c;renderFilters();render()});filters.append(b)}
+}
+search.addEventListener("input",render);
+try{const res=await fetch("./jokoak.json");if(!res.ok)throw Error(String(res.status));games=await res.json();renderFilters();render()}
+catch{grid.replaceChildren();counter.textContent="";empty.hidden=false;empty.textContent="Ezin izan da katalogoa kargatu. Saiatu berriro."}
+</script>
+</body></html>
