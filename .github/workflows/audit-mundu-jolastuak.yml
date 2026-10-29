@@ -6,6 +6,7 @@ on:
       - 'src/mundu-jolastuak.js'
       - 'src/worker.js'
       - 'scripts/verify_mundu_jolastuak.mjs'
+      - 'scripts/smoke_mundu_http.mjs'
   pull_request:
     paths:
       - 'public/mundu-jolastuak/**'
@@ -28,3 +29,29 @@ jobs:
         with:
           name: mundu-jolastuak-kanpoko-baliabideak
           path: reports/mundu-jolastuak-auditoria.json
+
+  http-smoke:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - name: Cloudflare Worker abiarazi probetarako
+        run: |
+          npx wrangler dev --local --ip 127.0.0.1 --port 8787 > /tmp/mundu-worker.log 2>&1 &
+          echo $! > /tmp/mundu-worker.pid
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8787/health >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/mundu-worker.log
+          exit 1
+      - name: 31 jokoen HTTP, CORS eta bide-probak
+        run: node scripts/smoke_mundu_http.mjs
+      - name: Erroreak ikusgai utzi
+        if: failure()
+        run: cat /tmp/mundu-worker.log || true
