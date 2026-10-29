@@ -1,0 +1,30 @@
+name: Mundu Jolastuak · egiaztapenak
+on:
+  push:
+    paths:
+      - 'public/mundu-jolastuak/**'
+      - 'src/mundu-jolastuak.js'
+      - 'src/worker.js'
+      - 'scripts/verify_mundu_jolastuak.mjs'
+  pull_request:
+    paths:
+      - 'public/mundu-jolastuak/**'
+      - 'src/mundu-jolastuak.js'
+      - 'src/worker.js'
+      - 'scripts/verify_mundu_jolastuak.mjs'
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/verify_mundu_jolastuak.mjs
+      - name: Gorde kanpo-baliabideen txostena
+        uses: actions/upload-artifact@v4
+        with:
+          name: mundu-jolastuak-kanpoko-baliabideak
+          path: reports/mundu-jolastuak-auditoria.json
