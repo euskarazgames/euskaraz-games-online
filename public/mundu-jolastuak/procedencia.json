@@ -1,0 +1,12 @@
+{
+  "sourceRepository": "https://github.com/lovisdotio/video-to-game",
+  "sourceCommit": "d1a24fd8a47576ec4b3c36388b30deda0631def9",
+  "mirrorDate": "2026-10-29",
+  "licenseCode": "MIT",
+  "copyright": "© 2026 Lovis Odin",
+  "archivedGameHtml": 31,
+  "archivedAdditionalJsModules": 26,
+  "mediaArchiveStatus": "not yet archived; explicit authorization required",
+  "translationStatus": "partial DOM + Canvas 2D",
+  "testStatus": "31 HTTP; browser smoke under verification"
+}

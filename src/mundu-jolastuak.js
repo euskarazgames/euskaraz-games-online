@@ -109,16 +109,31 @@ export async function handleLocalGame(request, env) {
     return handleMunduProxy(new Request(target,request));
   }
   if (!up) return new Response("Jokoa ez da aurkitu",{status:404});
-  if (parts.length === 1 && parts[0] === "") {
-    const target = new URL(incoming);
-    target.pathname += "index.html";
-    return Response.redirect(target.toString(),302);
-  }
+  // Let Cloudflare's auto-trailing-slash asset handler resolve directory
+  // index files. Redirecting /game/ -> index.html here creates a loop when
+  // the asset handler canonicalizes index.html back to /game/.
   // Worker checks real GitHub-archived HTML/JS assets before using fallback.
   const local = await env.ASSETS.fetch(request);
-  if (local.ok) return local;
+  // A sandboxed iframe without allow-same-origin has an opaque "null" origin.
+  // JS module imports, fonts and WebGL textures therefore require CORS headers
+  // EVEN THOUGH they are served from the portal's hostname.
+  const h = new Headers(local.headers);
+  h.set("access-control-allow-origin","*");
+  h.set("cross-origin-resource-policy","cross-origin");
+  h.set("x-content-type-options","nosniff");
+  h.delete("content-length"); h.delete("content-encoding");
+  const localResponse = new Response(request.method==="HEAD"?null:local.body,{
+    status:local.status,statusText:local.statusText,headers:h
+  });
+  if (local.ok) {
+    if (request.method==="GET" && /text\/html/i.test(h.get("content-type")||""))
+      return new HTMLRewriter().on("head",{
+        element(el){el.append('<script defer src="/mundu-jolastuak/touch-controls.js"></script>',{html:true})}
+      }).transform(localResponse);
+    return localResponse;
+  }
   const relative = parts.join("/");
-  if (!relative.startsWith("assets/") || relative.includes("..") || /%2f|%5c/i.test(relative)) return local;
+  if (!relative.startsWith("assets/") || relative.includes("..") || /%2f|%5c/i.test(relative)) return localResponse;
   const upstream = new URL("/mundu-jolastuak/original/" + up + "/" + relative + incoming.search, incoming.origin);
   return handleMunduProxy(new Request(upstream,request));
 }

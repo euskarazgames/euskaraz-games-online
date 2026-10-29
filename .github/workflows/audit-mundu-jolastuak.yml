@@ -1,4 +1,7 @@
 name: Mundu Jolastuak · egiaztapenak
+concurrency:
+  group: mundu-jolastuak-${{ github.ref }}
+  cancel-in-progress: true
 on:
   push:
     paths:
@@ -6,6 +9,8 @@ on:
       - 'src/mundu-jolastuak.js'
       - 'src/worker.js'
       - 'scripts/verify_mundu_jolastuak.mjs'
+      - 'scripts/smoke_mundu_http.mjs'
+      - 'scripts/smoke_mundu_browser.mjs'
   pull_request:
     paths:
       - 'public/mundu-jolastuak/**'
@@ -22,9 +27,51 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: node --check public/mundu-jolastuak/euskara.js
+      - run: node --check public/mundu-jolastuak/touch-controls.js
       - run: node scripts/verify_mundu_jolastuak.mjs
       - name: Gorde kanpo-baliabideen txostena
         uses: actions/upload-artifact@v4
         with:
           name: mundu-jolastuak-kanpoko-baliabideak
           path: reports/mundu-jolastuak-auditoria.json
+
+  http-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - name: Cloudflare Worker abiarazi probetarako
+        run: |
+          npx wrangler dev --local --ip 127.0.0.1 --port 8787 > /tmp/mundu-worker.log 2>&1 &
+          echo $! > /tmp/mundu-worker.pid
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8787/health >/dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/mundu-worker.log
+          exit 1
+      - name: 31 jokoen HTTP, CORS eta bide-probak
+        run: node scripts/smoke_mundu_http.mjs
+      - name: Chromium eta Playwright instalatu
+        run: |
+          npm install --no-save --no-audit --no-fund playwright
+          npx playwright install --with-deps chromium
+      - name: 31 jokoen nabigatzaile-proba eta pantaila-argazkiak
+        run: node scripts/smoke_mundu_browser.mjs
+      - name: Nabigatzaileko QA txostena eta argazkiak
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mundu-jolastuak-browser-qa
+          path: reports/browser/
+          if-no-files-found: ignore
+      - name: Erroreak ikusgai utzi
+        if: failure()
+        run: cat /tmp/mundu-worker.log || true
