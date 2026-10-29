@@ -11,6 +11,8 @@
       "/ws",
       "/mundu-jolastuak/original/*",
       "/mundu-jolastuak/games/*",
+      "/klasiko",
+      "/klasiko/*",
       "/health",
       "/ataria/api/*",
       "/garena/api/*",

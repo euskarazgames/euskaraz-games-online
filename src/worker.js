@@ -21,9 +21,16 @@ function sendJson(ws, obj) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (url.pathname === "/klasiko" || url.pathname.startsWith("/klasiko/")) {
+      const response = await env.ASSETS.fetch(request);
+      if (!response.ok || !/text\/html/i.test(response.headers.get("content-type") || "")) return response;
+      return new HTMLRewriter().on("head", {
+        element(el) { el.append('<script defer src="/klasiko/bridge.js"></script>', {html:true}); }
+      }).transform(response);
+    }
     if (url.pathname.startsWith("/mundu-jolastuak/games/")) return handleLocalGame(request,env);
     if (url.pathname.startsWith("/mundu-jolastuak/original/")) return handleMunduProxy(request);
-    if (url.pathname === "/" || url.pathname === "/index.html") return addMunduLink(await env.ASSETS.fetch(request));
+    if (url.pathname === "/" || url.pathname === "/index.html") return env.ASSETS.fetch(request);
     if(url.pathname==="/garena/api/news")return handleNewsApi(request);
 if (url.pathname === "/ataria/api/catalog" || url.pathname === "/garena/api/catalog") {
       return handleAtariaApi(request);
