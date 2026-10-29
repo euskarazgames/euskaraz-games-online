@@ -35,7 +35,7 @@ button:hover,.button:hover{border-color:#ffa257}.accent{background:#ffa257;color
  <iframe id="game" title="Bideojokoa" sandbox="allow-scripts allow-pointer-lock allow-downloads allow-forms" allow="fullscreen; gamepad" allowfullscreen referrerpolicy="no-referrer"></iframe>
 </section>
 <div id="help" role="region" aria-label="Jokatzeko laguntza">
-<p><b>Jokatzeko:</b> Sakatu jokoa abiarazteko agertzen den tekla edo botoia. Askotan geziak edo WASD teklak erabiltzen dira mugitzeko eta zuriune-barra jauzi egiteko; joko bakoitzean kontrolak desberdinak izan daitezke.</p>
+<p id="gameControls"><b>Jokatzeko:</b> Ikusi jokoaren aginduak.</p>
 <p><b>Euskararen egoera:</b> Nabigazioa eta testuzko hainbat mezu euskaratu dira. Jatorrizko jokoen irudietako, audioetako edo 3Dko zenbait testu ingelesez egon daitezke.</p>
 <p class="warn">⚠ Joko hauek batez ere teklatuarekin pentsatuak daude. Mugikorreko kontrolak ez daude joko guztietan bermatuta.</p>
 <p>Jokoak funtzionatzen ez badu, probatu <a id="fallback" target="_blank" rel="noopener noreferrer">jatorrizko bertsioa</a> edo begiratu <a id="code" target="_blank" rel="noopener noreferrer">iturburu-kodea</a>.</p>
@@ -55,6 +55,7 @@ try{
  const original=document.getElementById("originalLink");original.href=game.originalUrl;
  document.getElementById("fallback").href=game.originalUrl;document.getElementById("code").href=game.source;
  frame.title=game.title;
+ document.getElementById("gameControls").textContent=game.controlsEu || "Jokoaren aginduak pantailan ikus daitezke.";
  frame.addEventListener("load",()=>loading.classList.add("hidden"),{once:true});
  // Source assets are served by an allowlisted Worker proxy. The sandbox isolates game scripts from the main site.
  frame.src="./original/"+encodeURIComponent(game.upstreamPath)+"/";
