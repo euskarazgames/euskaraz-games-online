@@ -1,4 +1,7 @@
 name: Mundu Jolastuak · egiaztapenak
+concurrency:
+  group: mundu-jolastuak-${{ github.ref }}
+  cancel-in-progress: true
 on:
   push:
     paths:
@@ -24,6 +27,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: node --check public/mundu-jolastuak/euskara.js
+      - run: node --check public/mundu-jolastuak/touch-controls.js
       - run: node scripts/verify_mundu_jolastuak.mjs
       - name: Gorde kanpo-baliabideen txostena
         uses: actions/upload-artifact@v4
@@ -33,6 +38,7 @@ jobs:
 
   http-smoke:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
