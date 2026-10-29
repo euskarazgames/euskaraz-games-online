@@ -31,6 +31,20 @@ await page.locator("#heroPlay").click();
 await page.locator("#frame").waitFor({timeout:5000});
 const source=await page.locator("#frame").getAttribute("src");
 assert(source.includes("/klasiko/?joko=pilota"),"Sports must load actual preserved game");
+await page.waitForFunction(()=>{
+  const legacy=document.querySelector("#frame")?.contentDocument;
+  const inner=legacy?.querySelector("#gameFrame");
+  return !!inner && (inner.getAttribute("srcdoc")||"").length>10000;
+},{timeout:12000});
+const pilotaBytes=await page.locator("#frame").evaluate(f=>f.contentDocument?.querySelector("#gameFrame")?.getAttribute("srcdoc")?.length||0);
+assert(pilotaBytes>10000,"Classic pilota code did not load");
+await page.locator("#close").click();
+await page.locator(".feature-tile.basoa").click();
+await page.waitForFunction(()=>{
+  const legacy=document.querySelector("#frame")?.contentDocument;
+  const inner=legacy?.querySelector("#gameFrame");
+  return !!inner && (inner.getAttribute("srcdoc")||"").length>10000;
+},{timeout:12000});
 await page.locator("#close").click();
 await page.locator("#mundu").scrollIntoViewIfNeeded();
 await page.locator(".gamecard .openrow button").first().click();
