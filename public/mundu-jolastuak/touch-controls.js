@@ -1,4 +1,4 @@
-/* Euskaraz Games — independent multitouch sticks. No polling of synthetic keys. */
+/* Euskaraz Games — floating independent multitouch sticks. No polling of synthetic keys. */
 (()=>{
 'use strict';
 const cfg=window.EG_GAME,profile=cfg.touch;
@@ -9,11 +9,11 @@ function init(){
  if(document.getElementById('eg-controls'))return;
  const style=document.createElement('style');style.textContent=`
  #eg-controls{--size:clamp(104px,23vw,144px);position:fixed;inset:0;z-index:99990;pointer-events:none;user-select:none;-webkit-user-select:none;display:none}#eg-controls.visible{display:block}
- #eg-controls .stick{position:absolute;bottom:max(18px,env(safe-area-inset-bottom));width:var(--size);height:var(--size);border-radius:50%;background:radial-gradient(circle,#12322b33,#07191980);border:1px solid #bce7d958;box-shadow:inset 0 0 0 14px #a4dccc08,0 4px 18px #0003;pointer-events:auto;touch-action:none;contain:layout style;outline:none}
+ #eg-controls .stick{position:absolute;bottom:max(18px,env(safe-area-inset-bottom));width:var(--size);height:var(--size);border-radius:50%;background:radial-gradient(circle,#12322b33,#07191980);border:1px solid #bce7d958;box-shadow:inset 0 0 0 14px #a4dccc08,0 4px 18px #0003;pointer-events:none;touch-action:none;contain:layout style;outline:none;opacity:0}
  #eg-controls .stick::before,#eg-controls .stick::after{content:'';position:absolute;background:#d5efe42b;pointer-events:none}#eg-controls .stick::before{height:1px;top:50%;left:14px;right:14px}#eg-controls .stick::after{width:1px;left:50%;top:14px;bottom:14px}
  #eg-controls .stick.left{left:max(18px,env(safe-area-inset-left))}#eg-controls .stick.right{right:max(18px,env(safe-area-inset-right));border-color:#ffc89466;background:radial-gradient(circle,#73442533,#26160c80)}
  #eg-controls .nub{position:absolute;left:50%;top:50%;width:45%;height:45%;margin:-22.5%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d2f0dcbf,#33735fa8);border:1px solid #d1f4e3ad;box-shadow:0 3px 12px #0004;will-change:transform;pointer-events:none}#eg-controls .right .nub{background:radial-gradient(circle at 35% 30%,#ffe0b8cc,#aa673fac);border-color:#ffe4c6}
- #eg-controls .stick.active{border-color:#fff9}#eg-controls .stick-label{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;color:#f0f5ec;text-shadow:0 2px 3px #000;font:700 9px system-ui;letter-spacing:.08em;pointer-events:none}
+ #eg-controls .stick.active{border-color:#fff9;opacity:1}#eg-controls .stick-label{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;color:#f0f5ec;text-shadow:0 2px 3px #000;font:700 9px system-ui;letter-spacing:.08em;pointer-events:none}
  #eg-controls .actions{position:absolute;right:max(16px,env(safe-area-inset-right));bottom:calc(var(--size) + max(52px,env(safe-area-inset-bottom)));display:flex;max-width:220px;gap:7px;justify-content:flex-end;flex-wrap:wrap;pointer-events:none}
  #eg-controls button,#eg-settings button{min-height:44px;padding:8px 11px;border-radius:14px;background:#10251ed9;border:1px solid #c8ecda80;color:#fff;font:700 11px system-ui;pointer-events:auto;touch-action:none;box-shadow:0 3px 10px #0004}#eg-controls button.pressed{background:#bd7843;border-color:#ffe0b8}#eg-controls .actions button:first-child{background:#87542ddb;border-color:#f6c38b;min-width:65px}
  #eg-controls.left-handed .left{left:auto;right:max(18px,env(safe-area-inset-right))}#eg-controls.left-handed .right{right:auto;left:max(18px,env(safe-area-inset-left))}#eg-controls.left-handed .actions{right:auto;left:max(16px,env(safe-area-inset-left));justify-content:flex-start}
@@ -38,11 +38,27 @@ function init(){
  function makeStick(side,label){const el=document.createElement('div');el.className='stick '+side;el.dataset.stick=side;el.setAttribute('role','group');el.setAttribute('aria-label',label);el.innerHTML='<span class="stick-label"></span><span class="nub"></span>';el.querySelector('.stick-label').textContent=label;root.append(el);
  const st={el,nub:el.querySelector('.nub'),out:side==='left'?left:right,side,id:null,tx:0,ty:0,cx:0,cy:0,r:42};sticks.push(st);
  function position(e){let x=(e.clientX-st.cx)/st.r,y=(e.clientY-st.cy)/st.r;const l=Math.hypot(x,y);if(l>1){x/=l;y/=l}st.nub.style.transform=`translate3d(${x*st.r}px,${y*st.r}px,0)`;const d=Math.hypot(x,y),dz=.12,k=d>dz?Math.pow((d-dz)/(1-dz),1.2)/d:0;st.tx=x*k;st.ty=y*k;if(st.side==='left'&&profile.left==='x')st.ty=0;schedule()}
- el.addEventListener('pointerdown',e=>{if(st.id!==null||!pointerStart(el,e))return;st.id=e.pointerId;owners.set(e.pointerId,st);const r=el.getBoundingClientRect();st.cx=r.left+r.width/2;st.cy=r.top+r.height/2;st.r=r.width*.32;st.out.active=true;el.classList.add('active');position(e)});
- el.addEventListener('pointermove',e=>{if(e.pointerId!==st.id)return;stop(e);position(e)});
- function end(e){if(e.pointerId!==st.id)return;stop(e);releaseStick(st)}
- el.addEventListener('pointerup',end);el.addEventListener('pointercancel',end);el.addEventListener('lostpointercapture',end);return st}
- function releaseStick(st){owners.delete(st.id);st.id=null;st.tx=st.ty=st.out.x=st.out.y=0;st.out.active=false;st.nub.style.transform='translate3d(0,0,0)';st.el.classList.remove('active');setKeys(st.side,[])}
+ st.position=position;return st}
+ // Anchor each thumb at its initial contact; crossing the midpoint keeps ownership.
+ const interactive=target=>target?.closest?.('button,a,input,select,textarea,[role="button"],[contenteditable="true"],#eg-touch-menu,#eg-settings,.actions');
+ function floatingEnabled(e){return root.classList.contains('visible')&&panel.hidden&&!interactive(e.target)}
+ window.addEventListener('pointerdown',e=>{
+  if(!floatingEnabled(e)||owners.has(e.pointerId)||(e.pointerType==='mouse'&&e.button!==0))return;
+  const physicalLeft=e.clientX<window.innerWidth/2;
+  const st=sticks[(physicalLeft!==!!options.leftHanded)?0:1];
+  stop(e);e.stopImmediatePropagation();
+  if(st.id!==null)return;
+  st.id=e.pointerId;owners.set(e.pointerId,st);st.cx=e.clientX;st.cy=e.clientY;
+  const size=st.el.getBoundingClientRect().width||104;st.r=size*.32;
+  Object.assign(st.el.style,{left:(st.cx-size/2)+'px',top:(st.cy-size/2)+'px',right:'auto',bottom:'auto'});
+  st.out.active=true;st.el.classList.add('active');
+  try{st.el.setPointerCapture(e.pointerId)}catch{}
+  st.position(e);
+ },true);
+ window.addEventListener('pointermove',e=>{const st=owners.get(e.pointerId);if(!st)return;stop(e);e.stopImmediatePropagation();st.position(e)},true);
+ for(const type of ['pointerup','pointercancel','lostpointercapture'])window.addEventListener(type,e=>{const st=owners.get(e.pointerId);if(!st)return;stop(e);e.stopImmediatePropagation();releaseStick(st)},true);
+
+ function releaseStick(st){const id=st.id;owners.delete(id);st.id=null;try{if(id!==null&&st.el.hasPointerCapture?.(id))st.el.releasePointerCapture(id)}catch{}st.tx=st.ty=st.out.x=st.out.y=0;st.out.active=false;st.nub.style.transform='translate3d(0,0,0)';st.el.classList.remove('active');setKeys(st.side,[])}
  const leftLabel=profile.left==='runner'?'SALTO / JAITSI':profile.left==='x'?'MUGITU ↔':'MUGITU';
  makeStick('left',leftLabel);makeStick('right',profile.rightLabel||'EKINTZAK');
  function digital(v,codeA,codeB,prev){const at=v<0?codeA:codeB;const threshold=prev?.has(at) ? .20 : .32;return Math.abs(v)>threshold?at:null}
@@ -68,7 +84,7 @@ function init(){
  menu.querySelector('[data-settings]').setAttribute('aria-label','Aginteen ezarpenak');
  function pulse(code){const owner={};setKeys(owner,[code]);setTimeout(()=>setKeys(owner,[]),90)}
  menu.querySelector('[data-start]').onclick=()=>{if(profile.start==='join'){pulse('KeyW');setTimeout(()=>pulse('Enter'),140)}else pulse(profile.start||'Space')};
- const panel=document.createElement('div');panel.id='eg-settings';panel.hidden=true;panel.innerHTML='<strong>UKIPEN-AGINTEAK</strong><p class="mapping"></p><label>Kamera <input type="range" min="0.5" max="2" step="0.1" aria-label="Kameraren sentikortasuna"><output></output></label><label><input type="checkbox"> Ezker-eskuinak trukatu</label><p>Bi hatz joysticketan; beste hatz batekin ekintza. Diagonalean mugitu eta salto egin dezakezu.</p><button type="button">Itxi</button>';
+ const panel=document.createElement('div');panel.id='eg-settings';panel.hidden=true;panel.innerHTML='<strong>UKIPEN-AGINTEAK</strong><p class="mapping"></p><label>Kamera <input type="range" min="0.5" max="2" step="0.1" aria-label="Kameraren sentikortasuna"><output></output></label><label><input type="checkbox"> Ezker-eskuinak trukatu</label><p>Ukitu pantailaren ezkerreko erdia mugitzeko eta eskuinekoa kamera edo ekintzak kontrolatzeko. Joysticka hatza jartzen duzun tokian agertuko da, eta askatzean desagertuko da.</p><button type="button">Itxi</button>';
  panel.querySelector('.mapping').textContent=profile.right==='camera'?'Ezkerra: mugitu. Eskuina: kamera.':profile.right==='sails'?'Ezkerra: lema. Eskuina: belak eta orientazioa.':profile.right==='altitude'?'Ezkerra: hegan. Eskuina: igo edo jaitsi.':profile.right==='rope'?'Ezkerra: kulunkatu. Eskuina: sokan igo edo jaitsi.':'Ezkerra: '+(profile.left==='runner'?'salto eta jaitsiera.':'mugitu.')+' Eskuina: ↑ '+(profile.actions[0]?.[0]||'ekintza')+(profile.down?' · ↓ '+(profile.actions[1]?.[0]||'ekintza'):'')+(profile.side?' · ↔ '+(profile.actions.find(a=>a[1]===profile.side)?.[0]||'bizkortu'):'');
  const slider=panel.querySelector('input[type=range]'),check=panel.querySelector('input[type=checkbox]');slider.value=api.sensitivity;slider.parentElement.hidden=profile.right!=='camera';panel.querySelector('output').textContent=api.sensitivity+'×';check.checked=!!options.leftHanded;
  function persist(){try{localStorage.setItem('eg-touch-v2',JSON.stringify(options))}catch{}}
@@ -77,7 +93,7 @@ function init(){
  menu.querySelector('[data-toggle]').onclick=()=>{releaseAll();root.classList.toggle('visible')};menu.querySelector('[data-settings]').onclick=()=>{releaseAll();panel.hidden=!panel.hidden};panel.querySelector('button').onclick=()=>panel.hidden=true;
  // Controller touches never reach the original touch recognizers underneath.
  const isUI=e=>e.target?.closest?.('#eg-controls,#eg-touch-menu,#eg-settings');
- for(const type of ['touchstart','touchmove','touchend','touchcancel'])window.addEventListener(type,e=>{if(isUI(e)){if(e.target.closest('#eg-controls')&&e.cancelable)e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false});
+ for(const type of ['touchstart','touchmove','touchend','touchcancel'])window.addEventListener(type,e=>{if(isUI(e)||floatingEnabled(e)){if((e.target.closest('#eg-controls')||floatingEnabled(e))&&e.cancelable)e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false});
  for(const type of ['pointerdown','pointermove','pointerup','pointercancel','click','mousedown','mouseup']){root.addEventListener(type,e=>e.stopPropagation());menu.addEventListener(type,e=>e.stopPropagation());panel.addEventListener(type,e=>e.stopPropagation())}
  window.addEventListener('blur',releaseAll);window.addEventListener('pagehide',releaseAll);window.addEventListener('resize',releaseAll);document.addEventListener('visibilitychange',()=>{if(document.hidden)releaseAll()});
  document.body.append(root,menu,panel);
