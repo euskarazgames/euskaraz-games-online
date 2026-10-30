@@ -52,7 +52,7 @@ const { launch } = require('./_browser');
   /* 2 · bideak: solidoetan ez, ibaian ez (zubian bai) */
   const paths = await ev(() => {
     const g = __game, Z = g.ZONES.ibarra,
-      shapes = Z.solids.filter((o) => o.pillar && o.r > 0).flatMap((o) => (o.shapes && o.shapes.length ? o.shapes : [{ x: o.x, z: o.z, r: o.r }]).map((B) => ({ B, top: (o.y ?? 0) + (o.h ?? 3) }))),
+      shapes = Z.solids.filter((o) => o.pillar && !o.mov && o.r > 0).flatMap((o) => (o.shapes && o.shapes.length ? o.shapes : [{ x: o.x, z: o.z, r: o.r }]).map((B) => ({ B, top: (o.y ?? 0) + (o.h ?? 3) }))),
       pts = [[0, 41], [-22, 30], [24, 28], [8, 12], [0, -50], [-30, -60], [30, -70], [60, 15], [-60, 10], [-45, -20], [45, -30], [20, -100]],
       onBridge = (x, z) => Math.abs(x) < 2.7 && z < -17.5 && z > -39.5,
       out = { n: 0, cross: 0, inSolid: [], inRiver: [], none: [] };
