@@ -3472,7 +3472,7 @@
   /* tekla-zerrenda: hitzaurrean, ikasitako tresnak bakarrik */
   function keysRender() {
     const has = (k) => saved.items.includes(k);
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ["I", "begiratu"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"]]
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ["I", "begiratu"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"], ["gurpila / + −", "kamera"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
   }
@@ -3525,10 +3525,24 @@
       KeyH: powerMenu,
       KeyL: questLog,
       KeyO: camModeToggle,
+      /* PCan: kamera hurbildu / urrundu (gurpilarekin ere) */
+      Equal: () => camZoom(1 / 1.12),
+      NumpadAdd: () => camZoom(1 / 1.12),
+      Minus: () => camZoom(1.12),
+      NumpadSubtract: () => camZoom(1.12),
       KeyI: begiToggle,
       KeyE: interact,
       Escape: pause,
     };
+    /* saguaren gurpila (PCan): kamera hurbildu / urrundu, leunki */
+    addEventListener(
+      "wheel",
+      (e) => {
+        if (!started || paused || mobile || FILM.on || TXALA.on) return;
+        camZoom(Math.exp(clamp(e.deltaY, -240, 240) * 0.0011));
+      },
+      { passive: true },
+    );
     addEventListener("keydown", (e) => {
       if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"].includes(e.code)) e.preventDefault();
       /* azala: Enter / zuriunea → DEIARI ERANTZUN (botoia fokuan ez badago ere) */

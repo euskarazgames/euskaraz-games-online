@@ -24,14 +24,16 @@
       legs = ["l", "r"].map((s) => ({ up: bone("upperleg." + s), lo: bone("lowerleg." + s), ft: bone("foot." + s) }));
     const sk = [];
     root.traverse((n) => n.isSkinnedMesh && sk.push(n.skeleton));
-    /* lotura-jarreran neurtu (gero animazioak berreskuratzen du) */
-    const saved = sk.length ? sk[0].bones.map((b) => [b.position.clone(), b.quaternion.clone()]) : null;
+    /* lotura-jarreran neurtu, eta gero hezur guztiak bere horretan utzi: posizioa, biraketa ETA ESKALA
+       (pose()-k alderantzizko lotura-matrizeetatik ateratzen du eskala; kuantizatutako modeloetan ez da 1,
+       eta itzuli ezean pertsonaiak ~2,5 aldiz handiago ikusten ziren) */
+    const saved = sk.length ? sk[0].bones.map((b) => [b.position.clone(), b.quaternion.clone(), b.scale.clone()]) : null;
     if (sk.length) sk[0].pose();
     root.updateMatrixWorld(true);
     const rq = root.getWorldQuaternion(new T.Quaternion()),
       fwdW = new T.Vector3(0, 0, 1).applyQuaternion(rq),
       fwd = fwdW.clone().applyQuaternion(head.getWorldQuaternion(new T.Quaternion()).invert()).normalize();
-    if (saved) sk[0].bones.forEach((b, i) => (b.position.copy(saved[i][0]), b.quaternion.copy(saved[i][1])));
+    if (saved) sk[0].bones.forEach((b, i) => (b.position.copy(saved[i][0]), b.quaternion.copy(saved[i][1]), b.scale.copy(saved[i][2])));
     const ok = legs.every((L) => L.up && L.lo && L.ft),
       bones = [chest, head, ...(ok ? legs.flatMap((L) => [L.up, L.lo]) : [])];
     const R = { root, owner, head, chest, hips, legs: ok ? legs : null, fwd, w: 0, wf: 0, tgt: new T.Vector3(), feet: !!opts.feet, bones, pre: bones.map(() => new T.Quaternion()), preHip: new T.Vector3(), postQ: new T.Quaternion(), postHip: new T.Vector3(), post: false };
@@ -104,11 +106,15 @@
     const legs = R.legs,
       rootY = R.root.getWorldPosition(ikV[0]).y,
       off = [0, 0];
+    /* hankaren luzera (izterra + zangoa, munduan): oin bakoitza gehienez luzeraren erdia igo edo jaitsi
+       (pertsonaia txikiek hanka laburrak dituzte; gainerakoa aldakak hartzen du) */
+    if (!R.legLen) R.legLen = legs[0].up.getWorldPosition(ikV[1]).distanceTo(legs[0].lo.getWorldPosition(ikV[2])) + legs[0].lo.getWorldPosition(ikV[2]).distanceTo(legs[0].ft.getWorldPosition(ikV[3]));
+    const lim = Math.min(0.35, 0.5 * R.legLen);
     for (let i = 0; i < 2; i++) {
       const f = legs[i].ft.getWorldPosition(ikV[1]),
         g = ikGround(f.x, f.z, yRef);
       /* animazioa lur lauan dago (erroaren altueran): oina bere lurraren altuerara */
-      off[i] = g === null ? 0 : clamp(g - rootY, -0.35, 0.35);
+      off[i] = g === null ? 0 : clamp(g - rootY, -lim, lim);
     }
     const drop = Math.min(off[0], off[1], 0) * R.wf;
     if (Math.abs(drop) > 1e-3) {

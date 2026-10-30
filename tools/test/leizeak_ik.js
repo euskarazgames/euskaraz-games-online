@@ -1,7 +1,7 @@
 // LEIZEEN DEIA: IK (begirada eta oinak), ?test kakoekin, tick-ak eskuz.
 // Erabili: NODE_PATH=$(npm root -g) node tools/test/leizeak_ik.js http://127.0.0.1:8091/games/leizeak.html
 // Herritarra alboan → Amaiurrek burua biratzen du (mugaraino) eta herritarrak Amaiurri begiratzen dio →
-// 30 cm-ko maila oin baten azpian → oin hori igotzen da, bestea maldari jarraituz → behin eta berriz
+// maila (hankaren % 40) oin baten azpian → oin hori igotzen da, bestea maldari jarraituz → behin eta berriz
 // marraztuta ez da metatzen → jauzian eta korrika ez (pisua 0) → IK itzalita, jarrera berdina.
 const { launch } = require('./_browser');
 (async () => {
@@ -48,19 +48,26 @@ const { launch } = require('./_browser');
   ok(Math.abs(look.off) < 12 && look.on > 50 && look.on < 70, 'Amaiur: burua herritarrari (mugaraino, 65°)', S(look));
   ok(look.npcW > 0.5 && Math.abs(look.npc - Math.max(-65, Math.min(65, look.npcWant))) < 25, 'herritarrak Amaiurri begiratzen dio', S(look));
 
-  /* 2 · oinak: 30 cm-ko maila ezkerreko oinaren azpian */
+  /* 2 · oinak: maila (hankaren % 40) ezkerreko oinaren azpian */
   const feet = await ev(() => {
     const g = __game, bx = 8, bz = -60, y0 = g.gy(bx, bz);
-    g.ZONES.ibarra.platforms.push((window.__step = { x: bx + 0.75, z: bz + 0.05, y: y0 + 0.3, bottom: y0 - 0.5, w: 0.9, d: 1.0, rot: 0, phase: -1, safe: true }));
     const at = () => { g.teleport(bx, bz, y0); g.P.angle = 0; g.hero.rotation.y = 0; g.P.vx = g.P.vz = 0; };
     g.IK.on = false; at(); __run(90); const off = __feet();
+    /* maila ezkerreko oinaren azpian (oinaren benetako lekuan; pertsonaiaren tamainaren arabera) */
+    const lf = g.IK.hero.legs[0].ft.getWorldPosition(new THREE.Vector3()), rf = g.IK.hero.legs[1].ft.getWorldPosition(new THREE.Vector3());
+    /* mailaren altuera: hankaren luzeraren % 40 (pertsonaia txikiaren hanka ~25 cm) */
+    const R = g.IK.hero, legLen = R.legs[0].up.getWorldPosition(new THREE.Vector3()).distanceTo(R.legs[0].lo.getWorldPosition(new THREE.Vector3())) + R.legs[0].lo.getWorldPosition(new THREE.Vector3()).distanceTo(lf);
+    window.__stepH = +(0.4 * legLen).toFixed(3);
+    /* barruko ertza bi oinen artean (eskuineko oinetik urrun); support()-ek 7 cm-ko ertza kentzen du */
+    const sep = Math.hypot(lf.x - rf.x, lf.z - rf.z), ux = (lf.x - rf.x) / sep;
+    g.ZONES.ibarra.platforms.push((window.__step = { x: lf.x + ux * 0.3 * sep, z: lf.z, y: y0 + window.__stepH, bottom: y0 - 0.5, w: 1.2 * sep, d: 0.7, rot: 0, phase: -1, safe: true }));
     g.IK.on = true; at(); __run(90); const on = __feet(), hip = g.IK.hero.hips.position.y;
     /* behin eta berriz marraztuta (animaziorik gabe): ez da metatzen */
     for (let i = 0; i < 30; i++) g.draw();
     const again = __feet(), hip2 = g.IK.hero.hips.position.y;
-    return { off, on, again, hip: +hip.toFixed(4), hip2: +hip2.toFixed(4), gL: +(y0 + 0.3).toFixed(3) };
+    return { off, on, again, hip: +hip.toFixed(4), hip2: +hip2.toFixed(4), stepH: window.__stepH, gL: +(y0 + window.__stepH).toFixed(3) };
   });
-  ok(feet.on[0] - feet.off[0] > 0.25, 'oina mailara igo da (30 cm)', S(feet));
+  ok(feet.on[0] - feet.off[0] > 0.7 * feet.stepH, 'oina mailara igo da (hankaren % 40)', S(feet));
   ok(Math.abs(feet.on[1] - feet.off[1]) < 0.15, 'beste oina maldari jarraituz', S(feet));
   ok(Math.abs(feet.again[0] - feet.on[0]) < 0.005 && Math.abs(feet.hip2 - feet.hip) < 0.001, 'behin eta berriz marraztuta: ez da metatzen', S(feet));
 
