@@ -2,8 +2,8 @@
 <html lang="eu">
 <head>
 <script>window.EG_GAME={"slug": "dune-surfer", "touch": {"left": "x", "right": "actions", "up": "Space", "down": "ArrowDown", "actions": [["Eutsi / salto", "Space"], ["Makurtu", "ArrowDown"]], "analog": true}};</script>
-<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
-<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/touch-controls.js?v=mobile-launch-4"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=mobile-launch-4"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -115,6 +115,8 @@
 <div id="mute" class="hidden">M &middot; SOUND</div>
 
 <script type="module">
+window.EGPad.getState=()=>{try{return GAME.state}catch{return "loading"}};
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -1402,7 +1404,7 @@ function readInput() {
   let steer = (keys.right || touch.right ? 1 : 0) - (keys.left || touch.left ? 1 : 0);
   let tuck = !!keys.down;
   let jumpHeld = !!keys.jump || touch.jump;
-  const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+  const pads = navigator.getGamepads ? window.EGPad.gamepads() : [];
   for (const gp of pads) {
     if (!gp) continue;
     const ax = gp.axes[0] || 0;

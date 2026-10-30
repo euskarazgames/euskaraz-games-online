@@ -1,3 +1,5 @@
+
+window.EGPad.getState=()=>{try{return G.state}catch{return "loading"}};
 // HOURGLASS — a tiny wanderer climbs the falling time.
 // Three.js r160. Every texture, sprite, model, music and sound in assets/ was generated with fal.
 import * as THREE from 'three';

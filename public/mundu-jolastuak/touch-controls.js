@@ -5,6 +5,9 @@ const cfg=window.EG_GAME,profile=cfg.touch;
 if(!profile)throw Error('Ukipen-profila falta da: '+cfg.slug);
 const left={x:0,y:0,active:false},right={x:0,y:0,active:false};
 const api=window.EGPad={left,right,sensitivity:1,axis(value,axis='x',sign=1){return left.active?left[axis]*sign:value},rightAxis(value,axis='y',sign=1){return right.active?right[axis]*sign:value}};
+api.gamepads=()=>{try{return navigator.getGamepads?.()||[]}catch{return []}};
+api.state=()=>api.getState?.()||'loading';
+api.frames=0;
 function init(){
  if(document.getElementById('eg-controls'))return;
  const style=document.createElement('style');style.textContent=`
@@ -40,10 +43,12 @@ function init(){
  function position(e){let x=(e.clientX-st.cx)/st.r,y=(e.clientY-st.cy)/st.r;const l=Math.hypot(x,y);if(l>1){x/=l;y/=l}st.nub.style.transform=`translate3d(${x*st.r}px,${y*st.r}px,0)`;const d=Math.hypot(x,y),dz=.12,k=d>dz?Math.pow((d-dz)/(1-dz),1.2)/d:0;st.tx=x*k;st.ty=y*k;if(st.side==='left'&&profile.left==='x')st.ty=0;schedule()}
  st.position=position;return st}
  // Anchor each thumb at its initial contact; crossing the midpoint keeps ownership.
- const interactive=target=>target?.closest?.('button,a,input,select,textarea,[role="button"],[contenteditable="true"],#eg-touch-menu,#eg-settings,.actions');
+ const interactive=target=>target?.closest?.('button,a,input,select,textarea,[role="button"],[contenteditable="true"],.mode,[tabindex],#eg-touch-menu,#eg-settings,.actions');
  function floatingEnabled(e){return root.classList.contains('visible')&&panel.hidden&&!interactive(e.target)}
  window.addEventListener('pointerdown',e=>{
   if(!floatingEnabled(e)||owners.has(e.pointerId)||(e.pointerType==='mouse'&&e.button!==0))return;
+  if(['loading','load','boot'].includes(api.state()))return;
+  if(api.state()==='title'){stop(e);e.stopImmediatePropagation();start();return;}
   const physicalLeft=e.clientX<window.innerWidth/2;
   const st=sticks[(physicalLeft!==!!options.leftHanded)?0:1];
   stop(e);e.stopImmediatePropagation();
@@ -82,8 +87,24 @@ function init(){
  for(const [label,code] of profile.actions)button(label,code);
  const menu=document.createElement('div');menu.id='eg-touch-menu';menu.innerHTML='<button type="button" data-start>Hasi</button><button type="button" data-toggle>Aginteak</button><button type="button" data-settings>⚙</button>';
  menu.querySelector('[data-settings]').setAttribute('aria-label','Aginteen ezarpenak');
- function pulse(code){const owner={};setKeys(owner,[code]);setTimeout(()=>setKeys(owner,[]),90)}
- menu.querySelector('[data-start]').onclick=()=>{if(profile.start==='join'){pulse('KeyW');setTimeout(()=>pulse('Enter'),140)}else pulse(profile.start||'Space')};
+ function pulse(code){const owner={};setKeys(owner,[code]);setTimeout(()=>setKeys(owner,[]),650)}
+ let startPending=false,lastStart=0;
+ function start(){
+  if(startPending)return;
+  startPending=true;let attempts=0;
+  const attempt=()=>{
+   const state=api.state();
+   if(['loading','load','boot'].includes(state)){startPending=false;return;}
+   releaseAll();
+   // Enter joins the default player in Clockwork; no timing-dependent two-key sequence.
+   pulse(profile.start==='join'?'Enter':profile.start||'Space');
+   setTimeout(()=>{if(api.state()==='title'&&++attempts<4)attempt();else startPending=false},800);
+  };attempt();
+ }
+ const startButton=menu.querySelector('[data-start]');
+ startButton.addEventListener('pointerdown',e=>{stop(e);lastStart=Date.now();start()});
+ startButton.onclick=()=>{if(Date.now()-lastStart>700)start()};
+ setInterval(()=>{const loading=['loading','load','boot'].includes(api.state());startButton.disabled=loading;startButton.textContent=loading?'Kargatzen…':'Hasi';startButton.setAttribute('aria-busy',String(loading))},250);
  const panel=document.createElement('div');panel.id='eg-settings';panel.hidden=true;panel.innerHTML='<strong>UKIPEN-AGINTEAK</strong><p class="mapping"></p><label>Kamera <input type="range" min="0.5" max="2" step="0.1" aria-label="Kameraren sentikortasuna"><output></output></label><label><input type="checkbox"> Ezker-eskuinak trukatu</label><p>Ukitu pantailaren ezkerreko erdia mugitzeko eta eskuinekoa kamera edo ekintzak kontrolatzeko. Joysticka hatza jartzen duzun tokian agertuko da, eta askatzean desagertuko da.</p><button type="button">Itxi</button>';
  panel.querySelector('.mapping').textContent=profile.right==='camera'?'Ezkerra: mugitu. Eskuina: kamera.':profile.right==='sails'?'Ezkerra: lema. Eskuina: belak eta orientazioa.':profile.right==='altitude'?'Ezkerra: hegan. Eskuina: igo edo jaitsi.':profile.right==='rope'?'Ezkerra: kulunkatu. Eskuina: sokan igo edo jaitsi.':'Ezkerra: '+(profile.left==='runner'?'salto eta jaitsiera.':'mugitu.')+' Eskuina: ↑ '+(profile.actions[0]?.[0]||'ekintza')+(profile.down?' · ↓ '+(profile.actions[1]?.[0]||'ekintza'):'')+(profile.side?' · ↔ '+(profile.actions.find(a=>a[1]===profile.side)?.[0]||'bizkortu'):'');
  const slider=panel.querySelector('input[type=range]'),check=panel.querySelector('input[type=checkbox]');slider.value=api.sensitivity;slider.parentElement.hidden=profile.right!=='camera';panel.querySelector('output').textContent=api.sensitivity+'×';check.checked=!!options.leftHanded;
@@ -93,7 +114,7 @@ function init(){
  menu.querySelector('[data-toggle]').onclick=()=>{releaseAll();root.classList.toggle('visible')};menu.querySelector('[data-settings]').onclick=()=>{releaseAll();panel.hidden=!panel.hidden};panel.querySelector('button').onclick=()=>panel.hidden=true;
  // Controller touches never reach the original touch recognizers underneath.
  const isUI=e=>e.target?.closest?.('#eg-controls,#eg-touch-menu,#eg-settings');
- for(const type of ['touchstart','touchmove','touchend','touchcancel'])window.addEventListener(type,e=>{if(isUI(e)||floatingEnabled(e)){if((e.target.closest('#eg-controls')||floatingEnabled(e))&&e.cancelable)e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false});
+ for(const type of ['touchstart','touchmove','touchend','touchcancel'])window.addEventListener(type,e=>{if(isUI(e)||(floatingEnabled(e)&&!['title','loading','load','boot'].includes(api.state()))){if((e.target.closest('#eg-controls')||floatingEnabled(e))&&e.cancelable)e.preventDefault();e.stopImmediatePropagation()}},{capture:true,passive:false});
  for(const type of ['pointerdown','pointermove','pointerup','pointercancel','click','mousedown','mouseup']){root.addEventListener(type,e=>e.stopPropagation());menu.addEventListener(type,e=>e.stopPropagation());panel.addEventListener(type,e=>e.stopPropagation())}
  window.addEventListener('blur',releaseAll);window.addEventListener('pagehide',releaseAll);window.addEventListener('resize',releaseAll);document.addEventListener('visibilitychange',()=>{if(document.hidden)releaseAll()});
  document.body.append(root,menu,panel);

@@ -31,7 +31,7 @@ export class Input {
     let pause = this._e(PAUSE);
     const mute = this._e(MUTE);
     let any = this.edges.size > 0;
-    const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+    const pads = navigator.getGamepads ? window.EGPad.gamepads() : [];
     for (const gp of pads) {
       if (!gp || !gp.connected) continue;
       this.padConnected = true;

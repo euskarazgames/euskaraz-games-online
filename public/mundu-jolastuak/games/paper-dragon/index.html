@@ -2,8 +2,8 @@
 <html lang="eu">
 <head>
 <script>window.EG_GAME={"slug": "paper-dragon", "touch": {"left": "xy", "right": "actions", "up": "Space", "down": "ArrowDown", "actions": [["Igo", "Space"]], "analog": true}};</script>
-<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
-<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/touch-controls.js?v=mobile-launch-4"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=mobile-launch-4"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -102,6 +102,8 @@
 <div id="flash"></div>
 
 <script type="module">
+window.EGPad.getState=()=>{try{return G.state}catch{return "loading"}};
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -1745,7 +1747,7 @@ window.addEventListener('pointerup', () => { IN.pointer = false; });
 window.addEventListener('pointercancel', () => { IN.pointer = false; });
 window.addEventListener('contextmenu', (e) => e.preventDefault());
 function pollPad() {
-  const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+  const pads = navigator.getGamepads ? window.EGPad.gamepads() : [];
   let ax = 0, ay = 0, a = false, st = false, sel = false;
   const dz = (v) => (Math.abs(v) < 0.2 ? 0 : (v - Math.sign(v) * 0.2) / 0.8);
   for (const p of pads) {

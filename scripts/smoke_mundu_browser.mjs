@@ -42,19 +42,39 @@ for(const g of games){
     assert.equal(info.lang,"eu","Game document lang must be eu");
     assert(touch,"Touch controls should load on coarse pointer browser");
   }catch(e){errors.push("Frame inspection: "+String(e).slice(0,250));status="error"}
+  // Acceptance: real touch on Hasi must leave the title and continue rendering.
+  await frame.waitForFunction(()=>window.EGPad?.getState && !['load','loading','boot'].includes(window.EGPad.state()),{},{timeout:25000});
+  await frame.locator('[data-start]').tap({timeout:5000});
+  await frame.waitForFunction(()=>!['title','load','loading','boot'].includes(window.EGPad.state()),{},{timeout:12000});
+  const before=await frame.evaluate(()=>window.EGPad.frames);
+  await frame.waitForFunction(n=>window.EGPad.frames>n+2,before,{timeout:10000});
   if(sample.has(g.slug)){
     // A stalled GPU capture in headless CI is not a game startup failure.
     try {
-      await page.screenshot({path:out+g.slug+".png",fullPage:false,animations:"allow",timeout:6500});
+      await page.screenshot({path:out+g.slug+".png",fullPage:false,animations:"allow",timeout:1500});
     } catch(err) {
       errors.push("Screenshot unavailable: "+String(err).slice(0,130));
     }
   }
  }catch(e){status="error";errors.push(String(e).slice(0,350))}
- if(errors.some(x=>/CORS|MIME type|failed to fetch dynamically imported module/i.test(x)))status="error";
+ if(errors.some(x=>!x.startsWith("Screenshot unavailable:")))status="error";
  if(status==="error")critical++;
  audit.push({slug:g.slug,status,frameUrl,canvas,touch,errors,failedRequests:failedRequests.slice(0,15)});
  await page.close();
+}
+// iPhone-style fallback: Fullscreen API absent, then explicitly rejected.
+for(const denied of [false,true]){
+ const p=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ await p.addInitScript(denied=>{Element.prototype.requestFullscreen=denied?()=>Promise.reject(new Error('unsupported')):undefined;Element.prototype.webkitRequestFullscreen=undefined},denied);
+ await p.goto(target+'/mundu-jolastuak/play.html?joko=skyfarer');
+ await p.locator('#fullButton').tap();
+ assert(await p.locator('body').evaluate(el=>el.classList.contains('eg-expanded')),'immersive fallback');
+ assert(await p.locator('.eg-full-exit').isVisible(),'fullscreen exit');
+ const height=await p.locator('#game').evaluate(el=>el.getBoundingClientRect().height);
+ assert(height>=840,'fullscreen must expand actual game viewport');
+ await p.locator('.eg-full-exit').tap();
+ assert(!(await p.locator('body').evaluate(el=>el.classList.contains('eg-expanded'))),'exit fallback');
+ await p.close();
 }
 await browser.close();
 const summary={checked:audit.length,totalGames:games.length,critical,screenCaptures:[...sample],games:audit,

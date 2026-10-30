@@ -2,8 +2,8 @@
 <html lang="eu">
 <head>
 <script>window.EG_GAME={"slug": "aurora-skiff", "touch": {"left": "x", "right": "actions", "up": "Space", "actions": [["Haize-bolada", "Space"]], "analog": true}};</script>
-<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
-<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/touch-controls.js?v=mobile-launch-4"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=mobile-launch-4"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -111,6 +111,8 @@ canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;outline:non
 <div id="err"></div>
 
 <script type="module">
+window.EGPad.getState=()=>{try{return G.state}catch{return "loading"}};
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -435,7 +437,7 @@ const pad = { steer: 0, a: false, aPrev: false, start: false, startPrev: false, 
 addEventListener('gamepadconnected', () => { pad.connected = true; });
 function pollPad() {
   pad.aPrev = pad.a; pad.startPrev = pad.start;
-  const list = navigator.getGamepads ? navigator.getGamepads() : [];
+  const list = navigator.getGamepads ? window.EGPad.gamepads() : [];
   let gp = null; for (const g of list) { if (g && g.connected) { gp = g; break; } }
   if (!gp) { pad.steer = 0; pad.a = false; pad.start = false; return; }
   pad.connected = true;

@@ -2,8 +2,8 @@
 <html lang="eu">
 <head>
 <script>window.EG_GAME={"slug": "stained-glass", "touch": {"left": "x", "right": "actions", "up": "Space", "actions": [["Salto / planeatu", "Space"]], "analog": true}};</script>
-<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
-<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/touch-controls.js?v=mobile-launch-4"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=mobile-launch-4"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -66,6 +66,8 @@
 </div>
 
 <script type="module">
+window.EGPad.getState=()=>{try{return game.mode}catch{return "loading"}};
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
@@ -1090,7 +1092,7 @@ addEventListener('keyup', (e) => keys.delete(e.code));
 addEventListener('pointerdown', () => onAnyKey('Pointer'));
 function pollInput() {
   let l = KEY_L.some((k) => keys.has(k)), r = KEY_R.some((k) => keys.has(k)), j = KEY_J.some((k) => keys.has(k));
-  const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+  const pads = navigator.getGamepads ? window.EGPad.gamepads() : [];
   for (const p of pads) {
     if (!p) continue;
     const ax = p.axes[0] || 0;

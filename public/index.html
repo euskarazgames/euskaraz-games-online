@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="eu"><head><meta name="eg-release" content="dual-stick-portrait-3"><meta charset="utf-8">
+<html lang="eu"><head><meta name="eg-release" content="mobile-launch-4"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090a0e">
 <meta name="description" content="Euskaraz Games: Kirol Challenge, Basoa Solid eta 31 joko berri euskaraz. Nabigatu, aukeratu eta jolastu.">
@@ -110,7 +110,7 @@ body.playing{overflow:hidden}
 
 .eg-stars-inline{position:relative;z-index:5;display:inline-flex;align-items:center;gap:4px;margin-top:8px;background:#ff9d5629;border:1px solid #ff9d5680;border-radius:100px;padding:4px 9px;font-size:11px;color:#ffc488;font-weight:900}
 #eg-star-metric strong{color:#ffc488;font-size:25px}
-</style><style>@media(max-width:600px) and (orientation:portrait){.player{height:100dvh}.playerhead{flex:0 0 auto;min-height:52px;padding:7px 10px;gap:7px}.playerhead small{display:none}.playerhead .tools2{gap:4px}.playerhead .tools2 button{padding:7px;font-size:10px}.gameframe{min-height:0}iframe{max-width:100%}}</style></head><body>
+</style><style>@media(max-width:600px) and (orientation:portrait){.player{height:100dvh}.playerhead{flex:0 0 auto;min-height:52px;padding:7px 10px;gap:7px}.playerhead small{display:none}.playerhead .tools2{gap:4px}.playerhead .tools2 button{padding:7px;font-size:10px}.gameframe{min-height:0}iframe{max-width:100%}}</style><script src="/mundu-jolastuak/fullscreen.js?v=mobile-launch-4"></script></head><body>
 <header><div class="top container"><a href="/" class="brand" aria-label="Euskaraz Games · hasiera"><span>EUSKARAZ <em>GAMES</em></span></a>
 <nav class="nav" id="mainNav" aria-label="Nabigazio nagusia"><a href="#hasiera" data-t="home">Hasiera</a><a href="#kirol">Kirol Challenge</a><a href="#basoa">Basoa Solid</a><a href="#mundu">Mundu Jolastuak</a><a href="#mundu" data-t="all">Joko guztiak</a></nav>
 <div class="navright"><button class="iconbtn" id="favs" type="button" aria-pressed="false" data-t="fav">☆ Gogokoak</button><button class="iconbtn langBtn" id="lang" type="button" aria-label="Idioma / Hizkuntza">ES</button><button class="iconbtn menu-toggle" id="menu" type="button" aria-label="Nabigazioa ireki" aria-expanded="false">☰</button></div></div></header>
@@ -177,11 +177,11 @@ const frame=$("frame");frame.removeAttribute("sandbox");if(!isClassic)frame.setA
 $("instructions").textContent=game.controls||"Jokoaren argibideak."; $("instructions").classList.remove("visible");$("help").setAttribute("aria-expanded","false");$("spinner").classList.remove("hidden");$("spinner").textContent=word("loading");$("player").classList.add("open");document.body.classList.add("playing");
 frame.src=isClassic?"/klasiko/?joko="+encodeURIComponent(game.legacy):"/mundu-jolastuak/games/"+encodeURIComponent(game.slug)+"/";$("close").focus();try{history.replaceState(null,"",location.pathname+location.search+"#jolasten")}catch{}
 }
-function closeGame(){window.EGChallenges?.close();$("player").classList.remove("open");document.body.classList.remove("playing");$("frame").src="about:blank";active=null;$("heroPlay").focus();try{history.replaceState(null,"",location.pathname+location.search)}catch{}}
+function closeGame(){fullscreenView.exit();window.EGChallenges?.close();$("player").classList.remove("open");document.body.classList.remove("playing");$("frame").src="about:blank";active=null;$("heroPlay").focus();try{history.replaceState(null,"",location.pathname+location.search)}catch{}}
 $("frame").addEventListener("load",()=>{$("spinner").classList.add("hidden")});
 $("close").addEventListener("click",closeGame);$("help").addEventListener("click",()=>{const el=$("instructions"),show=el.classList.toggle("visible");$("help").setAttribute("aria-expanded",String(show))});
 $("restart").addEventListener("click",()=>{if(active)openGame(active)});
-$("fullscreen").addEventListener("click",async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await $("player").requestFullscreen()}catch{}});
+const fullscreenView=window.EGFullscreen($("player"),$("fullscreen"));
 $("heroPlay").addEventListener("click",()=>openGame(all.find(x=>x.id===heroItems[heroIndex].target)));
 $("continueButton").addEventListener("click",()=>openGame(all.find(x=>x.id===last)));
 document.querySelectorAll("[data-hero]").forEach(b=>b.addEventListener("click",()=>{heroIndex=Number(b.dataset.hero);updateHero()}));

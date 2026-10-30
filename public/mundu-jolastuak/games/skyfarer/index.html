@@ -2,8 +2,8 @@
 <html lang="eu">
 <head>
 <script>window.EG_GAME={"slug": "skyfarer", "touch": {"left": "xy", "right": "camera", "actions": [["Salto / planeatu", "Space"], ["Korrika", "ShiftLeft"]], "rightLabel": "KAMERA", "analog": true}};</script>
-<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
-<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/touch-controls.js?v=mobile-launch-4"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=mobile-launch-4"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -78,6 +78,8 @@
   <div id="mute">M · sound</div>
 </div>
 <script type="module">
+window.EGPad.getState=()=>{try{return G.mode}catch{return "loading"}};
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';

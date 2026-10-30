@@ -27,7 +27,7 @@ export function endFrame() { pressedEdge.clear(); padPrev = padNow; padNow = rea
 let padNow = [], padPrev = [];
 function readPads() {
   const out = [];
-  const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+  const pads = navigator.getGamepads ? window.EGPad.gamepads() : [];
   for (const p of pads) {
     if (!p) continue;
     const ax = p.axes[0] || 0;

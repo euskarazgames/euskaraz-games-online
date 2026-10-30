@@ -1,3 +1,5 @@
+
+window.EGPad.getState=()=>{try{return game.state}catch{return "loading"}};
 // CLOCKWORK HEIST — four hooded thieves, one giant clock tower.
 // Entry point: renderer, post-processing, game states, players, camera.
 import * as THREE from 'three';

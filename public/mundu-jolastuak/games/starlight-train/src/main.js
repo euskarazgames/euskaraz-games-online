@@ -1,3 +1,5 @@
+
+window.EGPad.getState=()=>{try{return G.mode}catch{return "loading"}};
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';

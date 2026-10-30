@@ -21,7 +21,7 @@ button:hover,.button:hover{border-color:#ffa257}.accent{background:#ffa257;color
 #help.visible{display:block}
 #help p{margin:5px 0}.warn{color:#ffb58d}#error{color:#fbd0c0}
 @media(max-width:690px){header{align-items:flex-start;flex-wrap:wrap}.headleft{width:100%}.actions{width:100%}button,.button{padding:8px 11px;font-size:11px}.panel{gap:8px}#stage{min-height:64dvh}}
-</style></head><body>
+</style><script src="./fullscreen.js?v=mobile-launch-4"></script></head><body>
 <header>
  <div class="headleft"><a href="./" class="back" aria-label="Bildumara itzuli">← Jokoak</a><div><h1 id="gameTitle">Jokoa kargatzen…</h1><div class="orig" id="originalTitle">Mundu Jolastuak · Euskaraz Games</div></div></div>
  <nav class="actions" aria-label="Jokoaren aukerak">
@@ -62,7 +62,7 @@ try{
  const idx=games.indexOf(game);
  document.getElementById("nextButton").addEventListener("click",()=>location.assign("./play.html?joko="+encodeURIComponent(games[(idx+1)%games.length].slug)));
  document.getElementById("reloadButton").addEventListener("click",()=>{loading.classList.remove("hidden");frame.src=frame.src});
- document.getElementById("fullButton").addEventListener("click",async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(frame.requestFullscreen)await frame.requestFullscreen()}catch{}});
+ window.EGFullscreen(document.body,document.getElementById("fullButton"));
  helpButton.addEventListener("click",()=>{help.classList.toggle("visible");helpButton.setAttribute("aria-expanded",String(help.classList.contains("visible")))});
 }catch(err){loading.textContent="Errorea: "+(err.message||err);help.classList.add("visible")}
 </script>

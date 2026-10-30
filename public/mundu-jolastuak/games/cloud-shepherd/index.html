@@ -2,8 +2,8 @@
 <html lang="eu">
 <head>
 <script>window.EG_GAME={"slug": "cloud-shepherd", "touch": {"left": "xy", "right": "actions", "up": "Space", "down": "KeyE", "side": "ShiftLeft", "actions": [["Bultzatu", "Space"], ["Txistu", "KeyE"], ["Korrika", "ShiftLeft"]], "analog": true}};</script>
-<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
-<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/touch-controls.js?v=mobile-launch-4"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=mobile-launch-4"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -82,6 +82,8 @@
 </div>
 
 <script type="module">
+window.EGPad.getState=()=>{try{return state}catch{return "loading"}};
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -1264,7 +1266,7 @@ function readInput() {
   if (keys.has('KeyD') || keys.has('ArrowRight')) x += 1;
   x += touch.x; z += touch.z;
   // gamepad
-  const gp = navigator.getGamepads ? [...navigator.getGamepads()].find(g => g) : null;
+  const gp = navigator.getGamepads ? [...window.EGPad.gamepads()].find(g => g) : null;
   let gSwing = false, gWhistle = false, gRun = false;
   if (gp) { const ax = gp.axes[0] || 0, az = gp.axes[1] || 0; if (Math.hypot(ax, az) > 0.18) { x += ax; z += az; } gSwing = gp.buttons[0]?.pressed; gWhistle = gp.buttons[2]?.pressed || gp.buttons[3]?.pressed; gRun = gp.buttons[7]?.pressed || gp.buttons[5]?.pressed; }
   x=window.EGPad.axis(x);z=window.EGPad.axis(z,"y");

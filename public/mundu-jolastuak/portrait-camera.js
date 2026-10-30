@@ -7,6 +7,7 @@ window.EGMobileView=function(renderer,camera){
  camera.lookAt=function(x,y,z){if(x?.isVector3)focus.copy(x);else focus.set(x,y,z);hasFocus=true;return lookAt.apply(this,arguments)};
  const render=renderer.render;
  renderer.render=function(scene,view){
+  if(view===camera)window.EGPad.frames++;
   const aspect=camera.aspect;
   if(view!==camera||aspect>=1||aspect<=0||!Number.isFinite(aspect))return render.apply(this,arguments);
   const baseFov=camera.fov,baseNear=camera.near; saved.copy(camera.position);
