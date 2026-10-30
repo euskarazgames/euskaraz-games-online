@@ -250,6 +250,8 @@
     return { g, body, eye, wings: g.userData.wings, ...parts };
   }
   function spawnEnemy(type, era, x, z, y) {
+    /* garaia aldatu ezin bada (bihurgunearen aurretik), garai bati lotutako ezkuturik ez */
+    if (era !== -1 && !canPhase()) era = -1;
     const D = EN_DEF[type],
       M = enemyMesh(type, era),
       e = { type, era, x, z, y, vx: 0, vz: 0, hp: D.hp, max: D.hp, state: "spawn", t: 0, cd: 1 + Math.random(), dir: Math.atan2(P.x - x, P.z - z), flash: 0, stun: 0, hitT: 0, blinkCd: 2, room: null, K: 1, H: !M.skel && type === "eye" ? 1.9 : D.H, ...M, D };
@@ -341,8 +343,16 @@
       if (!COACH.seen.has("era-shield")) {
         coachDone("era-shield");
         notify(
-          e.era ? "Ezkutu urdina: ORAINEAN bakarrik zauritzen da. ALDATU garaia!" : "Ezkutu urrea: IRAGANEAN bakarrik zauritzen da. ALDATU garaia!",
-          e.era ? "Escudo azul: solo se hiere en el PRESENTE. ¡CAMBIA de época!" : "Escudo dorado: solo se hiere en el PASADO. ¡CAMBIA de época!",
+          e.era === 2
+            ? "Ezkutua itxita: itxaron irekitzen den arte, eta orduan eraso."
+            : eraComb()
+              ? e.era
+                ? "Ezkutu urdina: IZOTZAREKIN bakarrik zauritzen da. ALDATU!"
+                : "Ezkutu urrea: UR BIZIAREKIN bakarrik zauritzen da. ALDATU!"
+              : e.era
+                ? "Ezkutu urdina: ORAINEAN bakarrik zauritzen da. ALDATU garaia!"
+                : "Ezkutu urrea: IRAGANEAN bakarrik zauritzen da. ALDATU garaia!",
+          "",
           3.5,
         );
       }
@@ -384,7 +394,12 @@
     if (!el) return;
     SHIELD_HINT.e = e;
     SHIELD_HINT.t = 1.4;
-    el.textContent = (e.era ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + " · " + L("ALDATU", "CAMBIA") + kb(" (Q)");
+    el.textContent =
+      e.era === 2
+        ? L("ITXITA · ITXARON")
+        : eraComb()
+          ? (e.era ? L("IZOTZA") : L("URA")) + " · " + L("ALDATU") + kb(" (Q)")
+          : (e.era ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + " · " + L("ALDATU", "CAMBIA") + kb(" (Q)");
     el.style.borderColor = el.style.color = ERA_COL[e.era];
   }
   const SHIELD_HINT = { e: null, t: 0 };

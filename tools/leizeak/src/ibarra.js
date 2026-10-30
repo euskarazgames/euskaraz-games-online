@@ -496,6 +496,14 @@
     HUB.iceFall = obj(new T.BoxGeometry(1.2, 17, 9.4), new T.MeshStandardMaterial({ color: "#cfeefa", roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.78, emissive: new T.Color("#5fa8c8"), emissiveIntensity: 0.15 }));
     HUB.iceFall.position.set(98.6, 7.3, -28.5);
     platforms.push((HUB.iceFall.p = { x: 98.6, z: -28.5, y: 16, bottom: -2, w: 1.3, d: 9.6, rot: 0, phase: 1, wall: true, safe: false }));
+    /* lehen ekitaldian ez dago garairik: izotz-gortinan suge-eraztun bat, KATEArekin erauzteko */
+    HUB.iceRing = serpentRing(97.85, 3.2, -28.5, -PI / 2);
+    HUB.iceRing.onHook = iceFallBreak;
+    if (flag("ur-jauzia")) {
+      HUB.iceFall.p.off = true;
+      HUB.iceRing.off = true;
+      HUB.iceRing.g.visible = false;
+    }
     /* ertz-harria ur-jauziaren aurrean (bi garaietan) eta leizearen ahoa atzean */
     slab({ x: 95.05, z: -28.5, y: -0.9, w: 9.1, d: 9, h: 1.4, area: "urjauzia" });
     wallBlock(97.5, -33.6, 6, 1.2, 0, -1.2, 10);
@@ -804,8 +812,19 @@
     }
     /* errotaren gurpila: iraganean biraka, orainean izoztuta */
     if (HUB.wheel) HUB.wheel.rotation.x -= dt * 0.9 * (1 - phaseBlend);
-    if (HUB.iceFall) {
-      HUB.iceFall.visible = phaseBlend > 0.5;
+    if (HUB.iceFall && HUB.iceFall.fallT !== undefined) {
+      /* izotz-gortina erortzen (KATEA): behera eta gardena */
+      HUB.iceFall.fallT += dt;
+      const k = Math.min(1, HUB.iceFall.fallT / 1.3);
+      HUB.iceFall.position.y = 7.3 - 9 * k * k;
+      HUB.iceFall.rotation.z = 0.35 * k;
+      HUB.iceFall.material.opacity = 0.78 * (1 - k);
+      if (k >= 1) {
+        HUB.iceFall.visible = false;
+        delete HUB.iceFall.fallT;
+      }
+    } else if (HUB.iceFall) {
+      HUB.iceFall.visible = phaseBlend > 0.5 && !flag("ur-jauzia");
       HUB.iceFall.material.opacity = 0.35 + 0.45 * phaseBlend;
     }
     if (HUB.andere && HUB.andere.seal) HUB.andere.seal.material.opacity = saved.flags.includes("andere") ? 0 : 0.45 + 0.25 * Math.sin(time * 2);
@@ -818,13 +837,26 @@
     if (ZONE.pending || cinematic) return;
     /* leizeen ahoak */
     if (HUB.gate && HUB.gate.p.off && Math.hypot(P.x - HUB.cave.x, P.z - HUB.cave.z) < 2.4 && P.y > 4) enterZone("leizea", { ...DUNGEON.entry, cp: true });
-    /* ur-jauziaren atzean: IRAGANEAN bakarrik (orainean izotz-gortina) */
-    if (DGS.lamia && phase === 0 && P.x > HUB.lamia.x && Math.abs(P.z - HUB.lamia.z) < 3.2 && P.y > -2 && P.y < 2) {
+    /* ur-jauziaren atzean: izotz-gortina erauzita (KATEA) edo IRAGANEAN */
+    if (DGS.lamia && (phase === 0 || flag("ur-jauzia")) && P.x > HUB.lamia.x && Math.abs(P.z - HUB.lamia.z) < 3.2 && P.y > -2 && P.y < 2) {
       fxBurst(P.x, P.y + 1.2, P.z, { n: 30, speed: 3, up: 2, life: 0.6, size: 0.3, color: "#cdeef5", grav: 6 });
       SND.splash();
       enterZone("lamia", { ...DGS.lamia.entry, cp: true });
     }
     if (DGS.tartalo && Math.hypot(P.x - HUB.tartalo.x, P.z - HUB.tartalo.z) < 2.4 && P.y > 10) enterZone("tartalo", { ...DGS.tartalo.entry, cp: true });
+  }
+  /* ur-jauziko izotz-gortina: suge-eraztuna KATEArekin → gortina erori, ura askatu, leizearen ahoa agerian */
+  function iceFallBreak(R) {
+    if (flag("ur-jauzia")) return;
+    R.off = true;
+    R.g.visible = false;
+    HUB.iceFall.p.off = true;
+    HUB.iceFall.fallT = 0;
+    flagSet("ur-jauzia");
+    shake(0.45);
+    SND.clang();
+    for (let i = 0; i < 4; i++) fxBurst(98.2, 2 + i * 3.5, -28.5 + (i % 2 ? 2.5 : -2.5), { n: 22, speed: 5, up: 2, life: 0.8, size: 0.35, color: "#dff6ff", grav: 9 });
+    notify(L("Izotz-gortina erori da! Ur-jauziaren atzean, leize baten ahoa…"), "", 4);
   }
   /* haize-errotaren atea: HAIZE-ADARRAz putz egitean besoak biraka eta atea gora */
   function windGateUpdate(dt) {

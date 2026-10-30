@@ -6,9 +6,9 @@
        1 · MUGITU          → oihartzun-harria dardaraka (deia)
        2 · SORGINKERIA     → sutondoa piztu            (leizeetako sutegiak)
        3 · JAUZI BIKOITZA  → ganbara: Iratiren makilak (txalaparta)
-       4 · GARAIA          → atea izoztuta; udan zabalik (garai-zubiak, itzalak)
+       4 · SORGINKERIA     → atea izoztuta: izotza urtu (garaiak istorioaren bihurgunean, denbora.js)
        5 · BULTZADA        → Gauekoren begiak kalean: itzalean itxaron edo ziztu bizian pasatu
-       6 · FINKATU + garaiak borrokan → plazako itzalak (urrezko begiak: iraganean bakarrik)
+       6 · FINKATU borrokan → plazako itzalak
      Egunsentia, Iratiren oihartzuna plazan eta izenburua. Banderak: pro-0, pro-deia, pro-sua,
      pro-makilak, pro-atea, pro-kalea, pro-plaza → intro + irati1 + prologoa.
      Partida zaharrek (intro banderarekin) ez dute hitzaurrerik eta tresnak libre dituzte.
@@ -16,7 +16,7 @@
   const PRO = { on: false, hideNpc: false, ghost: false, can: { phase: true, dash: true, lock: true }, stone: null, chest: null, ice: null, hearth: null, beams: [], caught: 0, catchT: 0, hold: null, eyes: null, fight: null, rise: 0, said: {}, nopeT: 0 };
   const proFlag = (k) => saved.flags.includes(k);
   function proLocks() {
-    PRO.can.phase = !PRO.on || proFlag("pro-makilak");
+    PRO.can.phase = canPhase();
     PRO.can.dash = !PRO.on || proFlag("pro-atea");
     PRO.can.lock = !PRO.on || proFlag("pro-kalea");
     const b = document.body.classList;
@@ -25,12 +25,8 @@
     b.toggle("pro-nolock", !PRO.can.lock);
     keysRender();
   }
-  /* ikasi gabeko tresna: garaiaz, pista txiki bat (besteetan, isilik) */
-  function proNope(what) {
-    if (what !== "phase" || time - PRO.nopeT < 4) return;
-    PRO.nopeT = time;
-    notify(L("Garaiak… oraindik ez dituzu gogoratzen."), "", 2.5);
-  }
+  /* ikasi gabeko tresna: isilik (garaiak istorioaren bihurgunean irekitzen dira: denbora.js) */
+  function proNope() {}
   const proDoor = () => {
     const S = HOUSE.home;
     return { x: S.x + S.fx * 1.6, y: S.y, z: S.z + S.fz * 1.6, a: Math.atan2(S.fx, S.fz) };
@@ -99,6 +95,9 @@
     ice.position.set(E(0), 1.47, D / 2 + 0.05);
     ice.castShadow = false;
     PRO.ice = ice;
+    /* atearen izotza: SORGINKERIAk urtzen du (makilak hartu ondoren) */
+    PRO.iceTarget = { rune: true, x: E(0), y: 1.4, z: D / 2 - 0.2, r: 1.5, lit: false, live: () => PRO.on && ZONE.cur === "etxea" && proFlag("pro-makilak") && !PRO.iceGone, hit: () => proIceMelt() };
+    RUNES.push(PRO.iceTarget);
     /* sutondoa: hitzaurrean itzalita; SORGINKERIAk pizten du */
     PRO.hearthTarget = { rune: true, x: DGE.hearth.x, y: 0.95, z: DGE.hearth.z, r: 1.3, lit: false, live: () => PRO.on && ZONE.cur === "etxea" && proFlag("pro-deia") && !proFlag("pro-sua"), hit: () => proHearthLit() };
     RUNES.push(PRO.hearthTarget);
@@ -254,6 +253,16 @@
       }
     }
   }
+  /* atearen izotza urtu (SORGINKERIA) */
+  function proIceMelt() {
+    if (PRO.iceGone) return;
+    PRO.iceGone = true;
+    PRO.iceTarget.lit = true;
+    coachDone("pro-ice");
+    SND.flame();
+    fxBurst(PRO.ice.position.x, 1.4, PRO.ice.position.z, { n: 40, speed: 3.5, up: 2, life: 0.9, size: 0.32, color: "#dff6ff", grav: 5 });
+    notify(L("Izotza urtu da. Kalera!"), "", 2.4);
+  }
   function proHearthLit() {
     if (proFlag("pro-sua")) return;
     flagSet("pro-sua");
@@ -285,8 +294,8 @@
       if (!saved.items.includes("makilak")) saved.items.push("makilak");
       persist();
       proLocks();
-      deia(["pro_i7", "pro_a3", "pro_i8", "pro_g3"], () => {
-        coach("pro-phase", "Q", "Q: GARAIA → IRAGANA (uda): atea zabalik", "", "phaseBtn", "ALDATU: IRAGANA (uda) → atea zabalik", "");
+      deia(["pro_i7", "pro_a3", "pro_g3"], () => {
+        coach("pro-ice", "J", "J: SORGINKERIA atearen izotzari", "", "attackBtn", "SORGINKERIA atearen izotzari", "");
         hud();
       });
     });
@@ -536,20 +545,20 @@
         C.halo.material.opacity = proFlag("pro-sua") && !C.open ? 0.55 + Math.sin(time * 4) * 0.25 : 0;
         C.lid.rotation.x = mix(C.lid.rotation.x, C.open ? -1.9 : 0, 1 - Math.exp(-dt * 6));
       }
-      /* izotza: orainean atea itxita; iraganean (uda) zabalik */
+      /* izotza: atea itxita, SORGINKERIAk urtu arte (gero urtzen ikusten da) */
       const iceOn = !proFlag("pro-atea");
-      PRO.ice.visible = iceOn;
+      PRO.iceFade = PRO.iceGone ? Math.max(0, (PRO.iceFade ?? 1) - dt * 1.4) : 1;
+      PRO.ice.visible = iceOn && PRO.iceFade > 0;
       if (iceOn) {
-        PRO.ice.material.opacity = 0.85 * phaseBlend;
-        if (phase === 1 && Math.abs(P.x - HX) < 1.7 && P.z > 4.35) {
+        PRO.ice.material.opacity = 0.85 * PRO.iceFade;
+        if (!PRO.iceGone && Math.abs(P.x - HX) < 1.7 && P.z > 4.35) {
           P.z = 4.35;
           P.vz = Math.min(0, P.vz);
           if (!PRO.said.ice && proFlag("pro-makilak")) {
             PRO.said.ice = true;
-            notify(L("Izotza. Gogoratu udako atea: GARAIA."), "", 3);
+            notify(L("Izotza. SORGINKERIArekin urtu."), "", 3);
           }
         }
-        if (phase === 0 && proFlag("pro-makilak")) coachDone("pro-phase");
       }
       return;
     }
@@ -571,9 +580,9 @@
       if (!proFlag("pro-deia")) return ["Oihartzun-harria dardaraka: hurbildu eta ERANTZUN.", [PRO.stone.x, PRO.stone.z + 1.2, 0]];
       if (!proFlag("pro-sua")) return ["Piztu sutondoa SORGINKERIArekin.", [DGE.hearth.x, DGE.hearth.z + 1.5, 0]];
       if (!proFlag("pro-makilak")) return ["Ganbaran, Iratiren kutxa. JAUZI BIKOITZA.", [PRO.chest.x, PRO.chest.z, 3.6]];
-      return ["Atea izoztuta: GARAIA aldatu (IRAGANA, uda) eta irten.", [DGE.exitArch.x, DGE.exitArch.z - 1, 0]];
+      return [PRO.iceGone ? "Kalera: irten etxetik." : "Atea izoztuta: SORGINKERIArekin urtu eta irten.", [DGE.exitArch.x, DGE.exitArch.z - 1, 0]];
     }
     if (!proFlag("pro-kalea")) return ["Plazara, Gauekoren begiei ihes eginez (itzalean itxaron edo BULTZADA).", [2, 31, 0]];
-    if (!proFlag("pro-plaza")) return ["Plazako itzalak garbitu. Urrezko begiak: IRAGANA.", [TXALA.spots[0].x, TXALA.spots[0].z, 0]];
+    if (!proFlag("pro-plaza")) return ["Plazako itzalak garbitu.", [TXALA.spots[0].x, TXALA.spots[0].z, 0]];
     return ["Egunsentia.", null];
   }

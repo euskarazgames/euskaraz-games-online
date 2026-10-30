@@ -17,7 +17,7 @@ const { launch } = require('./_browser');
   await ev(() => localStorage.clear());
   await page.reload({ waitUntil: 'load' });
   await page.waitForFunction(() => window.__game, null, { timeout: 120000 });
-  await ev(() => { __game.renderer.setPixelRatio(0.25); __game.renderer.shadowMap.enabled = false; __game.saved.flags.push('intro'); });
+  await ev(() => { __game.renderer.setPixelRatio(0.25); __game.renderer.shadowMap.enabled = false; __game.saved.flags.push('giroa', 'intro'); });
   await page.click('#play');
   await page.waitForTimeout(400);
   await ev(() => { __game.endScene(); window.__hold = true; });

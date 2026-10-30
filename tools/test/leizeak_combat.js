@@ -16,7 +16,7 @@ const { launch } = require('./_browser');
   const until = async (f, ms = 45000) => { const t0 = Date.now(); while (Date.now() - t0 < ms) { if (await ev(f)) return true; await wait(100); } return false; };
   await page.goto(url + (url.includes('?') ? '&' : '?') + 'test', { waitUntil: 'load' });
   await page.waitForFunction(() => window.__game, null, { timeout: 120000 });
-  await ev(() => { localStorage.clear(); __game.saved.flags.push('intro'); __game.renderer.setPixelRatio(0.5); __game.renderer.shadowMap.enabled = false; });
+  await ev(() => { localStorage.clear(); __game.saved.flags.push('giroa', 'intro'); __game.renderer.setPixelRatio(0.5); __game.renderer.shadowMap.enabled = false; });
   await page.click('#play');
   await wait(400);
   await ev(() => __game.endScene());

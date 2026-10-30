@@ -33,6 +33,7 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   moduak eta gelen angeluak game.js-en),
   sigiloa.js (itzal-zaindariak, argi-konoak, ALERTA/IHESA/ZAINTZA, oihartzun-radarra, TOK-TOK, LOTARAZI,
   begi-harriak, izotz-hariak), harpeak.js (ANBOTOKO HARPEAK: sigilu-leizea, gailurraren aurretik),
+  denbora.js (garaia istorioaren bihurgunean bakarrik: `canPhase()`, Lamien leizean ura/izotza),
   nabi.js (NABIGAZIOA: Recast & Detour, `tools/leizeak/vendor/`), fisika.js (FISIKA: Jolt, beranduago
   kargatua `public/assets/vendor/jolt-physics.js`-tik; `?fisika=0`), ik.js (begirada eta oinen IK)…).
   Azaleko letra-tipoa: `tools/leizeak/fonts/cinzel.woff2` (SIL OFL; build-ean base64). Ez editatu `public/games/leizeak.html` zuzenean:

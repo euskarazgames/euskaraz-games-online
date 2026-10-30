@@ -23,7 +23,7 @@ const { launch } = require('./_browser');
   await page.waitForFunction(() => window.__game, null, { timeout: 120000 });
   await ev(() => {
     const s = __game.saved;
-    s.flags.push('intro', 'irati1', 'prologoa');
+    s.flags.push('giroa', 'intro', 'irati1', 'prologoa');
     __game.renderer.setPixelRatio(0.25);
     __game.renderer.shadowMap.enabled = false;
   });

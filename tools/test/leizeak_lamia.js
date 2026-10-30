@@ -54,19 +54,25 @@ const { launch } = require('./_browser');
   const S = (p) => JSON.stringify(p);
   const flag = (k) => ev((k) => __game.saved.flags.includes(k), k);
 
-  /* 0 · haranean: helburua ur-jauzia; ertzean IRAGANERA → leizera */
+  /* 0 · haranean: helburua ur-jauzia; izotz-gortina (garairik ez) → suge-eraztuna KATEArekin → leizera */
   const obj0 = await ev(() => __game.objective());
-  ok(/LAMIEN LEIZEA/.test(obj0[0]), 'haraneko helburua: Lamien leizea', obj0[0]);
-  await toPhase(1);
+  ok(/ur-jauzia/.test(obj0[0]) && /KATEA/.test(obj0[0]), 'haraneko helburua: ur-jauzia, KATEA', obj0[0]);
   await tp(93, -0.9, -28.5);
   let p = await walk(1, 0, 1.2);
-  ok(p.zone === 'ibarra' && p.x < 98.4, 'orainean izotz-gortinak geldiarazi', S(p));
-  await toPhase(0);
-  p = await walk(1, 0, 1.6);
+  ok(p.zone === 'ibarra' && p.x < 98.4, 'izotz-gortinak geldiarazi', S(p));
+  await ev(() => __game.switchPhase());
+  ok((await ev(() => __game.phase())) === 1 && !(await ev(() => __game.canPhase())), 'haranean garairik ez (bihurgunearen arte)');
+  await tp(94.5, -0.9, -28.5);
+  await face(Math.PI / 2);
+  await ev(() => __game.chainFire());
+  ok(await until(() => __game.saved.flags.includes('ur-jauzia'), 600), 'KATEA: izotz-gortina erauzita');
+  await T(200);
+  p = await walk(1, 0, 1.8);
   await T(120);
   p = await ev(() => ({ zone: __game.ZONE.cur, x: __game.P.x, z: __game.P.z }));
-  ok(p.zone === 'lamia', 'iraganean ur-jauziaren atzetik → LAMIEN LEIZEA', S(p));
+  ok(p.zone === 'lamia', 'ur-jauziaren atzetik → LAMIEN LEIZEA', S(p));
   await skip();
+  ok(await ev(() => __game.canPhase()), 'leizean: ura / izotza (ALDATU)');
 
   /* 1 · L1: ubidea iraganean ura (erori), orainean izotza */
   await toPhase(0);

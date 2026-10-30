@@ -58,10 +58,12 @@
     MINI.def = def;
     MINI.flipDmg = 0;
     MINI.adds = 0;
+    MINI.closeT = 0;
+    MINI.eyeCol = e.eye ? e.eye.color.clone() : null;
     SND.stinger(false);
     shake(0.4);
     title(def.name, "");
-    notify(def.hint || L("Haren ezkutuak garaia aldatzen du. Begiratu begien koloreari!"), "", 4);
+    notify(canPhase() ? def.hint || L("Haren ezkutuak garaia aldatzen du. Begiratu begien koloreari!") : L("Haren ezkutua itxi eta ireki egiten da: itxaron, eta eraso irekita dagoenean."), "", 4);
     bossBar(def.name, 1);
   }
   function miniStart() {
@@ -76,7 +78,21 @@
     if (!e.mini) return;
     MINI.flipDmg += dmg;
     bossBar(MINI.def ? MINI.def.name : "BASOKO ZAINDARIA", Math.max(0, e.hp / e.max));
-    if (MINI.flipDmg >= 7 && e.hp > 0) {
+    if (MINI.flipDmg >= 7 && e.hp > 0 && !canPhase()) {
+      /* garairik gabe (bihurgunearen aurretik): ezkutua itxi, gero bere kabuz ireki (miniUpdate) */
+      MINI.flipDmg = 0;
+      MINI.closeT = 3.2;
+      e.era = 2;
+      if (e.eye) e.eye.color.set(ERA_COL[2]);
+      e.shield.material.color.set(ERA_COL[2]);
+      fxRing(e.x, e.y + 0.2, e.z, ERA_COL[2], 6, 0.6);
+      SND.clang();
+      notify(L("Ezkutua itxi da! Itxaron…"), "", 2);
+      if (MINI.adds < 2) {
+        MINI.adds++;
+        spawnWave((MINI.def && MINI.def.add) || [["grunt", -1, 2]], e.room);
+      }
+    } else if (MINI.flipDmg >= 7 && e.hp > 0) {
       MINI.flipDmg = 0;
       e.era = 1 - e.era;
       e.eye.color.set(ERA_COL[e.era]);
@@ -94,6 +110,17 @@
   function miniUpdate(dt) {
     const e = MINI.e;
     if (!e) return;
+    /* ezkutu itxia: denbora pasatuta, berriro ireki */
+    if (MINI.closeT > 0 && e.state !== "dead") {
+      MINI.closeT -= dt;
+      if (MINI.closeT <= 0 && e.era === 2) {
+        e.era = -1;
+        if (e.eye && MINI.eyeCol) e.eye.color.copy(MINI.eyeCol);
+        fxRing(e.x, e.y + 0.2, e.z, "#fff4d6", 6, 0.6);
+        SND.shift(1);
+        notify(L("Ezkutua ireki da: orain!"), "", 1.6);
+      }
+    }
     if (e.state === "dead" && !MINI.done) {
       MINI.done = true;
       for (const o of ENEMIES) if (o !== e && o.state !== "dead") killEnemy(o);

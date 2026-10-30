@@ -148,7 +148,7 @@
       BP.add(crown);
       ivySide(t, "s", y0, { phase: 0, id: "dorrea-heura" });
       const C = chest("h-dorrea", x, top, z - 0.6, PI, { t: "piece", id: "dorrea" });
-      SECRETS.push({ id: "dorrea", x, z, y: y0, r: 15, name: L("Dorre zaharra"), hint: L("Dorre zaharra heuraz jantzita: IRAGANEAN, heura bizirik dagoenean, igo daiteke. Goian, kutxa bat."), see: L("Dorre zahar bat, heuraz jantzita… goian zerbaitek distira egiten du."), done: () => saved.chests.includes("h-dorrea"), chest: C });
+      SECRETS.push({ id: "dorrea", past: true, x, z, y: y0, r: 15, name: L("Dorre zaharra"), hint: L("Dorre zaharra heuraz jantzita: IRAGANEAN, heura bizirik dagoenean, igo daiteke. Goian, kutxa bat."), see: L("Dorre zahar bat, heuraz jantzita… goian zerbaitek distira egiten du."), done: () => saved.chests.includes("h-dorrea"), chest: C });
     }
     /* --- JENTIL-HARRIA (TXIMISTARRIA) --- */
     {
@@ -179,5 +179,5 @@
   }
   /* egunkarirako lerroak */
   function secretsLog(line) {
-    return SECRETS.filter((S) => saved.flags.includes("m-" + S.id) || S.done()).map((S) => line(S.done(), S.name, "", S.hint));
+    return SECRETS.filter((S) => (saved.flags.includes("m-" + S.id) && (!S.past || eraOpen())) || S.done()).map((S) => line(S.done(), S.name, "", S.hint));
   }

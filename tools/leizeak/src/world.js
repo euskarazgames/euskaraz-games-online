@@ -61,6 +61,7 @@
     BP = null;
     zoneLook();
     setPhaseVisual(true);
+    eraGate();
   }
   /* gunez aldatu (leizera sartu / irten): pantaila beltzean */
   function enterZone(id, spawn, instant) {

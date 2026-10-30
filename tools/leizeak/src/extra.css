@@ -225,6 +225,7 @@ body:has(#bossHud:not([hidden])) #phaseHud{top:86px}
 @media (prefers-reduced-motion: reduce){#cinema.deia.intrusion #codec,#deiaRing,#cinema.deia #portrait.talk::before{animation:none}}
 /* hitzaurrea: oraindik ikasi gabeko tresnen botoiak ezkutatuta */
 body.pro-nophase #phaseBtn,body.pro-nodash #dashBtn,body.pro-nolock #recallBtn{visibility:hidden}
+body.pro-nophase #phaseHud{visibility:hidden}
 /* kokapen-errotulua: zona-aldaketan, makinaz idatzia */
 #locCap{position:fixed;right:26px;top:72px;z-index:12;pointer-events:none;text-align:right;white-space:pre;font:600 12px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.2em;color:#d7efe9;text-shadow:0 0 10px #000,0 1px 2px #000;transition:opacity 1.2s}
 #locCap.out{opacity:0}

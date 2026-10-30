@@ -1812,7 +1812,7 @@
       (!fight && npcNear() && coach("talk", "E", "E: HITZ EGIN", "", "useBtn", "HITZ EGIN botoia", "")) ||
       (mobile && !fight && CTX.cur && !CRAFT.on &&
         coach("power", "", "", "", "useBtn", "Ekintza-botoia: une bakoitzean behar duzuna agertzen da", "")) ||
-      (ZONE.cur === "leizea" && ROOM.cur && ROOM.cur.id === "B" && coach("shift", "Q", "Plataformak garai batean bakarrik daude · ALDATU GARAIA (Q), airean ere", "", "phaseBtn", "Plataformak garai batean bakarrik · sakatu ALDATU, airean ere", "")) ||
+      (ZONE.cur === "leizea" && ROOM.cur && ROOM.cur.id === "B" && !flag("dB-esnatu") && coach("dB-esnatu", "B", "Harrizko zubiak lo daude · TXALAPARTA: ESNATU (◀ ◀ ▶)", "", "useBtn", "Harrizko zubiak lo · TXALAPARTA: ESNATU", "")) ||
       (ZONE.cur === "leizea" && ROOM.cur && ROOM.cur.id === "B" && P.z < -30 && coach("jump", "␣ ×2", "JAUZI · airean berriro sakatu: jauzi bikoitza", "", "jumpBtn")) ||
       (saved.rhythms.length && !TXALA.on && coach("txala", "B", "B: txalaparta jo (ikasitako erritmoak)", "", "useBtn", "TXALAPARTA: ikasitako erritmoak jo (⋯ menuan ere)", ""));
   }
@@ -1837,6 +1837,7 @@
   /* @include dungeon.js */
   /* @include boss.js */
   /* @include story.js */
+  /* @include denbora.js */
   /* @include lamia.js */
   /* @include tartalo.js */
   /* @include gaua.js */
@@ -2704,7 +2705,7 @@
   }
   function switchPhase() {
     if (!started || paused || TXALA.on || phaseCooldown > 0 || respawnTimer) return;
-    if (!PRO.can.phase) return proNope("phase");
+    if (!canPhase()) return proNope("phase");
     phase = 1 - phase;
     phaseCooldown = 0.22;
     shiftFlash = 1;
@@ -2735,7 +2736,8 @@
     }
     for (const s of phaseObjects) {
       s.m.visible = s.phase === -1 || s.phase === phase;
-      s.ghost.visible = s.phase !== -1 && s.phase !== phase;
+      /* beste garaiko mamua: garaiak aldatu badaitezke bakarrik (edo lo dagoen zubia: 2) */
+      s.ghost.visible = s.phase !== -1 && s.phase !== phase && (s.phase === 2 || canPhase());
     }
     for (const h of hazards) h.beam.visible = h.phase === phase;
     phaseLabel();
@@ -4418,6 +4420,11 @@
         jump,
         dash,
         switchPhase,
+        DENB,
+        eraOpen,
+        canPhase,
+        eraGate,
+        iceFallBreak,
         attack,
         interact,
         actionHere,

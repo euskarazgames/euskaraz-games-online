@@ -1,15 +1,18 @@
   /* ==================================================================
      LAMIEN LEIZEA · bigarren leizea (diseinu propioa) — ura, izotza eta haizea
-       L1 Lamien ataria ....... ubidea: iraganean ura, orainean izotza → orainean zeharkatu
-       L2 Errotaren gela ...... ubidea eta errota: gurpilak (iraganean) mendebaldeko barrak
+       Lehen ekitaldian ez dago garairik: leize honetan urak Amaiurren sorginkeriari erantzuten dio, eta
+       garaien botoi berak ura esnatzen (UR BIZIA, barruko "iragana") edo izozten (IZOTZA, barruko
+       "oraina") du (denbora.js). Sarrera: ur-jauziko izotz-gortina, KATEArekin erauzita.
+       L1 Lamien ataria ....... ubidea: ur bizia edo izotza → izotzarekin zeharkatu
+       L2 Errotaren gela ...... ubidea eta errota: gurpilak (ur biziarekin) mendebaldeko barrak
                                 altxatzen ditu; iparrean giltzadun atea; ekialdean bi haize-errota
        L3 Lamien korua ........ borroka → GILTZA TXIKIA
-       L5 Herensugearen putzua  etsai ertaina: azaleratzean ORAINERA aldatu → izotzak harrapatzen
+       L5 Herensugearen putzua  etsai ertaina: azaleratzean IZOTZA → izotzak harrapatzen
                                 du → buruko harribitxia jo → HAIZE-ADARRA
-       L6 Balsen aintzira ..... balsa (iraganean) adarraz bultzatu; ur-jauziaren atzean GILTZA
+       L6 Balsen aintzira ..... balsa (ur biziarekin) adarraz bultzatu; ur-jauziaren atzean GILTZA
                                 NAGUSIA; lainoaren azpian uhartetxo bat
        L7 Lamia Ilunaren putzua etsai nagusia: lainoa uxatu (ADARRA), igerian dagoela izoztu
-                                (ORAINA), urrezko orrazia jo (SORGINKERIA). Hiru txanda.
+                                (IZOTZA), haren koroa jo (SORGINKERIA). Hiru txanda.
      ================================================================== */
   const LX = 900,
     WATER_Y = -0.25;
@@ -171,7 +174,7 @@
       dy: 4,
       range: 13,
       gust: (dx, dz, k) => {
-        if (phase !== 0) return notify(L("Balsa izotzean harrapatuta dago. IRAGANEAN ura bizirik zegoen…"), "", 2.6);
+        if (phase !== 0) return notify(L("Balsa izotzean harrapatuta dago. ALDATU: esnatu ura!"), "", 2.6);
         const ux = (RAFT.bx - RAFT.ax) / RAFT.L,
           uz = (RAFT.bz - RAFT.az) / RAFT.L,
           dot = dx * ux + dz * uz;
@@ -227,7 +230,7 @@
     dungeonBegin(DGL);
     const E = (x) => LX + x;
     /* ---- L1: Lamien ataria ---- */
-    room("L1", E(0), 0, 24, 24, { area: "lA", name: "LAMIEN ATARIA", desc: "Ubideak ura darama… edo izotza, garaiaren arabera.", doors: { n: 0, s: 0 }, floors: [[E(0), 7.5, 24, 9], [E(0), -7.5, 24, 9]] });
+    room("L1", E(0), 0, 24, 24, { area: "lA", name: "LAMIEN ATARIA", desc: "Ubideak ura darama… edo izotza. Hemen, urak zure sorginkeriari erantzuten dio (ALDATU).", doors: { n: 0, s: 0 }, floors: [[E(0), 7.5, 24, 9], [E(0), -7.5, 24, 9]] });
     pool(E(0), 0, 24, 6);
     slab({ x: E(0), z: 15, y: 0, w: 6, d: 6, h: 1.2, mat: "dark" });
     wallBlock(E(-3.4), 15, 0.8, 6, 0, 0, 7);
@@ -243,7 +246,7 @@
     /* ---- L1→L2 ---- */
     corridor(E(0), -18, 6, 12, "z");
     /* ---- L2: Errotaren gela ---- */
-    room("L2", E(0), -39, 36, 30, { area: "lB", name: "ERROTAREN GELA", desc: "Gurpilak iraganean biratzen du. Orainean, izotzak geldirik.", doors: { s: 0, w: -6, n: 0, e: -6 }, floors: [[E(0), -28.5, 36, 9], [E(0), -46.5, 36, 15]] });
+    room("L2", E(0), -39, 36, 30, { area: "lB", name: "ERROTAREN GELA", desc: "Gurpilak ur biziarekin biratzen du. Izotzarekin, geldirik.", doors: { s: 0, w: -6, n: 0, e: -6 }, floors: [[E(0), -28.5, 36, 9], [E(0), -46.5, 36, 15]] });
     pool(E(0), -36, 36, 6);
     DGL.wheel = waterWheel(E(-11), 0.9, -36);
     solids.push({ x: E(-11), z: -36, r: 1.4, h: 4, y: -1, pillar: true });
@@ -275,7 +278,7 @@
       waves: [[["eye", 0, 2]], [["grunt", 1, 2], ["eye", 1, 1]], [["brute", 0, 1], ["eye", -1, 2]]],
       diff: 1.1,
       hpK: 1.25,
-      fightText: "Lamien itzalak! Kolore bakoitza bere garaian zauritzen da.",
+      fightText: "Lamien itzalak! Urreak ur biziarekin zauritzen dira; urdinak, izotzarekin.",
       onWin: () => {
         revealChest(DGL.keyChest);
         notify(L("Kutxa bat agertu da korutik."), "", 3);
@@ -364,7 +367,7 @@
           break;
         }
     /* lehen aldiz ataria iraganean: abisua */
-    if (ROOM.cur === DGL.rooms.L1 && phase === 0 && P.z > 3) notifyOnce("lamia-water", L("Ura bizirik dago. ORAINEAN izoztuta egongo litzateke…"), "");
+    if (ROOM.cur === DGL.rooms.L1 && phase === 0 && P.z > 3) notifyOnce("lamia-water", L("Ura bizirik dago. ALDATU berriro, eta izoztu egingo da…"), "");
   };
 
   /* ============================ HERENSUGE GAZTEA (L5) ============================ */
@@ -494,7 +497,7 @@
     SND.stinger(false);
     shake(0.4);
     title("HERENSUGE GAZTEA", "");
-    notify(L("Azaleratzen denean, ALDATU ORAINERA: izotzak harrapatuko du!"), "", 5);
+    notify(L("Azaleratzen denean, ALDATU: IZOTZA! Harrapatuta geratuko da!"), "", 5);
     bossBar("HERENSUGE GAZTEA", 1);
   }
   function serpentSpit() {
@@ -561,7 +564,7 @@
         } else if (phase === 1) {
           /* izotzaren azpian zain: itzalek presioa egiten dute */
           SERP.hint += dt;
-          if (SERP.hint > 1.5) notifyOnce("serp-ice", L("Herensugea izotzaren azpian dago. IRAGANEAN azaleratzen da!"), "");
+          if (SERP.hint > 1.5) notifyOnce("serp-ice", L("Herensugea izotzaren azpian dago. UR BIZIAREKIN azaleratzen da!"), "");
           if (SERP.t > 7 && enemiesAlive() < 2) {
             SERP.t = 0.06;
             spawnWave([["eye", 1, 1]], R);
@@ -626,7 +629,7 @@
         }
         break;
     }
-    /* izozte-tranpa: azaleratuta dagoela ORAINERA aldatzean */
+    /* izozte-tranpa: azaleratuta dagoela IZOTZA (barruko "oraina") */
     if (phase === 1 && (SERP.state === "rise" || SERP.state === "spit" || SERP.state === "dazed") && SERP.rise > 0.3) {
       SERP.state = "frozen";
       SERP.t = 0;
@@ -646,7 +649,7 @@
         SERP.t = 0;
         SND.clang();
         fxBurst(SERP.ref.x, SERP.hy, SERP.ref.z, { n: 20, speed: 4, life: 0.5, size: 0.3, color: "#ffffff", grav: 2 });
-        notifyOnce("serp-dazed", L("Zorabiatuta! Orain: ORAINERA, izozteko!"), "");
+        notifyOnce("serp-dazed", L("Zorabiatuta! Orain: IZOTZA, harrapatzeko!"), "");
       }
     }
     serpentPose();
@@ -670,7 +673,7 @@
         SERP.hp = SERP_HP;
         if (SERP.rounds <= 0) return serpentDefeat();
         serpentFree(true);
-        notify(SERP.rounds === 2 ? L("Izotza hautsi du! Berriro: azaleratu → ORAINERA.") : L("Azken aldia! Haserre dago."), "", 3);
+        notify(SERP.rounds === 2 ? L("Izotza hautsi du! Berriro: azaleratu → IZOTZA.") : L("Azken aldia! Haserre dago."), "", 3);
       }
     },
   };
@@ -818,7 +821,7 @@
     LAM.t = 0;
     SND.roar();
     lamAnim("Hit_A", true, 0.8);
-    notifyOnce("lam-exposed", L("Lainorik gabe! Uretara salto egingo du… igerian dagoela, ORAINERA!"), "");
+    notifyOnce("lam-exposed", L("Lainorik gabe! Uretara salto egingo du… igerian dagoela, IZOTZA!"), "");
   }
   function lamWave() {
     const m = new T.Mesh(new T.TorusGeometry(1, 0.12, 6, 64), new T.MeshBasicMaterial({ color: "#cdf4ff", transparent: true, opacity: 0.9, depthWrite: false }));
@@ -896,7 +899,7 @@
         /* orainean: izotz-kuskuan, ukiezina; itzalak bidaltzen ditu */
         LAM.cocoon.visible = true;
         lamAnim("Idle");
-        notifyOnce("lam-cocoon", L("Izotzak babesten du. IRAGANEAN, lainoa uxatu adarraz."), "");
+        notifyOnce("lam-cocoon", L("Izotzak babesten du. UR BIZIAREKIN, lainoa uxatu adarraz."), "");
         if (phase === 0) {
           LAM.state = "song";
           LAM.t = 0;
@@ -1160,13 +1163,13 @@
   DGL.objective = () => {
     const R = DGL.rooms,
       f = (k) => saved.flags.includes(k);
-    if (ROOM.cur === R.L1 && P.z > -3) return ["Ubidea: ORAINEAN izotza da. Zeharkatu iparrera.", [R.L1.x, -6, 0]];
+    if (ROOM.cur === R.L1 && P.z > -3) return ["Ubidea: IZOTZAREKIN zeharkatzen da. Iparrera.", [R.L1.x, -6, 0]];
     if (!isCleared("L3") && (saved.keyz.lamia || 0) === 0 && !saved.doors.includes("lB-n"))
-      return ROOM.cur === R.L2 && P.z > -36 ? ["Mendebaldeko barrak gurpilak altxatzen ditu (IRAGANEAN). Ubidea, berriz, ORAINEAN izotza…", [R.L2.x - 12, -45, 0]] : ["Lamien korua, mendebaldean.", [R.L3.x, R.L3.z, 0]];
+      return ROOM.cur === R.L2 && P.z > -36 ? ["Mendebaldeko barrak gurpilak altxatzen ditu (UR BIZIA). Ubidea, berriz, IZOTZAREKIN…", [R.L2.x - 12, -45, 0]] : ["Lamien korua, mendebaldean.", [R.L3.x, R.L3.z, 0]];
     if (!saved.doors.includes("lB-n")) return ["Errotaren gelako iparreko atea: giltza txikia.", [R.L2.x, -51, 0]];
-    if (!isCleared("lD-boss")) return ["Herensugearen putzua. Azaleratzen denean: ORAINERA!", [R.L5.x, R.L5.z + 6, 0]];
+    if (!isCleared("lD-boss")) return ["Herensugearen putzua. Azaleratzen denean: IZOTZA!", [R.L5.x, R.L5.z + 6, 0]];
     if (!saved.items.includes("adarra")) return ["Kutxa ireki: putzuaren hegoaldean.", [R.L5.x, -67.5, 0]];
-    if (!saved.items.includes(DGL.bigKey)) return saved.doors.includes("lB-e") ? ["Aintzira: balsa IRAGANEAN, adarraz bultzatu ur-jauziraino.", [R.L6.x - 6, -45, 0]] : ["Errotaren gelako ekialdeko atea: bi haize-errotari putz (ADARRA · V).", [R.L2.x + 12, -45, 0]];
+    if (!saved.items.includes(DGL.bigKey)) return saved.doors.includes("lB-e") ? ["Aintzira: balsa UR BIZIAREKIN, adarraz bultzatu ur-jauziraino.", [R.L6.x - 6, -45, 0]] : ["Errotaren gelako ekialdeko atea: bi haize-errotari putz (ADARRA · V).", [R.L2.x + 12, -45, 0]];
     if (!f("lamia")) return saved.doors.includes("lD-n") ? ["Lamia Iluna. Lainoa uxatu, igerian dagoela izoztu.", [R.L7.x, R.L7.z + 12, 0]] : ["Herensugearen putzuko iparreko ate handia: giltza nagusia.", [R.L5.x, -90, 0]];
     return ["Irten leizetik hegoaldeko arkutik.", [DGL.exitArch.x, DGL.exitArch.z, 0]];
   };

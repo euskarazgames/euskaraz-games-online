@@ -22,7 +22,7 @@ const { launch } = require('./_browser');
   await ev(() => {
     localStorage.clear();
     const s = __game.saved;
-    s.flags.push('intro', 'irati1', 'atea', 'leizea', 'basajaun', 'cliff', 'ardiak', 'lamia', 'irati-lamia', 'lepoa', 'tartalo', 'irati-tartalo', 'jentil', 'jentilatea', 'errolan', 'irati-errolan', 'ortzadarra', 'odei', 'irati-odei', 'sutondoa', 'etxea');
+    s.flags.push('giroa', 'intro', 'irati1', 'atea', 'leizea', 'basajaun', 'cliff', 'ardiak', 'lamia', 'irati-lamia', 'lepoa', 'tartalo', 'irati-tartalo', 'jentil', 'jentilatea', 'errolan', 'irati-errolan', 'ortzadarra', 'odei', 'irati-odei', 'sutondoa', 'etxea');
     s.rhythms.push('esnatu', 'entzun', 'ortzi');
     s.items.push('katea', 'giltzanagusia', 'adarra', 'orrazia', 'giltzanagusia-lamia', 'sugarra', 'giltzanagusia-tartalo', 'tximistarria', 'giltzanagusia-jentil', 'enara', 'giltzanagusia-zerua');
     s.hearts = 5;

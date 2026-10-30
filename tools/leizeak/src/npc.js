@@ -288,7 +288,7 @@
     if (saved.flags.includes("basajaun"))
       return talk(N, [
         ["IRATI", "Basajaun aske dago. Baina Mariren suzko bola… nork darama? Zerua ere isilik dago."],
-        ["IRATI", "Ekialdeko ur-jauzian lamiak kantatzen zuten lehen. Orain isilik daude. Izotzaren gainetik joan… eta han, IRAGANERA."],
+        ["IRATI", "Ekialdeko ur-jauzian lamiak kantatzen zuten lehen. Orain isilik daude. Izotz-gortinan suge-eraztun bat dago: KATEA."],
       ]);
     if (saved.zone === "leizea" || f("leizea"))
       return talk(N, [["IRATI", "Leizeak oihartzun asko ditu. Entzun ondo: batzuek bidea erakusten dute, beste batzuek tranpa."]]);
@@ -381,7 +381,7 @@
         ],
         () => flagSet("kattalin"),
       );
-    if (!f("kattalin-belar"))
+    if (!f("kattalin-belar") && eraOpen())
       return talk(
         N,
         [
@@ -397,7 +397,7 @@
         persist();
         pieceGet("belarrak");
       });
-    if (!f("belarrak-ok")) return talk(N, [["KATTALIN", "Lore urdinak iraganean bakarrik ikusten dira (ALDATU garaia). " + saved.herbs.length + " / 3."]]);
+    if (!f("belarrak-ok") && f("kattalin-belar")) return talk(N, [["KATTALIN", "Lore urdinak iraganean bakarrik ikusten dira (ALDATU garaia). " + saved.herbs.length + " / 3."]]);
     return talk(N, [["KATTALIN", ["Harrespilan jentil zahar bat bizi da, harrizkoa. Galdetu iezaiozu Mariri buruz.", "Andere… nire amona. Sorgina zen, zu bezala. Ehun urte dira desagertu zela.", "Gure aitonek esaten zuten: izena duen guztia bada."][Math.floor(time) % 3]]]);
   }
   function talkJentil(N, f) {

@@ -415,6 +415,28 @@ itzultzen da). Hezur-izenak: three.js-k puntuak kentzen ditu ("upperleg.l" → "
 gutxiago (abisuak 1.8-3.6 s, izenburuak 2.8 s, irakaspenak 5 s, HUD isila 5 s). Elkarrizketa- eta
 dei-panela erdian eta estuago (gehienez 680 px), erretratu txikiagoa eta banda beltz meheagoak.
 
+## 5k. Denbora, istorioaren bihurgunean (gidoi berriaren oinarria)
+Erabiltzailearen eskaera: Amaiurrek ez du garaia hasieratik aldatu behar; denboran bidaiatzea istorioaren
+erdiko bihurgunea da (ideia orokorra, generoarena: ez beste jokoen edukirik), lekuek bi garaien artean
+kontraste handia eta konpontzeko arrazoi bat dute, eta inork ez daki bera izan zela mundua salbatu zuena.
+Gidoi osoa gidoilari-agente batek berridazten du; hau da mekanikaren oinarria (`denbora.js`):
+- **Giltzarrapoa.** `canPhase()` = bihurgunearen bandera (`DENB.flag`, kaiko kanpaian) edo Lamien leizea.
+  Bestela ALDATU botoia eta garaiaren HUDa ezkutuan, Q isilik, eta zona aldatzean beti ORAINA (`eraGate`).
+  Beste garaiko plataformen mamuak ere ez dira ikusten.
+- **Hitzaurrea.** GARAIA erronka kenduta: atearen izotza SORGINKERIAz urtzen da (sutondoa bezala, jomuga batean).
+  Plazako itzalek ez dute garairik.
+- **Basajaunen leizea.** B gela, HARRI LOEN AMILDEGIA: hiru zubiak lo daude (garai "ezinezkoa", 2: mamua
+  bakarrik) eta ESNATU erritmoarekin altxatzen dira, bata bestearen atzetik (`dB-esnatu`).
+- **Lamien leizea.** Leizean urak Amaiurren sorginkeriari erantzuten dio: botoi berak ura esnatzen (UR BIZIA)
+  edo izozten (IZOTZA) du — barruan bakarrik, eta testu guztiak horrela. Sarrera: ur-jauziko izotz-gortinan
+  suge-eraztun bat; KATEArekin erauzita (`ur-jauzia`), gortina erori eta ura askatzen da.
+- **Borroka.** Garairik gabe, garai bati lotutako etsaiak ezkuturik gabe sortzen dira (`spawnEnemy`); etsai
+  ertainen ezkutua ez da garaiz aldatzen: itxi egiten da (morea, 3.2 s) eta bere kabuz irekitzen da.
+- **Haraneko misioak.** Iraganean bakarrik egin daitezkeenak (Kattalinen belarrak, eguzkilorea, heura-dorrea)
+  ez dira agertzen bihurgunearen arte.
+Probak: `leizeak_prologoa.js` (izotza urtu), `leizeak_route.js` (zubiak ESNATUz), `leizeak_lamia.js` (KATEA
+gortinan, ura/izotza barruan); bihurgunearen ondoko probek bandera jartzen dute.
+
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da
 neurgarriak diren helburuekin: errore 0 kargan eta ibilbide osoan (bot-probak), 60 fps

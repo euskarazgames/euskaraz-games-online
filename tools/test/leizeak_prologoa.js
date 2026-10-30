@@ -1,9 +1,9 @@
 // LEIZEEN DEIA: hitzaurrea ("OIHARTZUNA") hasieratik amaierara (bot-a, ?test kakoekin, tick-ak eskuz).
 // Erabili: NODE_PATH=$(npm root -g) node tools/test/leizeak_prologoa.js http://127.0.0.1:8091/games/leizeak.html [argazki-karpeta]
 // Zinema (letterbox, errotuluak) → Iturralde: oihartzun-harriaren deia (hurbildu eta ERANTZUN) → SORGINKERIA
-// sutondoan → ganbara (jauzi bakarrak ez du balio; JAUZI BIKOITZA bai) → Iratiren makilak → atea izoztuta
-// orainean, IRAGANEAN zabalik → kalea: Gauekoren begiek harrapatu (atera itzuli), BULTZADAn ez → plaza:
-// hiru itzal (bi urdin, bat urre) → egunsentia, Irati eta izenburua → intro, irati1; tresnak libre.
+// sutondoan → ganbara (jauzi bakarrak ez du balio; JAUZI BIKOITZA bai) → Iratiren makilak → atea izoztuta:
+// SORGINKERIAz urtu → kalea: Gauekoren begiek harrapatu (atera itzuli), BULTZADAn ez → plaza: hiru itzal
+// → egunsentia, Irati eta izenburua → intro, irati1; bultzada eta finkatu libre (garaiak bihurgunean).
 const { launch } = require('./_browser');
 (async () => {
   const [url, shots] = process.argv.slice(2);
@@ -111,23 +111,24 @@ const { launch } = require('./_browser');
   ok(sawIntrusion, 'Gauekok deia zulatzen du (interferentzia)');
   await skipScenes();
   ok((await flags()).includes('pro-makilak') && (await ev(() => __game.saved.items.includes('makilak'))), 'makilak eskuan');
-  ok(await ev(() => __game.PRO.can.phase && !__game.PRO.can.dash), 'GARAIA ikasita (bultzada ez oraindik)');
+  ok(await ev(() => !__game.PRO.can.phase && !__game.PRO.can.dash), 'garaiak itxita (bihurgunearen arte); bultzada ez oraindik');
 
-  /* 4 · atea: orainean izotza, iraganean zabalik */
+  /* 4 · atea: izotzak ixten du; SORGINKERIAk urtzen du (garairik ez) */
   await tp(await ev(() => __game.DGE.exitArch.x), 2.6, 0, 0);
   await walk(0, 1, 240);
   s = await st();
-  ok(s.zone === 'etxea' && s.z <= 4.4, 'orainean izotzak atea ixten du', S(s));
+  ok(s.zone === 'etxea' && s.z <= 4.4, 'izotzak atea ixten du', S(s));
   await ev(() => __game.switchPhase());
-  await T(40);
-  ok((await ev(() => __game.phase())) === 0, 'IRAGANA (uda)');
+  ok((await ev(() => __game.phase())) === 1, 'GARAIA ez dabil (bihurgunearen arte)');
+  await tp(await ev(() => __game.DGE.exitArch.x), 2.2, 0, 0);
+  for (let i = 0; i < 12 && !(await ev(() => __game.PRO.iceGone)); i++) { await ev(() => __game.attack()); await T(90); }
+  ok(await ev(() => !!__game.PRO.iceGone), 'izotza urtuta SORGINKERIArekin');
   await walk(0, 1, 420);
   await T(120);
   s = await st();
   ok(s.zone === 'ibarra', 'irten: Ibarra, gaua', S(s));
   await T(10);
   ok((await flags()).includes('pro-atea') && (await ev(() => __game.PRO.can.dash)), 'pro-atea; BULTZADA libre');
-  await ev(() => { if (__game.phase() !== 1) __game.switchPhase(); });
   await T(40);
   ok(await ev(() => __game.NPCS.filter((n) => n.g.visible).length === 0), 'gauez, herritarrak etxean');
   ok(await ev(() => __game.PRO.beams.length === 3 && __game.PRO.beams.every((b) => b.spot.visible)), 'Gauekoren hiru begirada kalean');
@@ -156,9 +157,9 @@ const { launch } = require('./_browser');
   await wait(200);
   await skipScenes();
 
-  /* 6 · plaza: hiru itzal, bat urre-begiduna (iragana) */
+  /* 6 · plaza: hiru itzal, garairik gabe (garaiak bihurgunean irekitzen dira) */
   const foes = await ev(() => __game.ENEMIES.filter((e) => e.pro).map((e) => e.era));
-  ok(foes.length === 3 && foes.filter((e) => e === 0).length === 1, 'hiru itzal (bat iraganekoa)', S(foes));
+  ok(foes.length === 3 && foes.every((e) => e === -1), 'hiru itzal, ezkuturik gabe', S(foes));
   ok(await ev(() => __game.PRO.can.lock), 'FINKATU libre');
   await shot('p04_plaza');
   await ev(() => { for (const e of __game.ENEMIES) if (e.pro) __game.killEnemy(e); });
@@ -180,8 +181,8 @@ const { launch } = require('./_browser');
   await wait(200);
   const fl = await flags();
   ok(['intro', 'irati1', 'prologoa'].every((k) => fl.includes(k)), 'intro, irati1, prologoa');
-  ok(await ev(() => !__game.PRO.on && __game.PRO.can.phase && __game.PRO.can.dash && __game.PRO.can.lock), 'hitzaurrea amaituta; tresna guztiak libre');
-  ok(await ev(() => !document.body.classList.contains('pro-nophase')), 'botoiak berriro agerian');
+  ok(await ev(() => !__game.PRO.on && !__game.PRO.can.phase && __game.PRO.can.dash && __game.PRO.can.lock), 'hitzaurrea amaituta; bultzada eta finkatu libre, garaiak ez (bihurgunea)');
+  ok(await ev(() => document.body.classList.contains('pro-nophase') && !document.body.classList.contains('pro-nodash')), 'ALDATU ezkutuan, BULTZADA agerian');
   ok((await ev(() => __game.objective()[0])).includes('Pello'), 'hurrengo helburua: bikiak', await ev(() => __game.objective()[0]));
   await ev(() => { window.__hold = false; });
   await wait(1500);

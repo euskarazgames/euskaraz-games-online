@@ -19,7 +19,7 @@ const { launch } = require('./_browser');
   await ev(() => {
     localStorage.clear();
     const s = __game.saved;
-    s.flags.push('intro', 'irati1', 'atea', 'leizea', 'basajaun', 'cliff');
+    s.flags.push('giroa', 'intro', 'irati1', 'atea', 'leizea', 'basajaun', 'cliff');
     s.rhythms.push('esnatu', 'entzun');
     s.items.push('katea');
     s.tod = 0.4;

@@ -1,7 +1,7 @@
 // LEIZEEN DEIA: bide nagusia hasieratik amaierara (bot-a, ?test kakoekin).
 // Erabili: NODE_PATH=$(npm root -g) node tools/test/leizeak_route.js http://127.0.0.1:8091/games/leizeak.html [argazki-karpeta]
 // Urrats bakoitzean egoera egiaztatzen du: elkarrizketak, txalaparta (deia eta erantzuna), jentil-atea,
-// leizeko gelak (sutegiak, garai-zubiak, kaxak, borroka, ENTZUN, zaindaria, katea, giltza nagusia) eta etsai nagusia.
+// leizeko gelak (sutegiak, zubiak ESNATUz, kaxak, borroka, ENTZUN, zaindaria, katea, giltza nagusia) eta etsai nagusia.
 const { launch } = require('./_browser');
 (async () => {
   const [url, shots] = process.argv.slice(2);
@@ -108,8 +108,17 @@ const { launch } = require('./_browser');
   ok(await ev(() => __game.isCleared('dA-fire')), 'bi sutegiak piztuta');
   ok(await until(() => __game.DOORS.find((d) => d.id === 'dA-n').p.off), 'A-ko barrak irekita');
 
-  /* 6 · B: garai-zubiak (euskarria garaiaren arabera) */
-  ok(await ev(() => { const g = __game; return !!g.support(596, -33, 0.5, 0) && !g.support(596, -33, 0.5, 1) && !!g.support(604, -37.5, 0.5, 1) && !!g.support(597, -42, 0.5, 0); }), 'B: zubiak garai bakarrean');
+  /* 6 · B: harrizko zubiak lo (garairik ez lehen ekitaldian) → ESNATU → altxatuta */
+  ok(await ev(() => { const g = __game; return [0, 1].every((ph) => !g.support(596, -33, 0.5, ph) && !g.support(604, -37.5, 0.5, ph) && !g.support(597, -42, 0.5, ph)); }), 'B: zubiak lo (euskarririk ez)');
+  await tp(600, 0, -25, Math.PI);
+  await wait(300);
+  ok(await ev(() => __game.state().room === 'B'), 'B gelan');
+  await ev(() => __game.txalaOpen());
+  for (const s of ['L', 'L', 'R']) { await ev((s) => __game.txalaHit(s), s); await wait(120); }
+  ok(await until(() => __game.saved.flags.includes('dB-esnatu')), 'ESNATU: zubiak esnatzen');
+  await wait(1600);
+  ok(await ev(() => { const g = __game; return !!g.support(596, -33, 0.5, 1) && !!g.support(604, -37.5, 0.5, 1) && !!g.support(597, -42, 0.5, 1); }), 'B: hiru zubiak altxatuta (orainean)');
+  ok(await ev(() => !__game.canPhase() && __game.phase() === 1), 'garaiak itxita (bihurgunearen arte)');
 
   /* 7 · C: giltza txikia (ertz garaian) */
   await tp(564, 6.2, -44, Math.PI);

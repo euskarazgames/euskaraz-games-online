@@ -219,7 +219,11 @@
     CHAIN.t = 0;
     SND.clang();
     fxBurst(CHAIN.hx, CHAIN.hy, CHAIN.hz, { n: 14, speed: 3, life: 0.4, size: 0.25, color: "#7fe3c0", grav: 1 });
-    if (t.kind === "ring") {
+    if (t.kind === "ring" && t.onHook) {
+      /* eraztunak berak zerbait egiten du (adib. ur-jauziko izotz-gortina erauzi): katea itzuli */
+      CHAIN.state = "retract";
+      t.onHook(t);
+    } else if (t.kind === "ring") {
       CHAIN.state = "pull";
       P.grounded = false;
       P.platform = null;

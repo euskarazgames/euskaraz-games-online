@@ -261,7 +261,7 @@
       case "joanes":
         return !f("ardiak") || (f("ardiak-saria") && !saved.rhythms.includes("pottoka")) ? "!" : saved.sheep.length >= 3 && !f("ardiak-saria") ? "?" : null;
       case "kattalin":
-        if (f("gaua") && !saved.rhythms.includes("eguzkilore")) return f("eguzkilorea") ? "?" : !f("eguzkilore-bila") ? "!" : null;
+        if (f("gaua") && eraOpen() && !saved.rhythms.includes("eguzkilore")) return f("eguzkilorea") ? "?" : !f("eguzkilore-bila") ? "!" : null;
         if ((saved.arimak || []).length >= 3 && !f("arimak3")) return "?";
         if ((saved.arimak || []).length >= 6 && !f("arimak6")) return "?";
         if ((saved.arimak || []).length >= 10 && !f("arimak10")) return "?";
@@ -384,13 +384,13 @@
       side = [];
     if (f("ardiak") || f("intro")) side.push(line(f("ardiak-saria"), L("Joanesen ardiak"), saved.sheep.length + "/3", f("ardiak") ? L("Hiru ardi galduak: zelaiak, ipar-larreak eta basoa. Hurbildu eta hesira eraman.") : L("Joanes artzaina zelaietan dago.")));
     side.push(line(f("erronka"), L("Txalapartarien erronka"), "", L("Pello eta Peio plazan: sei kolpeko erritmoa.")));
-    if (f("kattalin")) side.push(line(f("belarrak-ok"), L("Kattalinen sorgin-belarrak"), saved.herbs.length + "/3", L("Lore urdinak IRAGANEAN bakarrik: basoa, harrespila, ibaiaz bestaldeko larreak.")));
+    if (f("kattalin-belar")) side.push(line(f("belarrak-ok"), L("Kattalinen sorgin-belarrak"), saved.herbs.length + "/3", L("Lore urdinak IRAGANEAN bakarrik: basoa, harrespila, ibaiaz bestaldeko larreak.")));
     side.push(line(f("mikel-ok"), L("Mikelen frontoiko erronka"), "", L("Hamar jomuga hogeita hamar segundotan.")));
-    if (f("txomin")) side.push(line(f("txomin-ok"), L("Txominen sarea"), f("sarea") ? L("eskuan") : "", L("Badiako uhartetxoa: ORAINEAN izotzaren gainetik.")));
+    if (f("txomin")) side.push(line(f("txomin-ok"), L("Txominen sarea"), f("sarea") ? L("eskuan") : "", L("Badiako uhartetxoa: izotzaren gainetik.")));
     else side.push(line(false, L("Arrantzalea kaian"), "", L("Portuko eskaileratik behera, kaian norbait zain.")));
     if (f("maddi-burdina")) side.push(line(f("burdina-ok"), L("Maddiren burdin-harriak"), saved.ores.length + "/5", L("Harri ilunak zain laranjekin: arroila (izotza), lepoa eta leizeak.")));
     side.push(line(f("andere"), L("Oihartzun-harriak"), saved.echoes.length + "/7", L("Harri urdin distiratsuak haran osoan: jo ENTZUN haien ondoan.")));
-    if (f("gaua")) side.push(line(saved.rhythms.includes("eguzkilore"), L("Kattalinen eguzkilorea"), f("eguzkilorea") ? L("eskuan") : "", L("Harrespilako larrean: IRAGANEAN (uda) eta EGUNEZ bakarrik loratzen da.")));
+    if (f("gaua") && eraOpen()) side.push(line(saved.rhythms.includes("eguzkilore"), L("Kattalinen eguzkilorea"), f("eguzkilorea") ? L("eskuan") : "", L("Harrespilako larrean: IRAGANEAN (uda) eta EGUNEZ bakarrik loratzen da.")));
     if (f("arimak") || (saved.arimak || []).length) side.push(line(f("arimak10"), L("Arima-argiak"), (saved.arimak || []).length + "/10", L("GAUEZ bakarrik, haran osoan barreiatuta. Kattalinek elizako argizaiolak pizten ditu.")));
     side.push(...secretsLog(line));
     const pieces = saved.pieces.length;

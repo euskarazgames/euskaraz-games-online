@@ -199,7 +199,9 @@
   }
   function phaseLabel() {
     const night = ZONES[ZONE.cur] && ZONES[ZONE.cur].outdoor && DAY.k > 0.5;
-    $("phaseName").textContent = (night ? "☾ " : "") + (phase ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + kb(" · Q");
+    /* Lamien leizean: ura / izotza (ez garaiak) */
+    const comb = eraComb();
+    $("phaseName").textContent = (night ? "☾ " : "") + (comb ? (phase ? L("IZOTZA") : L("URA")) : phase ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + kb(" · Q");
     hudShow("phaseHud", $("phaseName").textContent);
   }
 
@@ -533,7 +535,8 @@
   /* ------------------------------ Kattalin gauez ------------------------------ */
   /* talkKattalin-etik: true → hemen kudeatuta */
   function kattalinNight(N, f) {
-    if (f("gaua") && !saved.rhythms.includes("eguzkilore")) {
+    /* eguzkilorea udan (iraganean) bakarrik loratzen da: bihurgunearen ondoren */
+    if (f("gaua") && eraOpen() && !saved.rhythms.includes("eguzkilore")) {
       if (f("eguzkilorea")) {
         talk(
           N,

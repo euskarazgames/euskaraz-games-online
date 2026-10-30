@@ -263,15 +263,15 @@
     /* ---- B: Garaien amildegia ---- */
     room("B", E(0), -36, 30, 36, {
       area: "dB",
-      name: "GARAIEN AMILDEGIA",
-      desc: "Plataformak garai batean bakarrik daude. Aldatu garaia airean.",
+      name: "HARRI LOEN AMILDEGIA",
+      desc: "Harrizko zubiak lo daude. Jo ESNATU, eta jauzi zubiz zubi.",
       doors: { s: 0, w: 9, n: 0 },
       floors: [[E(0), -24, 30, 12], [E(0), -48, 30, 12]],
     });
-    /* iragana → oraina → iragana: garaia airean aldatu behar da */
-    bridge(E(-4), -33, 0, 5, 4, 0);
-    bridge(E(4), -37.5, 0, 5, 4, 1);
-    bridge(E(-3), -42, 0, 5, 4, 0);
+    /* harrizko hiru zubi lo (lehen ekitaldian ez dago garairik): ESNATU erritmoarekin altxatzen dira,
+       bata bestearen atzetik (DUNGEON.wake). Lo daudela, garai "ezinezkoan" (2): ez dira ikusten, mamua bai. */
+    DUNGEON.sleepBridges = [bridge(E(-4), -33, 0, 5, 4, 0), bridge(E(4), -37.5, 0, 5, 4, 1), bridge(E(-3), -42, 0, 5, 4, 0)];
+    for (const b of DUNGEON.sleepBridges) b.phase = flag("dB-esnatu") ? -1 : 2;
     for (const [px, pz] of [[E(-12), -21], [E(12), -21], [E(-12), -51], [E(12), -51]]) {
       bprop("column", px, 0, pz, DS * 1.4, 0);
       solids.push({ x: px, z: pz, r: 0.8, h: 3, y: 0, pillar: true });
@@ -388,6 +388,27 @@
     const DG = DGS[ZONE.cur];
     return DG && DG.wake ? DG.wake() : 0;
   }
+  /* lehen leizea: HARRI LOEN AMILDEGIA (B gela), ESNATU → zubiak altxatu */
+  DUNGEON.wake = () => {
+    const R = DUNGEON.rooms.B;
+    if (!R || ROOM.cur !== R) return 0;
+    const sleep = (DUNGEON.sleepBridges || []).filter((b) => b.phase === 2);
+    sleep.forEach((b, i) =>
+      setTimeout(() => {
+        b.phase = -1;
+        setPhaseVisual();
+        fxRing(b.x, b.y + 0.1, b.z, "#ffd38a", 4, 0.8);
+        fxBurst(b.x, b.y, b.z, { n: 16, speed: 3, up: 2.5, life: 0.6, size: 0.3, color: "#d9c39b", grav: 6 });
+        SND.wake();
+        shake(0.12);
+      }, 380 * (i + 1)),
+    );
+    if (sleep.length) {
+      flagSet("dB-esnatu");
+      coachDone("dB-esnatu");
+    }
+    return sleep.length;
+  };
   function dungeonUpdate(dt) {
     const DG = DGS[ZONE.cur];
     if (!DG) return;
