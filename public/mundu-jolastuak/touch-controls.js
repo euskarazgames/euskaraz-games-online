@@ -46,6 +46,7 @@ function init(){
  const interactive=target=>target?.closest?.('button,a,input,select,textarea,[role="button"],[contenteditable="true"],.mode,[tabindex],#eg-touch-menu,#eg-settings,.actions');
  function floatingEnabled(e){return root.classList.contains('visible')&&panel.hidden&&!interactive(e.target)}
  window.addEventListener('pointerdown',e=>{
+  api.resume?.();
   if(!floatingEnabled(e)||owners.has(e.pointerId)||(e.pointerType==='mouse'&&e.button!==0))return;
   if(['loading','load','boot'].includes(api.state()))return;
   if(api.state()==='title'){stop(e);e.stopImmediatePropagation();start();return;}

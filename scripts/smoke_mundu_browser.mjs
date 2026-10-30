@@ -46,6 +46,11 @@ for(const g of games){
   await frame.waitForFunction(()=>window.EGPad?.getState && !['load','loading','boot'].includes(window.EGPad.state()),{},{timeout:25000});
   await frame.locator('[data-start]').tap({timeout:5000});
   await frame.waitForFunction(()=>!['title','load','loading','boot'].includes(window.EGPad.state()),{},{timeout:12000});
+  if(await frame.evaluate(()=>!!window.EGPad.resume)){
+   await frame.evaluate(()=>dispatchEvent(new Event('blur')));
+   await frame.locator('[data-start]').tap();
+   assert(!(await frame.evaluate(()=>window.EGPad.isPaused?.())), 'resume after fullscreen focus change');
+  }
   const before=await frame.evaluate(()=>window.EGPad.frames);
   await frame.waitForFunction(n=>window.EGPad.frames>n+2,before,{timeout:10000});
   if(sample.has(g.slug)){
@@ -60,6 +65,8 @@ for(const g of games){
  if(errors.some(x=>!x.startsWith("Screenshot unavailable:")))status="error";
  if(status==="error")critical++;
  audit.push({slug:g.slug,status,frameUrl,canvas,touch,errors,failedRequests:failedRequests.slice(0,15)});
+ writeFileSync(out+"progress.json",JSON.stringify(audit,null,2));
+ console.log(JSON.stringify(audit[audit.length-1]));
  await page.close();
 }
 // iPhone-style fallback: Fullscreen API absent, then explicitly rejected.

@@ -103,6 +103,8 @@
 
 <script type="module">
 window.EGPad.getState=()=>{try{return G.state}catch{return "loading"}};
+window.EGPad.resume=()=>{try{if(G.paused)setPause(false)}catch{}};
+window.EGPad.isPaused=()=>{try{return !!G.paused}catch{return false}};
 
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';

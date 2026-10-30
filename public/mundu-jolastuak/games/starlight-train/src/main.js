@@ -1,5 +1,7 @@
 
 window.EGPad.getState=()=>{try{return G.mode}catch{return "loading"}};
+window.EGPad.resume=()=>{try{if(G.paused)setPaused(false)}catch{}};
+window.EGPad.isPaused=()=>{try{return !!G.paused}catch{return false}};
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
