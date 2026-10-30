@@ -31051,7 +31051,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       const a = (i / n) * TAU + Math.random() * 0.6,
         ox = Math.cos(a) * 0.25,
         oz = Math.sin(a) * 0.25;
-      PHYS.p.Set(x + ox, y + (i % 3) * 0.18, z + oz);
+      /* lurretik apur bat gora sortu: lurraren sarearekin gurutzatuta ez hasteko */
+      PHYS.p.Set(x + ox, y + 0.22 + (i % 3) * 0.18, z + oz);
       PHYS.q.Set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5, 1);
       const len = Math.hypot(PHYS.q.GetX(), PHYS.q.GetY(), PHYS.q.GetZ(), 1);
       PHYS.q.Set(PHYS.q.GetX() / len, PHYS.q.GetY() / len, PHYS.q.GetZ() / len, 1 / len);
@@ -31164,7 +31165,18 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       const id = F.body.GetID(),
         p = bi.GetPosition(id),
         q = bi.GetRotation(id);
-      F.m.position.set(p.GetX(), p.GetY(), p.GetZ());
+      /* haranean, lurraren azpira irristatu bada (sarearen zirrikituak): gainera itzuli */
+      if (ZONE.cur === "ibarra") {
+        const g0 = gy(p.GetX(), p.GetZ());
+        if (p.GetY() < g0 - 0.25) {
+          PHYS.p.Set(p.GetX(), g0 + 0.15, p.GetZ());
+          bi.SetPosition(id, PHYS.p, PHYS.J.EActivation_Activate);
+          PHYS.v.Set(0, 0, 0);
+          bi.SetLinearVelocity(id, PHYS.v);
+        }
+      }
+      const pp = bi.GetPosition(id);
+      F.m.position.set(pp.GetX(), pp.GetY(), pp.GetZ());
       F.m.quaternion.set(q.GetX(), q.GetY(), q.GetZ(), q.GetW());
       /* azken segundoan lurrera hondoratu eta desagertu */
       if (F.t > F.life - 0.8) F.m.scale.setScalar(Math.max(0.01, (F.life - F.t) / 0.8));
