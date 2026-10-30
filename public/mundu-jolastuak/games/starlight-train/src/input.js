@@ -55,7 +55,7 @@ export class Input {
       for (let i = 0; i < gp.buttons.length; i++) if (edge(i)) { any = true; this.lastDevice = 'gamepad'; }
       this.prevPad[gp.index] = now;
     }
-    s.x = Math.max(-1, Math.min(1, x)); s.y = Math.max(-1, Math.min(1, y));
+    s.x = Math.max(-1, Math.min(1, window.EGPad.axis(x))); s.y = Math.max(-1, Math.min(1, window.EGPad.axis(y,"y",-1)));
     s.jumpHeld = jumpHeld; s.jumpPressed = jumpPressed; s.start = start; s.pause = pause; s.mute = mute; s.any = any;
     s.pointer = this.edges.has('Pointer');
     this.edges.clear();

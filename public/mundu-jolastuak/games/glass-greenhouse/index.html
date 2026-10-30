@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "glass-greenhouse", "touch": {"left": "xy", "right": "actions", "up": "Space", "actions": [["Ireki / salto", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -206,6 +209,8 @@ THREE.ShaderChunk.fog_fragment = `#ifdef USE_FOG
 scene.fog = new THREE.Fog(HAZE, 15.0, 160.0);
 const FOG_U = () => THREE.UniformsUtils.clone(THREE.UniformsLib.fog);
 const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 2500);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 4, 34);
 
 // soft overcast-blue fill (cool teal shadows) + a warm low-ish key sun, as in the video
@@ -1299,6 +1304,7 @@ function pollInput() {
     break;
   }
   if (bot.active) { x = bot.x; y = bot.y; a = bot.a; }
+  x=window.EGPad.axis(x);y=window.EGPad.axis(y,"y",-1);
   const len = Math.hypot(x, y); if (len > 1) { x /= len; y /= len; }
   input.aP = a && !input.a; input.stP = st && !input.st; input.anyP = any && !padPrevAny;
   input.x = x; input.y = y; input.a = a; input.st = st; padPrevAny = any;

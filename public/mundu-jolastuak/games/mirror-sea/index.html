@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "mirror-sea", "touch": {"left": "xy", "right": "camera", "actions": [["Salto", "Space"], ["Korrika", "ShiftLeft"]], "rightLabel": "KAMERA", "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -125,6 +128,8 @@ let rtMaskB = new THREE.WebGLRenderTarget(CFG.maskRes, CFG.maskRes, maskOpts);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 6000);
+window.EGMobileView(renderer,camera);
+
 camera.layers.enable(2);   // layer 2 = the memories beneath the surface (hidden from the mirror camera)
 
 // full-screen helper
@@ -958,6 +963,7 @@ function update(dt) {
     if (keys.has('KeyA') || keys.has('ArrowLeft')) ix -= 1;
     if (keys.has('KeyD') || keys.has('ArrowRight')) ix += 1;
   }
+  if(playing){ix=window.EGPad.axis(ix);iz=window.EGPad.axis(iz,"y",-1);}
   const fwd = _v.set(-Math.sin(camRig.yaw), 0, -Math.cos(camRig.yaw));
   const right = _v2.set(Math.cos(camRig.yaw), 0, -Math.sin(camRig.yaw));
   let dx = fwd.x * iz + right.x * ix, dz = fwd.z * iz + right.z * ix;
@@ -1141,9 +1147,10 @@ function updateCamera(dt) {
     camRig.yaw += d * (1 - Math.exp(-0.7 * dt));
   } else if (!intro) {
     // lazy follow of the walking direction (calm third-person) + Q / E to turn the camera
+    if(window.EGPad.right.active){camRig.touchLookTime=state.t;camRig.yaw -= window.EGPad.right.x * dt * 1.7 * window.EGPad.sensitivity;camRig.touchPitch=clamp((camRig.touchPitch||0)+window.EGPad.right.y*dt*.6*window.EGPad.sensitivity,-.35,.3);}
     if (keys.has('KeyQ')) camRig.yaw += 1.4 * dt;
     if (keys.has('KeyE')) camRig.yaw -= 1.4 * dt;
-    if (boy.speed > 0.5) {
+    if (boy.speed > 0.5 && state.t - (camRig.touchLookTime??-100) > 1.2) {
       const want = boy.heading + Math.PI; // camera sits behind the boy
       let d = ((want - camRig.yaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
       const backwards = Math.abs(d) > 2.3;
@@ -1156,7 +1163,7 @@ function updateCamera(dt) {
   const f = state.focus;
   // above a memory the camera rises and tilts down, as in the video, so the painted world opens beneath the boy
   const endT2 = ending ? smooth(state.t - state.endT, 10, 19) : 0;   // then the camera lifts its eyes to the dawn sky
-  const pitch = intro ? -0.085 : lerp(lerp(-0.2, -0.40, f), -0.115, endT);
+  const pitch = (intro ? -0.085 : lerp(lerp(-0.2, -0.40, f), -0.115, endT)) + (camRig.touchPitch||0);
   const dist = intro ? 4.6 : lerp(lerp(6.4, 8.2, f), 16.5, endT);
   const h = intro ? 0.95 : lerp(0.9, 1.9, endT);
   const k = intro ? 1.2 : (ending ? 0.8 : 1.6);

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "autumn-wind", "touch": {"left": "runner", "right": "actions", "up": "Space", "down": "ArrowDown", "actions": [["Salto / planeatu", "Space"], ["Murgildu", "ArrowDown"]], "analog": false}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -152,6 +155,8 @@ const HAZE = new THREE.Color('#ecdcbb'), DUSK_HAZE = new THREE.Color('#f2c3a2');
 scene.background = new THREE.Color('#e9dcc0');
 scene.fog = new THREE.Fog(HAZE.clone(), 34, 560);
 const camera = new THREE.PerspectiveCamera(36, innerWidth / innerHeight, 0.5, 3000);
+window.EGMobileView(renderer,camera);
+
 scene.add(camera);
 
 const sun = new THREE.DirectionalLight(new THREE.Color('#fff1d6'), 2.3);

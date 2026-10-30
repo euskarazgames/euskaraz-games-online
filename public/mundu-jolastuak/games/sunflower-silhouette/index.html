@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "sunflower-silhouette", "touch": {"left": "x", "right": "actions", "up": "Space", "actions": [["Salto / igo", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -131,6 +134,8 @@ renderer.toneMapping = THREE.NoToneMapping;
 renderer.autoClear = true;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 4000);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 3, 14);
 
 const rtMain = new THREE.WebGLRenderTarget(innerWidth * DPR, innerHeight * DPR, { type: THREE.HalfFloatType, samples: 4 });
@@ -1552,7 +1557,7 @@ function readInput() {
   const held = keys.Space || keys.ArrowUp || keys.KeyW || keys.KeyZ || touch.jump || jump;
   const jp = pressed.Space || pressed.ArrowUp || pressed.KeyW || pressed.KeyZ || (jump && !gpJumpPrev);
   gpJumpPrev = jump;
-  return { dir: (right ? 1 : 0) - (left ? 1 : 0), held, jumpPressed: jp, start: pressed.Space || pressed.Enter || (jump && !gpJumpPrev) || jp };
+  return { dir: window.EGPad.axis(((right ? 1 : 0) - (left ? 1 : 0)),"x",1), held, jumpPressed: jp, start: pressed.Space || pressed.Enter || (jump && !gpJumpPrev) || jp };
 }
 function clearPressed() { for (const k in pressed) pressed[k] = false; }
 
@@ -1614,7 +1619,7 @@ function updatePlayer(dt, inp) {
   const P = player;
   const controllable = game.state === 'play' && P.respawning <= 0;
   const dir = controllable ? inp.dir : 0;
-  if (dir !== 0) P.facing = dir;
+  if (dir !== 0) P.facing = Math.sign(dir);
   const target = dir * CFG.run * (P.inUpdraft && !P.ground ? 0.55 : 1);
   const acc = P.ground ? (dir !== 0 ? CFG.accelGround : CFG.decel) : CFG.accelAir;
   if (P.vx < target) P.vx = Math.min(target, P.vx + acc * dt); else if (P.vx > target) P.vx = Math.max(target, P.vx - acc * dt);

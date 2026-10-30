@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "whale-song", "touch": {"left": "xy", "right": "actions", "up": "Space", "side": "ShiftLeft", "actions": [["Abestu", "Space"], ["Bizkortu", "ShiftLeft"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -128,6 +131,8 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 document.body.prepend(renderer.domElement);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.3, 1200);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 2, 18);
 
 const rt = new THREE.WebGLRenderTarget(innerWidth * PR, innerHeight * PR, { type: THREE.HalfFloatType, samples: renderer.capabilities.isWebGL2 ? 4 : 0 });
@@ -356,6 +361,7 @@ function readInput() {
     if (d > 0.6) { x += dx / d * clamp(d / 3, 0, 1); y += dy / d * clamp(d / 3, 0, 1); }
     if (d > 9) kick = true;
   }
+  x=window.EGPad.axis(x);y=window.EGPad.axis(y,"y",-1);
   const l = Math.hypot(x, y); if (l > 1) { x /= l; y /= l; }
   return { x, y, kick, sing };
 }

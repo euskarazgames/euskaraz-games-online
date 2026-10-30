@@ -65,6 +65,8 @@ class Game {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(CAMERA.fov, 16 / 9, 0.3, 600);
+window.EGMobileView(this.renderer,this.camera);
+
     this.camera.position.set(-6, 3, 20);
     this.time = 0;
     this.simTime = 0;

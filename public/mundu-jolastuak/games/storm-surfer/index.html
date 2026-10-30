@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "storm-surfer", "touch": {"left": "x", "right": "actions", "up": "Space", "side": "ShiftLeft", "actions": [["Salto", "Space"], ["Bultzada", "ShiftLeft"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -163,6 +166,8 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.2, 14000);
+window.EGMobileView(renderer,camera);
+
 
 // Shared uniforms
 const U = {
@@ -1036,7 +1041,7 @@ function updateRider(dt) {
   const lv = LEVELS[G.level];
   let input = 0, boostKey = false;
   if (G.state === 'play' && !G.autopilot && P.wipe <= 0) {
-    input = (keys.ArrowRight || keys.KeyD ? 1 : 0) - (keys.ArrowLeft || keys.KeyA ? 1 : 0);
+    input = window.EGPad.axis(((keys.ArrowRight || keys.KeyD ? 1 : 0) - (keys.ArrowLeft || keys.KeyA ? 1 : 0)),"x",1);
     boostKey = !!(keys.ShiftLeft || keys.ShiftRight || keys.ArrowUp || keys.KeyW);
   } else if (P.wipe <= 0) {
     // attract-mode / victory autopilot: carve up and down, launch at the lip, spin sometimes

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "kintsugi-mountain", "touch": {"left": "x", "right": "actions", "up": "Space", "down": "KeyE", "actions": [["Salto", "Space"], ["Konpondu", "KeyE"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -98,6 +101,8 @@ const MAX_ANISO = Math.min(8, renderer.capabilities.getMaxAnisotropy());
 const scene = new THREE.Scene();
 const FOV = 30, CAM_DIST = 19;
 const camera = new THREE.PerspectiveCamera(FOV, innerWidth / innerHeight, 0.5, 1200);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 4, CAM_DIST);
 
 const U = { time: { value: 0 } };
@@ -1406,12 +1411,13 @@ function fixedUpdate(h) {
   if (Game.state === 'play') {
     dir = (isRight() ? 1 : 0) - (isLeft() ? 1 : 0);
     if (pad && pad.x) dir = pad.x;
+    dir=window.EGPad.axis(dir);
   }
   const holding = Game.state === 'play' && (isMend() || (pad && pad.mend));
   if (holding && monk.onGround && Game.activeTarget) dir = 0;
   const acc = monk.onGround ? P.accel : P.airAccel;
   monk.vx = damp(monk.vx, dir * P.speed, acc * 0.5, h);
-  if (dir) monk.facing = dir;
+  if (dir) monk.facing = Math.sign(dir);
   // horizontal move with walls
   let nx = monk.x + monk.vx * h;
   if (nx < 0.35) { nx = 0.35; monk.vx = 0; }

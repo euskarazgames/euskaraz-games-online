@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "stained-glass", "touch": {"left": "x", "right": "actions", "up": "Space", "actions": [["Salto / planeatu", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -284,6 +287,8 @@ scene.background = new THREE.Color(0x120f0c);
 scene.fog = new THREE.Fog(FOG_COL, 18, 80);
 
 const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.1, 200);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(4, 3.1, 12.5);
 
 const hemi = new THREE.HemisphereLight(0xc8c2b4, 0x2c2924, 1.0);
@@ -1165,7 +1170,7 @@ function updateHero(dt, t) {
     return;
   }
   const inPlay = game.mode === 'play';
-  const dir = inPlay ? (input.right ? 1 : 0) - (input.left ? 1 : 0) : 0;
+  const dir = inPlay ? window.EGPad.axis(((input.right ? 1 : 0) - (input.left ? 1 : 0)),"x",1) : 0;
   if (input.jumpPressed) { h.buffer = BUFFER; input.jumpPressed = false; }
   else h.buffer = Math.max(0, h.buffer - dt);
 
@@ -1173,7 +1178,7 @@ function updateHero(dt, t) {
   const target = dir * RUN;
   const acc = h.ground ? (dir ? ACC : DEC) : AIR_ACC;
   if (h.vx < target) h.vx = Math.min(target, h.vx + acc * dt); else if (h.vx > target) h.vx = Math.max(target, h.vx - acc * dt);
-  if (dir) h.face = dir;
+  if (dir) h.face = Math.sign(dir);
 
   // is the ground still lit?
   if (h.ground) {

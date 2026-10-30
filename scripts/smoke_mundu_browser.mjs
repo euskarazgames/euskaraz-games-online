@@ -16,7 +16,7 @@ const sample=new Set(["skyfarer","clockwork-heist","starlight-train","ink-fox","
 const audit=[];
 let critical=0;
 for(const g of games){
- const page=await browser.newPage({viewport:{width:900,height:670},isMobile:true,hasTouch:true});
+ const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const errors=[];
  const failedRequests=[];
  page.on("pageerror",e=>errors.push(String(e.message||e).slice(0,300)));
@@ -33,7 +33,7 @@ for(const g of games){
   try{
     const info=await frame.evaluate(()=>({
       canvas:!!document.querySelector("canvas"),
-      touch:!!document.querySelector("#eg-touch"),
+      touch:document.querySelectorAll("#eg-controls .stick").length===2,
       lang:document.documentElement.lang,
       difficulties:document.querySelectorAll("#eg-difficulty button, #eg-ink-difficulty button").length
     }));

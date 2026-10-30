@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "ember-path", "touch": {"left": "x", "right": "actions", "up": "Space", "down": "KeyE", "side": "ShiftLeft", "actions": [["Salto", "Space"], ["Putz egin", "KeyE"], ["Korrika", "ShiftLeft"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -144,6 +147,8 @@ renderer.toneMapping = THREE.NoToneMapping;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#a39a8e');
 const camera = new THREE.PerspectiveCamera(34, innerWidth / innerHeight, 0.1, 700);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(LV.start, 3, 15);
 
 // reveal field: how much each x of the path has been redrawn by the ember
@@ -1137,7 +1142,7 @@ const _v1 = new THREE.Vector3(), _v2 = new THREE.Vector3(), _buf = new THREE.Vec
 function updatePlayer(dt) {
   const canMove = G.state === 'play' && pl.lock <= 0;
   let dir = 0;
-  if (canMove) { if (kL()) dir -= 1; if (kR()) dir += 1; }
+  if (canMove) { if (kL()) dir -= 1; if (kR()) dir += 1; dir=window.EGPad.axis(dir); }
   const run = kRun() || (DBG.auto && inAsh(pl.x));
   if (DBG.auto && G.state === 'play') {
     dir = 1;
@@ -1149,7 +1154,7 @@ function updatePlayer(dt) {
   }
   const target = dir * (run ? RUN : WALK);
   pl.vx = toward(pl.vx, target, (pl.grounded ? ACC : AIR_ACC) * dt);
-  if (dir) pl.face = dir;
+  if (dir) pl.face = Math.sign(dir);
   pl.jbuf -= dt; pl.coyote -= dt; pl.lock -= dt;
   if (jumpPressed && G.state === 'play') pl.jbuf = JBUF;
   jumpPressed = false;

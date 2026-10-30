@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "train-painter", "touch": {"left": "xy", "right": "actions", "up": "Space", "actions": [["Txistua", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -218,6 +221,8 @@ const FOG_COLOR = new THREE.Color(0xa9d8f2);
 scene.fog = new THREE.Fog(FOG_COLOR, 200, 680);
 scene.background = FOG_COLOR.clone();
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.5, 2200);
+window.EGMobileView(renderer,camera);
+
 
 const hemi = new THREE.HemisphereLight(0xe2f0ff, 0x86a35a, 1.6);
 scene.add(hemi);
@@ -1451,7 +1456,7 @@ function getSteer() {
   let s = 0;
   if (keys.ArrowLeft || keys.KeyA || keys.KeyQ) s -= 1;
   if (keys.ArrowRight || keys.KeyD) s += 1;
-  s += pointerSteer;
+  s += pointerSteer;s=window.EGPad.axis(s);
   return clamp(s, -1, 1);
 }
 

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "ink-fox", "touch": {"left": "runner", "right": "actions", "up": "Space", "down": "ShiftLeft", "actions": [["Salto", "Space"], ["Margotu", "ShiftLeft"]], "analog": false}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -144,6 +147,8 @@ const sceneRT = new THREE.WebGLRenderTarget(VW * DPR, VH * DPR, { samples: 4 });
 const scene = new THREE.Scene();
 scene.background = PAPER;
 const camera = new THREE.PerspectiveCamera(30, VW / VH, 0.5, 700);
+window.EGMobileView(renderer,camera);
+
 const TAN = Math.tan(THREE.MathUtils.degToRad(15));
 let camDist = 19;
 function fitCamera() {

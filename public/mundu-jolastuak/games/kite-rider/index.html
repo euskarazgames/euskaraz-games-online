@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "kite-rider", "touch": {"left": "xy", "right": "actions", "up": "Space", "actions": [["Haize-bultzada", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -381,6 +384,8 @@ const MAXDPR = Q.has('hq') ? 2 : 1.25;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(62, 16 / 9, 0.5, 14000);
+window.EGMobileView(renderer,camera);
+
 const reflCam = new THREE.PerspectiveCamera(62, 16 / 9, 0.5, 14000);
 camera.position.set(0, 90, 60);
 
@@ -1650,7 +1655,7 @@ function readInput() {
     steer = clamp((touch.x - touch.sx) / 90, -1, 1);
     pitch = clamp(-(touch.y - touch.sy) / 90, -1, 1);
   }
-  return { steer, pitch, boost };
+  return { steer:window.EGPad.axis(steer), pitch:window.EGPad.axis(pitch,"y",-1), boost };
 }
 
 // ------------------------------------------------------------------ player state & game state

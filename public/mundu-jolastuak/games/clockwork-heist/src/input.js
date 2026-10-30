@@ -55,7 +55,7 @@ export class Controller {
       const any = (arr) => arr.some((c) => down.has(c));
       const anyP = (arr) => arr.some((c) => pressedEdge.has(c));
       return {
-        move: (any(s.right) ? 1 : 0) - (any(s.left) ? 1 : 0),
+        move: (this.index===0 ? window.EGPad.axis((any(s.right) ? 1 : 0) - (any(s.left) ? 1 : 0)) : (any(s.right) ? 1 : 0) - (any(s.left) ? 1 : 0)),
         jumpPressed: anyP(s.jump),
         jumpHeld: any(s.jump),
         act: any(s.act),

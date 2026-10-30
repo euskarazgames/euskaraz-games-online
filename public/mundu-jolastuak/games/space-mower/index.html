@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "space-mower", "touch": {"left": "xy", "right": "actions", "up": "ShiftLeft", "actions": [["Turboa", "ShiftLeft"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -192,6 +195,8 @@ document.body.prepend(renderer.domElement);
 const scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x9fd3f2, 16, 46);
 const camera = new THREE.PerspectiveCamera(48, innerWidth / innerHeight, 0.1, 900);
+window.EGMobileView(renderer,camera);
+
 
 const hemi = new THREE.HemisphereLight(0xe8f3ff, 0x5f8a2c, 0.85);
 scene.add(hemi);
@@ -1302,8 +1307,8 @@ function updateMower(dt) {
   const up = mUp(_v2), fwd = mFwd(_v3);
   let thr = 0, steer = 0, wantBoost = false;
   if (playing && M.stun <= 0) {
-    thr = (keys.KeyW || keys.ArrowUp || keys.KeyZ ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0);
-    steer = (keys.KeyA || keys.ArrowLeft || keys.KeyQ ? 1 : 0) - (keys.KeyD || keys.ArrowRight ? 1 : 0);
+    thr = window.EGPad.axis(((keys.KeyW || keys.ArrowUp || keys.KeyZ ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0)),"y",-1);
+    steer = window.EGPad.axis(((keys.KeyA || keys.ArrowLeft || keys.KeyQ ? 1 : 0) - (keys.KeyD || keys.ArrowRight ? 1 : 0)),"x",-1);
     wantBoost = !!(keys.ShiftLeft || keys.ShiftRight);
   }
   // boost

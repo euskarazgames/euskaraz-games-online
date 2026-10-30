@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "snow-globe", "touch": {"left": "x", "right": "actions", "up": "ArrowUp", "down": "Space", "actions": [["Salto", "ArrowUp"], ["Biratu mundua", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -101,6 +104,8 @@ const FOGC = new THREE.Color('#cbd9e1');
 scene.background = FOGC.clone();
 scene.fog = new THREE.Fog(FOGC, 40, 250);
 const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.5, 1400);
+window.EGMobileView(renderer,camera);
+
 const CAM_D = Q.has('camd') ? +Q.get('camd') : 35;
 
 scene.add(new THREE.HemisphereLight(0xe4f0fb, 0x2b3452, 1.45));
@@ -826,7 +831,7 @@ function stepGround(dt, inx) {
   const target = inx * PH.SPEED;
   const accel = target === 0 ? PH.DEC : (Math.sign(target) === Math.sign(pl.vt) || pl.vt === 0 ? PH.ACC : PH.DEC * 1.3);
   pl.vt = approach(pl.vt, target, accel * dt);
-  if (inx !== 0) pl.facing = inx;
+  if (inx !== 0) pl.facing = Math.sign(inx);
   const [tx, ty] = groundTangent();
   let nx = pl.x + tx * pl.vt * dt, ny = pl.y + ty * pl.vt * dt;
   const r = resolveBody(nx, ny, pl.ux, pl.uy);
@@ -884,7 +889,7 @@ function stepAir(dt, inx) {
   if (vu > 0 && !jumpHeld() && !pl.flipping && !(pl.vaulting > 0)) vu -= g * 0.9 * dt;
   if (vu < -PH.VMAX) vu = -PH.VMAX;
   vr = approach(vr, inx * PH.SPEED, (pl.flipping ? 6.5 : PH.AIRACC) * dt);
-  if (inx !== 0) pl.facing = inx;
+  if (inx !== 0) pl.facing = Math.sign(inx);
   pl.vx = rx * vr + ux * vu; pl.vy = ry * vr + uy * vu;
   const n = Math.max(1, Math.ceil(Math.hypot(pl.vx, pl.vy) * dt / 0.07));
   const sdt = dt / n, o = PH.STEP + PH.R;
@@ -915,7 +920,7 @@ function stepGlass(dt, inx) {
   if (pl.jumpBuf > 0) { doJump(); return; }
   const target = inx * PH.SPEED * 0.85;
   pl.vt = approach(pl.vt, target, (target === 0 ? PH.DEC : PH.ACC) * dt);
-  if (inx !== 0) pl.facing = inx;
+  if (inx !== 0) pl.facing = Math.sign(inx);
   const rx = pl.uy, ry = -pl.ux;
   let nx = pl.x + rx * pl.vt * dt, ny = pl.y + ry * pl.vt * dt;
   let dx = nx - b.x, dy = ny - b.y; const d = Math.hypot(dx, dy) || 1; dx /= d; dy /= d;
@@ -927,7 +932,7 @@ function stepGlass(dt, inx) {
 }
 function stepPlayer(dt) {
   if (pl.frozen) return;
-  const inx = state === 'play' && !pl.frozen ? (inRight() ? 1 : 0) - (inLeft() ? 1 : 0) : 0;
+  const inx = state === 'play' && !pl.frozen ? window.EGPad.axis(((inRight() ? 1 : 0) - (inLeft() ? 1 : 0)),"x",1) : 0;
   pl.glassCd = Math.max(0, pl.glassCd - dt);
   pl.vaultCd = Math.max(0, (pl.vaultCd || 0) - dt);
   pl.vaulting = Math.max(0, (pl.vaulting || 0) - dt);

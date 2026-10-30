@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "tidebound", "touch": {"left": "x", "right": "sails", "start": "Digit1", "actions": [["Tiratu", "KeyW"]], "rightLabel": "BELAK", "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -229,6 +232,8 @@ const MAX_ANISO = renderer.capabilities.getMaxAnisotropy();
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 12000);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 8, -14);
 
 // object fog: same law as the ocean (exp of linear distance), color = horizon haze
@@ -1522,6 +1527,8 @@ function readInput(b, dt) {
     inp.haul = (k('ArrowUp') ? 1 : 0) - (k('ArrowDown') ? 1 : 0);
     inp.brace = (k('ArrowLeft') ? 1 : 0) - (k('ArrowRight') ? 1 : 0);
   }
+  inp.steer=window.EGPad.axis(inp.steer);
+  if(window.EGPad.right.active){inp.haul=-window.EGPad.right.y;inp.brace=-window.EGPad.right.x;}
   if (AIP1) aiSteer(b, inp, dt);
   return inp;
 }

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "skyfarer", "touch": {"left": "xy", "right": "camera", "actions": [["Salto / planeatu", "Space"], ["Korrika", "ShiftLeft"]], "rightLabel": "KAMERA", "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -112,6 +115,8 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 7000);
+window.EGMobileView(renderer,camera);
+
 
 // ---------------------------------------------------------------- palette / sun
 const HAZE = new THREE.Color('#e9d7bd');            // horizon haze (sampled from the fal sky panorama)
@@ -941,7 +946,7 @@ addEventListener('mousemove', (e) => {
 const axis = () => {
   const x = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft || keys.KeyQ ? 1 : 0);
   const y = (keys.KeyW || keys.ArrowUp || keys.KeyZ ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0);
-  return { x, y };
+  return { x: window.EGPad.axis(x), y: window.EGPad.axis(y,"y",-1) };
 };
 
 // =====================================================================
@@ -1532,6 +1537,7 @@ function endGame() {
 
 function updateCamera(dt, t) {
   const p = player;
+  if(window.EGPad.right.active){mouseDX += window.EGPad.right.x * 520 * dt * window.EGPad.sensitivity;mouseDY += window.EGPad.right.y * 400 * dt * window.EGPad.sensitivity;lastMouse=clock.elapsedTime;}
   if (mouseDX || mouseDY) {
     camRig.yaw -= mouseDX * 0.0028; camRig.pitch = clamp(camRig.pitch + mouseDY * 0.0022, -0.3, 1.1);
     mouseDX = mouseDY = 0;

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "dune-surfer", "touch": {"left": "x", "right": "actions", "up": "Space", "down": "ArrowDown", "actions": [["Eutsi / salto", "Space"], ["Makurtu", "ArrowDown"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -398,6 +401,8 @@ renderer.setClearColor(0xe8b688, 1);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.15, 9000);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 30, 30);
 
 const composerTarget = new THREE.WebGLRenderTarget(innerWidth, innerHeight, { type: THREE.HalfFloatType, samples: LOW ? 0 : 4 });
@@ -1413,7 +1418,7 @@ function readInput() {
     GAME.padUp = (gp.axes[1] || 0) < -0.5 || gp.buttons[12]?.pressed;
     GAME.padDown = (gp.axes[1] || 0) > 0.5 || gp.buttons[13]?.pressed;
   }
-  input.steer = steer; input.tuck = tuck; input.jumpHeld = jumpHeld;
+  input.steer = window.EGPad.axis(steer); input.tuck = tuck; input.jumpHeld = jumpHeld;
   // flips only count when the key went down after take-off (so holding tuck through a lip never flips)
   input.up = (!!keys.up && keyAt.up > P.takeoffT) || !!GAME.padUp;
   input.down = (!!keys.down && keyAt.down > P.takeoffT) || !!GAME.padDown;

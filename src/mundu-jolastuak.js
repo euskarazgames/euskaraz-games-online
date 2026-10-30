@@ -125,13 +125,7 @@ export async function handleLocalGame(request, env) {
   const localResponse = new Response(request.method==="HEAD"?null:local.body,{
     status:local.status,statusText:local.statusText,headers:h
   });
-  if (local.ok) {
-    if (request.method==="GET" && /text\/html/i.test(h.get("content-type")||""))
-      return new HTMLRewriter().on("head",{
-        element(el){el.append('<script defer src="/mundu-jolastuak/touch-controls.js"></script>',{html:true})}
-      }).transform(localResponse);
-    return localResponse;
-  }
+  if (local.ok) return localResponse;
   const relative = parts.join("/");
   if (!relative.startsWith("assets/") || relative.includes("..") || /%2f|%5c/i.test(relative)) return localResponse;
   const upstream = new URL("/mundu-jolastuak/original/" + up + "/" + relative + incoming.search, incoming.origin);

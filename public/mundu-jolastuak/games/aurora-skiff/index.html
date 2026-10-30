@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "aurora-skiff", "touch": {"left": "x", "right": "actions", "up": "Space", "actions": [["Haize-bolada", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -251,6 +254,8 @@ const FOG = new THREE.Color().setRGB(0.0477, 0.1064, 0.1644);
 scene.fog = new THREE.FogExp2(FOG.clone(), 0.0021);
 scene.background = FOG.clone();
 const camera = new THREE.PerspectiveCamera(56, innerWidth / innerHeight, 0.3, 5000);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 10, 60);
 
 /* ---------------- post-processing ----------------
@@ -444,7 +449,7 @@ function pollPad() {
   if ((pad.a && !pad.aPrev) || (pad.start && !pad.startPrev)) { if (navigator.userActivation && navigator.userActivation.hasBeenActive) Snd.unlock(); }
 }
 const input = {
-  steer() { let s = 0; if (keys.has('ArrowLeft') || keys.has('KeyA')) s -= 1; if (keys.has('ArrowRight') || keys.has('KeyD')) s += 1; if (s === 0) s = pad.steer; return clamp(s, -1, 1); },
+  steer() { let s = 0; if (keys.has('ArrowLeft') || keys.has('KeyA')) s -= 1; if (keys.has('ArrowRight') || keys.has('KeyD')) s += 1; if (s === 0) s = pad.steer; return clamp(window.EGPad.axis(s), -1, 1); },
   gust() { return pressedOnce.has('Space') || pressedOnce.has('ArrowUp') || pressedOnce.has('KeyW') || (pad.a && !pad.aPrev); },
   confirm() { return pressedOnce.has('Enter') || pressedOnce.has('Space') || (pad.start && !pad.startPrev) || (pad.a && !pad.aPrev); },
   pause() { return pressedOnce.has('Escape') || pressedOnce.has('KeyP') || (pad.start && !pad.startPrev); }

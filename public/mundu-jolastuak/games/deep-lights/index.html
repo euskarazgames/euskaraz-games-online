@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "deep-lights", "touch": {"left": "xy", "right": "actions", "up": "Space", "actions": [["Argi-pultsua", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -107,6 +110,8 @@ const FOG = new THREE.Color(0x05192a);
 scene.background = FOG.clone();
 scene.fog = new THREE.FogExp2(FOG.clone(), 0.02);
 const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 260);
+window.EGMobileView(renderer,camera);
+
 
 /* ------------------------------------------------------------------ the trench path */
 const R = rng(1207);
@@ -942,8 +947,8 @@ function update(dt) {
   const lim = Math.max(2.5, rad * 0.8 - 1.4);
   let ax = 0, ay = 0;
   if (playing) {
-    ax = (keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0);
-    ay = (keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0);
+    ax = window.EGPad.axis(((keys.KeyD || keys.ArrowRight ? 1 : 0) - (keys.KeyA || keys.ArrowLeft ? 1 : 0)),"x",1);
+    ay = window.EGPad.axis(((keys.KeyW || keys.ArrowUp ? 1 : 0) - (keys.KeyS || keys.ArrowDown ? 1 : 0)),"y",-1);
     if (ax || ay) mouse.active = false;
     if (mouse.active && performance.now() - mouse.t < 4000) {
       const tx = mouse.x * lim * 1.05, ty = mouse.y * lim * 1.05;

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "bubble-balloon", "touch": {"left": "xy", "right": "actions", "up": "Space", "actions": [["Putz egin", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -220,6 +223,8 @@ scene.fog = new THREE.FogExp2(FOG_COL.getHex(), 0.001);
 scene.background = FOG_COL.clone();
 
 const camera = new THREE.PerspectiveCamera(52, innerWidth / innerHeight, 0.3, 6000);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 20, 12);
 
 const rt = new THREE.WebGLRenderTarget(innerWidth * PR, innerHeight * PR, { type: THREE.HalfFloatType, samples: 4 });
@@ -1461,7 +1466,7 @@ function pollInput() {
     if (st && !Input.padStart) { Input.start = true; Input.any = true; Audio.unlock(); }
     Input.padA = a; Input.padStart = st;
   }
-  Input.steer = clamp(sx, -1, 1); Input.lean = clamp(sy, -1, 1);
+  Input.steer = clamp(window.EGPad.axis(sx), -1, 1); Input.lean = clamp(window.EGPad.axis(sy,"y",-1), -1, 1);
 }
 function consumeEdges() { Input.puff = Input.start = Input.pause = Input.any = false; }
 

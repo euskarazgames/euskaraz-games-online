@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "cloud-shepherd", "touch": {"left": "xy", "right": "actions", "up": "Space", "down": "KeyE", "side": "ShiftLeft", "actions": [["Bultzatu", "Space"], ["Txistu", "KeyE"], ["Korrika", "ShiftLeft"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -125,6 +128,8 @@ scene.background = FOG.clone();
 scene.fog = new THREE.Fog(FOG, 62, 175);
 
 const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 0.3, 420);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 16, 28);
 
 const hemi = new THREE.HemisphereLight(0xe8f5ff, 0x9cc4e4, 0.78);
@@ -1262,6 +1267,7 @@ function readInput() {
   const gp = navigator.getGamepads ? [...navigator.getGamepads()].find(g => g) : null;
   let gSwing = false, gWhistle = false, gRun = false;
   if (gp) { const ax = gp.axes[0] || 0, az = gp.axes[1] || 0; if (Math.hypot(ax, az) > 0.18) { x += ax; z += az; } gSwing = gp.buttons[0]?.pressed; gWhistle = gp.buttons[2]?.pressed || gp.buttons[3]?.pressed; gRun = gp.buttons[7]?.pressed || gp.buttons[5]?.pressed; }
+  x=window.EGPad.axis(x);z=window.EGPad.axis(z,"y");
   const l = Math.hypot(x, z); if (l > 1) { x /= l; z /= l; }
   const swing = keys.has('Space') || touch.swing || gSwing, whistle = keys.has('KeyE') || touch.whistle || gWhistle;
   touch.swing = touch.whistle = false;

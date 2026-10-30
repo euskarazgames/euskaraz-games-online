@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "rust-bloom", "touch": {"left": "x", "right": "actions", "up": "Space", "down": "KeyJ", "actions": [["Salto", "Space"], ["Ura bota", "KeyJ"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -119,6 +122,8 @@ const FOG = new THREE.Color('#e9e2d3');
 scene.background = FOG.clone();
 scene.fog = new THREE.Fog(FOG.clone(), 26, 150);
 const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.1, 800);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 2, 14.5);
 
 const hemi = new THREE.HemisphereLight(0xfff6e8, 0x6e7072, 1.55);
@@ -772,12 +777,12 @@ class Player {
     const canMove = started && !ended && this.lock <= 0;
     this.lock -= dt;
     let ix = 0;
-    if (canMove) { if (K.left()) ix -= 1; if (K.right()) ix += 1; }
+    if (canMove) { if (K.left()) ix -= 1; if (K.right()) ix += 1; ix=window.EGPad.axis(ix); }
     if (DBG.pour && !started) ix = 0;
     const wantPour = (canMove && K.pour()) || (DBG.pour && !started);
     const maxV = this.pouring > 0.5 ? 1.55 : 2.55;
     const acc = this.onGround ? 11 : 7;
-    if (ix !== 0) { this.vx = damp(this.vx, ix * maxV, acc * 0.6, dt); this.face = ix; }
+    if (ix !== 0) { this.vx = damp(this.vx, ix * maxV, acc * 0.6, dt); this.face = Math.sign(ix); }
     else this.vx = damp(this.vx, 0, this.onGround ? 14 : 3, dt);
     // jump
     if (canMove && K.jump()) this.jumpBuf = 0.14;

@@ -81,6 +81,8 @@ scene.fog = new THREE.Fog(FOG_COLOR, 34, 120);
 scene.background = FOG_COLOR.clone();
 
 const camera = new THREE.PerspectiveCamera(34, window.innerWidth / window.innerHeight, 0.1, 400);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 8, 23);
 
 const SUN = new THREE.Vector3(-0.55, 0.78, 0.32).normalize();
@@ -1145,8 +1147,8 @@ function updatePlay(dt) {
     world.fx.spawn({ x: hx, y: hy, z: 0.15, vx: dx * 1.1 + (Math.random() - 0.5) * 0.4, vy: dy * 1.1 + 0.6 + Math.random() * 0.5, life: 0.9, s0: 0.12, s1: 0.04, frame: 3, a: 0.95, r: 1.25, gr: 1.0, b: 0.65, vr: 3, drag: 0.6 });
   }
   // horizontal movement
-  const dir = (right ? 1 : 0) - (left ? 1 : 0);
-  if (dir !== 0) P.facing = dir;
+  const dir = window.EGPad.axis(((right ? 1 : 0) - (left ? 1 : 0)),"x",1);
+  if (dir !== 0) P.facing = Math.sign(dir);
   const slopeAhead = (groundAt(P.x + 0.12 * (dir || P.facing)) - groundAt(P.x - 0.12 * (dir || P.facing))) / 0.24;
   let target = 0;
   if (!G.calling) {
@@ -1265,8 +1267,8 @@ function updateAscend(dt) {
 
 function updateUpper(dt) {
   const left = down(KEY_LEFT), right = down(KEY_RIGHT);
-  const dir = (right ? 1 : 0) - (left ? 1 : 0);
-  if (dir !== 0) P.facing = dir;
+  const dir = window.EGPad.axis(((right ? 1 : 0) - (left ? 1 : 0)),"x",1);
+  if (dir !== 0) P.facing = Math.sign(dir);
   P.vx = damp(P.vx, dir * 3.0, 10, dt);
   const L = upper.L, D = upper.D;
   const craterR = D / SLOPE;

@@ -42,6 +42,8 @@ const scene = new THREE.Scene();
 const FOG_NIGHT = new THREE.Color(0x7393ab), FOG_DAWN = new THREE.Color(0xc4a7a2);
 scene.fog = new THREE.FogExp2(FOG_NIGHT.clone(), 0.0105);
 const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 2600);
+window.EGMobileView(renderer,camera);
+
 scene.add(camera);
 
 // moonlight from behind the scene, like the reference (the moon hangs above the far range):

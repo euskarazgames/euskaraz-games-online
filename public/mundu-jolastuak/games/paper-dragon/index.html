@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "paper-dragon", "touch": {"left": "xy", "right": "actions", "up": "Space", "down": "ArrowDown", "actions": [["Igo", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -185,6 +188,8 @@ scene.background = FOG_COL.clone();
 scene.fog = new THREE.Fog(FOG_COL, 46, 600);
 
 const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.3, 1600);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 4, 30);
 
 // soft overcast-ish key: cool pale sky fill, ochre bounce from the grass, a high warm sun from the upper left
@@ -1761,7 +1766,7 @@ function playerInput() {
   const up = keys.ArrowUp || keys.KeyW || keys.KeyZ ? 1 : 0, dn = keys.ArrowDown || keys.KeyS ? 1 : 0;
   const lf = keys.ArrowLeft || keys.KeyA || keys.KeyQ ? 1 : 0, rt = keys.ArrowRight || keys.KeyD ? 1 : 0;
   const rise = keys.Space || keys.KeyJ || keys.KeyK || IN.padA || IN.pointer ? 1 : 0;
-  return { uy: clamp(up - dn + IN.padY + rise, -1, 1), ux: clamp(rt - lf + IN.padX, -1, 1), active: up + dn + lf + rt + rise + Math.abs(IN.padY) + Math.abs(IN.padX) > 0 };
+  return { uy: clamp(window.EGPad.axis(up - dn + IN.padY,"y",-1) + rise, -1, 1), ux: clamp(window.EGPad.axis((rt - lf + IN.padX),"x",1), -1, 1), active: window.EGPad.left.active || up + dn + lf + rt + rise + Math.abs(IN.padY) + Math.abs(IN.padX) > 0 };
 }
 
 // ============================================================================

@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "paper-moon-stairs", "touch": {"left": "x", "right": "actions", "up": "Space", "actions": [["Salto", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -109,6 +112,8 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.NoToneMapping;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(48, innerWidth / innerHeight, 0.1, 2000);
+window.EGMobileView(renderer,camera);
+
 
 const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
@@ -1070,7 +1075,7 @@ function support(s, yMax, platSnap = 0) {
   return { h: best, plat };
 }
 function physics(dt) {
-  input.axis = (input.right ? 1 : 0) - (input.left ? 1 : 0);
+  input.axis = window.EGPad.axis(((input.right ? 1 : 0) - (input.left ? 1 : 0)),"x",1);
   const acc = P.grounded ? ACC : AIR_ACC;
   P.vs += clamp(input.axis * SPEED - P.vs, -acc * dt, acc * dt);
   // horizontal: only drawn rock taller than a small step stops her
@@ -1122,7 +1127,7 @@ function physics(dt) {
   // fell into the clouds: drift back to the last solid ground
   if (P.y < groundRef(P.lastSafe.s) - 7.5 && !world.respawning) respawn();
   // facing
-  if (Math.abs(input.axis) > 0) P.face = input.axis;
+  if (Math.abs(input.axis) > 0) P.face = Math.sign(input.axis);
 }
 function respawn() {
   world.respawning = true; world.falls = (world.falls || 0) + 1;

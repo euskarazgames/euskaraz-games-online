@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "fog-shepherd", "touch": {"left": "xy", "right": "actions", "up": "Space", "actions": [["Linterna", "Space"]], "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -112,6 +115,8 @@ renderer.info.autoReset = false;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#d3d7d6');
 const camera = new THREE.PerspectiveCamera(CAM_FOV, innerWidth / innerHeight, 0.1, 600);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(-6, 2.6, CAM_Z);
 
 const rt = new THREE.WebGLRenderTarget(innerWidth, innerHeight, { type: THREE.HalfFloatType, samples: 4 });
@@ -1004,7 +1009,7 @@ function readInput() {
     if (p.buttons[15] && p.buttons[15].pressed) ix += 1;
     if (p.buttons[9] && p.buttons[9].pressed && (G.state === 'title' || G.state === 'end')) startGame();
   }
-  return { ix: clamp(ix, -1, 1), iz: clamp(iz, -1, 1), fl };
+  return { ix: clamp(window.EGPad.axis(ix), -1, 1), iz: clamp(window.EGPad.axis(iz,"y"), -1, 1), fl };
 }
 
 function startGame() {

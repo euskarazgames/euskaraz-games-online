@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="eu">
 <head>
+<script>window.EG_GAME={"slug": "skyhook-rescue", "touch": {"left": "xy", "right": "altitude", "actions": [["Igo", "KeyR"], ["Jaitsi", "KeyF"]], "rightLabel": "ALTUERA", "analog": true}};</script>
+<script src="/mundu-jolastuak/touch-controls.js?v=dual-stick-portrait-3"></script>
+<script src="/mundu-jolastuak/portrait-camera.js?v=dual-stick-portrait-3"></script>
 <!-- Original © 2026 Lovis Odin, MIT. Euskaraz Games localization. -->
 <script src="/mundu-jolastuak/euskara.js"></script>
 
@@ -149,6 +152,8 @@ const scene = new THREE.Scene();
 const FOG_CLEAR = new THREE.Color(0x7f8b95), FOG_STORM = new THREE.Color(0x4b5660);
 scene.fog = new THREE.FogExp2(FOG_CLEAR.clone(), 0.00105);
 const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.5, 9000);
+window.EGMobileView(renderer,camera);
+
 camera.position.set(0, 175, 170);
 
 const SUN_DIR = new V3(0.75, 0.42, -0.51).normalize();
@@ -1490,6 +1495,7 @@ function readInputs() {
     pi++;
   }
   [p1, p2].forEach(p => { p.x = clamp(p.x, -1, 1); p.y = clamp(p.y, -1, 1); p.z = clamp(p.z, -1, 1); });
+  p1.x=window.EGPad.axis(p1.x);p1.z=window.EGPad.axis(p1.z,"y");p1.y=window.EGPad.rightAxis(p1.y,"y",-1);
   return [p1, p2];
 }
 function onPress(code) {
