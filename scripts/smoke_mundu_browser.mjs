@@ -15,7 +15,8 @@ const browser=await chromium.launch({headless:true,args:["--enable-webgl","--use
 const sample=new Set(["skyfarer","clockwork-heist","starlight-train","ink-fox","tidebound","hourglass"]);
 const audit=[];
 let critical=0;
-for(const g of games){
+const group=Number(process.env.MUNDU_TEST_GROUP||0), groups=Number(process.env.MUNDU_TEST_GROUPS||1);
+for(const g of games.filter((_,i)=>i%groups===group)){
  const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
  const errors=[];
  const failedRequests=[];
