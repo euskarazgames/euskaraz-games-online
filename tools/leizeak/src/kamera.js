@@ -102,7 +102,8 @@
     const sd = HORMA.side,
       e = HORMA.k > 0 ? clamp(1 - (HORMA.ext - HORMA.at * sd - 0.3) / 3.5, 0, 1) : 0;
     HORMA.e = mix(HORMA.e || 0, e, 1 - Math.exp(-dt * 4));
-    const w = HORMA.k * HORMA.e,
+    /* izkinatik hurbil, izkina-kamera osoa (kamera nagusia urrun dagoenean ere, zoomaren menpe ez) */
+    const w = HORMA.k * clamp(HORMA.e * 1.25, 0, 1),
       k = w * w * (3 - 2 * w);
     if (k <= 0.001) return;
     const tx = HORMA.tx * sd,

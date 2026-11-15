@@ -45,7 +45,7 @@ const { launch } = require('./_browser');
   const dA = await camDist();
   await ev(() => __game.camModeToggle());
   ok((await ev(() => __game.CAM.mode)) === 'goitik', 'berriro GOITIK');
-  ok(dG < dA && dG < 30, 'GOITIK hurbilago', S({ goitik: dG, atzetik: dA }));
+  ok(dG < dA && dG < 45, 'GOITIK hurbilago', S({ goitik: dG, atzetik: dA }));
   const pitch = await ev(() => { const g = __game; for (let i = 0; i < 8; i++) g.draw(); const c = g.camera.position, h = g.hero.position; return +(Math.atan2(c.y - h.y, Math.hypot(c.x - h.x, c.z - h.z)) * 180 / Math.PI).toFixed(0); });
   ok(pitch > 40, 'GOITIK: goitik begira', pitch + '°');
 

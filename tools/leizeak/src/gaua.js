@@ -176,8 +176,8 @@
     ambient.color.copy(AMB_DAY).lerp(AMB_NIGHT, k);
     ambient.groundColor.copy(GND_DAY).lerp(GND_NIGHT, k);
     scene.fog.color.lerp(FOG_DUSK, tw * 0.3).lerp(FOG_NIGHT, k);
-    scene.fog.near = mix(130, 60, k);
-    scene.fog.far = mix(560, 400, k);
+    scene.fog.near = mix(130, 60, k) + CAM.far;
+    scene.fog.far = mix(560, 400, k) + CAM.far;
     const su = sky.material.uniforms;
     if (su.uNight) {
       su.uNight.value = k;

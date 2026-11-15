@@ -115,8 +115,8 @@
     ambient.color.set("#8f9cd8").lerp(new T.Color("#ffe1c4"), d);
     ambient.groundColor.set("#1b1830").lerp(new T.Color("#6a5a50"), d);
     scene.fog.color.copy(AN_FOG_NIGHT).lerp(AN_FOG_DAWN, d);
-    scene.fog.near = mix(50, 140, d);
-    scene.fog.far = mix(300, 800, d);
+    scene.fog.near = mix(50, 140, d) + CAM.far;
+    scene.fog.far = mix(300, 800, d) + CAM.far;
     playerLight.intensity = mix(1.8, 0, d);
     for (const c of AN.clouds) c.traverse((n) => n.isMesh && n.material.color.setRGB(mix(0.2, 1, d), mix(0.22, 0.82, d), mix(0.32, 0.74, d)));
   }

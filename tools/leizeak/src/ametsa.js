@@ -374,8 +374,8 @@
     ambient.color.set("#b9a8ff");
     ambient.groundColor.set("#2a1f4a");
     scene.fog.color.copy(DREAM_FOG_PAST).lerp(DREAM_FOG, phaseBlend);
-    scene.fog.near = DGA.fog[0];
-    scene.fog.far = DGA.fog[1];
+    scene.fog.near = DGA.fog[0] + CAM.far;
+    scene.fog.far = DGA.fog[1] + CAM.far;
     playerLight.intensity = 1.6;
   }
 

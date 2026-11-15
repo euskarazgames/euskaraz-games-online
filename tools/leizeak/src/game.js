@@ -437,28 +437,37 @@
   const CAM = { trauma: 0, fovKick: 0, look: new T.Vector3(), lookVel: new T.Vector3(), baseFov: 44, shakeT: 0 };
   /* Kamera-distantzia (⤢ botoia): hurbil · ertaina · urrun. Bertikalean ikus-eremu horizontala
      estua da: kamera askoz urrunago, FOV zabalagoa eta jokalaria ukipen-botoien gainetik. */
-  const CAM_LEVELS = [0.8, 1, 1.3];
+  const CAM_LEVELS = [0.8, 1, 1.3, 1.9];
   let camLevel = 1;
   /* erabiltzailearen kamera: hatz eskuinaz biratu (yaw) eta hurbildu/urrundu (user) */
   CAM.yaw = 0;
   CAM.yawS = 0; /* leundua: kamerak eta kontrolek hau erabiltzen dute */
   CAM.user = 1;
+  /* zoomaren ibilbidea: PCan (gurpila, + −) oso luzea — hurbil-hurbiletik haran erdia ikusteraino;
+     ukipen-pantailan (bi hatz) laburragoa. CAM.far: kamera ohi baino urrunago dagoen tartea (lainoa
+     eta itzalak horren arabera urruntzen dira, Amaiurren ingurua beti garbi ikus dadin). */
+  const CAM_MIN = mobile ? 0.55 : 0.3,
+    CAM_MAX = mobile ? 2.4 : 3.2;
+  CAM.far = 0;
   try {
-    const v = localStorage.getItem("oihartzun-cam");
-    if (v !== null) {
+    const z = localStorage.getItem("leizeak-zoom"),
+      /* lehengo gakoa (maila estuak): mugikorrean bakarrik irakurri — PCan oinarria aldatu da */
+      v = mobile ? localStorage.getItem("oihartzun-cam") : null;
+    if (z !== null) CAM.user = clamp(+z || 1, CAM_MIN, CAM_MAX);
+    else if (v !== null) {
       const f = +v;
       /* lehengo formatua: 0/1/2 mailak */
       if (Number.isInteger(f) && f >= 0 && f <= 2) camLevel = f;
-      CAM.user = Number.isInteger(f) && f >= 0 && f <= 2 ? CAM_LEVELS[f] : clamp(f || 1, 0.55, 1.8);
+      CAM.user = Number.isInteger(f) && f >= 0 && f <= 2 ? CAM_LEVELS[f] : clamp(f || 1, CAM_MIN, CAM_MAX);
     }
   } catch {}
   function camSave() {
     try {
-      localStorage.setItem("oihartzun-cam", CAM.user.toFixed(3));
+      localStorage.setItem("leizeak-zoom", CAM.user.toFixed(3));
     } catch {}
   }
   function camZoom(f) {
-    CAM.user = clamp(CAM.user * f, 0.55, 1.8);
+    CAM.user = clamp(CAM.user * f, CAM_MIN, CAM_MAX);
     camSave();
   }
   function camReset() {
@@ -556,7 +565,8 @@
       open = ZONE.cur === "ibarra" && !G ? 1 : 0;
     return {
       /* hurbilago (lehen: bertikalean 1.95, mugikorrean 1.12) */
-      k: (portrait ? (G ? 1.42 : 1.7) : mobile ? (G ? 1 : 1.02) : G ? 1 : 0.9) * CAM.user * (1 + 0.08 * open),
+      /* PCan (pantaila zabala): urrunago — ingurua ikusteko; gurpilarekin nahi adina hurbildu/urrundu */
+      k: (portrait ? (G ? 1.42 : 1.7) : mobile ? (G ? 1 : 1.02) : G ? 1.8 : 1.5) * CAM.user * (1 + 0.08 * open),
       fov: (portrait ? 50 : G ? 42 : 44) + 2 * open,
       lift: portrait ? (G ? 3 : 5.5) : mobile ? 1.2 : 0,
       fight: G ? 0.92 : portrait ? 0.86 : 0.74,
@@ -3358,6 +3368,17 @@
     sun.position.set(P.x - 32, P.y + 60, P.z + 25);
     sun.target.position.set(P.x, P.y, P.z);
     sun.target.updateMatrixWorld();
+    /* kamera urrun: lainoa urrundu (gaua.js, world.js…) eta itzalen eremua zabaldu (ikusten den lur guztia) */
+    const cd = camera.position.distanceTo(hero.position);
+    CAM.far = Math.max(0, cd - 30);
+    const sb = Math.round(clamp(40 * (cd / 34), 40, 110) / 5) * 5,
+      sc = sun.shadow.camera;
+    if (sc.right !== sb) {
+      sc.left = sc.bottom = -sb;
+      sc.right = sc.top = sb;
+      sc.far = 140 + (sb - 40);
+      sc.updateProjectionMatrix();
+    }
   }
   function start() {
     if (!ready) return;
@@ -3526,10 +3547,10 @@
       KeyL: questLog,
       KeyO: camModeToggle,
       /* PCan: kamera hurbildu / urrundu (gurpilarekin ere) */
-      Equal: () => camZoom(1 / 1.12),
-      NumpadAdd: () => camZoom(1 / 1.12),
-      Minus: () => camZoom(1.12),
-      NumpadSubtract: () => camZoom(1.12),
+      Equal: () => camZoom(1 / 1.18),
+      NumpadAdd: () => camZoom(1 / 1.18),
+      Minus: () => camZoom(1.18),
+      NumpadSubtract: () => camZoom(1.18),
       KeyI: begiToggle,
       KeyE: interact,
       Escape: pause,
@@ -3539,7 +3560,7 @@
       "wheel",
       (e) => {
         if (!started || paused || mobile || FILM.on || TXALA.on) return;
-        camZoom(Math.exp(clamp(e.deltaY, -240, 240) * 0.0011));
+        camZoom(Math.exp(clamp(e.deltaY, -240, 240) * 0.0017));
       },
       { passive: true },
     );
@@ -3651,11 +3672,11 @@
     /* begia: BEGIRATU (lehen pertsona, kamera.js) */
     $("lookBtn").onclick = () => begiToggle();
     $("camBtn").onclick = () => {
-      camLevel = (camLevel + 1) % 3;
+      camLevel = (camLevel + 1) % CAM_LEVELS.length;
       CAM.user = CAM_LEVELS[camLevel];
       CAM.yaw = Math.round(CAM.yawS / TAU) * TAU;
       camSave();
-      notify(...[["KAMERA · HURBIL", "CÁMARA · CERCA"], ["KAMERA · ERTAINA", "CÁMARA · MEDIA"], ["KAMERA · URRUN", "CÁMARA · LEJOS"]][camLevel], 1.6);
+      notify(...[["KAMERA · HURBIL", "CÁMARA · CERCA"], ["KAMERA · ERTAINA", "CÁMARA · MEDIA"], ["KAMERA · URRUN", "CÁMARA · LEJOS"], ["KAMERA · OSO URRUN", "CÁMARA · MUY LEJOS"]][camLevel], 1.6);
     };
     $("camBtn").textContent = "⤢";
     $("quality").onclick = () => {
