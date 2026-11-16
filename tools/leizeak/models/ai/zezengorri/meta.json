@@ -1,0 +1,14 @@
+{
+ "concept": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "Zezengorri, a huge dark red bull spirit from Basque folklore, standing still on four sturdy legs in a wide stance, all four legs clearly separated and fully visible, long curved ivory horns, a glowing orange ember set in its forehead, ember cracks along its back, muscular shoulders, side three-quarter view, whole animal from horns to tail. stylized low-poly 3D game character, clean hand-painted colors, chunky readable shapes, full body visible from head to feet, front three-quarter view, neutral A-pose, centered, plain pure white background, soft even studio lighting, no shadows on the background, no text, no logo, no frame, single character only",
+  "seed": 7,
+  "url": "https://v3b.fal.media/files/b/0ab2b9ff/wIxR80hQ04b94rO_MismZ.jpg"
+ },
+ "tripo": {
+  "model": "tripo3d/tripo/v2.5/image-to-3d",
+  "task_id": "f1b6a56c-8fed-4e9d-ba6f-07e89578a6e8",
+  "faces": 12000,
+  "url": "https://v3b.fal.media/files/b/0ab2ba08/-EW0U4DCQFloaaC-9ltmX_tripo_model_f1b6a56c-8fed-4e9d-ba6f-07e89578a6e8.glb"
+ }
+}

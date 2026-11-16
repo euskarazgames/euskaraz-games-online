@@ -2,7 +2,7 @@
 // Erabili: NODE_PATH=$(npm root -g) node tools/test/leizeak_tartalo.js http://127.0.0.1:8091/games/leizeak.html
 // Lepoa → sutegiak → ardi-korta (borroka) → begiaren gela (ezkutuka, giltza) → burruntziaren sutegia
 // (zaindaria, SUGAR-IZPIA) → hesia erre → izotza urtu → galdara garaia → lau galdarak (giltza nagusia)
-// → Tartalo (galdarak piztu → itsutu → begia jo, hiru aldiz) → irteera → helburua: Irati.
+// → Tartalo (galdarak piztu → itsutu → begia jo, hiru aldiz) → irteera → Atarrabi → amonaren txingarra.
 const { launch } = require('./_browser');
 (async () => {
   const [url] = process.argv.slice(2);
@@ -271,15 +271,26 @@ const { launch } = require('./_browser');
   p = await ev(() => ({ zone: __game.ZONE.cur, x: +__game.P.x.toFixed(1), y: +__game.P.y.toFixed(1), z: +__game.P.z.toFixed(1) }));
   ok(p.zone === 'ibarra' && p.y > 10, 'kobatik irten → lepoan', S(p));
   const obj1 = await ev(() => __game.objective());
-  ok(/Irati/i.test(obj1[0]), 'helburua: Iratirekin hitz egin', obj1[0]);
-  /* 10 · herrian: Irati → amaierako eszena (zazpi argi zeruan) */
+  ok(/Atarrabi/.test(obj1[0]), 'helburua: Atarrabiri Tartaloren berri eman', obj1[0]);
+  /* 10 · herrian: Atarrabi → amaierako eszena */
   await ev(() => { const g = __game, N = g.NPCS.find((n) => n.id === 'irati'); g.teleport(N.x + 1.2, N.z, N.y || 0); for (let i = 0; i < 20; i++) g.tick(1 / 120); g.talkTo(N); });
   const cine = await ev(() => !!__game.cinematicState());
   await skip();
   await T(60);
-  ok(cine && (await flag('irati-tartalo')), 'Irati: amaierako eszena (JARRAITZEKO…)');
+  ok(cine && (await flag('irati-tartalo')), 'Atarrabi: amaierako eszena (JARRAITZEKO…)');
   const obj2 = await ev(() => __game.objective());
-  ok(/trikuharria/.test(obj2[0]), 'helburua: Harrespilako trikuharria (laugarren leizea)', obj2[0]);
+  ok(/amona/.test(obj2[0]), 'helburua: Iturraldera, amona zain', obj2[0]);
+  /* 11 · BIHURGUNEA: etxean, amonaren txingarra (urtaroak: UDA ↔ NEGUA) */
+  await ev(() => { const g = __game; g.homeEnter(); for (let i = 0; i < 240; i++) { g.tick(1 / 120); g.zoneFadeUpdate(1 / 120); } });
+  const obj3 = await ev(() => __game.objective());
+  ok(/Amonarekin/.test(obj3[0]), 'etxean: helburua amonarekin hitz egin', obj3[0]);
+  const am = await ev(() => { const g = __game, A = g.DGE.amona; g.teleport(A.x + 1.3, A.z, 0); for (let i = 0; i < 20; i++) g.tick(1 / 120); const a = g.homeActionNear(); if (a) a.fn(); return { label: a && a.label, vis: A.g.visible }; });
+  ok(am.label === 'AMONA' && am.vis, 'amona sutondoan (HITZ EGIN)', S(am));
+  for (let k = 0; k < 6 && !(await flag('giroa')); k++) { await skip(); await T(30); }
+  ok(await flag('giroa'), 'AMONAREN TXINGARRA: urtaroak aldatu daitezke (bandera)');
+  ok(await ev(() => __game.saved.items.includes('txingarra')), 'txingarra eskuan');
+  const obj4 = await ev(() => __game.objective());
+  ok(/trikuharria|Mairubaratza|Irten/.test(obj4[0]), 'helburua: hurrengo leizea (trikuharria)', obj4[0]);
 
   console.log(errs.length ? errs.join('\n') : 'ERRORERIK EZ');
   console.log(fails ? `${fails} HUTS` : 'DENA ONDO');

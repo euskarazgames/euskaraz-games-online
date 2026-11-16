@@ -3,7 +3,7 @@
 // Trikuharria (ESNATU) → ataria: SUTONDOA, lasterbidea itxita, HEURA (iraganean) → kanpaiak (bat orainean)
 // → harresia (borroka, giltza) → harri-zaina (TXIMISTARRIA) → arrakalak (jauzia atalasera, dorrea) →
 // dorrea: heura, harri arrakalatua eta lau kanpaia (giltza nagusia) → biltegia (sutondoa, lasterbidea)
-// → ate handia → ERROLAN (tximistarria, aldaratu, harkaitza itzuli) → irteera → Irati: laugarren argia.
+// → ate handia → MAIRU ZAHARRA (tximistarria, aldaratu, harkaitza itzuli) → irteera → Atarrabi: laugarren txingarra.
 const { launch } = require('./_browser');
 (async () => {
   const [url] = process.argv.slice(2);
@@ -286,7 +286,7 @@ const { launch } = require('./_browser');
   await T(140);
   ok((await ev(() => __game.ZONE.cur)) === 'ibarra', 'irteera: trikuharrira', S(p));
   const obj1 = await ev(() => __game.objective());
-  ok(/Errolan/.test(obj1[0]), 'helburua: Iratiri Errolanen berri eman', obj1[0]);
+  ok(/Mairu zaharraren/.test(obj1[0]), 'helburua: Atarrabiri Mairu zaharraren berri eman', obj1[0]);
   await ev(() => { const g = __game, N = g.NPCS.find((n) => n.id === 'irati'); g.teleport(N.x + 1.2, N.z, N.y || 0); for (let i = 0; i < 4; i++) g.tick(1 / 120); g.talkTo(N); });
   const green = await ev(() => {
     const g = __game;
@@ -296,7 +296,7 @@ const { launch } = require('./_browser');
   });
   ok(green === 4, 'zazpi argiak: laugarrena berde (Errolan aske)', green);
   await skip();
-  ok(await flag('irati-errolan'), 'Irati: Errolanen berria (amaiera)');
+  ok(await flag('irati-errolan'), 'Atarrabi: Mairu zaharraren berria (amaiera)');
 
   console.log(errs.length ? errs.join('\n') : 'ERRORERIK EZ');
   console.log(fails ? `${fails} HUTS` : 'DENA ONDO');

@@ -1,11 +1,12 @@
   /* ==================================================================
-     DENBORA · noiz alda daitekeen garaia
-     Garaia aldatzea ez dago hasieratik: istorioaren bihurgunean irekitzen da (DENB.flag bandera,
-     kaiko kanpaian). Lehen ekitaldian (Basajaun, Lamia, Tartalo) Amaiur neguan bakarrik dago:
+     DENBORA · noiz alda daitekeen urtaroa (UDA ↔ NEGUA)
+     Urtaroa aldatzea ez dago hasieratik: istorioaren bihurgunean irekitzen da (DENB.flag bandera,
+     AMONAREN TXINGARRA, Tartaloren ondoren, Iturraldeko sutondoan: herria.js). Lehen ekitaldian
+     (Basajaun, Lamia, Tartalo) Amaiur neguan bakarrik dago:
      · LAMIEN LEIZEAN, ura eta izotza: botoi berarekin, ura esnatu (UR BIZIA) edo izoztu (IZOTZA);
        leizearen bi egoerak, barruan bakarrik. Sarrera (ur-jauziko izotz-gortina): KATEArekin erauzi.
-     · Garai bati lotutako etsaiak garairik gabe sortzen dira, eta etsai ertainen ezkutua ez da
-       garaiz aldatzen: itxi eta ireki egiten da (itxaron eta eraso).
+     · Urtaro bati lotutako etsaiak urtarorik gabe sortzen dira, eta etsai ertainen ezkutua ez da
+       urtaroz aldatzen: itxi eta ireki egiten da (itxaron eta eraso).
      · Haranean eta beste leizeetan, NEGUA beti.
      Probetan: __game.DENB, eraOpen(), canPhase().
      ================================================================== */

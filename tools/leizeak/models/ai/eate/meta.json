@@ -1,0 +1,14 @@
+{
+ "concept": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "Eate, an imposing storm god spirit from Basque folklore: the upper body of a tall gaunt adult figure made of dark slate-grey storm clouds, long flowing hair made of orange fire, glowing white lightning eyes, long arms with crackling lightning, no legs, the waist dissolving into a swirling column of dark cloud, menacing and ancient, not cute. stylized low-poly 3D game character, clean hand-painted colors, chunky readable shapes, full body visible from head to feet, front three-quarter view, neutral A-pose, centered, plain pure white background, soft even studio lighting, no shadows on the background, no text, no logo, no frame, single character only",
+  "seed": 21,
+  "url": "https://v3b.fal.media/files/b/0ab2ba01/q4szOYLbtkbX3-XXdOHSI.jpg"
+ },
+ "tripo": {
+  "model": "tripo3d/tripo/v2.5/image-to-3d",
+  "task_id": "3eb828de-8a67-4283-be21-1d1a8e65766d",
+  "faces": 12000,
+  "url": "https://v3b.fal.media/files/b/0ab2ba0d/bW4shtLUUdlMf4VPqGBHD_tripo_model_3eb828de-8a67-4283-be21-1d1a8e65766d.glb"
+ }
+}

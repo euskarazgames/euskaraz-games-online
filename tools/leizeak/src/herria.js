@@ -619,6 +619,7 @@
           L("AMONAREN TXINGARRA"),
           L("Iturraldeko sutondoaren txingarra, kriseiluan. ALDATU (") + (mobile ? L("botoia") : "Q") + L("): elurraren azpian lo dagoen uda esnatu, edo negura itzuli. Udan ura isurtzen da eta heura hazten; neguan izotzak eusten du. Etsai bakoitza bere urtaroan zauritzen da."),
           () => {
+            if (!saved.items.includes("txingarra")) saved.items.push("txingarra");
             flagSet("giroa");
             eraGate();
             coach("shift", "Q", "Q: URTAROA aldatu (uda ↔ negua)", "", "phaseBtn", "ALDATU: urtaroa aldatu (uda ↔ negua)", "");

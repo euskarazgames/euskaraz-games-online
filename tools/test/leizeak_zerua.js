@@ -425,7 +425,7 @@ const { launch } = require('./_browser');
   await T(160);
   ok((await ev(() => __game.ZONE.cur)) === 'ibarra', 'ortzadarretik behera → harrespila', S(p));
   const obj1 = await ev(() => __game.objective());
-  ok(/Odei/.test(obj1[0]), 'helburua: Iratiri Odeiren berri eman', obj1[0]);
+  ok(/Eateren/.test(obj1[0]), 'helburua: Atarrabiri Eateren berri eman', obj1[0]);
   await ev(() => { const g = __game, N = g.NPCS.find((n) => n.id === 'irati'); g.teleport(N.x + 1.2, N.z, N.y || 0); for (let i = 0; i < 4; i++) g.tick(1 / 120); g.talkTo(N); });
   const green = await ev(() => {
     const g = __game;
@@ -435,7 +435,7 @@ const { launch } = require('./_browser');
   });
   ok(green === 5, 'zazpi argiak: bosgarrena berde (Odei aske)', green);
   await skip();
-  ok(await flag('irati-odei'), 'Irati: Odeiren berria (amaiera)');
+  ok(await flag('irati-odei'), 'Atarrabi: Eateren berria (amaiera)');
 
   console.log(errs.length ? errs.join('\n') : 'ERRORERIK EZ');
   console.log(fails ? `${fails} HUTS` : 'DENA ONDO');

@@ -26,11 +26,14 @@ ASSETS = {
     'akerbeltz': ('Akerbeltz, a black he-goat spirit from Basque folklore standing upright on two legs, big curled '
                   'ram horns, amber eyes with horizontal pupils, long goatee, wearing a long dark purple hooded robe '
                   'with a frayed hem, mystical and old, hands open'),
-    'zezengorri': ('Zezengorri, a huge red fire bull from Basque folklore standing on four legs, long curved ivory '
-                   'horns, a glowing orange ember set in its forehead, smoke and small flames at its nostrils, '
-                   'muscular, side three-quarter view'),
-    'eate': ('Eate, a storm and fire spirit from Basque folklore: a floating figure made of dark storm clouds '
-             'with flaming orange hair, crackling lightning eyes, no legs, the lower body dissolving into cloud'),
+    'zezengorri': ('Zezengorri, a huge dark red bull spirit from Basque folklore, standing still on four sturdy legs '
+                   'in a wide stance, all four legs clearly separated and fully visible, long curved ivory horns, '
+                   'a glowing orange ember set in its forehead, ember cracks along its back, muscular shoulders, '
+                   'side three-quarter view, whole animal from horns to tail'),
+    'eate': ('Eate, an imposing storm god spirit from Basque folklore: the upper body of a tall gaunt adult figure '
+             'made of dark slate-grey storm clouds, long flowing hair made of orange fire, glowing white lightning eyes, '
+             'long arms with crackling lightning, no legs, the waist dissolving into a swirling column of dark cloud, '
+             'menacing and ancient, not cute'),
 }
 
 

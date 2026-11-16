@@ -103,7 +103,7 @@ const { launch } = require('./_browser');
   const ir = await ev(() => { const a = __game.actionHere(); if (a) __game.interact(); return a && a.label; });
   const irc = await ev(() => !!__game.cinematicState());
   await skip();
-  ok(ir === 'IRATIREN TXOKOA' && irc, 'Iratiren txokoa (oroitzapena)', S({ ir, irc }));
+  ok(ir === 'AHIZPAREN TXOKOA' && irc, 'ahizparen txokoa (oroitzapena)', S({ ir, irc }));
   /* irteera: atetik kanpora → haranera, etxearen aurrean */
   await ev(() => { const g = __game; g.teleport(2100, 4.0, 0); g.input.x = 0.83 * 0 - 0.557 * 1; g.input.z = 0.557 * 0 + 0.83 * 1; for (let i = 0; i < 240; i++) { g.tick(1 / 120); g.zoneFadeUpdate(1 / 120); } g.input.x = g.input.z = 0; for (let i = 0; i < 90; i++) { g.tick(1 / 120); g.zoneFadeUpdate(1 / 120); } });
   st = await ev(() => { const g = __game, H = g.HOUSE.home; return { zone: g.ZONE.cur, d: +Math.hypot(g.P.x - H.x, g.P.z - H.z).toFixed(2) }; });

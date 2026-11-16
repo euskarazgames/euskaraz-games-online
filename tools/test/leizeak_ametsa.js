@@ -161,7 +161,7 @@ const { launch } = require('./_browser');
   await skip();
   await ev(() => { const g = __game; g.teleport(g.DGE.bed.x + 1.6, g.DGE.bed.z, 0); for (let i = 0; i < 6; i++) g.tick(1 / 120); });
   obj = await ev(() => __game.objective());
-  ok(/AMETSERA/.test(obj[0]), 'etxean: helburua AMETSERA', obj[0]);
+  ok(/AKELARRERA/.test(obj[0]), 'etxean: helburua AKELARRERA', obj[0]);
   a = await ev(() => { const a = __game.actionHere(); if (a) __game.interact(); return a && a.label; });
   const choice = await ev(() => document.querySelector('#choices button') && document.querySelector('#choices button').textContent);
   await page.click('#choices button:first-child');
@@ -172,7 +172,7 @@ const { launch } = require('./_browser');
   await skip();
   await T(60);
   st = await ev(() => { const g = __game; return { zone: g.ZONE.cur, x: +g.P.x.toFixed(1), z: +g.P.z.toFixed(1), night: g.DAY.k, flag: g.saved.flags.includes('ametsa') }; });
-  ok(choice === 'AMETSERA' && filmOn && st.zone === 'ametsa' && Math.abs(st.x - AE(0)) < 1 && st.flag, 'ohea → AMETSERA (zinema) → ametsa', S({ choice, filmOn, st }));
+  ok(choice === 'AKELARRERA' && filmOn && st.zone === 'ametsa' && Math.abs(st.x - AE(0)) < 1 && st.flag, 'ohea → AKELARRERA (zinema) → akelarrea', S({ choice, filmOn, st }));
   st = await ev(() => { const g = __game, c = g.scene.fog.color; return { k: g.DAY.k, fog: [c.r, c.g, c.b].map((v) => +v.toFixed(3)), sea: g.ZONES.ametsa.sky }; });
   ok(st.k === 1 && st.fog[2] > st.fog[1], 'ametsaren itxura: beti gaua, laino morea', S(st));
   await shot('ametsa-1-ohe-uhartea');
@@ -472,7 +472,7 @@ const { launch } = require('./_browser');
   const fin = await ev(() => !!__game.cinematicState());
   const turn = await ev(() => __game.ZAZPI.turnTo);
   await skip();
-  ok(fin && turn === 7 && (await flag('irati-inguma')), 'Anboto: zazpigarren argia berde, Gaueko eta Irati (amaiera)', S({ fin, turn }));
+  ok(fin && turn === 7 && (await flag('irati-inguma')), 'Murumendi: zazpigarren txingarra, Mikelatsek amona eraman (amaiera)', S({ fin, turn }));
   /* oroitzapena */
   ok(await ev(() => __game.DGE.mementos ? __game.DGE.mementos.filter((m) => m.kind === 'zorroa').length === 1 : true), 'oroitzapena: amonaren hauts-zorroa');
 
