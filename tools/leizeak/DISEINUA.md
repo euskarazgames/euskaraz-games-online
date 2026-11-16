@@ -437,6 +437,60 @@ Gidoi osoa gidoilari-agente batek berridazten du; hau da mekanikaren oinarria (`
 Probak: `leizeak_prologoa.js` (izotza urtu), `leizeak_route.js` (zubiak ESNATUz), `leizeak_lamia.js` (KATEA
 gortinan, ura/izotza barruan); bihurgunearen ondoko probek bandera jartzen dute.
 
+## 5l. AURREKUELA: LEIZEEN DEIA, GAU BELTZA baino lehen
+Erabiltzailearen eskaera: LEIZEEN DEIA GAU BELTZAren aurreko istorioa izan dadila, protagonista berarekin
+(Amaiur) baina istorio, etsai nagusi eta izen desberdinekin; abenturen maila gorenean. GAU BELTZAk
+bereak ditu kanpaia eta denbora-bidaia, Irati, Izar, Gaueko, Errolan, Odei, Herensugea, Inguma,
+Anbotoko harpeak eta gailurreko duelua: hemen ez dira erabiltzen (aipamen txikiak salbu).
+
+**Noiz.** Gau Beltzaren gauetik HIRU NEGURA (GAU BELTZAn, zazpi urte). Amaiurrek 15 urte ditu, amonaren
+sorgin-ikaslea da, eta Ibarran ez da udaberririk iristen. Ahizparen izena ia ez da aipatzen.
+
+**Logline.** Hirugarren neguko lehen elurte-gauean, leizeek deitzen dute: lurraren azpitik, txalaparta bat.
+Amaiurrek deiari jarraitzen dio eta itzalik gabeko mutil bat aurkitzen du, ATARRABI, Mariren semea. Haren
+anaiak, MIKELATSek, Mariren zazpi txingarrak lapurtzen ditu leizeetako zaindariak gaiztotuz; zazpiak
+biltzen baditu, Mariren lekua hartuko du eta negua betikoa izango da.
+
+**Pertsonaiak.** AMAIUR (protagonista, 15) · AMONA (Iturraldeko sorgin zaharra, maisua; izenik gabe) ·
+ATARRABI (Mariren seme ona; Etsairen leize-eskolan zazpi urte ikasi eta itzala galdu zuen; Amaiurri
+KRISELU-DEIEZ hitz egiten dio, kriseiluaren sugarretik) · MIKELATS (anaia; kazkabarraren eta ekaitzaren
+jauna; Atarrabiren itzala gorde du, eta harekin egiten ditu bere itzal-soldaduak) · MARI (lo, ia isilik) ·
+herritarrak (Pello eta Peio, Kattalin, Txomin, Maddi, Joanes, Mikel, Mendietatarrak: hiru urte gazteago).
+
+**Egitura (zazpi leize + amaiera).**
+| Atala | Lekua | Zaindaria (etsai nagusia) | Tresna |
+|---|---|---|---|
+| I | Basajaunen leizea | Basajaun Iluna | BASAJAUNEN KATEA |
+| II | Lamien leizea | Lamia Iluna | HAIZE-ADARRA |
+| III | Tartaloren koba | Tartalo | SUGAR-IZPIA |
+| — | Bihurgunea: AMONAREN TXINGARRA | — | UDA-DEIA (urtaroak) |
+| IV | MAIRUBARATZA (harrespilaren azpiko mairuen hiria) | MAIRU ZAHARRA | TXIMISTARRIA |
+| V | ORTZIA (hodeien gaineko uharteak) | EATE (ekaitz- eta su-izpiritua) | ENARAREN HEGOAK |
+| VI | ZEZEN-HARPEA (eguzkiaren leizea) | ZEZENGORRI (su botatzen duen zezen gorria) | EGUZKI-ISPILUA |
+| VII | SORGINEN LEIZEA (akelarrea) | AKERBELTZ | SORGIN-HAUTSA eta LO-KANTA |
+| Amaiera | MURUMENDI (harpeak eta gailurra) | MIKELATS | amonaren txingarra |
+
+**Urtaroak (lehengo garaiak).** 0 = UDA, 1 = NEGUA. Bihurgunean amonak Iturraldeko sutondoaren txingarra
+ematen dio (AMONAREN TXINGARRA): kriseiluan, elurraren azpian lo dagoen uda esnatzen du — ura isurtzen da,
+heura hazten, izotz-zubiak desagertzen. Ez da denbora-bidaia (hori GAU BELTZArena da): lurraren oroitzapena
+da, une baterako. Etsaiak udakoak edo negukoak dira; etsai ertainen ezkutua urtaroz aldatzen da.
+
+**Bihurguneak.** (1) Itzalak ez dira Gaueko-renak: Atarrabiren itzalaren zatiak dira; zaindari bakoitza
+askatzean, zati bat itzultzen zaio (itzala pixkanaka hazten zaio). (2) Iturraldeko sutondoa Mariren
+zortzigarren sua da; Mikelatsek amonaren txingarra nahi du. (3) Amaieran Marik dio negu hau ez dela bere
+semearena: "Gau batek ekarri zuen, eta beste gau batek eramango du" — lau negu geroago, kanpaia (GAU BELTZA).
+Atarrabi Mariren ondoan geratzen da anaia zaintzen; Amaiur etxera bakarrik itzultzen da. Azken planoa:
+kaiko kanpaia izotzaren barruan.
+
+**Jarraitasuna GAU BELTZArekin.** Hemen ikasitakoak (SUGAR-IZPIA, TOK-TOK, LOTARAZI, EGUZKI-ISPILUA,
+txalapartaren erritmoak) GAU BELTZAn Amaiurren trebetasunak dira. Barne-IDak (zonak, banderak) ez dira
+aldatzen; pantailako izenak eta testuak bai.
+
+**Ekoizpena.** Etsai nagusi berrien eta Atarrabiren modeloak: Tripo (testu/irudia → 3D, hezurdura eta
+animazioak) → Blender (bpy: garbitu, poligonoak murriztu, eskala eta jatorria) → meshopt; behar denean
+kargatuak, eta modelorik gabe ere jokoak funtzionatzen du (lehengo prozedurazko gorputzak). Irudiak eta
+bideoak: fal.ai (saldoa dagoenean). Ahotsak: OmniVoice (ATARRABI eta MIKELATS ahots diseinatu berriak).
+
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da
 neurgarriak diren helburuekin: errore 0 kargan eta ibilbide osoan (bot-probak), 60 fps

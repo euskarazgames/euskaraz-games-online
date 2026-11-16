@@ -6,6 +6,12 @@
 #portrait.witch .p2{fill:#27405e}#portrait.witch .p5{fill:none;stroke:#7fb8e6}
 #portrait.gaueko{background:radial-gradient(ellipse at 50% 40%,#10211f,#020807 70%)}#portrait .g1{fill:#071311}#portrait .g2{fill:#ffcf7a}
 #portrait.gaueko .eyes{animation:gglow 2.4s ease-in-out infinite}
+#portrait.atarrabi{background:radial-gradient(ellipse at 50% 40%,#4a3416,#120a04 75%)}
+#portrait.mikelats{background:radial-gradient(ellipse at 50% 38%,#1f2c40,#03050a 72%)}#portrait.mikelats .eyes{animation:gglow 2.4s ease-in-out infinite}
+#portrait.akerbeltz{background:radial-gradient(ellipse at 50% 40%,#2a1838,#060309 72%)}#portrait.akerbeltz .eyes{animation:gglow 2.8s ease-in-out infinite}
+#portrait.eate{background:radial-gradient(ellipse at 50% 40%,#3a2a1a,#06090f 72%)}
+#portrait.zezengorri{background:radial-gradient(ellipse at 50% 42%,#4a140c,#0c0302 72%)}
+#portrait.sorginak{background:radial-gradient(ellipse at 50% 40%,#24163a,#05030a 75%)}
 #portrait.unknown .static{animation:noise .3s steps(3) infinite}#portrait.unknown{background:#061312}
 #portrait .eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.6s infinite}
 #portrait .mouth{transform-box:fill-box;transform-origin:center}

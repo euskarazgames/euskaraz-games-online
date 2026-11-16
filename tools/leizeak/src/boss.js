@@ -63,7 +63,7 @@
     SND.stinger(false);
     shake(0.4);
     title(def.name, "");
-    notify(canPhase() ? def.hint || L("Haren ezkutuak garaia aldatzen du. Begiratu begien koloreari!") : L("Haren ezkutua itxi eta ireki egiten da: itxaron, eta eraso irekita dagoenean."), "", 4);
+    notify(canPhase() ? def.hint || L("Haren ezkutuak urtaroa aldatzen du. Begiratu begien koloreari!") : L("Haren ezkutua itxi eta ireki egiten da: itxaron, eta eraso irekita dagoenean."), "", 4);
     bossBar(def.name, 1);
   }
   function miniStart() {
@@ -99,7 +99,7 @@
       e.shield.material.color.set(ERA_COL[e.era]);
       fxRing(e.x, e.y + 0.2, e.z, ERA_COL[e.era], 6, 0.6);
       SND.shift(e.era);
-      notify(e.era ? L("Ezkutua ORAINERA aldatu da!") : L("Ezkutua IRAGANERA aldatu da!"), "", 2);
+      notify(e.era ? L("Ezkutua NEGURA aldatu da!") : L("Ezkutua UDARA aldatu da!"), "", 2);
       /* laguntzaileak */
       if (MINI.adds < 2) {
         MINI.adds++;
@@ -552,9 +552,9 @@
       [
         ["· · ·", "Itzala basajaunen azaletik askatu da, ke beltz bat bezala, eta sabaian desagertu.", "", BJ.x, BJ.z, 3],
         ["BASAJAUN", "…Argia. Usaina. Basoa. Nor zara zu, sorgin txikia, itzala uxatzeko adorea duzuna?", "", BJ.x, BJ.z, 4],
-        ["AMAIUR", "Amaiur naiz, Herrikoa. Txalapartek deitu ninduten.", "", P.x, P.z, 0],
-        ["BASAJAUN", "Mari isilik dago, eta ez da kasualitatea. Itzalak ez ninduen bakarrik harrapatu: norbaitek bidali zuen.", "", BJ.x, BJ.z, 4],
-        ["BASAJAUN", "Hartu nire bihotzaren zati bat. Eta entzun: Mariren suzko bola ez dago bere leizean.", "", BJ.x, BJ.z, 4],
+        ["AMAIUR", "Amaiur naiz, Iturraldekoa. Leizeek deitu ninduten.", "", P.x, P.z, 0],
+        ["BASAJAUN", "Mariren txingarra gordetzen nuen, basoaren bihotzean. Kazkabar-gau batean, Mikelats etorri zen, eta itzal bat utzi zidan barruan.", "", BJ.x, BJ.z, 4],
+        ["BASAJAUN", "Itzal hori ez zen harena… itzalik gabeko mutil baten usaina zuen. Hartu txingarra, sorgin, eta nire bihotzaren zati bat.", "", BJ.x, BJ.z, 4],
       ],
       () => {
         bjFreed();

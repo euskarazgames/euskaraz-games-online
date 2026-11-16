@@ -331,7 +331,7 @@
     if (run2 > 1e-4 && gy(sx, sz) <= lim2) return [sx, sz];
     return [px, pz];
   }
-  /* IRAGANEAN ibaian ezin da sakonera sartu: ur-ertzera bultzatu */
+  /* UDAN ibaian ezin da sakonera sartu: ur-ertzera bultzatu */
   function riverBank(px, pz, py, nx, nz) {
     if (phase !== 0 || py > RIVER_Y + 0.22) return [nx, nz];
     const w1 = riverW(nx, nz);
@@ -342,12 +342,12 @@
       gl = Math.hypot(gx, gz) || 1;
     return [nx + (gx / gl) * (-0.6 - w1), nz + (gz / gl) * (-0.6 - w1)];
   }
-  /* uretan (iraganean, ibaiaren hondoan): korronteak eramaten du */
+  /* uretan (udan, ibaiaren hondoan): korronteak eramaten du */
   function riverDrown() {
     if (phase !== 0 || respawnTimer || P.y > RIVER_Y - 0.7 || riverW(P.x, P.z) > -0.4) return;
     fxBurst(P.x, RIVER_Y + 0.2, P.z, { n: 26, speed: 3.2, up: 3, life: 0.6, size: 0.3, color: "#d8f2ff", grav: 8 });
     SND.splash();
-    notify(L("Korronteak eraman zaitu. Iraganean ibaia bizirik dago."), "", 2.6);
+    notify(L("Korronteak eraman zaitu. Udan ibaia bizirik dago."), "", 2.6);
     fall();
   }
   /* lur segurua ez ibaiaren barruan */
@@ -555,7 +555,7 @@
     m.receiveShadow = true;
     return m;
   }
-  /* ibaia: ur-zinta kurbatua (orainean izotza) */
+  /* ibaia: ur-zinta kurbatua (neguan izotza) */
   function riverSheet() {
     const tn = rawTex("water_n", false),
       mat = new T.MeshStandardMaterial({ color: "#2d6f7c", roughness: 0.12, metalness: 0.15, transparent: true, opacity: 0.86, normalMap: tn || null });
@@ -629,12 +629,12 @@
     floor.rotation.x = -PI / 2;
     floor.position.set(x, -8.3, z);
     floor.castShadow = floor.receiveShadow = false;
-    /* ur-hautsa (iraganean) */
+    /* ur-hautsa (udan) */
     HUB.pit = { x, z, fall, mist: 0 };
     /* zuloaren atzean harkaitzak (mendebaldeko hegala) */
     for (const [a, hh, sd] of [[2.1, 16, 31], [2.7, 21, 32], [3.3, 24, 33], [3.9, 19, 34], [4.5, 13, 35]]) rockPillar(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5), gy(x + Math.cos(a) * (r + 5.5), z + Math.sin(a) * (r + 5.5)) + hh, sd, 0.6, null, "zuloa");
   }
-  /* leize-zuloa: iraganean ur-hautsa gora; orainean isilik */
+  /* leize-zuloa: udan ur-hautsa gora; neguan isilik */
   function pitUpdate(dt) {
     const H = HUB.pit;
     if (!H || phaseBlend > 0.5 || Math.abs(P.x - H.x) > 70 || Math.abs(P.z - H.z) > 70) return;
@@ -763,7 +763,7 @@
   }
   /* zuhaitzak ez itsaslabarrean, ez ibaian, ez haranetik kanpo */
   const treeSpot = (x, z) => !HG.h || (valleySD(x, z) > 2.2 && riverW(x, z) > 2.2);
-  /* lurraren plataforma (haran osoa) eta ibaiaren izotza (orainean) */
+  /* lurraren plataforma (haran osoa) eta ibaiaren izotza (neguan) */
   function valleyGround() {
     buildHeights();
     valleyMesh();

@@ -3,16 +3,16 @@
      Jentilak ortzadarretik igotzen ziren zerura (ORTZI erritmoa, harrespilan). Gauekok
      hiru zaindari gogorrenak hemen ditu; lehenengoa: ODEI, trumoiaren hodeia.
        Z1 Ortzadarraren muturra .. iritsiera; SUTONDOA; hegoan, ortzadarra (haranera)
-       Z2 Hodei-zubiak ........... hodeiak IRAGANEAN trinkoak (garaia airean aldatu);
+       Z2 Hodei-zubiak ........... hodeiak UDAN trinkoak (garaia airean aldatu);
                                    ekialdean laino trinkoa: HAIZE-ADARRAz uxatu → arnasa-zatia
        Z3 Zeruko plaza ........... borroka → GILTZA TXIKIA; SUTONDOA; iparrean zeruko eskailerak;
-                                   mendebaldean haize-zutabea (ORAINEAN)
+                                   mendebaldean haize-zutabea (NEGUAN)
        Z4 Haize-errota ........... HAIZE-ADARRAz errota biratu → harrizko igogailua gora
        Z5 Hodei-zainaren harria .. (giltza txikiko atea) etsai ertaina → ENARAREN HEGOAK
        Z6 Tximista-dorrea ........ ENARAz haize-zutabean gora; hiru ekaitz-kanpaia (bat
-                                   ORAINEAN) → dorrea HEURAz (iraganean) → GILTZA NAGUSIA
+                                   NEGUAN) → dorrea HEURAz (udan) → GILTZA NAGUSIA
        Z7 Ekaitzaren begia ....... ekaitz-hesia (ate handia) → ODEI (odei.js)
-       Z8 Enaren habia ........... ezkutuko uhartetxoa (haize-zutabea, ORAINEAN) → arnasa-zatia
+       Z8 Enaren habia ........... ezkutuko uhartetxoa (haize-zutabea, NEGUAN) → arnasa-zatia
      Uharte guztiak airean: erortzean, azken lur segurura (arnasa bat galduta).
      ================================================================== */
   const SX = 1800;
@@ -232,7 +232,7 @@
     }
     return mergeGeos(parts);
   }
-  /* hodei-harria: garai batean trinkoa (iragana: urre-zuria; oraina: ekaitz-grisa) */
+  /* hodei-harria: garai batean trinkoa (uda: urre-zuria; negua: ekaitz-grisa) */
   const CLOUD_MATS = {};
   function cloudMat(ph) {
     if (CLOUD_MATS[ph]) return CLOUD_MATS[ph];
@@ -609,7 +609,7 @@
     /* ---- Z1 → Z2: zubia ---- */
     skyBridge(ZE(0), -16.6, 3.6, 9.4, 0, "zA");
     /* ---- Z2: Hodei-zubiak (garaia airean) ---- */
-    ROOMS_AREA.zB = ["HODEI-ZUBIAK", "Iraganean, hodeiak harri bezain trinkoak ziren. Aldatu garaia airean."];
+    ROOMS_AREA.zB = ["HODEI-ZUBIAK", "Udan, hodeiak harri bezain trinkoak dira. Aldatu urtaroa airean."];
     cloudStep(ZE(-1.5), 0, -24.8, 2.3, 0, { area: "zB" });
     cloudStep(ZE(2.6), 0.6, -30.8, 2.3, 1, { area: "zB" });
     cloudStep(ZE(-1.6), 1.0, -36.8, 2.3, 0, { area: "zB" });
@@ -654,7 +654,7 @@
       waves: [[["eye", -1, 2], ["grunt", -1, 1]], [["grunt", 0, 2], ["eye", 1, 1]], [["brute", -1, 1], ["eye", 0, 1], ["eye", 1, 1]]],
       diff: 1.3,
       hpK: 1.45,
-      fightText: "Itzalak hodeien gainean! Kolore bakoitza bere garaian. Ertzetik kontuz…",
+      fightText: "Itzalak hodeien gainean! Kolore bakoitza bere urtaroan. Ertzetik kontuz…",
       onWin: () => {
         revealChest(DGZ.keyChest);
         notify(L("Kutxa bat agertu da plazaren erdian."), "", 4);
@@ -691,7 +691,7 @@
     DGZ.wingChest = chest("zE-enara", ZE(34), 9, -97, PI, { t: "item", id: "enara" }, { hidden: !isCleared("zE-mini") });
     jentilStatue(ZE(26), -113, 0.3, 0.75, 9);
     jentilStatue(ZE(42), -113, -0.3, 0.75, 9);
-    /* ---- Z3 mendebaldea: haize-zutabea (ORAINEAN) → Z6 ---- */
+    /* ---- Z3 mendebaldea: haize-zutabea (NEGUAN) → Z6 ---- */
     ZR.westDraft = updraft({ x: ZE(-21), z: -62, r: 2.7, y0: -16, y1: 19.5, phase: 1, power: 8.8, id: "zF-u" });
     /* ---- Z6: Tximista-dorrea (y 14) ---- */
     skyIsland({ x: ZE(-46), z: -62, y: 14, r: 11, depth: 15, area: "zF" });
@@ -712,11 +712,11 @@
       kind: "kanpaia",
       time: 9,
       runes: [[ZE(-54.5), 17.6, -57.5, -1], [ZE(-37.5), 17.6, -57.5, 1], [ZE(-46), 17.6, -53.6, -1]],
-      hint: "Hiru ekaitz-kanpaia dorrearen inguruan. Jo denak SORGINKERIAz, elkarren segidan (bat ORAINEAN bakarrik).",
+      hint: "Hiru ekaitz-kanpaia dorrearen inguruan. Jo denak SORGINKERIAz, elkarren segidan (bat NEGUAN bakarrik).",
       onSolve: () => {
         revealChest(DGZ.bigChest);
         title("KANPAIAK BATERA", "");
-        notify(L("Dorrearen gainean, kutxa bat! Heura IRAGANEAN bizirik dago."), "", 4.5);
+        notify(L("Dorrearen gainean, kutxa bat! Heura UDAN bizirik dago."), "", 4.5);
       },
     });
     model("rock_single_C", ZE(-53), 14, -68, 2.4, 0.8);
@@ -754,7 +754,7 @@
     }
     barrierBuild();
     odeiBuild();
-    /* ---- Z8: Enaren habia (ezkutuko uhartetxoa) — Z4-ko haize-zutabea (ORAINEAN) ---- */
+    /* ---- Z8: Enaren habia (ezkutuko uhartetxoa) — Z4-ko haize-zutabea (NEGUAN) ---- */
     ZR.nestDraft = updraft({ x: ZE(45.2), z: -55.5, r: 2.2, y0: -12, y1: 15.5, phase: 1, power: 8.4, id: "zH-u" });
     skyIsland({ x: ZE(52), z: -34, y: 6, r: 4.2, depth: 7, area: "zH", debris: 2 });
     ROOMS_AREA.zH = ["ENAREN HABIA", "Enarak hemen bizi dira, ekaitzetik urrun."];
@@ -884,11 +884,11 @@
       flagSet("zerua");
       say(
         [
-          ["· · ·", "Ortzadarraren amaieran, hodeien gainean: uharte zaharrak airean, eta urrunean, Anboto, ekaitz beltz batean bilduta.", "", ZE(0), -40, 0, [ZE(18), 14, 26]],
-          ["AMAIUR", "Jentilen zerua… Hemendik igotzen ziren izarretara, amonak zioenez.", "", P.x, P.z, 0],
-          ["AMAIUR", "Trumoia entzuten da iparrean. Gauekoren zaindari bat, zalantzarik gabe.", "", P.x, P.z, 0],
+          ["· · ·", "Ortzadarraren amaieran, hodeien gainean: uharte zaharrak airean, eta urrunean, Murumendi, ekaitz beltz batean bilduta.", "", ZE(0), -40, 0, [ZE(18), 14, 26]],
+          ["AMAIUR", "Ortzia… Hemendik igotzen ziren jentilak izarretara, amonak zioenez.", "", P.x, P.z, 0],
+          ["AMAIUR", "Trumoia entzuten da iparrean. Eate, zalantzarik gabe.", "", P.x, P.z, 0],
         ],
-        () => notify(L("Iparrera, hodei-zubietatik. Hodeiak IRAGANEAN trinkoak dira: aldatu garaia airean."), "", 6),
+        () => notify(L("Iparrera, hodei-zubietatik. Hodeiak UDAN trinkoak dira: aldatu urtaroa airean."), "", 6),
       );
     }
     /* Z5: zaindaria esnatzen da */
@@ -904,7 +904,7 @@
           K: 1.3,
           tint: "#c9d6e6",
           add: [["eye", -1, 2]],
-          hint: "Hodeiz jantzitako zaindaria! Ezkutua garaiz aldatzen du (begien kolorea). Oldarka datorrenean: ALDARATU.",
+          hint: "Hodeiz jantzitako zaindaria! Ezkutua urtaroz aldatzen du (begien kolorea). Oldarka datorrenean: ALDARATU.",
           onDead: () => {
             revealChest(DGZ.wingChest);
             notify(L("Kutxa bat agertu da harriaren hegoaldean."), "", 4);
@@ -948,7 +948,7 @@
       if (!saved.flags.includes("herensugea")) return ["Odeiren hodei zuria (ortzadarraren muturrean): SUGE-MENDIRA.", HZ.cloud ? [HZ.cloud.position.x, HZ.cloud.position.z, 0] : null];
       return ["Ortzadarra (hegoan): haranera.", [DGZ.exitArch.x, DGZ.exitArch.z, 0]];
     }
-    if (!isCleared("Z3")) return ROOM.cur === R.Z3 ? ["Zeruko plaza: garaitu itzalak (ertzetik kontuz).", [R.Z3.x, R.Z3.z, 0]] : ["Iparrera hodei-zubietatik: hodeiak IRAGANEAN trinkoak dira. Aldatu garaia airean.", [R.Z3.x, -51, 0]];
+    if (!isCleared("Z3")) return ROOM.cur === R.Z3 ? ["Zeruko plaza: garaitu itzalak (ertzetik kontuz).", [R.Z3.x, R.Z3.z, 0]] : ["Iparrera hodei-zubietatik: hodeiak UDAN trinkoak dira. Aldatu urtaroa airean.", [R.Z3.x, -51, 0]];
     if (!saved.doors.includes("zD-n") && !(saved.keyz.zerua > 0)) return ["Kutxa: plazaren erdian.", [R.Z3.x, R.Z3.z, 0]];
     if (!saved.doors.includes("zD-n")) {
       if (P.y > 7.5 && Math.abs(P.x - ZE(34)) < 4 && P.z < -74) return ["Giltza txikiko atea: ireki.", [ZE(34), -83, 9]];
@@ -957,8 +957,8 @@
     if (!isCleared("zE-mini")) return ["Hodei-zainaren harria: zaindaria esnatuko da.", [R.Z5.x, R.Z5.z, 9]];
     if (!it("enara")) return ["Kutxa ireki: harriaren hegoaldean.", [R.Z5.x, -97, 9]];
     if (!it(DGZ.bigKey)) {
-      if (ROOM.cur === R.Z6) return isCleared("zF-bells") ? ["Dorrea: igo heura IRAGANEAN; goian, kutxa.", [ZE(-46), -60.8, 14]] : ["Hiru ekaitz-kanpaiak, elkarren segidan (bat ORAINEAN bakarrik).", [ZE(-46), -56, 14]];
-      return ["Plazaren mendebaldean, haize-zutabea (ORAINEAN): jauzi bikoitza eta eutsi JAUZIari — planeatu gora, dorreraino.", [ZE(-21), -62, 0]];
+      if (ROOM.cur === R.Z6) return isCleared("zF-bells") ? ["Dorrea: igo heura UDAN; goian, kutxa.", [ZE(-46), -60.8, 14]] : ["Hiru ekaitz-kanpaiak, elkarren segidan (bat NEGUAN bakarrik).", [ZE(-46), -56, 14]];
+      return ["Plazaren mendebaldean, haize-zutabea (NEGUAN): jauzi bikoitza eta eutsi JAUZIari — planeatu gora, dorreraino.", [ZE(-21), -62, 0]];
     }
     return saved.doors.includes(DGZ.bossDoor) ? ["Ekaitzaren begia: ODEI.", [Z7.x, Z7.z + 10, Z7.y]] : ["Zeruko eskailerak iparrean: ekaitz-hesiaren ate handia (giltza nagusia).", [ZE(0), -112, 18]];
   };

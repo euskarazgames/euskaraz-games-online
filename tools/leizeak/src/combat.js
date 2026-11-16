@@ -1,10 +1,10 @@
   /* ==================================================================
-     BORROKA · Gauekoren hezurrezko zaindariak (KayKit Skeletons, CC0)
+     BORROKA · Mikelatsen hezurrezko zaindariak (KayKit Skeletons, CC0)
      · Hiru mota: ezpatadun hezurdura (lasterka eta ebakia), hezurdun
        sorgina (urrutitik jaurtitzen du eta teleportatzen da) eta
        aizkoradun gudaria (orroa, oldarraldia, kaiolaren kontra zorabiatu).
      · Zaindari bakoitza garai batean bakarrik zauritzen da: begi urreak →
-       iragana, begi urdinak → oraina, moreak → biak. Beste garaian ezkutua.
+       uda, begi urdinak → negua, moreak → biak. Beste garaian ezkutua.
      · Jokalariaren sorginkeria: magic.js.
      ================================================================== */
   const ENEMIES = [],
@@ -350,8 +350,8 @@
                 ? "Ezkutu urdina: IZOTZAREKIN bakarrik zauritzen da. ALDATU!"
                 : "Ezkutu urrea: UR BIZIAREKIN bakarrik zauritzen da. ALDATU!"
               : e.era
-                ? "Ezkutu urdina: ORAINEAN bakarrik zauritzen da. ALDATU garaia!"
-                : "Ezkutu urrea: IRAGANEAN bakarrik zauritzen da. ALDATU garaia!",
+                ? "Ezkutu urdina: NEGUAN bakarrik zauritzen da. ALDATU urtaroa!"
+                : "Ezkutu urrea: UDAN bakarrik zauritzen da. ALDATU urtaroa!",
           "",
           3.5,
         );
@@ -399,7 +399,7 @@
         ? L("ITXITA · ITXARON")
         : eraComb()
           ? (e.era ? L("IZOTZA") : L("URA")) + " · " + L("ALDATU") + kb(" (Q)")
-          : (e.era ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + " · " + L("ALDATU", "CAMBIA") + kb(" (Q)");
+          : (e.era ? L("NEGUA", "INVIERNO") : L("UDA", "VERANO")) + " · " + L("ALDATU", "CAMBIA") + kb(" (Q)");
     el.style.borderColor = el.style.color = ERA_COL[e.era];
   }
   const SHIELD_HINT = { e: null, t: 0 };
@@ -1257,7 +1257,7 @@
   const BOONS = [
     ["heart", "ARNASA SAKONA", "ALIENTO PROFUNDO", "+1 bizitza gehienez.", "+1 de vida máxima."],
     ["sharp", "MAKILA ZORROTZA", "VARA AFILADA", "Izpi hirukoitzek eta INDARRAk +1 kalte egiten dute.", "Los rayos triples y la INDARRA hacen +1 de daño."],
-    ["wave", "GARAI-UHIN HANDIA", "GRAN ONDA DE ÉPOCA", "Garaia aldatzean uhin zabalagoa eta indartsuagoa.", "Al cambiar de época, la onda es más amplia y fuerte."],
+    ["wave", "URTARO-UHIN HANDIA", "GRAN ONDA DE ESTACIÓN", "Urtaroa aldatzean uhin zabalagoa eta indartsuagoa.", "Al cambiar de estación, la onda es más amplia y fuerte."],
     ["dash", "AIREKO BULTZADA BIKOITZA", "DOBLE DASH AÉREO", "Bi BULTZADA airean, lurrera jaitsi gabe.", "Dos DASH en el aire sin tocar el suelo."],
   ];
   function offerBoon(i) {

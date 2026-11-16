@@ -1,8 +1,9 @@
   /* ==================================================================
-     GIDOIA · LEIZEEN DEIA (istorio propioa)
-     Erlojua hautsi eta urtebetera, Ibarrako txalapartak gauez jotzen hasten dira
-     bakarrik. Mari isildu da; Gauekoren itzal-zatiek mitologiako izakiak
-     gaiztotzen dituzte. Amaiur leizera jaitsiko da Basajaun askatzera.
+     GIDOIA · LEIZEEN DEIA (GAU BELTZAren aurrekoa; istorio propioa)
+     Gau Beltzaren gauetik hiru negura, Ibarrako txalapartak gauez jotzen hasten dira
+     bakarrik: leizeek deitzen dute. Atarrabik (Mariren semea, itzalik gabe) kriseiluaren
+     sugarretik hitz egiten dio Amaiurri; haren anaia Mikelatsek Mariren zazpi txingarrak
+     lapurtzen ditu leizeetako zaindariak gaiztotuz. Amaiur leizera jaitsiko da Basajaun askatzera.
      · Banderak (saved.flags): istorioaren aurrerapena.
      · Helburua (HUD + urrezko markatzailea): aurrerapenaren araberakoa.
      · Amaiera (zati honetakoa): Mariren suzko bola zeruan… nork darama?
@@ -28,7 +29,7 @@
         itemGet(
           "sugarra",
           L("BURRUNTZI GORIA"),
-          L("SUGAR-IZPIA: INDARRA kargatuta askatzean, izpia sua da. Egurra erretzen du, Gauekoren izotza urtzen eta burdinazko galdarak pizten. ") + (mobile ? L("Eutsi SORGINKERIA botoiari eta askatu.") : L("Eutsi J (edo klika) eta askatu.")),
+          L("SUGAR-IZPIA: INDARRA kargatuta askatzean, izpia sua da. Egurra erretzen du, Mikelatsen izotza urtzen eta burdinazko galdarak pizten. ") + (mobile ? L("Eutsi SORGINKERIA botoiari eta askatu.") : L("Eutsi J (edo klika) eta askatu.")),
           () => coach("fire", "J", "Mantendu J eta askatu: SUGAR-IZPIA (sua)", "", "attackBtn", "Mantendu SORGINKERIA eta askatu: SUGAR-IZPIA", ""),
         );
       },
@@ -68,7 +69,7 @@
         itemGet(
           "ispilua",
           L("EGUZKI-ISPILUA"),
-          L("Brontzezko ispilu zaharra, eguzki bat atzean. Argi-zutabe batean (sabaiko arrakalak), eutsi SORGINKERIAri: argia islatu eta apuntatu. IRAGANEAN eguzkia, ORAINEAN ilargia. Gela honetan bertan ere, zutabe bat dago… ") + (mobile ? L("Eutsi SORGINKERIA botoiari argian.") : L("Eutsi J argian.")),
+          L("Brontzezko ispilu zaharra, eguzki bat atzean. Argi-zutabe batean (sabaiko arrakalak), eutsi SORGINKERIAri: argia islatu eta apuntatu. UDAN eguzkia, NEGUAN ilargia. Gela honetan bertan ere, zutabe bat dago… ") + (mobile ? L("Eutsi SORGINKERIA botoiari argian.") : L("Eutsi J argian.")),
           () => coach("ispilua", "J", "Argi-zutabean: mantendu J → EGUZKI-ISPILUA (apuntatu)", "", "attackBtn", "Argi-zutabean: mantendu SORGINKERIA → ISPILUA", ""),
         );
       },
@@ -79,8 +80,8 @@
         persist();
         itemGet(
           "katea",
-          L("SUGAARREN KATEA"),
-          L("Suge-eraztunetara tiratzen zaitu, kaxak erakartzen ditu eta etsaiak zorabiatzen. ") + (mobile ? L("KATEA botoia agertzen da eraztun bat hurbil dagoenean.") : L("C tekla.")),
+          L("BASAJAUNEN KATEA"),
+          L("Basajaunen katea: eraztunetara tiratzen zaitu, kaxak erakartzen ditu eta etsaiak zorabiatzen. ") + (mobile ? L("KATEA botoia agertzen da eraztun bat hurbil dagoenean.") : L("C tekla.")),
           () => coach("chain", "C", "C: KATEA · suge-eraztunetara tiratu", "", "useBtn", "KATEA: suge-eraztunetara tiratu", ""),
         );
       },
@@ -129,37 +130,39 @@
       if (!flag("basajaun")) return saved.doors.includes("dD-n") ? ["Basajaunen bihotza. Prestatu.", [R.I.x, R.I.z + 8, 0]] : ["Ate handia iparraldean: giltza nagusia.", [R.D.x, R.D.z - 12, 0]];
       return ["Irten leizetik hegoaldeko arkutik. Herriak zure berri itxaroten du.", [DUNGEON.exitArch.x, DUNGEON.exitArch.z, 0]];
     }
-    if (!flag("irati1")) return ["Plazan: Iratiren oihartzunarekin hitz egin.", [0, 41, 0]];
+    if (!flag("irati1")) return ["Plazan: Atarrabirekin hitz egin, txalapartaren ondoan.", [0, 41, 0]];
     if (!saved.rhythms.includes("esnatu")) return ["Plazako txalaparta: Pello eta Peiorekin hitz egin.", [0, 28.4, 0]];
     if (!flag("atea")) return ["Iparrera, ibaiaz bestaldean, basoko leizea. Atea: jo ESNATU (" + d(HUB.cave.x, HUB.cave.z) + " m).", [HUB.cave.x, HUB.cave.z + 4, 5]];
     if (!flag("basajaun")) return ["Basajaunen leizea zabalik dago. Sartu.", [HUB.cave.x, HUB.cave.z, 5]];
-    if (!flag("cliff")) return ["Itzuli herrira. Iratiri kontatu.", [0, 41, 0]];
+    if (!flag("cliff")) return ["Itzuli herrira: Atarrabiri kontatu.", [0, 41, 0]];
     if (!flag("lamia")) return [(flag("ur-jauzia") ? "Ekialdeko ur-jauzia: LAMIEN LEIZEA, uraren atzean (" : "Ekialdeko ur-jauzia izoztuta: izotz-gortinako suge-eraztuna, KATEArekin (") + d(93, -28.5) + " m).", [93, -28.5, -0.9]];
     if (!flag("lepoa")) return ["Artzainen lepoa: haize-errotari putz HAIZE-ADARRAz (" + d(-74.6, -99) + " m).", [-74.6, -99, 9.4]];
     if (!flag("tartalo")) return ["Lepoaren goian: TARTALOREN KOBA (" + d(-70, -128) + " m).", [-70, -127, 12]];
-    if (!flag("irati-tartalo")) return ["Itzuli herrira: Iratiri Tartaloren berri eman.", [0, 41, 0]];
-    if (!flag("jentilatea")) return ["Harrespilako trikuharria: jentilen atea. Jo ESNATU haren ondoan (" + d(45, -69.5) + " m).", [45, -67, 9]];
-    if (!flag("errolan")) return ["JENTILBARATZA: trikuharriaren azpian, jentilen hiria (" + d(45, -69.5) + " m).", [45, -69.4, 9]];
-    if (!flag("irati-errolan")) return ["Itzuli herrira: Iratiri Errolanen berri eman.", [0, 41, 0]];
+    if (!flag("irati-tartalo")) return ["Itzuli herrira: Atarrabiri Tartaloren berri eman.", [0, 41, 0]];
+    /* bihurgunea: AMONAREN TXINGARRA (Iturralden; urtaroak irekitzen ditu) */
+    if (!flag("giroa")) return ["Iturraldera: amona zain dago, sutondoan.", [28, 31, 0]];
+    if (!flag("jentilatea")) return ["Harrespilako trikuharria: mairuen atea. Jo ESNATU haren ondoan (" + d(45, -69.5) + " m).", [45, -67, 9]];
+    if (!flag("errolan")) return ["MAIRUBARATZA: trikuharriaren azpian, mairuen hiria (" + d(45, -69.5) + " m).", [45, -69.4, 9]];
+    if (!flag("irati-errolan")) return ["Itzuli herrira: Atarrabiri Mairu zaharraren berri eman.", [0, 41, 0]];
     if (!saved.rhythms.includes("ortzi")) return ["Harrespilan, jentil zaharrak badaki zerura nola igo (" + d(46, -64) + " m).", [46, -62.4, 9]];
     if (!flag("ortzadarra")) return ["Harrespilaren erdian jo ORTZI (txalaparta): ortzadarra.", [46, -66.5, 9]];
-    if (!flag("odei")) return ["Ortzadarra: igo hodeien gainera, JENTILEN ZERUA (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
-    if (!flag("irati-odei")) return ["Itzuli herrira: Iratiri Odeiren berri eman.", [0, 41, 0]];
-    if (!flag("herensugea")) return ["JENTILEN ZERUA: ortzadarretik igo, eta Odeiren hodei zuriak SUGE-MENDIRA eramango zaitu (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
-    if (!flag("irati-herensuge")) return ["Plazan: Iratiri Herensugearen berri eman.", [0, 41, 0]];
+    if (!flag("odei")) return ["Ortzadarra: igo hodeien gainera, ORTZIA (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
+    if (!flag("irati-odei")) return ["Itzuli herrira: Atarrabiri Eateren berri eman.", [0, 41, 0]];
+    if (!flag("herensugea")) return ["ORTZIA: ortzadarretik igo, eta hodei zuri batek ZEZEN-HARPERA eramango zaitu (" + d(ORZ.A.x, ORZ.A.z) + " m).", [ORZ.A.x, ORZ.A.z - 1, 9]];
+    if (!flag("irati-herensuge")) return ["Plazan: Atarrabiri Zezengorriren berri eman.", [0, 41, 0]];
     /* zazpigarren atala: Inguma (seaska.js, ametsa.js) */
     if (!flag("inguma-ametsa")) return ["Iturralden lo egin (ohea), sutondoa piztuta.", [28, 31, 0]];
-    if (!flag("seaska")) return ["Plazan: Iratiri ametsaren berri eman.", [0, 41, 0]];
+    if (!flag("seaska")) return ["Plazan: Atarrabiri akelarrearen berri eman.", [0, 41, 0]];
     if (!flag("seaska-kanta")) {
       const B = BERTSOAK.find((b) => !flag(b.flag));
-      if (!B) return ["Plazan: Irati, hiru bertsoekin.", [0, 41, 0]];
+      if (!B) return ["Plazan: Atarrabi, hiru bertsoekin.", [0, 41, 0]];
       const at = { "bertso-belar": [-15.5, 28.5, 0], "bertso-hare": [8.2, 78, -7.2], "bertso-izar": [46, -64, 9] }[B.flag];
-      return ["Seaska-kantaren bertsoak (" + bertsoCount() + "/3): " + B.who + (B.flag === "bertso-izar" && DAY.k < 0.5 ? " — gauez." : "."), at];
+      return ["Lo-kantaren bertsoak (" + bertsoCount() + "/3): " + B.who + (B.flag === "bertso-izar" && DAY.k < 0.5 ? " — gauez." : "."), at];
     }
-    if (!flag("inguma")) return ["Iturralden, ohean: AMETSERA (Ingumaren ametsa).", [28, 31, 0]];
-    if (!flag("irati-inguma")) return ["Irten kanpora: Anboto aldera begiratu.", [28, 31, 0]];
+    if (!flag("inguma")) return ["Iturralden, ohean: AKELARRERA (Akerbeltz).", [28, 31, 0]];
+    if (!flag("irati-inguma")) return ["Irten kanpora: Murumendi aldera begiratu.", [28, 31, 0]];
     /* azken atala: Anboto (anboto.js) */
-    if (!flag("anboto")) return ["Plazan: Irati. Anbotora, Mariren etxera.", [0, 41, 0]];
+    if (!flag("anboto")) return ["Plazan: Atarrabi. Murumendira, amonaren bila.", [0, 41, 0]];
     return [saved.pieces.length < 8 ? "Harana zurea da. Arnasa-zatiak: " + saved.pieces.length + " · Ardiak: " + saved.sheep.length + "/3" : "Harana zurea da.", null];
   }
   function questCheck() {
@@ -186,16 +189,16 @@
     MARI.armed = true;
     say(
       [
-        ["IRATI", "Amaiur! Basajaunen orroa entzun dugu herritik… baina ez zen haserrea. Askatu duzu!", "", 0, 41, 0],
-        ["· · ·", "Bat-batean, zerua argitzen da. Suzko bola bat, Anbotoko aldetik, itsaso aldera hegan.", "", 10, -120, 79, [0, 4, 34]],
-        ["IRATI", "Mariren sua… baina Mari ez doa haren barruan. Norbaitek darama.", "", 0, 41, 0],
-        ["GAUEKO", "Txalapartak deitzen du, sorgin. Nik ere entzuten dut. Zazpi leize, zazpi zaindari… eta zu bakarrik.", "", P.x, P.z, 0, null, "st_g1"],
-        ["AMAIUR", "Gaueko… ez zinen desagertu.", "", P.x, P.z, 0],
-        ["IRATI", "Ez gaude bakarrik, Amaiur. Basajaun zurekin dago orain. Eta herri osoa.", "", 0, 41, 0],
+        ["ATARRABI", "Amaiur! Basajaunen orroa entzun dut lurraren azpitik… baina ez zen haserrea. Askatu duzu!", "", 0, 41, 0],
+        ["· · ·", "Bat-batean, zerua argitzen da. Suzko bola bat, mendi aldetik, itsaso aldera hegan.", "", 10, -120, 79, [0, 4, 34]],
+        ["ATARRABI", "Lehen txingarra amaren leizera itzuli da. Amak… sentitu du.", "", 0, 41, 0],
+        ["MIKELATS", "Anaiak sorgin bat aurkitu du. Txingar bat itzuli diozu amari… Sei ditut oraindik.", "", P.x, P.z, 0, null, "st_g1"],
+        ["AMAIUR", "Hori zen zure anaia? Haren ahotsa… hotza da.", "", P.x, P.z, 0],
+        ["ATARRABI", "Ez beldurtu. Basajaun zurekin dago orain. Eta herri osoa ere bai.", "", 0, 41, 0],
       ],
       () => {
         title("JARRAITZEKO…", "");
-        notify(L("Lehen leizea amaituta. Harana libreki esploratu dezakezu: arnasa-zatiak, ardiak, erronkak…"), "", 7);
+        notify(L("Lehen txingarra itzulita. Harana libreki esploratu dezakezu: arnasa-zatiak, ardiak, erronkak…"), "", 7);
         hud();
       },
     );
@@ -278,20 +281,19 @@
     ZAZPI.armed = true;
     say(
       [
-        ["IRATI", "Amaiur! Lepotik ardi-zintzarriak entzun ditugu, eta Tartaloren orroa… baina kantu bat zirudien.", "", 0, 41, 0],
-        ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala. Eta izen bat esan zuen: Anboto.", "", P.x, P.z, 0],
-        ["· · ·", "Une horretan, Anboto aldetik, hodei beltz bat jaitsi da harana estaltzera. Haren barruan, zazpi argi.", "", 20, -170, 120, [0, 30, 40]],
-        ["· · ·", "Hiru argi berde: Basajaun, Lamia, Tartalo. Beste lauak gorri, taupaka, bihotz gaiztotuak bezala.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Hiru zaindari, sorgin. Lau falta. Eta Anboton, Mariren etxean… ni zain. Txalaparta jo nahi duzu? Jo, bada. Nik ere badakit dantzan.", "", P.x, P.z, 0, null, "st_g3"],
-        ["IRATI", "Ez entzun. Beldur da: herriak berriro jotzen du gauez, eta erritmoa indartzen ari da.", "", 0, 41, 0],
-        ["AMAIUR", "Orrazia, adarra, sua… eta zuek. Anbotora noa.", "", P.x, P.z, 0],
+        ["ATARRABI", "Amaiur! Lepotik ardi-zintzarriak entzun dira, eta Tartaloren orroa… baina kantu bat zirudien.", "", 0, 41, 0],
+        ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala. Zure itzalaren kolorekoa zen…", "", P.x, P.z, 0],
+        ["· · ·", "Une horretan, Murumendi aldetik, ekaitz-hodei bat jaitsi da harana estaltzera. Haren barruan, zazpi argi.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Hiru argi berde: Basajaun, Lamia, Tartalo. Beste lauak gorri, Mikelatsen eskuetan, taupaka.", "", 20, -170, 120, [0, 30, 40]],
+        ["MIKELATS", "Hiru txingar galdu ditut. Baina negua nirea da, eta zure amonaren sua… hura ere nahi dut.", "", P.x, P.z, 0, null, "st_g3"],
+        ["ATARRABI", "Zure amonaren sua aipatu du… Zoaz etxera, Amaiur. Orain.", "", 0, 41, 0],
+        ["AMAIUR", "Amona…!", "", P.x, P.z, 0],
       ],
       () => {
         flagSet("irati-tartalo");
         ZAZPI.t = -1;
         if (ZAZPI.g) ZAZPI.g.visible = false;
-        title("JARRAITZEKO…", "");
-        notify(L("Hiru leize amaituta. Harrespilako trikuharriak dardara egiten du: jo ESNATU haren ondoan."), "", 8);
+        notify(L("Hiru txingar itzulita. Iturraldera, azkar: amona zain dago, sutondoan."), "", 8);
         hud();
       },
     );
@@ -305,12 +307,12 @@
     ZAZPI.turn = true;
     say(
       [
-        ["IRATI", "Amaiur! Gau osoan harrespilako harriek dardara egin dute… eta gero, trumoi bat, zerua garbi zegoen arren.", "", 0, 41, 0],
-        ["AMAIUR", "Errolan, jentilen azkena. Aske dago. Ekaitz bat zeraman bularrean.", "", P.x, P.z, 0],
-        ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Laugarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Lau. Ondo kontatzen duzu, sorgin. Baina hodeien gainean, jentilen zeruan… nire hiru zaindari gogorrenak zain daude.", "", P.x, P.z, 0, null, "st_g4"],
-        ["IRATI", "Ez gaude bakarrik: herriak berriro jotzen du txalaparta, gauez eta egunez.", "", 0, 41, 0],
-        ["AMAIUR", "Jentilen zerura, beraz. Hodeien gainera.", "", P.x, P.z, 0],
+        ["ATARRABI", "Amaiur! Gau osoan harrespilako harriek dardara egin dute… eta gero, isiltasuna. Lo daude berriro.", "", 0, 41, 0],
+        ["AMAIUR", "Mairu zaharra aske dago. Haserrez altxatzen zituen harriak: ekaitz bat zeraman bularrean.", "", P.x, P.z, 0],
+        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Laugarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["MIKELATS", "Lau. Harriak lo daude berriro. Baina hodeien gainean, Eatek ez du sorginik maite.", "", P.x, P.z, 0, null, "st_g4"],
+        ["ATARRABI", "Eate: haizearen eta suaren izpiritua. Hodeien gainean, Ortzian, nire anaiak bosgarren txingarra eman dio.", "", 0, 41, 0],
+        ["AMAIUR", "Ortzira, beraz. Hodeien gainera.", "", P.x, P.z, 0],
       ],
       () => {
         flagSet("irati-errolan");
@@ -318,7 +320,7 @@
         ZAZPI.turn = false;
         if (ZAZPI.g) ZAZPI.g.visible = false;
         title("JARRAITZEKO…", "");
-        notify(L("Lau leize amaituta. Harana zurea da: arnasa-zatiak, misterioak, erronkak… Jentilen zerua laster."), "", 8);
+        notify(L("Lau txingar itzulita. Harana zurea da: arnasa-zatiak, misterioak, erronkak… Ortzia laster."), "", 8);
         hud();
       },
     );
@@ -333,12 +335,12 @@
     ZAZPI.turnTo = 5;
     say(
       [
-        ["IRATI", "Amaiur! Gaur euria egin du, eta euri goxoa zen, ez kazkabarra. Txalapartak lasaiago jotzen du.", "", 0, 41, 0],
-        ["AMAIUR", "Odei aske dago. Trumoi bat zeraman bihotzean, Errolanek bezala.", "", P.x, P.z, 0],
-        ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Bosgarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere.", "", P.x, P.z, 0, null, "st_g5"],
-        ["IRATI", "Ez dago bakarrik, Gaueko. Herri osoak jotzen du berarekin.", "", 0, 41, 0],
-        ["AMAIUR", "Bi falta. Gero, Anbotora.", "", P.x, P.z, 0],
+        ["ATARRABI", "Amaiur! Gaur euria egin du, eta euri goxoa zen, ez kazkabarra. Txalapartak lasaiago jotzen du.", "", 0, 41, 0],
+        ["AMAIUR", "Eate aske dago. Trumoi bat zeraman bihotzean, Mairu zaharrak bezala.", "", P.x, P.z, 0],
+        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Bosgarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["MIKELATS", "Bost. Ekaitza ere galdu dut… Baina Zezengorrik ez du inoiz altxorrik uzten.", "", P.x, P.z, 0, null, "st_g5"],
+        ["ATARRABI", "Zezengorri amaren altxorren zaindaria zen. Orain, nire anaiaren txingarra zaintzen du, eguzkiaren leizean.", "", 0, 41, 0],
+        ["AMAIUR", "Bi falta. Gero, Murumendira.", "", P.x, P.z, 0],
       ],
       () => {
         flagSet("irati-odei");
@@ -346,7 +348,7 @@
         ZAZPI.turn = false;
         if (ZAZPI.g) ZAZPI.g.visible = false;
         title("JARRAITZEKO…", "");
-        notify(L("Bost leize amaituta. Herensugea zain dago, hodeien beste aldean: igo ortzadarretik, eta Odeiren hodei zuriak eramango zaitu."), "", 8);
+        notify(L("Bost txingar itzulita. Zezengorri zain dago, hodeien beste aldean: igo ortzadarretik, eta hodei zuri batek eramango zaitu."), "", 8);
         hud();
       },
     );
@@ -361,12 +363,12 @@
     ZAZPI.turnTo = 6;
     say(
       [
-        ["IRATI", "Amaiur! Herensuge bat herriaren gainean, hegan! Haurrak oihuka atera dira… baina zuri begira zegoen, ez guri.", "", 0, 41, 0],
-        ["AMAIUR", "Zazpi buru zituen, eta sei gezurrak ziren. Orain bat bakarra du: berea.", "", P.x, P.z, 0],
-        ["· · ·", "Anbotoko hodeian, zazpi argiak berriro. Seigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
-        ["GAUEKO", "Sei. Esna zaude oraindik, sorgin txikia? Laster… lo egingo duzu. Eta ametsetan, nire azken zaindaria zain: Inguma.", "", P.x, P.z, 0, null, "st_g6"],
-        ["IRATI", "Gaur gauean, ez itzali sutondoa, Amaiur. Nire amonak esaten zuen: Ingumaren aurka, kanta bat ohe ondoan.", "", 0, 41, 0],
-        ["AMAIUR", "Kanta bat… Bat falta. Gero, Anbotora.", "", P.x, P.z, 0],
+        ["ATARRABI", "Amaiur! Bart, zerua gorri jarri da herriaren gainean, eta zezen baten orroa entzun da mendietan… eskerrak ziruditen.", "", 0, 41, 0],
+        ["AMAIUR", "Zezengorri aske dago. Altxorra itzuli du, eta eguzkiak berriro ikusten du haren leizea.", "", P.x, P.z, 0],
+        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Seigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["MIKELATS", "Sei. Nekatuta zaude, sorgin? Lo egin… Akelarrean, Akerbeltz zain.", "", P.x, P.z, 0, null, "st_g6"],
+        ["ATARRABI", "Akelarrea… Gaur gauean, ez itzali sutondoa, Amaiur. Sorginak lotan hegan egiten du: kontuz zure ametsekin.", "", 0, 41, 0],
+        ["AMAIUR", "Akelarrea… Bat falta. Gero, Murumendira.", "", P.x, P.z, 0],
       ],
       () => {
         flagSet("irati-herensuge");
@@ -374,7 +376,7 @@
         ZAZPI.turn = false;
         if (ZAZPI.g) ZAZPI.g.visible = false;
         title("JARRAITZEKO…", "");
-        notify(L("Sei leize amaituta. Harana, zerua eta suge-mendia zureak dira. Inguma laster: ametsetan…"), "", 8);
+        notify(L("Sei txingar itzulita. Harana, Ortzia eta Zezen-harpea zureak dira. Akelarrea laster: ametsetan…"), "", 8);
         hud();
       },
     );

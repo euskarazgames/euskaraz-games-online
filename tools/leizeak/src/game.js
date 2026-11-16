@@ -106,8 +106,8 @@
   P.maxHp = P.hp = (saved.boons || []).includes("heart") ? 6 : 5;
   /* ==================================================================
      ATMOSFERA · bi garai, bi zeru
-     Iragana: ilunabar urrekara, itsasoa bizirik.
-     Oraina: egun argi eta hotza, denbora hautsia — itsasoa izoztuta (izotz-zelai
+     Uda: ilunabar urrekara, itsasoa bizirik.
+     Negua: egun argi eta hotza, denbora hautsia — itsasoa izoztuta (izotz-zelai
      zabala) eta denbora-hauts gutxi airean geldirik. Mundu irekiaren sentsazioa.
      EGFX (/assets/egfx.js) ez badago, lehengo gradienteak erabiltzen dira.
      ================================================================== */
@@ -140,7 +140,7 @@
     uv.needsUpdate = true;
     return geo;
   }
-  /* Uharteen gaina: belarra iraganean, elurra orainean (zarata batekin, ez dena batera). */
+  /* Uharteen gaina: belarra udan, elurra neguan (zarata batekin, ez dena batera). */
   function terrainMaterial() {
     if (ATMO.terrain !== undefined) return ATMO.terrain;
     const g = rawTex("grass_c", true),
@@ -222,7 +222,7 @@
     }
     return m;
   }
-  /* Denbora-hautsa: orainean airean geldirik (elurra ez dena); iraganean urre-izpi gutxi batzuk dantzan. */
+  /* Denbora-hautsa: neguan airean geldirik (elurra ez dena); udan urre-izpi gutxi batzuk dantzan. */
   function timeDust() {
     const N = mobile ? 900 : 1800,
       pos = new Float32Array(N * 3),
@@ -265,7 +265,7 @@
     scene.add(p);
     return (ATMO.dust = p);
   }
-  /* Ur-jauzia: iraganean erortzen, orainean izoztuta. */
+  /* Ur-jauzia: udan erortzen, neguan izoztuta. */
   function fallTexture() {
     const c = document.createElement("canvas");
     c.width = 64;
@@ -357,7 +357,7 @@
     t.needsUpdate = true;
     return t;
   }
-  /* Itsasoa: iraganean bizirik (olatuak, islapena, apar-eraztunak); orainean izoztuta (izotz-pitzadurak). */
+  /* Itsasoa: udan bizirik (olatuak, islapena, apar-eraztunak); neguan izoztuta (izotz-pitzadurak). */
   function seaMaterial() {
     const tPast = ATMO.skyPast,
       tNow = ATMO.skyNow,
@@ -827,8 +827,8 @@
 
   /* ==================================================================
      SOINUA · musika sortzailea, efektuak eta giroa (Web Audio, fitxategirik gabe)
-     Iragana: Re lidioa, epela (pad + arpa-pultsua, olatuak).
-     Oraina: Re doriarra, hotza (kanpai izoztuak, haizea, erlojuaren tik-taka).
+     Uda: Re lidioa, epela (pad + arpa-pultsua, olatuak).
+     Negua: Re doriarra, hotza (kanpai izoztuak, haizea, erlojuaren tik-taka).
      Gaueko: txalaparta-erritmoa eta drone baxua.
      ================================================================== */
   const SND = (() => {
@@ -1738,6 +1738,60 @@
         return `<rect class="p${2 + (i % 3)}" x="${x}" y="${y}" width="${w}" height="2"/>`;
       }).join("") +
       '</g><text class="p1" x="50" y="74" text-anchor="middle" font-size="34" font-family="Georgia">?</text></svg>',
+    /* ATARRABI: Mariren semea, gaztea; argi epela atzean eta itzalik gabe (azpian ez dago ilunik) */
+    atarrabi:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><circle fill="#ffb45a" opacity=".22" cx="50" cy="62" r="44"/>' +
+      '<path fill="#6b4a2a" d="M10 120c3-20 17-30 40-31 23 1 37 11 40 31z"/><path fill="#c98a3e" d="M38 92q12 8 24 0l2 8q-14 7-28 0z"/>' +
+      '<rect fill="#e6b98e" x="44" y="80" width="12" height="11"/>' +
+      '<ellipse fill="#f0c9a0" cx="50" cy="65" rx="17.5" ry="21"/>' +
+      '<path fill="#3a2414" d="M32 60c0-15 8-24 18-24s19 8 18 24c-3-6-7-9-11-10l-3 4-3-5q-3 0-6 1l-2 4-3-4c-4 2-6 5-8 10z"/>' +
+      '<g class="eyes"><ellipse fill="#fbf3e6" cx="43" cy="64" rx="3.6" ry="4.2"/><ellipse fill="#fbf3e6" cx="57" cy="64" rx="3.6" ry="4.2"/>' +
+      '<circle fill="#d98a1e" cx="43.2" cy="64.6" r="2.5"/><circle fill="#d98a1e" cx="56.8" cy="64.6" r="2.5"/>' +
+      '<circle fill="#2a1406" cx="43.2" cy="64.6" r="1.2"/><circle fill="#2a1406" cx="56.8" cy="64.6" r="1.2"/>' +
+      '<circle fill="#fff" cx="42.2" cy="63.4" r=".8"/><circle fill="#fff" cx="55.8" cy="63.4" r=".8"/></g>' +
+      '<path stroke="#3a2414" stroke-width="1.3" fill="none" stroke-linecap="round" d="M38.5 57.5q4.5-2.4 8.6-.2M52.9 57.3q4.1-2.2 8.6.2"/>' +
+      '<path class="mouth" fill="#9a4a32" d="M46 77q4 2.4 8 0q-4 1.2-8 0z"/>' +
+      '<path stroke="#ffd27a" stroke-width="1.2" fill="none" opacity=".8" d="M20 108q30-8 60 0"/></svg>',
+    /* MIKELATS: ekaitzaren eta kazkabarraren jauna — kazkabar-koroa, begi hotzak, kapa iluna (anaiaren itzala) */
+    mikelats:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><path fill="#0b0f18" d="M4 120c6-34 20-56 46-60 26 4 40 26 46 60z"/>' +
+      '<path fill="#1b2433" d="M28 72c-3-20 7-36 22-38 15 2 25 18 22 38-6 10-13 15-22 15s-16-5-22-15z"/>' +
+      '<path fill="#dfeaf6" d="M28 40l4-16 5 13 4-19 5 17 4-21 4 21 5-17 4 19 5-13 4 16q-22-8-44 0z"/>' +
+      '<path fill="#9fb6cc" opacity=".55" d="M30 41q20-6 40 0l-1 4q-19-5-38 0z"/>' +
+      '<g class="eyes"><path fill="#c9ecff" d="M37 60l9-2-1 3-8 1zM63 60l-9-2 1 3 8 1z"/></g>' +
+      '<path class="mouth" fill="#5e7a94" d="M44 76q6 1.6 12 0q-6 2.6-12 0z"/>' +
+      '<g fill="#e8f3ff" opacity=".7"><circle cx="16" cy="22" r="1.4"/><circle cx="84" cy="30" r="1.2"/><circle cx="24" cy="48" r="1"/><circle cx="78" cy="12" r="1.5"/><circle cx="90" cy="54" r="1"/></g></svg>',
+    /* AKERBELTZ: aker beltza, adar kizkurrak eta begi anbarrak */
+    akerbeltz:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><path fill="#0d0a10" d="M8 120c6-28 20-46 42-48 22 2 36 20 42 48z"/>' +
+      '<path fill="#1a1520" d="M32 50c0-10 8-16 18-16s18 6 18 16l-4 26q-6 16-14 18-8-2-14-18z"/>' +
+      '<path fill="#3a2f3e" d="M33 46c-12-4-20-14-16-26 6 8 12 6 18 10 4 3 4 9-2 16zM67 46c12-4 20-14 16-26-6 8-12 6-18 10-4 3-4 9 2 16z"/>' +
+      '<path fill="#2a2230" d="M28 54q-10 2-16-4 8-2 16-1zM72 54q10 2 16-4-8-2-16-1z"/>' +
+      '<g class="eyes"><ellipse fill="#ffb02e" cx="41" cy="58" rx="4" ry="2.6"/><ellipse fill="#ffb02e" cx="59" cy="58" rx="4" ry="2.6"/>' +
+      '<rect fill="#1a0e02" x="38.6" y="57.4" width="4.8" height="1.2"/><rect fill="#1a0e02" x="56.6" y="57.4" width="4.8" height="1.2"/></g>' +
+      '<path fill="#2b2430" d="M44 94q6 14 6 22 0-8 6-22z"/><path class="mouth" fill="#4a3a52" d="M45 84q5 2 10 0q-5 1.4-10 0z"/></svg>',
+    /* EATE: ekaitz- eta su-izpiritua — suzko ilea, begi tximistak */
+    eate:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><path fill="#1e2a3a" d="M8 120c6-24 20-38 42-40 22 2 36 16 42 40z"/>' +
+      '<path fill="#ff7a2a" d="M26 64q-6-26 8-44 0 14 8 16-2-16 8-28 2 18 10 22 2-12 10-14-4 16 4 22 6-6 8-14 6 22-4 40z"/>' +
+      '<ellipse fill="#3a4d66" cx="50" cy="70" rx="16" ry="19"/>' +
+      '<g class="eyes"><path fill="#ffe36a" d="M38 66l5-6 1 4 4-3-3 7-2-2zM62 66l-5-6-1 4-4-3 3 7 2-2z"/></g>' +
+      '<path class="mouth" fill="#ffb45a" d="M45 80q5 2 10 0q-5 1.4-10 0z"/></svg>',
+    /* ZEZENGORRI: zezen gorria, sudurretatik sua */
+    zezengorri:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><path fill="#3a0d08" d="M6 120c6-30 20-48 44-50 24 2 38 20 44 50z"/>' +
+      '<path fill="#a8261a" d="M30 48c0-10 9-16 20-16s20 6 20 16l-3 24q-6 18-17 20-11-2-17-20z"/>' +
+      '<path fill="#f1e2c4" d="M30 44q-14-2-20-14 10 4 20 2zM70 44q14-2 20-14-10 4-20 2z"/>' +
+      '<g class="eyes"><ellipse fill="#ffd36a" cx="41" cy="58" rx="3.4" ry="2.2"/><ellipse fill="#ffd36a" cx="59" cy="58" rx="3.4" ry="2.2"/></g>' +
+      '<ellipse fill="#6e140c" cx="50" cy="82" rx="10" ry="7"/><circle fill="#1a0402" cx="46" cy="82" r="1.6"/><circle fill="#1a0402" cx="54" cy="82" r="1.6"/>' +
+      '<path fill="#ffb02e" opacity=".85" d="M44 88q-4 10-12 14 8 0 14-8zM56 88q4 10 12 14-8 0-14-8z"/></svg>',
+    /* SORGINAK: akelarreko sorginen silueta (hiru txapel) */
+    sorginak:
+      '<svg viewBox="0 0 100 120" aria-hidden="true"><circle fill="#7d4bd0" opacity=".25" cx="50" cy="60" r="44"/>' +
+      '<g fill="#140f22"><path d="M8 120c2-16 8-26 18-28 10 2 16 12 18 28z"/><circle cx="26" cy="80" r="9"/><path d="M14 74l12-30 12 30z"/>' +
+      '<path d="M56 120c2-16 8-26 18-28 10 2 16 12 18 28z"/><circle cx="74" cy="80" r="9"/><path d="M62 74l12-30 12 30z"/>' +
+      '<path d="M30 120c2-20 9-32 20-34 11 2 18 14 20 34z"/><circle cx="50" cy="74" r="11"/><path d="M36 66l14-38 14 38z"/></g>' +
+      '<g class="eyes" fill="#c6a6ff"><circle cx="46" cy="74" r="1.4"/><circle cx="54" cy="74" r="1.4"/><circle cx="23" cy="80" r="1"/><circle cx="29" cy="80" r="1"/><circle cx="71" cy="80" r="1"/><circle cx="77" cy="80" r="1"/></g></svg>',
     gaueko:
       '<svg viewBox="0 0 100 120" aria-hidden="true"><path class="g1" d="M8 120c6-30 18-52 42-56 24 4 36 26 42 56z"/>' +
       '<path class="g1" d="M30 70c-2-16 5-30 20-33 15 3 22 17 20 33-6-5-13-7-20-7s-14 2-20 7z"/>' +
@@ -1746,7 +1800,7 @@
   };
   function portraitFor(who) {
     if (PORTRAIT_OF[who]) return PORTRAIT_OF[who];
-    return who.startsWith("AMAIUR") ? "witch" : who.startsWith("IRATI") ? "radio" : who.startsWith("GAUEKO") ? "gaueko" : "unknown";
+    return who.startsWith("AMAIUR") ? "witch" : who.startsWith("ATARRABI") ? "atarrabi" : who.startsWith("MIKELATS") ? "mikelats" : who.startsWith("IRATI") ? "radio" : who.startsWith("GAUEKO") ? "gaueko" : "unknown";
   }
   /* ---- irakaspenak: kontrol bakoitza behar den unean, behin ---- */
   const COACH = { seen: new Set(), cur: null };
@@ -3146,7 +3200,7 @@
   }
   const GRASS = new T.Color("#829977").convertSRGBToLinear(),
     SNOW = new T.Color("#b9ccd5").convertSRGBToLinear();
-  /* leizean: ilun eta hotza (oraina) edo epela (iragana); argia zuziek eta Amaiurren kriseiluak ematen dute */
+  /* leizean: ilun eta hotza (negua) edo epela (uda); argia zuziek eta Amaiurren kriseiluak ematen dute */
   const CAVE_PAST = new T.Color("#140d09"),
     CAVE_NOW = new T.Color("#070b11");
   function eraVisuals() {
@@ -3425,12 +3479,12 @@
       "IBARRA haran zabala da: herria, zelaiak, ibaia, harrespila eta basoa. Herritarrekin hitz egin (E edo ekintza-botoia): eginkizunak, denda eta sekretuak. Urrezko eraztunak hurrengo helburua erakusten du.\n\n" +
         "MUGITU: WASD edo makila (ertzeraino: korrika). JAUZI: Espazioa (airean berriro: jauzi bikoitza). BULTZADA (F): ziztu bizian; bitartean ukiezina zara.\n\n" +
         "SORGINKERIA: J, klika edo botoia. Izpiak bakarrik bilatzen du helburua; mantendu: INDARRA (eztanda) eta, bitartean, EZKUTUA: aurretik datozen proiektilak itzultzen ditu. FINKATU (T edo ◎): helburu bat finkatu; kamerak eta izpiek hari jarraitzen diote.\n\n" +
-        "GARAIA (Q): URREA iragana (uda), URDINA oraina (negua). Plataforma batzuk garai batean bakarrik daude, eta itzal bakoitza bere begien koloreko garaian bakarrik zauritzen da.\n\n" +
+        "URTAROA (Q): URREA uda, URDINA negua. Plataforma batzuk urtaro batean bakarrik daude, eta itzal bakoitza bere begien koloreko urtaroan bakarrik zauritzen da.\n\n" +
         "TXALAPARTA (B): bi makila, EZKERRA eta ESKUINA. Espirituek erritmo bat jotzen dute; zuk errepikatu. Ikasitako erritmoak edonon jo daitezke: ESNATU (◀ ◀ ▶) jentil-harriak altxatzen ditu, ENTZUN (▶ ◀ ▶ ▶) ezkutukoa erakusten du.\n\n" +
         "LEIZEAN: giltza txikiek ateak irekitzen dituzte; giltza nagusiak, ate handia. Kutxa bakoitzak zerbait du. Lehen leizearen tresna: SUGAARREN KATEA (C) — suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.\n\n" +
         "ESKU MAGIKOA (G): kaxak arrastatu, biratu eta pilatu. Lau ARNASA-ZATIrekin, arnasa bat gehiago.\n\n" +
         "KAMERA: GOITIK (lehenetsia) edo ATZETIK (O edo menua); hatzarekin edo saguaren eskuineko botoiarekin biratu eta hurbildu. BEGIRATU (I edo begia): Amaiurren begietatik, geldirik. HORMA: hormaren kontra une batez → itsatsita, eta izkinatik begiratu.\n\n" +
-        "SIGILOA (Gauekoren itzalak): haien argi-konoetatik kanpo, itzal-zokoetan eta astiro. TOK-TOK (E hormaren ondoan) hotsera erakartzen ditu; LOTARAZI (E atzetik) lotan uzten ditu. Ikusiz gero: ezkutatu eta itxaron.",
+        "SIGILOA (Mikelatsen itzalak): haien argi-konoetatik kanpo, itzal-zokoetan eta astiro. TOK-TOK (E hormaren ondoan) hotsera erakartzen ditu; LOTARAZI (E atzetik) lotan uzten ditu. Ikusiz gero: ezkutatu eta itxaron.",
       "",
     );
   }
@@ -3493,7 +3547,7 @@
   /* tekla-zerrenda: hitzaurrean, ikasitako tresnak bakarrik */
   function keysRender() {
     const has = (k) => saved.items.includes(k);
-    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "garaia"]] : []), ["E", "ekin"], ["I", "begiratu"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"], ["gurpila / + −", "kamera"]]
+    $("keys").innerHTML = [["WASD", "mugitu"], ["Shift", "korrika"], ["␣ ×2", "jauzi"], ["J / klik", "sorginkeria"], ...(PRO.can.dash ? [["F", "bultzada"]] : []), ...(PRO.can.phase ? [["Q", "urtaroa"]] : []), ["E", "ekin"], ["I", "begiratu"], ...(PRO.can.lock ? [["T", "finkatu"]] : []), ...(!PRO.on || has("makilak") ? [["B", "txalaparta"]] : []), ...(!PRO.on ? [["C", "katea"]] : []), ...(has("adarra") ? [["V", "adarra"]] : []), ...(has("tximistarria") ? [["X", "tximistarria"]] : []), ...(has("enara") ? [["␣ eutsi", "enara"]] : []), ...(has("ispilua") ? [["J argian", "ispilua"]] : []), ["L", "egunkaria"], ["gurpila / + −", "kamera"]]
       .map(([k, t]) => `<span><kbd>${k}</kbd>${t}</span>`)
       .join("");
   }
@@ -3709,7 +3763,7 @@
         "",
         L(
           "OIHARTZUN-en bigarren atala: joko berria eta originala. Istorioa, pertsonaiak, mailak, txalapartaren mekanika, musika eta soinu guztiak joko honetarako sortu dira (musika eta soinuak jokoak berak sortzen ditu, Web Audio bidez).\n\n" +
-            "Euskal mitologia (Mari, Basajaun, jentilak, Gaueko, Sugaar) herri-ondarea da; hemen modu librean kontatzen da.\n\n" +
+            "Euskal mitologia (Mari, Atarrabi, Mikelats, Basajaun, mairuak, Akerbeltz) herri-ondarea da; hemen modu librean kontatzen da.\n\n" +
             "Pertsonaiak, animazioak, herria eta leizeko piezak: Kay Lousberg / KayKit, CC0. Testurak eta zeruak: Poly Haven eta ambientCG, CC0. Motorra: three.js r128, MIT.",
         ),
         "",
@@ -4051,7 +4105,7 @@
     /* sh[7]: ahotsaren id-a (ahotsak.js); deietan, larruazal berezia (oihartzun-deia) */
     Object.assign(c, { t: 0, full: L(sh[1], sh[2]), shown: 0, lastN: -1, typing: true, doneT: 0, voice: sh[7] || null, vOn: !sh[7], vEnd: 0, vT0: 0 });
     const cin = $("cinema"),
-      intr = call && /^(GAUEKO|INGUMA)/.test(sh[0]);
+      intr = call && /^(MIKELATS|AKERBELTZ|GAUEKO|INGUMA)/.test(sh[0]);
     c.intr = intr;
     cin.classList.toggle("deia", call);
     cin.classList.toggle("intrusion", intr);
@@ -4246,7 +4300,7 @@
         (hasHorn() ? L("ADARRA: haize-bolada aurrera — errotak, balsak, lainoa, hostoak.") + "\n\n" : "") +
         (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
         (hasWings() ? L("ENARA: jauzi bikoitza eta eutsi JAUZIari — planeatu; haize-zutabeek gora eramaten zaituzte.") + "\n\n" : "") +
-        (saved.items.includes("ispilua") ? L("EGUZKI-ISPILUA: argi-zutabe batean, eutsi SORGINKERIAri eta apuntatu. Iraganean eguzkia, orainean ilargia. Ispilu-harriak: BIRATU.") + "\n\n" : "") +
+        (saved.items.includes("ispilua") ? L("EGUZKI-ISPILUA: argi-zutabe batean, eutsi SORGINKERIAri eta apuntatu. Udan eguzkia, neguan ilargia. Ispilu-harriak: BIRATU.") + "\n\n" : "") +
         (hasDust() ? L("IZAR-HAUTSA: bota, eta gaueko izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, izar-plataformak; airean, izar-eskailerak.") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
@@ -4463,6 +4517,8 @@
         attack,
         interact,
         actionHere,
+        npcNear,
+        sigActionNear,
         talkTo,
         txalaOpen,
         txalaHit,

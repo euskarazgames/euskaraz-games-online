@@ -1,8 +1,8 @@
   /* ==================================================================
      LAMIEN LEIZEA · bigarren leizea (diseinu propioa) — ura, izotza eta haizea
        Lehen ekitaldian ez dago garairik: leize honetan urak Amaiurren sorginkeriari erantzuten dio, eta
-       garaien botoi berak ura esnatzen (UR BIZIA, barruko "iragana") edo izozten (IZOTZA, barruko
-       "oraina") du (denbora.js). Sarrera: ur-jauziko izotz-gortina, KATEArekin erauzita.
+       garaien botoi berak ura esnatzen (UR BIZIA, barruko "uda") edo izozten (IZOTZA, barruko
+       "negua") du (denbora.js). Sarrera: ur-jauziko izotz-gortina, KATEArekin erauzita.
        L1 Lamien ataria ....... ubidea: ur bizia edo izotza → izotzarekin zeharkatu
        L2 Errotaren gela ...... ubidea eta errota: gurpilak (ur biziarekin) mendebaldeko barrak
                                 altxatzen ditu; iparrean giltzadun atea; ekialdean bi haize-errota
@@ -34,7 +34,7 @@
     pools: [],
   };
   /* ------------------------------ ura ↔ izotza ------------------------------ */
-  /* iraganean ura (erori → korronteak eraman), orainean izotza (ibili, irristatu) */
+  /* udan ura (erori → korronteak eraman), neguan izotza (ibili, irristatu) */
   function pool(x, z, w, d, y = WATER_Y) {
     const m = waterSheet(x, z, w, d, y);
     m.renderOrder = 1;
@@ -86,7 +86,7 @@
     glow(x, y + 0.8 * s, z, col, 2.2 * s);
     return m;
   }
-  /* errota-gurpila: iraganean biraka (ardatza z-n) */
+  /* errota-gurpila: udan biraka (ardatza z-n) */
   function waterWheel(x, y, z) {
     const g = new T.Group();
     g.position.set(x, y, z);
@@ -114,7 +114,7 @@
     g.traverse((n) => n.isMesh && (n.castShadow = true));
     return g;
   }
-  /* ur-jauzi gortina: iraganean ura (pasa daiteke), orainean izotza (horma) */
+  /* ur-jauzi gortina: udan ura (pasa daiteke), neguan izotza (horma) */
   function curtain(x, z0, z1, y0, h) {
     const len = Math.abs(z1 - z0),
       cz = (z0 + z1) / 2,
@@ -250,7 +250,7 @@
     pool(E(0), -36, 36, 6);
     DGL.wheel = waterWheel(E(-11), 0.9, -36);
     solids.push({ x: E(-11), z: -36, r: 1.4, h: 4, y: -1, pillar: true });
-    /* mendebaldeko barrak: gurpilak altxatzen ditu (iraganean bakarrik) */
+    /* mendebaldeko barrak: gurpilak altxatzen ditu (udan bakarrik) */
     DOORDEF.lBw = door("lB-w", E(-18), -45, PI / 2, 0, "bars");
     DOORDEF.lBw.era = true;
     DOORDEF.lBn = door("lB-n", E(0), -54, 0, 0, "key");
@@ -354,10 +354,10 @@
   DGL.update = (dt) => {
     watersUpdate(dt);
     raftUpdate(dt);
-    /* errota: iraganean biraka; mendebaldeko barrak harekin */
+    /* errota: udan biraka; mendebaldeko barrak harekin */
     if (DGL.wheel) DGL.wheel.rotation.z += dt * 1.3 * (1 - phaseBlend);
     if (DOORDEF.lBw) DOORDEF.lBw.open = phase === 0;
-    /* uretara erori (iraganean): korronteak eraman */
+    /* uretara erori (udan): korronteak eraman */
     if (phase === 0 && !respawnTimer)
       for (const W of DGL.pools)
         if (inPool(W, P.x, P.z) && P.y < W.y - 0.45) {
@@ -366,7 +366,7 @@
           fall();
           break;
         }
-    /* lehen aldiz ataria iraganean: abisua */
+    /* lehen aldiz ataria udan: abisua */
     if (ROOM.cur === DGL.rooms.L1 && phase === 0 && P.z > 3) notifyOnce("lamia-water", L("Ura bizirik dago. ALDATU berriro, eta izoztu egingo da…"), "");
   };
 
@@ -550,7 +550,7 @@
       case "under": {
         SERP.rise = Math.max(0, SERP.rise - dt * 3);
         SERP.low = Math.max(0, SERP.low - dt * 3);
-        /* putzuaren azpian: uhin-eraztuna (iraganean) edo itzala izotzaren azpian */
+        /* putzuaren azpian: uhin-eraztuna (udan) edo itzala izotzaren azpian */
         if (SERP.t < 0.05) serpentPick();
         rip.position.set(SERP.ex, W.y + 0.05, SERP.ez);
         rip.scale.setScalar(1 + (SERP.t % 0.8) * 1.5);
@@ -629,7 +629,7 @@
         }
         break;
     }
-    /* izozte-tranpa: azaleratuta dagoela IZOTZA (barruko "oraina") */
+    /* izozte-tranpa: azaleratuta dagoela IZOTZA (barruko "negua") */
     if (phase === 1 && (SERP.state === "rise" || SERP.state === "spit" || SERP.state === "dazed") && SERP.rise > 0.3) {
       SERP.state = "frozen";
       SERP.t = 0;
@@ -737,7 +737,7 @@
     const combGlow = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffd36a", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0 }));
     combGlow.scale.setScalar(2.6);
     comb.add(combGlow);
-    /* izotz-kuskua (orainean, uhartean): ukiezina */
+    /* izotz-kuskua (neguan, uhartean): ukiezina */
     const cocoon = new T.Mesh(new T.IcosahedronGeometry(1, 1), new T.MeshStandardMaterial({ color: "#d6f4ff", transparent: true, opacity: 0.55, roughness: 0.1, metalness: 0.2, flatShading: true, emissive: new T.Color("#3d8fb0"), emissiveIntensity: 0.25 }));
     cocoon.scale.set(2.4, 4.2, 2.4);
     cocoon.position.y = 3.3;
@@ -759,7 +759,7 @@
     for (const c of models.mage.animations) acts[c.name] = mixer.clipAction(c);
     Object.assign(LAM, { g, root, mixer, acts, skirt, comb, combGlow, cocoon, light, fin, ripple });
     g.position.set(LAM.x, LAM.y, LAM.z);
-    /* lainoa uhartearen inguruan: ADARRAk uxatzen du (iraganean, kantatzen ari denean) */
+    /* lainoa uhartearen inguruan: ADARRAk uxatzen du (udan, kantatzen ari denean) */
     LAM.mist = mist(R.x, 0, R.z, 4.2, {
       n: 20,
       op: 0.7,
@@ -808,7 +808,7 @@
     say(
       [
         ["LAMIA ILUNA", "Nork dakar sorgin-usaina nire putzura? Hau ez da zure ibaia, txikia.", "", R.x, R.z, 3],
-        ["AMAIUR", "Orrazi hori ez da zurea. Andereren orrazia da!", "", P.x, P.z, 0],
+        ["AMAIUR", "Orrazi hori ez da zurea. Nire amonarena da!", "", P.x, P.z, 0],
         ["LAMIA ILUNA", "Itzalak eman zidan… eta itzalak eramango zaitu. Entzun nire kantua, eta lo egin betiko.", "", R.x, R.z, 3],
       ],
       fight,
@@ -896,7 +896,7 @@
         break;
       }
       case "cocoon": {
-        /* orainean: izotz-kuskuan, ukiezina; itzalak bidaltzen ditu */
+        /* neguan: izotz-kuskuan, ukiezina; itzalak bidaltzen ditu */
         LAM.cocoon.visible = true;
         lamAnim("Idle");
         notifyOnce("lam-cocoon", L("Izotzak babesten du. UR BIZIAREKIN, lainoa uxatu adarraz."), "");
@@ -1087,9 +1087,9 @@
       [
         ["· · ·", "Orrazitik itzal bat askatu da, lino beltz bat bezala, eta uretan urtu.", "", R.x, R.z, 2],
         ["LAMIA", "…Ur epela. Nire kantua berriro. Barkatu, sorgin: itzalak nire ahotsa zuen, ez nik.", "", R.x, R.z, 3],
-        ["LAMIA", "Orrazi hau Andererena da. Gordetzeko eman zigun, Gauekori erlojua ixteko itun hura egin aurretik.", "", R.x, R.z, 3],
-        ["AMAIUR", "Zer ixten du orrazi honek?", "", P.x, P.z, 0],
-        ["LAMIA", "Mariren ilea. Mari haserre dagoenean, orrazia da bere ekaitza baretzen duen gauza bakarra. Eraman.", "", R.x, R.z, 3],
+        ["LAMIA", "Orrazi hau zure amonarena da. Gordetzeko eman zigun, gaztea zela, akelarretik itzuli zen gau batean.", "", R.x, R.z, 3],
+        ["AMAIUR", "Akelarretik? Nire amona?", "", P.x, P.z, 0],
+        ["LAMIA", "Galdetu iezaiozu. Orrazi honek ekaitzak baretzen ditu, eta Mikelats ekaitzez egina dago. Eraman.", "", R.x, R.z, 3],
         ["LAMIA", "Eta adarra gorde: Artzainen lepoko errotak haize honen zain daude. Tartalo esnatu da…", "", R.x, R.z, 3],
       ],
       () => {
@@ -1100,7 +1100,7 @@
         P.hp = P.maxHp;
         flagSet("lamia");
         persist();
-        itemGet("orrazia", L("URREZKO ORRAZIA"), L("Andereren orrazia. Arnasa bat gehiago. Mariren ekaitza baretzen omen du…"), () => {
+        itemGet("orrazia", L("URREZKO ORRAZIA"), L("Amonaren orrazia. Arnasa bat gehiago. Ekaitzak baretzen omen ditu…"), () => {
           title("LAMIA ASKE", "");
           notify(L("Irten leizetik hegoaldeko arkutik. Artzainen lepoan, haize-errota zain."), "", 6);
           hud();

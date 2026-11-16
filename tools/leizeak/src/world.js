@@ -2,7 +2,7 @@
      MUNDUA · guneak (zonak) eta IBARRA, haran nagusia
      · Zona bakoitzak bere taldea eta bere plataforma-zerrendak ditu: bakarra
        marrazten eta kalkulatzen da (haranean edo leizean).
-     · Haranean bi garaiak: iragana (uda, jentilen garaia) eta oraina (negua,
+     · Haranean bi garaiak: uda (uda, jentilen garaia) eta negua (negua,
        Mari isildu zenetik). Leizean argi gutxi: zuziak eta Amaiurren argia.
      · Terrazak: elipse-lautadak altuera desberdinetan, haien arteko harri-
        hormak eta arrapalak. Itsasoa hegoaldean; mendiak eta Anboto iparraldean.
@@ -12,24 +12,24 @@
     leizea: { name: "BASAJAUNEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     lamia: { name: "LAMIEN LEIZEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     tartalo: { name: "TARTALOREN KOBA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
-    jentil: { name: "JENTILBARATZA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    jentil: { name: "MAIRUBARATZA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
     /* zerua: kanpoan baina itsasorik gabe (hodei-itsasoa beherago), gaurik ez */
-    zerua: { name: "JENTILEN ZERUA", outdoor: true, sky: true, fallY: -16, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
-    herensuge: { name: "HERENSUGEAREN HAITZULOA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    zerua: { name: "ORTZIA", outdoor: true, sky: true, fallY: -16, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
+    herensuge: { name: "ZEZEN-HARPEA", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null },
   };
   const ZONE = { cur: "ibarra", fadeT: 0, pending: null };
   const AREA = { cur: "", seen: new Set() };
   const AREAS = {
     herria: ["HERRIA", "Txalapartak gauez jotzen dute, inork ukitu gabe."],
-    portua: ["PORTUA", "Mari isildu zenetik, itsasoa izoztuta dago. Iraganean, txalupak ibiltzen ziren."],
+    portua: ["PORTUA", "Mari isildu zenetik, itsasoa izoztuta dago. Udan, txalupak ibiltzen ziren."],
     zelaiak: ["ZELAIAK", "Joanesen ardiak hemen bazkatzen ziren."],
     iparra: ["IPAR-ZELAIAK", "Ibaiaz bestaldean, harrespila zain dago."],
     harrespila: ["HARRESPILA", "Jentilen harriak. Lo daude, ez hilda."],
     basoa: ["BASOA", "Basajaunen lurra. Zuhaitzek isilik begiratzen dute."],
     ataria: ["LEIZEAREN ATARIA", "Harri handi batek ixten du sarrera."],
-    ibaia: ["IBAIA", "Mari isildu zenetik ibaia izoztuta dago. Iraganean, ura bizi zen."],
+    ibaia: ["IBAIA", "Mari isildu zenetik ibaia izoztuta dago. Udan, ura bizi zen."],
     arroila: ["HARRI-ARROILA", "Ur-jauziaren isiltasuna. Izotzak hemen ere hitz egiten du."],
-    urjauzia: ["UR-JAUZIA", "Izotz-gortinaren atzean, ilunpe bat. Iraganean ura erortzen zen…"],
+    urjauzia: ["UR-JAUZIA", "Izotz-gortinaren atzean, ilunpe bat. Udan ura erortzen zen…"],
     lepoa: ["ARTZAINEN LEPOA", "Hemendik aurrera, Tartaloren lurrak. Ardi-hezurrak bidean."],
     kaia: ["KAIA", "Txalupa izotzean harrapatuta dago."],
     badia: ["BADIA IZOZTUA", "Itsasoak ere eutsi dio arnasari."],
@@ -591,7 +591,7 @@
   function breakAt(x, y, z, r, fire) {
     for (const B of BREAKABLES) {
       if (!breakHere(B) || !breakHit(B, x, y, z, r)) continue;
-      /* egurrezko hesiak eta Gauekoren izotza: SUA bakarrik; harri arrakalatuak: TXIMISTARRIA bakarrik */
+      /* egurrezko hesiak eta Mikelatsen izotza: SUA bakarrik; harri arrakalatuak: TXIMISTARRIA bakarrik */
       if ((B.fireOnly && !fire) || B.bombOnly) {
         if (B.hint) notifyOnce((B.bombOnly ? "bomb-" : "fire-") + B.kind, B.hint, "");
         fxBurst(x, y, z, { n: 6, speed: 2, life: 0.3, size: 0.2, color: "#ffffff", grav: 4 });

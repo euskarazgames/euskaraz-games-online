@@ -12,7 +12,7 @@
      Probetan: window.__game.anboto (egoera) eta txalaparta-kolpeak (txalaHit) botarentzat.
      ================================================================== */
   const ANX = 3000;
-  ZONES.anboto = { name: "ANBOTO · MARIREN ETXEA", outdoor: true, sky: true, anboto: true, fallY: -24, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
+  ZONES.anboto = { name: "MURUMENDI · GAILURRA", outdoor: true, sky: true, anboto: true, fallY: -24, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
   const AN = { built: false, round: 0, stage: "", tx: null, stones: [], lit: 0, gaueko: null, eyes: [], mouth: null, glow: null, clouds: [], dawn: 0, flash: 0, irati: null, fire: null };
   const AN_SPAWN = { x: ANX, y: 0, z: 9, a: PI };
   const AN_ROUNDS = [

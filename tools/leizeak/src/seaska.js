@@ -100,7 +100,7 @@
           at,
         );
       const pouch = () =>
-        itemGet("hautsa", L("IZAR-HAUTSA"), L("Amonaren hauts-zorroa. Bota: Gaueko izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, hautsak izar-plataformak sortzen ditu; airean botaz gero, izar-eskailerak. ") + (mobile ? L("IZARRAK botoia agertzen da behar denean.") : L("Z tekla.")), () => {
+        itemGet("hautsa", L("IZAR-HAUTSA"), L("Amonaren hauts-zorroa. Bota: itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, hautsak izar-plataformak sortzen ditu; airean botaz gero, izar-eskailerak. ") + (mobile ? L("IZARRAK botoia agertzen da behar denean.") : L("Z tekla.")), () => {
           if (!saved.items.includes("hautsa")) saved.items.push("hautsa");
           persist();
           translate();

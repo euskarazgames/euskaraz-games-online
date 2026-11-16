@@ -133,7 +133,7 @@
     hero.rotation.y = Math.atan2(TITLE.look.x - sx, TITLE.look.z - sz) - 0.35;
     hero.visible = true;
     animate("Idle");
-    /* azalean, iragana (harana bizirik, ura mugitzen); start()-ek oraina berrezartzen du */
+    /* azalean, uda (harana bizirik, ura mugitzen); start()-ek negua berrezartzen du */
     phase = 0;
     setPhaseVisual(true);
     TITLE.g.visible = true;

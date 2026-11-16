@@ -1,17 +1,17 @@
   /* ==================================================================
-     SIGILOA · Gauekoren itzal-zaindariak (diseinu propioa; sigilu-jokoen ideia orokorrak, gure eran)
+     SIGILOA · Mikelatsen itzal-zaindariak (diseinu propioa; sigilu-jokoen ideia orokorrak, gure eran)
      · ZAINDARIA: itzal bat kriseilu batekin. Bide bat egiten du (puntuz puntu) eta geldialdietan
        inguruari begiratzen dio. Haren argi-konoa lurrean ikusten da (hormek mozten dute): barruan
        bazaude, susmoa hazten da (?) — beteta: IKUSI ZAITU (!) eta ALARMA.
      · ALARMA: ALERTA (zaindariak ehizan, itzal gehiago lurretik) → IHESA (bilatzen) → ZAINTZA
        (begirada zabalagoa) → lasai. Ikusten ez zaituzten bitartean, kontagailua jaisten da.
      · OIHARTZUN-RADARRA: Iratiren oihartzunak zaindariak eta haien begiradak erakusten ditu
-       (goiko eskuinean). Alarman, Gauekoren zaratak itsutzen du.
+       (goiko eskuinean). Alarman, Mikelatsen zaratak itsutzen du.
      · TOK-TOK: makilaz hormari jo → hurbileko zaindariak hotsera datoz (bidea libre).
        LOTARAZI: zaindari baten atzean, oharkabean → lo (une batez).
        ITZAL-ZOKOAK: ilunpean, geldi edo astiro, ia ez zaituzte ikusten. Korrika: hotsa.
-     · BEGI-HARRIAK: Gauekoren harrizko begi finkoak, biraka (ezin dira lotarazi).
-     · ARGI-HARIAK: orainaren izotz-hariak; ukituz gero, alarma. Iraganean ez daude.
+     · BEGI-HARRIAK: Mikelatsen harrizko begi finkoak, biraka (ezin dira lotarazi).
+     · ARGI-HARIAK: orainaren izotz-hariak; ukituz gero, alarma. Udan ez daude.
      ================================================================== */
   const SIG_ALERT = 14,
     SIG_EVADE = 10,
@@ -211,7 +211,7 @@
     SIG.eyes.push(E);
     return E;
   }
-  /* ARGI-HARIA: izotz-hari bat bi hormen artean (orainean bakarrik) */
+  /* ARGI-HARIA: izotz-hari bat bi hormen artean (neguan bakarrik) */
   function sigThread(ax, az, bx, bz, y) {
     const len = Math.hypot(bx - ax, bz - az),
       m = obj(new T.CylinderGeometry(0.035, 0.035, len, 5), new T.MeshBasicMaterial({ color: "#bff6ff", transparent: true, opacity: 0.9, blending: T.AdditiveBlending, depthWrite: false }));
@@ -643,7 +643,7 @@
       sigConeColor(E.cone, E.sus > 0.05 ? "#ff3a2a" : "#ffe9a0", 0.3 + E.sus * 0.25);
       E.eye.material.color.set(E.sus > 0.05 ? "#ff6a3a" : "#ffcf7a");
     }
-    /* argi-hariak (orainean bakarrik) */
+    /* argi-hariak (neguan bakarrik) */
     for (const th of SIG.threads) {
       const on = phase === 1;
       for (const o of th.parts) o.visible = on;

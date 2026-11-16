@@ -2,8 +2,8 @@
      HARANAREN BIZITZA · animaliak, kea, txinpartak, haizea eta giro-hotsak
      · Oiloak eta behiak: geometria bakarra (erpin-koloreekin) eta instantziak
        (marrazketa-dei bakarra espezie bakoitzeko).
-     · Iraganean (uda): tximeletak, ipurtargiak basoan, arrainak ibaian.
-       Orainean (negua): ke gehiago tximinietan, izotzaren karrankak, beleak.
+     · Udan (uda): tximeletak, ipurtargiak basoan, arrainak ibaian.
+       Neguan (negua): ke gehiago tximinietan, izotzaren karrankak, beleak.
      · Zuhaitzak eta banderak haizean; errementariaren txinpartak eta mailu-hotsak.
      ================================================================== */
   const LIFE = { hens: [], cows: [], henIM: null, cowIM: null, flies: null, bugs: [], bugIM: null, fish: null, smoke: [], chimneys: [], t: 0, next: {} };
@@ -80,7 +80,7 @@
     LIFE.cowIM.frustumCulled = false;
     BP.add(LIFE.cowIM);
     for (const [i, [cx, cz]] of cowSpots.entries()) LIFE.cows.push({ hx: cx, hz: cz, x: cx, z: cz, a: i * 2.1, tx: cx, tz: cz, t: i * 2.3, graze: 0 });
-    /* tximeletak (iraganean): bi hegal, instantziak kolorearekin */
+    /* tximeletak (udan): bi hegal, instantziak kolorearekin */
     const wing = new T.BufferGeometry();
     wing.setAttribute("position", new T.Float32BufferAttribute([0, 0, 0, 0.16, 0, 0.1, 0.14, 0, -0.1, 0, 0, 0, -0.14, 0, -0.1, -0.16, 0, 0.1], 3));
     wing.computeVertexNormals();
@@ -93,7 +93,7 @@
       LIFE.bugs.push({ hx: home[0] + (i % 3) * 2, hz: home[1] + (i % 2) * 3, ph: i * 1.37, sp: 0.6 + (i % 4) * 0.15 });
       LIFE.bugIM.setColorAt(i, new T.Color(bugCols[i % bugCols.length]));
     }
-    /* ipurtargiak basoan (iraganean, ilunabarrean) */
+    /* ipurtargiak basoan (udan, ilunabarrean) */
     const N = 46,
       pos = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) {
@@ -106,7 +106,7 @@
     LIFE.flies = new T.Points(fg, new T.PointsMaterial({ color: "#d9ff8a", size: 0.35, transparent: true, opacity: 0, blending: T.AdditiveBlending, depthWrite: false, map: glowTexture }));
     LIFE.flies.userData.base = pos.slice();
     BP.add(LIFE.flies);
-    /* arraina (iraganean ibaitik jauzi) */
+    /* arraina (udan ibaitik jauzi) */
     LIFE.fish = new T.Mesh(at(new T.ConeGeometry(0.16, 0.7, 6), 0, 0, 0, PI / 2), material("#9fb6c8", 0.1));
     LIFE.fish.visible = false;
     BP.add(LIFE.fish);
@@ -220,7 +220,7 @@
       }
       LIFE.cowIM.instanceMatrix.needsUpdate = true;
     }
-    /* tximeletak: iraganean bakarrik */
+    /* tximeletak: udan bakarrik */
     if (LIFE.bugIM) {
       LIFE.bugIM.visible = past > 0.3;
       if (LIFE.bugIM.visible)
@@ -237,7 +237,7 @@
         }
       LIFE.bugIM.instanceMatrix.needsUpdate = true;
     }
-    /* ipurtargiak basoan (iraganean) */
+    /* ipurtargiak basoan (udan) */
     if (LIFE.flies) {
       LIFE.flies.material.opacity = past * (0.7 + 0.3 * Math.sin(LIFE.t * 3));
       LIFE.flies.visible = past > 0.05 && near(-6, -112, 60);
@@ -248,7 +248,7 @@
         a.needsUpdate = true;
       }
     }
-    /* arraina ibaian (iraganean, ibaitik hurbil) */
+    /* arraina ibaian (udan, ibaitik hurbil) */
     if (LIFE.fishT < 0 && past > 0.6 && riverW(P.x, P.z) < 20 && Math.random() < dt * 0.25) {
       /* ibaiaren puntu bat Amaiurren inguruan (ertzetik urrun) */
       const [rx, rz, hw] = riverAt(riverS(clamp(P.x + (Math.random() - 0.5) * 24, -84, 92)));
@@ -278,7 +278,7 @@
       w.m.rotation.x = Math.sin(LIFE.t * 0.9 + w.ph * 1.7) * 0.012 * w.k * wind;
     }
     for (const [i, f] of FLAGS.entries()) f.rotation.z = Math.sin(LIFE.t * 2.4 + i) * 0.03 * wind;
-    /* kea tximinietatik (orainean gehiago) eta errementariaren txinpartak */
+    /* kea tximinietatik (neguan gehiago) eta errementariaren txinpartak */
     for (const c of LIFE.chimneys) {
       if (!near(c.x, c.z, 75)) continue;
       c.t -= dt * (0.5 + phaseBlend * 0.9 + (c.forge ? 0.6 : 0));

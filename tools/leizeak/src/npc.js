@@ -2,14 +2,14 @@
      HERRITARRAK · Herriko jendea (KayKit Adventurers, CC0, kolore propioekin)
      Pello eta Peio (txalapartari bikiak), Maddi (errementaria eta denda),
      Joanes (artzaina: hiru ardi galdu ditu), Kattalin (andre zaharra, Mariren
-     istorioak) eta Iratiren oihartzuna (plazan, ia gardena).
+     istorioak) eta Atarrabi (Mariren semea, itzalik gabe: plazan, txalapartaren ondoan).
      Animazioak: sorginarenak (Rig_Medium bera) eta hezurdurenak (makila-kolpea).
      ================================================================== */
   const NPCS = [];
   const NPC_DEFS = [
     { id: "pello", name: "PELLO", model: "npc_rogue", tint: "#7f9fc9", x: -1.9, z: 28.4, a: 0, area: "herria", hit: true },
     { id: "peio", name: "PEIO", model: "npc_rogue", tint: "#d58b74", x: 1.9, z: 28.4, a: 0, area: "herria", hit: true },
-    { id: "irati", name: "IRATI", model: "npc_hooded", ghost: true, x: 0, z: 41, a: PI, area: "herria" },
+    { id: "irati", name: "ATARRABI", model: "npc_rogue", shadowless: true, tint: "#d9c39a", x: 0, z: 41, a: PI, area: "herria" },
     { id: "maddi", name: "MADDI", model: "npc_knight", tint: "#e0b48a", noHelmet: true, x: 21, z: 40.5, a: -2.2, area: "herria" },
     { id: "joanes", name: "JOANES", model: "npc_barbarian", tint: "#9fbf86", x: -31, z: 1, a: 0.3, area: "zelaiak", route: [[-31, 1], [-27, -3], [-34, -8], [-36, -1]], pause: 4 },
     { id: "kattalin", name: "KATTALIN", model: "npc_hooded", tint: "#8a7f9a", x: -15.5, z: 28.5, a: 2.2, area: "herria" },
@@ -32,7 +32,13 @@
       n.frustumCulled = false;
       const m = n.material.clone();
       m.skinning = !!n.isSkinnedMesh;
-      if (D.ghost) {
+      if (D.shadowless) {
+        /* Atarrabi: itzalik gabe (leize-eskolan galdu zuen), argi epel bat azalean */
+        if (D.tint) m.color = new T.Color(D.tint).lerp(new T.Color("#ffffff"), 0.3);
+        m.emissive = new T.Color("#ffb45a");
+        m.emissiveIntensity = 0.22;
+        n.castShadow = false;
+      } else if (D.ghost) {
         m.transparent = true;
         m.opacity = 0.55;
         m.color = new T.Color("#bfe6ff");
@@ -66,7 +72,7 @@
         acts = {};
       for (const c of models.mage.animations) acts[c.name] = mixer.clipAction(c);
       if (models.skel_minion) for (const c of models.skel_minion.animations) if (/Chop|Taunt/.test(c.name)) acts[c.name] = mixer.clipAction(c);
-      const N = { ...D, g, root, mixer, acts, cur: "", t: Math.random() * 3, y: ny, hx: D.x, hz: D.z };
+      const N = { ...D, g, root, mixer, acts, cur: "", t: Math.random() * 3, y: ny, hx: D.x, hz: D.z, hy: ny };
       /* IK (ik.js): Amaiurri begiratu ondotik pasatzean */
       N.ik = ikRig(root, N);
       npcAnim(N, D.stone ? "Idle" : "Idle");
@@ -74,6 +80,7 @@
       N.solid = { x: D.x, z: D.z, r: D.stone ? 1.6 : 0.6, h: 2, y: N.y, pillar: true, mov: !D.stone };
       solids.push(N.solid);
       if (D.ghost) N.halo = glow(D.x, 1.3, D.z, "#9fd8ff", 4.5);
+      if (D.shadowless) N.halo = glow(D.x, 1.2, D.z, "#ffcf8a", 3.2);
       NPCS.push(N);
     }
   }
@@ -230,16 +237,17 @@
       );
     return talk(N, [[N.name, ["Harrespila ekialdean dago, ibaiaz bestaldean. Harriek gure erritmoa gogoratzen dute.", "Leizean harri-danborrak entzungo dituzu. Haiek ere erantzuna nahi dute.", "Gaua gauekoentzat, eguna egunekoentzat. Hala esaten zuten gure aitonek."][Math.floor(time) % 3]]]);
   }
+  /* ATARRABI (Mariren semea, itzalik gabe): plazan, txalapartaren ondoan; leizeetan, kriseiluaren sugarretik */
   function talkIrati(N, f) {
     if (!f("irati1"))
       return talk(
         N,
         [
-          ["IRATI", "Amaiur… ez beldurtu. Ez naiz mamua. Oihartzun bat naiz: zuk gogoratzen nauzunean, hemen nago."],
-          ["AMAIUR", "Irati! Txalapartak gauez… zu zara?"],
-          ["IRATI", "Ez. Deia Marirengandik dator. Mendien andrea isildu egin da, eta haren leizeak itxi."],
-          ["IRATI", "Gauekoren itzalak ez ziren guztiz desagertu. Izakiak gaiztotzen ari dira: Basajaun lehena."],
-          ["IRATI", "Ikasi erritmoak Pello eta Peiorengandik. Gero, harrespila eta basoa. Ni hemen egongo naiz."],
+          ["ATARRABI", "Ez izan beldurrik, Amaiur. Kriseiluko ahotsa nirea zen. Gauez eta egunsentian bakarrik igo naiteke lurrazalera."],
+          ["AMAIUR", "Atarrabi… Mariren semea? Amonaren ipuinetan agertzen zara."],
+          ["ATARRABI", "Ipuinek gehiegi esaten dute, eta gutxiegi. Leizeek zure laguntza behar dute: amaren txingarrak hozten ari dira."],
+          ["ATARRABI", "Nire anaiak, Mikelatsek, zaindariak gaiztotu ditu txingarrak lapurtzeko. Basajaun lehena."],
+          ["ATARRABI", "Ikasi erritmoak Pello eta Peiorengandik. Gero, harrespila eta basoa. Ni hemen egongo naiz, txalapartaren ondoan."],
         ],
         () => flagSet("irati1"),
       );
@@ -248,52 +256,41 @@
     if (f("errolan") && !f("irati-errolan")) return iratiJentil();
     if (f("odei") && !f("irati-odei")) return iratiOdei();
     if (f("herensugea") && !f("irati-herensuge")) return iratiHerensuge();
+    if (f("irati-tartalo") && !f("giroa")) return talk(N, [["ATARRABI", "Zoaz Iturraldera, Amaiur. Zure amona zain dago, sutondoan."]]);
     if (f("irati-tartalo") && !f("errolan"))
-      return talk(N, [["IRATI", "Harrespilako trikuharria… amonak esaten zuen jentilak haren azpian ezkutatu zirela, zeruan argi bitxi bat ikusi zutenean. Jo ESNATU haren ondoan."]]);
+      return talk(N, [["ATARRABI", "Harrespilako trikuharriaren azpian, mairuen hiria dago: MAIRUBARATZA. Jo ESNATU haren ondoan."]]);
     if (f("lamia") && !f("irati-lamia"))
       return talk(
         N,
         [
-          ["IRATI", "Ibaian kantuak entzun ditut berriro, lamien kantuak. Urte askoan lehen aldiz. Zuk askatu dituzu!"],
+          ["ATARRABI", "Ibaian kantuak entzun ditut berriro, lamien kantuak. Bigarren txingarra amaren leizera itzuli da!"],
           ["AMAIUR", "Lamiak esan zidan: Tartalo esnatu da. Artzainen lepoan, haize-errota geldirik dago."],
-          ["IRATI", "Errota hori Gauekoren negutik dago geldi. Zure adarrak berriro biraraziko du."],
-          ["IRATI", "Eta gogoratu amonaren ipuina: Tartalok ilunpean dena ikusten du… baina argiak itsutzen du."],
+          ["ATARRABI", "Errota hori nire anaiaren kazkabarrak geldiarazi zuen. Zure adarrak berriro biraraziko du."],
+          ["ATARRABI", "Eta gogoratu: Tartalok ilunpean dena ikusten du… baina argiak itsutzen du."],
         ],
         () => flagSet("irati-lamia"),
       );
-    /* zazpigarren atala: seaska-kanta (seaska.js) */
+    /* zazpigarren atala: lo-kanta (seaska.js) */
     if (f("irati-herensuge") && seaskaIrati(N, f)) return;
-    /* amaieraren ondoren: Irati bizirik, plazan */
-    if (f("anboto"))
-      return talk(N, [
-        [
-          "IRATI",
-          [
-            "Gauero argizaiola bat pizten dugu Gauekorentzat. Ez du inoiz eskerrik ematen… baina ilunpea leunagoa da.",
-            "Zazpi urte galdu ditut, Amaiur. Baina txalapartak gogoratzen nau. Jo nirekin, plazan, nahi duzunean.",
-            "Amonaren sua Anboton dago orain, Mariren etxean. Gauez, mendi-gailurrean, argi bat ikusten da.",
-            "Txomin zahartu egin da… baina ezagutu nau. Kaian, kanpaiaren ondoan, negarrez egon gara biok.",
-          ][Math.floor(time) % 4],
-        ],
-      ]);
-    /* zazpigarren argiaren ondoren: Anbotora (anboto.js) */
-    if (f("irati-inguma")) return anbotoStart();
-    if (f("seaska-kanta")) return talk(N, [["IRATI", "Gauez, Iturralden: ohean, AMETSERA. Eta gogoratu: benetako Iratik ez du inoiz zure izena oihukatzen."]]);
-    if (f("irati-herensuge")) return talk(N, [["IRATI", f("inguma-ametsa") ? "Amets gaizto bat? Ingumak nire ahotsa egin zuen? … Amonak kantu bat zekien, ohe ondoan kantatzeko. Gogoratu nahi dut, Amaiur." : "Argi bakarra falta da, gorria. Gaur gauean, lo egin etxean, Iturralden: sutondoa piztuta, eta kantu bat ohe ondoan."]]);
-    if (f("irati-odei")) return talk(N, [["IRATI", "Herensugea… hodeien beste aldean. Zeruan, Odeiren hodei zuria zain duzu, ortzadarraren muturrean. Kontuz haren suarekin, Amaiur."]]);
-    if (f("irati-errolan") && !f("ortzadarra")) return talk(N, [["IRATI", "Jentilen zerua… hodeien gainean. Harrespilako jentil zaharrak badaki nola igo: galdetu iezaiozu."]]);
-    if (f("irati-errolan")) return talk(N, [["IRATI", "Ortzadar bat harrespilan! Herri osoa atera da ikustera. Igo, Amaiur: hodeien gainean, trumoia entzuten da."]]);
-    if (f("tartalo")) return talk(N, [["IRATI", "Anboto… Mariren etxea. Zazpi argietatik lau gorri daude oraindik. Atseden hartu, Amaiur: harana zurea da."]]);
-    if (f("lamia")) return talk(N, [["IRATI", f("lepoa") ? "Tartaloren koba lepoaren goian dago. Argia eraman, Amaiur." : "Artzainen lepoa: haize-errotari putz egin adarrarekin."]]);
+    /* zazpigarren txingarraren ondoren: Murumendira (anboto.js) */
+    if (f("irati-inguma") && !f("anboto")) return anbotoStart();
+    if (f("anboto")) return talk(N, [["ATARRABI", "Leizeek ez dute zure izena ahaztuko, Amaiur."]]);
+    if (f("seaska-kanta")) return talk(N, [["ATARRABI", "Gauez, Iturralden: ohean, AKELARRERA. Eta gogoratu: akelarrean, ez dantzatu."]]);
+    if (f("irati-herensuge")) return talk(N, [["ATARRABI", f("inguma-ametsa") ? "Akelarrean egon zara? Akerbeltz… Zazpigarren txingarra hark du. Lo-kanta bat behar duzu, sorgin zaharren kanta." : "Txingar bakarra falta da. Gaur gauean, lo egin Iturralden, sutondoa piztuta."]]);
+    if (f("irati-odei")) return talk(N, [["ATARRABI", "Zezen-harpea… hodeien beste aldean. Ortzian, hodei zuri bat zain duzu, ortzadarraren muturrean. Kontuz Zezengorriren suarekin."]]);
+    if (f("irati-errolan") && !f("ortzadarra")) return talk(N, [["ATARRABI", "Ortzia… hodeien gaineko uharteak. Harrespilako jentil zaharrak badaki nola igo: galdetu iezaiozu."]]);
+    if (f("irati-errolan")) return talk(N, [["ATARRABI", "Ortzadar bat harrespilan! Herri osoa atera da ikustera. Igo, Amaiur: hodeien gainean, Eateren trumoia entzuten da."]]);
+    if (f("tartalo")) return talk(N, [["ATARRABI", "Murumendi… nire anaiaren ekaitza haren gainean dago. Zazpi txingarretatik lau gorri daude oraindik."]]);
+    if (f("lamia")) return talk(N, [["ATARRABI", f("lepoa") ? "Tartaloren koba lepoaren goian dago. Argia eraman, Amaiur." : "Artzainen lepoa: haize-errotari putz egin adarrarekin."]]);
     if (saved.flags.includes("basajaun"))
       return talk(N, [
-        ["IRATI", "Basajaun aske dago. Baina Mariren suzko bola… nork darama? Zerua ere isilik dago."],
-        ["IRATI", "Ekialdeko ur-jauzian lamiak kantatzen zuten lehen. Orain isilik daude. Izotz-gortinan suge-eraztun bat dago: KATEA."],
+        ["ATARRABI", "Basajaun aske dago, eta lehen txingarra amaren leizera itzuli da. Baina nire anaiak sei ditu oraindik."],
+        ["ATARRABI", "Ekialdeko ur-jauzian lamiak kantatzen zuten lehen. Orain isilik daude. Izotz-gortinan eraztun bat dago: KATEA."],
       ]);
     if (saved.zone === "leizea" || f("leizea"))
-      return talk(N, [["IRATI", "Leizeak oihartzun asko ditu. Entzun ondo: batzuek bidea erakusten dute, beste batzuek tranpa."]]);
-    if (!saved.rhythms.includes("esnatu")) return talk(N, [["IRATI", "Plazako bikiek erritmo zaharrak dakizkite. Hitz egin haiekin."]]);
-    return talk(N, [["IRATI", "Basoa iparraldean dago, ibaiaz bestaldean. Atea jentil-harri bat da: ESNATU."]]);
+      return talk(N, [["ATARRABI", "Leizeek oihartzun asko dituzte. Entzun ondo: batzuek bidea erakusten dute, beste batzuek tranpa."]]);
+    if (!saved.rhythms.includes("esnatu")) return talk(N, [["ATARRABI", "Plazako bikiek erritmo zaharrak dakizkite. Hitz egin haiekin."]]);
+    return talk(N, [["ATARRABI", "Basoa iparraldean dago, ibaiaz bestaldean. Atea jentil-harri bat da: ESNATU."]]);
   }
   function talkMaddi(N, f) {
     if (f("basajaun") && !f("maddi-burdina"))
@@ -377,7 +374,7 @@
         [
           ["KATTALIN", "Mari… Anbotoko andrea. Ostiraletan suzko bola batean ibiltzen zen mendiz mendi."],
           ["KATTALIN", "Zazpi leize ditu, eta bakoitzean zaindari bat. Lehena Basajaunena da, basoan."],
-          ["KATTALIN", "Gaueko gauaren jabea da. Gaua gauekoentzat… baina zuk ez diozu beldurrik izan behar, alaba."],
+          ["KATTALIN", "Gaua gauekoentzat, esaten zuten zaharrek… baina zuk ez diozu ilunpeari beldurrik izan behar, alaba."],
         ],
         () => flagSet("kattalin"),
       );
@@ -386,7 +383,7 @@
         N,
         [
           ["KATTALIN", "Sendabelarrak egin nahi nituzke, baina sorgin-belarrak negu honetan ez dira hazten."],
-          ["KATTALIN", "Iraganean, ordea… lore urdinak basoan, harrespilan eta ibaiaz bestaldeko larreetan. Ekarri hiru, eta botilak egingo dizkizut."],
+          ["KATTALIN", "Udan, ordea… lore urdinak basoan, harrespilan eta ibaiaz bestaldeko larreetan. Ekarri hiru, eta botilak egingo dizkizut."],
         ],
         () => flagSet("kattalin-belar"),
       );
@@ -397,7 +394,7 @@
         persist();
         pieceGet("belarrak");
       });
-    if (!f("belarrak-ok") && f("kattalin-belar")) return talk(N, [["KATTALIN", "Lore urdinak iraganean bakarrik ikusten dira (ALDATU garaia). " + saved.herbs.length + " / 3."]]);
+    if (!f("belarrak-ok") && f("kattalin-belar")) return talk(N, [["KATTALIN", "Lore urdinak udan bakarrik ikusten dira (ALDATU urtaroa). " + saved.herbs.length + " / 3."]]);
     return talk(N, [["KATTALIN", ["Harrespilan jentil zahar bat bizi da, harrizkoa. Galdetu iezaiozu Mariri buruz.", "Andere… nire amona. Sorgina zen, zu bezala. Ehun urte dira desagertu zela.", "Gure aitonek esaten zuten: izena duen guztia bada."][Math.floor(time) % 3]]]);
   }
   function talkJentil(N, f) {
@@ -406,8 +403,8 @@
       return talk(
         N,
         [
-          ["JENTIL ZAHARRA", "…Mende asko lo. Zure erritmoak esnatu nau, sorgin txikia."],
-          ["JENTIL ZAHARRA", "Gu, jentilak, joan ginen zeruan izar berri bat agertu zenean. Harriak bakarrik geratu ziren."],
+          ["JENTIL ZAHARRA", "…Hiru negu lo. Zure erritmoak esnatu nau, sorgin txikia."],
+          ["JENTIL ZAHARRA", "Nire anaiak, jentilak, joan egin ziren, Gau Beltzaren aurreko egunetan. Ni harri bihurtu nintzen, harrespila zaintzeko."],
           ["JENTIL ZAHARRA", "Leizeetan oihartzunak bizi dira. Hau ere ikasi: ezkutukoa erakusten du."],
         ],
         () => {
@@ -417,23 +414,23 @@
           else go();
         },
       );
-    if (f("herensugea")) return talk(N, [["JENTIL ZAHARRA", "Herensuge urre bat zeruan, sorgin txikia! Gure aiton-amonek ikusi zuten azkena, mila urte dira. Zaindari bakarra falta."]]);
-    if (f("odei")) return talk(N, [["JENTIL ZAHARRA", "Euri goxoa… Odei aske dago. Mende askoan ez dut horrelako usainik sentitu. Bi zaindari falta, sorgin txikia."]]);
-    if (f("ortzadarra")) return talk(N, [["JENTIL ZAHARRA", "Ortzadarra… igo, sorgin txikia. Hodeien gainean, gure uharte zaharrak. Iraganean, hodeiak harri bezain trinkoak ziren."]]);
+    if (f("herensugea")) return talk(N, [["JENTIL ZAHARRA", "Zezengorriren orroa entzun dut mendietan, sorgin txikia, baina pozez. Txingar bakarra falta da."]]);
+    if (f("odei")) return talk(N, [["JENTIL ZAHARRA", "Euri goxoa… Eate aske dago. Hiru neguan ez dut horrelako usainik sentitu. Bi txingar falta, sorgin txikia."]]);
+    if (f("ortzadarra")) return talk(N, [["JENTIL ZAHARRA", "Ortzadarra… igo, sorgin txikia. Hodeien gainean, gure uharte zaharrak. Udan, hodeiak harri bezain trinkoak dira."]]);
     if (f("irati-errolan") && saved.rhythms.includes("ortzi")) return talk(N, [["JENTIL ZAHARRA", "Harrespilaren erdian, gure harrien artean: jo ORTZI. Zeruak entzungo zaitu."]]);
     if (f("irati-errolan"))
       return talk(
         N,
         [
-          ["JENTIL ZAHARRA", "Jentilen zerua… Antzina, gu ere igotzen ginen hara, ortzadarra agertzen zenean, euriaren eta eguzkiaren artean."],
+          ["JENTIL ZAHARRA", "Ortzia… Antzina, gu ere igotzen ginen hara, ortzadarra agertzen zenean, euriaren eta eguzkiaren artean."],
           ["JENTIL ZAHARRA", "Ortzi, zeru zaharra, gure laguna zen. Haren erritmoa gogoratzen dut oraindik: entzun, eta errepikatu."],
         ],
         () => txalaLearn("ortzi", "JENTIL ZAHARRA", () => notify(L("Jo ORTZI harrespilaren erdian: ortzadarra, zerurako bidea."), "", 5)),
       );
-    if (f("errolan")) return talk(N, [["JENTIL ZAHARRA", "Errolan aske… Mende askoan lehen aldiz, jentilen hiriak lo egiten du lasai. Eskerrik asko, sorgin txikia."]]);
+    if (f("errolan")) return talk(N, [["JENTIL ZAHARRA", "Mairu zaharra aske… Mairuen hiriak lo egiten du lasai berriro. Gu baino zaharragoak dira, sorgin txikia."]]);
     if (f("irati-tartalo"))
       return talk(N, [
-        ["JENTIL ZAHARRA", "Trikuharria… gure atea. Errolan, gure artean handiena, azpian lo dago, baina ekaitz bat entzuten dut haren bularrean."],
+        ["JENTIL ZAHARRA", "Trikuharria… mairuen atea. Gu baino lehenagokoak dira: harriak altxatzen zituzten. Haien zaharrena azpian dago, eta ekaitz bat entzuten dut haren bularrean."],
         ["JENTIL ZAHARRA", "Jo ESNATU harriaren ondoan. Barruan, harri arrakalatuak: tximista batek bakarrik apurtzen ditu."],
       ]);
     return talk(N, [["JENTIL ZAHARRA", "Basajaunek basoa zaintzen zuen. Orain itzalak zaintzen du bera. Askatu ezazu."]]);
@@ -553,4 +550,4 @@
       '<ellipse class="p5" cx="50" cy="44" rx="34" ry="12"/><path class="g2" d="M30 60l10 20M50 58v24M70 60l-10 20" stroke-width="2.4" fill="none"/>' +
       '<g class="eyes"><circle class="g2" cx="40" cy="44" r="2.4"/><circle class="g2" cx="60" cy="44" r="2.4"/></g></svg>',
   });
-  const PORTRAIT_OF = { LAMIA: "lamia", "LAMIA ILUNA": "lamiailuna", TARTALO: "tartalo", "TARTALO ILUNA": "tartalo", PELLO: "aitona", PEIO: "aitona", "PELLO ETA PEIO": "aitona", MADDI: "errementari", JOANES: "artzain", KATTALIN: "amona", "JENTIL ZAHARRA": "jentil", BASAJAUN: "basajaun", MARI: "mari", "HARRI-DANBORRA": "danbor", IRATI: "radio" };
+  const PORTRAIT_OF = { LAMIA: "lamia", "LAMIA ILUNA": "lamiailuna", TARTALO: "tartalo", "TARTALO ILUNA": "tartalo", PELLO: "aitona", PEIO: "aitona", "PELLO ETA PEIO": "aitona", MADDI: "errementari", JOANES: "artzain", KATTALIN: "amona", "JENTIL ZAHARRA": "jentil", BASAJAUN: "basajaun", MARI: "mari", "HARRI-DANBORRA": "danbor", IRATI: "radio", ATARRABI: "atarrabi", MIKELATS: "mikelats", AKERBELTZ: "akerbeltz", SORGINAK: "sorginak", EATE: "eate", ZEZENGORRI: "zezengorri", "MAIRU ZAHARRA": "jentil", AMONA: "amona" };

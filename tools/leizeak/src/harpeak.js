@@ -1,18 +1,18 @@
   /* ==================================================================
      ANBOTOKO HARPEAK · sigilu-leizea (diseinu propioa), ANBOTOren gailurraren aurrean
      Gauekoren ekaitzak Andereren suzko bola bota du mendi-magalean: Amaiurrek mendiaren barrutik
-     igo behar du, Gauekoren itzal-zaindarien artean, ikusia izan gabe (sigiloa.js).
+     igo behar du, Mikelatsen itzal-zaindarien artean, ikusia izan gabe (sigiloa.js).
        A Suzko bolaren zuloa ... lurreratzea; Iratiren deia (oihartzun-radarra)
        B Zaintza-gela .......... zaindari bat joan-etorrian: itxaron eta pasatu bizkarretik
        C Kutxen harpea ......... bi zaindari eta begi-harri bat: TOK-TOK eta LOTARAZI
-       D Hari-pasabidea ........ izotz-hariak (orainean): jauzi edo iraganera
-       E Gauekoren ataria ...... bi zaindari, begi-harria eta atea → GAILURRA (anboto.js)
+       D Hari-pasabidea ........ izotz-hariak (neguan): jauzi edo udara
+       E Mikelatsen ataria ...... bi zaindari, begi-harria eta atea → GAILURRA (anboto.js)
      Gela bakoitza kontrol-puntu bat da. Kamera: GOITIK eta HORMA (kamera.js); C eta E garaiago (gela
      osoa), D baxuago (harien altuera irakurgarri). BEGIRATU (lehen pertsona) leku guztietan.
      Probetan: window.__game.HK, harpeakStart(), harpeakEnd().
      ================================================================== */
   const KX = 3300;
-  ZONES.harpeak = { name: "ANBOTOKO HARPEAK", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
+  ZONES.harpeak = { name: "MURUMENDIKO HARPEAK", outdoor: false, fallY: -9.3, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
   const DGK = {
     id: "harpeak",
     num: "08",
@@ -43,7 +43,7 @@
     dungeonBegin(DGK);
     const E = (x) => KX + x;
     /* ---- A: suzko bolaren zuloa ---- */
-    room("hkA", E(0), 0, 30, 24, { area: "hA", name: "SUZKO BOLAREN ZULOA", desc: "Ekaitzak hemen bota zaitu. Mendiaren barrua: Gauekoren bidea.", doors: { n: 0 }, fog: [10, 60] });
+    room("hkA", E(0), 0, 30, 24, { area: "hA", name: "SUZKO BOLAREN ZULOA", desc: "Ekaitzak hemen bota zaitu. Mendiaren barrua: Mikelatsen bidea.", doors: { n: 0 }, fog: [10, 60] });
     for (const [x, z, s, r] of [[E(-4), 3, 0.7, 0.3], [E(5), 1, 0.9, 1.4], [E(-9), -4, 0.6, 2.1], [E(8), -6, 0.55, 0.8], [E(1), 8, 0.6, 2.6]]) bprop(s > 0.65 ? "rubble_large" : "rubble_half", x, 0, z, DS * s, r);
     /* zuloa sabaian: ekaitzaren argia goitik */
     const shaft = obj(new T.CylinderGeometry(1.6, 2.6, 14, 16, 1, true), new T.MeshBasicMaterial({ color: "#9fb8ff", transparent: true, opacity: 0.04, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide, fog: false }));
@@ -86,14 +86,14 @@
     HK.eyeC = sigEye({ x: E(0), z: -72, base: 0, sweep: 1.25, sp: 0.42, range: 10.5, fov: 0.3 });
     HK.defs.push({ x: E(-6), z: -85.6, a: 0, room: C, path: [[E(-6), -85.6, 9, 0]] });
     corridor(E(-6), -93, 6, 6, "z");
-    /* ---- D: hari-pasabidea (izotz-hariak orainean) ---- */
-    const D = room("hkD", E(-6), -111, 18, 30, { area: "hD", name: "HARI-PASABIDEA", desc: "Izotz-hariak, orainean bakarrik. Iraganean, bidea libre.", doors: { s: 0, n: 0 }, fog: [10, 60], cam: { pitch: 0.74, d: 18.5 } });
+    /* ---- D: hari-pasabidea (izotz-hariak neguan) ---- */
+    const D = room("hkD", E(-6), -111, 18, 30, { area: "hD", name: "HARI-PASABIDEA", desc: "Izotz-hariak, neguan bakarrik. Udan, bidea libre.", doors: { s: 0, n: 0 }, fog: [10, 60], cam: { pitch: 0.74, d: 18.5 } });
     for (const [z, y] of [[-102, 0.75], [-110, 1.5], [-118, 0.75]]) sigThread(E(-14.2), z, E(2.2), z, y);
     for (const [x, z] of [[E(-14.4), -106], [E(2.4), -114]]) hkHide(x, z, 1.6);
     HK.defs.push({ x: E(-1), z: -100, a: PI, room: D, range: 8.5, path: [[E(-1), -100, 2, PI], [E(-1), -122, 2, 0]] });
     corridor(E(-6), -129, 6, 6, "z");
-    /* ---- E: Gauekoren ataria ---- */
-    const Ee = room("hkE", E(0), -147, 30, 30, { area: "hE", name: "GAUEKOREN ATARIA", desc: "Atea, gailurrera. Begirada guztiak hemen.", doors: { s: -6, n: 0 }, fog: [12, 70], cam: { pitch: 1.08, d: 25 } });
+    /* ---- E: Mikelatsen ataria ---- */
+    const Ee = room("hkE", E(0), -147, 30, 30, { area: "hE", name: "MIKELATSEN ATARIA", desc: "Atea, gailurrera. Begirada guztiak hemen.", doors: { s: -6, n: 0 }, fog: [12, 70], cam: { pitch: 1.08, d: 25 } });
     for (const [x, z] of [[E(-5), -147], [E(5), -147]]) {
       bprop("pillar_decorated", x, 0, z, DS * 0.9, 0);
       solids.push({ x, z, r: 1.3, h: 6, y: 0, pillar: true });
@@ -244,8 +244,8 @@
     if (a === "hA" || !a) return ["Mendiaren barrutik, gailurrera. Iparrera, itzalean.", [E(0), -16, 0]];
     if (a === "hB") return ["Zaindariaren bizkarretik: iparreko atera.", [E(6), -50, 0]];
     if (a === "hC") return ["Iparreko atea: zaindaria hotsera erakarri (TOK-TOK).", [E(-6), -92, 0]];
-    if (a === "hD") return ["Izotz-hariak: jauzi, edo iraganera (garaia).", [E(-6), -128, 0]];
-    return ["Gauekoren ataria: atea, gailurrera.", [E(0), -164, 0]];
+    if (a === "hD") return ["Izotz-hariak: jauzi, edo udara (urtaroa).", [E(-6), -128, 0]];
+    return ["Mikelatsen ataria: atea, gailurrera.", [E(0), -164, 0]];
   }
   /* egunkarian: sigilu-leizearen emaitza (izenburua, alarmak, lo eta denbora) */
   function harpeakLog() {

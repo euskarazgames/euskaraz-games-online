@@ -6,7 +6,7 @@
        KATEAz igo.
      · ERROTA ZAHARRA (ekialdeko zelaiak): haize-errota geldia; HAIZE-ADARRAz
        biratuta, lurreko ate-tranpa irekitzen da.
-     · DORRE ZAHARRA (ekialdeko larreak): hegoaldeko horma heuraz; IRAGANEAN igo.
+     · DORRE ZAHARRA (ekialdeko larreak): hegoaldeko horma heuraz; UDAN igo.
      · JENTIL-HARRIA (mendebaldea): harri arrakalatua; TXIMISTARRIAz apurtu.
      Bakoitza egunkarian agertzen da ikusten denean (pista batekin).
      ================================================================== */
@@ -126,7 +126,7 @@
       });
       SECRETS.push({ id: "errota", x, z, y, r: 12, name: L("Errota zaharra"), hint: L("Errota zahar geldia ekialdeko zelaietan. Haizeak ahaztu du: HAIZE-ADARRA."), see: L("Errota zahar bat, geldi. Haizeak ahaztu du…"), done: () => saved.chests.includes("h-errota"), chest: C });
     }
-    /* --- DORRE ZAHARRA (HEURA: iraganean igo) --- */
+    /* --- DORRE ZAHARRA (HEURA: udan igo) --- */
     {
       const x = 80,
         z = -72,
@@ -148,7 +148,7 @@
       BP.add(crown);
       ivySide(t, "s", y0, { phase: 0, id: "dorrea-heura" });
       const C = chest("h-dorrea", x, top, z - 0.6, PI, { t: "piece", id: "dorrea" });
-      SECRETS.push({ id: "dorrea", past: true, x, z, y: y0, r: 15, name: L("Dorre zaharra"), hint: L("Dorre zaharra heuraz jantzita: IRAGANEAN, heura bizirik dagoenean, igo daiteke. Goian, kutxa bat."), see: L("Dorre zahar bat, heuraz jantzita… goian zerbaitek distira egiten du."), done: () => saved.chests.includes("h-dorrea"), chest: C });
+      SECRETS.push({ id: "dorrea", past: true, x, z, y: y0, r: 15, name: L("Dorre zaharra"), hint: L("Dorre zaharra heuraz jantzita: UDAN, heura bizirik dagoenean, igo daiteke. Goian, kutxa bat."), see: L("Dorre zahar bat, heuraz jantzita… goian zerbaitek distira egiten du."), done: () => saved.chests.includes("h-dorrea"), chest: C });
     }
     /* --- JENTIL-HARRIA (TXIMISTARRIA) --- */
     {
@@ -162,7 +162,7 @@
           notify(L("Jentil-harria apurtu da: azpian, kutxa bat!"), "", 3);
         },
       });
-      SECRETS.push({ id: "harkaitza", x, z, y, r: 13, name: L("Jentil-harria"), hint: L("Jentil batek jaurtitako harri arrakalatua: TXIMISTA batek apurtuko luke (Jentilbaratzan)."), see: L("Harri erraldoi bat, arrakalatua. Kondairak dio jentil batek jaurti zuela mendi batetik…"), done: () => saved.chests.includes("h-harkaitza"), chest: C });
+      SECRETS.push({ id: "harkaitza", x, z, y, r: 13, name: L("Jentil-harria"), hint: L("Jentil batek jaurtitako harri arrakalatua: TXIMISTA batek apurtuko luke (Mairubaratzan)."), see: L("Harri erraldoi bat, arrakalatua. Kondairak dio jentil batek jaurti zuela mendi batetik…"), done: () => saved.chests.includes("h-harkaitza"), chest: C });
     }
   }
   /* hubUpdate-tik: hurbiltzean pista (eta egunkarian sartu) */

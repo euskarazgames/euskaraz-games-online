@@ -1,5 +1,5 @@
   /* ==================================================================
-     TXIMISTARRIA · tximista-harria (Jentilbaratzako tresna)
+     TXIMISTARRIA · tximista-harria (Mairubaratzako tresna)
      Herri-sinesmenean, tximistak lurrera botatako harria; etxeetan gordetzen
      zen ekaitzetatik babesteko. Hemen: X (edo TXIMISTARRIA botoia) → harria
      jaurti; 1.7 s-ra lehertzen da, trumoi batekin:

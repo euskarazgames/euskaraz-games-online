@@ -4,7 +4,7 @@
      · Makila/teklak: gora eta behera (pantailan bezala), alboetara.
      · JAUZI: gora begira bazaude, jauzi bat gora (hormatik askatu gabe);
        bestela, hormatik atzera jauzi. Goian, ertzera igotzen da.
-     · Heura bizirik IRAGANEAN dago (uda); ORAINEAN izoztuta: ezin da heldu.
+     · Heura bizirik UDAN dago (uda); NEGUAN izoztuta: ezin da heldu.
        (phase: -1 → bi garaietan.) Garaia aldatzean, heura izoztu → erori.
      ================================================================== */
   const IVY = [];
@@ -70,7 +70,7 @@
         k1 = rnd(),
         k2 = rnd(),
         col = frost ? `rgb(${(96 + g * 0.35) | 0},${(88 + g * 0.3) | 0},${(84 + k2 * 40) | 0})` : `rgb(${(28 + k1 * 34) | 0},${g},${(26 + k2 * 30) | 0})`;
-      /* orainean: hostoen erdiak eroriak */
+      /* neguan: hostoen erdiak eroriak */
       if (frost && k1 > 0.55) continue;
       /* ertzetan: beste aldean ere marraztu (errepikapena jarraitua) */
       for (const ox of [-256, 0, 256]) for (const oy of [-256, 0, 256]) if (lx + ox > -20 && lx + ox < 276 && ly + oy > -20 && ly + oy < 276) leaf(lx + ox, ly + oy, r, a, col);
@@ -160,7 +160,7 @@
       if (P.y < F.y0 - 0.6 || P.y > F.y1 - 0.75) continue;
       if (-(d.x * F.nx + d.z * F.nz) / len < 0.55) continue;
       if (!ivyLive(F)) {
-        notifyOnce("heura-izotza", L("Heura izoztuta dago: ezin zara heldu. IRAGANEAN, udan, bizirik zegoen…"), "");
+        notifyOnce("heura-izotza", L("Heura izoztuta dago: ezin zara heldu. UDAN bizirik dago…"), "");
         continue;
       }
       climbStart(F, along);
@@ -217,7 +217,7 @@
       /* garaia aldatuta: heura izoztu da */
       climbDrop();
       fxBurst(P.x + F.nx * 0.3, P.y + 1.2, P.z + F.nz * 0.3, { n: 12, speed: 2, life: 0.6, size: 0.25, color: "#dff4ff", grav: 3 });
-      notifyOnce("heura-erori", L("Heura izoztu da eta erori zara! IRAGANEAN bakarrik heltzen zaio."), "");
+      notifyOnce("heura-erori", L("Heura izoztu da eta erori zara! UDAN bakarrik heltzen zaio."), "");
       return false;
     }
     const st = stickRaw(),

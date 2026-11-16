@@ -1,20 +1,20 @@
   /* ==================================================================
-     JENTILBARATZA · laugarren leizea (diseinu propioa) — jentilen hiri lurperatua
+     MAIRUBARATZA · laugarren leizea (diseinu propioa) — mairuen hiri lurperatua (harrespilaren azpian)
      Kondairak dioenez, jentilek zeruan argi bitxi bat ikusi zutenean, harri handi
      baten azpian ezkutatu ziren. Harrespilako trikuharriaren azpian, haien hiria lo dago.
        J1 Jentilen ataria ...... SUTONDOA (atseden-lekua); ekialdean ertz garaia HEURAz
-                                 (iraganean); iparrean atalasea; mendebaldean lasterbidea
+                                 (udan); iparrean atalasea; mendebaldean lasterbidea
        J2 Kanpaien aretoa ...... hiru kanpaia sarearen atzean: urrutitik jo, denak batera
-                                 (bat ORAINEAN bakarrik ikusten da) → sarea zabaldu
+                                 (bat NEGUAN bakarrik ikusten da) → sarea zabaldu
        J3 Harresia ............. borroka (zezenen oldarrak: ALDARATU!) → GILTZA TXIKIA;
                                  mendebaldean harri arrakalatua (gero: jauzi atalasera)
        J4 Harri-zainaren gela .. etsai ertaina → TXIMISTARRIA
        J0 Atalasea ............. ate handia; ekialdetik jauzi (lasterbidea); mendebaldean
                                  arrakala → dorrea
        J6 Jentilen dorrea ...... zutabe garaia HEURAz igo; inguruan lau kanpaia (bat harri
-                                 arrakalatu baten barruan, bat ORAINEAN) → GILTZA NAGUSIA
+                                 arrakalatu baten barruan, bat NEGUAN) → GILTZA NAGUSIA
        J5 Biltegia ............. bigarren SUTONDOA; ekialdean, atarira lasterbidea
-       J7 Errolanen aretoa ..... ERROLAN, jentil iluna (beherago)
+       J7 Mairuaren aretoa ..... MAIRU ZAHARRA, harri-eraikitzaile iluna (beherago)
      Leize bakoitzak bezala, lasterbideek eta arrakalek bideak lotzen dituzte: "metroidvania"
      estiloko itzulerak, tresna berri bakoitzarekin.
      ================================================================== */
@@ -26,7 +26,7 @@
     exitArch: { x: JX, z: 15.2 },
     exitTo: () => ({ x: 43, y: 9, z: -66.2, a: 0, cp: true }),
     bigKey: "giltzanagusia-jentil",
-    bigKeyText: "Errolanen aretora daraman ate handia irekitzen du.",
+    bigKeyText: "Mairu zaharraren aretora daraman ate handia irekitzen du.",
     bossDoor: "jD-n",
     lights: [],
     torches: [],
@@ -218,7 +218,7 @@
     dungeonBegin(DGJ);
     const E = (x) => JX + x;
     /* ---- J1: Jentilen ataria ---- */
-    room("J1", E(0), 0, 30, 30, { area: "jA", name: "JENTILEN ATARIA", desc: "Jentilen harri handiak. Lo daude, ez hilda.", doors: { s: 0, n: 0, e: -6, w: 0 }, wallH: 20 });
+    room("J1", E(0), 0, 30, 30, { area: "jA", name: "MAIRUEN ATARIA", desc: "Mairuen harri handiak. Lo daude, ez hilda.", doors: { s: 0, n: 0, e: -6, w: 0 }, wallH: 20 });
     slab({ x: E(0), z: 18, y: 0, w: 6, d: 6, h: 1.2, mat: "dark" });
     wallBlock(E(-3.4), 18, 0.8, 6, 0, 0, 7);
     wallBlock(E(3.4), 18, 0.8, 6, 0, 0, 7);
@@ -226,7 +226,7 @@
     const arch = obj(new T.PlaneGeometry(5, 5.6), new T.MeshBasicMaterial({ color: "#ffe9c0", transparent: true, opacity: 0.35, depthWrite: false, blending: T.AdditiveBlending }));
     arch.position.set(E(0), 2.8, 20.6);
     DGJ.exitGlow = arch;
-    /* ekialdeko ertza (6 m): hegoaldeko aldea heuraz (iraganean bizirik; kamerak ikusten du) */
+    /* ekialdeko ertza (6 m): hegoaldeko aldea heuraz (udan bizirik; kamerak ikusten du) */
     const ledge = slab({ x: E(10), z: -6, y: 6, w: 10, d: 18, h: 6, area: "jA" });
     ledge.slick = true;
     DGJ.ivyA = ivySide(ledge, "s", 0, { phase: 0, id: "jA-heura" });
@@ -243,7 +243,7 @@
     bprop("rubble_large", E(-4.5), 0, -7, DS * 0.6, 0.5);
     bprop("banner_patternB_red", E(-6), 0, -14.2, DS * 0.8, 0);
     /* ---- J2: Kanpaien aretoa (y 6) ---- */
-    room("J2", E(36), 0, 30, 30, { y: 6, area: "jB", name: "KANPAIEN ARETOA", desc: "Jentilen kanpaiak sarearen atzean. Urrutitik jo behar…", doors: { w: -6, n: 12, e: 12 } });
+    room("J2", E(36), 0, 30, 30, { y: 6, area: "jB", name: "KANPAIEN ARETOA", desc: "Mairuen kanpaiak sarearen atzean. Urrutitik jo behar…", doors: { w: -6, n: 12, e: 12 } });
     DOORDEF.jBg = grate(E(40), 0, 30, 6, "jB-g");
     RUNE_SETS.push({
       id: "jB-bells",
@@ -251,7 +251,7 @@
       kind: "kanpaia",
       time: 7,
       runes: [[E(46), 9.6, -9, -1], [E(48), 9.6, 0, 1], [E(46), 9.6, 9, -1]],
-      hint: "Hiru kanpaia sarearen atzean. Jo denak SORGINKERIAz, elkarren segidan — bat ORAINEAN bakarrik ikusten da!",
+      hint: "Hiru kanpaia sarearen atzean. Jo denak SORGINKERIAz, elkarren segidan — bat NEGUAN bakarrik ikusten da!",
       onSolve: () => {
         openDoor(DOORDEF.jBg);
         title("SAREA ZABALDU DA", "");
@@ -274,7 +274,7 @@
       y: 6,
       area: "jC",
       name: "HARRESIA",
-      desc: "Jentilen harresia. Hezurrezko zaindariak txandaka.",
+      desc: "Mairuen harresia. Hezurrezko zaindariak txandaka.",
       doors: { s: 12, w: 0, e: 0 },
       waves: [[["grunt", -1, 3]], [["brute", -1, 1], ["grunt", 0, 2]], [["brute", 1, 1], ["eye", -1, 1], ["grunt", 1, 1]]],
       diff: 1.2,
@@ -306,7 +306,7 @@
     }
     bprop("rubble_large", E(84), 6, -48, DS * 0.6, 1.2);
     /* ---- J0: Atalasea ---- */
-    room("J0", E(0), -36, 30, 30, { area: "jE", name: "ATALASEA", desc: "Ate handi bat, jentilen neurrikoa. Goian, ekaitz bat zizelkatuta.", doors: { s: 0, n: 0, e: 0, w: 0 }, wallH: 20 });
+    room("J0", E(0), -36, 30, 30, { area: "jE", name: "ATALASEA", desc: "Ate handi bat, mairuen neurrikoa. Goian, ekaitz bat zizelkatuta.", doors: { s: 0, n: 0, e: 0, w: 0 }, wallH: 20 });
     DOORDEF.jDn = door("jD-n", E(0), -51, 0, 0, "boss");
     corridor(E(0), -54, 6, 6, "z");
     jentilStatue(E(-7.5), -47, 0, 1.25);
@@ -314,7 +314,7 @@
     crackWall("jE-crack", E(-15.2), -36, 1.4, 5.9, 5.6, { onBreak: () => notify(L("Harria apurtu da: mendebaldean, dorre bat."), "", 3.5) });
     corridor(E(-18), -36, 6, 6, "x");
     /* ---- J6: Jentilen dorrea ---- */
-    room("J6", E(-36), -36, 30, 30, { area: "jF", name: "JENTILEN DORREA", desc: "Zutabe erraldoi bat, heuraz estalia. Inguruan, lau kanpaia.", doors: { e: 0, s: 0 }, fog: [12, 80], wallH: 20 });
+    room("J6", E(-36), -36, 30, 30, { area: "jF", name: "MAIRUEN DORREA", desc: "Zutabe erraldoi bat, heuraz estalia. Inguruan, lau kanpaia.", doors: { e: 0, s: 0 }, fog: [12, 80], wallH: 20 });
     const pil = slab({ x: E(-36), z: -36, y: 12, w: 8, d: 8, h: 12, area: "jF" });
     pil.slick = true;
     DGJ.ivyF = ivySide(pil, "s", 0, { phase: 0, id: "jF-heura" });
@@ -344,7 +344,7 @@
     });
     corridor(E(-36), -15, 6, 12, "z");
     /* ---- J5: Biltegia ---- */
-    room("J5", E(-36), 0, 18, 18, { area: "jG", name: "BILTEGIA", desc: "Jentilen biltegia: gari-zakuak, kutxak… eta su bat.", doors: { n: 0, e: 0 } });
+    room("J5", E(-36), 0, 18, 18, { area: "jG", name: "BILTEGIA", desc: "Mairuen biltegia: gari-zakuak, kutxak… eta su bat.", doors: { n: 0, e: 0 } });
     DGJ.hearthG = sutondoa("jG-su", E(-40), 0, 3.5, 1.9, -1.4);
     bprop("crate_A_big", E(-42.5), 0, -6, DS * 0.9, 0.3);
     bprop("crate_B_small", E(-30), 0, 6.5, DS * 0.9, 1);
@@ -352,8 +352,8 @@
     breakable("barrel", E(-30), 0, -6);
     breakable("crate_A_big", E(-31.5), 0, -3.5);
     /* ---- J7: Errolanen aretoa ---- */
-    room("J7", E(0), -78, 42, 42, { area: "jH", name: "ERROLANEN ARETOA", desc: "", doors: { s: 0 }, wallH: 20 });
-    /* izkinetako zutabeak heurarekin (iraganean): uhinetatik babesteko */
+    room("J7", E(0), -78, 42, 42, { area: "jH", name: "MAIRUAREN ARETOA", desc: "", doors: { s: 0 }, wallH: 20 });
+    /* izkinetako zutabeak heurarekin (udan): uhinetatik babesteko */
     for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) {
       const p = slab({ x: E(sx * 14), z: -78 + sz * 14, y: 7, w: 3.2, d: 3.2, h: 7, area: "jH" });
       p.slick = true;
@@ -391,7 +391,7 @@
   };
 
   /* ================================ ERROLAN (J7) ================================
-     Jentilen azkena, Gauekoren ekaitz batek gaiztotua. Erasoak:
+     Mairuen azkena, Mikelatsen ekaitz batek gaiztotua. Erasoak:
      · HARKAITZA: buru gainean altxatu (une hori: TXIMISTARRIA oinetara → harkaitza
        buruan erori → belauniko) eta gero jaurti (EZKUTUAz itzuli → belauniko);
      · UKABILKADA: lurra jo → uhinak (salto, edo heura duten zutabeetara igo);
@@ -516,19 +516,19 @@
     const fight = () => {
       ERR.state = "idle";
       ERR.t = 0;
-      title("ERROLAN", "");
+      title("MAIRU ZAHARRA", "");
       SND.roar();
       shake(0.6);
-      bossBar("ERROLAN", 1);
+      bossBar("MAIRU ZAHARRA", 1);
       notify(L("Harkaitza buru gainean duenean: TXIMISTARRIA oinetara! Eskukada: ALDARATU. Harkaitzak: EZKUTUA."), "", 7);
     };
     if (ERR.seenIntro) return fight();
     ERR.seenIntro = true;
     say(
       [
-        ["ERROLAN", "Nork esnatzen ditu jentilak? Zeruan argi bitxi bat ikusi genuen, eta harri honen azpian sartu ginen… mende askoan.", "", ERR.x, ERR.z, 9],
-        ["AMAIUR", "Ez naiz zure etsaia, Errolan. Itzal bat daramazu bularrean.", "", P.x, P.z, 0],
-        ["ERROLAN", "ITZALIK EZ, SORGIN: EKAITZA! HARRIAK HEGAN, MENDIAK DARDARKA. ZAPALDUKO ZAITUT!", "", ERR.x, ERR.z, 9],
+        ["MAIRU ZAHARRA", "Nork esnatzen ditu mairuak? Harriak altxatu genituen, trikuharriak eta harrespilak… eta gero, lo, harrien azpian.", "", ERR.x, ERR.z, 9],
+        ["AMAIUR", "Ez naiz zure etsaia, mairu zaharra. Itzal bat daramazu bularrean.", "", P.x, P.z, 0],
+        ["MAIRU ZAHARRA", "ITZALIK EZ, SORGIN: EKAITZA! HARRIAK HEGAN, MENDIAK DARDARKA. ZAPALDUKO ZAITUT!", "", ERR.x, ERR.z, 9],
       ],
       fight,
     );
@@ -563,7 +563,7 @@
       fxBurst(P.x, P.y + 1.4, P.z, { n: 30, speed: 7, up: 1, life: 0.45, size: 0.32, color: "#fff1a8", grav: 2 });
       damageNumber({ x: ERR.x, y: 6.5, z: ERR.z, H: 0.5 }, L("ALDARATUA!"), "#fff1a8");
       coachDone("parry");
-      errDown(3.4, L("ALDARATUA! Errolan belauniko: bihotza agerian!"), "parry");
+      errDown(3.4, L("ALDARATUA! Mairua belauniko: bihotza agerian!"), "parry");
       return;
     }
     if (front && MAG.charging && MAG.charge > 0.12) {
@@ -809,7 +809,7 @@
       const w = BOSS.weak();
       FB.bossHit(w.x, w.y, w.z);
       damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.4 }, n);
-      bossBar("ERROLAN", (ERR.rounds - 1 + Math.max(0, ERR.hp) / ERR_HP) / 3);
+      bossBar("MAIRU ZAHARRA", (ERR.rounds - 1 + Math.max(0, ERR.hp) / ERR_HP) / 3);
       if (ERR.hp <= 0) {
         ERR.rounds--;
         ERR.hp = ERR_HP;
@@ -843,11 +843,11 @@
     say(
       [
         ["· · ·", "Bularretik itzal bat atera zaio, ekaitz-hodei txiki bat bezala, eta harrien artean desagertu da.", "", ERR.x, ERR.z, 8],
-        ["ERROLAN", "…Isiltasuna. Mende askoan lehen aldiz, ez dago trumoirik nire buruan.", "", ERR.x, ERR.z, 9],
-        ["ERROLAN", "Gauekok ekaitz bat sartu zidan bularrean. Jentilen indarra bere alde nahi zuen: harriak jaurti, mendiak astindu…", "", ERR.x, ERR.z, 9],
-        ["AMAIUR", "Lau zaindari askatuta. Hiru falta dira. Non daude?", "", P.x, P.z, 0],
-        ["ERROLAN", "Anboton, hodeien gainean: jentilen zeruan. Haizeak eta trumoiak han dute etxea, eta Mariren sua ere hara eraman zuten.", "", ERR.x, ERR.z, 9],
-        ["ERROLAN", "Gorde tximista-harria, sorgin txikia. Ekaitzak zure alde jo dezala.", "", ERR.x, ERR.z, 9],
+        ["MAIRU ZAHARRA", "…Isiltasuna. Mende askoan lehen aldiz, ez dago trumoirik nire buruan.", "", ERR.x, ERR.z, 9],
+        ["MAIRU ZAHARRA", "Mikelatsek ekaitz bat sartu zidan bularrean, eta txingarra eraman. Mairuen indarra bere alde nahi zuen: harriak jaurti, mendiak astindu…", "", ERR.x, ERR.z, 9],
+        ["AMAIUR", "Lau txingar itzulita. Hiru falta dira. Non daude?", "", P.x, P.z, 0],
+        ["MAIRU ZAHARRA", "Hodeien gainean, Ortzian: Eatek, haizearen eta suaren izpirituak, bosgarrena dauka. Ortzadarretik igotzen ziren jentilak.", "", ERR.x, ERR.z, 9],
+        ["MAIRU ZAHARRA", "Gorde tximista-harria, sorgin txikia. Ekaitzak zure alde jo dezala.", "", ERR.x, ERR.z, 9],
       ],
       () => {
         errFreed();
@@ -856,9 +856,9 @@
         P.hp = P.maxHp;
         flagSet("errolan");
         persist();
-        itemGet("bihotza", L("ERROLANEN BIHOTZA"), L("Arnasa bat gehiago. Jentilen hiriak lo egin dezake berriro, lasai."), () => {
-          title("ERROLAN ASKE", "");
-          notify(L("Irten hegoaldeko arkutik. Herrian, Irati zain."), "", 6);
+        itemGet("bihotza", L("MAIRUAREN BIHOTZA"), L("Arnasa bat gehiago. Mairuen hiriak lo egin dezake berriro, lasai."), () => {
+          title("MAIRU ZAHARRA ASKE", "");
+          notify(L("Irten hegoaldeko arkutik. Herrian, Atarrabi zain."), "", 6);
           hud();
         });
       },
@@ -907,8 +907,8 @@
     const R = DGJ.rooms,
       it = (k) => saved.items.includes(k);
     if (!isCleared("jB-bells"))
-      return ROOM.cur === R.J2 ? ["Hiru kanpaia sarearen atzean: jo denak elkarren segidan (bat ORAINEAN bakarrik ikusten da).", [R.J2.x + 11, 0, 9.6]] : ["Ekialdeko ertz garaia: HEURA, IRAGANEAN bizirik. Igo eta ekialdera.", [R.J1.x + 10, 3.6, 0]];
-    if (!isCleared("J3")) return ["Harresia: jentilen zaindariak. Kolpea iristean, ALDARATU.", [R.J3.x, R.J3.z, 6]];
+      return ROOM.cur === R.J2 ? ["Hiru kanpaia sarearen atzean: jo denak elkarren segidan (bat NEGUAN bakarrik ikusten da).", [R.J2.x + 11, 0, 9.6]] : ["Ekialdeko ertz garaia: HEURA, UDAN bizirik. Igo eta ekialdera.", [R.J1.x + 10, 3.6, 0]];
+    if (!isCleared("J3")) return ["Harresia: mairuen zaindariak. Kolpea iristean, ALDARATU.", [R.J3.x, R.J3.z, 6]];
     if (!saved.doors.includes("jC-e") && !(saved.keyz.jentil > 0)) return ["Kutxa: harresiaren erdian.", [R.J3.x, R.J3.z, 6]];
     if (!saved.doors.includes("jC-e")) return ["Harresiaren ekialdeko atea: giltza txikia.", [R.J3.x + 13, R.J3.z, 6]];
     if (!isCleared("jD-mini")) return ["Harri-zainaren gela. Zaindaria esnatuko da.", [R.J4.x, R.J4.z, 6]];
@@ -918,10 +918,10 @@
         if (!isCleared("jC-crack") && ROOM.cur !== R.J0) return ["Harresiaren mendebaldeko harri arrakalatua: TXIMISTARRIA (urrun egon!). Beherago, atalasea.", [R.J3.x - 13, R.J3.z, 6]];
         return ["Atalaseko mendebaldeko harri arrakalatua: TXIMISTARRIA.", [R.J0.x - 13, R.J0.z, 0]];
       }
-      if (!isCleared("jF-crack")) return ["Dorrea: igo zutabea HEURAz (iraganean); goitik, harri arrakalatua TXIMISTAz.", [R.J6.x, R.J6.z + 4.4, 0]];
-      return ["Lau kanpaiak batera, zutabearen gainetik (bat ORAINEAN).", [R.J6.x, R.J6.z, 12]];
+      if (!isCleared("jF-crack")) return ["Dorrea: igo zutabea HEURAz (udan); goitik, harri arrakalatua TXIMISTAz.", [R.J6.x, R.J6.z + 4.4, 0]];
+      return ["Lau kanpaiak batera, zutabearen gainetik (bat NEGUAN).", [R.J6.x, R.J6.z, 12]];
     }
-    if (!saved.flags.includes("errolan")) return saved.doors.includes("jD-n") ? ["Errolan, jentil iluna. Harkaitza altxatzen duenean: TXIMISTARRIA!", [R.J7.x, R.J7.z + 14, 0]] : ["Atalaseko ate handia: giltza nagusia.", [R.J0.x, R.J0.z - 13, 0]];
+    if (!saved.flags.includes("errolan")) return saved.doors.includes("jD-n") ? ["Mairu zaharra, harri-eraikitzaile iluna. Harkaitza altxatzen duenean: TXIMISTARRIA!", [R.J7.x, R.J7.z + 14, 0]] : ["Atalaseko ate handia: giltza nagusia.", [R.J0.x, R.J0.z - 13, 0]];
     return ["Irten hegoaldeko arkutik.", [DGJ.exitArch.x, DGJ.exitArch.z, 0]];
   };
 
@@ -975,8 +975,8 @@
     DOL.t = 0.0001;
     SND.wake();
     shake(0.45);
-    title("JENTILEN ATEA", "");
-    notify(L("Trikuharriaren harria mugitu da: azpian, eskailerak. JENTILBARATZA."), "", 5);
+    title("MAIRUEN ATEA", "");
+    notify(L("Trikuharriaren harria mugitu da: azpian, eskailerak. MAIRUBARATZA."), "", 5);
     return 1;
   }
   function dolmenUpdate(dt) {

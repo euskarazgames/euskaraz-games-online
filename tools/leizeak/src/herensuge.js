@@ -4,8 +4,8 @@
      Odeiren hodei zuriak (zeruko ortzadarraren muturrean) eramaten zaitu hara.
        H1 Suge-mendiaren ahoa .. SUTONDOA; sare beltza iparrean (SUAk erretzen du);
                                  sabaiko arrakala: argi-zutabe bat… zertarako?
-       H2 Laba-arroila ......... ORAINEAN laba gogortuta (lurrazala) erdiko harkaitzera;
-                                 IRAGANEAN beroa gora (haize-zutabea): ENARAz ertz garaira.
+       H2 Laba-arroila ......... NEGUAN laba gogortuta (lurrazala) erdiko harkaitzera;
+                                 UDAN beroa gora (haize-zutabea): ENARAz ertz garaira.
                                  Mendebaldean, apal garai bat (arnasa-zatia). Saguzarrak.
        H3 Saguzarren habia ..... borroka → GILTZA TXIKIA; bigarren SUTONDOA; ekialdean barrak
                                  (kristal urrea atzean); iparrean ate handia
@@ -41,7 +41,7 @@
   /* ------------------------------ eraikigaiak ------------------------------ */
   let LAVA_TEX = null;
   /* laba: Voronoi mosaikoa (ertzetan errepikatzen da) — plaka ilunak eta arrakala distiratsuak.
-     IRAGANEAN distira handiz (dena urtuta), ORAINEAN gutxiagoz (plakak gogortuta) */
+     UDAN distira handiz (dena urtuta), NEGUAN gutxiagoz (plakak gogortuta) */
   function lavaTexture() {
     if (LAVA_TEX) return LAVA_TEX;
     const N = 128,
@@ -103,7 +103,7 @@
     HZ.lava.push(L0);
     return L0;
   }
-  /* lurrazala (ORAINEAN): laba gogortua, harri beltza arrakala gorriekin */
+  /* lurrazala (NEGUAN): laba gogortua, harri beltza arrakala gorriekin */
   function crust(x, z, w, d, y = 0) {
     const g = new T.Group();
     g.position.set(x, y, z);
@@ -209,16 +209,16 @@
     /* ---- H1 → H2 ---- */
     corridor(E(0), -15, 6, 6, "z");
     /* ---- H2: Laba-arroila ---- */
-    room("H2", E(0), -36, 30, 36, { area: "hB", name: "LABA-ARROILA", desc: "Iraganean laba bizirik, beroa gora. Orain, lurrazal beltz bat gainean.", doors: { s: 0, n: 0 }, floors: [[E(0), -21, 30, 6]], wallH: 18 });
+    room("H2", E(0), -36, 30, 36, { area: "hB", name: "LABA-ARROILA", desc: "Udan laba bizirik, beroa gora. Neguan, lurrazal beltz bat gainean.", doors: { s: 0, n: 0 }, floors: [[E(0), -21, 30, 6]], wallH: 18 });
     lavaPool(E(0), -35, 30, 22, -1);
-    /* lurrazala (ORAINEAN) erdiko harkaitzeraino */
+    /* lurrazala (NEGUAN) erdiko harkaitzeraino */
     crust(E(-2.2), -26.4, 3.6, 4.8, 0);
     crust(E(-0.8), -30.8, 3.4, 4.8, 0);
     /* erdiko harkaitza (beti) */
     const isle = slab({ x: E(0), z: -36, y: 0, w: 6, d: 6, h: 9, area: "hB" });
     isle.slick = true;
     for (const [rx, rz] of [[E(-2.2), -38.2], [E(2.4), -34]]) bprop("rubble_half", rx, 0, rz, DS * 0.45, rx);
-    /* bero-zutabea (IRAGANEAN): ENARAz ertz garaira */
+    /* bero-zutabea (UDAN): ENARAz ertz garaira */
     DGH.heat = updraft({ id: "hB-beroa", x: E(0.4), z: -37, r: 1.8, y0: 0, y1: 10.8, phase: 0, col: "#ffb070", power: 9.2, vent: 0.02 });
     /* iparreko ertz garaia */
     const north = slab({ x: E(0), z: -50, y: SGY, w: 30, d: 8, h: SGY + 1.2, area: "hB" });
@@ -253,7 +253,7 @@
     DOORDEF.hCw.room = "H3";
     DOORDEF.hCe = door("hC-e", E(15), -75, PI / 2, SGY, "bars", "H3");
     DOORDEF.hCn = door("hC-n", E(0), -90, 0, SGY, "boss");
-    /* eguzki-zuloa (IRAGANEAN): izpia barren artetik kristal urrera */
+    /* eguzki-zuloa (UDAN): izpia barren artetik kristal urrera */
     DGH.shaftC = lightShaft({ id: "hC-argia", x: E(6), z: -76.4, y: SGY, kind: "sun", r: 1.5 });
     DGH.crystalC = lightCrystal({
       id: "hC-kristala",
@@ -394,7 +394,7 @@
   function odeiCloudRide() {
     const go = () => {
       SND.whoosh();
-      title("SUGE-MENDIA", "");
+      title("ZEZEN-HARPEA", "");
       enterZone("herensuge", { ...DGH.entry, cp: true });
     };
     if (HZ.seenCloud || flag("suge-mendia")) return go();
@@ -402,9 +402,9 @@
     const c = HZ.cloud.position;
     say(
       [
-        ["ODEI", "Sorgin. Nire zati txiki bat utzi dizut hemen: hodei zuri bat, euri-usaina duena.", "", c.x, c.z, c.y],
-        ["ODEI", "Hodeien beste aldean, SUGE-MENDIA. Haren barruan, Herensugea: zazpi buru, zazpi su. Argiak bakarrik ikaratzen ditu haren begiak.", "", c.x, c.z, c.y],
-        ["AMAIUR", "Eraman nazazu, beraz. Argia aurkituko dut.", "", P.x, P.z, P.y],
+        ["EATE", "Sorgin. Nire zati txiki bat utzi dizut hemen: hodei zuri bat, euri-usaina duena.", "", c.x, c.z, c.y],
+        ["EATE", "Hodeien beste aldean, ZEZEN-HARPEA, eguzkiaren leizea. Haren barruan, Zezengorri: sua botatzen du sudurretik. Eguzkiak bakarrik itsutzen ditu haren begiak.", "", c.x, c.z, c.y],
+        ["AMAIUR", "Eraman nazazu, beraz. Eguzkia aurkituko dut.", "", P.x, P.z, P.y],
       ],
       () => {
         flagSet("suge-mendia");
@@ -449,7 +449,7 @@
         fxBurst(P.x, L0.y + 0.3, P.z, { n: 30, speed: 4, up: 5, life: 0.8, size: 0.4, color: "#ff7a2a", grav: -1 });
         SND.flame();
         haptic(40);
-        notifyOnce("laba", L("Laba! Iraganean bizirik dago; orainean, lurrazal gogorra bakarrik ibiltzeko."), "");
+        notifyOnce("laba", L("Laba! Udan bizirik dago; neguan, lurrazal gogorra bakarrik ibiltzeko."), "");
         fall();
       }
     }
@@ -478,7 +478,7 @@
           K: 1.25,
           tint: "#d8b87a",
           add: [["bat", -1, 2]],
-          hint: "Ispiluaren zaindaria! Ezkutuak garaia aldatzen du: begiratu begien koloreari. Saguzarrak: murgiltzean, ALDARATU.",
+          hint: "Ispiluaren zaindaria! Ezkutuak urtaroa aldatzen du: begiratu begien koloreari. Saguzarrak: murgiltzean, ALDARATU.",
           onDead: () => {
             revealChest(DGH.mirrorChest);
             notify(L("Kutxa bat agertu da gelaren iparrean."), "", 4);
@@ -494,7 +494,7 @@
       has = (k) => saved.items.includes(k);
     if (!isCleared("hA-sarea")) return ["Sare beltz batek iparreko pasabidea ixten du. SUA: INDARRA kargatu eta askatu.", [R.H1.x, -11.4, 0]];
     if (!isCleared("H3")) {
-      if (ROOM.cur === R.H2 && P.y < SGY - 1) return phase ? ["Lurrazala (ORAINEAN) erdiko harkaitzeraino. Han, IRAGANERA: beroa gora.", [R.H2.x, -36, 0]] : ["Bero-zutabea (IRAGANEAN): jauzi bikoitza eta eutsi JAUZIari → ENARA, iparreko ertzera.", [R.H2.x, -37, 0]];
+      if (ROOM.cur === R.H2 && P.y < SGY - 1) return phase ? ["Lurrazala (NEGUAN) erdiko harkaitzeraino. Han, UDARA: beroa gora.", [R.H2.x, -36, 0]] : ["Bero-zutabea (UDAN): jauzi bikoitza eta eutsi JAUZIari → ENARA, iparreko ertzera.", [R.H2.x, -37, 0]];
       return ["Iparrera: saguzarren habia.", [R.H3.x, R.H3.z, SGY]];
     }
     if (!has("ispilua")) {
@@ -502,7 +502,7 @@
       if (!saved.doors.includes("hC-w")) return ["Mendebaldeko atea: giltza txikia.", [R.H3.x - 13.6, R.H3.z, SGY]];
       return isCleared("hD-mini") ? ["Ispilu-zainaren kutxa ireki.", [R.H4.x, -82, SGY]] : ["Mendebaldean: ispilu-zainaren gela.", [R.H4.x, R.H4.z, SGY]];
     }
-    if (!saved.doors.includes("hC-e")) return ["Habiako eguzki-zuloa (IRAGANEAN): ISPILUA, barren artetik kristal urrera.", [DGH.shaftC.x, DGH.shaftC.z, SGY]];
+    if (!saved.doors.includes("hC-e")) return ["Habiako eguzki-zuloa (UDAN): ISPILUA, barren artetik kristal urrera.", [DGH.shaftC.x, DGH.shaftC.z, SGY]];
     if (!saved.doors.includes("hE-n")) return ["Ispiluen aretoa: ispilu-harriak BIRATU. Sarea EGUZKIAz, kristal urdina ILARGIAz.", [DGH.shaftE.x, DGH.shaftE.z, SGY]];
     if (!has(DGH.bigKey)) return isCleared("hF-kristalak") ? ["Giltza nagusiaren kutxa.", [DGH.bigChest.x, DGH.bigChest.z, SGY]] : ["Kristalen gela: hiru kristalak piztu (urrea, urdina, zuria).", [DGH.shaftF.x, DGH.shaftF.z, SGY]];
     if (!flag("herensugea")) return saved.doors.includes(DGH.bossDoor) ? ["Herensugearen habia. Argia begietara.", [R.H7.x, R.H7.z + 10, SGY]] : ["Habiako ate handia (iparrean): giltza nagusia.", [R.H3.x, R.H3.z - 13, SGY]];
@@ -827,7 +827,7 @@
       shake(0.6);
       bossBar("HERENSUGEA", 1);
       zbRound(0);
-      notify(L("Begi urreak: EGUZKIA (IRAGANA). Begi urdinak: ILARGIA (ORAINA). Argi-zutabe batean, ISPILUA begietara!"), "", 7);
+      notify(L("Begi urreak: EGUZKIA (UDA). Begi urdinak: ILARGIA (NEGUA). Argi-zutabe batean, ISPILUA begietara!"), "", 7);
     };
     if (ZB.seenIntro) return fight();
     ZB.seenIntro = true;
@@ -1280,11 +1280,11 @@
         ZB.stats.light++;
         return zbDown(H, 5, "light");
       }
-      notifyOnce("zb-both-" + kind, kind === "sun" ? L("Begi urrea itxi da! Orain, ILARGIA begi urdinera: ORAINERA, azkar!") : L("Begi urdina itxi da! Orain, EGUZKIA begi urrera: IRAGANERA, azkar!"), "");
+      notifyOnce("zb-both-" + kind, kind === "sun" ? L("Begi urrea itxi da! Orain, ILARGIA begi urdinera: NEGURA, azkar!") : L("Begi urdina itxi da! Orain, EGUZKIA begi urrera: UDARA, azkar!"), "");
       return;
     }
     if (H.kind !== kind) {
-      notifyOnce("zb-wrong-" + H.kind, H.kind === "sun" ? L("Buru horren begiak urreak dira: EGUZKIA behar dute (IRAGANA).") : L("Buru horren begiak urdinak dira: ILARGIA behar dute (ORAINA)."), "");
+      notifyOnce("zb-wrong-" + H.kind, H.kind === "sun" ? L("Buru horren begiak urreak dira: EGUZKIA behar dute (UDA).") : L("Buru horren begiak urdinak dira: ILARGIA behar dute (NEGUA)."), "");
       return;
     }
     /* argia jasotzen: erasoa eten */

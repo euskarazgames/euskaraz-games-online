@@ -163,7 +163,7 @@
           if (!home("joanes")) return quiet(L("Inork ez du erantzuten. Joanes larreetan dabil, ardiekin. Atean, artile-mataza bat zintzilik."));
           return voice("JOANES", [f("ardiak") ? L("Ardiak etxean, ni etxean. Lasai lo egiten dut berriro, zuri esker.") : L("Hiru ardi falta zaizkit… Ez dut begirik ixten.")]);
         case "mendieta":
-          if (freedCount() < 3) return quiet(L("Etxe hutsa. Leihoak itxita, atean hautsa. Mendietakoek mendira ihes egin zuten, Gauekoren itzalak iritsi zirenean."));
+          if (freedCount() < 3) return quiet(L("Etxe hutsa. Leihoak itxita, atean hautsa. Mendietakoek mendira ihes egin zuten, Mikelatsen itzalak iritsi zirenean."));
           if (once("mendieta", () => {}))
             return voice("MENDIETAKO ANDREA", [L("Itzuli gara! Mendian entzun genuen: itzalak hausten ari dira, eta txalapartak berriro jotzen du."), L("Zu zara, ezta? Hartu hau: ez da asko, baina gure esker ona da.")], () => {
               saved.coins += 30;
@@ -182,7 +182,7 @@
             }
             return voice("OSTALARIA", [L("Bost zaindari aske? Sagardotegia zabalduko dugu! Txotx, sorgin: edan, eta indarberritu.")]);
           }
-          return voice("OSTALARIA", [freedCount() >= 2 ? L("Itxita oraindik… baina kupelak prestatzen ari gara. Gauekoren itzalak joan bezain laster, txotx!") : L("Itxita dago, neska! Gaueko ibili bitartean, hemen ez da sagardorik zabalduko.")]);
+          return voice("OSTALARIA", [freedCount() >= 2 ? L("Itxita oraindik… baina kupelak prestatzen ari gara. Mikelatsen itzalak joan bezain laster, txotx!") : L("Itxita dago, neska! Mikelats ibili bitartean, hemen ez da sagardorik zabalduko.")]);
       }
     }, 520);
   }
@@ -396,6 +396,28 @@
     DGE.letter.position.set(E(0.6) + 0.15, 1.02, 0.85);
     BP.add(DGE.letter);
     DGE.table = { x: E(0.6), z: 0.6 };
+    /* AMONA: sutondoaren ondoan, makila eskuan (Iturraldeko sorgin zaharra) */
+    {
+      const ax = E(-2.5),
+        az = -1.5,
+        root = npcMesh({ model: "npc_hooded", tint: "#4a4048", scale: 0.93 });
+      if (root) {
+        const g = new T.Group();
+        g.add(root);
+        const stick = new T.Mesh(new T.CylinderGeometry(0.035, 0.045, 1.3, 6), material("#6b4a2e"));
+        stick.position.set(0.42, 0.65, 0.18);
+        g.add(stick);
+        g.position.set(ax, 0, az);
+        g.rotation.y = Math.atan2(E(-4.6) - ax, -3.4 - az) + 0.9;
+        BP.add(g);
+        const mixer = new T.AnimationMixer(root),
+          idle = models.mage.animations.find((c) => c.name === "Idle");
+        if (idle) mixer.clipAction(idle).play();
+        mixer.timeScale = 0.6;
+        DGE.amona = { x: ax, z: az, g, mixer, solid: { x: ax, z: az, r: 0.55, h: 2, y: 0, pillar: true } };
+        solids.push(DGE.amona.solid);
+      }
+    }
     /* lauburu-alfonbra */
     const rc = document.createElement("canvas");
     rc.width = rc.height = 256;
@@ -494,6 +516,7 @@
   function homeActionNear() {
     if (ZONE.cur !== "etxea") return null;
     const near = (o, r) => o && Math.hypot(P.x - o.x, P.z - o.z) < r;
+    if (DGE.amona && DGE.amona.g.visible && near(DGE.amona, 2.3)) return { kind: "talk", label: L("AMONA"), fn: homeAmona };
     if (near(DGE.bed, 2.4)) return { kind: "hearth", label: L("OHEA · LO EGIN"), fn: homeSleep };
     if (near(DGE.shelf, 2.2)) return { kind: "talk", label: L("OROITZAPENAK"), fn: homeMementos };
     if (near(DGE.irati, 2.0)) return { kind: "talk", label: L("IRATIREN TXOKOA"), fn: homeIrati };
@@ -552,6 +575,60 @@
       [L("EZ ORAIN"), () => {}],
     ]);
   }
+  /* AMONA: aurrerapenaren araberako esaldiak; Tartaloren ondoren, BIHURGUNEA (amonaren txingarra) */
+  function homeAmona() {
+    const f = (k) => saved.flags.includes(k),
+      A = DGE.amona;
+    if (f("irati-tartalo") && !f("giroa")) return amonaTxingarra();
+    const t = f("anboto")
+      ? "Sutondoa piztuta dago, laztana. Eta piztuta egongo da: zu hemen zauden bitartean."
+      : f("irati-herensuge")
+        ? "Akelarrea? Bai… nik ere dantzatu nuen, gaztetan. Ez dantzatu zuk: entzun, eta kantatu."
+        : f("irati-odei")
+          ? "Zezengorri? Txikitan, haren orroa entzuten genuen ekaitz-gauetan. Eguzkia du etsai, laztana."
+          : f("irati-errolan")
+            ? "Ortzia… Hodeien gainean, haizeak ez du bidea erakusten: zuk egin behar duzu."
+            : f("giroa")
+              ? "Txingarra zaindu. Udak ez du luze irauten: zuk esnatzen duzun bitartean bakarrik."
+              : f("lamia")
+                ? "Lamien kantuak berriro ibaian… Zure amak ere maite zituen. Jan zerbait, eta zoaz."
+                : f("basajaun")
+                  ? "Basajaun askatu duzu? Ondo. Basoak ez du ahazten nork lagundu dion."
+                  : "Leizeek deitzen dute? Badakit, laztana. Nik ere entzun nituen, zure adinean. Zoaz, baina itzuli afaltzera.";
+    say([["AMONA", L(t), "", A.x, A.z, 0]]);
+  }
+  function amonaTxingarra() {
+    const A = DGE.amona,
+      H = DGE.hearth;
+    say(
+      [
+        ["AMONA", "Etorri, laztana. Eseri sutondoan. Hiru txingar itzuli dizkiozu Mariri.", "", A.x, A.z, 0, null, "tx_n1"],
+        ["AMAIUR", "Nola dakizu hori?", "", P.x, P.z, 0, null, "tx_a1"],
+        ["AMONA", "Sorgina naiz, Amaiur. Zure adinean, nik ere entzun nuen leizeen deia.", "", A.x, A.z, 0, null, "tx_n2"],
+        ["AMONA", "Sutondo hau ez da edozein: Marik berak piztu zuen, herria zaintzeko. Ez da inoiz itzaltzen.", "", H.x, H.z, 0, null, "tx_n3"],
+        ["AMAIUR", "Baina deiaren gauean itzali zen.", "", P.x, P.z, 0, null, "tx_a2"],
+        ["AMONA", "Bai. Mikelatsek bere hotza bidali zuen tximinian behera. Horregatik, hau zuretzat da.", "", A.x, A.z, 0, null, "tx_n4"],
+        ["AMONA", "Txingar bat, gure sutik. Elurraren azpian uda lo dago; txingarrak esnatuko du, une batez.", "", H.x, H.z, 0, null, "tx_n5"],
+        ["AMAIUR", "Uda… Hiru urte dira uda ikusi ez dudala.", "", P.x, P.z, 0, null, "tx_a3"],
+        ["AMONA", "Ez ahaztu: zuk esnatzen duzun bitartean bakarrik irauten du. Negua ez da oraindik joango.", "", A.x, A.z, 0, null, "tx_n6"],
+      ],
+      () => {
+        if (H) fxBurst(H.x, 1, H.z, { n: 40, speed: 3.6, up: 3, life: 1.1, size: 0.3, color: "#ffb35c", grav: -1.2 });
+        itemGet(
+          "txingarra",
+          L("AMONAREN TXINGARRA"),
+          L("Iturraldeko sutondoaren txingarra, kriseiluan. ALDATU (") + (mobile ? L("botoia") : "Q") + L("): elurraren azpian lo dagoen uda esnatu, edo negura itzuli. Udan ura isurtzen da eta heura hazten; neguan izotzak eusten du. Etsai bakoitza bere urtaroan zauritzen da."),
+          () => {
+            flagSet("giroa");
+            eraGate();
+            coach("shift", "Q", "Q: URTAROA aldatu (uda ↔ negua)", "", "phaseBtn", "ALDATU: urtaroa aldatu (uda ↔ negua)", "");
+            title("UDA-DEIA", "");
+            hud();
+          },
+        );
+      },
+    );
+  }
   function homeMementos() {
     const got = MEMENTOS.filter((M) => saved.flags.includes(M.flag));
     /* ikusitako oroitzapenak berriro (oroitzapenak.js): oroigarri bakoitza, bere eszena */
@@ -586,6 +663,13 @@
   /* barruko eguneraketa: leihoa (eguna/gaua), oroitzapenak (agerian ala ez) */
   DGE.update = (dt) => {
     hearthsUpdate(dt);
+    if (DGE.amona) {
+      const f = (k) => saved.flags.includes(k),
+        on = !PRO.on && !(f("inguma") && !f("anboto"));
+      DGE.amona.g.visible = on;
+      DGE.amona.solid.r = on ? 0.55 : 0;
+      if (on) DGE.amona.mixer.update(dt);
+    }
     const night = DAY.k > 0.5;
     if (DGE.window) DGE.window.material.color.set(night ? "#3a5a9a" : "#ffe8b8");
     if (DGE.shaft) DGE.shaft.material.opacity = night ? 0.03 : 0.08;
@@ -602,6 +686,7 @@
   };
   DGE.objective = () => {
     const f = (k) => saved.flags.includes(k);
+    if (DGE.amona && f("irati-tartalo") && !f("giroa")) return ["Amonarekin hitz egin, sutondoan.", [DGE.amona.x, DGE.amona.z, 0]];
     /* zazpigarren atala: ohea (lehen amets gaiztoa, gero AMETSERA) eta, esnatu ondoren, kanpora */
     if (DGE.bed && f("irati-herensuge") && !f("inguma-ametsa")) return ["Ohean lo egin, sutondoa piztuta.", [DGE.bed.x, DGE.bed.z, 0]];
     if (DGE.bed && seaskaReady()) return ["Ohean: AMETSERA (Ingumaren ametsa).", [DGE.bed.x, DGE.bed.z, 0]];

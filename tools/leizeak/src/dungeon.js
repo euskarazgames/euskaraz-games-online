@@ -1,7 +1,7 @@
   /* ==================================================================
      BASAJAUNEN LEIZEA · lehen leizea (diseinu propioa)
        A Sarrera ........ bi sutegi: SORGINKERIAz biak batera piztu → barrak
-       B Garaien amildegia  garai bateko plataformak (aldatu garaia airean)
+       B Garaien amildegia  garai bateko plataformak (aldatu urtaroa airean)
        C Kaxen gela ....... kaxak pilatu ertz altura → GILTZA TXIKIA
        D Itzalen gela ..... borroka (ateak itxi) → ekialdea eta mendebaldea ireki
        E Oihartzunen gela . iluna: harri-danborra (ENTZUN) eta ezkutuko plataformak
@@ -306,7 +306,7 @@
       waves: [[["grunt", -1, 3]], [["grunt", 0, 2], ["grunt", 1, 2]], [["eye", -1, 1], ["grunt", -1, 2], ["brute", 1, 1]]],
       diff: 1,
       hpK: 1.2,
-      fightText: "Basajaunen itzalak! Kolore bakoitza bere garaian zauritzen da.",
+      fightText: "Basajaunen itzalak! Kolore bakoitza bere urtaroan zauritzen da.",
       onWin: () => {
         openDoor(DOORDEF.De);
         openDoor(DOORDEF.Dw);

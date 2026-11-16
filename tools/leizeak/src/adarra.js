@@ -1,7 +1,7 @@
   /* ==================================================================
      HAIZE-ADARRA · lamien adarra (2. leizeko tresna)
      · V tekla (edo ekintza-botoia): putz egin aurrera → haize-bolada (konoa, ~14 m).
-     · Haize-errotak biratzen ditu (ateak), balsak bultzatzen ditu (iraganean, uretan),
+     · Haize-errotak biratzen ditu (ateak), balsak bultzatzen ditu (udan, uretan),
        laino lamiarra uxatzen du, hosto-pilak hegan bidaltzen ditu, etsai txikiak atzera
        bultzatzen eta proiektilak desbideratzen.
      · Haranean: Artzainen lepoko haize-errota (Tartaloren bidea) eta hosto-pilak.

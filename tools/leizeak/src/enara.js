@@ -3,7 +3,7 @@
      · Airean, jauzi bikoitzaren ondoren, eutsi JAUZIari: hegoak zabaldu eta astiro
        jaitsi, aurrera planeatuz. Askatu: hegoak bildu (eta berriro sakatu: zabaldu).
      · HAIZE-ZUTABEAK: planeatzen ari zarela, gora eramaten zaituzte (hegorik gabe,
-       erorketa leuntzen dute bakarrik). Batzuk ORAINEAN bakarrik bizi dira (Gauekoren
+       erorketa leuntzen dute bakarrik). Batzuk NEGUAN bakarrik bizi dira (Gauekoren
        ekaitza); beste batzuk ODEIren haizeak pizten ditu.
      · Haize-bolada (Odei): P.wx / P.wz — move()-k posizioari gehitzen dio.
      ================================================================== */
@@ -104,7 +104,7 @@
     DRAFT_TEX.wrapS = DRAFT_TEX.wrapT = T.RepeatWrapping;
     return DRAFT_TEX;
   }
-  /* haize-zutabea: (x, z) erdia, r erradioa, y0 → y1; phase: -1 beti / 0 iragana / 1 oraina;
+  /* haize-zutabea: (x, z) erdia, r erradioa, y0 → y1; phase: -1 beti / 0 uda / 1 negua;
      live(): aukerako baldintza (adib. Odei agerian); vent: lurreko harri-zuloa */
   function updraft(o) {
     const { x, z, r, y0, y1 } = o,

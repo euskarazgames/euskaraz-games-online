@@ -5,7 +5,7 @@
        1 ZERUAN IZARRAK ... goian hegan: izar-euria (EZKUTUAz itzuli → zorabiatuta) eta murgiltzea
                             (itzala lurrean: alde egin). Murgildu ondoren, nekatuta behean →
                             IZAR-HAUTSA → KONTATZEN → zauritu.
-       2 LURREAN BELARRAK . amets-belarrak lurrean (ORAINEAN mina; IRAGANEAN belar hutsak) eta
+       2 LURREAN BELARRAK . amets-belarrak lurrean (NEGUAN mina; UDAN belar hutsak) eta
                             hiru Inguma: ENTZUN (txalaparta) → benetakoa urre-distiraz → hautsa.
                             Faltsuak, jotzean, mamu bihurtzen dira.
        3 ITSASOAN HAREAK .. handitu eta ohean eseri: amesgaiztoa betetzen (hare-haizea bultzaka).
@@ -223,7 +223,7 @@
       for (const F of ING.fakes) Object.assign(F, { alive: true, t: 0 });
       grassSpawn();
       bark("c7_n5");
-      notify(L("Hiru Inguma! Benetakoak bakarrik botatzen ditu izarrak — edo ENTZUN (txalaparta): urre-distira. Amets-belarrak: IRAGANEAN ez dute minik egiten."), "", 7);
+      notify(L("Hiru Inguma! Benetakoak bakarrik botatzen ditu izarrak — edo ENTZUN (txalaparta): urre-distira. Amets-belarrak: UDAN ez dute minik egiten."), "", 7);
     } else {
       ING.state = "sit";
       ING.t = 0;
@@ -272,7 +272,7 @@
     }
     notifyOnce("inguma-faltsua", L("Faltsua! Mamu bihurtu da. Benetakoa: ENTZUN (txalaparta)."), "");
   }
-  /* amets-belarrak (2. fasea): ORAINEAN mina ematen dute */
+  /* amets-belarrak (2. fasea): NEGUAN mina ematen dute */
   function grassSpawn() {
     grassClear();
     const R = ingR();
@@ -457,7 +457,7 @@
         F.g.rotation.y = Math.atan2(P.x - F.x, P.z - F.z);
         F.cloth.emissive.set("#2a1450");
       }
-      /* belarrak: ORAINEAN mina */
+      /* belarrak: NEGUAN mina */
       if (ING.grassMat) ING.grassMat.emissiveIntensity = phase ? 0.6 + Math.sin(time * 4) * 0.15 : 0.04;
       for (const G of ING.grass) {
         G.k = mix(G.k, 1, 1 - Math.exp(-dt * 1.5));
@@ -466,7 +466,7 @@
         if (phase === 1 && G.hurtT <= 0 && Math.hypot(P.x - G.x, P.z - G.z) < G.r && P.y < 1 && !respawnTimer) {
           G.hurtT = 1.2;
           playerHit(1, G.x, G.z);
-          notifyOnce("amets-belarrak", L("Amets-belarrak! ORAINEAN mina; IRAGANEAN (uda), belar hutsak dira."), "");
+          notifyOnce("amets-belarrak", L("Amets-belarrak! NEGUAN mina; UDAN belar hutsak dira."), "");
         }
       }
     }

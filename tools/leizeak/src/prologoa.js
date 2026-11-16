@@ -1,15 +1,15 @@
   /* ==================================================================
-     HITZAURREA · "OIHARTZUNA" (0. atala)
-     Hasiera mailakatua: zinema (gaua, txalaparta bakarrik, Gaueko), Iturralden esnatu, Iratiren
-     lehen oihartzun-deia eta erronka txikiak; bakoitzak tresna bat irakasten du, gero istorioan
-     behar dena:
-       1 · MUGITU          → oihartzun-harria dardaraka (deia)
-       2 · SORGINKERIA     → sutondoa piztu            (leizeetako sutegiak)
-       3 · JAUZI BIKOITZA  → ganbara: Iratiren makilak (txalaparta)
-       4 · SORGINKERIA     → atea izoztuta: izotza urtu (garaiak istorioaren bihurgunean, denbora.js)
-       5 · BULTZADA        → Gauekoren begiak kalean: itzalean itxaron edo ziztu bizian pasatu
+     HITZAURREA · "LEIZEEN DEIA" (0. atala)
+     Hasiera mailakatua: zinema (gaua, txalaparta bakarrik, Mikelatsen begiak), Iturralden esnatu,
+     Atarrabiren lehen deia kriseiluaren sugarretik eta erronka txikiak; bakoitzak tresna bat
+     irakasten du, gero istorioan behar dena:
+       1 · MUGITU          → kriseilua dardaraka (deia)
+       2 · SORGINKERIA     → amonaren sutondoa piztu (leizeetako sutegiak)
+       3 · JAUZI BIKOITZA  → ganbara: amonaren makilak (txalaparta)
+       4 · SORGINKERIA     → atea izoztuta: izotza urtu (urtaroak istorioaren bihurgunean, denbora.js)
+       5 · BULTZADA        → Mikelatsen begiak kalean: itzalean itxaron edo ziztu bizian pasatu
        6 · FINKATU borrokan → plazako itzalak
-     Egunsentia, Iratiren oihartzuna plazan eta izenburua. Banderak: pro-0, pro-deia, pro-sua,
+     Egunsentia, Atarrabi plazan (itzalik gabe) eta izenburua. Banderak: pro-0, pro-deia, pro-sua,
      pro-makilak, pro-atea, pro-kalea, pro-plaza → intro + irati1 + prologoa.
      Partida zaharrek (intro banderarekin) ez dute hitzaurrerik eta tresnak libre dituzte.
      ================================================================== */
@@ -42,18 +42,22 @@
 
   /* ------------------------------ eraikitzea (Iturralde barruan) ------------------------------ */
   function proBuildHouse(E, D) {
-    /* oihartzun-harria: leiho azpiko aulki txikian; Iratiren ahotsa hemendik dator */
+    /* kriseilua: leiho azpiko aulki txikian; Atarrabiren ahotsa haren sugarretik dator */
     const stool = obj(new T.BoxGeometry(0.9, 0.62, 0.7), material("#6e4a2c"));
     stool.position.set(E(-1.2), 0.31, -D / 2 + 0.75);
     solids.push({ x: E(-1.2), z: -D / 2 + 0.75, r: 0.55, h: 0.62, y: 0, pillar: true });
     const g = new T.Group(),
-      st = new T.Mesh(new T.SphereGeometry(0.24, 18, 12), new T.MeshStandardMaterial({ color: "#5d7f86", roughness: 0.35, emissive: new T.Color("#5fe3c8"), emissiveIntensity: 0.2 })),
-      band = new T.Mesh(new T.TorusGeometry(0.25, 0.018, 6, 28), new T.MeshBasicMaterial({ color: "#a8fff0", transparent: true, opacity: 0.5 })),
-      halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#7fffe0", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0 }));
-    st.scale.set(1, 0.72, 1);
+      st = new T.Mesh(new T.SphereGeometry(0.11, 14, 10), new T.MeshStandardMaterial({ color: "#ffcf8a", roughness: 0.3, emissive: new T.Color("#ff9a3a"), emissiveIntensity: 0.4 })),
+      band = new T.Mesh(new T.TorusGeometry(0.2, 0.02, 6, 24), new T.MeshStandardMaterial({ color: "#4a3a2a", roughness: 0.6, metalness: 0.4 })),
+      glass = new T.Mesh(new T.CylinderGeometry(0.17, 0.19, 0.42, 12, 1, true), new T.MeshStandardMaterial({ color: "#fff2dc", transparent: true, opacity: 0.25, roughness: 0.1, depthWrite: false })),
+      cap = new T.Mesh(new T.ConeGeometry(0.22, 0.16, 12), material("#4a3a2a", 0.4)),
+      halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffcf8a", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0 }));
+    st.scale.set(1, 1.6, 1);
     band.rotation.x = PI / 2;
+    band.position.y = -0.2;
+    cap.position.y = 0.29;
     halo.scale.setScalar(2.4);
-    g.add(st, band, halo);
+    g.add(st, band, glass, cap, halo);
     g.position.set(E(-1.2), 0.85, -D / 2 + 0.75);
     BP.add(g);
     PRO.stone = { x: E(-1.2), z: -D / 2 + 0.75, g, st, band, halo, ring: 0 };
@@ -68,7 +72,7 @@
     }
     const lip = obj(new T.BoxGeometry(5.4, 0.18, 0.12), beam);
     lip.position.set(E(4.1), 3.62, -D / 2 + 1.68);
-    /* Iratiren kutxa ganbaran: barruan, haren txalaparta-makilak */
+    /* amonaren kutxa ganbaran: barruan, haren txalaparta-makilak */
     const chest = new T.Group(),
       box = new T.Mesh(new T.BoxGeometry(0.9, 0.5, 0.56), material("#7a4e2c")),
       lid = new T.Group(),
@@ -90,7 +94,7 @@
     chest.position.set(E(5.7), 3.6, -D / 2 + 0.75);
     BP.add(chest);
     PRO.chest = { x: E(5.7), y: 3.6, z: -D / 2 + 0.75, g: chest, lid, halo: ch, open: false };
-    /* atea izoztuta (orainean): Gauekoren negua; iraganean, uda eta atea zabalik */
+    /* atea izoztuta: Mikelatsen kazkabarra, SORGINKERIAk urtzen du */
     const ice = obj(new T.BoxGeometry(2.7, 2.95, 0.42), new T.MeshStandardMaterial({ color: "#cdefff", roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.85, emissive: new T.Color("#6fb8e8"), emissiveIntensity: 0.35 }));
     ice.position.set(E(0), 1.47, D / 2 + 0.05);
     ice.castShadow = false;
@@ -122,12 +126,12 @@
     if (!proFlag("pro-plaza")) return proStreet();
     proDawn();
   }
-  /* Gauekoren begiak hodeietan (zinemarako) */
+  /* Mikelatsen begiak ekaitz-hodeietan (zinemarako): urdin izoztuak */
   function proEyes() {
     if (PRO.eyes) return PRO.eyes;
     const g = new T.Group();
     for (const s of [-1, 1]) {
-      const e = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#ffcf7a", transparent: true, blending: T.AdditiveBlending, depthWrite: false, fog: false, opacity: 0 }));
+      const e = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#bfe8ff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, fog: false, opacity: 0 }));
       e.scale.set(15, 0.1, 1);
       e.position.set(s * 9, 0, 0);
       g.add(e);
@@ -149,17 +153,17 @@
       S = HOUSE.home;
     film(
       [
-        { d: 6.5, fade: "in", cam: [[70, 40, 122], [50, 29, 96]], look: [[0, 4, 30], [3, 3, 27]], cap: ["IBARRA HARANA · 03:12", "ERLOJUA HAUTSI ZENETIK · 365 EGUN"] },
+        { d: 6.5, fade: "in", cam: [[70, 40, 122], [50, 29, 96]], look: [[0, 4, 30], [3, 3, 27]], cap: ["IBARRA HARANA · 03:12", "GAU BELTZAZ GEROZTIK · HIRUGARREN NEGUA"] },
         { d: 5.5, cam: [[7.5, 4.8, 39.5], [4.2, 3, 35.6]], look: [sp.x, 1.3, sp.z], cap: ["HERRIKO PLAZA", "HIRUGARREN GAUA · INORK EZ DU JOTZEN"] },
         { d: 4.6, cam: [[2, 5, 45], [1, 6.5, 41]], look: [[8, 30, -60], [8, 60, -96]], cap: null, say: "pro_g1", tick: (dt, k) => proEyesOpen(k) },
         { d: 4.4, cam: [[1, 6.5, 41], [-2, 12, 26]], look: [[8, 60, -96], [8, 64, -96]], say: "pro_g2", tick: () => proEyesOpen(1) },
-        { d: 5.2, cam: [[11, 7, 43], [15.5, 4.4, 38.5]], look: [S.x, 2.6, S.z], cap: ["ITURRALDE · 03:40", "BI AHIZPAREN ETXEA. BAT BAKARRIK LO."], fade: "out", on: () => PRO.eyes && (PRO.eyes.visible = false) },
+        { d: 5.2, cam: [[11, 7, 43], [15.5, 4.4, 38.5]], look: [S.x, 2.6, S.z], cap: ["ITURRALDE · 03:40", "AMONAREN ETXEA. SUA ITZALI DA."], fade: "out", on: () => PRO.eyes && (PRO.eyes.visible = false) },
         /* Amaiur aurkezpena: lehen planoa, lo (ilargi-argia aurpegian), eta begiak irekitzen */
         {
           d: 4.4,
           fade: "in",
           key: "#c4d6ff",
-          cap: ["AMAIUR", "LO DAGO. HARRIAK DEITUKO DIO."],
+          cap: ["AMAIUR · HAMABOST URTE", "LO DAGO. SUGARRAK DEITUKO DIO."],
           on: () => {
             proBedroom();
             FACE.force = "closed";
@@ -171,7 +175,7 @@
         {
           d: 3.8,
           key: "#c4d6ff",
-          cap: ["AMAIUR · ITURRALDEKO SORGINA", "IRATIREN AHIZPA"],
+          cap: ["AMAIUR · ITURRALDEKO SORGINA", "AMONAREN IKASLEA"],
           on: () => {
             FACE.force = null;
             FACE.blinkT = 2.6;
@@ -222,7 +226,7 @@
     locCaption("etxea");
     if (!proFlag("pro-deia")) {
       deiaRing(
-        "IRATI",
+        "ATARRABI",
         ["pro_i1", "pro_a1", "pro_i2", "pro_i3", "pro_a2", "pro_i4", "pro_i5"],
         () => {
           flagSet("pro-deia");
@@ -232,17 +236,18 @@
         16,
         { x: PRO.stone.x, z: PRO.stone.z + 0.6, r: 2.6 },
       );
-      notify(L("Oihartzun-harria dardaraka dago. Hurbildu eta erantzun."), "", 5);
+      notify(L("Kriseiluaren sugarra dardaraka dago. Hurbildu eta erantzun."), "", 5);
     }
   }
-  /* oihartzun-harria: dardara, distira eta txalaparta-kolpe bigunak deia jotzen duen bitartean */
+  /* kriseilua: sugarraren dardara, distira eta txalaparta-kolpe bigunak deia jotzen duen bitartean */
   function proStoneRing(dt, film) {
     const S = PRO.stone;
     if (!S) return;
     const on = film || RING.on;
     S.ring = mix(S.ring, on ? 1 : proFlag("pro-deia") ? 0.25 : 0, 1 - Math.exp(-dt * 4));
     S.halo.material.opacity = S.ring * (0.55 + Math.sin(time * 9) * 0.25);
-    S.st.material.emissiveIntensity = 0.2 + S.ring * 1.3;
+    S.st.material.emissiveIntensity = 0.4 + S.ring * 2.2;
+    S.st.scale.y = 1.6 + Math.sin(time * 13) * 0.12 * (0.3 + S.ring);
     S.g.position.x = S.x + (on ? Math.sin(time * 70) * 0.012 : 0);
     S.band.rotation.z += dt * (0.5 + S.ring * 3);
     if (film) {
@@ -289,7 +294,7 @@
     C.open = true;
     coachDone("pro-dj");
     SND.creak();
-    itemGet("makilak", L("IRATIREN MAKILAK"), L("Iratiren txalaparta-makilak. Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ikasitako erritmoak edonon jo daitezke: ") + (mobile ? L("⋯ menuan, TXALAPARTA.") : L("B tekla.")), () => {
+    itemGet("makilak", L("AMONAREN MAKILAK"), L("Amonaren txalaparta-makilak, gaztetan erabiltzen zituenak. Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Ikasitako erritmoak edonon jo daitezke: ") + (mobile ? L("⋯ menuan, TXALAPARTA.") : L("B tekla.")), () => {
       flagSet("pro-makilak");
       if (!saved.items.includes("makilak")) saved.items.push("makilak");
       persist();
@@ -309,7 +314,7 @@
     return null;
   }
 
-  /* ------------------------------ 5 · kalea: Gauekoren begiak ------------------------------ */
+  /* ------------------------------ 5 · kalea: Mikelatsen begiak ------------------------------ */
   const PRO_BEAMS = [
     /* [x0, z0, ax, az, abiadura, fasea, erradioa] */
     [18.2, 32, 0, 7.5, 1.35, 0, 2.6],
@@ -358,7 +363,7 @@
     locCaption("ibarra");
     if (!proFlag("pro-kalea") && !PRO.said.street) {
       PRO.said.street = true;
-      setTimeout(() => PRO.on && !proFlag("pro-kalea") && deiaRing("IRATI", ["pro_i9", "pro_i10"], () => coach("pro-dash", "F", "F: BULTZADA · ziztu bizian, begiradak ez zaitu ikusten", "", "dashBtn", "BULTZADA: ziztu bizian, begiradak ez zaitu ikusten", ""), 4), 700);
+      setTimeout(() => PRO.on && !proFlag("pro-kalea") && deiaRing("ATARRABI", ["pro_i9", "pro_i10"], () => coach("pro-dash", "F", "F: BULTZADA · ziztu bizian, begiradak ez zaitu ikusten", "", "dashBtn", "BULTZADA: ziztu bizian, begiradak ez zaitu ikusten", ""), 4), 700);
     }
   }
   /* begiradak: bidea, ukitzea eta harrapatzea */
@@ -417,7 +422,7 @@
     fxBurst(P.x, P.y + 1, P.z, { n: 30, speed: 3, up: 1, life: 0.8, size: 0.4, color: "#1a1020", grav: -2 });
     voiceLoad("pro_g4").then(() => voiceLoad("pro_g5"));
     voicePlay(PRO.caught % 2 ? "pro_g4" : "pro_g5");
-    if (PRO.caught === 3) setTimeout(() => notify(L("Irati: «Bultzadan ez zaitu ikusten. Itxaron argia urruntzen den arte, eta orduan: F!»"), "", 5), 1700);
+    if (PRO.caught === 3) setTimeout(() => notify(L("Atarrabi: «Bultzadan ez zaitu ikusten. Itxaron argia urruntzen den arte, eta orduan: F!»"), "", 5), 1700);
   }
 
   /* ------------------------------ 6 · plaza: lehen borroka ------------------------------ */
@@ -438,7 +443,7 @@
         PRO.fight.list.push(e);
       }
       coach("pro-lock", "T", "T: FINKATU · helburu bat, eta jo", "", "recallBtn", "◎: FINKATU · helburu bat, eta jo", "");
-      notify(L("Urrezko begiak: IRAGANEAN bakarrik zauritzen dira. Urdinak: ORAINEAN."), "", 6);
+      notify(L("Mikelatsen itzalak: finkatu bat, eta jo."), "", 5);
       hud();
     });
   }
@@ -453,7 +458,7 @@
     }
   }
 
-  /* ------------------------------ egunsentia, Irati eta izenburua ------------------------------ */
+  /* ------------------------------ egunsentia, Atarrabi eta izenburua ------------------------------ */
   function proDawn() {
     const sp = TXALA.spots[0],
       N = NPCS.find((n) => n.id === "irati");
@@ -484,11 +489,11 @@
         PRO.hideNpc = false;
         if (N) {
           N.g.visible = true;
-          fxBurst(N.x, 1.2, N.z, { n: 50, speed: 2.5, up: 2.5, life: 1.3, size: 0.3, color: "#bff6ff", grav: -1 });
-          fxRing(N.x, 0.15, N.z, "#9ae3e5", 4, 1);
+          fxBurst(N.x, 1.2, N.z, { n: 50, speed: 2.5, up: 2.5, life: 1.3, size: 0.3, color: "#ffe2a6", grav: -1 });
+          fxRing(N.x, 0.15, N.z, "#ffcf8a", 4, 1);
         }
         SND.memory();
-        vsay(["pro_i13", "pro_a4", "pro_i14", "pro_i15", "pro_i16", "pro_a5"], proTitle, { IRATI: [0, 41, 0] });
+        vsay(["pro_i13", "pro_a4", "pro_i14", "pro_i15", "pro_i16", "pro_a5"], proTitle, { ATARRABI: [0, 41, 0] });
       },
     );
   }
@@ -577,12 +582,12 @@
   /* helburua (HUD) hitzaurrean */
   function proObjective() {
     if (ZONE.cur === "etxea") {
-      if (!proFlag("pro-deia")) return ["Oihartzun-harria dardaraka: hurbildu eta ERANTZUN.", [PRO.stone.x, PRO.stone.z + 1.2, 0]];
+      if (!proFlag("pro-deia")) return ["Kriseiluaren sugarra dardaraka: hurbildu eta ERANTZUN.", [PRO.stone.x, PRO.stone.z + 1.2, 0]];
       if (!proFlag("pro-sua")) return ["Piztu sutondoa SORGINKERIArekin.", [DGE.hearth.x, DGE.hearth.z + 1.5, 0]];
-      if (!proFlag("pro-makilak")) return ["Ganbaran, Iratiren kutxa. JAUZI BIKOITZA.", [PRO.chest.x, PRO.chest.z, 3.6]];
+      if (!proFlag("pro-makilak")) return ["Ganbaran, amonaren kutxa. JAUZI BIKOITZA.", [PRO.chest.x, PRO.chest.z, 3.6]];
       return [PRO.iceGone ? "Kalera: irten etxetik." : "Atea izoztuta: SORGINKERIArekin urtu eta irten.", [DGE.exitArch.x, DGE.exitArch.z - 1, 0]];
     }
-    if (!proFlag("pro-kalea")) return ["Plazara, Gauekoren begiei ihes eginez (itzalean itxaron edo BULTZADA).", [2, 31, 0]];
+    if (!proFlag("pro-kalea")) return ["Plazara, Mikelatsen begiei ihes eginez (itzalean itxaron edo BULTZADA).", [2, 31, 0]];
     if (!proFlag("pro-plaza")) return ["Plazako itzalak garbitu.", [TXALA.spots[0].x, TXALA.spots[0].z, 0]];
     return ["Egunsentia.", null];
   }

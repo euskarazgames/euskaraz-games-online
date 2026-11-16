@@ -6,7 +6,7 @@
        T3 Begiaren gela ........ Tartaloren begiak zirrikitutik zaintzen du: harrien eta ardien
                                  atzean ezkutatu → GILTZA TXIKIA
        T4 Burruntziaren sutegia  zaindari ertaina (BURRUNTZI-ZAINA) → BURRUNTZI GORIA (SUGAR-IZPIA)
-       T5 Izotz-hesia .......... Gauekoren izotz-horma urtu (SUA); galdara garaiak barrak irekitzen ditu
+       T5 Izotz-hesia .......... Mikelatsen izotz-horma urtu (SUA); galdara garaiak barrak irekitzen ditu
        T6 Galdaren gela ........ lau galdara garai, denak batera SUArekin → GILTZA NAGUSIA
        T7 Tartaloren etxea ..... etsai nagusia: lau galdarak piztu → argiak itsutzen du → begia jo
      Ipuin zaharrean bezala: Tartalok ilunpean ikusten du, baina argiak itsutzen du.
@@ -80,7 +80,7 @@
     BREAKABLES.push(B);
     return B;
   }
-  /* Gauekoren izotza: izotz-bloke gardenak (SUAk urtzen du) */
+  /* Mikelatsen izotza: izotz-bloke gardenak (SUAk urtzen du) */
   let ICE_MAT = null;
   function gaukoIce(id, x, z, w, d, h = 5.5) {
     ICE_MAT ||= new T.MeshStandardMaterial({ color: "#a9dcf5", roughness: 0.08, metalness: 0.1, transparent: true, opacity: 0.84, emissive: new T.Color("#2f6f9f"), emissiveIntensity: 0.45, flatShading: true });
@@ -123,7 +123,7 @@
       broken: done,
       buildZone: BP,
       fireOnly: true,
-      hint: L("Gauekoren izotza: ez da hausten, ez da ukitzen… SUAk bakarrik urtzen du."),
+      hint: L("Mikelatsen izotza: ez da hausten, ez da ukitzen… SUAk bakarrik urtzen du."),
       solid: { r: 0 },
       hitTest: (bx, by, bz, r) => by < h + 1 && Math.abs(bx - x) < w / 2 + r + 0.3 && Math.abs(bz - z) < d / 2 + r + 0.3,
       custom: () => {
@@ -133,7 +133,7 @@
         persist();
         SND.sizzle();
         for (let i = 0; i < 6; i++) fxBurst(x + (Math.random() - 0.5) * w, 1 + Math.random() * h, z + (Math.random() - 0.5) * d, { n: 12, speed: 2, up: 3, life: 1.4, size: 0.6, color: "#e6f6ff", grav: -1.5, drag: 1 });
-        notify(L("Gauekoren izotza urtu da!"), "", 2);
+        notify(L("Mikelatsen izotza urtu da!"), "", 2);
       },
     };
     BREAKABLES.push(B);
@@ -411,7 +411,7 @@
       waves: [[["grunt", 0, 3]], [["brute", 1, 1], ["grunt", 1, 2]], [["eye", -1, 2], ["brute", 0, 1]]],
       diff: 1.15,
       hpK: 1.3,
-      fightText: "Tartaloren artzainak! Kolore bakoitza bere garaian zauritzen da.",
+      fightText: "Tartaloren artzainak! Kolore bakoitza bere urtaroan zauritzen da.",
       onWin: () => {
         openDoor(DOORDEF.tBw);
         notify(L("Mendebaldeko barrak ireki dira."), "", 3);
@@ -423,7 +423,7 @@
     DGT.barricadeE = barricade("tB-hesia", E(15.6), -39, true);
     /* izotzean harrapatutako kutxa: orain ezin da… (SUArekin itzuli) */
     gaukoIce("tB-ice", E(-11.4), -50.4, 3.6, 3.6, 2.9);
-    chest("tB-piece", E(-11.4), 0, -50.4, PI / 4, { t: "piece", id: "tartalo" }, { locked: () => !isCleared("tB-ice"), lockedHint: L("Kutxa izotzean harrapatuta dago. Gauekoren izotza… SUAk bakarrik urtzen du.") });
+    chest("tB-piece", E(-11.4), 0, -50.4, PI / 4, { t: "piece", id: "tartalo" }, { locked: () => !isCleared("tB-ice"), lockedHint: L("Kutxa izotzean harrapatuta dago. Mikelatsen izotza… SUAk bakarrik urtzen du.") });
     oreNode(ORE_DEFS.find((d) => d.id === "tartalo"), E(12), 0, -50.5);
     /* bi korta (egurrezko hesiak) eta lastoa */
     for (const sx of [-1, 1]) {
@@ -513,7 +513,7 @@
     /* ---- T2→T5 ---- */
     corridor(E(18.6), -39, 7.2, 6, "x");
     /* ---- T5: Izotz-hesia ---- */
-    room("T5", E(37.2), -39, 30, 30, { area: "tE", name: "IZOTZ-HESIA", desc: "Gauekoren izotza. Hemen ez da negua iristen… baina izotza bai.", doors: { w: 0, n: 0 }, fog: [6, 46] });
+    room("T5", E(37.2), -39, 30, 30, { area: "tE", name: "IZOTZ-HESIA", desc: "Mikelatsen izotza. Hemen ez da negua iristen… baina izotza bai.", doors: { w: 0, n: 0 }, fog: [6, 46] });
     /* gela osoa zeharkatzen duen izotz-horma (gardena: atzean, barrak eta galdara garaia) */
     gaukoIce("tE-ice", E(30), -39, 1.4, 28.4, 6.5);
     for (let i = 0; i < 9; i++) {
@@ -598,7 +598,7 @@
           K: 1.2,
           tint: "#e6b48a",
           add: [["grunt", -1, 2]],
-          hint: "Sutegiaren zaindaria! Haren ezkutuak garaia aldatzen du: begiratu begien koloreari.",
+          hint: "Sutegiaren zaindaria! Haren ezkutuak urtaroa aldatzen du: begiratu begien koloreari.",
           onDead: () => {
             revealChest(DGT.fireChest);
             notify(L("Kutxa bat agertu da sutegiaren erdian."), "", 4);
@@ -1023,9 +1023,9 @@
       [
         ["· · ·", "Begitik itzal bat atera da, kea bezala, eta koba osoa hoztu du une batez.", "", TART.x, TART.z, 6],
         ["TARTALO", "…Argia. Mina. Eta gero… ezer ez. Burua garbi daukat lehen aldiz aspaldian.", "", TART.x, TART.z, 7],
-        ["TARTALO", "Gaueko etorri zen gauez. Begi bat eman zidan, berea. Harekin dena ikusten nuen… eta dena gorrotatzen.", "", TART.x, TART.z, 7],
-        ["AMAIUR", "Zazpi leize, zazpi zaindari, esan zuen Gauekok. Zuk zer dakizu?", "", P.x, P.z, 0],
-        ["TARTALO", "Anbotoko gailurrean, jentilen zeruan, haizeak ez du lorik egiten. Hara joan zen Mariren sua. Han egongo da hurrengo atea.", "", TART.x, TART.z, 7],
+        ["TARTALO", "Mikelats etorri zen kazkabar-gau batean. Begi bat eman zidan, izotzezkoa. Harekin dena ikusten nuen… eta dena gorrotatzen.", "", TART.x, TART.z, 7],
+        ["AMAIUR", "Zazpi txingar, zazpi leize, dio Atarrabik. Zuk zer dakizu?", "", P.x, P.z, 0],
+        ["TARTALO", "Mikelatsek beste lau gordetzen ditu, eta beste zerbait nahi du: herri baten sutondoa. Zaharra, ez dena inoiz itzaltzen.", "", TART.x, TART.z, 7],
       ],
       () => {
         tartFreed();
@@ -1091,7 +1091,7 @@
     if (!saved.items.includes("sugarra")) return ["Kutxa ireki: sutegiaren erdian.", [R.T4.x, -70, 0]];
     if (!saved.items.includes(DGT.bigKey)) {
       if (!isCleared("tB-hesia")) return ["Ardi-kortako ekialdeko hesia: SUA (INDARRA kargatu).", [R.T2.x + 12, -39, 0]];
-      if (!isCleared("tE-ice")) return ["Gauekoren izotz-horma: SUAk urtzen du.", [R.T5.x - 7.2, -39, 0]];
+      if (!isCleared("tE-ice")) return ["Mikelatsen izotz-horma: SUAk urtzen du.", [R.T5.x - 7.2, -39, 0]];
       if (!isCleared("tE-galdara")) return ["Galdara garaia: SUA (INDARRA kargatu) urrutitik.", [R.T5.x + 10.8, -50, 7]];
       return ["Galdaren gela: lauak SUArekin, denak batera.", [R.T6.x, R.T6.z, 0]];
     }

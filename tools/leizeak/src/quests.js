@@ -2,10 +2,10 @@
      EGINKIZUNAK ETA MISTERIOAK
      · Egunkaria (L tekla, ⋯ menua edo pausa): istorioa eta bigarren mailako eginkizunak.
      · Ikurrak herritarren buru gainean: ! (zerbait berria) eta ? (emateko prest).
-     · OIHARTZUN-HARRIAK (7): ENTZUN haien ondoan → iraganeko ahots bat (Andereren istorioa).
+     · OIHARTZUN-HARRIAK (7): ENTZUN haien ondoan → udako ahots bat (Andereren istorioa).
        Zazpiak entzunda, Andereren etxeko zigilua desagertzen da.
-     · Kattalinen sorgin-belarrak (3, IRAGANEAN bakarrik), Txominen sarea (badia izoztua,
-       ORAINEAN), Mikelen erronka (frontoiko jomugak), Maddiren burdin-harriak (5).
+     · Kattalinen sorgin-belarrak (3, UDAN bakarrik), Txominen sarea (badia izoztua,
+       NEGUAN), Mikelen erronka (frontoiko jomugak), Maddiren burdin-harriak (5).
      ================================================================== */
   const ECHO_DEFS = [
     { id: "eliza", x: -27, z: 15.5, y: null, lines: ["Ehun urte isilik… eta orain txalapartak berriro. Norbaitek entzuten badu: ni Andere naiz, Ibarrako sorgina."] },
@@ -68,7 +68,7 @@
     /* frontoiaren gaina: plataforma eta ENTZUN-ek agertzen dituen harri-mailak */
     platforms.push({ x: -32, z: 37, y: 9.6, bottom: 9, w: 1.8, d: 15.6, rot: 0, phase: -1, safe: true, area: "herria" });
     for (const [hx, hz, hy] of [[-26.5, 31.5, 2.1], [-28.2, 33.6, 4.2], [-29.9, 35.8, 6.3], [-30.3, 33.2, 8.3]]) hiddenSlab(hx, hz, hy, 2, 2);
-    /* sorgin-belarrak: lore urdin distiratsuak (iraganean bakarrik) */
+    /* sorgin-belarrak: lore urdin distiratsuak (udan bakarrik) */
     for (const D of HERB_DEFS) {
       const y = D.y ?? gy(D.x, D.z),
         g = new T.Group();
@@ -223,7 +223,7 @@
       E.rune.material.opacity = E.heard ? 0.12 : 0.45 + 0.3 * Math.sin(time * 2.6 + E.x);
       E.halo.material.opacity = E.heard ? 0.05 : 0.28 + 0.14 * Math.sin(time * 2 + E.z);
     }
-    /* belarrak: iraganean bakarrik ikusten dira; hurbiltzean bildu */
+    /* belarrak: udan bakarrik ikusten dira; hurbiltzean bildu */
     for (const H of HERBS) {
       H.g.visible = !H.got && phaseBlend < 0.5;
       H.g.rotation.y += dt * 0.6;
@@ -236,7 +236,7 @@
         notify(L("SORGIN-BELARRA ") + saved.herbs.length + " / 3" + (saved.flags.includes("kattalin-belar") ? "" : L(" · Kattalinek jakingo du zertarako den")), "", 3);
       }
     }
-    /* sarea: badiako uhartetxoan (orainean iristen da) */
+    /* sarea: badiako uhartetxoan (neguan iristen da) */
     if (QST.netMesh) {
       QST.netMesh.visible = !saved.flags.includes("sarea");
       if (QST.netMesh.visible && Math.hypot(P.x - 26.5, P.z - 101.5) < 2 && P.y > -8) {
@@ -359,7 +359,7 @@
         N,
         [
           ["TXOMIN", "Itsasoa izoztuta, txalupa harrapatuta… eta nire sarea, badiako uhartetxoan, izotzaren erdian."],
-          ["TXOMIN", "Oinez joan daiteke izotzaren gainetik, baina ni zaharregia naiz. Eta iraganeko ura… hura ez da izotza."],
+          ["TXOMIN", "Oinez joan daiteke izotzaren gainetik, baina ni zaharregia naiz. Eta udako ura… hura ez da izotza."],
         ],
         () => flagSet("txomin"),
       );
@@ -371,7 +371,7 @@
         persist();
         pieceGet("sarea");
       });
-    return talk(N, [["TXOMIN", f("txomin-ok") ? "Itsasoa urtzen denean, arraina eramango dizut. Hitza." : "Sarea uhartetxoan dago, badiaren erdian. Orainean izotzak eusten du."]]);
+    return talk(N, [["TXOMIN", f("txomin-ok") ? "Itsasoa urtzen denean, arraina eramango dizut. Hitza." : "Sarea uhartetxoan dago, badiaren erdian. Neguan izotzak eusten du."]]);
   }
   function talkMaite(N) {
     talk(N, [["MAITE", ["Ogia goizean, txalaparta gauez. Herri honek ez du lorik egiten.", "Andereren etxe hura… gauez argi urdin bat ikusten da leihoan.", "Ibaia izoztu zenetik, Txomin ez da itsasora atera.", "Oiloak ere urduri daude. Zerbait dator."][Math.floor(time * 0.7) % 4]]]);
@@ -384,13 +384,13 @@
       side = [];
     if (f("ardiak") || f("intro")) side.push(line(f("ardiak-saria"), L("Joanesen ardiak"), saved.sheep.length + "/3", f("ardiak") ? L("Hiru ardi galduak: zelaiak, ipar-larreak eta basoa. Hurbildu eta hesira eraman.") : L("Joanes artzaina zelaietan dago.")));
     side.push(line(f("erronka"), L("Txalapartarien erronka"), "", L("Pello eta Peio plazan: sei kolpeko erritmoa.")));
-    if (f("kattalin-belar")) side.push(line(f("belarrak-ok"), L("Kattalinen sorgin-belarrak"), saved.herbs.length + "/3", L("Lore urdinak IRAGANEAN bakarrik: basoa, harrespila, ibaiaz bestaldeko larreak.")));
+    if (f("kattalin-belar")) side.push(line(f("belarrak-ok"), L("Kattalinen sorgin-belarrak"), saved.herbs.length + "/3", L("Lore urdinak UDAN bakarrik: basoa, harrespila, ibaiaz bestaldeko larreak.")));
     side.push(line(f("mikel-ok"), L("Mikelen frontoiko erronka"), "", L("Hamar jomuga hogeita hamar segundotan.")));
     if (f("txomin")) side.push(line(f("txomin-ok"), L("Txominen sarea"), f("sarea") ? L("eskuan") : "", L("Badiako uhartetxoa: izotzaren gainetik.")));
     else side.push(line(false, L("Arrantzalea kaian"), "", L("Portuko eskaileratik behera, kaian norbait zain.")));
     if (f("maddi-burdina")) side.push(line(f("burdina-ok"), L("Maddiren burdin-harriak"), saved.ores.length + "/5", L("Harri ilunak zain laranjekin: arroila (izotza), lepoa eta leizeak.")));
     side.push(line(f("andere"), L("Oihartzun-harriak"), saved.echoes.length + "/7", L("Harri urdin distiratsuak haran osoan: jo ENTZUN haien ondoan.")));
-    if (f("gaua") && eraOpen()) side.push(line(saved.rhythms.includes("eguzkilore"), L("Kattalinen eguzkilorea"), f("eguzkilorea") ? L("eskuan") : "", L("Harrespilako larrean: IRAGANEAN (uda) eta EGUNEZ bakarrik loratzen da.")));
+    if (f("gaua") && eraOpen()) side.push(line(saved.rhythms.includes("eguzkilore"), L("Kattalinen eguzkilorea"), f("eguzkilorea") ? L("eskuan") : "", L("Harrespilako larrean: UDAN eta EGUNEZ bakarrik loratzen da.")));
     if (f("arimak") || (saved.arimak || []).length) side.push(line(f("arimak10"), L("Arima-argiak"), (saved.arimak || []).length + "/10", L("GAUEZ bakarrik, haran osoan barreiatuta. Kattalinek elizako argizaiolak pizten ditu.")));
     side.push(...secretsLog(line));
     const pieces = saved.pieces.length;

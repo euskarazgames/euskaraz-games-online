@@ -1,7 +1,7 @@
   /* ==================================================================
      IZAR-HAUTSA · amonaren hauts-zorroa (ametseko tresna, diseinu propioa)
      Ingumaren aurkako konjuru zaharrak dio: «zeruan izarrak, lurrean belarrak,
-     itsasoan hareak: denak kontatu arte, ez etorri enegana». Gaueko izakiek
+     itsasoan hareak: denak kontatu arte, ez etorri enegana». itzal-izakiek
      ezin diote kontatzeari utzi: Z (edo IZARRAK botoia) → hauts-eskukada aurrera:
      · itzalak, saguzarrak, mamuak… KONTATZEN geratzen dira (geldi, kalte bikoitza);
      · IZAR-LAINOAN (ametsa leun dagoen tokietan) hautsak izar-plataforma bat

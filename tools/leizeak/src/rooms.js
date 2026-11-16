@@ -14,7 +14,7 @@
   };
   function roomCollide(px, pz, nx, nz, py) {
     if (ZONE.cur === "ibarra") {
-      /* haranaren ingerada eta portua (haran.js); iraganean ibaian ezin da sakonera sartu */
+      /* haranaren ingerada eta portua (haran.js); udan ibaian ezin da sakonera sartu */
       [nx, nz] = hubBounds(px, pz, nx, nz);
       [nx, nz] = riverBank(px, pz, py, nx, nz);
     }
@@ -26,7 +26,7 @@
           fz = (nz - B.z) / B.rz;
         if (Math.hypot(fx, fz) <= B.k) continue;
         const a = Math.atan2(fz, fx);
-        /* hutsuneak (zubia, kaia...); hirugarren balioa: garai horretan bakarrik (izotza orainean) */
+        /* hutsuneak (zubia, kaia...); hirugarren balioa: garai horretan bakarrik (izotza neguan) */
         if (B.gaps.some(([ga, gw, gp]) => (gp === undefined || gp === phase) && angDiff(a, ga) < gw)) continue;
         nx = B.x + Math.cos(a) * B.rx * B.k * 0.999;
         nz = B.z + Math.sin(a) * B.rz * B.k * 0.999;
@@ -485,7 +485,7 @@
     }
     if (mixer) mixer.update(dt);
   }
-  const ICONS = { makilak: "≋", giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀", bertsoa: "♪", hautsa: "✧" };
+  const ICONS = { makilak: "≋", giltza: "🗝", giltzanagusia: "🗝", txanponak: "◎", zatia: "♥", bihotza: "♥", katea: "⛓", erritmoa: "≋", botila: "⚱", bultzada: "◆", izpia: "✦", adarra: "♫", orrazia: "✧", sugarra: "✹", eraztuna: "◯", eguzkilore: "✺", tximista: "ϟ", enara: "⋎", ispilua: "☀", bertsoa: "♪", hautsa: "✧", txingarra: "✹" };
   function itemMesh(icon) {
     const g = new T.Group();
     if (icon === "makilak") {
@@ -505,6 +505,15 @@
     } else if (icon === "zatia" || icon === "bihotza") {
       const h = new T.Mesh(new T.IcosahedronGeometry(icon === "bihotza" ? 0.5 : 0.36, 1), material("#ff5b6e", 0.8));
       g.add(h);
+    } else if (icon === "txingarra") {
+      /* amonaren txingarra: kriseilu txiki bat, barruan txingar gorri bat */
+      const glass = new T.Mesh(new T.CylinderGeometry(0.2, 0.24, 0.5, 10, 1, true), new T.MeshStandardMaterial({ color: "#ffe7c4", transparent: true, opacity: 0.35, roughness: 0.1 }));
+      const ember = new T.Mesh(new T.IcosahedronGeometry(0.13, 1), new T.MeshStandardMaterial({ color: "#ff7a2a", emissive: new T.Color("#ff5a1a"), emissiveIntensity: 2.2 }));
+      const cap = new T.Mesh(new T.ConeGeometry(0.26, 0.2, 10), material("#4a3a2a", 0.4));
+      cap.position.y = 0.35;
+      const base = new T.Mesh(new T.CylinderGeometry(0.26, 0.26, 0.08, 10), material("#4a3a2a", 0.4));
+      base.position.y = -0.27;
+      g.add(glass, ember, cap, base);
     } else if (icon === "katea") {
       for (let i = 0; i < 5; i++) {
         const l = new T.Mesh(new T.TorusGeometry(0.16, 0.05, 6, 14), material("#c9d6e3", 0.3));

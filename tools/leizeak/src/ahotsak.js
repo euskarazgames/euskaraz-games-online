@@ -39,7 +39,7 @@
   /* v4: oihartzun eta erreberberazio gutxiago (ahotsa hurbilago eta naturalago, "prozesatu" gabe) */
   function voiceChain(who, fx) {
     /* fx: planoaren katea (zinema): "oroit" (oroitzapena), "dry" (hurbil, adib. Irati bizirik), "irati"… */
-    const k = fx || (who.startsWith("INGUMA") || who === "IRATI?" ? "inguma" : who.startsWith("IRATI") ? "irati" : who.startsWith("GAUEKO") ? "gaueko" : who === "MARI" ? "mari" : "dry");
+    const k = fx || (who.startsWith("AKERBELTZ") || who === "SORGINAK" || who.startsWith("INGUMA") || who === "IRATI?" ? "inguma" : who.startsWith("ATARRABI") || who.startsWith("IRATI") ? "irati" : who.startsWith("MIKELATS") || who.startsWith("GAUEKO") ? "gaueko" : who === "MARI" ? "mari" : "dry");
     if (VOICE.chains[k]) return VOICE.chains[k];
     const ctx = SND.ctx,
       N = SND.voiceNodes();

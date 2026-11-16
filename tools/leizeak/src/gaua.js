@@ -1,10 +1,10 @@
   /* ==================================================================
      EGUNA ETA GAUA · "Gaua gauekoentzat, eguna egunekoentzat"
-     · Haranean denbora ibiltzen da Basajaun askatu ondoren (Gauekok txalaparta entzun du):
+     · Haranean denbora ibiltzen da Basajaun askatu ondoren (Mikelatsek txalaparta entzun du):
        eguna ~5 min, gaua ~2.5 min. Leizeetan ez: han ez dago eguzkirik.
      · Gauez: izarrak eta ilargia, leihoetako eta faroletako argiak, Amaiurren kriseilua;
        herritarrak etxera (Irati, Kattalin eta Txomin ez); plazako txalapartak bakarrik jotzen du.
-     · Gauekoren itzalak zelaietan (herrira ez dira sartzen); egunsentian hautsi egiten dira.
+     · Mikelatsen itzalak zelaietan (herrira ez dira sartzen); egunsentian hautsi egiten dira.
      · ARIMA-ARGIAK: gauez bakarrik, haranean barreiatuta; Kattalinek argizaiolak pizten ditu.
      · EGUZKILORE erritmoa (Kattalinek irakatsia, eguzkilorea ekarri ondoren): hurrengo
        egunsentira edo ilunabarrera; leizean, inguruko itzalak zorabiatzen ditu.
@@ -60,7 +60,7 @@
     DAY.night = DAY.k > 0.5;
     nightWindows();
     nightLamps();
-    /* eguzkilorea: harrespilan, iraganean eta egunez */
+    /* eguzkilorea: harrespilan, udan eta egunez */
     const fy = nightGround(EGUZKILORE_AT.x, EGUZKILORE_AT.z, 20);
     DAY.flower = eguzkiloreMesh();
     DAY.flower.position.set(EGUZKILORE_AT.x, fy + 0.05, EGUZKILORE_AT.z);
@@ -201,7 +201,7 @@
     const night = ZONES[ZONE.cur] && ZONES[ZONE.cur].outdoor && DAY.k > 0.5;
     /* Lamien leizean: ura / izotza (ez garaiak) */
     const comb = eraComb();
-    $("phaseName").textContent = (night ? "☾ " : "") + (comb ? (phase ? L("IZOTZA") : L("URA")) : phase ? L("ORAINA", "PRESENTE") : L("IRAGANA", "PASADO")) + kb(" · Q");
+    $("phaseName").textContent = (night ? "☾ " : "") + (comb ? (phase ? L("IZOTZA") : L("URA")) : phase ? L("NEGUA", "INVIERNO") : L("UDA", "VERANO")) + kb(" · Q");
     hudShow("phaseHud", $("phaseName").textContent);
   }
 
@@ -239,7 +239,7 @@
     if (!saved.flags.includes("gaua")) {
       flagSet("gaua");
       title("GAUA", "");
-      notify(L("Gaua iritsi da Ibarrara. Gauekoren itzalak zelaietan dabiltza… Kattalin atarian zain dago, kriseiluarekin."), "", 7);
+      notify(L("Gaua iritsi da Ibarrara. Mikelatsen itzalak zelaietan dabiltza… Kattalin atarian zain dago, kriseiluarekin."), "", 7);
     } else notify(L("Gaua. Gaua gauekoentzat… herritarrak etxera doaz."), "", 3);
     SND.owl();
   }
@@ -287,10 +287,16 @@
     }
     if (N.proHid) {
       N.proHid = false;
-      if (!NIGHT_HOME[N.id]) {
-        N.away = false;
+      /* hitzaurrearen ondoren, egunez: bakoitza bere lekuan (bikiak txalapartan), etxetik oinez etorri gabe */
+      if (!NIGHT_HOME[N.id] || DAY.k <= 0.55) {
+        Object.assign(N, { away: false, back: false, walking: false, x: N.hx, z: N.hz, y: N.hy ?? gy(N.hx, N.hz) });
+        N.g.position.set(N.x, N.y, N.z);
         N.g.visible = true;
-        if (N.solid) N.solid.r = 0.6;
+        if (N.solid) {
+          N.solid.r = 0.6;
+          N.solid.x = N.x;
+          N.solid.z = N.z;
+        }
       }
     }
     const H = NIGHT_HOME[N.id];
@@ -410,7 +416,7 @@
       G.pv.position.y = 1.65 + Math.sin(time * 2 + G.s) * 0.04;
     }
   }
-  /* ------------------------------ Gauekoren itzalak ------------------------------ */
+  /* ------------------------------ Mikelatsen itzalak ------------------------------ */
   function nightFoes(dt) {
     for (const e of ENEMIES) {
       if (!e.night) continue;
@@ -444,7 +450,7 @@
       if (Math.abs(y - P.y) > 3) continue;
       const e = spawnEnemy(Math.random() < 0.25 ? "eye" : "grunt", -1, x, z, y);
       Object.assign(e, { night: true, terrain: true, K: 0.9 });
-      notifyOnce("gaueko-itzalak", L("Gauekoren itzalak! Gauez zelaietan ibiltzen dira; herrian ez dira sartzen."), "");
+      notifyOnce("gaueko-itzalak", L("Mikelatsen itzalak! Gauez zelaietan ibiltzen dira; herrian ez dira sartzen."), "");
       return;
     }
   }
@@ -535,14 +541,14 @@
   /* ------------------------------ Kattalin gauez ------------------------------ */
   /* talkKattalin-etik: true → hemen kudeatuta */
   function kattalinNight(N, f) {
-    /* eguzkilorea udan (iraganean) bakarrik loratzen da: bihurgunearen ondoren */
+    /* eguzkilorea udan (udan) bakarrik loratzen da: bihurgunearen ondoren */
     if (f("gaua") && eraOpen() && !saved.rhythms.includes("eguzkilore")) {
       if (f("eguzkilorea")) {
         talk(
           N,
           [
             ["KATTALIN", "Eguzkilorea! Usaina… eguzkiarena. Amonak gure atean iltzatzen zuen, udazkenero."],
-            ["KATTALIN", "Gaueko ez da eguzkilorea dagoen atetik sartzen: eguzkia dela uste du, eta beldur da."],
+            ["KATTALIN", "Sorginak eta izpiritu gaiztoak ez dira eguzkilorea dagoen atetik sartzen: eguzkia dela uste dute, eta beldur dira."],
             ["KATTALIN", "Entzun orain erritmo hau. Andererena zen. Eguzkiari deitzen dio… edo bidaltzen du."],
           ],
           () => txalaLearn("eguzkilore", "KATTALIN", () => {
@@ -556,7 +562,7 @@
         talk(
           N,
           [
-            ["KATTALIN", "Gaua, alaba. Gaua gauekoentzat, eguna egunekoentzat… Gauekoren itzalak zelaietan dabiltza berriro."],
+            ["KATTALIN", "Gaua, alaba. Gaua gauekoentzat, eguna egunekoentzat… Mikelatsen itzalak zelaietan dabiltza berriro."],
             ["KATTALIN", "Gure atean eguzkilore bat zegoen. Negu honek zimeldu du, eta etxea babesik gabe dago."],
             ["KATTALIN", "Harrespilako larrean hazten da, lurrean, eguzki txiki bat bezala. Baina udan bakarrik loratzen da… eta egunez."],
             ["KATTALIN", "Ekarri bat, eta erakutsiko dizut Andereren erritmoa."],
@@ -565,7 +571,7 @@
         );
         return true;
       }
-      talk(N, [["KATTALIN", "Eguzkilorea harrespilan dago, lurrean. IRAGANEAN (uda) eta EGUNEZ bakarrik ikusten da."]]);
+      talk(N, [["KATTALIN", "Eguzkilorea harrespilan dago, lurrean. UDAN eta EGUNEZ bakarrik ikusten da."]]);
       return true;
     }
     /* arima-argiak: argizaiolak piztu */

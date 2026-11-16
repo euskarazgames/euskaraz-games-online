@@ -1,7 +1,7 @@
   /* ==================================================================
      ERRUNAK ETA SUTEGIAK · sorginkeriaz pizten dira
      Multzo bakoitza zona eta gela batean dago. Errun/sutegi bakoitza garai batean
-     bakarrik ikusten eta jotzen da (urrea → iragana, urdina → oraina, morea →
+     bakarrik ikusten eta jotzen da (urrea → uda, urdina → negua, morea →
      biak). Piztutakoak segundo gutxi irauten du: denak batera piztuta → onSolve.
      Sutegiak (kind: "fire") leizeetan: harrizko ontzia eta sua.
      ================================================================== */

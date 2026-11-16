@@ -438,14 +438,14 @@
       }
       /* ametsa: musika-kutxa, astiro (seaska-kanta zaharra akordeen gainean) */
       if (ZONES[ZONE.cur].dream && lv <= 1 && s % 4 === 0) bell(mf(C.pad[[0, 2, 3, 2, 1, 3, 2, 0][(bar * 4 + s / 4) % 8]] + 24), t, 0.02, MZ.era);
-      /* oraina: izotz-distirak esplorazioan */
+      /* negua: izotz-distirak esplorazioan */
       if (phase && lv <= 1 && (s === 0 || s === 8) && ((n * 7) % 5) < 3) bell(mf(C.pad[(bar + s / 8) % 4] + 24), t + 0.01, 0.016, MZ.era);
     }
     function mzSchedule(t0) {
       if (!MZ.L) mzBuild();
       const lv = musicLevel();
       if (lv !== MZ.level) mzLevel(lv, t0);
-      /* garaia eta zona: oraina hotza (iragazkia), gaua leunagoa, leizea itxia (are ilunagoa) */
+      /* garaia eta zona: negua hotza (iragazkia), gaua leunagoa, leizea itxia (are ilunagoa) */
       const caveK = ZONES[ZONE.cur].outdoor ? (DAY.k > 0.5 ? 0.72 : 1) : 0.55,
         eraKey = phase + caveK * 10;
       if (MZ.eraOn !== eraKey) {

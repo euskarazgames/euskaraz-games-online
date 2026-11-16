@@ -60,7 +60,7 @@
     if (line) {
       $("filmWho").textContent = line[0];
       $("filmLine").textContent = L(line[1]);
-      $("filmSub").className = line[0].startsWith("GAUEKO") ? "dark" : "";
+      $("filmSub").className = /^(MIKELATS|AKERBELTZ|GAUEKO)/.test(line[0]) ? "dark" : "";
     }
     const fd = $("filmFade");
     fd.style.transition = "none";

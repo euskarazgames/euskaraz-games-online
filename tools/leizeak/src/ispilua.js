@@ -1,7 +1,7 @@
   /* ==================================================================
      EGUZKI-ISPILUA · Herensugearen haitzuloko tresna (diseinu propioa)
-     Sabaiko arrakaletatik argia sartzen da haitzulora: IRAGANEAN eguzkia (urrea),
-     ORAINEAN ilargia (zilarra). Argi-zutabe batean, eutsi SORGINKERIAri: Amaiurrek
+     Sabaiko arrakaletatik argia sartzen da haitzulora: UDAN eguzkia (urrea),
+     NEGUAN ilargia (zilarra). Argi-zutabe batean, eutsi SORGINKERIAri: Amaiurrek
      ispilua altxatzen du eta izpia jaurtitzen (makilarekin apuntatu; askatu: jaitsi).
      · ISPILU-HARRIAK: BIRATU (E) → argia harriaren aurpegiak begiratzen duen norabidean
        ateratzen da (zortzi norabide). Atzetik jotzen badu, ez.
@@ -244,7 +244,7 @@
     C.hitT = 0;
     if (C.on && C.latch) return;
     if (C.kind !== "any" && C.kind !== kind) {
-      const want = C.kind === "sun" ? L("Kristal urreak EGUZKIA behar du: IRAGANEAN bakarrik sartzen da.") : L("Kristal urdinak ILARGIA behar du: ORAINEAN bakarrik sartzen da.");
+      const want = C.kind === "sun" ? L("Kristal urreak EGUZKIA behar du: UDAN bakarrik sartzen da.") : L("Kristal urdinak ILARGIA behar du: NEGUAN bakarrik sartzen da.");
       notifyOnce("kristal-" + C.kind, want, "");
       return;
     }
@@ -693,7 +693,7 @@
         E.W.k += dt;
         if (frame % 2 === 0) fxBurst(E.x, MIR.y, E.z, { n: 2, speed: 1.5, up: 2, life: 0.5, size: 0.2, color: "#ffb347", grav: -2 });
         if (E.W.k > 0.4) webBurn(E.W);
-      } else notifyOnce("sare-ilargia", L("Ilargiaren argiak ez du sare beltza erretzen. EGUZKIA behar da: IRAGANA."), "");
+      } else notifyOnce("sare-ilargia", L("Ilargiaren argiak ez du sare beltza erretzen. EGUZKIA behar da: UDA."), "");
     } else if (E.k === "enemy") {
       const e = E.e;
       if (e.type === "bat") {

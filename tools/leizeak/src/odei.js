@@ -1,5 +1,5 @@
   /* ==================================================================
-     ODEI · trumoiaren hodeia (bosgarren zaindaria), Gauekok gaiztotua
+     ODEI · trumoiaren hodeia (bosgarren zaindaria), Mikelatsek gaiztotua
      Ekaitz-hodei erraldoia arenaren gainean, begi zuriak eta aho beltza. Erasoak:
      · TXIMISTAK: lurrean zirkuluak (abisua) → tximista. BULTZADA edo atera; airean,
        planeatzen, ez zaitu jotzen.
@@ -145,20 +145,20 @@
       ODEI.state = "storm";
       ODEI.t = 0;
       odeiBellsArm();
-      title("ODEI", "");
+      title("EATE", "");
       SND.roar();
       SND.thunder && SND.thunder();
       shake(0.5);
-      bossBar("ODEI", 1);
+      bossBar("EATE", 1);
       notify(L("Jo lau EKAITZ-KANPAIAK SORGINKERIAz, elkarren segidan: kanpaiek hodeia urratzen dute!"), "", 7);
     };
     if (ODEI.seenIntro) return fight();
     ODEI.seenIntro = true;
     say(
       [
-        ["ODEI", "Kanpaiak… Herriek kanpaiak jotzen zituzten nire ekaitzak uxatzeko. Hemen ez dago kanpai-jolerik, sorgin.", "", ODEI.x, ODEI.z, ODEI.y - 2],
-        ["AMAIUR", "Badago. Eta badakit zure izena: Odei, trumoiaren hodeia. Lehen euria ekartzen zenuen.", "", P.x, P.z, P.y],
-        ["ODEI", "GAUEKOREN TRUMOIA NAIZ ORAIN! KAZKABARRA, TXIMISTA, HAIZEA… ERORI ZAITEZ HODEIETATIK!", "", ODEI.x, ODEI.z, ODEI.y - 2],
+        ["EATE", "Kanpaiak… Herriek kanpaiak jotzen zituzten nire ekaitzak uxatzeko. Hemen ez dago kanpai-jolerik, sorgin.", "", ODEI.x, ODEI.z, ODEI.y - 2],
+        ["AMAIUR", "Badago. Eta badakit zure izena: Eate, haizearen eta suaren izpiritua. Lehen euria ekartzen zenuen.", "", P.x, P.z, P.y],
+        ["EATE", "MIKELATSEN TRUMOIA NAIZ ORAIN! KAZKABARRA, TXIMISTA, HAIZEA… ERORI ZAITEZ HODEIETATIK!", "", ODEI.x, ODEI.z, ODEI.y - 2],
       ],
       fight,
     );
@@ -206,7 +206,7 @@
     shake(0.7);
     slowmo = 0.5;
     odeiClose(true);
-    notify(ODEI.rounds === 2 ? L("Haserre dago! Kanpai bat ORAINEAN bakarrik ikusten da orain…") : L("Azken aldia! Kanpaiak garai bietan banatuta: IRAGANA eta ORAINA!"), "", 4.5);
+    notify(ODEI.rounds === 2 ? L("Haserre dago! Kanpai bat NEGUAN bakarrik ikusten da orain…") : L("Azken aldia! Kanpaiak bi urtaroetan banatuta: UDA eta NEGUA!"), "", 4.5);
   }
   /* HAIZE-ADARRA haize-boladaren kontra */
   function odeiHornCounter() {
@@ -510,10 +510,10 @@
     say(
       [
         ["· · ·", "Hodei beltza zabaldu da, eta haren erdian itzal bat apurtu da, kristal bat bezala. Hodei zuri bat geratu da, euri-usaina zeramala.", "", ODEI.x, ODEI.z, ODEI.y - 2],
-        ["ODEI", "…Arnasa. Lurrari euria eman nahi nion, ez harria. Gauekok trumoia sartu zidan bihotzean.", "", ODEI.x, ODEI.z, ODEI.y - 2],
-        ["AMAIUR", "Bost zaindari askatuta. Bi falta dira. Non daude?", "", P.x, P.z, P.y],
-        ["ODEI", "Hodeien beste aldean: suzko suge zahar bat, Herensugea, hegan; eta amets gaiztoen jauna, Inguma. Biak Gauekoren menpe.", "", ODEI.x, ODEI.z, ODEI.y - 2],
-        ["ODEI", "Eta Anboton, Mari bera, ahotsik gabe. Hartu nire bihotza, sorgin: euriak ere badaki itzultzen.", "", ODEI.x, ODEI.z, ODEI.y - 2],
+        ["EATE", "…Arnasa. Lurrari euria eman nahi nion, ez harria. Mikelatsek trumoia sartu zidan bihotzean, txingarraren ordainetan.", "", ODEI.x, ODEI.z, ODEI.y - 2],
+        ["AMAIUR", "Bost txingar itzulita. Bi falta dira. Non daude?", "", P.x, P.z, P.y],
+        ["EATE", "Hodeien beste aldean, eguzkiaren leizean: Zezengorri, altxorren zaindaria. Eta sorginen leizean, Akerbeltz. Biak Mikelatsen menpe.", "", ODEI.x, ODEI.z, ODEI.y - 2],
+        ["EATE", "Eta haien gainean, Murumendi, ekaitzaren etxea. Hartu nire bihotza, sorgin: euriak ere badaki itzultzen.", "", ODEI.x, ODEI.z, ODEI.y - 2],
       ],
       () => {
         odeiFreed();
@@ -522,8 +522,8 @@
         P.hp = P.maxHp;
         flagSet("odei");
         persist();
-        itemGet("bihotza", L("ODEIREN BIHOTZA"), L("Arnasa bat gehiago. Hodeiek euri goxoa ekarriko dute berriro."), () => {
-          title("ODEI ASKE", "");
+        itemGet("bihotza", L("EATEREN BIHOTZA"), L("Arnasa bat gehiago. Hodeiek euri goxoa ekarriko dute berriro."), () => {
+          title("EATE ASKE", "");
           notify(L("Ekaitz-hesia desagertu da. Itzuli ortzadarretik (hegoan): herrian, Irati zain."), "", 6);
           hud();
         });

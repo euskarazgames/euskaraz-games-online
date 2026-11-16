@@ -1,11 +1,11 @@
   /* ==================================================================
-     OIHARTZUN-DEIAK · Iratiren ahotsa oihartzun-harritik
-     Deia iristean: harria dardaraka, txalaparta-kolpe bigunak (◀ ◀ ▶, Iratiren "sinadura")
-     eta HUDean "OIHARTZUN-DEIA". ERANTZUN (E, ekintza-botoia edo ukitu) → elkarrizketa
-     deien larruazalarekin: erretratu biribila, uhina eta ahotsa. Erantzuten ez bada, segundo
-     batzuen buruan bakarrik irekitzen da (istorioa ez da geratzen). Gauekok deia "zulatu"
-     dezake: interferentzia, kolore gorria eta haren ahotsa.
-     Edozein unetan, menuan: DEITU · IRATI → zer egin galdetu (helburuaren arabera).
+     KRISELU-DEIAK · Atarrabiren ahotsa kriseiluaren sugarretik (leizeetatik)
+     Deia iristean: sugarra dardaraka, txalaparta-kolpe bigunak (◀ ◀ ▶, Atarrabiren "sinadura")
+     eta HUDean deia. ERANTZUN (E, ekintza-botoia edo ukitu) → elkarrizketa deien larruazalarekin:
+     erretratu biribila, uhina eta ahotsa. Erantzuten ez bada, segundo batzuen buruan bakarrik
+     irekitzen da (istorioa ez da geratzen). Mikelatsek deia "zulatu" dezake: interferentzia,
+     kolore gorria eta haren ahotsa.
+     Edozein unetan, menuan: DEITU · ATARRABI → zer egin galdetu (helburuaren arabera).
      ================================================================== */
   const RING = { on: false, t: 0, k: 0, auto: 6, next: null, from: "", near: null };
   /* erantzun daiteke? (lehen deian, harriaren ondoan bakarrik) */
@@ -70,7 +70,7 @@
       RING.missed = RING.next;
       RING.next = null;
       $("deiaRing").hidden = true;
-      notify(L("Galdutako deia: menuan, DEITU · IRATI."), "", 3);
+      notify(L("Galdutako deia: menuan, DEITU · ATARRABI."), "", 3);
     }
   }
   /* uhina (ahotsaren analizatzailetik) deien kanbasean */
@@ -95,7 +95,7 @@
     }
     g.stroke();
   }
-  /* menutik: DEITU · IRATI (zer egin) */
+  /* menutik: DEITU · ATARRABI (zer egin) */
   function iratiCall() {
     if (!started || cinematic || FILM.on) return;
     if (RING.missed) {
@@ -105,14 +105,14 @@
     }
     const o = objective()[0] || "";
     const extra = [
-      "Gogoratu: itzal bakoitza bere begien koloreko garaian zauritzen da.",
+      "Gogoratu: itzal bakoitza bere begien koloreko urtaroan zauritzen da.",
       "Ez ahaztu sutondoak: atseden hartu, eta handik jarraituko duzu.",
-      "Txalapartak bi ahots ditu. Zuk erantzun, Amaiur.",
+      "Leizeek galdetzen dute; zuk erantzun, Amaiur.",
       "Harri-danborrak entzun: leizeek beren bidea kantatzen dute.",
     ][Math.floor(time) % 4];
-    deia(["dei_i1", ["IRATI", o], ["IRATI", extra], "dei_i2"]);
+    deia(["dei_i1", ["ATARRABI", o], ["ATARRABI", extra], "dei_i2"]);
   }
-  /* ---- leize bakoitzaren lehen sarrera: Iratiren deia (behin) · kokapen-errotulua beti ---- */
+  /* ---- leize bakoitzaren lehen sarrera: Atarrabiren deia (behin) · kokapen-errotulua beti ---- */
   const ZONE_CALLS = {
     leizea: ["dz_leizea1", "dz_leizea2"],
     lamia: ["dz_lamia1", "dz_lamia2"],
@@ -124,20 +124,20 @@
   const CALL_TEST = new URLSearchParams(location.search).has("test");
   function zoneEntered(id) {
     if (!FILM.on) locCaption(id);
-    /* ANBOTOKO HARPEAK: zaindariak eta radarra (harpeak.js, sigiloa.js) */
+    /* MURUMENDIKO HARPEAK: zaindariak eta radarra (harpeak.js, sigiloa.js) */
     harpeakEntered(id);
     /* zaindari bat askatu ondoren, haranean: haren oroitzapena (oroitzapenak.js) */
     oroitCheck(id);
-    /* Inguma garaituta: etxetik irtetean, zazpigarren argia (seaska.js) */
+    /* Akerbeltz garaituta: etxetik irtetean, zazpigarren txingarra (seaska.js) */
     if (id === "ibarra" && saved.flags.includes("inguma") && !saved.flags.includes("irati-inguma")) setTimeout(ingumaFinale, 1400);
     const lines = ZONE_CALLS[id];
     /* probetan (?test) deirik ez, eskatu ezean (window.__calls): botak ez eteteko */
     if (!lines || PRO.on || saved.flags.includes("deia-" + id) || (CALL_TEST && !window.__calls)) return;
     saved.flags.push("deia-" + id);
     persist();
-    setTimeout(() => ZONE.cur === id && !RING.on && deiaRing("IRATI", lines, null, 7), 2200);
+    setTimeout(() => ZONE.cur === id && !RING.on && deiaRing("ATARRABI", lines, null, 7), 2200);
   }
-  /* kokapen-errotulua (goian eskuinean, makinaz): "BASAJAUNEN LEIZEA" / "07:12 · IRAGANA" */
+  /* kokapen-errotulua (goian eskuinean, makinaz): "BASAJAUNEN LEIZEA" / "07:12 · UDA" */
   let locTimer = 0;
   function locCaption(id) {
     const Z = ZONES[id];
@@ -145,7 +145,7 @@
     const t = ((saved.tod ?? 0.35) * 24 + 24) % 24,
       hh = String(Math.floor(t)).padStart(2, "0"),
       mm = String(Math.floor((t % 1) * 60)).padStart(2, "0"),
-      full = Z.name + "\n" + hh + ":" + mm + " · " + (phase ? "ORAINA" : "IRAGANA"),
+      full = Z.name + "\n" + hh + ":" + mm + " · " + (phase ? "NEGUA" : "UDA"),
       el = $("locCap");
     clearInterval(locTimer);
     el.classList.remove("out");

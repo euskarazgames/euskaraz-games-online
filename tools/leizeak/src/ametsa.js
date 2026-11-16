@@ -17,7 +17,7 @@
      ================================================================== */
   const AX = 2700;
   const AE = (x) => AX + x;
-  ZONES.ametsa = { name: "AMETSA", outdoor: true, sky: true, dream: true, fallY: -16, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
+  ZONES.ametsa = { name: "SORGINEN LEIZEA · AKELARREA", outdoor: true, sky: true, dream: true, fallY: -16, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
   const DGA = {
     id: "ametsa",
     num: "07",

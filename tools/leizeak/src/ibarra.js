@@ -4,10 +4,10 @@
        inguruan eta bideen muturretan laua.
      · Bideak kurbatuak (spline), ertz leun eta irregularrekin: harlauzak herrian,
        lur-bidea kanpoan. Zubia harrizko arkua da.
-     · Ibaia harri-arroila batean: ORAINEAN izoztuta (gainetik ibil daiteke),
-       IRAGANEAN ur bizia. Ekialdean ur-jauzia eta haren atzean LAMIEN LEIZEA;
+     · Ibaia harri-arroila batean: NEGUAN izoztuta (gainetik ibil daiteke),
+       UDAN ur bizia. Ekialdean ur-jauzia eta haren atzean LAMIEN LEIZEA;
        ipar-mendebaldean ARTZAINEN LEPOA eta TARTALOREN KOBA; hegoaldean portua,
-       kaia eta badia (orainean izoztua).
+       kaia eta badia (neguan izoztua).
      ================================================================== */
   const HUB = {
     gate: null,
@@ -459,7 +459,7 @@
     );
     /* portuko eskailera itsaslabarrean zulatuta */
     CUTS.push({ ax: -6, az: 61, ay: -0.08, bx: 8, bz: 74, by: -7.28, w: 3.6, k: -2.6 });
-    /* haran osoa: lurra, ibaia (izotza orainean) eta leize-zuloa */
+    /* haran osoa: lurra, ibaia (izotza neguan) eta leize-zuloa */
     valleyGround();
     /* terrazak */
     plateau({ x: 46, z: -64, y: 9, rx: 15, rz: 15, area: "harrespila" });
@@ -492,7 +492,7 @@
     fall.rotation.y = -PI / 2;
     fall.castShadow = false;
     ATMO.falls.push(fall);
-    /* izotz-gortina (ORAINA): ur-jauzia izoztuta, pasaezina */
+    /* izotz-gortina (NEGUA): ur-jauzia izoztuta, pasaezina */
     HUB.iceFall = obj(new T.BoxGeometry(1.2, 17, 9.4), new T.MeshStandardMaterial({ color: "#cfeefa", roughness: 0.15, metalness: 0.1, transparent: true, opacity: 0.78, emissive: new T.Color("#5fa8c8"), emissiveIntensity: 0.15 }));
     HUB.iceFall.position.set(98.6, 7.3, -28.5);
     platforms.push((HUB.iceFall.p = { x: 98.6, z: -28.5, y: 16, bottom: -2, w: 1.3, d: 9.6, rot: 0, phase: 1, wall: true, safe: false }));
@@ -558,7 +558,7 @@
     HOUSES.push({ m: model("building_blacksmith_red", 25, 0, 43, 7.5, -1.9), x: 25, z: 43, forge: true });
     HOUSES.push({ m: model("building_tavern_red", 2, 0, 58, 9, PI), x: 2, z: 58 });
     model("building_well_red", 9, 0, 35, 3.2, 0.3);
-    /* errota ibai-ertzean: gurpila iraganean biraka */
+    /* errota ibai-ertzean: gurpila udan biraka */
     const mill = model("building_watermill_red", 30, 0, -12, 9, PI);
     HUB.wheel = mill.getObjectByName("building_watermill_wheel_red");
     HOUSES.push({ m: mill, x: 30, z: -12 });
@@ -581,7 +581,7 @@
     model("wheelbarrow", 19.6, 0, 36.6, 1.5, 0.8);
     model("target", -27.5, 0, 31, 2.2, -1.2);
     /* ------------------------------ PORTUA ------------------------------ */
-    /* harrizko eskailera itsaslabarrean behera, egurrezko kaia eta badia (orainean izoztua) */
+    /* harrizko eskailera itsaslabarrean behera, egurrezko kaia eta badia (neguan izoztua) */
     rampP(-6, 61, 0, 8, 74, -7.2, 3.2, "portua");
     stairsMesh(-6, 61, 0, 8, 74, -7.2, 3.2, 18);
     for (const k of [0.62, 0.86]) box(-6 + 14 * k, (0 - 7.2 * k - 9.4) / 2, 61 + 13 * k, 1.6, 9.4 - 7.2 * k + 0.2, 1.6, stackMaterial());
@@ -590,7 +590,7 @@
     slab({ x: 8, z: 80.5, y: -7.2, w: 5, d: 13, h: 0.5, mat: "wood", area: "kaia" });
     for (const s of [-1, 1]) for (let k = 0; k < 4; k++) box(8 + s * 2.2, -8.3, 75.5 + k * 3.6, 0.35, 2.4, 0.35, "#5d4632");
     harborBoat(17, 85);
-    /* badia izoztua (orainean): elipsea, itsaslabarraren oinetik (mugak haran.js-en) */
+    /* badia izoztua (neguan): elipsea, itsaslabarraren oinetik (mugak haran.js-en) */
     HUB.bay = { x: PORT.bay.x, z: PORT.bay.z, rx: PORT.bay.rx, rz: PORT.bay.rz };
     platforms.push({ x: PORT.bay.x, z: PORT.bay.z, y: -8.4, bottom: -9, rx: PORT.bay.rx + 0.5, rz: PORT.bay.rz + 0.5, phase: 1, area: "badia", safe: false, slick: true, ice: true });
     /* izotz-uhartetxoa badian (Txominen sarea) */
@@ -758,7 +758,7 @@
   }
   const HOUSES = [],
     FLAGS = [];
-  /* txalupa portuan: iraganean kulunka, orainean izotzean harrapatuta */
+  /* txalupa portuan: udan kulunka, neguan izotzean harrapatuta */
   function harborBoat(x, z) {
     const hull = new T.Shape();
     hull.moveTo(-2.7, 0.9);
@@ -810,7 +810,7 @@
       HUB.boat.position.y = -8.3 + Math.sin(time * 1.1) * 0.12 * live - phaseBlend * 0.15;
       HUB.boat.rotation.z = Math.sin(time * 0.8) * 0.04 * live + phaseBlend * 0.06;
     }
-    /* errotaren gurpila: iraganean biraka, orainean izoztuta */
+    /* errotaren gurpila: udan biraka, neguan izoztuta */
     if (HUB.wheel) HUB.wheel.rotation.x -= dt * 0.9 * (1 - phaseBlend);
     if (HUB.iceFall && HUB.iceFall.fallT !== undefined) {
       /* izotz-gortina erortzen (KATEA): behera eta gardena */
@@ -837,7 +837,7 @@
     if (ZONE.pending || cinematic) return;
     /* leizeen ahoak */
     if (HUB.gate && HUB.gate.p.off && Math.hypot(P.x - HUB.cave.x, P.z - HUB.cave.z) < 2.4 && P.y > 4) enterZone("leizea", { ...DUNGEON.entry, cp: true });
-    /* ur-jauziaren atzean: izotz-gortina erauzita (KATEA) edo IRAGANEAN */
+    /* ur-jauziaren atzean: izotz-gortina erauzita (KATEA) edo UDAN */
     if (DGS.lamia && (phase === 0 || flag("ur-jauzia")) && P.x > HUB.lamia.x && Math.abs(P.z - HUB.lamia.z) < 3.2 && P.y > -2 && P.y < 2) {
       fxBurst(P.x, P.y + 1.2, P.z, { n: 30, speed: 3, up: 2, life: 0.6, size: 0.3, color: "#cdeef5", grav: 6 });
       SND.splash();
