@@ -96,6 +96,27 @@
     /* haize-boladaren aurka: HAIZE-ADARRA */
     ODEI.wind = windable({ x: Z7.x, y: Z7.y + ODEI_HOVER, z: Z7.z, r: 5, dy: 30, range: 26, live: () => ODEI.state === "inhale" || ODEI.state === "gust", gust: () => odeiHornCounter() });
     if (saved.flags.includes("odei")) odeiFreed(true);
+    /* IA-modeloa (Flux → Tripo, fal.ai; Blender): ekaitzaren izpiritua, sugar-ileak eta hodei-zutabea.
+       Bularrean, bihotza (ekaitz-harria); hodei-bolak inguruan, txikiago. Ez badago, hodei-buru prozedurala. */
+    aiModel("eate", (sc) => {
+      if (!sc || !ODEI.g || ODEI.ai) return;
+      const A = aiInstance(sc, 14, 0.3);
+      A.m.position.y = -14 * 0.62;
+      ODEI.g.add(A.m);
+      for (const m of A.mats) m.transparent = true;
+      ODEI.ai = A;
+      ODEI.mouth.visible = false;
+      for (const e of ODEI.eyes) e.visible = false;
+      for (const P0 of ODEI.puffs) {
+        P0.base.set(P0.base.x * 1.3, P0.base.y * 0.8 - 3.2, P0.base.z * 1.3 - 0.4);
+        P0.m.scale.multiplyScalar(0.48);
+      }
+      /* aurpegiko hodei-bola handia: IA-gorputzak ordezkatzen du */
+      ODEI.puffs[0].m.visible = false;
+      /* (askatuta badago, ODEI.state === "freed" da jada: eguneraketak itxura zuria ematen dio.
+         Ez deitu odeiFreed() hemen: modeloa beranduago kargatzen da, eta BOSS.on itzaliko luke
+         beste borroka batean — adib. Zezengorrirenean) */
+    });
   }
   function odeiHome() {
     ODEI.x = Z7.x;
@@ -196,7 +217,7 @@
     FB.bossHit(w.x, w.y, w.z);
     damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.5 }, n);
     ODEI.flash = 0.25;
-    bossBar("ODEI", (ODEI.rounds - 1 + Math.max(0, ODEI.hp) / ODEI_HP) / 3);
+    bossBar("EATE", (ODEI.rounds - 1 + Math.max(0, ODEI.hp) / ODEI_HP) / 3);
     if (ODEI.hp > 0) return;
     ODEI.rounds--;
     ODEI.stats.rounds++;
@@ -288,7 +309,7 @@
       const k = 1 + op * 1.4 + swell;
       p.m.position.set(p.base.x * k + Math.sin(time * 0.9 + p.ph) * 0.3, p.base.y * (1 + op * 0.8) + Math.sin(time * 1.3 + p.ph) * 0.25, p.base.z * k);
     }
-    ODEI.mat.opacity = ODEI.state === "freed" ? 0.9 : 1 - op * 0.55;
+    ODEI.mat.opacity = (ODEI.ai ? 0.78 : 1) * (ODEI.state === "freed" ? 0.9 : 1 - op * 0.55);
     ODEI.mat.transparent = ODEI.mat.opacity < 1;
     ODEI.flash = Math.max(0, ODEI.flash - dt);
     ODEI.cough = Math.max(0, ODEI.cough - dt);
@@ -297,7 +318,14 @@
     ODEI.mat.emissiveIntensity = ODEI.state === "freed" ? 0.25 : 0.55 + fl * 1.6;
     ODEI.mat.emissive.set(fl && ODEI.state !== "freed" ? "#3a3480" : ODEI.state === "freed" ? "#cfe3f5" : "#120d22");
     ODEI.mouth.scale.y = mix(ODEI.mouth.scale.y, ODEI.state === "inhale" ? 1.1 : ODEI.state === "gust" ? 0.8 : ODEI.cough > 0 ? 0.6 + Math.sin(time * 30) * 0.3 : 0.25, 1 - Math.exp(-dt * 8));
-    for (const e of ODEI.eyes) e.visible = op < 0.6 && !(ODEI.state === "freed" && e.isMesh && e.geometry.type === "BoxGeometry");
+    for (const e of ODEI.eyes) e.visible = !ODEI.ai && op < 0.6 && !(ODEI.state === "freed" && e.isMesh && e.geometry.type === "BoxGeometry");
+    if (ODEI.ai)
+      for (const m of ODEI.ai.mats) {
+        m.opacity = ODEI.state === "freed" ? 0.92 : 1 - op * 0.72;
+        m.depthWrite = m.opacity > 0.9;
+        m.emissiveIntensity = ODEI.state === "freed" ? 0.55 : 0.3 + fl * 0.9 + op * 0.25;
+        m.emissive.set(ODEI.state === "freed" ? "#fff2d8" : fl ? "#c9c2ff" : "#ffffff");
+      }
     const vul = BOSSK.odei.vulnerable();
     ODEI.core.material.emissiveIntensity = op > 0.3 ? (vul ? 3 : 1.6) + Math.sin(time * 10) * 0.4 : 0.6;
     ODEI.coreGlow.material.opacity = op * (0.6 + Math.sin(time * 10) * 0.2);
@@ -510,7 +538,7 @@
     say(
       [
         ["· · ·", "Hodei beltza zabaldu da, eta haren erdian itzal bat apurtu da, kristal bat bezala. Hodei zuri bat geratu da, euri-usaina zeramala.", "", ODEI.x, ODEI.z, ODEI.y - 2],
-        ["EATE", "…Arnasa. Lurrari euria eman nahi nion, ez harria. Mikelatsek trumoia sartu zidan bihotzean, txingarraren ordainetan.", "", ODEI.x, ODEI.z, ODEI.y - 2],
+        ["EATE", "…Arnasa. Lurrari euria eman nahi nion, ez harria. Mikelatsek trumoia sartu zidan bihotzean, txingarra beretzat gorde nezan.", "", ODEI.x, ODEI.z, ODEI.y - 2],
         ["AMAIUR", "Bost txingar itzulita. Bi falta dira. Non daude?", "", P.x, P.z, P.y],
         ["EATE", "Hodeien beste aldean, eguzkiaren leizean: Zezengorri, altxorren zaindaria. Eta sorginen leizean, Akerbeltz. Biak Mikelatsen menpe.", "", ODEI.x, ODEI.z, ODEI.y - 2],
         ["EATE", "Eta haien gainean, Murumendi, ekaitzaren etxea. Hartu nire bihotza, sorgin: euriak ere badaki itzultzen.", "", ODEI.x, ODEI.z, ODEI.y - 2],
@@ -524,7 +552,7 @@
         persist();
         itemGet("bihotza", L("EATEREN BIHOTZA"), L("Arnasa bat gehiago. Hodeiek euri goxoa ekarriko dute berriro."), () => {
           title("EATE ASKE", "");
-          notify(L("Ekaitz-hesia desagertu da. Itzuli ortzadarretik (hegoan): herrian, Irati zain."), "", 6);
+          notify(L("Ekaitz-hesia desagertu da. Itzuli ortzadarretik (hegoan): herrian, Atarrabi zain."), "", 6);
           hud();
         });
       },

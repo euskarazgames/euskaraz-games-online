@@ -1,5 +1,5 @@
   /* ==================================================================
-     SUGAARREN KATEA · lehen leizeko tresna (C tekla edo KATEA botoia)
+     BASAJAUNEN KATEA · lehen leizeko tresna (C tekla edo KATEA botoia)
      Suge-buruko katea jaurti:
        · suge-eraztun batera → Amaiur harantz tiratzen du (amildegiak gurutzatu);
        · kaxa batera → kaxa Amaiurrengana erakarri;

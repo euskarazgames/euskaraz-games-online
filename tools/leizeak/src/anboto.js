@@ -17,9 +17,13 @@
   ZONES.anboto = { name: "MURUMENDI · GAILURRA", outdoor: true, sky: true, anboto: true, fallY: -24, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
   const AN = { built: false, round: 0, stage: "", tx: null, stones: [], lit: 0, gaueko: null, eyes: [], mouth: null, glow: null, clouds: [], dawn: 0, flash: 0, amona: null, cage: null };
   const AN_SPAWN = { x: ANX, y: 0, z: 9, a: PI };
+  /* borroka-eremua: uhartea (elipsea); jokalaria eta itzalak barruan */
+  const MK_ARENA = { id: "gailurra", x: ANX, z: 0, rx: 14.6, rz: 12.6, y: 0, w: 29, d: 25, boss: true };
+  /* leiho bakoitzeko kalte-muga: hiru kolpe, gero altxatu */
+  const MK_WIN = 3;
   /* MIKELATS: borrokako gorputza (hegan) — egoera, fasea, bizia eta erasoak */
-  const MK = { on: false, g: null, root: null, mixer: null, acts: {}, cur: "", cloak: null, crown: [], eyes: [], aura: null, state: "", phase: 0, hp: 0, t: 0, x: ANX, y: 5, z: -4, tx: ANX, tz: -4, retarget: 0, atkCd: 2.4, marks: [], bolts: [], stun: 0, waves: 0, burn: 0, flash: 0, top: 4.4 };
-  const MK_HP = [0, 3, 3, 0];
+  const MK = { on: false, g: null, root: null, mixer: null, acts: {}, cur: "", cloak: null, crown: [], eyes: [], aura: null, state: "", phase: 0, hp: 0, t: 0, x: ANX, y: 5, z: -4, tx: ANX, tz: -4, retarget: 0, atkCd: 2.4, marks: [], bolts: [], stun: 0, waves: 0, burn: 0, flash: 0, top: 4.4, wind: 0, winDmg: 0, tiredT: 0 };
+  const MK_HP = [0, 6, 6, 0];
   const AN_FOG_NIGHT = new T.Color("#141a2e"),
     AN_FOG_DAWN = new T.Color("#e9b08c");
   /* ------------------------------ eraikuntza ------------------------------ */
@@ -77,7 +81,7 @@
       orb.scale.setScalar(2.2);
       BP.add(orb);
       const S = { x, z, orb, k: 0, lit: false };
-      S.rune = { rune: true, x, y: orb.position.y, z, r: 1.3, lit: false, live: () => ZONE.cur === "anboto" && MK.on && MK.state === "hover" && (MK.phase === 1 || MK.phase === 3) && !S.lit, hit: () => mkStone(S) };
+      S.rune = { rune: true, x, y: orb.position.y, z, r: 1.3, lit: false, needFire: true, fireMsg: "Zutarria ez da sorginkeria arruntaz pizten: SUA behar du (kargatu sorginkeria, SUGAR-IZPIA).", live: () => ZONE.cur === "anboto" && MK.on && MK.state === "hover" && (MK.phase === 1 || MK.phase === 3) && !S.lit, hit: () => mkStone(S) };
       RUNES.push(S.rune);
       AN.stones.push(S);
     }
@@ -159,7 +163,15 @@
     if (!AN.built || ZONE.cur !== "anboto") return;
     AN.flash = Math.max(0, AN.flash - dt * 3);
     /* tximistak ekaitzean (egunsentia arte) */
-    if (AN.dawn < 0.3 && Math.random() < dt * (MK.on ? 0.25 : 0.12)) {
+    if (AN.stage === "retry" && !cinematic && !FILM.on) {
+      AN.retryT -= dt;
+      if (AN.retryT <= 0 && P.grounded) {
+        AN.stage = "fight";
+        mkStart();
+        hud();
+      }
+    }
+    if (AN.dawn < 0.3 && Math.random() < dt * (MK.on ? 0.05 : 0.12)) {
       AN.flash = 1;
       setTimeout(() => SND.thunder && SND.thunder(), 280);
     }
@@ -263,7 +275,7 @@
         AN.dawn = 0;
         /* zinema lehenik (FILM.on): kokapen-errotulua zinemak berak idazten du, ez bikoiztu */
         anbotoArrive();
-        enterZone("anboto", { ...AN_SPAWN }, true);
+        enterZone("anboto", { ...AN_SPAWN, cp: true }, true);
       },
     );
   }
@@ -345,7 +357,7 @@
   }
   function mkAnim(name, once) {
     const a = MK.acts[name];
-    if (!a || MK.cur === name) return;
+    if (!a || (MK.cur === name && !once)) return;
     const old = MK.acts[MK.cur];
     a.reset();
     a.setLoop(once ? T.LoopOnce : T.LoopRepeat);
@@ -363,10 +375,12 @@
     BOSS.on = true;
     BOSS.dead = false;
     BOSS.kind = "mikelats";
-    ROOM.fight = null;
+    BOSS.weakR = 1.7;
+    ROOM.fight = MK_ARENA;
+    Object.assign(MK, { wind: 0, winDmg: 0, tiredT: 0, retarget: 0 });
     title("MIKELATS", "");
     bossBar("MIKELATS", 1);
-    notify(L("Haren kapa Atarrabiren itzala da: ez dago zauritzerik. Piztu ZUTARRIAK sorginkeriaz: txingarren argiak kapa erreko du!"), "", 7);
+    notify(L("Haren kapa Atarrabiren itzala da: ez dago zauritzerik. Piztu ZUTARRIAK SUAREKIN (sorginkeria kargatuta, SUGAR-IZPIA): txingarren argiak kapa erreko du!"), "", 8);
   }
   const mkLit = () => AN.stones.filter((S) => S.lit).length;
   function mkStone(S) {
@@ -388,6 +402,8 @@
   function mkDown(secs, msg) {
     MK.state = "down";
     MK.stun = secs;
+    MK.winDmg = 0;
+    MK.wind = 0;
     MK.burn = 1;
     MK.tx = ANX + (MK.x - ANX) * 0.3;
     MK.tz = -2 + (MK.z + 2) * 0.3;
@@ -398,15 +414,23 @@
   }
   function mkHit(n) {
     if (MK.state !== "down") return;
+    n = Math.min(n, MK_WIN - MK.winDmg);
+    if (n <= 0) return;
+    MK.winDmg += n;
     MK.hp -= n;
     MK.flash = 1;
     SND.hit ? SND.hit(1) : SND.thud();
     fxBurst(MK.x, MK.y + MK.top * 0.6, MK.z, { n: 18, speed: 3, up: 2, life: 0.6, size: 0.3, color: "#bfe8ff", grav: 2 });
+    damageNumber({ x: MK.x, y: MK.y + MK.top * 0.6, z: MK.z, H: 0.5 }, n);
     bossBar("MIKELATS", mkTotal());
+    if (MK.hp > 0 && MK.winDmg < MK_WIN) return;
+    FB.bossHit(MK.x, MK.y + MK.top * 0.6, MK.z);
     if (MK.hp <= 0) {
       if (MK.phase === 1) return mkPhase2();
       if (MK.phase === 2) return mkPhase3();
     }
+    /* leihoa itxita: altxatu (I: zutarri bat itzali; II: oleada berria) */
+    MK.stun = 0;
   }
   /* bizi-barra: hiru fase (III-n, zutarriak) */
   function mkTotal() {
@@ -426,22 +450,35 @@
       () => {
         MK.state = "summon";
         MK.waves = 0;
+        MK.atkCd = 2.4;
         mkWave();
-        notify(L("Itzalak UDAN bakarrik zauritzen dira (begi urreak): ALDATU urtaroa, Q!"), "", 6);
+        notify(L("Itzal hauek UDAN zauritzen dira (urrezko begiak): ALDATU urtaroa, Q!"), "", 6);
       },
     );
   }
+  /* oleadak: I (3, urrezkoak), II (4, urrezkoak eta urdinak), III (indartsu bat eta bi begi) */
   function mkWave() {
     MK.waves++;
-    const n = MK.waves === 1 ? 3 : 4;
-    for (let i = 0; i < n; i++) {
-      const a = (i / n) * TAU + MK.waves,
+    const W = MK.waves,
+      list = W === 1 ? ["grunt", "grunt", "grunt"] : W === 2 ? ["grunt", "grunt", "grunt", "grunt"] : ["brute", "eye", "eye"];
+    for (let i = 0; i < list.length; i++) {
+      let a = (i / list.length) * TAU + W,
         x = ANX + Math.cos(a) * 6.5,
-        z = -1 + Math.sin(a) * 5.5,
-        era = MK.waves === 1 ? 0 : i % 2;
-      const e = spawnEnemy("grunt", era, x, z, 0);
+        z = -1 + Math.sin(a) * 5.5;
+      /* ez agertu jokalariaren ondoan (3 m) */
+      for (let k = 0; k < 6 && Math.hypot(x - P.x, z - P.z) < 3; k++) {
+        a += 0.7;
+        x = ANX + Math.cos(a) * 6.5;
+        z = -1 + Math.sin(a) * 5.5;
+      }
+      const era = W === 1 ? 0 : W === 2 ? i % 2 : i === 0 ? -1 : (i + 1) % 2;
+      const e = spawnEnemy(list[i], era, x, z, 0);
       e.mk = true;
+      e.room = MK_ARENA;
+      e.K = W === 3 ? 1.25 : 1;
     }
+    if (W === 2) notify(L("Begi urdinak ere bai: horiek NEGUAN zauritzen dira. ALDATU, behar denean!"), "", 5);
+    if (W === 3) notify(L("Itzal handi bat eta bi begi: azkena!"), "", 3.5);
   }
   function mkPhase3() {
     MK.phase = 3;
@@ -451,18 +488,22 @@
       MK.state = "hover";
       MK.atkCd = 1.6;
       MK.cloak.material.opacity = 0.82;
+      MK.comb = saved.items.includes("orrazia");
       notify(L("Ekaitza! Piztu beste ZUTARRIAK (zazpiak), kazkabarraren artean."), "", 5);
+      if (MK.comb) setTimeout(() => notify(L("Amonaren orrazia distiraka: kazkabarra baretzen ari da!"), "", 4), 2600);
     });
   }
   function mkTired() {
     MK.state = "tired";
+    MK.tiredT = 12;
+    MK.atkCd = 3;
     MK.tx = ANX;
-    MK.tz = -3;
+    MK.tz = 2;
     MK.burn = 1;
     SND.stinger(true);
     mkAnim("Death_A", true);
     bossBar("MIKELATS", 0.02);
-    notify(L("Mikelats nekatuta dago. Jo LO-KANTA (◀ ▶ ◀ ▶ ◀): lo egin dezala, mendiaren azpian."), "", 8);
+    notify(L("Mikelats nekatuta dago. Jo LO-KANTA (◀ ▶ ◀ ▶ ◀), azkar: lo egin dezala, mendiaren azpian!"), "", 8);
     coach("mk-lokanta", "B", "B: txalaparta → LO-KANTA (◀ ▶ ◀ ▶ ◀)", "", "useBtn", "TXALAPARTA → LO-KANTA (◀ ▶ ◀ ▶ ◀)", "");
   }
   /* LO-KANTA gailurrean (seaska.js-ko seaskaEffect-etik): true → kudeatuta */
@@ -476,9 +517,9 @@
     MK.on = false;
     BOSS.dead = true;
     BOSS.on = false;
+    ROOM.fight = null;
     bossBar(null);
-    for (const M of MK.marks) M.m.parent && M.m.parent.remove(M.m);
-    MK.marks.length = 0;
+    mkMarksClear();
     for (const e of ENEMIES) if (e.mk && e.state !== "dead") killEnemy(e);
     coachDone("mk-lokanta");
     fxRing(MK.x, 0.3, MK.z, "#c9b6ff", 9, 1.2);
@@ -488,16 +529,46 @@
   /* kazkabar-zirkuluak eta tximistak (abisua lurrean, gero kolpea) */
   function mkMark(x, z, kind) {
     const bolt = kind === "bolt",
-      m = new T.Mesh(new T.RingGeometry(bolt ? 1.1 : 1.3, bolt ? 1.4 : 1.6, 24), new T.MeshBasicMaterial({ color: bolt ? "#bfe8ff" : "#e8f3ff", transparent: true, opacity: 0.8, depthWrite: false }));
+      m = new T.Mesh(new T.RingGeometry(bolt ? 1.1 : 1.3, bolt ? 1.45 : 1.6, 24), new T.MeshBasicMaterial({ color: bolt ? "#ffe066" : "#8fd3ff", transparent: true, opacity: 0.8, depthWrite: false }));
     m.rotation.x = -PI / 2;
     m.position.set(x, 0.07, z);
     ZONES.anboto.group.add(m);
-    MK.marks.push({ x, z, t: 0, fuse: bolt ? 0.9 : 1.25, m, kind });
+    let col = null;
+    if (bolt) {
+      /* tximista: argi-zutabea hazten (kolpearen unea irakurgarri) */
+      col = new T.Mesh(new T.CylinderGeometry(0.5, 0.5, 1, 10, 1, true), new T.MeshBasicMaterial({ color: "#fff1a8", transparent: true, opacity: 0, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide }));
+      col.position.set(x, 0, z);
+      ZONES.anboto.group.add(col);
+    }
+    /* amonaren orrazia (III): kazkabarrak denbora gehiago uzten du ihes egiteko */
+    MK.marks.push({ x, z, t: 0, fuse: bolt ? 0.9 : MK.comb && MK.phase === 3 ? 1.6 : 1.25, m, col, kind });
   }
   const mkOnIsland = (x, z) => Math.hypot((x - ANX) / 14, (z - 0) / 12) < 1;
+  function mkMarksClear() {
+    for (const M of MK.marks) {
+      M.m.parent && M.m.parent.remove(M.m);
+      if (M.col) M.col.parent && M.col.parent.remove(M.col);
+    }
+    MK.marks.length = 0;
+  }
+  /* bossReset-etik (bizitzak amaituta): gailurrean berriro, zinemarik gabe (I fasetik) */
+  function mikelatsReset() {
+    if (!(MK.on && BOSS.kind === "mikelats" && !BOSS.dead)) return;
+    MK.on = false;
+    BOSS.on = false;
+    MK.state = "hover";
+    MK.wind = 0;
+    mkMarksClear();
+    clearEnemies();
+    ROOM.fight = null;
+    bossBar(null);
+    AN.stage = "retry";
+    AN.retryT = 2.4;
+  }
   function mkAttack() {
     mkAnim("Spellcast_Shoot", true);
     MK.flash = 0.6;
+    SND.crackle && SND.crackle();
     const hard = MK.phase === 3,
       kind = Math.random() < (hard ? 0.45 : 0.35) ? "bolt" : "hail";
     if (kind === "bolt") {
@@ -528,18 +599,25 @@
       M.t += dt;
       M.m.material.opacity = 0.4 + 0.4 * Math.abs(Math.sin(time * 12));
       M.m.scale.setScalar(1 + (1 - M.t / M.fuse) * 0.4);
+      if (M.col) {
+        const k = M.t / M.fuse;
+        M.col.scale.set(0.4 + k * 0.6, 0.1 + k * 14, 0.4 + k * 0.6);
+        M.col.position.y = (0.1 + k * 14) / 2;
+        M.col.material.opacity = 0.1 + k * 0.4;
+      }
       if (M.t >= M.fuse) {
         if (M.kind === "bolt") {
           AN.flash = 1;
           SND.thunder && SND.thunder();
           fxBurst(M.x, 0.5, M.z, { n: 30, speed: 6, up: 6, life: 0.5, size: 0.35, color: "#dff4ff", grav: 4 });
-          if (Math.hypot(P.x - M.x, P.z - M.z) < 1.5 && P.y < 1.8) playerHit(1, M.x, M.z);
+          if (Math.hypot(P.x - M.x, P.z - M.z) < 1.5 && P.y < 1.8) playerHit(MK.phase === 3 ? 2 : 1, M.x, M.z);
         } else {
           fxBurst(M.x, 0.4, M.z, { n: 22, speed: 4, up: 3, life: 0.6, size: 0.3, color: "#e8f3ff", grav: 9 });
           SND.thud();
           if (Math.hypot(P.x - M.x, P.z - M.z) < 1.7 && P.y < 1.6) playerHit(1, M.x, M.z);
         }
         M.m.parent && M.m.parent.remove(M.m);
+        if (M.col) M.col.parent && M.col.parent.remove(M.col);
         MK.marks.splice(i, 1);
       }
     }
@@ -554,7 +632,7 @@
       MK.tz = -2 + Math.sin(a) * 5;
       MK.retarget = 3 + Math.random() * 2;
     }
-    const ty = low ? 0 : high ? 9 + Math.sin(time * 0.8) : 4.5 + Math.sin(time * 1.3) * 0.5;
+    const ty = low ? 0 : high ? 9 + Math.sin(time * 0.8) : 4.5 + Math.sin(time * 1.3) * 0.5 + (MK.wind > 0 ? 1.1 : 0);
     MK.x = mix(MK.x, MK.tx, 1 - Math.exp(-dt * (low ? 3 : 1.2)));
     MK.z = mix(MK.z, MK.tz, 1 - Math.exp(-dt * (low ? 3 : 1.2)));
     MK.y = mix(MK.y, ty, 1 - Math.exp(-dt * (low ? 4 : 1.5)));
@@ -568,29 +646,61 @@
         m.emissive.setRGB(1, 1 - MK.burn * 0.55, 1 - MK.burn * 0.85);
         m.emissiveIntensity = 0.38 + MK.burn * 0.5 + MK.flash * 0.8;
       }
-    MK.aura.material.opacity = 0.35 + MK.flash * 0.5;
+    MK.aura.material.opacity = 0.35 + MK.flash * 0.5 + (MK.wind > 0 ? 0.55 + Math.sin(time * 30) * 0.1 : 0);
     if (MK.burn > 0.2 && Math.random() < dt * 20) fxBurst(MK.x, MK.y + MK.top * 0.4, MK.z, { n: 2, speed: 1, up: 2, life: 0.6, size: 0.3, color: "#ff9a3a", grav: -2 });
     if (MK.state === "hover") {
-      MK.atkCd -= dt;
-      if (MK.atkCd <= 0 && !cinematic && !FILM.on) mkAttack();
+      if (MK.wind > 0) {
+        /* prestaketa (0.5 s): igo, aura distiratsu, txinpartak → erasoa */
+        MK.wind -= dt;
+        if (MK.wind <= 0 && !cinematic && !FILM.on) mkAttack();
+      } else {
+        MK.atkCd -= dt;
+        if (MK.atkCd <= 0 && !cinematic && !FILM.on) {
+          MK.wind = 0.5;
+          SND.crackle && SND.crackle();
+        }
+      }
     } else if (MK.state === "down") {
       MK.stun -= dt;
       if (MK.stun <= 0) {
-        /* altxatu: I fasean, zutarri bat itzali (berriro piztu behar da) */
+        /* altxatu: I fasean, zutarri bat itzali (berriro piztu behar da); II-n, oleada berria */
         MK.state = MK.phase === 2 ? "summon" : "hover";
         MK.atkCd = 1.2;
+        MK.wind = 0;
         if (MK.phase === 1) {
           const S = AN.stones.filter((s) => s.lit).pop();
           if (S) S.lit = S.rune.lit = false;
           AN.lit = mkLit();
           notify(L("Mikelats altxatu da! Zutarri bat itzali du: piztu berriro."), "", 4);
+        } else if (MK.phase === 2) {
+          MK.waves = 1;
+          notify(L("Mikelats altxatu da! Itzal gehiago deitzen ditu…"), "", 3.5);
         }
         mkAnim("Idle");
       }
     } else if (MK.state === "summon") {
+      /* deitzen ari den bitartean ere kazkabarra (erdia bezain maiz) */
+      MK.atkCd -= dt * 0.5;
+      if (MK.atkCd <= 0 && !cinematic && !FILM.on) mkAttack();
       if (!ENEMIES.some((e) => e.mk && e.state !== "dead")) {
-        if (MK.waves < 2) mkWave();
+        if (MK.waves < 3) mkWave();
         else mkDown(8, L("Armada desegin da! Mikelats lurrera erori da: jo, orain!"));
+      }
+    } else if (MK.state === "tired") {
+      /* nekatuta: 12 s LO-KANTArako; kazkabarra ahul (% 30); bestela, altxatu eta bi zutarri itzali */
+      MK.tiredT -= dt;
+      MK.atkCd -= dt * 0.3;
+      if (MK.atkCd <= 0 && !cinematic && !FILM.on && !TXALA.on) mkAttack();
+      if (MK.tiredT <= 0 && !TXALA.on) {
+        MK.state = "hover";
+        MK.atkCd = 1.6;
+        MK.burn = 0;
+        for (const S of AN.stones.filter((s) => s.lit).slice(-2)) S.lit = S.rune.lit = false;
+        AN.lit = mkLit();
+        bossBar("MIKELATS", mkTotal());
+        mkAnim("Idle");
+        SND.roar && SND.roar();
+        notify(L("Mikelats berriro altxatu da! Bi zutarri itzali ditu: piztu, eta LO-KANTA azkarrago!"), "", 5);
       }
     }
   }
@@ -613,7 +723,7 @@
       [
         {
           d: 5.4,
-          text: ["· · ·", "Mikelats lurrean etzan da, lo. Haren kapa beltza askatu da, eta itzal bat bezala irristatu da harkaitzen gainetik."],
+          text: ["· · ·", "Mikelats lurrean etzan da, begiak ixten. Haren kapa beltza askatu da, eta itzal bat bezala irristatu da harkaitzen gainetik."],
           cam: [[ANX + 8, 4, 8], [ANX + 5, 5, 5]],
           look: [[S0.x, 1, S0.z], [ANX, 2, -8]],
           on: () => {
@@ -696,7 +806,7 @@
         },
         {
           d: 6,
-          text: ["· · ·", "Iturralden, sutondoa piztuta dago berriro. Eta plazan, txalapartak ez du gehiago bakarrik jotzen."],
+          text: ["· · ·", "Iturralden, sutondoa piztuta dago berriro. Plazan, amonak galdetzen du, eta Amaiurrek erantzuten."],
           cam: [[0.6, 2.4, 24.6], [0.2, 2, 25.8]],
           look: [0, 1.2, 29.4],
           tick: (dt) => {

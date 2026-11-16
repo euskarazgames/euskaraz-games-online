@@ -176,7 +176,7 @@ const { launch } = require('./_browser');
   await tp(636, 0, -121.5, Math.PI);
   await wait(300);
   await ev(() => __game.interact());
-  ok(await until(() => __game.GET.on), 'SUGAARREN KATEA');
+  ok(await until(() => __game.GET.on), 'BASAJAUNEN KATEA');
   await shot('09_katea');
   await closeGet();
   ok(await ev(() => __game.saved.items.includes('katea')), 'katea eskuratuta');

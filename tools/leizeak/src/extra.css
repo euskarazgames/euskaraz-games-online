@@ -330,3 +330,6 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 #top button.on{background:#e2b271;color:#1c3b50;border-color:#e2b271}
 body.begi #vignette{box-shadow:inset 0 0 22vmin 5vmin #02080cb8;transition:box-shadow .3s}
 body.begi #keys,body.begi #waypoint{opacity:.2}
+/* izenburua agerian dagoen bitartean, urtaroaren etiketa ezkutuan (gainjarri ez daitezen) */
+#phaseHud{transition:opacity .35s}
+body.titling #phaseHud{opacity:0}

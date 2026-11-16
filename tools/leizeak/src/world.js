@@ -20,8 +20,8 @@
   const ZONE = { cur: "ibarra", fadeT: 0, pending: null };
   const AREA = { cur: "", seen: new Set() };
   const AREAS = {
-    herria: ["HERRIA", "Txalapartak gauez jotzen dute, inork ukitu gabe."],
-    portua: ["PORTUA", "Mari isildu zenetik, itsasoa izoztuta dago. Udan, txalupak ibiltzen ziren."],
+    herria: ["HERRIA", "Txalapartak gauez jotzen du, inork ukitu gabe."],
+    portua: ["PORTUA", "Gau Beltzaz geroztik, itsasoa izoztuta dago. Udan, txalupak ibiltzen ziren."],
     zelaiak: ["ZELAIAK", "Joanesen ardiak hemen bazkatzen ziren."],
     iparra: ["IPAR-ZELAIAK", "Ibaiaz bestaldean, harrespila zain dago."],
     harrespila: ["HARRESPILA", "Mairuek altxatutako harriak. Lo daude, ez hilda."],

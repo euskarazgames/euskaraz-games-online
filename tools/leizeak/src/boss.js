@@ -3,7 +3,7 @@
      · BOSS: kudeatzaile orokorra (magic.js, lockon.js eta chain.js-ek erabiltzen dute):
        vulnerable(), weak(), hit(), center(), ring (katearen helburua), chained().
      · BASOKO ZAINDARIA (F gela): hezurdura erraldoia; bere ezkutuak garaiz
-       aldatzen du kolpe batzuen ondoren. Garaitzean: SUGAARREN KATEA.
+       aldatzen du kolpe batzuen ondoren. Garaitzean: BASAJAUNEN KATEA.
      · BASAJAUN ILUNA (I gela): basoaren jauna, itzal batek gaiztotua.
        Zapalketak (uhinak: salto edo bultzada), harkaitzak (izpiekin suntsitu),
        itzal-laguntzaileak. Nekatzean, bizkarreko sustrai-eraztuna argitzen da:
@@ -263,12 +263,13 @@
     odeiReset();
     zbReset();
     ingumaReset();
+    mikelatsReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;
       bossBar(null);
     }
-    if (!BOSS.on || BOSS.dead || !BJ.g) return;
+    if (!BOSS.on || BOSS.dead || !BJ.g || BOSS.kind !== "basajaun") return;
     BOSS.on = false;
     for (const W of BJ.waves) W.m.parent && W.m.parent.remove(W.m);
     BJ.waves.length = 0;
@@ -554,7 +555,7 @@
         ["BASAJAUN", "…Argia. Usaina. Basoa. Nor zara zu, sorgin txikia, itzala uxatzeko adorea duzuna?", "", BJ.x, BJ.z, 4],
         ["AMAIUR", "Amaiur naiz, Iturraldekoa. Leizeek deitu ninduten.", "", P.x, P.z, 0],
         ["BASAJAUN", "Mariren txingarra gordetzen nuen, basoaren bihotzean. Kazkabar-gau batean, Mikelats etorri zen, eta itzal bat utzi zidan barruan.", "", BJ.x, BJ.z, 4],
-        ["BASAJAUN", "Itzal hori ez zen harena… itzalik gabeko mutil baten usaina zuen. Hartu txingarra, sorgin, eta nire bihotzaren zati bat.", "", BJ.x, BJ.z, 4],
+        ["BASAJAUN", "Itzal hori ez zen harena… itzalik gabeko mutil baten usaina zuen. Txingarra amarengana itzuliko da. Zuk, hartu nire bihotzaren zati bat.", "", BJ.x, BJ.z, 4],
       ],
       () => {
         bjFreed();

@@ -1,7 +1,7 @@
 // LEIZEEN DEIA: zazpigarren atala, AMETSA eta INGUMA hasieratik amaierara (bot-a, ?test kakoekin, tick-ak eskuz).
 // Erabili: NODE_PATH=$(npm root -g) node tools/test/leizeak_ametsa.js http://127.0.0.1:8091/games/leizeak.html [pantaila-argazkien-karpeta]
 // Herensugearen ondoren: etxean lo → lehen amets gaiztoa → Irati (SEASKA-KANTA) → hiru bertso (Kattalin, Txomin,
-// jentil zaharra gauez) → SEASKA eta IZAR-HAUTSA → AMETSERA → izar-plataformak hutsunean → izar-eskailerak
+// jentil zaharra gauez) → SEASKA eta SORGIN-HAUTSA → AMETSERA → izar-plataformak hutsunean → izar-eskailerak
 // (giltza) → ENTZUN (ezkutuko harriak) → mamuen sukaldea → ate-zainak → dei faltsua eta amets-gaiztoa →
 // SEASKA sehaskan (giltza nagusia) → INGUMA (izarrak itzuli, murgiltzea, hautsa; hiru Inguma eta ENTZUN;
 // ohean eserita, SEASKA eta kalte bikoitza) → esnatu → zazpigarren argia berde.
@@ -123,7 +123,7 @@ const { launch } = require('./_browser');
   await T(30);
   await skip();
   let st = await ev(() => ({ r: __game.saved.rhythms.includes('seaska'), dust: __game.saved.items.includes('hautsa'), kanta: __game.saved.flags.includes('seaska-kanta') }));
-  ok(seq === 'LRLRL' && st.r && st.dust && st.kanta, 'SEASKA ikasita (◀ ▶ ◀ ▶ ◀), IZAR-HAUTSA eta Iratiren abisua', S({ seq, st }));
+  ok(seq === 'LRLRL' && st.r && st.dust && st.kanta, 'SEASKA ikasita (◀ ▶ ◀ ▶ ◀), SORGIN-HAUTSA eta Iratiren abisua', S({ seq, st }));
   /* SEASKA ametsetik kanpo: inguruko itzalak lokartu */
   st = await ev(() => {
     const g = __game;
@@ -137,7 +137,7 @@ const { launch } = require('./_browser');
     return { stun };
   });
   ok(st.stun >= 3, 'SEASKA: itzalak lokartzen dira', S(st));
-  /* IZAR-HAUTSA: etsaia KONTATZEN */
+  /* SORGIN-HAUTSA: etsaia KONTATZEN */
   st = await ev(() => {
     const g = __game;
     g.teleport(10, 30, 0);
@@ -154,7 +154,7 @@ const { launch } = require('./_browser');
     for (let i = 0; i < 60; i++) g.tick(1 / 120);
     return r;
   });
-  ok(st.counting > 2 && st.stun > 0 && st.n2 > st.n, 'IZAR-HAUTSA: etsaia kontatzen (geldi, zenbakiak)', S(st));
+  ok(st.counting > 2 && st.stun > 0 && st.n2 > st.n, 'SORGIN-HAUTSA: etsaia kontatzen (geldi, zenbakiak)', S(st));
 
   /* ---------------- 3 · AMETSERA ---------------- */
   await ev(() => { const g = __game; g.homeEnter(); for (let i = 0; i < 240; i++) { g.tick(1 / 120); g.zoneFadeUpdate(1 / 120); } });
@@ -181,7 +181,7 @@ const { launch } = require('./_browser');
   await tp(AE(0), 0, -10.6);
   await T(20);
   const ctx = await ev(() => { __game.ctxUpdate && __game.ctxUpdate(); return __game.dustUseful(); });
-  ok(ctx, 'IZARRAK botoia: izar-lainoaren ertzean');
+  ok(ctx, 'HAUTSA botoia: lainoaren ertzean');
   let p;
   for (let k = 0; k < 4; k++) {
     await dust(N_);
@@ -247,7 +247,7 @@ const { launch } = require('./_browser');
     for (let i = 0; i < 70; i++) g.tick(1 / 120);
     return { counting: +(e.counting || 0).toFixed(2) };
   });
-  ok(st.counting > 1, 'mamua kontatzen (IZAR-HAUTSA)', S(st));
+  ok(st.counting > 1, 'mamua kontatzen (SORGIN-HAUTSA)', S(st));
   for (let k = 0; k < 8 && (await ev(() => !!__game.ROOM.fight)); k++) { await killAll(); await T(360); }
   await skip();
   ok(await cleared('M3'), 'mamuen sukaldea garbituta');
@@ -347,7 +347,7 @@ const { launch } = require('./_browser');
     for (let i = 0; i < 80; i++) g.tick(1 / 120);
     return { state: I.state, y: +I.y.toFixed(1), vul: g.BOSS.vulnerable() };
   });
-  ok(st.state === 'count' && st.vul, 'IZAR-HAUTSA: Inguma kontatzen (zaurgarri)', S(st));
+  ok(st.state === 'count' && st.vul, 'SORGIN-HAUTSA: Inguma kontatzen (zaurgarri)', S(st));
   st = await ev(() => { const g = __game, I = g.ING, hp0 = I.hp; g.BOSS.hit(3); g.BOSS.hit(3); g.BOSS.hit(3); return { hp0, hp: I.hp, phase: I.phase }; });
   ok(st.hp < st.hp0, 'kontatzen ari dela: kolpeak', S(st));
   /* murgiltzea: itzala, behera, nekatuta */
@@ -410,20 +410,28 @@ const { launch } = require('./_browser');
   /* benetakoa: hautsa → kontatzen → 3. fasea */
   st = await ev(() => {
     const g = __game, I = g.ING;
+    let s0 = '', wins = 0, cap = 0;
+    for (let c = 0; c < 4 && I.phase === 2; c++) {
+      for (let i = 0; i < 240; i++) g.tick(1 / 120);
+      g.P.hp = g.P.maxHp;
+      g.teleport(I.x + 0.5, I.z + 3.5, 0);
+      for (let i = 0; i < 4; i++) g.tick(1 / 120);
+      g.P.angle = Math.atan2(I.x - g.P.x, I.z - g.P.z);
+      g.HAUTS.cd = 0;
+      g.dustThrow();
+      for (let i = 0; i < 80; i++) g.tick(1 / 120);
+      if (!s0) s0 = I.state;
+      const h0 = I.hp;
+      for (let k = 0; k < 6 && I.phase === 2; k++) g.BOSS.hit(3);
+      if (I.phase === 2) cap = Math.max(cap, h0 - I.hp);
+      wins++;
+      for (let i = 0; i < 40; i++) g.tick(1 / 120);
+    }
     for (let i = 0; i < 240; i++) g.tick(1 / 120);
-    g.P.hp = g.P.maxHp;
-    g.teleport(I.x + 0.5, I.z + 3.5, 0);
-    for (let i = 0; i < 4; i++) g.tick(1 / 120);
-    g.P.angle = Math.atan2(I.x - g.P.x, I.z - g.P.z);
-    g.HAUTS.cd = 0;
-    g.dustThrow();
-    for (let i = 0; i < 80; i++) g.tick(1 / 120);
-    const s0 = I.state;
-    for (let k = 0; k < 6 && I.phase === 2; k++) g.BOSS.hit(3);
-    for (let i = 0; i < 240; i++) g.tick(1 / 120);
-    return { s0, phase: I.phase, state: I.state, scale: +I.scale.toFixed(2), grass: I.grass.length };
+    return { s0, wins, cap, phase: I.phase, state: I.state, scale: +I.scale.toFixed(2), grass: I.grass.length };
   });
-  ok(st.s0 === 'count' && st.phase === 3 && st.state === 'sit' && st.grass === 0, '3. fasea: ohean eserita (amesgaiztoa)', S(st));
+  ok(st.s0 === 'count' && st.wins === 2 && st.cap === 4, 'leihoa: lau kalte gehienez (bi ziklo fase bakoitzeko)', S(st));
+  ok(st.phase === 3 && st.state === 'sit' && st.grass === 0, '3. fasea: ohean eserita (amesgaiztoa)', S(st));
   /* hare-haizea eta amesgaiztoaren neurgailua */
   st = await ev(() => {
     const g = __game, I = g.ING;
@@ -433,6 +441,19 @@ const { launch } = require('./_browser');
   });
   ok(Math.hypot(st.wx, st.wz) > 0.5 && st.crush > 0.1 && st.vig, 'hare-haizea (bultzaka) eta binjeta morea', S(st));
   await shot('ametsa-6-ohean');
+  /* LO-KANTA urrunetik (> 7 m): ez du lokartzen */
+  st = await ev(() => {
+    const g = __game, I = g.ING;
+    g.teleport(I.bed.x + 9, I.bed.z + 6, 0);
+    for (let i = 0; i < 4; i++) g.tick(1 / 120);
+    g.rhythmEffect('seaska');
+    for (let i = 0; i < 30; i++) g.tick(1 / 120);
+    const far = I.state;
+    g.teleport(I.bed.x + 3, I.bed.z + 4, 0);
+    for (let i = 0; i < 4; i++) g.tick(1 / 120);
+    return { far };
+  });
+  ok(st.far === 'sit', 'LO-KANTA urrunetik: tronutik gertu jo behar da', S(st));
   /* SEASKA → lokartu → hautsa → kalte bikoitza */
   st = await ev(() => {
     const g = __game, I = g.ING;
@@ -449,8 +470,24 @@ const { launch } = require('./_browser');
     return { lull, count, dmg: hp0 - I.hp, wind: Math.hypot(g.P.wx, g.P.wz) };
   });
   ok(st.lull === 'lull' && st.count === 'count' && st.dmg === 2 && st.wind === 0, 'SEASKA: lokartuta → hautsa → kalte bikoitza', S(st));
-  /* azken kolpeak → garaituta */
-  await ev(() => { const g = __game; for (let k = 0; k < 10 && !g.BOSS.dead; k++) g.BOSS.hit(3); });
+  /* azken kolpeak → garaituta (leiho bakoitzean lau gehienez: LO-KANTA eta hautsa berriro) */
+  await ev(() => {
+    const g = __game, I = g.ING;
+    for (let k = 0; k < 4 && !g.BOSS.dead; k++) g.BOSS.hit(3);
+    for (let c = 0; c < 4 && !g.BOSS.dead; c++) {
+      for (let i = 0; i < 900 && I.state !== 'sit'; i++) { g.tick(1 / 120); g.P.hp = g.P.maxHp; }
+      g.teleport(I.bed.x + 3, I.bed.z + 4, 0);
+      for (let i = 0; i < 4; i++) g.tick(1 / 120);
+      g.rhythmEffect('seaska');
+      for (let i = 0; i < 120; i++) g.tick(1 / 120);
+      g.teleport(I.x, I.z + 3.5, 0);
+      g.P.angle = Math.atan2(I.x - g.P.x, I.z - g.P.z);
+      g.HAUTS.cd = 0;
+      g.dustThrow();
+      for (let i = 0; i < 80; i++) g.tick(1 / 120);
+      for (let k = 0; k < 4 && !g.BOSS.dead; k++) g.BOSS.hit(3);
+    }
+  });
   await T(30);
   const defeated = await ev(() => __game.BOSS.dead && __game.saved.flags.includes('inguma'));
   await shot('ametsa-7-inguma-garaituta');

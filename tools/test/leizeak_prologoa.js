@@ -66,8 +66,8 @@ const { launch } = require('./_browser');
   ok((await ev(() => (__game.actionHere() || {}).label)) === 'ERANTZUN', 'harriaren ondoan: ERANTZUN');
   await ev(() => __game.interact());
   await wait(200);
-  ok(await ev(() => !!__game.cinematicState() && document.getElementById('cinema').classList.contains('deia')), 'OIHARTZUN-DEIA (deien larruazala)');
-  ok((await page.textContent('#cineTag')).includes('OIHARTZUN-DEIA'), 'deiaren etiketa', await page.textContent('#cineTag'));
+  ok(await ev(() => !!__game.cinematicState() && document.getElementById('cinema').classList.contains('deia')), 'KRISELU-DEIA (deien larruazala)');
+  ok((await page.textContent('#cineTag')).includes('KRISELU-DEIA'), 'deiaren etiketa', await page.textContent('#cineTag'));
   await shot('p01_deia');
   await skipScenes();
   ok((await flags()).includes('pro-deia'), 'pro-deia bandera');
@@ -192,6 +192,8 @@ const { launch } = require('./_browser');
   await ev(() => { window.__calls = true; __game.enterZone('tartalo', __game.DGS.tartalo.entry, true); });
   for (let i = 0; i < 40 && !(await ev(() => __game.RING.on)); i++) await wait(150);
   ok(await ev(() => __game.RING.on), 'TARTALOREN KOBA: deia jotzen (lehen sarrera)');
+  /* errotulua makinaz idazten da: osatu arte itxaron */
+  for (let i = 0; i < 30 && !/TARTALO/.test(await page.textContent('#locCap')); i++) await wait(150);
   ok(/TARTALO/.test(await page.textContent('#locCap')), 'kokapen-errotulua', JSON.stringify(await page.textContent('#locCap')));
   await ev(() => __game.deiaAnswer(true));
   await wait(150);
@@ -201,10 +203,10 @@ const { launch } = require('./_browser');
   await ev(() => { window.__calls = false; __game.enterZone('ibarra', { x: 0, y: 0, z: 36 }, true); });
   await wait(300);
 
-  /* menutik: DEITU · IRATI */
+  /* menutik: DEITU · ATARRABI */
   await ev(() => __game.iratiCall());
   await wait(200);
-  ok(await ev(() => !!__game.cinematicState() && document.getElementById('cinema').classList.contains('deia')), 'DEITU · IRATI (menutik)');
+  ok(await ev(() => !!__game.cinematicState() && document.getElementById('cinema').classList.contains('deia')), 'DEITU · ATARRABI (menutik)');
   await skipScenes();
 
   console.log(errs.length ? errs.join('\n') : 'ERRORERIK EZ');

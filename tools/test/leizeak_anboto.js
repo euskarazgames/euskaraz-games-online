@@ -103,17 +103,35 @@ const { launch } = require('./_browser');
     const g = __game, hp0 = g.P.hp;
     g.MK.atkCd = 0;
     g.tick(1 / 120);
+    const wind = g.MK.wind > 0;
+    for (let i = 0; i < 66; i++) g.tick(1 / 120);
     const n = g.MK.marks.length;
     for (let i = 0; i < 240; i++) g.tick(1 / 120);
-    return { n, hp0, hp: g.P.hp, left: g.MK.marks.length };
+    return { wind, n, hp0, hp: g.P.hp, left: g.MK.marks.length };
   });
-  ok(hail.n >= 1 && hail.left === 0, 'erasoa: zirkuluak lurrean, gero kolpea', JSON.stringify(hail));
+  ok(hail.wind && hail.n >= 1 && hail.left === 0, 'erasoa: prestaketa (0.5 s), zirkuluak lurrean, gero kolpea', JSON.stringify(hail));
   ok(hail.hp < hail.hp0, 'zirkuluaren barruan: zauritua', JSON.stringify(hail));
   ok(await ev(() => !__game.BOSS.vulnerable()), 'kapak babesten du (ez da zauritzen)');
   await ev(() => { const g = __game; g.P.hp = g.P.maxHp; for (const S of g.AN.stones.slice(0, 3)) S.rune.hit(); for (let i = 0; i < 30; i++) g.tick(1 / 120); });
   mk = await ev(() => ({ lit: __game.AN.lit, state: __game.MK.state, vul: __game.BOSS.vulnerable() }));
   ok(mk.lit === 3 && mk.state === 'down' && mk.vul, 'hiru zutarri → kapa erre, lurrera', JSON.stringify(mk));
-  await ev(() => { const g = __game; for (let n = 0; n < 3; n++) g.BOSS.hit(1); });
+  /* leihoa: hiru kolpe gehienez; gero altxatu eta zutarri bat itzali */
+  mk = await ev(() => { const g = __game; for (let n = 0; n < 5; n++) g.BOSS.hit(1); for (let i = 0; i < 20; i++) g.tick(1 / 120); return { hp: g.MK.hp, state: g.MK.state, lit: g.AN.lit, phase: g.MK.phase }; });
+  ok(mk.hp === 3 && mk.state === 'hover' && mk.lit === 2 && mk.phase === 1, 'leihoa: hiru kolpe, gero altxatu (zutarri bat itzali)', JSON.stringify(mk));
+  /* hil eta berriro: gailurrean (kontrol-puntua), borroka I fasetik, zinemarik gabe; Basajaun ukitu gabe */
+  mk = await ev(() => {
+    const g = __game, bj = g.BJ ? g.BJ.state : '';
+    g.returnCheckpoint();
+    for (let i = 0; i < 30; i++) g.tick(1 / 120);
+    const mid = { zone: g.ZONE.cur, on: g.MK.on, stage: g.AN.stage, boss: g.BOSS.on };
+    for (let i = 0; i < 420 && !g.MK.on; i++) g.tick(1 / 120);
+    return { mid, on: g.MK.on, phase: g.MK.phase, hp: g.MK.hp, boss: g.BOSS.on, kind: g.BOSS.kind, lit: g.AN.lit, bj0: bj, bj: g.BJ ? g.BJ.state : '', film: g.FILM.on };
+  });
+  ok(mk.mid.zone === 'anboto' && !mk.mid.on && mk.mid.stage === 'retry' && mk.on && mk.phase === 1 && mk.hp === 6 && mk.boss && mk.kind === 'mikelats' && mk.lit === 0 && !mk.film && mk.bj === mk.bj0, 'hil → gailurrean berriro, I fasetik (zinemarik gabe)', JSON.stringify(mk));
+  for (let r = 0; r < 2; r++) {
+    await ev(() => { const g = __game; g.P.hp = g.P.maxHp; for (const S of g.AN.stones.slice(0, 3)) if (!S.lit) S.rune.hit(); for (let i = 0; i < 30; i++) g.tick(1 / 120); });
+    await ev(() => { const g = __game; for (let n = 0; n < 3; n++) g.BOSS.hit(1); for (let i = 0; i < 20; i++) g.tick(1 / 120); });
+  }
   await playFilm();
   await T(20);
   /* ---------------- 4 · II: itzal-armada (UDAN zauritzen dira) ---------------- */
@@ -123,7 +141,16 @@ const { launch } = require('./_browser');
   let w = await wave();
   ok(w.waves === 2 && w.en === 4, 'bigarren uhina (lau itzal)', JSON.stringify(w));
   w = await wave();
+  mk = await ev(() => ({ waves: __game.MK.waves, kinds: __game.ENEMIES.filter((e) => e.mk && e.state !== 'dead').map((e) => e.type).sort().join(','), room: __game.ENEMIES.filter((e) => e.mk && e.state !== 'dead').every((e) => e.room && e.room.id === 'gailurra') }));
+  ok(mk.waves === 3 && mk.kinds === 'brute,eye,eye' && mk.room, 'hirugarren uhina (handi bat eta bi begi, arenan)', JSON.stringify(mk));
+  w = await wave();
   ok(w.state === 'down', 'armada desegin → lurrera', JSON.stringify(w));
+  /* leihoa itxita → altxatu eta itzal gehiago (2. eta 3. uhinak), gero berriro lurrera */
+  w = await ev(() => { const g = __game; for (let n = 0; n < 3; n++) g.BOSS.hit(1); for (let i = 0; i < 30; i++) g.tick(1 / 120); return { state: g.MK.state, waves: g.MK.waves, hp: g.MK.hp }; });
+  ok(w.state === 'summon' && w.waves === 2 && w.hp === 3, 'leihoa itxita: altxatu, itzal gehiago', JSON.stringify(w));
+  w = await wave();
+  w = await wave();
+  ok(w.state === 'down', 'berriro lurrera', JSON.stringify(w));
   await ev(() => { const g = __game; for (let n = 0; n < 3; n++) g.BOSS.hit(1); });
   await playFilm();
   await T(20);
@@ -136,9 +163,9 @@ const { launch } = require('./_browser');
   await shot('murumendi_nekatuta');
   await ev(() => { const g = __game; g.txalaOpen(); });
   for (const s of ['L', 'R', 'L', 'R', 'L']) { await ev((s) => { __game.txalaHit(s); for (let i = 0; i < 14; i++) __game.tick(1 / 120); }, s); }
-  await ev(() => { window.__hold = false; });
-  await page.waitForTimeout(1400);
-  await ev(() => { window.__hold = true; });
+  /* LO-KANTA ezagutu arte (jokoaren denbora), gero amaierako zinema (900 ms) */
+  await ev(() => { const g = __game; for (let i = 0; i < 480 && g.MK.state !== 'sleep'; i++) g.tick(1 / 120); });
+  for (let i = 0; i < 50 && (await ev(() => __game.AN.stage)) !== 'end'; i++) await page.waitForTimeout(200);
   mk = await ev(() => ({ state: __game.MK.state, dead: __game.BOSS.dead, stage: __game.AN.stage, film: __game.FILM.on }));
   ok(mk.state === 'sleep' && mk.dead && mk.stage === 'end', 'LO-KANTA: Mikelats lo; amaiera', JSON.stringify(mk));
   /* ---------------- 6 · amaiera eta epilogoa ---------------- */

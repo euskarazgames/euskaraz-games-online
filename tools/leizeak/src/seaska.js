@@ -101,7 +101,7 @@
           at,
         );
       const pouch = () =>
-        itemGet("hautsa", L("SORGIN-HAUTSA"), L("Mariren leizeko hauts urrea. Bota: itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Akelarreko lainoan, hautsak plataformak sortzen ditu; airean botaz gero, eskailerak. ") + (mobile ? L("HAUTSA botoia agertzen da behar denean.") : L("Z tekla.")), () => {
+        itemGet("hautsa", L("SORGIN-HAUTSA"), L("Mariren leizeko urre-hautsa. Bota: itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Akelarreko lainoan, hautsak plataformak sortzen ditu; airean botaz gero, eskailerak. ") + (mobile ? L("HAUTSA botoia agertzen da behar denean.") : L("Z tekla.")), () => {
           if (!saved.items.includes("hautsa")) saved.items.push("hautsa");
           persist();
           translate();
@@ -224,7 +224,7 @@
       [
         V("c7_a5", P.x, P.z, P.y),
         ["· · ·", "Herriko txalapartak bakarrik jo du, astiro, egunsentiarekin. Murumendi aldetik, kazkabar-haize bat.", "", P.x, P.z, P.y],
-        ["· · ·", "Murumendiko hodeian, zazpi argiak. Zazpigarrena… berde bihurtu da. Baina Iturraldeko tximiniak ez du kerik.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Murumendiko hodeian, zazpi txingarrak. Zazpigarrena… urrez piztu da. Baina Iturraldeko tximiniak ez du kerik.", "", 20, -170, 120, [0, 30, 40]],
         V("c7_g1", 20, -170, 120, [0, 30, 40]),
         V("c7_a6", P.x, P.z, P.y),
         V("c7_i8", 0, 41, 0),

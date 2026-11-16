@@ -204,7 +204,7 @@
         ["· · ·", "Zigilua urtu egiten da, izotza eguzkitan bezala. Barruan, mahai baten gainean, gutun bat eta argi epel bat.", "", -40, 48, 0],
         ["AMONA GAZTEA", "Leizeek deitzen badizute, ez beldurtu: erantzun. Nik ere erantzun nuen, zure adinean.", "", -40, 48, 0],
         ["AMONA GAZTEA", "Sua zaindu. Gure sutondoa ez da gurea bakarrik: Mariren zortzigarren sua da, herriarena.", "", -40, 48, 0],
-        ["AMAIUR", "Amona… zuk ere egin zenuen bidaia hau. Eta ez zenidan inoiz kontatu.", "", P.x, P.z, P.y],
+        ["AMAIUR", "Amona… zuk ere egin zenuen bidaia hau. Eta ez zenidan dena kontatu.", "", P.x, P.z, P.y],
       ],
       () => {
         saved.hearts += 1;

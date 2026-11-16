@@ -136,7 +136,7 @@
           return voice("PEIO", [L("Nor dabil gau honetan? A, sorgina zara! Badakizu zergatik deitzen den etxe hau Pellonea? Pello bost minutu lehenago jaio zelako. Bidegabekeria hutsa."), L("…Pellok dio lo egiteko. Egunez etorri, eta erritmo berri bat irakatsiko dizugu.")]);
         case "arrantzalenea":
           if (!home("txomin")) return quiet(night ? L("Inork ez du erantzuten. Txomin kaian dago, gauez ere: izotzari begira, itsasoa noiz askatuko.") : L("Inork ez du erantzuten. Txomin kaian egoten da egunez, txalupa zaharraren ondoan."));
-          return voice("TXOMIN", [f("herensugea") ? L("Herensuge urre bat ikusi dut itsasoaren gainean, hegan! Lehenengo, beldurra. Gero… txalupari begira zegoen, laguntzeko moduan.") : f("odei") ? L("Gaur euria egin du itsasoan. Izotza ahultzen ari da, neska: udan, berriro arrantzara!") : L("Gauez itsasoa entzuten dut… izotza karraska. Egunen batean, berriro aterako naiz.")]);
+          return voice("TXOMIN", [f("herensugea") ? L("Zezen gorri bat ikusi dut hodeien artean, sutan! Lehenengo, beldurra. Gero… txalupa inguruko izotza urtzen hasi zen.") : f("odei") ? L("Gaur euria egin du itsasoan. Izotza ahultzen ari da, neska: udan, berriro arrantzara!") : L("Gauez itsasoa entzuten dut… izotza karraska. Egunen batean, berriro aterako naiz.")]);
         case "okinenea": {
           const fresh = time - HOUSE.breadT > 90;
           if (P.hp < P.maxHp && fresh) {
@@ -156,7 +156,7 @@
               persist();
               itemGet("botila", L("SENDABELAR-BOTILA"), L("Bizitzak amaitzean, berez erabiltzen da. Orain: ") + saved.potions + ".");
             });
-          return voice("MIKELEN AMONA", [night ? (f("irati-herensuge") ? L("Ixo! Mikel lotan dago… Amets gaiztoak ditu azkenaldian. Nik kantu zahar bat kantatzen diot ohe ondoan: Ingumaren aurka, betidanik.") : L("Ixo! Mikel lotan dago. Ametsetan ere pilotan jokatzen du, ostikoka ohean.")) : f("odei") ? L("Atzo euria egin zuen, euri goxoa. Nire belaunek ere eskertu dute.") : L("Mikel? Frontoian, betiko moduan. Pilota baino ez du buruan.")]);
+          return voice("MIKELEN AMONA", [night ? (f("irati-herensuge") ? L("Ixo! Mikel lotan dago… Amets gaiztoak ditu azkenaldian: adarrak eta dantzak. Nik lo-kanta zahar bat kantatzen diot ohe ondoan.") : L("Ixo! Mikel lotan dago. Ametsetan ere pilotan jokatzen du, ostikoka ohean.")) : f("odei") ? L("Atzo euria egin zuen, euri goxoa. Nire belaunek ere eskertu dute.") : L("Mikel? Frontoian, betiko moduan. Pilota baino ez du buruan.")]);
         case "belarrenea":
           return quiet(night ? L("Inork ez du erantzuten: Kattalin elizan dago, argizaiolak pizten. Atean, eguzkilore lehor bat iltzatuta.") : L("Inork ez du erantzuten. Atean, eguzkilore lehor bat iltzatuta: gaueko izakiak uxatzeko, amonek zioten bezala."));
         case "artzainenea":
@@ -214,7 +214,7 @@
     { flag: "errolan", name: "TXIMISTA-HARRIA", text: "Mairu zaharraren ekaitz-harriaren zati bat. Eskuan, oraindik epel dago.", kind: "tximista" },
     { flag: "odei", name: "EURI-URA", text: "Eateren lehen euri goxoa, beirazko ontzi batean. Argiak ortzadarra egiten du barruan.", kind: "euria" },
     { flag: "herensugea", name: "ZEZENGORRIREN TXINPARTA", text: "Zezengorriren suaren txinparta bat, urrezkoa. Sutan jarrita ere, hotz; eskuan, bihotz baten taupadak.", kind: "ezkata" },
-    { flag: "inguma", name: "SORGIN-HAUTSAREN ZORROA", text: "Hutsik, baina barruan hauts urre pixka bat geratzen da: gauez, distira egiten du. Lo-kanta, ahopean, beti.", kind: "zorroa" },
+    { flag: "inguma", name: "SORGIN-HAUTSAREN ZORROA", text: "Hutsik, baina barruan urre-hauts pixka bat geratzen da: gauez, distira egiten du. Lo-kanta, ahopean, beti.", kind: "zorroa" },
   ];
   function mementoMesh(kind) {
     const g = new T.Group();
@@ -594,7 +594,7 @@
                 ? "Lamien kantuak berriro ibaian… Zure amak ere maite zituen. Jan zerbait, eta zoaz."
                 : f("basajaun")
                   ? "Basajaun askatu duzu? Ondo. Basoak ez du ahazten nork lagundu dion."
-                  : "Leizeek deitzen dute? Badakit, laztana. Nik ere entzun nituen, zure adinean. Zoaz, baina itzuli afaltzera.";
+                  : "Leizeek deitzen dute? …Jan zerbait, laztana, eta itzuli afaltzera.";
     say([["AMONA", L(t), "", A.x, A.z, 0]]);
   }
   function amonaTxingarra() {
@@ -607,7 +607,7 @@
         ["AMONA", "Sorgina naiz, Amaiur. Zure adinean, nik ere entzun nuen leizeen deia.", "", A.x, A.z, 0, null, "tx_n2"],
         ["AMONA", "Sutondo hau ez da edozein: Marik berak piztu zuen, herria zaintzeko. Ez da inoiz itzaltzen.", "", H.x, H.z, 0, null, "tx_n3"],
         ["AMAIUR", "Baina deiaren gauean itzali zen.", "", P.x, P.z, 0, null, "tx_a2"],
-        ["AMONA", "Bai. Mikelatsek bere hotza bidali zuen tximinian behera. Horregatik, hau zuretzat da.", "", A.x, A.z, 0, null, "tx_n4"],
+        ["AMONA", "Bai. Mikelatsek bere hotza bidali zuen tximinian behera, eta zuk piztu zenuen berriro. Horregatik da zuretzat.", "", A.x, A.z, 0, null, "tx_n4"],
         ["AMONA", "Txingar bat, gure sutik. Elurraren azpian uda lo dago; txingarrak esnatuko du, une batez.", "", H.x, H.z, 0, null, "tx_n5"],
         ["AMAIUR", "Uda… Hiru urte dira uda ikusi ez dudala.", "", P.x, P.z, 0, null, "tx_a3"],
         ["AMONA", "Ez ahaztu: zuk esnatzen duzun bitartean bakarrik irauten du. Negua ez da oraindik joango.", "", A.x, A.z, 0, null, "tx_n6"],
@@ -647,13 +647,13 @@
   function homeIrati() {
     const f = (k) => saved.flags.includes(k);
     const t = f("inguma")
-      ? L("Ahizparen marrazkia: zazpi argi berde mendi baten gainean, eta behean, Iturraldeko tximinia, kerik gabe. Lehen ez zegoen hor.")
+      ? L("Ahizparen marrazkiaren ondoan, zuk bart margotua: zazpi txingar mendi baten gainean, eta behean, Iturraldeko tximinia, kerik gabe.")
       : f("herensugea")
         ? L("Marrazkian, zezen gorri bat dago orain, hodeien gainean. Zuk margotu duzu, lotan?")
         : f("odei")
-          ? L("Marrazkiaren hutsuneetan, euri-tanta txiki batzuk. Ez dakizu nork margotu dituen.")
+          ? L("Marrazkiaren hutsuneetan, euri-tanta txiki batzuk: zuk margotu dituzu, Eateren euria gogoan.")
           : f("errolan")
-            ? L("Ahizparen marrazkia: mendi bat, eta haren gainean, zazpi argi txiki. Lau berdez margotu dituzu, konturatu gabe.")
+            ? L("Ahizparen marrazkia: mendi bat, eta haren gainean, zazpi txingar txiki. Lau urrez margotu dituzu, konturatu gabe.")
             : f("basajaun")
               ? L("Marrazkiaren ondoan, haren idazkera: «Txalapartak ez du inoiz bakarrik jotzen». Orain, leizeek jotzen dute.")
               : L("Ahizparen txokoa: haren txalaparta txikia eta marrazki bat, ekaitz bat itsasoaren gainean. Hiru negu dira ez dela itzuli.");

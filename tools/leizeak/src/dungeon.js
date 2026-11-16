@@ -5,7 +5,7 @@
        C Kaxen gela ....... kaxak pilatu ertz altura → GILTZA TXIKIA
        D Itzalen gela ..... borroka (ateak itxi) → ekialdea eta mendebaldea ireki
        E Oihartzunen gela . iluna: harri-danborra (ENTZUN) eta ezkutuko plataformak
-       F Zaindariaren gela  etsai ertaina → SUGAARREN KATEA
+       F Zaindariaren gela  etsai ertaina → BASAJAUNEN KATEA
        G Sugearen putzua .. katea eraztunetara → GILTZA NAGUSIA
        I Basajaunen bihotza etsai nagusia (boss.js)
      Piezak (KayKit Dungeon, CC0) InstancedMesh bidez: dei gutxi mugikorrean.
@@ -263,7 +263,7 @@
     /* ---- B: Garaien amildegia ---- */
     room("B", E(0), -36, 30, 36, {
       area: "dB",
-      name: "HARRI LOEN AMILDEGIA",
+      name: "HARRI LOTIEN AMILDEGIA",
       desc: "Harrizko zubiak lo daude. Jo ESNATU, eta jauzi zubiz zubi.",
       doors: { s: 0, w: 9, n: 0 },
       floors: [[E(0), -24, 30, 12], [E(0), -48, 30, 12]],

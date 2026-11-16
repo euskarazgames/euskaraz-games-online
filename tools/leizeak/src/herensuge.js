@@ -349,10 +349,19 @@
     /* ---- H7: Herensugearen habia ---- */
     room("H7", E(0), -117, 42, 42, { y: SGY, area: "hG", name: "ZEZENGORRIREN ALTXORTEGIA", desc: "Urrea, kea eta arnasa bero bat. Altxor-pilen artean, zerbait mugitzen da.", doors: { s: 0 }, floors: [[E(0), -111, 42, 30]], wallH: 22 });
     lavaPool(E(0), -132, 42, 12, SGY - 1.4);
+    /* basaltozko ertza labaren ondoan (bultzadak ez du jokalaria labara botatzen) */
+    wallBlock(E(0), -126.5, 42, 1, 0, SGY - 1.4, 2.3, true);
     /* argi-zutabeak eta estalpeak (su-arnasaren aurka) */
     DGH.shaftsH = [[-12, -104], [12, -104], [-15, -117.5], [15, -117.5]].map(([sx, sz], i) => lightShaft({ id: "hG-argia" + i, x: E(sx), z: sz, y: SGY, kind: "both", r: 1.45 }));
     /* estalpe baxuak: su-arnasatik babesten dute; ISPILUAren argia gainetik pasatzen da */
     for (const [cx, cz, w, d] of [[-7, -108.5, 2.4, 1.4], [7, -108.5, 2.4, 1.4], [-18, -110.5, 1.4, 2.4], [18, -110.5, 1.4, 2.4], [0, -116, 2.8, 1.4]]) coverBlock(E(cx), cz, w, d, 1.5, SGY);
+    /* argi-zutabe bakoitzaren aurrean, erdirantz (2.3 m), estalpe baxua (1.3 m): babesa argiaren ondoan */
+    for (const [sx, sz] of [[-12, -104], [12, -104], [-15, -117.5], [15, -117.5]]) {
+      const dx = 0 - sx,
+        dz = -121.5 - sz,
+        dd = Math.hypot(dx, dz);
+      coverBlock(E(sx + (dx / dd) * 2.3), sz + (dz / dd) * 2.3, 2.2, 1.1, 1.3, SGY);
+    }
     for (const [sx, sz, sr] of [[-4, -112, 2.6], [9, -118, 2.2], [-11, -121, 2], [3, -101, 1.6]]) scorch(E(sx), sz, SGY, sr);
     hoard(E(-17), -123, SGY, 8, 1.6);
     hoard(E(17.5), -123.5, SGY, 8, 1.6);
@@ -403,7 +412,7 @@
     say(
       [
         ["EATE", "Sorgin. Nire zati txiki bat utzi dizut hemen: hodei zuri bat, euri-usaina duena.", "", c.x, c.z, c.y],
-        ["EATE", "Hodeien beste aldean, ZEZEN-HARPEA, eguzkiaren leizea. Haren barruan, Zezengorri: sua botatzen du sudurretik. Eguzkiak bakarrik itsutzen ditu haren begiak.", "", c.x, c.z, c.y],
+        ["EATE", "Hodeien beste aldean, ZEZEN-HARPEA, eguzkiaren leizea. Haren barruan, Zezengorri: sua botatzen du sudurretik. Haren begiak eguzkiak eta ilargiak bakarrik itsutzen dituzte.", "", c.x, c.z, c.y],
         ["AMAIUR", "Eraman nazazu, beraz. Eguzkia aurkituko dut.", "", P.x, P.z, P.y],
       ],
       () => {
@@ -502,7 +511,7 @@
       if (!saved.doors.includes("hC-w")) return ["Mendebaldeko atea: giltza txikia.", [R.H3.x - 13.6, R.H3.z, SGY]];
       return isCleared("hD-mini") ? ["Ispilu-zainaren kutxa ireki.", [R.H4.x, -82, SGY]] : ["Mendebaldean: ispilu-zainaren gela.", [R.H4.x, R.H4.z, SGY]];
     }
-    if (!saved.doors.includes("hC-e")) return ["Habiako eguzki-zuloa (UDAN): ISPILUA, barren artetik kristal urrera.", [DGH.shaftC.x, DGH.shaftC.z, SGY]];
+    if (!saved.doors.includes("hC-e")) return ["Habiako eguzki-zuloa (UDAN): ISPILUA, barren artetik urrezko kristalera.", [DGH.shaftC.x, DGH.shaftC.z, SGY]];
     if (!saved.doors.includes("hE-n")) return ["Ispiluen aretoa: ispilu-harriak BIRATU. Sarea EGUZKIAz, kristal urdina ILARGIAz.", [DGH.shaftE.x, DGH.shaftE.z, SGY]];
     if (!has(DGH.bigKey)) return isCleared("hF-kristalak") ? ["Giltza nagusiaren kutxa.", [DGH.bigChest.x, DGH.bigChest.z, SGY]] : ["Kristalen gela: hiru kristalak piztu (urrea, urdina, zuria).", [DGH.shaftF.x, DGH.shaftF.z, SGY]];
     if (!flag("herensugea")) return saved.doors.includes(DGH.bossDoor) ? ["Zezengorriren altxortegia. Argia begietara.", [R.H7.x, R.H7.z + 10, SGY]] : ["Altxortegiko ate handia (iparrean): giltza nagusia.", [R.H3.x, R.H3.z - 13, SGY]];
@@ -521,8 +530,10 @@
      Hiru txanda: I begi urreak, II begi urdinak, III bat urrea eta bestea urdina (biak, segidan).
      Barne-IDak (ZB, zb*, herensugea bandera) bere horretan; BOSS.kind = "zezen".
      ========================================================================= */
-  const ZB = { g: null, body: null, head: null, legs: [], tail: null, eyes: [], ember: null, nose: null, heads: [], state: "sleep", t: 0, round: -1, seenIntro: false, x: 0, y: 0, z: 0, a: PI, atkCd: 2, hp: 0, max: 6, light: 0, sunT: 0, moonT: 0, stun: 0, run: null, marks: [], fires: [], breathCone: null, breathT: 0, flash: 0, gallop: 0, stats: { light: 0, parry: 0, reflect: 0, crash: 0 } };
-  const ZB_HP = [6, 6, 10];
+  const ZB = { g: null, body: null, head: null, legs: [], tail: null, eyes: [], ember: null, nose: null, heads: [], state: "sleep", t: 0, round: -1, seenIntro: false, x: 0, y: 0, z: 0, a: PI, atkCd: 2, hp: 0, max: 6, light: 0, sunT: 0, moonT: 0, stun: 0, run: null, marks: [], fires: [], breathCone: null, breathT: 0, flash: 0, gallop: 0, stats: { light: 0, parry: 0, reflect: 0, crash: 0 }, sunL: 0, moonL: 0, winDmg: 0, tele: null, cone: null, rings: [] };
+  const ZB_HP = [6, 6, 9];
+  /* leiho bakoitzeko kalte-muga (lurrean): hiru kolpe, gero altxatu (borroka zikloka, ez botoi-zaparrada) */
+  const ZB_WIN = 3;
   const ZB_EYE = ["sun", "moon", "both"];
   const EYE_COL = { sun: "#ffc933", moon: "#6fd0ff" };
   const ZV = new T.Vector3();
@@ -535,6 +546,7 @@
     ZB.a = 0;
     const g = new T.Group();
     g.position.set(ZB.x, ZB.y, ZB.z);
+    g.rotation.order = "YXZ";
     BP.add(g);
     ZB.g = g;
     const hide = new T.MeshStandardMaterial({ color: "#8a1f14", roughness: 0.6, metalness: 0.05, flatShading: true, emissive: new T.Color("#2a0603"), emissiveIntensity: 0.45 }),
@@ -612,10 +624,113 @@
     ZB.breathCone.renderOrder = 7;
     ZB.breathCone.visible = false;
     BP.add(ZB.breathCone);
+    /* lurreko abisuak: oldarraldiaren bidea (zerrenda gorria) eta su-arnasaren konoa (sektorea) */
+    const tg = new T.PlaneGeometry(1, 1);
+    tg.rotateX(-PI / 2);
+    tg.translate(0, 0, 0.5);
+    ZB.tele = new T.Mesh(tg, new T.MeshBasicMaterial({ color: "#ff3b2a", transparent: true, opacity: 0, depthWrite: false, blending: T.AdditiveBlending }));
+    ZB.tele.renderOrder = 3;
+    ZB.tele.visible = false;
+    BP.add(ZB.tele);
+    ZB.cone = new T.Mesh(new T.CircleGeometry(10, 28, -PI / 2 - 0.36, 0.72), new T.MeshBasicMaterial({ color: "#ff7a2a", transparent: true, opacity: 0, depthWrite: false, side: T.DoubleSide, blending: T.AdditiveBlending }));
+    ZB.cone.geometry.rotateX(-PI / 2);
+    ZB.cone.renderOrder = 3;
+    ZB.cone.visible = false;
+    BP.add(ZB.cone);
     ZB.solid = { x: ZB.x, z: ZB.z, r: 1.9, h: 3.4, y: SGY, pillar: true, mov: true };
     solids.push(ZB.solid);
     zbEyes();
     if (flag("herensugea")) zbFreed(true);
+    /* IA-modeloa (Flux → Tripo → Blender-eko hezurdura, tools/leizeak/models/ai/rig_zezen.py):
+       hezurrak pibota prozeduralek gidatzen dituzte; ez badago (?ia=0, ?gfx=0), gorputz prozedurala */
+    aiModel("zezengorri", (sc) => zbAi(sc));
+  }
+  function zbAi(sc) {
+    if (!sc || !ZB.g || ZB.ai) return;
+    const mats = [];
+    sc.traverse((n) => {
+      if (!n.isMesh) return;
+      n.frustumCulled = false;
+      n.material = n.material.clone();
+      if (n.material.map) {
+        n.material.emissiveMap = n.material.map;
+        n.material.emissive = new T.Color("#ffffff");
+        n.material.emissiveIntensity = 0.2;
+      }
+      mats.push(n.material);
+    });
+    const mk = (nm) => sc.getObjectByName(nm),
+      eyeL = mk("eye_L"),
+      eyeR = mk("eye_R"),
+      fore = mk("forehead"),
+      snout = mk("snout");
+    if (!eyeL || !eyeR || !fore || !snout) return;
+    /* prozeduralak ezkutatu; begien distira, txingarra eta sudur-sua IA-buruaren marketara */
+    ZB.g.traverse((n) => {
+      if (n.isMesh && n !== ZB.ember) n.visible = false;
+    });
+    sc.rotation.set(0, 0, 0);
+    sc.position.set(0, 0, 0);
+    ZB.g.add(sc);
+    ZB.g.updateMatrixWorld(true);
+    const bones = {},
+      X = new T.Vector3(1, 0, 0),
+      Y = new T.Vector3(0, 1, 0),
+      qr = new T.Quaternion(),
+      qb = new T.Quaternion();
+    sc.getWorldQuaternion(qr).invert();
+    sc.traverse((n) => {
+      if (!n.isBone) return;
+      n.getWorldQuaternion(qb);
+      const inv = qr.clone().multiply(qb).invert();
+      bones[n.name] = { b: n, rest: n.quaternion.clone(), ax: X.clone().applyQuaternion(inv), ay: Y.clone().applyQuaternion(inv), u: 0 };
+    });
+    const neck = new T.Vector3(),
+      w = new T.Vector3();
+    (bones.head ? bones.head.b : snout).getWorldPosition(neck);
+    for (const E of ZB.eyes) {
+      const M = E.side > 0 ? eyeL : eyeR;
+      M.getWorldPosition(w);
+      w.add(w.clone().sub(neck).setY(0).normalize().multiplyScalar(0.14));
+      E.halo.position.copy(M.worldToLocal(w));
+      E.halo.scale.setScalar(0.9);
+      M.add(E.halo);
+    }
+    fore.add(ZB.ember);
+    ZB.ember.position.set(0, 0, 0);
+    snout.add(ZB.nose);
+    ZB.nose.position.set(0, 0, 0);
+    ZB.ai = { sc, mats, bones, snout };
+  }
+  /* IA-hezurdura: lauhazka (belaunak tolestuz), lurrera belauniko, burua (prozeduralaren angelu berak) */
+  const AQ = new T.Quaternion(),
+    AQ2 = new T.Quaternion();
+  function aiTurn(B, ax, ay = 0) {
+    B.b.quaternion.copy(B.rest).multiply(AQ.setFromAxisAngle(B.ax, ax)).multiply(AQ2.setFromAxisAngle(B.ay, ay));
+  }
+  function zbAiPose(dt, run, down) {
+    const A = ZB.ai,
+      k = 1 - Math.exp(-dt * 16);
+    for (const Lg of ZB.legs) {
+      const id = "leg_" + (Lg.front ? "F" : "B") + "_" + (Lg.side > 0 ? "L" : "R"),
+        up = A.bones[id + "_up"],
+        lo = A.bones[id + "_lo"];
+      if (!up || !lo) continue;
+      const ph = ZB.gallop + (Lg.front ? 0 : PI) + (Lg.side > 0 ? 0.6 : 0);
+      let tu = Lg.pv.rotation.x,
+        tl = 0;
+      if (down) {
+        tu = Lg.front ? -1.1 : 1.0;
+        tl = Lg.front ? 2.0 : -1.9;
+      } else if (run) tl = (Lg.front ? 1 : -1) * Math.max(0, Math.cos(ph)) * 0.9;
+      else if (ZB.state === "paw" && Lg.front && Lg.side > 0) tl = 0.7 + Math.sin(ZB.t * 14) * 0.4;
+      up.u = mix(up.u, tu, k);
+      lo.u = mix(lo.u, tl, k);
+      aiTurn(up, up.u);
+      aiTurn(lo, lo.u);
+    }
+    if (A.bones.head) aiTurn(A.bones.head, ZB.head.rotation.x, ZB.head.rotation.y);
+    for (const m of A.mats) m.emissiveIntensity = 0.2 + ZB.flash * 1.1;
   }
   /* begien kolorea txandaren arabera (III: ezkerra urrea, eskuina urdina) */
   function zbEyes() {
@@ -627,9 +742,15 @@
       E.halo.material.color.set(c);
     }
   }
-  const zbAwake = () => ZB.state === "idle" || ZB.state === "paw" || ZB.state === "breath" || ZB.state === "spit";
+  const zbAwake = () => ZB.state === "idle" || ZB.state === "paw" || ZB.state === "breath" || ZB.state === "spit" || ZB.state === "daze";
+  /* begiak zabalik: erasoa prestatzean eta zorabiatuta bakarrik (atsedenean, erdi itxita) */
+  const zbEyesOpen = () => ZB.state === "paw" || ZB.state === "breath" || ZB.state === "spit" || ZB.state === "daze";
   /* buruaren mundu-posizioa (ahoa / begiak) */
   function zbHeadPos(out) {
+    if (ZB.ai) {
+      ZB.ai.snout.getWorldPosition(out);
+      return out.set(out.x + Math.sin(ZB.g.rotation.y) * 0.35, out.y, out.z + Math.cos(ZB.g.rotation.y) * 0.35);
+    }
     ZB.head.updateWorldMatrix(true, false);
     return out.set(0, 0, 1.4).applyMatrix4(ZB.head.matrixWorld);
   }
@@ -653,7 +774,7 @@
       SND.roar();
       shake(0.6);
       zbRound(0);
-      notify(L("Begi urreak: EGUZKIA (UDA). Argi-zutabe batean, ISPILUA begietara: itsututa, hormaren kontra joko du. Erasoan, saihestu (BULTZADA)!"), "", 7);
+      notify(L("Begi urrezkoak: EGUZKIA (UDA). Erasoa prestatzen duenean, argi-zutabe batetik ISPILUA begietara: itsututa, hormaren kontra joko du. Oldarraldia: saihestu (BULTZADA) edo estalpe baten atzean!"), "", 8);
     };
     if (ZB.seenIntro) return fight();
     ZB.seenIntro = true;
@@ -670,7 +791,7 @@
   function zbRound(n) {
     ZB.round = n;
     ZB.hp = ZB.max = ZB_HP[n];
-    ZB.light = ZB.sunT = ZB.moonT = 0;
+    ZB.light = ZB.sunT = ZB.moonT = ZB.sunL = ZB.moonL = 0;
     zbEyes();
     bossBar("ZEZENGORRI", zbTotal());
     if (n === 1) notify(L("Begiak urdin bihurtu zaizkio! Orain: ILARGIA (NEGUA), argi-zutabe batean."), "", 6);
@@ -685,7 +806,10 @@
     ZB.state = "down";
     ZB.stun = dur || 4.6;
     ZB.run = null;
-    ZB.light = ZB.sunT = ZB.moonT = 0;
+    ZB.winDmg = 0;
+    ZB.g.rotation.x = 0;
+    zbTeleOff();
+    ZB.light = ZB.sunT = ZB.moonT = ZB.sunL = ZB.moonL = 0;
     ZB.breathCone.visible = false;
     ZB.nose.material.opacity = 0;
     ZB.ember.visible = true;
@@ -697,79 +821,132 @@
   }
   function zbHit(n) {
     if (ZB.state !== "down") return;
+    n = Math.min(n, ZB_WIN - ZB.winDmg);
+    if (n <= 0) return;
+    ZB.winDmg += n;
     ZB.hp -= n;
     ZB.flash = 1;
     SND.hit ? SND.hit(1) : SND.thud();
-    fxBurst(ZB.x, SGY + 3.4, ZB.z, { n: 16, speed: 3, up: 2, life: 0.5, size: 0.3, color: "#ffb347", grav: 3 });
+    ZB.ember.getWorldPosition(ZV);
+    fxBurst(ZV.x, ZV.y, ZV.z, { n: 16, speed: 3, up: 2, life: 0.5, size: 0.3, color: "#ffb347", grav: 3 });
+    damageNumber({ x: ZV.x, y: ZV.y, z: ZV.z, H: 0.5 }, n);
     bossBar("ZEZENGORRI", zbTotal());
-    if (ZB.hp > 0) return;
+    if (ZB.hp > 0 && ZB.winDmg < ZB_WIN) return;
+    FB.bossHit(ZV.x, ZV.y, ZV.z);
+    if (ZB.hp > 0) return zbRise(L("Altxatu da! Berriro: argia begietara, erasoa prestatzen duenean."));
     if (ZB.round < 2) {
-      ZB.state = "idle";
-      ZB.ember.visible = false;
-      ZB.atkCd = 2.2;
-      SND.roar();
+      zbRise(null, 1.6);
       return zbRound(ZB.round + 1);
     }
     zbDefeat();
   }
+  /* altxatu: TXINGARRA ezkutatu, orroa (txanda berrian, 1.6 s zauriezin: begiak itxita) */
+  function zbRise(msg, roar = 0) {
+    ZB.ember.visible = false;
+    ZB.state = roar ? "roar" : "idle";
+    ZB.stun = roar;
+    ZB.atkCd = roar ? 2 : 1.4;
+    SND.roar();
+    shake(0.35);
+    if (roar) fxRing(ZB.x, SGY + 0.2, ZB.z, ZB.round + 1 === 1 ? EYE_COL.moon : EYE_COL.sun, 9, 1.1);
+    if (msg) notify(msg, "", 3.2);
+  }
+  /* zorabiatuta (estalpearen kontra, su-bola itzulia, argiak erasoa etenda): begiak zabalik, argiak bikoitz */
+  function zbDaze(secs, msg) {
+    ZB.state = "daze";
+    ZB.stun = secs;
+    ZB.run = null;
+    ZB.breathCone.visible = false;
+    ZB.nose.material.opacity = 0;
+    zbTeleOff();
+    if (msg) notify(msg, "", 2.6);
+  }
+  function zbTeleOff() {
+    if (ZB.tele) ZB.tele.visible = false;
+    if (ZB.cone) ZB.cone.visible = false;
+  }
+  /* gorputzaren kapsula (buztanetik muturrera): oldarraldiaren kolpea */
+  function zbBodyDist(px, pz) {
+    const dx = Math.sin(ZB.a),
+      dz = Math.cos(ZB.a),
+      t = clamp((px - ZB.x) * dx + (pz - ZB.z) * dz, -2.4, ZB.ai ? 3.4 : 3.9);
+    return Math.hypot(px - (ZB.x + dx * t), pz - (ZB.z + dz * t));
+  }
   /* EGUZKI-ISPILUA begietara (ispilua.js, beamHit-etik) */
   function zbLight(kind, dt) {
     if (!zbAwake()) return;
-    const need = ZB_EYE[ZB.round];
+    if (!zbEyesOpen()) {
+      notifyOnce("zb-squint", L("Begiak erdi itxita ditu. Erasoa prestatzen duenean (harea hankaz, arnasa hartzean), orduan: ARGIA!"), "");
+      return;
+    }
+    const need = ZB_EYE[ZB.round],
+      k = ZB.state === "daze" ? 2 : 1;
+    if (need !== "both" && need !== kind) {
+      notifyOnce("zb-wrong-" + need, need === "sun" ? L("Haren begiak urrezkoak dira: EGUZKIA behar dute (UDA).") : L("Haren begiak urdinak dira: ILARGIA behar dute (NEGUA)."), "");
+      if (frame % 40 === 0) {
+        zbHeadPos(ZV);
+        fxBurst(ZV.x, ZV.y, ZV.z, { n: 8, speed: 3, up: 1, life: 0.3, size: 0.18, color: EYE_COL[kind], grav: 2 });
+        SND.clang(0.3);
+      }
+      return;
+    }
+    /* argia jasotzen: erasoa eten (zorabiatuta, begiak zabalik) */
+    if (ZB.state === "breath" || ZB.state === "spit") zbDaze(1.2);
     if (need === "both") {
-      if (kind === "sun") ZB.sunT = Math.max(ZB.sunT, 3.5);
-      else ZB.moonT = Math.max(ZB.moonT, 3.5);
+      const key = kind === "sun" ? "sunL" : "moonL",
+        tk = kind === "sun" ? "sunT" : "moonT";
+      if (ZB[tk] > 0) return;
+      ZB[key] += (dt / 0.4) * k;
+      if (frame % 3 === 0) fxBurst(ZB.x, SGY + 3.2, ZB.z, { n: 2, speed: 2, up: 1, life: 0.3, size: 0.16, color: EYE_COL[kind], grav: 1 });
+      if (ZB[key] < 1) return;
+      ZB[key] = 0;
+      ZB[tk] = 3.5;
       if (ZB.sunT > 0 && ZB.moonT > 0) {
         ZB.stats.light++;
         return zbBlind();
       }
-      notifyOnce("zb-both-" + kind, kind === "sun" ? L("Begi urrea itsutu da! Orain, ILARGIA begi urdinera: NEGURA, azkar!") : L("Begi urdina itsutu da! Orain, EGUZKIA begi urrera: UDARA, azkar!"), "");
+      notify(kind === "sun" ? L("Urrezko begia itsutu da! Orain, ILARGIA begi urdinera: NEGURA, azkar!") : L("Begi urdina itsutu da! Orain, EGUZKIA urrezko begira: UDARA, azkar!"), "", 3);
       return;
     }
-    if (need !== kind) {
-      notifyOnce("zb-wrong-" + need, need === "sun" ? L("Haren begiak urreak dira: EGUZKIA behar dute (UDA).") : L("Haren begiak urdinak dira: ILARGIA behar dute (NEGUA)."), "");
-      return;
-    }
-    /* argia jasotzen: erasoa eten */
-    if (ZB.state === "breath" || ZB.state === "spit") {
-      ZB.state = "idle";
-      ZB.breathCone.visible = false;
-      ZB.nose.material.opacity = 0;
-    }
-    ZB.light += dt / 0.55;
+    ZB.light += (dt / 0.55) * k;
     if (frame % 3 === 0) fxBurst(ZB.x, SGY + 3.2, ZB.z, { n: 2, speed: 2, up: 1, life: 0.3, size: 0.16, color: EYE_COL[kind], grav: 1 });
     if (ZB.light >= 1) {
       ZB.stats.light++;
       zbBlind();
     }
   }
-  /* itsu: korrika itsuan, hormaren edo estalpe baten kontra */
   function zbBlind() {
     ZB.state = "blind";
     ZB.t = 0;
-    ZB.light = ZB.sunT = ZB.moonT = 0;
+    ZB.light = ZB.sunT = ZB.moonT = ZB.sunL = ZB.moonL = 0;
+    ZB.breathCone.visible = false;
+    ZB.nose.material.opacity = 0;
+    zbTeleOff();
     const a = Math.atan2(P.x - ZB.x, P.z - ZB.z) + (Math.random() < 0.5 ? 1 : -1) * (0.9 + Math.random() * 0.8);
-    ZB.run = { dx: Math.sin(a), dz: Math.cos(a), sp: 13, blind: true, d: 0 };
-    ZB.a = a;
+    ZB.run = { dx: Math.sin(a), dz: Math.cos(a), sp: 13, blind: true, d: 0, rear: 0.5 };
     SND.roar();
-    notify(L("Itsututa! Korrika itsuan…"), "", 2.4);
+    shake(0.3);
+    notify(L("Itsututa! Atzeko hanketan altxatu da… eta korrika itsuan!"), "", 2.4);
   }
   /* oldarraldia: abisua (hankaz arrastatu), gero zuzen */
   function zbCharge() {
     const a = Math.atan2(P.x - ZB.x, P.z - ZB.z);
     ZB.a = a;
     ZB.run = { dx: Math.sin(a), dz: Math.cos(a), sp: 15, blind: false, d: 0, hit: false };
+    zbTeleOff();
     ZB.state = "charge";
     ZB.t = 0;
     SND.roar();
   }
   /* estalpeak eta hormak: korrikan, aurrean? */
-  function zbBlocked(x, z) {
+  function zbBlocked(x, z, sx, sz) {
     const R = DGH.bossRoom;
-    if (x < R.x - 19 || x > R.x + 19 || z < -124.5 || z > -97.5) return true;
+    if (x < R.x - 19 || x > R.x + 19 || z < -124.5 || z > -97.5) return "wall";
+    if (sx !== undefined && (sx < R.x - 20.6 || sx > R.x + 20.6 || sz < -127.2 || sz > -96.6)) return "wall";
     for (const s of solids) {
       if (s === ZB.solid || s.h < 1.2 || s.y + s.h < SGY + 1 || Math.abs(s.x - R.x) > 22 || s.z > -94 || s.z < -128) continue;
-      if (Math.hypot(x - s.x, z - s.z) < s.r + ZB_R * 0.8) return true;
+      if (Math.hypot(x - s.x, z - s.z) < s.r + ZB_R * 0.8) return "cover";
+      if (sx !== undefined && Math.hypot(sx - s.x, sz - s.z) < s.r + 0.5) return "cover";
     }
     return false;
   }
@@ -778,7 +955,7 @@
       dz = z1 - z0,
       d = Math.hypot(dx, dz) || 1;
     for (const s of solids) {
-      if (s === ZB.solid || s.h < 1.5 || s.y + s.h < SGY + 1.2 || s.noBeam) continue;
+      if (s === ZB.solid || s.h < 1.2 || s.y + s.h < SGY + 1.1 || s.noBeam) continue;
       if (rayCircle(x0, z0, dx / d, dz / d, s.x, s.z, s.r, d) >= 0) return true;
     }
     return false;
@@ -798,7 +975,13 @@
       m.add(fl);
       m.position.copy(ZV);
       scene.add(m);
-      SHOTS.push({ m, x: ZV.x, z: ZV.z, y: ZV.y, vx: dx / T0, vz: dz / T0, sp: td / T0, t: 0, era: 2, rock: true, fire: true, floor: SGY, vy: (SGY + 0.5 - ZV.y + 0.5 * 16 * T0 * T0) / T0, onLand: (s) => zbFirePatch(s.x, s.z, 1.5, 2.4) });
+      SHOTS.push({ m, x: ZV.x, z: ZV.z, y: ZV.y, vx: dx / T0, vz: dz / T0, sp: td / T0, t: 0, era: 2, rock: true, fire: true, zb: true, floor: SGY, vy: (SGY + 0.5 - ZV.y + 0.5 * 16 * T0 * T0) / T0, onLand: (s) => zbFirePatch(s.x, s.z, 1.5, 2.4) });
+      /* erortze-lekua: eraztun laranja lurrean, hegaldiak irauten duen bitartean */
+      const rg = new T.Mesh(new T.RingGeometry(1.2, 1.55, 28), new T.MeshBasicMaterial({ color: "#ff8a2a", transparent: true, opacity: 0.6, depthWrite: false, blending: T.AdditiveBlending }));
+      rg.rotation.x = -PI / 2;
+      rg.position.set(tx, SGY + 0.06, tz);
+      ZONES[DGH.id].group.add(rg);
+      ZB.rings.push({ m: rg, t: 0, T: T0 });
     }
     SND.flame();
   }
@@ -839,16 +1022,27 @@
       else if (ZB.state === "paw" && Lg.front && Lg.side > 0) r = -0.4 + Math.sin(ZB.t * 14) * 0.5;
       Lg.pv.rotation.x = mix(Lg.pv.rotation.x, down ? (Lg.front ? -1.35 : 1.35) : r, 1 - Math.exp(-dt * 10));
     }
-    const lowY = down ? -1.45 : run ? 0.15 * Math.abs(Math.sin(ZB.gallop)) : Math.sin(time * 1.4) * 0.04;
+    const rear = !!(ZB.run && ZB.run.rear > 0),
+      lowY = down ? (ZB.ai ? -0.95 : -1.45) : rear ? 0.55 : run ? 0.15 * Math.abs(Math.sin(ZB.gallop)) : Math.sin(time * 1.4) * 0.04;
     ZB.g.position.y = mix(ZB.g.position.y, SGY + lowY, 1 - Math.exp(-dt * 8));
+    ZB.g.rotation.x = mix(ZB.g.rotation.x, rear ? -0.38 : 0, 1 - Math.exp(-dt * 12));
     const hx = ZB.state === "breath" ? -0.25 : run || ZB.state === "paw" ? 0.45 : down ? 0.35 : Math.sin(time * 0.9) * 0.06;
     ZB.head.rotation.x = mix(ZB.head.rotation.x, hx, 1 - Math.exp(-dt * 8));
-    ZB.head.rotation.y = ZB.state === "blind" ? Math.sin(time * 18) * 0.25 : mix(ZB.head.rotation.y, 0, 1 - Math.exp(-dt * 6));
+    ZB.head.rotation.y = ZB.state === "blind" ? Math.sin(time * 18) * 0.25 : ZB.state === "daze" ? Math.sin(time * 7) * 0.32 : mix(ZB.head.rotation.y, 0, 1 - Math.exp(-dt * 6));
     ZB.tail.rotation.z = Math.sin(time * (run ? 9 : 2.2)) * 0.4;
-    for (const E of ZB.eyes) E.halo.material.opacity = ZB.state === "blind" ? 0.15 + Math.random() * 0.5 : down ? 0.1 : 0.45 + ZB.light * 0.5;
+    /* begiak: erdi itxita atsedenean, zabalik erasoa prestatzean (argia metatuz), itsutuak grisak (III) */
+    const open = zbEyesOpen();
+    for (const E of ZB.eyes) {
+      const blindT = ZB.round === 2 ? (E.side < 0 ? ZB.sunT : ZB.moonT) : 0,
+        lk = ZB.round === 2 ? (E.side < 0 ? ZB.sunL : ZB.moonL) : ZB.light;
+      E.halo.material.opacity = ZB.state === "blind" ? 0.15 + Math.random() * 0.5 : down || ZB.state === "roar" ? 0.1 : blindT > 0 ? 0.12 : open ? 0.55 + lk * 0.45 : 0.16;
+      E.halo.scale.setScalar((ZB.ai ? 0.9 : 1.1) * (open && !blindT ? 1.15 + lk * 0.5 : 0.75));
+      if (ZB.round === 2) E.halo.material.color.set(blindT > 0 ? "#6b6b6b" : E.side < 0 ? EYE_COL.sun : EYE_COL.moon);
+    }
     ZB.mat.emissiveIntensity = 0.45 + ZB.flash * 1.2;
     ZB.ember.material.emissiveIntensity = 1.6 + Math.sin(time * 8) * 0.5;
     ZB.g.rotation.y = mix(ZB.g.rotation.y, ZB.a, 1 - Math.exp(-dt * (run ? 20 : 4)));
+    if (ZB.ai) zbAiPose(dt, run, down);
   }
   function zbUpdate(dt) {
     if (!ZB.g || ZONE.cur !== "herensuge") return;
@@ -870,6 +1064,18 @@
     ZB.sunT = Math.max(0, ZB.sunT - dt);
     ZB.moonT = Math.max(0, ZB.moonT - dt);
     ZB.light = Math.max(0, ZB.light - dt * 0.35);
+    ZB.sunL = Math.max(0, ZB.sunL - dt * 0.35);
+    ZB.moonL = Math.max(0, ZB.moonL - dt * 0.35);
+    for (let i = ZB.rings.length - 1; i >= 0; i--) {
+      const Rg = ZB.rings[i];
+      Rg.t += dt;
+      Rg.m.material.opacity = 0.5 + 0.4 * Math.abs(Math.sin(time * 10));
+      Rg.m.scale.setScalar(1 + Math.max(0, 1 - Rg.t / Rg.T) * 0.6);
+      if (Rg.t > Rg.T + 0.1) {
+        Rg.m.parent && Rg.m.parent.remove(Rg.m);
+        ZB.rings.splice(i, 1);
+      }
+    }
     /* sua lurrean */
     for (let i = ZB.fires.length - 1; i >= 0; i--) {
       const F = ZB.fires[i];
@@ -891,44 +1097,71 @@
       ZB.a += Math.atan2(Math.sin(want - ZB.a), Math.cos(want - ZB.a)) * Math.min(1, dt * 3);
       ZB.nose.material.opacity = 0.5 + Math.sin(time * 20) * 0.3;
       if (Math.random() < dt * 14) fxBurst(ZB.x + Math.sin(ZB.a + 0.6) * 1.6, SGY + 0.2, ZB.z + Math.cos(ZB.a + 0.6) * 1.6, { n: 3, speed: 1.6, up: 1.4, life: 0.6, size: 0.35, color: "#c8a080", grav: 2 });
+      /* abisua lurrean: oldarraldiaren bidea (3.6 m zabal), jokalariarengana */
+      const Tl = ZB.tele;
+      Tl.visible = true;
+      Tl.position.set(ZB.x + Math.sin(ZB.a) * 1.5, SGY + 0.06, ZB.z + Math.cos(ZB.a) * 1.5);
+      Tl.rotation.y = ZB.a;
+      Tl.scale.set(3.6, 1, Math.min(30, Math.hypot(P.x - ZB.x, P.z - ZB.z) + 8));
+      Tl.material.opacity = 0.3 + 0.4 * Math.min(1, ZB.t / 1.15) + Math.sin(time * 16) * 0.1;
+      if (Math.floor(ZB.t * 3.4) !== Math.floor((ZB.t - dt) * 3.4)) SND.thud();
       if (ZB.t > 1.15) {
         ZB.nose.material.opacity = 0;
         zbCharge();
       }
     } else if (ZB.state === "charge" || ZB.state === "blind") {
-      const Rn = ZB.run,
-        step = Rn.sp * dt,
-        nx = ZB.x + Rn.dx * step,
-        nz = ZB.z + Rn.dz * step;
-      if (zbBlocked(nx + Rn.dx * 1.2, nz + Rn.dz * 1.2)) {
-        /* talka: itsu bazegoen (edo estalpe/harri bat), lurrera; bestela, gelditu eta biratu */
-        ZB.a = Math.atan2(Rn.dx, Rn.dz);
-        if (Rn.blind) zbDown("crash", 4.6);
-        else if (ZB.round >= 0 && Math.random() < 0.45) zbDown("crash", 2.6);
-        else {
-          ZB.state = "idle";
-          ZB.atkCd = 1.4;
-          shake(0.3);
-          SND.thud();
-        }
+      const Rn = ZB.run;
+      if (Rn.rear > 0) {
+        /* itsututa: atzeko hanketan altxatuta, orroka (irakurtzeko unea) */
+        Rn.rear -= dt;
+        if (Rn.rear <= 0) ZB.a = Math.atan2(Rn.dx, Rn.dz);
       } else {
-        ZB.x = nx;
-        ZB.z = nz;
-        Rn.d += step;
-        if (!Rn.hit && Math.hypot(P.x - ZB.x, P.z - ZB.z) < ZB_R + 0.3 && P.y < SGY + 2.2) {
-          Rn.hit = true;
-          playerHit(1, ZB.x, ZB.z);
-        }
-        if (Math.random() < dt * 20) fxBurst(ZB.x - Rn.dx * 2, SGY + 0.2, ZB.z - Rn.dz * 2, { n: 2, speed: 1.4, up: 1, life: 0.5, size: 0.4, color: "#c8a080", grav: 2 });
-        if (!Rn.blind && Rn.d > 30) {
-          ZB.state = "idle";
-          ZB.atkCd = 1.6;
+        const step = Rn.sp * dt,
+          nx = ZB.x + Rn.dx * step,
+          nz = ZB.z + Rn.dz * step,
+          hit = zbBlocked(nx + Rn.dx * 1.2, nz + Rn.dz * 1.2, nx + Rn.dx * (ZB.ai ? 3.2 : 3.8), nz + Rn.dz * (ZB.ai ? 3.2 : 3.8));
+        if (hit) {
+          /* talka: itsu → lurrera (TXINGARRA); estalpea → zorabiatuta (begiak zabalik); horma → gelditu eta biratu */
+          ZB.a = Math.atan2(Rn.dx, Rn.dz);
+          if (Rn.blind) zbDown("crash", 4.6);
+          else if (hit === "cover") {
+            shake(0.45);
+            SND.thud();
+            zbDaze(1.5, L("Estalpearen kontra! Zorabiatuta, begiak zabalik: ARGIA, orain!"));
+          } else {
+            ZB.state = "idle";
+            ZB.run = null;
+            ZB.atkCd = 1.4;
+            shake(0.3);
+            SND.thud();
+          }
+        } else {
+          ZB.x = nx;
+          ZB.z = nz;
+          Rn.d += step;
+          if (!Rn.hit && P.y < SGY + 2.2 && zbBodyDist(P.x, P.z) < 1.5) {
+            Rn.hit = true;
+            playerHit(2, ZB.x, ZB.z);
+          }
+          if (Math.random() < dt * 20) fxBurst(ZB.x - Rn.dx * 2, SGY + 0.2, ZB.z - Rn.dz * 2, { n: 2, speed: 1.4, up: 1, life: 0.5, size: 0.4, color: "#c8a080", grav: 2 });
+          if (!Rn.blind && Rn.d > 30) {
+            ZB.state = "idle";
+            ZB.run = null;
+            ZB.atkCd = 1.6;
+          }
         }
       }
     } else if (ZB.state === "breath") {
       zbHeadPos(ZV);
+      if (ZB.breathT === 0) SND.breath && SND.breath();
       ZB.breathT += dt;
       ZB.nose.material.opacity = Math.min(1, ZB.breathT * 1.5);
+      /* abisua lurrean: su-arnasaren konoa (10 m, 0.36 rad), prestatzean ere bai */
+      const Cn = ZB.cone;
+      Cn.visible = true;
+      Cn.position.set(ZV.x, SGY + 0.07, ZV.z);
+      Cn.rotation.y = ZB.a;
+      Cn.material.opacity = ZB.breathT < 0.8 ? 0.25 + 0.35 * (ZB.breathT / 0.8) + Math.sin(time * 18) * 0.08 : 0.45;
       if (ZB.breathT > 0.8) {
         /* sua: konoa aurrera, apur bat jokalariarengana biratuz */
         ZB.a += Math.atan2(Math.sin(want - ZB.a), Math.cos(want - ZB.a)) * Math.min(1, dt * 0.9);
@@ -945,10 +1178,12 @@
           dz = P.z - ZV.z,
           d = Math.hypot(dx, dz),
           off = Math.abs(Math.atan2(Math.sin(Math.atan2(dx, dz) - ZB.a), Math.cos(Math.atan2(dx, dz) - ZB.a)));
-        if (d < len && off < ang && P.y < SGY + 2 && !zbCovered(ZV.x, ZV.z, P.x, P.z)) playerHit(1, ZV.x, ZV.z);
+        /* estalpearen atzean, babestuta; haren GAINEAN, ez */
+        if (d < len && off < ang && P.y < SGY + 2.4 && (P.y > SGY + 1.1 || !zbCovered(ZV.x, ZV.z, P.x, P.z))) playerHit(1, ZV.x, ZV.z);
       }
       if (ZB.breathT > 2.5) {
         ZB.breathCone.visible = false;
+        ZB.cone.visible = false;
         ZB.nose.material.opacity = 0;
         ZB.state = "idle";
         ZB.atkCd = 1.8;
@@ -968,11 +1203,12 @@
       }
     } else if (ZB.state === "down") {
       ZB.stun -= dt;
+      if (ZB.stun <= 0) zbRise();
+    } else if (ZB.state === "daze" || ZB.state === "roar") {
+      ZB.stun -= dt;
       if (ZB.stun <= 0) {
         ZB.state = "idle";
-        ZB.ember.visible = false;
-        ZB.atkCd = 1.4;
-        SND.roar();
+        ZB.atkCd = Math.max(ZB.atkCd, 1.1);
       }
     }
     ZB.solid.x = ZB.x;
@@ -992,7 +1228,7 @@
     stagger: () => {
       if (!zbAwake()) return;
       ZB.stats.reflect++;
-      zbDown("reflect", 3.6);
+      zbDaze(2, L("Su-bola itzulia! Zorabiatuta: ARGIA begietara, orain!"));
     },
     /* EGUZKI-ISPILUA: begiak (buruaren inguruan) */
     beamHit: (x, y, z, dx, dz, maxD) => {
@@ -1007,8 +1243,8 @@
     BOSS.dead = true;
     ZB.state = "freed";
     ZB.t = 0;
-    for (const F of ZB.fires) F.m.parent && F.m.parent.remove(F.m);
-    ZB.fires.length = 0;
+    zbPurge();
+    zbTeleOff();
     for (const e of ENEMIES) if (e.state !== "dead") killEnemy(e);
     ZB.breathCone.visible = false;
     ROOM.fight = null;
@@ -1078,11 +1314,28 @@
     ZB.x = DGH.bossRoom.x;
     ZB.z = -121.5;
     ZB.a = 0;
-    for (const F of ZB.fires) F.m.parent && F.m.parent.remove(F.m);
-    ZB.fires.length = 0;
+    Object.assign(ZB, { spat: false, light: 0, sunT: 0, moonT: 0, sunL: 0, moonL: 0, stun: 0, winDmg: 0 });
+    ZB.g.position.set(ZB.x, SGY, ZB.z);
+    ZB.g.rotation.set(0, 0, 0);
+    ZB.solid.x = ZB.x;
+    ZB.solid.z = ZB.z;
+    zbPurge();
     ZB.breathCone.visible = false;
+    zbTeleOff();
     ZB.ember.visible = false;
     ZB.nose.material.opacity = 0;
     zbEyes();
     bossBar(null);
+  }
+  /* sua lurrean, eraztunak eta hegan dauden su-bolak kendu */
+  function zbPurge() {
+    for (const F of ZB.fires) F.m.parent && F.m.parent.remove(F.m);
+    ZB.fires.length = 0;
+    for (const Rg of ZB.rings) Rg.m.parent && Rg.m.parent.remove(Rg.m);
+    ZB.rings.length = 0;
+    for (let i = SHOTS.length - 1; i >= 0; i--)
+      if (SHOTS[i].zb) {
+        scene.remove(SHOTS[i].m);
+        SHOTS.splice(i, 1);
+      }
   }

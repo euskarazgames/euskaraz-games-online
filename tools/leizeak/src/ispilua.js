@@ -244,7 +244,7 @@
     C.hitT = 0;
     if (C.on && C.latch) return;
     if (C.kind !== "any" && C.kind !== kind) {
-      const want = C.kind === "sun" ? L("Kristal urreak EGUZKIA behar du: UDAN bakarrik sartzen da.") : L("Kristal urdinak ILARGIA behar du: NEGUAN bakarrik sartzen da.");
+      const want = C.kind === "sun" ? L("Urrezko kristalak EGUZKIA behar du: UDAN bakarrik sartzen da.") : L("Kristal urdinak ILARGIA behar du: NEGUAN bakarrik sartzen da.");
       notifyOnce("kristal-" + C.kind, want, "");
       return;
     }

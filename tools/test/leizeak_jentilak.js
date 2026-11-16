@@ -294,7 +294,7 @@ const { launch } = require('./_browser');
     for (let k = 0; k < 150 && g.cinematicState() && g.ZAZPI.green < 4; k++) g.step(1 / 30, false);
     return g.ZAZPI.green;
   });
-  ok(green === 4, 'zazpi argiak: laugarrena berde (Errolan aske)', green);
+  ok(green === 4, 'zazpi txingarrak: laugarrena urrez (Mairu zaharra aske)', green);
   await skip();
   ok(await flag('irati-errolan'), 'Atarrabi: Mairu zaharraren berria (amaiera)');
 

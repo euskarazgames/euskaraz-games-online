@@ -258,7 +258,7 @@
           /* sutegi handiak (Tartalorenak): SUA bakarrik */
           if (r.needFire && !b.fire) {
             SND.clang(0.5);
-            notifyOnce("need-fire", L("Burdinazko galdara hau ez da sorginkeria arruntaz pizten… SUA behar da."), "");
+            notifyOnce(r.fireMsg ? "need-fire-z" : "need-fire", r.fireMsg ? L(r.fireMsg) : L("Burdinazko galdara hau ez da sorginkeria arruntaz pizten… SUA behar da."), "");
             continue;
           }
           r.hit(b);

@@ -425,7 +425,7 @@ Gidoi osoa gidoilari-agente batek berridazten du; hau da mekanikaren oinarria (`
   Beste garaiko plataformen mamuak ere ez dira ikusten.
 - **Hitzaurrea.** GARAIA erronka kenduta: atearen izotza SORGINKERIAz urtzen da (sutondoa bezala, jomuga batean).
   Plazako itzalek ez dute garairik.
-- **Basajaunen leizea.** B gela, HARRI LOEN AMILDEGIA: hiru zubiak lo daude (garai "ezinezkoa", 2: mamua
+- **Basajaunen leizea.** B gela, HARRI LOTIEN AMILDEGIA: hiru zubiak lo daude (garai "ezinezkoa", 2: mamua
   bakarrik) eta ESNATU erritmoarekin altxatzen dira, bata bestearen atzetik (`dB-esnatu`).
 - **Lamien leizea.** Leizean urak Amaiurren sorginkeriari erantzuten dio: botoi berak ura esnatzen (UR BIZIA)
   edo izozten (IZOTZA) du — barruan bakarrik, eta testu guztiak horrela. Sarrera: ur-jauziko izotz-gortinan
@@ -448,14 +448,15 @@ sorgin-ikaslea da, eta Ibarran ez da udaberririk iristen. Ahizparen izena ia ez 
 
 **Logline.** Hirugarren neguko lehen elurte-gauean, leizeek deitzen dute: lurraren azpitik, txalaparta bat.
 Amaiurrek deiari jarraitzen dio eta itzalik gabeko mutil bat aurkitzen du, ATARRABI, Mariren semea. Haren
-anaiak, MIKELATSek, Mariren zazpi txingarrak lapurtzen ditu leizeetako zaindariak gaiztotuz; zazpiak
-biltzen baditu, Mariren lekua hartuko du eta negua betikoa izango da.
+anaiak, MIKELATSek, leizeetako zaindariak gaiztotu ditu, Marik emandako zazpi txingarrak beretzat gorde
+ditzaten; zazpiak eta zortzigarrena (Iturraldeko sutondoa) bereganatzen baditu, Mariren lekua hartuko du eta
+negua betikoa izango da. Zaindari bat askatzean, haren txingarra berez itzultzen da Mariren leizera.
 
 **Pertsonaiak.** AMAIUR (protagonista, 15) · AMONA (Iturraldeko sorgin zaharra, maisua; izenik gabe) ·
 ATARRABI (Mariren seme ona; Etsairen leize-eskolan zazpi urte ikasi eta itzala galdu zuen; Amaiurri
 KRISELU-DEIEZ hitz egiten dio, kriseiluaren sugarretik) · MIKELATS (anaia; kazkabarraren eta ekaitzaren
 jauna; Atarrabiren itzala gorde du, eta harekin egiten ditu bere itzal-soldaduak) · MARI (lo, ia isilik) ·
-herritarrak (Pello eta Peio, Kattalin, Txomin, Maddi, Joanes, Mikel, Mendietatarrak: hiru urte gazteago).
+herritarrak (Pello eta Peio, Kattalin, Txomin, Maddi, Joanes, Mikel, Mendietatarrak: lau urte gazteago).
 
 **Egitura (zazpi leize + amaiera).**
 | Atala | Lekua | Zaindaria (etsai nagusia) | Tresna |
@@ -490,6 +491,26 @@ aldatzen; pantailako izenak eta testuak bai.
 animazioak) → Blender (bpy: garbitu, poligonoak murriztu, eskala eta jatorria) → meshopt; behar denean
 kargatuak, eta modelorik gabe ere jokoak funtzionatzen du (lehengo prozedurazko gorputzak). Irudiak eta
 bideoak: fal.ai (saldoa dagoenean). Ahotsak: OmniVoice (ATARRABI eta MIKELATS ahots diseinatu berriak).
+Eginda: Mikelats, Akerbeltz, Zezengorri eta Eate (Flux → Tripo, fal.ai bidez; `models/ai/sortu_3d.py`).
+Blender: `garbitu.py` (modelo estatikoak) eta `rig_zezen.py` (Zezengorriren hezurdura geometriatik: lau
+hanka belaunarekin, burua, eta markak — begiak, bekokia, muturra); jokoan, pibota prozeduralek gidatzen dute.
+
+**Etsai nagusien arauak (estudioaren berrikuspena, game-designer).** Fase bakoitza ziklo batzuetan, ez
+botoi-zaparrada batean: *leiho* bakoitzean kalte-muga (Zezengorri 3, Mikelats 3, Akerbeltz 4), gero altxatu.
+· ZEZENGORRI (6/6/9): begiak erdi itxita atsedenean; erasoa prestatzean (harea hankaz, arnasa, txistua) edo
+  zorabiatuta bakarrik metatzen du argia (zorabiatuta, bikoitza). Estalpearen kontrako talka eta EZKUTUAz
+  itzulitako su-bola → ZORABIOA (begiak zabalik, kalterik ez). TXINGARRA itsututa hormaren kontra bakarrik.
+  Itsutzean 0.5 s altxatu eta orro egiten du. Abisuak lurrean (oldarraldiaren bidea, su-arnasaren konoa,
+  su-bolen eraztunak); oldarraldiak 2 kentzen ditu (kapsula buztanetik muturrera). III: kolore bakoitza
+  0.4 s; itsututako begia gris geratzen da 3.5 s. Labaren ertzean basaltozko ertza.
+· MIKELATS (6/6 + zutarriak): zutarriak SUAREKIN bakarrik (SUGAR-IZPIA, kargatuta). Eraso bakoitza 0.5 s
+  prestatzen du (igo, aura). Tximista horia (argi-zutabea hazten), kazkabarra urdin hotza. II: hiru uhin
+  (azkena: handi bat eta bi begi), deitzen ari dela ere kazkabarra; uhinek arenaren elipsean. III: nekea
+  12 s (bestela altxatu eta bi zutarri itzali); amonaren orraziak kazkabarra mantsotzen du. Hilez gero:
+  gailurrean berriro (kontrol-puntua), I fasetik, zinemarik gabe.
+· AKERBELTZ (8 fase bakoitzeko): zaurgarri kontatzen ari denean bakarrik (SORGIN-HAUTSA); LO-KANTA tronutik
+  zazpi metrora; loa 4 s. II: lekuz aldatzean (6 s) ENTZUN-en distira itzaltzen da; faltsuen mamuak NEGUKOAK.
+  Murgiltzeak 2 kentzen ditu (eraztun argia eta hotsa helburua finkatzean).
 
 ## 6. Errealismoa
 95eko joko batek talde handiak eta urteak behar ditu. Hemen zutabe bakoitzean aurrera egiten da

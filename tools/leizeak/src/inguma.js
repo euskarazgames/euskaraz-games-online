@@ -5,7 +5,7 @@
      haren aurka, seaska-kantaren hiru bertsoak, hiru fasetan:
        1 ZERUAN IZARRAK ... goian hegan: izar-euria (EZKUTUAz itzuli → zorabiatuta) eta murgiltzea
                             (itzala lurrean: alde egin). Murgildu ondoren, nekatuta behean →
-                            IZAR-HAUTSA → KONTATZEN → zauritu.
+                            SORGIN-HAUTSA → KONTATZEN → zauritu.
        2 LURREAN BELARRAK . amets-belarrak lurrean (NEGUAN mina; UDAN belar hutsak) eta
                             hiru Inguma: ENTZUN (txalaparta) → benetakoa urre-distiraz → hautsa.
                             Faltsuak, jotzean, mamu bihurtzen dira.
@@ -26,8 +26,10 @@
   PORTRAIT_OF.INGUMA = "inguma";
   PORTRAIT_OF.AKERBELTZ = "akerbeltz";
   PORTRAIT_OF["IRATI?"] = "unknown";
-  const ING_HP = 10,
-    ING_R = 2.4;
+  const ING_HP = 8,
+    ING_R = 2.4,
+    /* leiho bakoitzeko kalte-muga (kontatzen): lau, gero esnatu (fase bakoitza bi ziklotan) */
+    ING_WIN = 4;
   /* ametseko hitzak (jokoa gelditu gabe): ahotsa eta azpititulua */
   function bark(id) {
     if (ING.said[id]) return;
@@ -167,7 +169,7 @@
       ING.fakes.push({ ...F, x: R.x, y: 3, z: R.z, alive: true, t: 0 });
     }
     /* murgiltzearen itzala lurrean */
-    ING.shadow = new T.Mesh(new T.CircleGeometry(2.4, 28), new T.MeshBasicMaterial({ color: "#2a0a3a", transparent: true, opacity: 0, depthWrite: false }));
+    ING.shadow = new T.Mesh(new T.CircleGeometry(2.4, 28), new T.MeshBasicMaterial({ color: "#c58bff", transparent: true, opacity: 0, depthWrite: false, blending: T.AdditiveBlending }));
     ING.shadow.rotation.x = -PI / 2;
     ING.shadow.position.y = 0.06;
     ING.shadow.renderOrder = 3;
@@ -205,12 +207,13 @@
     ING.seenIntro = true;
     vsay(["c7_n3", "c7_a4"], fight, { AKERBELTZ: [ING.x, ING.z, 2.4] });
   }
-  /* kontatzen hasi (IZAR-HAUTSA): zaurgarri */
+  /* kontatzen hasi (SORGIN-HAUTSA): zaurgarri */
   function ingumaCount(secs = 4.5) {
     ING.state = "count";
     ING.t = 0;
     ING.countT = secs;
     ING.countN = 0;
+    ING.winDmg = 0;
     ING.stats.counts++;
     bark("c7_n4");
     SND.wake();
@@ -237,11 +240,16 @@
   function ingumaHit(n) {
     if (!BOSS.vulnerable()) return;
     /* lokartuta eta kontatzen: kalte bikoitza */
-    const k = ING.state === "count" && ING.lullBoth ? 2 : 1;
-    ING.hp -= n * k;
+    const k = ING.state === "count" && ING.lullBoth ? 2 : 1,
+      dmg = Math.min(n * k, ING_WIN - (ING.winDmg || 0));
+    if (dmg <= 0) return;
+    ING.winDmg = (ING.winDmg || 0) + dmg;
+    ING.hp -= dmg;
     const w = BOSS.weak();
     FB.bossHit(w.x, w.y, w.z);
-    damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.5 }, n * k);
+    damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.5 }, dmg);
+    /* leihoa beteta: kontatzeari utzi (esnatu) */
+    if (ING.hp > 0 && ING.winDmg >= ING_WIN) ING.countT = Math.min(ING.countT, 0.05);
     ING.flash = 0.25;
     bossBar("AKERBELTZ", (3 - ING.phase + Math.max(0, ING.hp) / ING_HP) / 3);
     if (ING.hp > 0) return;
@@ -276,13 +284,17 @@
       return true;
     }
     if (ING.state !== "sit") return true;
+    if (Math.hypot(P.x - ING.bed.x, P.z - ING.bed.z) > 7) {
+      notify(L("Urrunegi! LO-KANTA tronutik gertu jo behar da (zazpi metro), hare-haizearen kontra."), "", 3.5);
+      return true;
+    }
     ING.state = "lull";
     ING.t = 0;
     ING.crush = Math.max(0, ING.crush - 0.4);
     ING.stats.lull++;
     bark("c7_n6");
     fxBurst(ING.x, ING.y + 2, ING.z, { n: 40, speed: 2, up: 1, life: 1.4, size: 0.3, color: "#e6dcff", grav: -0.3 });
-    notify(L("Lokartzen ari da! Orain: jo (eta SORGIN-HAUTSA: kalte bikoitza)."), "", 4);
+    notify(L("Lokartzen ari da! Orain: SORGIN-HAUTSA (Z), eta jo: kalte bikoitza!"), "", 4);
     return true;
   }
   /* itzulitako izarra: zorabiatuta (hautsarentzat leihoa) */
@@ -302,7 +314,7 @@
     fxBurst(F.x, F.y + 2, F.z, { n: 30, speed: 3, life: 0.8, size: 0.35, color: "#cbb8ff", grav: -0.5 });
     SND.whoosh();
     if (ENEMIES.filter((e) => e.state !== "dead").length < 3) {
-      const e = spawnEnemy("mamua", -1, F.x, F.z, 0);
+      const e = spawnEnemy("mamua", 1, F.x, F.z, 0);
       e.room = ingR();
     }
     notifyOnce("inguma-faltsua", L("Faltsua! Mamu bihurtu da. Benetakoa: ENTZUN (txalaparta)."), "");
@@ -355,7 +367,7 @@
       updateMaxHp();
       P.hp = P.maxHp;
       persist();
-      itemGet("bihotza", L("AKERBELTZEN BIHOTZA"), L("Arnasa bat gehiago. Zazpigarren txingarra amaren leizera itzuli da."), () => ametsaWake());
+      itemGet("bihotza", L("AKERBELTZEN BIHOTZA"), L("Arnasa bat gehiago. Zazpigarren txingarra Mariren leizera itzuli da."), () => ametsaWake());
     }, { AKERBELTZ: [ING.x, ING.z, ING.y] });
   }
   /* --------------------------- eguneraketa --------------------------- */
@@ -414,6 +426,7 @@
         ING.state = "dive";
         ING.t = 0;
         ING.from = { x: ING.x, y: ING.y, z: ING.z };
+        SND.crackle && SND.crackle();
       }
     } else if (ING.state === "dive") {
       const k = Math.min(1, t / 0.38);
@@ -423,10 +436,10 @@
       if (k >= 1) {
         shake(0.45);
         fxRing(ING.x, 0.15, ING.z, "#7a5cff", 4, 0.5);
-        if (Math.hypot(P.x - ING.x, P.z - ING.z) < 2.4 && P.y < 2.5 && P.dashT <= 0) playerHit(1, ING.x, ING.z);
+        if (Math.hypot(P.x - ING.x, P.z - ING.z) < 2.4 && P.y < 2.5 && P.dashT <= 0) playerHit(2, ING.x, ING.z);
         ING.state = "tired";
         ING.t = 0;
-        notifyOnce("inguma-nekatuta", L("Nekatuta, behean! IZAR-HAUTSA (Z) bota: kontatzen hasiko da."), "");
+        notifyOnce("inguma-nekatuta", L("Nekatuta, behean! SORGIN-HAUTSA (Z) bota: kontatzen hasiko da."), "");
       }
     } else if (ING.state === "tired" || ING.state === "stagger") {
       /* zorabiatuta (izarra itzulita) erortzen da; nekatuta, behean arnasestuka */
@@ -451,9 +464,12 @@
     if (ING.phase === 2) {
       ING.reveal = TXALA.reveal > 0 ? 1 : Math.max(0, ING.reveal - dt * 0.5);
       ING.swap += dt;
-      if (ING.swap > 7 && ING.state === "float2") {
+      if (ING.swap > 6 && ING.state === "float2") {
         ING.swap = 0;
         ING.realI = (ING.realI + 1 + Math.floor(Math.random() * 2)) % 3;
+        /* lekuz aldatzean, ENTZUN-en distira itzali: berriro entzun behar da */
+        ING.reveal = 0;
+        TXALA.reveal = 0;
         SND.whoosh();
       }
       const slots = [0, 1, 2].map((i) => {
@@ -501,7 +517,7 @@
         if (phase === 1 && G.hurtT <= 0 && Math.hypot(P.x - G.x, P.z - G.z) < G.r && P.y < 1 && !respawnTimer) {
           G.hurtT = 1.2;
           playerHit(1, G.x, G.z);
-          notifyOnce("amets-belarrak", L("Amets-belarrak! NEGUAN mina; UDAN belar hutsak dira."), "");
+          notifyOnce("amets-belarrak", L("Akelarre-belarrak! NEGUAN mina; UDAN belar hutsak dira."), "");
         }
       }
     }
@@ -531,7 +547,7 @@
       ING.x = mix(ING.x, ING.bed.x + 3.2, 1 - Math.exp(-dt * 2));
       ING.z = mix(ING.z, ING.bed.z + 2.5, 1 - Math.exp(-dt * 2));
       if (Math.random() < dt * 2) damageNumber({ x: ING.x, y: ty + 4.2, z: ING.z, H: 0.4 }, "z z", "#d9c8ff");
-      if (t > 7) {
+      if (t > 4) {
         ING.state = "sit";
         ING.t = 0;
       }
@@ -565,7 +581,8 @@
         m.emissiveIntensity = ING.flash > 0 ? 1.1 : ING.phase === 2 && ING.reveal > 0.05 ? 0.6 : 0.22;
       }
     for (const [i, A] of ING.arms.entries()) A.rotation.x = ING.state === "diveWind" ? -1.6 : ING.state === "sit" ? -0.6 + Math.sin(t * 3 + i) * 0.2 : Math.sin(t * 2 + i * 2) * 0.25;
-    ING.aura.material.opacity = 0.35 + Math.sin(t * 3) * 0.1;
+    ING.aura.material.opacity = counting || asleep ? 0.6 + Math.sin(t * (asleep ? 2.4 : 9)) * 0.25 : ING.state === "diveWind" ? 0.75 : 0.3 + Math.sin(t * 3) * 0.08;
+    ING.aura.material.color.set(asleep ? "#e6dcff" : counting ? "#c9b6ff" : ING.state === "diveWind" ? "#ff8ad8" : "#9a4cff");
     /* murgiltzearen itzala */
     ING.shadow.material.opacity = ING.state === "diveWind" ? 0.25 + 0.4 * Math.min(1, t / 1.1) : 0;
     if (ING.dive) ING.shadow.position.set(ING.dive.x, 0.06, ING.dive.z);
@@ -585,7 +602,7 @@
     bossBar(null);
   }
   BOSSK.inguma = {
-    vulnerable: () => ING.state === "count" || ING.state === "lull",
+    vulnerable: () => ING.state === "count",
     weak: () => ({ x: ING.x, y: ING.y + 3.9 * ING.scale, z: ING.z }),
     center: () => ({ x: ING.x, y: ING.y, z: ING.z, h: 4.5 * ING.scale, r: 2.6 }),
     hit: (n) => ingumaHit(n),

@@ -190,33 +190,39 @@
     AM.floaters.push({ g, y0: y, ph: x * 0.3 + z * 0.17, spin: kind === "liburuak" ? 0.3 : 0.08 });
     return g;
   }
-  /* erloju geldituak (OIHARTZUN-en erlojua gogoratuz): esfera, orratzak eta zenbaki-markak */
+  /* sorgin-erratzak hegan (akelarreko atrezzoa): kirtena, lotura eta isats-adaxkak; kirtenak astiro kulunkatzen dira */
   function stoppedClock(x, y, z, r = 1.6) {
     const g = new T.Group(),
-      face = new T.Mesh(new T.CircleGeometry(r, 36), material("#efe6d2")),
-      rim = new T.Mesh(new T.TorusGeometry(r, r * 0.08, 6, 36), material("#b48a3e", 0.3));
-    g.add(face, rim);
-    for (let i = 0; i < 12; i++) {
-      const a = (i / 12) * TAU,
-        mk = new T.Mesh(new T.BoxGeometry(r * 0.06, r * 0.18, 0.04), material("#3a2a1a"));
-      mk.position.set(Math.sin(a) * r * 0.82, Math.cos(a) * r * 0.82, 0.02);
-      mk.rotation.z = -a;
-      g.add(mk);
+      wood = material("#6b4a2e"),
+      straw = material("#c9a35a"),
+      band = material("#3a2a1a");
+    const hand1 = new T.Group(),
+      hand2 = new T.Group();
+    g.add(hand1);
+    hand1.add(hand2);
+    const stick = new T.Mesh(new T.CylinderGeometry(r * 0.05, r * 0.06, r * 2.4, 7), wood);
+    stick.rotation.z = PI / 2;
+    hand2.add(stick);
+    const tie = new T.Mesh(new T.CylinderGeometry(r * 0.12, r * 0.12, r * 0.12, 8), band);
+    tie.rotation.z = PI / 2;
+    tie.position.x = -r * 1.1;
+    hand2.add(tie);
+    for (let i = 0; i < 9; i++) {
+      const a = (i / 9) * TAU,
+        tw = new T.Mesh(new T.ConeGeometry(r * 0.09, r * 1.1, 4), straw);
+      tw.rotation.z = PI / 2 + Math.cos(a) * 0.18;
+      tw.rotation.x = Math.sin(a) * 0.18;
+      tw.position.set(-r * 1.65, Math.cos(a) * r * 0.12, Math.sin(a) * r * 0.12);
+      hand2.add(tw);
     }
-    const hand1 = new T.Mesh(new T.BoxGeometry(r * 0.07, r * 0.75, 0.05), material("#1a1410")),
-      hand2 = new T.Mesh(new T.BoxGeometry(r * 0.05, r * 0.5, 0.05), material("#1a1410"));
-    hand1.geometry.translate(0, r * 0.35, 0.04);
-    hand2.geometry.translate(0, r * 0.22, 0.05);
-    hand1.rotation.z = -2.2;
-    hand2.rotation.z = -0.4;
-    g.add(hand1, hand2);
-    /* arrakala: erlojua hautsita */
-    const crack = new T.Mesh(new T.BoxGeometry(r * 1.4, r * 0.03, 0.03), material("#6a5a4a"));
-    crack.rotation.z = 0.7;
-    crack.position.z = 0.03;
-    g.add(crack);
+    /* distira lila (sorginkeria) */
+    const halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#b28cff", transparent: true, opacity: 0.35, blending: T.AdditiveBlending, depthWrite: false }));
+    halo.scale.setScalar(r * 2.2);
+    halo.position.x = -r * 1.5;
+    hand2.add(halo);
+    hand1.rotation.z = -0.25;
     g.position.set(x, y, z);
-    g.lookAt(x, y, z + 10);
+    g.rotation.y = (x * 0.37 + z * 0.11) % TAU;
     BP.add(g);
     AM.clocks.push({ g, y0: y, ph: x + z, hand1, hand2 });
     return g;
@@ -420,8 +426,8 @@
     for (const C of AM.clocks) {
       C.g.position.y = C.y0 + Math.sin(time * 0.5 + C.ph) * 0.5;
       C.g.visible = !camNear(C.g, 9);
-      /* orratzak dardaraka: denbora ez da igarotzen */
-      C.hand1.rotation.z = -2.2 + Math.sin(time * 9 + C.ph) * 0.02;
+      /* erratzak astiro kulunkan, haizerik gabe */
+      C.hand1.rotation.z = -0.25 + Math.sin(time * 0.9 + C.ph) * 0.12;
     }
     if (AM.motes) AM.motes.rotation.y += dt * 0.004;
     /* sehaska geldi → giltza nagusiaren kutxa agerian */

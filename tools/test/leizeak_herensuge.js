@@ -385,41 +385,93 @@ const { launch } = require('./_browser');
     g.hero.rotation.y = a;
     g.ATK.hold = true;
     let maxL = 0;
-    for (let k = 0; k < Math.round(secs * 120) && g.ZB.state !== 'blind' && g.ZB.state !== 'down'; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); maxL = Math.max(maxL, g.ZB.light); }
+    if (g.ZB.state === 'idle') { g.ZB.state = 'paw'; g.ZB.t = 0; }
+    for (let k = 0; k < Math.round(secs * 120) && g.ZB.state !== 'blind' && g.ZB.state !== 'down'; k++) { g.ZB.atkCd = 99; if (g.ZB.state === 'paw') g.ZB.t = Math.min(g.ZB.t, 0.5); g.tick(1 / 120); maxL = Math.max(maxL, g.ZB.light, g.ZB.sunL, g.ZB.moonL); }
     g.ATK.hold = false;
     const first = g.ZB.state;
     for (let k = 0; k < 900 && g.ZB.state === 'blind'; k++) g.tick(1 / 120);
     return { first, state: g.ZB.state, maxL: +maxL.toFixed(2), mir: g.MIR.kind };
   }, [shaft, secs]);
+  /* atsedenean (idle) begiak erdi itxita: argiak ez du metatzen */
+  st = await ev(() => {
+    const g = __game, S0 = g.SHAFTS.find((s) => s.id === 'hG-argia0');
+    g.teleport(S0.x, S0.z, 6);
+    const hp = new THREE.Vector3();
+    g.ZB.head.getWorldPosition(hp);
+    const a = Math.atan2(hp.x - g.P.x, hp.z - g.P.z);
+    g.P.angle = a;
+    g.hero.rotation.y = a;
+    g.ATK.hold = true;
+    let maxL = 0;
+    for (let k = 0; k < 120; k++) { g.ZB.atkCd = 99; g.ZB.state = 'idle'; g.tick(1 / 120); maxL = Math.max(maxL, g.ZB.light); }
+    g.ATK.hold = false;
+    for (let k = 0; k < 20; k++) g.tick(1 / 120);
+    return { maxL, state: g.ZB.state };
+  });
+  ok(st.maxL === 0, 'atsedenean begiak erdi itxita: argiak ez du itsutzen', S(st));
+  /* leihoa: hiru kolpe gehienez, gero altxatu; txanda amaitu arte */
+  const finishRound = () => ev(() => {
+    const g = __game, r = g.ZB.round;
+    let wins = 0;
+    for (let k = 0; k < 8 && g.ZB.round === r && !g.BOSS.dead; k++) { if (g.ZB.state !== 'down') g.zbDown('crash', 4); g.zbHit(9); wins++; }
+    return { wins, round: g.ZB.round, state: g.ZB.state };
+  });
   let bh = await beamBull(0, 3);
   ok(bh.first === 'blind' && bh.state === 'down', 'EGUZKIA begi urreetara → itsu → hormaren kontra → lurrera', S(bh));
   ok(await ev(() => __game.BOSS.vulnerable() && __game.ZB.ember.visible), 'bekokiko TXINGARRA agerian');
-  await ev(() => { const g = __game; g.zbHit(g.ZB.hp); for (let k = 0; k < 30; k++) g.tick(1 / 120); });
-  ok(await ev(() => __game.ZB.round === 1), 'II: begi urdinak');
+  st = await ev(() => { const g = __game, h0 = g.ZB.hp; g.zbHit(9); return { d: h0 - g.ZB.hp, state: g.ZB.state }; });
+  ok(st.d === 3 && st.state === 'idle', 'leihoa: hiru kolpe gehienez, gero altxatu', S(st));
+  st = await finishRound();
+  ok(st.round === 1 && st.wins === 1, 'II: begi urdinak (bigarren leihoarekin)', S(st));
+  await ev(() => { const g = __game; for (let k = 0; k < 220; k++) g.tick(1 / 120); });
   await calm();
   /* II: ILARGIA (NEGUA) */
   await ev(() => { const g = __game; if (g.phase() !== 1) g.switchPhase(); for (let k = 0; k < 40; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); } });
   bh = await beamBull(1, 3);
   ok(bh.maxL > 0.9 && bh.state === 'down', 'ILARGIA begi urdinetara → itsu → lurrera', S(bh));
-  await ev(() => { const g = __game; g.zbHit(g.ZB.hp); for (let k = 0; k < 30; k++) g.tick(1 / 120); });
-  ok(await ev(() => __game.ZB.round === 2), 'III: begi bat urrea, bestea urdina');
+  st = await finishRound();
+  ok(st.round === 2, 'III: begi bat urrezkoa, bestea urdina', S(st));
+  await ev(() => { const g = __game; for (let k = 0; k < 220; k++) g.tick(1 / 120); });
   await calm();
-  /* su-bola itzulia (EZKUTUA): zorabiatuta */
-  st = await ev(() => { const g = __game; g.BOSS.stagger(); return { state: g.ZB.state, reflect: g.ZB.stats.reflect }; });
-  ok(st.state === 'down' && st.reflect === 1, 'su-bola itzulia → lurrera', S(st));
+  /* su-bola itzulia (EZKUTUA, benetako bidea): kargatzen → zezenak su-bola → itzuli → zorabiatuta (ez lurrera) */
+  st = await ev(() => {
+    const g = __game, Z = g.ZB;
+    g.P.hp = g.P.maxHp;
+    /* leku librea (estalperik gabe zezenaren eta jokalariaren artean): itsu-lasterketaren ondoren, edonon egon daiteke */
+    Z.x = g.DGH.bossRoom.x + 6;
+    Z.z = -121.5;
+    Z.a = 0;
+    Z.g.rotation.y = 0;
+    g.teleport(Z.x, Z.z + 11, 6);
+    for (let k = 0; k < 10; k++) { Z.atkCd = 99; g.tick(1 / 120); }
+    const a = Math.atan2(Z.x - g.P.x, Z.z - g.P.z);
+    g.P.angle = a;
+    g.hero.rotation.y = a;
+    Z.state = 'spit';
+    Z.t = 0;
+    Z.spat = false;
+    g.ATK.hold = true;
+    let seen = '';
+    const r0 = Z.stats.reflect;
+    for (let k = 0; k < 480 && Z.stats.reflect === r0; k++) { Z.atkCd = 99; g.P.angle = Math.atan2(Z.x - g.P.x, Z.z - g.P.z); g.tick(1 / 120); if (Z.state === 'daze') seen = 'daze'; }
+    g.ATK.hold = false;
+    for (let k = 0; k < 4; k++) g.tick(1 / 120);
+    return { state: Z.state, seen, r0, reflect: Z.stats.reflect, hp: g.P.hp, max: g.P.maxHp };
+  });
+  ok(st.reflect === st.r0 + 1 && (st.state === 'daze' || st.seen === 'daze'), 'EZKUTUA: su-bola itzulia → zorabiatuta (begiak zabalik)', S(st));
   await ev(() => { const g = __game; g.ZB.stun = 0; for (let k = 0; k < 20; k++) g.tick(1 / 120); });
   await calm();
   /* III: lehenik EGUZKIA (UDA), gero ILARGIA (NEGUA) */
   await ev(() => { const g = __game; if (g.phase() !== 0) g.switchPhase(); for (let k = 0; k < 40; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); } });
-  bh = await beamBull(0, 0.6);
+  bh = await beamBull(0, 1.2);
   st = await ev(() => ({ sun: __game.ZB.sunT > 0, state: __game.ZB.state }));
-  ok(st.sun && st.state !== 'blind', 'III: begi urrea itsututa (bat bakarrik)', S(st));
+  ok(st.sun && st.state !== 'blind', 'III: urrezko begia itsututa (bat bakarrik)', S(st));
   await ev(() => { const g = __game; g.switchPhase(); for (let k = 0; k < 30; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); } });
   bh = await beamBull(1, 3);
   ok(bh.state === 'down', 'III: ILARGIA ere → itsu → lurrera', S(bh));
-  await ev(() => { const g = __game; g.zbHit(g.ZB.hp); });
+  st = await finishRound();
   await T(30);
-  ok(await ev(() => __game.BOSS.dead && __game.cinematicState()), 'ZEZENGORRI garaituta (eszena)');
+  ok(await ev(() => __game.BOSS.dead && __game.cinematicState()), 'ZEZENGORRI garaituta (eszena)', S(st));
   await shot('07_askatuta');
   await skip();
   await T(30);

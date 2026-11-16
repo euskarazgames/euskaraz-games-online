@@ -348,10 +348,10 @@
             : eraComb()
               ? e.era
                 ? "Ezkutu urdina: IZOTZAREKIN bakarrik zauritzen da. ALDATU!"
-                : "Ezkutu urrea: UR BIZIAREKIN bakarrik zauritzen da. ALDATU!"
+                : "Urrezko ezkutua: UR BIZIAREKIN bakarrik zauritzen da. ALDATU!"
               : e.era
                 ? "Ezkutu urdina: NEGUAN bakarrik zauritzen da. ALDATU urtaroa!"
-                : "Ezkutu urrea: UDAN bakarrik zauritzen da. ALDATU urtaroa!",
+                : "Urrezko ezkutua: UDAN bakarrik zauritzen da. ALDATU urtaroa!",
           "",
           3.5,
         );
@@ -738,7 +738,7 @@
             shake(0.3);
             SND.thud();
             fxBurst(nx, e.y + 1, nz, { n: 20, speed: 5, up: 3, life: 0.6, size: 0.3, color: "#c58bff", grav: 6 });
-            notifyOnce("brute-stun", "Zezena zorabiatuta: orain bikoitza zauritzen da!", "Bestia aturdida: ¡ahora recibe doble daño!");
+            notifyOnce("brute-stun", "Etsaia zorabiatuta: orain kalte bikoitza jasotzen du!", "");
           }
         }
       }
@@ -1005,7 +1005,9 @@
     }
     if (s.rock && BOSS.canStagger()) {
       const c = BOSS.center();
-      if (Math.hypot(c.x - s.x, c.z - s.z) < (c.r || 2.6) && s.y < (c.h || 7)) {
+      /* altuera erlatiboa (arenak ez daude beti y = 0an: Zezengorriren altxortegia y = 6an) */
+      const cy = c.y || 0;
+      if (Math.hypot(c.x - s.x, c.z - s.z) < (c.r || 2.6) && s.y > cy - 1.5 && s.y < cy + (c.h || 7)) {
         BOSS.stagger();
         return true;
       }

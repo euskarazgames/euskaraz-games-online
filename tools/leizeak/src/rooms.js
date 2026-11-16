@@ -75,7 +75,7 @@
     shiftFlash = 0.8;
     FB.respawn();
     haptic(30);
-    notify(L("Denbora atzera. Saiatu berriro."), "", 1.8);
+    notify(L("Lur seguruan berriro. Saiatu berriro."), "", 1.8);
     hud();
   }
   function haptic(ms) {

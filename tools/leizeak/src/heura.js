@@ -160,7 +160,7 @@
       if (P.y < F.y0 - 0.6 || P.y > F.y1 - 0.75) continue;
       if (-(d.x * F.nx + d.z * F.nz) / len < 0.55) continue;
       if (!ivyLive(F)) {
-        notifyOnce("heura-izotza", L("Heura izoztuta dago: ezin zara heldu. UDAN bizirik dago…"), "");
+        notifyOnce("heura-izotza", L("Heura izoztuta dago: ezin zaio heldu. UDAN bizirik dago…"), "");
         continue;
       }
       climbStart(F, along);

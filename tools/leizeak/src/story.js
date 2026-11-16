@@ -209,7 +209,7 @@
   function zazpiColors(green) {
     ZAZPI.green = green;
     for (const L0 of ZAZPI.lights) {
-      const c = L0.i < green ? "#3dff8a" : "#ff2a1a";
+      const c = L0.i < green ? "#ffcf5a" : "#a3201a";
       L0.halo.material.color.set(c);
       L0.core.material.color.set(c);
     }
@@ -237,7 +237,7 @@
     g.add(storm);
     for (let i = 0; i < 7; i++) {
       const a = (i / 7) * TAU - PI / 2,
-        col = i < 3 ? "#3dff8a" : "#ff2a1a",
+        col = i < 3 ? "#ffcf5a" : "#a3201a",
         halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, depthWrite: false, opacity: 0, fog: false })),
         core = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0, fog: false }));
       halo.position.set(Math.cos(a) * 24, Math.sin(a) * 24, 0);
@@ -282,9 +282,9 @@
     say(
       [
         ["ATARRABI", "Amaiur! Lepotik ardi-zintzarriak entzun dira, eta Tartaloren orroa… baina kantu bat zirudien.", "", 0, 41, 0],
-        ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala. Zure itzalaren kolorekoa zen…", "", P.x, P.z, 0],
-        ["· · ·", "Une horretan, Murumendi aldetik, ekaitz-hodei bat jaitsi da harana estaltzera. Haren barruan, zazpi argi.", "", 20, -170, 120, [0, 30, 40]],
-        ["· · ·", "Hiru argi berde: Basajaun, Lamia, Tartalo. Beste lauak gorri, Mikelatsen eskuetan, taupaka.", "", 20, -170, 120, [0, 30, 40]],
+        ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala… eta zure oinetara etorri zen, Atarrabi.", "", P.x, P.z, 0],
+        ["· · ·", "Une horretan, Murumendi aldetik, ekaitz-hodei bat jaitsi da harana estaltzera. Haren barruan, zazpi txingar.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Hiru txingar urrezko: Basajaun, Lamia, Tartalo. Beste lauak gorri, Mikelatsen ekaitzean, taupaka.", "", 20, -170, 120, [0, 30, 40]],
         ["MIKELATS", "Hiru txingar galdu ditut. Baina negua nirea da, eta zure amonaren sua… hura ere nahi dut.", "", P.x, P.z, 0, null, "st_g3"],
         ["ATARRABI", "Zure amonaren sua aipatu du… Zoaz etxera, Amaiur. Orain.", "", 0, 41, 0],
         ["AMAIUR", "Amona…!", "", P.x, P.z, 0],
@@ -309,9 +309,10 @@
       [
         ["ATARRABI", "Amaiur! Gau osoan harrespilako harriek dardara egin dute… eta gero, isiltasuna. Lo daude berriro.", "", 0, 41, 0],
         ["AMAIUR", "Mairu zaharra aske dago. Haserrez altxatzen zituen harriak: ekaitz bat zeraman bularrean.", "", P.x, P.z, 0],
-        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Laugarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Murumendiko hodeian, zazpi txingarrak berriro. Laugarrena… urrez piztu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["ATARRABI", "Nire itzala hazten ari da, txingar bakoitzarekin. Ez dakit zergatik… baina ez dut beldurrik.", "", 0, 41, 0],
         ["MIKELATS", "Lau. Harriak lo daude berriro. Baina hodeien gainean, Eatek ez du sorginik maite.", "", P.x, P.z, 0, null, "st_g4"],
-        ["ATARRABI", "Eate: haizearen eta suaren izpiritua. Hodeien gainean, Ortzian, nire anaiak bosgarren txingarra eman dio.", "", 0, 41, 0],
+        ["ATARRABI", "Eate: haizearen eta suaren izpiritua. Hodeien gainean, Ortzian, bosgarren txingarra gordetzen du, nire anaiaren trumoia bihotzean.", "", 0, 41, 0],
         ["AMAIUR", "Ortzira, beraz. Hodeien gainera.", "", P.x, P.z, 0],
       ],
       () => {
@@ -337,9 +338,9 @@
       [
         ["ATARRABI", "Amaiur! Gaur euria egin du, eta euri goxoa zen, ez kazkabarra. Txalapartak lasaiago jotzen du.", "", 0, 41, 0],
         ["AMAIUR", "Eate aske dago. Trumoi bat zeraman bihotzean, Mairu zaharrak bezala.", "", P.x, P.z, 0],
-        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Bosgarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Murumendiko hodeian, zazpi txingarrak berriro. Bosgarrena… urrez piztu da.", "", 20, -170, 120, [0, 30, 40]],
         ["MIKELATS", "Bost. Ekaitza ere galdu dut… Baina Zezengorrik ez du inoiz altxorrik uzten.", "", P.x, P.z, 0, null, "st_g5"],
-        ["ATARRABI", "Zezengorri amaren altxorren zaindaria zen. Orain, nire anaiaren txingarra zaintzen du, eguzkiaren leizean.", "", 0, 41, 0],
+        ["ATARRABI", "Zezengorri amaren altxorren zaindaria zen. Orain, amaren txingarra zaintzen du nire anaiarentzat, eguzkiaren leizean.", "", 0, 41, 0],
         ["AMAIUR", "Bi falta. Gero, Murumendira.", "", P.x, P.z, 0],
       ],
       () => {
@@ -363,9 +364,10 @@
     ZAZPI.turnTo = 6;
     say(
       [
-        ["ATARRABI", "Amaiur! Bart, zerua gorri jarri da herriaren gainean, eta zezen baten orroa entzun da mendietan… eskerrak ziruditen.", "", 0, 41, 0],
+        ["ATARRABI", "Amaiur! Bart, zerua gorri jarri da herriaren gainean, eta zezen baten orroa entzun da mendietan… esker-oihu bat zirudien.", "", 0, 41, 0],
         ["AMAIUR", "Zezengorri aske dago. Altxorra itzuli du, eta eguzkiak berriro ikusten du haren leizea.", "", P.x, P.z, 0],
-        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Seigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Murumendiko hodeian, zazpi txingarrak berriro. Seigarrena… urrez piztu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["ATARRABI", "Ia osorik dago nire itzala, Amaiur. Begira: eguzkiak badaki non utzi.", "", 0, 41, 0],
         ["MIKELATS", "Sei. Nekatuta zaude, sorgin? Lo egin… Akelarrean, Akerbeltz zain.", "", P.x, P.z, 0, null, "st_g6"],
         ["ATARRABI", "Akelarrea… Gaur gauean, ez itzali sutondoa, Amaiur. Sorginak lotan hegan egiten du: kontuz zure ametsekin.", "", 0, 41, 0],
         ["AMAIUR", "Akelarrea… Bat falta. Gero, Murumendira.", "", P.x, P.z, 0],

@@ -233,7 +233,7 @@
         AN.stage = "arrive";
         AN.dawn = 0;
         anbotoArrive();
-        enterZone("anboto", { ...AN_SPAWN }, true);
+        enterZone("anboto", { ...AN_SPAWN, cp: true }, true);
       },
     );
   }

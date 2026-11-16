@@ -80,7 +80,15 @@
       N.solid = { x: D.x, z: D.z, r: D.stone ? 1.6 : 0.6, h: 2, y: N.y, pillar: true, mov: !D.stone };
       solids.push(N.solid);
       if (D.ghost) N.halo = glow(D.x, 1.3, D.z, "#9fd8ff", 4.5);
-      if (D.shadowless) N.halo = glow(D.x, 1.2, D.z, "#ffcf8a", 3.2);
+      if (D.shadowless) {
+        N.halo = glow(D.x, 1.2, D.z, "#ffcf8a", 3.2);
+        /* itzal-zatia oinetan: txingar bakoitzarekin hazten da (amaieran, itzala osorik itzultzen zaio) */
+        N.shard = new T.Mesh(new T.CircleGeometry(1, 24), new T.MeshBasicMaterial({ color: "#05060a", transparent: true, opacity: 0, depthWrite: false }));
+        N.shard.rotation.x = -PI / 2;
+        N.shard.renderOrder = 2;
+        N.shard.visible = false;
+        BP.add(N.shard);
+      }
       NPCS.push(N);
     }
   }
@@ -105,6 +113,13 @@
         if (N.halo) N.halo.visible = false;
         if (N.solid) N.solid.r = 0;
         continue;
+      }
+      if (N.shard) {
+        const k = ["lamia", "tartalo", "errolan", "odei", "herensugea", "inguma"].filter((x) => saved.flags.includes(x)).length;
+        N.shard.visible = N.g.visible && k > 0;
+        N.shard.position.set(N.x + 0.25, (N.y || 0) + 0.04, N.z + 0.3);
+        N.shard.scale.set(0.3 + k * 0.12, 0.22 + k * 0.08, 1);
+        N.shard.material.opacity = 0.12 + k * 0.07;
       }
       const d = Math.hypot(P.x - N.x, P.z - N.z);
       /* gauez etxera (eta goizean itzuli): egutegia jokalariaren urruntasunetik aparte */
@@ -251,7 +266,7 @@
       return talk(
         N,
         [
-          ["ATARRABI", "Ez izan beldurrik, Amaiur. Kriseiluko ahotsa nirea zen. Gauez eta egunsentian bakarrik igo naiteke lurrazalera."],
+          ["ATARRABI", "Ez izan beldurrik, Amaiur. Kriseiluko ahotsa nirea zen. Hemen egongo naiz, txalapartaren ondoan."],
           ["AMAIUR", "Atarrabi… Mariren semea? Amonaren ipuinetan agertzen zara."],
           ["ATARRABI", "Ipuinek gehiegi esaten dute, eta gutxiegi. Leizeek zure laguntza behar dute: amaren txingarrak hozten ari dira."],
           ["ATARRABI", "Nire anaiak, Mikelatsek, zaindariak gaiztotu ditu txingarrak lapurtzeko. Basajaun lehena."],
@@ -272,6 +287,7 @@
         N,
         [
           ["ATARRABI", "Ibaian kantuak entzun ditut berriro, lamien kantuak. Bigarren txingarra amaren leizera itzuli da!"],
+          ["ATARRABI", "Begira: nire oinetan, itzal-zati bat. Lehen ez zegoen."],
           ["AMAIUR", "Lamiak esan zidan: Tartalo esnatu da. Artzainen lepoan, haize-errota geldirik dago."],
           ["ATARRABI", "Errota hori nire anaiaren kazkabarrak geldiarazi zuen. Zure adarrak berriro biraraziko du."],
           ["ATARRABI", "Eta gogoratu: Tartalok ilunpean dena ikusten du… baina argiak itsutzen du."],
@@ -364,7 +380,7 @@
       );
     if (f("ardiak-saria")) {
       if (joanesPony(N, f)) return;
-      return talk(N, [["JOANES", ponyTamed() ? "Beltxak zu ezagutzen zaitu orain. Jo POTTOKA, eta etorriko da." : "Ardiak lasai daude orain. Basajaun bizirik balego bezala."]]);
+      return talk(N, [["JOANES", ponyTamed() ? "Beltxak zu ezagutzen zaitu orain. Jo POTTOKA, eta etorriko da." : "Ardiak lasai daude orain. Basajaun esna balego bezala."]]);
     }
     if (home < 3) return talk(N, [["JOANES", home ? home + " ardi etxean. Beste " + (3 - home) + " falta dira." : "Hesira ekarri, zure atzetik etorriko dira."]]);
     if (!f("ardiak-saria"))
@@ -380,7 +396,7 @@
       return talk(
         N,
         [
-          ["KATTALIN", "Mari… Anbotoko andrea. Ostiraletan suzko bola batean ibiltzen zen mendiz mendi."],
+          ["KATTALIN", "Mari… Murumendiko andrea. Ostiraletan suzko bola batean ibiltzen zen mendiz mendi."],
           ["KATTALIN", "Zazpi leize ditu, eta bakoitzean zaindari bat. Lehena Basajaunena da, basoan."],
           ["KATTALIN", "Gaua gauekoentzat, esaten zuten zaharrek… baina zuk ez diozu ilunpeari beldurrik izan behar, alaba."],
         ],
@@ -390,7 +406,7 @@
       return talk(
         N,
         [
-          ["KATTALIN", "Sendabelarrak egin nahi nituzke, baina sorgin-belarrak negu honetan ez dira hazten."],
+          ["KATTALIN", "Sendabelar-botilak egin nahi nituzke, baina sorgin-belarrak negu honetan ez dira hazten."],
           ["KATTALIN", "Udan, ordea… lore urdinak basoan, harrespilan eta ibaiaz bestaldeko larreetan. Ekarri hiru, eta botilak egingo dizkizut."],
         ],
         () => flagSet("kattalin-belar"),
@@ -424,13 +440,13 @@
       );
     if (f("herensugea")) return talk(N, [["JENTIL ZAHARRA", "Zezengorriren orroa entzun dut mendietan, sorgin txikia, baina pozez. Txingar bakarra falta da."]]);
     if (f("odei")) return talk(N, [["JENTIL ZAHARRA", "Euri goxoa… Eate aske dago. Hiru neguan ez dut horrelako usainik sentitu. Bi txingar falta, sorgin txikia."]]);
-    if (f("ortzadarra")) return talk(N, [["JENTIL ZAHARRA", "Ortzadarra… igo, sorgin txikia. Hodeien gainean, gure uharte zaharrak. Udan, hodeiak harri bezain trinkoak dira."]]);
+    if (f("ortzadarra")) return talk(N, [["JENTIL ZAHARRA", "Ortzadarra… igo, sorgin txikia. Hodeien gainean, Ortziren uharte zaharrak. Udan, hodeiak harri bezain trinkoak dira."]]);
     if (f("irati-errolan") && saved.rhythms.includes("ortzi")) return talk(N, [["JENTIL ZAHARRA", "Harrespilaren erdian, gure harrien artean: jo ORTZI. Zeruak entzungo zaitu."]]);
     if (f("irati-errolan"))
       return talk(
         N,
         [
-          ["JENTIL ZAHARRA", "Ortzia… Antzina, gu ere igotzen ginen hara, ortzadarra agertzen zenean, euriaren eta eguzkiaren artean."],
+          ["JENTIL ZAHARRA", "Ortzia… Antzina, gure aitonek ikusten zuten, ortzadarra agertzen zenean, euriaren eta eguzkiaren artean."],
           ["JENTIL ZAHARRA", "Ortzi, zeru zaharra, gure laguna zen. Haren erritmoa gogoratzen dut oraindik: entzun, eta errepikatu."],
         ],
         () => txalaLearn("ortzi", "JENTIL ZAHARRA", () => notify(L("Jo ORTZI harrespilaren erdian: ortzadarra, zerurako bidea."), "", 5)),
@@ -456,7 +472,7 @@
       if (!S.follow && saved.flags.includes("ardiak") && d < 4.5 && Math.abs(P.y - S.y) < 3) {
         S.follow = true;
         SND.baa();
-        notify(L("Ardiak zure atzetik dator. Eraman hesira!"), "", 2.5);
+        notify(L("Ardia zure atzetik dator. Eraman hesira!"), "", 2.5);
       }
       if (S.follow) {
         if (d > 2.4) {

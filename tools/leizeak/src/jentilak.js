@@ -251,7 +251,7 @@
       kind: "kanpaia",
       time: 7,
       runes: [[E(46), 9.6, -9, -1], [E(48), 9.6, 0, 1], [E(46), 9.6, 9, -1]],
-      hint: "Hiru kanpaia sarearen atzean. Jo denak SORGINKERIAz, elkarren segidan — bat NEGUAN bakarrik ikusten da!",
+      hint: "Hiru kanpai sarearen atzean. Jo denak SORGINKERIAz, elkarren segidan — bat NEGUAN bakarrik ikusten da!",
       onSolve: () => {
         openDoor(DOORDEF.jBg);
         title("SAREA ZABALDU DA", "");
@@ -314,7 +314,7 @@
     crackWall("jE-crack", E(-15.2), -36, 1.4, 5.9, 5.6, { onBreak: () => notify(L("Harria apurtu da: mendebaldean, dorre bat."), "", 3.5) });
     corridor(E(-18), -36, 6, 6, "x");
     /* ---- J6: Jentilen dorrea ---- */
-    room("J6", E(-36), -36, 30, 30, { area: "jF", name: "MAIRUEN DORREA", desc: "Zutabe erraldoi bat, heuraz estalia. Inguruan, lau kanpaia.", doors: { e: 0, s: 0 }, fog: [12, 80], wallH: 20 });
+    room("J6", E(-36), -36, 30, 30, { area: "jF", name: "MAIRUEN DORREA", desc: "Zutabe erraldoi bat, heuraz estalia. Inguruan, lau kanpai.", doors: { e: 0, s: 0 }, fog: [12, 80], wallH: 20 });
     const pil = slab({ x: E(-36), z: -36, y: 12, w: 8, d: 8, h: 12, area: "jF" });
     pil.slick = true;
     DGJ.ivyF = ivySide(pil, "s", 0, { phase: 0, id: "jF-heura" });
@@ -335,7 +335,7 @@
       kind: "kanpaia",
       time: 10,
       runes: cols.map(([cx, cz, era]) => [E(cx), 11.6, cz, era]),
-      hint: "Lau kanpaia zutabeen gainean. Jo denak, elkarren segidan: goitik hobeto…",
+      hint: "Lau kanpai zutabeen gainean. Jo denak, elkarren segidan: goitik hobeto…",
       onSolve: () => {
         revealChest(DGJ.bigChest);
         title("KANPAIAK BATERA", "");
@@ -844,9 +844,9 @@
       [
         ["· · ·", "Bularretik itzal bat atera zaio, ekaitz-hodei txiki bat bezala, eta harrien artean desagertu da.", "", ERR.x, ERR.z, 8],
         ["MAIRU ZAHARRA", "…Isiltasuna. Mende askoan lehen aldiz, ez dago trumoirik nire buruan.", "", ERR.x, ERR.z, 9],
-        ["MAIRU ZAHARRA", "Mikelatsek ekaitz bat sartu zidan bularrean, eta txingarra eraman. Mairuen indarra bere alde nahi zuen: harriak jaurti, mendiak astindu…", "", ERR.x, ERR.z, 9],
+        ["MAIRU ZAHARRA", "Mikelatsek ekaitz bat sartu zidan bularrean, txingarra beretzat gorde nezan. Mairuen indarra bere alde nahi zuen: harriak jaurti, mendiak astindu…", "", ERR.x, ERR.z, 9],
         ["AMAIUR", "Lau txingar itzulita. Hiru falta dira. Non daude?", "", P.x, P.z, 0],
-        ["MAIRU ZAHARRA", "Hodeien gainean, Ortzian: Eatek, haizearen eta suaren izpirituak, bosgarrena dauka. Ortzadarretik igotzen ziren jentilak.", "", ERR.x, ERR.z, 9],
+        ["MAIRU ZAHARRA", "Hodeien gainean, Ortzian: Eatek, haizearen eta suaren izpirituak, bosgarrena dauka. Ortzadarra da bidea.", "", ERR.x, ERR.z, 9],
         ["MAIRU ZAHARRA", "Gorde tximista-harria, sorgin txikia. Ekaitzak zure alde jo dezala.", "", ERR.x, ERR.z, 9],
       ],
       () => {
@@ -907,7 +907,7 @@
     const R = DGJ.rooms,
       it = (k) => saved.items.includes(k);
     if (!isCleared("jB-bells"))
-      return ROOM.cur === R.J2 ? ["Hiru kanpaia sarearen atzean: jo denak elkarren segidan (bat NEGUAN bakarrik ikusten da).", [R.J2.x + 11, 0, 9.6]] : ["Ekialdeko ertz garaia: HEURA, UDAN bizirik. Igo eta ekialdera.", [R.J1.x + 10, 3.6, 0]];
+      return ROOM.cur === R.J2 ? ["Hiru kanpai sarearen atzean: jo denak elkarren segidan (bat NEGUAN bakarrik ikusten da).", [R.J2.x + 11, 0, 9.6]] : ["Ekialdeko ertz garaia: HEURA, UDAN bizirik. Igo eta ekialdera.", [R.J1.x + 10, 3.6, 0]];
     if (!isCleared("J3")) return ["Harresia: mairuen zaindariak. Kolpea iristean, ALDARATU.", [R.J3.x, R.J3.z, 6]];
     if (!saved.doors.includes("jC-e") && !(saved.keyz.jentil > 0)) return ["Kutxa: harresiaren erdian.", [R.J3.x, R.J3.z, 6]];
     if (!saved.doors.includes("jC-e")) return ["Harresiaren ekialdeko atea: giltza txikia.", [R.J3.x + 13, R.J3.z, 6]];

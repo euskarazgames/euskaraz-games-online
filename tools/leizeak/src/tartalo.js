@@ -1036,7 +1036,7 @@
         persist();
         itemGet("bihotza", L("TARTALOREN BIHOTZA"), L("Arnasa bat gehiago. Kobako artaldea lasai dago orain."), () => {
           title("TARTALO ASKE", "");
-          notify(L("Irten kobatik hegoaldeko arkutik. Herrian, Irati zain."), "", 6);
+          notify(L("Irten kobatik hegoaldeko arkutik. Herrian, Atarrabi zain."), "", 6);
           hud();
         });
       },

@@ -597,7 +597,7 @@
           "arimak10",
           [
             ["KATTALIN", "Hamar! Eta azkenak… nire amonaren izena zuen. Bere argia ere bidean galduta zegoen."],
-            ["KATTALIN", "Esan du: «Anboton, Mariren etxean, zazpigarren atea. Erritmoa eraman, eta ez beldurtu ilunpeaz.»"],
+            ["KATTALIN", "Esan du: «Murumendin, Mariren etxean, ekaitzaren atea. Lo-kanta eraman, eta ez beldurtu ilunpeaz.»"],
           ],
           () => pieceGet("arimak10"),
         );

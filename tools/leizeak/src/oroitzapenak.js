@@ -12,11 +12,11 @@
      ================================================================== */
   const OROIT = { actors: {}, bell: null, clock: null, timer: 0, last: 0 };
   const OROIT_LIST = [
-    { flag: "basajaun", n: "I", name: "GAU BELTZA", when: "HIRU NEGU LEHENAGO · KAIA", sum: "Gau Beltzaren gauean, ekaitz bat. Nire ahizpak kaiko kanpaia jo zuen, Txomin itsasotik deitzeko. Ez zen itzuli." },
+    { flag: "basajaun", n: "I", name: "GAU BELTZA", when: "HIRU NEGU LEHENAGO · KAIA", sum: "Gau Beltzaren gauean, ekaitz bat. Nire ahizpak kaiko kanpaia jo zuen, Txomin itsasotik deitzeko. Txomin itzuli zen; bera, ez." },
     { flag: "lamia", n: "II", name: "AMONA", when: "HAMAR URTE LEHENAGO · PLAZA", sum: "Amonak txalaparta irakatsi zigun: batak galdetzen du, besteak erantzuten du. Eguna egunekoentzat, gaua gauekoentzat." },
     { flag: "tartalo", n: "III", name: "ATARRABIREN ITZALA", when: "AMONAREN IPUINA · ETSAIREN LEIZEA", sum: "Mariren bi semeek Etsairen leizean ikasi zuten. Atarrabi azkena irten zen, eta itzala utzi zuen; anaiak hartu zuen." },
     { flag: "errolan", n: "IV", name: "ZORTZIGARREN SUA", when: "BERROGEITA HAMAR URTE LEHENAGO · ITURRALDE", sum: "Marik bere sua utzi zuen Iturraldeko sutondoan, herria zaintzeko. Amona gaztea zen, eta zaintzea hitz eman zuen." },
-    { flag: "odei", n: "V", name: "ZAZPI TXINGARRAK", when: "ANTZINA · MARIREN LEIZEA", sum: "Marik zazpi txingar eman zizkien zazpi zaindariei. Mikelatsi, ezer ez. Haren ekaitzak gorri bihurtu zituen." },
+    { flag: "odei", n: "V", name: "ZAZPI TXINGARRAK", when: "BERROGEITA HAMAR URTE LEHENAGO · MARIREN LEIZEA", sum: "Marik zazpi txingar eman zizkien zazpi zaindariei. Mikelatsi, ezer ez. Haren ekaitzak gorri bihurtu zituen." },
     { flag: "herensugea", n: "VI", name: "MIKELATS", when: "ANTZINA ETA ORAIN · EKAITZAREN GAUA", sum: "Mikelatsek anaiaren itzala gorde zuen leizean. Itzal hartatik egin ditu bere soldaduak." },
     { flag: "inguma", n: "VII", name: "ANAIAK", when: "ORAIN · MURUMENDI", sum: "Atarrabik ez du anaia hil nahi: lo egin dezala, mendiaren azpian, ekaitza baretu arte." },
   ];
@@ -174,7 +174,7 @@
             OROIT.actors.irati.g.visible = false;
             for (let n = 0; n < 3; n++) setTimeout(() => FILM.on && SND.echo(1 - n * 0.3), n * 1300);
           }, tick: () => (OROIT.bell.swing.rotation.z = Math.sin(time * 5) * 0.4 * Math.max(0, 1 - FILM.t / 4)) }),
-          OSH({ d: 4.6, night: 0.95, say: "o1_g1", fade: "out", cam: [[2, 7, 70], [0, 10, 64]], look: [[8, 30, -60], [8, 62, -96]], tick: (dt, k) => proEyesOpen(k) }),
+          OSH({ d: 4.6, night: 0.95, say: "o1_g1", fade: "out", cam: [[2, 7, 70], [0, 10, 64]], look: [[8, 30, -60], [8, 62, -96]] }),
         ];
       case 1: /* AMONA */
         return [
@@ -215,7 +215,7 @@
             if (!MARI.m) mariCliffMesh();
             MARI.t = 0;
           }, tick: (dt) => mariFlight(dt) }),
-          OSH({ d: 5.2, night: 0.85, text: ["· · ·", "Sorgin gazteak sutondoan gorde zuen txingarra. Ordutik, Iturralden ez da sua inoiz itzali."], fade: "out", cam: [[0, 4, 46], [0, 3, 40]], look: [[0, 30, -20], [0, 60, -80]], on: () => setTimeout(() => FILM.on && SND.echo(0.6), 600), tick: (dt) => mariFlight(dt) }),
+          OSH({ d: 5.2, night: 0.85, text: ["· · ·", "Sorgin gazteak sutondoan gorde zuen txingarra. Ordutik, Iturralden ez zen sua inoiz itzali, deiaren gauera arte."], fade: "out", cam: [[0, 4, 46], [0, 3, 40]], look: [[0, 30, -20], [0, 60, -80]], on: () => setTimeout(() => FILM.on && SND.echo(0.6), 600), tick: (dt) => mariFlight(dt) }),
         ];
       case 4: /* ZAZPI TXINGARRAK */
         return [

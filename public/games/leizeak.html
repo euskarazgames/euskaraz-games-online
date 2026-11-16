@@ -346,13 +346,16 @@ body.oroit #film::before{content:"";position:absolute;inset:0;pointer-events:non
 #top button.on{background:#e2b271;color:#1c3b50;border-color:#e2b271}
 body.begi #vignette{box-shadow:inset 0 0 22vmin 5vmin #02080cb8;transition:box-shadow .3s}
 body.begi #keys,body.begi #waypoint{opacity:.2}
+/* izenburua agerian dagoen bitartean, urtaroaren etiketa ezkutuan (gainjarri ez daitezen) */
+#phaseHud{transition:opacity .35s}
+body.titling #phaseHud{opacity:0}
 
 </style></head><body><canvas id="view"></canvas><div id="vignette"></div><div id="phaseFlash"></div><div id="waypoint" hidden></div><div id="loading"><div>LEIZEEN DEIA<small id="loadLabel">Txalapartak gauez jotzen du…</small><i><b id="loadBar"></b></i></div></div>
-<section id="start"><div id="logo"><svg id="emblem" viewBox="-130 -130 260 260" aria-hidden="true"><defs><linearGradient id="lzG" gradientUnits="userSpaceOnUse" x1="0" y1="-120" x2="0" y2="120"><stop offset="0" stop-color="#fff3c4"/><stop offset=".36" stop-color="#f0c869"/><stop offset=".56" stop-color="#b38026"/><stop offset=".76" stop-color="#f6dc8e"/><stop offset="1" stop-color="#7a4e14"/></linearGradient><linearGradient id="lzW" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4319"/><stop offset=".5" stop-color="#c88f45"/><stop offset="1" stop-color="#5a3612"/></linearGradient><path id="lzHead" d="M0 0A30 30 0 0 1 0-60A15 15 0 0 1 0-30A15 15 0 0 0 0 0Z"/><path id="lzStar" d="M0-9L2.2-2.2 9 0 2.2 2.2 0 9-2.2 2.2-9 0-2.2-2.2Z"/></defs><g stroke="#2b1906" stroke-width="2.5"><rect x="-7" y="-128" width="14" height="256" rx="7" fill="url(#lzW)" transform="rotate(38)"/><rect x="-7" y="-128" width="14" height="256" rx="7" fill="url(#lzW)" transform="rotate(-38)"/></g><circle r="101" fill="#0b1626" fill-opacity=".72" stroke="url(#lzG)" stroke-width="7"/><circle r="89" fill="none" stroke="#e9cf96" stroke-opacity=".55" stroke-width="1.6"/><g fill="#fff6d8"><use href="#lzStar" transform="rotate(0) translate(0 -101)"/><use href="#lzStar" transform="rotate(51) translate(0 -101)"/><use href="#lzStar" transform="rotate(103) translate(0 -101)"/><use href="#lzStar" transform="rotate(154) translate(0 -101)"/><use href="#lzStar" transform="rotate(206) translate(0 -101)"/><use href="#lzStar" transform="rotate(257) translate(0 -101)"/><use href="#lzStar" transform="rotate(309) translate(0 -101)"/></g><g fill="url(#lzG)" stroke="#3a240a" stroke-width="2.2"><use href="#lzHead"/><use href="#lzHead" transform="rotate(90)"/><use href="#lzHead" transform="rotate(180)"/><use href="#lzHead" transform="rotate(270)"/></g></svg><h1>LEIZEEN<span>DEIA</span></h1><div id="logoTag">ZAZPI LEIZE · AHIZPA BAT · DEI BAT</div></div><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>© EUSKARAZ GAMES</span><div><button id="credits">KREDITUAK</button> <button id="reset">↺</button></div></div></section>
+<section id="start"><div id="logo"><svg id="emblem" viewBox="-130 -130 260 260" aria-hidden="true"><defs><linearGradient id="lzG" gradientUnits="userSpaceOnUse" x1="0" y1="-120" x2="0" y2="120"><stop offset="0" stop-color="#fff3c4"/><stop offset=".36" stop-color="#f0c869"/><stop offset=".56" stop-color="#b38026"/><stop offset=".76" stop-color="#f6dc8e"/><stop offset="1" stop-color="#7a4e14"/></linearGradient><linearGradient id="lzW" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4319"/><stop offset=".5" stop-color="#c88f45"/><stop offset="1" stop-color="#5a3612"/></linearGradient><path id="lzHead" d="M0 0A30 30 0 0 1 0-60A15 15 0 0 1 0-30A15 15 0 0 0 0 0Z"/><path id="lzStar" d="M0-9L2.2-2.2 9 0 2.2 2.2 0 9-2.2 2.2-9 0-2.2-2.2Z"/></defs><g stroke="#2b1906" stroke-width="2.5"><rect x="-7" y="-128" width="14" height="256" rx="7" fill="url(#lzW)" transform="rotate(38)"/><rect x="-7" y="-128" width="14" height="256" rx="7" fill="url(#lzW)" transform="rotate(-38)"/></g><circle r="101" fill="#0b1626" fill-opacity=".72" stroke="url(#lzG)" stroke-width="7"/><circle r="89" fill="none" stroke="#e9cf96" stroke-opacity=".55" stroke-width="1.6"/><g fill="#fff6d8"><use href="#lzStar" transform="rotate(0) translate(0 -101)"/><use href="#lzStar" transform="rotate(51) translate(0 -101)"/><use href="#lzStar" transform="rotate(103) translate(0 -101)"/><use href="#lzStar" transform="rotate(154) translate(0 -101)"/><use href="#lzStar" transform="rotate(206) translate(0 -101)"/><use href="#lzStar" transform="rotate(257) translate(0 -101)"/><use href="#lzStar" transform="rotate(309) translate(0 -101)"/></g><g fill="url(#lzG)" stroke="#3a240a" stroke-width="2.2"><use href="#lzHead"/><use href="#lzHead" transform="rotate(90)"/><use href="#lzHead" transform="rotate(180)"/><use href="#lzHead" transform="rotate(270)"/></g></svg><h1>LEIZEEN<span>DEIA</span></h1><div id="logoTag">ZAZPI LEIZE · ZAZPI TXINGAR · DEI BAT</div></div><div id="startActions"><button id="play" class="primary"></button><button id="helpBtn"></button></div><div id="startFooter"><span>© EUSKARAZ GAMES</span><div><button id="credits">KREDITUAK</button> <button id="reset">↺</button></div></div></section>
 <div id="top"><button id="lookBtn" aria-label="Begiratu (lehen pertsona)"><svg viewBox="0 0 24 14" width="17" height="10" aria-hidden="true"><path d="M1 7C4 2.2 8 0.8 12 0.8S20 2.2 23 7C20 11.8 16 13.2 12 13.2S4 11.8 1 7Z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="7" r="3.2" fill="currentColor"/></svg></button><button id="camBtn" aria-label="Kamera">⤢</button><button id="audio">♫</button><button id="quality" aria-label="Kalitatea">HD</button><button id="pause" hidden>Ⅱ</button></div>
 <div id="hud" hidden><div id="place"><span id="chapter"></span><span id="placeName"></span></div><div id="goal"></div><div id="magicStatus"></div><div id="workHint" hidden></div><div id="stasisBadge" hidden></div><div id="phaseHud"><div id="phaseMark"></div><b id="phaseName"></b></div><div id="life"><div><b id="hearts"></b><small id="heartLab"></small></div><div><b id="dashDot">◆</b><small id="dashLab"></small></div><div><b id="coins">0</b><small id="coinLab"></small></div><div id="keyBox" hidden><b id="keyN">0</b><small id="keyLab"></small></div><div id="bombBox" hidden><b id="bombN">●●●</b><small id="bombLab"></small></div></div><div id="subtitle"></div><div id="prompt" hidden></div><div id="chapterTitle"></div><canvas id="map" width="240" height="240"></canvas><canvas id="radar" width="220" height="220" hidden aria-label="Oihartzun-radarra"></canvas><div id="sigBanner" hidden></div><div id="route"></div><div id="keys"></div><div id="bossHud" hidden></div><div id="coach" hidden><span id="coachKey" class="k"></span><span id="coachText"></span></div></div>
 <div id="touch"><div id="stick"><i id="knob"></i></div><div id="touchActions"><button id="weaveBtn"></button><button id="recallBtn" aria-label="Finkatu"></button><button id="phaseBtn"></button><button id="dashBtn">BULTZADA</button><button id="jumpBtn"></button><button id="useBtn"></button><button id="attackBtn"></button><button id="craftBtn"></button><button id="rotateBtn" aria-label="Biratu"></button></div></div>
-<section id="cinema" hidden><div id="cineTop"><span id="cineTag">LEIZEEN DEIA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><canvas id="deiaWave" width="240" height="40" aria-hidden="true"></canvas><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="katea" hidden></div><div id="shieldHint" hidden></div><div id="zoneFade"></div><div id="itemGet" hidden role="dialog" aria-live="polite"><div class="ig"><div id="getIcon"></div><h2 id="getName"></h2><p id="getText"></p><small id="getMore">JARRAITU ›</small></div></div><div id="txala" hidden><div class="tx"><header><b id="txTitle"></b><button id="txClose" aria-label="Itxi">✕</button></header><div id="txSeq"></div><p id="txMsg"></p><div id="txPads"><button id="txL"><span>◀</span>EZKERRA<small>← · J</small></button><button id="txR"><span>▶</span>ESKUINA<small>→ · K</small></button></div><div id="txKnown"></div></div></div><div id="film" hidden><div id="filmFade"></div><div class="bar t"><button id="filmSkip">SALTATU →</button></div><div class="bar b"></div><div id="filmCap" aria-live="polite"></div><div id="filmTitle" hidden><b id="filmTitleBig"></b><small id="filmTitleSmall"></small></div><div id="filmSub" hidden><span id="filmWho"></span><span id="filmLine"></span></div></div><button id="deiaRing" hidden><i></i><b>OIHARTZUN-DEIA</b><span id="deiaFrom"></span><small id="deiaKey">ERANTZUN</small></button><div id="beamAlert" hidden>IKUSI ZAITU</div><div id="locCap" hidden aria-live="polite"></div>
+<section id="cinema" hidden><div id="cineTop"><span id="cineTag">LEIZEEN DEIA</span><button id="cineSkip">SALTATU →</button></div><div id="codec"><div id="portrait"></div><canvas id="deiaWave" width="240" height="40" aria-hidden="true"></canvas><div id="cineDialogue"><span id="cineWho"></span><p id="cineText"></p><span id="cineFull" class="sr" aria-live="polite"></span><div id="cineFoot"><span id="cineCount"></span><button id="cineNext">JARRAITU →</button></div></div></div></section><div id="overlay" hidden><article id="card"><div id="speaker"></div><h2 id="title"></h2><div id="text"></div><div id="choices"></div></article></div><div id="katea" hidden></div><div id="shieldHint" hidden></div><div id="zoneFade"></div><div id="itemGet" hidden role="dialog" aria-live="polite"><div class="ig"><div id="getIcon"></div><h2 id="getName"></h2><p id="getText"></p><small id="getMore">JARRAITU ›</small></div></div><div id="txala" hidden><div class="tx"><header><b id="txTitle"></b><button id="txClose" aria-label="Itxi">✕</button></header><div id="txSeq"></div><p id="txMsg"></p><div id="txPads"><button id="txL"><span>◀</span>EZKERRA<small>← · J</small></button><button id="txR"><span>▶</span>ESKUINA<small>→ · K</small></button></div><div id="txKnown"></div></div></div><div id="film" hidden><div id="filmFade"></div><div class="bar t"><button id="filmSkip">SALTATU →</button></div><div class="bar b"></div><div id="filmCap" aria-live="polite"></div><div id="filmTitle" hidden><b id="filmTitleBig"></b><small id="filmTitleSmall"></small></div><div id="filmSub" hidden><span id="filmWho"></span><span id="filmLine"></span></div></div><button id="deiaRing" hidden><i></i><b>KRISELU-DEIA</b><span id="deiaFrom"></span><small id="deiaKey">ERANTZUN</small></button><div id="beamAlert" hidden>IKUSI ZAITU</div><div id="locCap" hidden aria-live="polite"></div>
 <div id="fatal" hidden></div>
 <script>/**
  * @license
@@ -6656,7 +6659,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     shiftFlash = 0.8;
     FB.respawn();
     haptic(30);
-    notify(L("Denbora atzera. Saiatu berriro."), "", 1.8);
+    notify(L("Lur seguruan berriro. Saiatu berriro."), "", 1.8);
     hud();
   }
   function haptic(ms) {
@@ -7553,10 +7556,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
             : eraComb()
               ? e.era
                 ? "Ezkutu urdina: IZOTZAREKIN bakarrik zauritzen da. ALDATU!"
-                : "Ezkutu urrea: UR BIZIAREKIN bakarrik zauritzen da. ALDATU!"
+                : "Urrezko ezkutua: UR BIZIAREKIN bakarrik zauritzen da. ALDATU!"
               : e.era
                 ? "Ezkutu urdina: NEGUAN bakarrik zauritzen da. ALDATU urtaroa!"
-                : "Ezkutu urrea: UDAN bakarrik zauritzen da. ALDATU urtaroa!",
+                : "Urrezko ezkutua: UDAN bakarrik zauritzen da. ALDATU urtaroa!",
           "",
           3.5,
         );
@@ -7943,7 +7946,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
             shake(0.3);
             SND.thud();
             fxBurst(nx, e.y + 1, nz, { n: 20, speed: 5, up: 3, life: 0.6, size: 0.3, color: "#c58bff", grav: 6 });
-            notifyOnce("brute-stun", "Zezena zorabiatuta: orain bikoitza zauritzen da!", "Bestia aturdida: ¡ahora recibe doble daño!");
+            notifyOnce("brute-stun", "Etsaia zorabiatuta: orain kalte bikoitza jasotzen du!", "");
           }
         }
       }
@@ -8210,7 +8213,9 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     }
     if (s.rock && BOSS.canStagger()) {
       const c = BOSS.center();
-      if (Math.hypot(c.x - s.x, c.z - s.z) < (c.r || 2.6) && s.y < (c.h || 7)) {
+      /* altuera erlatiboa (arenak ez daude beti y = 0an: Zezengorriren altxortegia y = 6an) */
+      const cy = c.y || 0;
+      if (Math.hypot(c.x - s.x, c.z - s.z) < (c.r || 2.6) && s.y > cy - 1.5 && s.y < cy + (c.h || 7)) {
         BOSS.stagger();
         return true;
       }
@@ -8749,7 +8754,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
           /* sutegi handiak (Tartalorenak): SUA bakarrik */
           if (r.needFire && !b.fire) {
             SND.clang(0.5);
-            notifyOnce("need-fire", L("Burdinazko galdara hau ez da sorginkeria arruntaz pizten… SUA behar da."), "");
+            notifyOnce(r.fireMsg ? "need-fire-z" : "need-fire", r.fireMsg ? L(r.fireMsg) : L("Burdinazko galdara hau ez da sorginkeria arruntaz pizten… SUA behar da."), "");
             continue;
           }
           r.hit(b);
@@ -9706,8 +9711,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   const ZONE = { cur: "ibarra", fadeT: 0, pending: null };
   const AREA = { cur: "", seen: new Set() };
   const AREAS = {
-    herria: ["HERRIA", "Txalapartak gauez jotzen dute, inork ukitu gabe."],
-    portua: ["PORTUA", "Mari isildu zenetik, itsasoa izoztuta dago. Udan, txalupak ibiltzen ziren."],
+    herria: ["HERRIA", "Txalapartak gauez jotzen du, inork ukitu gabe."],
+    portua: ["PORTUA", "Gau Beltzaz geroztik, itsasoa izoztuta dago. Udan, txalupak ibiltzen ziren."],
     zelaiak: ["ZELAIAK", "Joanesen ardiak hemen bazkatzen ziren."],
     iparra: ["IPAR-ZELAIAK", "Ibaiaz bestaldean, harrespila zain dago."],
     harrespila: ["HARRESPILA", "Mairuek altxatutako harriak. Lo daude, ez hilda."],
@@ -12492,7 +12497,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         ["· · ·", "Zigilua urtu egiten da, izotza eguzkitan bezala. Barruan, mahai baten gainean, gutun bat eta argi epel bat.", "", -40, 48, 0],
         ["AMONA GAZTEA", "Leizeek deitzen badizute, ez beldurtu: erantzun. Nik ere erantzun nuen, zure adinean.", "", -40, 48, 0],
         ["AMONA GAZTEA", "Sua zaindu. Gure sutondoa ez da gurea bakarrik: Mariren zortzigarren sua da, herriarena.", "", -40, 48, 0],
-        ["AMAIUR", "Amona… zuk ere egin zenuen bidaia hau. Eta ez zenidan inoiz kontatu.", "", P.x, P.z, P.y],
+        ["AMAIUR", "Amona… zuk ere egin zenuen bidaia hau. Eta ez zenidan dena kontatu.", "", P.x, P.z, P.y],
       ],
       () => {
         saved.hearts += 1;
@@ -13558,7 +13563,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     look.set(mix(look.x, cx + fx * cp * 10, k), mix(look.y, ey + Math.sin(BEGI.pitch) * 10, k), mix(look.z, cz + fz * cp * 10, k));
   }
   /* ==================================================================
-     SUGAARREN KATEA · lehen leizeko tresna (C tekla edo KATEA botoia)
+     BASAJAUNEN KATEA · lehen leizeko tresna (C tekla edo KATEA botoia)
      Suge-buruko katea jaurti:
        · suge-eraztun batera → Amaiur harantz tiratzen du (amildegiak gurutzatu);
        · kaxa batera → kaxa Amaiurrengana erakarri;
@@ -13891,7 +13896,15 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       N.solid = { x: D.x, z: D.z, r: D.stone ? 1.6 : 0.6, h: 2, y: N.y, pillar: true, mov: !D.stone };
       solids.push(N.solid);
       if (D.ghost) N.halo = glow(D.x, 1.3, D.z, "#9fd8ff", 4.5);
-      if (D.shadowless) N.halo = glow(D.x, 1.2, D.z, "#ffcf8a", 3.2);
+      if (D.shadowless) {
+        N.halo = glow(D.x, 1.2, D.z, "#ffcf8a", 3.2);
+        /* itzal-zatia oinetan: txingar bakoitzarekin hazten da (amaieran, itzala osorik itzultzen zaio) */
+        N.shard = new T.Mesh(new T.CircleGeometry(1, 24), new T.MeshBasicMaterial({ color: "#05060a", transparent: true, opacity: 0, depthWrite: false }));
+        N.shard.rotation.x = -PI / 2;
+        N.shard.renderOrder = 2;
+        N.shard.visible = false;
+        BP.add(N.shard);
+      }
       NPCS.push(N);
     }
   }
@@ -13916,6 +13929,13 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         if (N.halo) N.halo.visible = false;
         if (N.solid) N.solid.r = 0;
         continue;
+      }
+      if (N.shard) {
+        const k = ["lamia", "tartalo", "errolan", "odei", "herensugea", "inguma"].filter((x) => saved.flags.includes(x)).length;
+        N.shard.visible = N.g.visible && k > 0;
+        N.shard.position.set(N.x + 0.25, (N.y || 0) + 0.04, N.z + 0.3);
+        N.shard.scale.set(0.3 + k * 0.12, 0.22 + k * 0.08, 1);
+        N.shard.material.opacity = 0.12 + k * 0.07;
       }
       const d = Math.hypot(P.x - N.x, P.z - N.z);
       /* gauez etxera (eta goizean itzuli): egutegia jokalariaren urruntasunetik aparte */
@@ -14062,7 +14082,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       return talk(
         N,
         [
-          ["ATARRABI", "Ez izan beldurrik, Amaiur. Kriseiluko ahotsa nirea zen. Gauez eta egunsentian bakarrik igo naiteke lurrazalera."],
+          ["ATARRABI", "Ez izan beldurrik, Amaiur. Kriseiluko ahotsa nirea zen. Hemen egongo naiz, txalapartaren ondoan."],
           ["AMAIUR", "Atarrabi… Mariren semea? Amonaren ipuinetan agertzen zara."],
           ["ATARRABI", "Ipuinek gehiegi esaten dute, eta gutxiegi. Leizeek zure laguntza behar dute: amaren txingarrak hozten ari dira."],
           ["ATARRABI", "Nire anaiak, Mikelatsek, zaindariak gaiztotu ditu txingarrak lapurtzeko. Basajaun lehena."],
@@ -14083,6 +14103,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         N,
         [
           ["ATARRABI", "Ibaian kantuak entzun ditut berriro, lamien kantuak. Bigarren txingarra amaren leizera itzuli da!"],
+          ["ATARRABI", "Begira: nire oinetan, itzal-zati bat. Lehen ez zegoen."],
           ["AMAIUR", "Lamiak esan zidan: Tartalo esnatu da. Artzainen lepoan, haize-errota geldirik dago."],
           ["ATARRABI", "Errota hori nire anaiaren kazkabarrak geldiarazi zuen. Zure adarrak berriro biraraziko du."],
           ["ATARRABI", "Eta gogoratu: Tartalok ilunpean dena ikusten du… baina argiak itsutzen du."],
@@ -14175,7 +14196,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       );
     if (f("ardiak-saria")) {
       if (joanesPony(N, f)) return;
-      return talk(N, [["JOANES", ponyTamed() ? "Beltxak zu ezagutzen zaitu orain. Jo POTTOKA, eta etorriko da." : "Ardiak lasai daude orain. Basajaun bizirik balego bezala."]]);
+      return talk(N, [["JOANES", ponyTamed() ? "Beltxak zu ezagutzen zaitu orain. Jo POTTOKA, eta etorriko da." : "Ardiak lasai daude orain. Basajaun esna balego bezala."]]);
     }
     if (home < 3) return talk(N, [["JOANES", home ? home + " ardi etxean. Beste " + (3 - home) + " falta dira." : "Hesira ekarri, zure atzetik etorriko dira."]]);
     if (!f("ardiak-saria"))
@@ -14191,7 +14212,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       return talk(
         N,
         [
-          ["KATTALIN", "Mari… Anbotoko andrea. Ostiraletan suzko bola batean ibiltzen zen mendiz mendi."],
+          ["KATTALIN", "Mari… Murumendiko andrea. Ostiraletan suzko bola batean ibiltzen zen mendiz mendi."],
           ["KATTALIN", "Zazpi leize ditu, eta bakoitzean zaindari bat. Lehena Basajaunena da, basoan."],
           ["KATTALIN", "Gaua gauekoentzat, esaten zuten zaharrek… baina zuk ez diozu ilunpeari beldurrik izan behar, alaba."],
         ],
@@ -14201,7 +14222,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       return talk(
         N,
         [
-          ["KATTALIN", "Sendabelarrak egin nahi nituzke, baina sorgin-belarrak negu honetan ez dira hazten."],
+          ["KATTALIN", "Sendabelar-botilak egin nahi nituzke, baina sorgin-belarrak negu honetan ez dira hazten."],
           ["KATTALIN", "Udan, ordea… lore urdinak basoan, harrespilan eta ibaiaz bestaldeko larreetan. Ekarri hiru, eta botilak egingo dizkizut."],
         ],
         () => flagSet("kattalin-belar"),
@@ -14235,13 +14256,13 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       );
     if (f("herensugea")) return talk(N, [["JENTIL ZAHARRA", "Zezengorriren orroa entzun dut mendietan, sorgin txikia, baina pozez. Txingar bakarra falta da."]]);
     if (f("odei")) return talk(N, [["JENTIL ZAHARRA", "Euri goxoa… Eate aske dago. Hiru neguan ez dut horrelako usainik sentitu. Bi txingar falta, sorgin txikia."]]);
-    if (f("ortzadarra")) return talk(N, [["JENTIL ZAHARRA", "Ortzadarra… igo, sorgin txikia. Hodeien gainean, gure uharte zaharrak. Udan, hodeiak harri bezain trinkoak dira."]]);
+    if (f("ortzadarra")) return talk(N, [["JENTIL ZAHARRA", "Ortzadarra… igo, sorgin txikia. Hodeien gainean, Ortziren uharte zaharrak. Udan, hodeiak harri bezain trinkoak dira."]]);
     if (f("irati-errolan") && saved.rhythms.includes("ortzi")) return talk(N, [["JENTIL ZAHARRA", "Harrespilaren erdian, gure harrien artean: jo ORTZI. Zeruak entzungo zaitu."]]);
     if (f("irati-errolan"))
       return talk(
         N,
         [
-          ["JENTIL ZAHARRA", "Ortzia… Antzina, gu ere igotzen ginen hara, ortzadarra agertzen zenean, euriaren eta eguzkiaren artean."],
+          ["JENTIL ZAHARRA", "Ortzia… Antzina, gure aitonek ikusten zuten, ortzadarra agertzen zenean, euriaren eta eguzkiaren artean."],
           ["JENTIL ZAHARRA", "Ortzi, zeru zaharra, gure laguna zen. Haren erritmoa gogoratzen dut oraindik: entzun, eta errepikatu."],
         ],
         () => txalaLearn("ortzi", "JENTIL ZAHARRA", () => notify(L("Jo ORTZI harrespilaren erdian: ortzadarra, zerurako bidea."), "", 5)),
@@ -14267,7 +14288,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       if (!S.follow && saved.flags.includes("ardiak") && d < 4.5 && Math.abs(P.y - S.y) < 3) {
         S.follow = true;
         SND.baa();
-        notify(L("Ardiak zure atzetik dator. Eraman hesira!"), "", 2.5);
+        notify(L("Ardia zure atzetik dator. Eraman hesira!"), "", 2.5);
       }
       if (S.follow) {
         if (d > 2.4) {
@@ -14377,7 +14398,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
        C Kaxen gela ....... kaxak pilatu ertz altura → GILTZA TXIKIA
        D Itzalen gela ..... borroka (ateak itxi) → ekialdea eta mendebaldea ireki
        E Oihartzunen gela . iluna: harri-danborra (ENTZUN) eta ezkutuko plataformak
-       F Zaindariaren gela  etsai ertaina → SUGAARREN KATEA
+       F Zaindariaren gela  etsai ertaina → BASAJAUNEN KATEA
        G Sugearen putzua .. katea eraztunetara → GILTZA NAGUSIA
        I Basajaunen bihotza etsai nagusia (boss.js)
      Piezak (KayKit Dungeon, CC0) InstancedMesh bidez: dei gutxi mugikorrean.
@@ -14635,7 +14656,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     /* ---- B: Garaien amildegia ---- */
     room("B", E(0), -36, 30, 36, {
       area: "dB",
-      name: "HARRI LOEN AMILDEGIA",
+      name: "HARRI LOTIEN AMILDEGIA",
       desc: "Harrizko zubiak lo daude. Jo ESNATU, eta jauzi zubiz zubi.",
       doors: { s: 0, w: 9, n: 0 },
       floors: [[E(0), -24, 30, 12], [E(0), -48, 30, 12]],
@@ -14832,7 +14853,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
      · BOSS: kudeatzaile orokorra (magic.js, lockon.js eta chain.js-ek erabiltzen dute):
        vulnerable(), weak(), hit(), center(), ring (katearen helburua), chained().
      · BASOKO ZAINDARIA (F gela): hezurdura erraldoia; bere ezkutuak garaiz
-       aldatzen du kolpe batzuen ondoren. Garaitzean: SUGAARREN KATEA.
+       aldatzen du kolpe batzuen ondoren. Garaitzean: BASAJAUNEN KATEA.
      · BASAJAUN ILUNA (I gela): basoaren jauna, itzal batek gaiztotua.
        Zapalketak (uhinak: salto edo bultzada), harkaitzak (izpiekin suntsitu),
        itzal-laguntzaileak. Nekatzean, bizkarreko sustrai-eraztuna argitzen da:
@@ -15092,12 +15113,13 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     odeiReset();
     zbReset();
     ingumaReset();
+    mikelatsReset();
     if (MINI.e) {
       MINI.e = null;
       MINI.done = false;
       bossBar(null);
     }
-    if (!BOSS.on || BOSS.dead || !BJ.g) return;
+    if (!BOSS.on || BOSS.dead || !BJ.g || BOSS.kind !== "basajaun") return;
     BOSS.on = false;
     for (const W of BJ.waves) W.m.parent && W.m.parent.remove(W.m);
     BJ.waves.length = 0;
@@ -15383,7 +15405,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         ["BASAJAUN", "…Argia. Usaina. Basoa. Nor zara zu, sorgin txikia, itzala uxatzeko adorea duzuna?", "", BJ.x, BJ.z, 4],
         ["AMAIUR", "Amaiur naiz, Iturraldekoa. Leizeek deitu ninduten.", "", P.x, P.z, 0],
         ["BASAJAUN", "Mariren txingarra gordetzen nuen, basoaren bihotzean. Kazkabar-gau batean, Mikelats etorri zen, eta itzal bat utzi zidan barruan.", "", BJ.x, BJ.z, 4],
-        ["BASAJAUN", "Itzal hori ez zen harena… itzalik gabeko mutil baten usaina zuen. Hartu txingarra, sorgin, eta nire bihotzaren zati bat.", "", BJ.x, BJ.z, 4],
+        ["BASAJAUN", "Itzal hori ez zen harena… itzalik gabeko mutil baten usaina zuen. Txingarra amarengana itzuliko da. Zuk, hartu nire bihotzaren zati bat.", "", BJ.x, BJ.z, 4],
       ],
       () => {
         bjFreed();
@@ -15626,7 +15648,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   function zazpiColors(green) {
     ZAZPI.green = green;
     for (const L0 of ZAZPI.lights) {
-      const c = L0.i < green ? "#3dff8a" : "#ff2a1a";
+      const c = L0.i < green ? "#ffcf5a" : "#a3201a";
       L0.halo.material.color.set(c);
       L0.core.material.color.set(c);
     }
@@ -15654,7 +15676,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     g.add(storm);
     for (let i = 0; i < 7; i++) {
       const a = (i / 7) * TAU - PI / 2,
-        col = i < 3 ? "#3dff8a" : "#ff2a1a",
+        col = i < 3 ? "#ffcf5a" : "#a3201a",
         halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, depthWrite: false, opacity: 0, fog: false })),
         core = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: col, transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0, fog: false }));
       halo.position.set(Math.cos(a) * 24, Math.sin(a) * 24, 0);
@@ -15699,9 +15721,9 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     say(
       [
         ["ATARRABI", "Amaiur! Lepotik ardi-zintzarriak entzun dira, eta Tartaloren orroa… baina kantu bat zirudien.", "", 0, 41, 0],
-        ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala. Zure itzalaren kolorekoa zen…", "", P.x, P.z, 0],
-        ["· · ·", "Une horretan, Murumendi aldetik, ekaitz-hodei bat jaitsi da harana estaltzera. Haren barruan, zazpi argi.", "", 20, -170, 120, [0, 30, 40]],
-        ["· · ·", "Hiru argi berde: Basajaun, Lamia, Tartalo. Beste lauak gorri, Mikelatsen eskuetan, taupaka.", "", 20, -170, 120, [0, 30, 40]],
+        ["AMAIUR", "Aske dago. Begitik itzal bat atera zitzaion, kea bezala… eta zure oinetara etorri zen, Atarrabi.", "", P.x, P.z, 0],
+        ["· · ·", "Une horretan, Murumendi aldetik, ekaitz-hodei bat jaitsi da harana estaltzera. Haren barruan, zazpi txingar.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Hiru txingar urrezko: Basajaun, Lamia, Tartalo. Beste lauak gorri, Mikelatsen ekaitzean, taupaka.", "", 20, -170, 120, [0, 30, 40]],
         ["MIKELATS", "Hiru txingar galdu ditut. Baina negua nirea da, eta zure amonaren sua… hura ere nahi dut.", "", P.x, P.z, 0, null, "st_g3"],
         ["ATARRABI", "Zure amonaren sua aipatu du… Zoaz etxera, Amaiur. Orain.", "", 0, 41, 0],
         ["AMAIUR", "Amona…!", "", P.x, P.z, 0],
@@ -15726,9 +15748,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       [
         ["ATARRABI", "Amaiur! Gau osoan harrespilako harriek dardara egin dute… eta gero, isiltasuna. Lo daude berriro.", "", 0, 41, 0],
         ["AMAIUR", "Mairu zaharra aske dago. Haserrez altxatzen zituen harriak: ekaitz bat zeraman bularrean.", "", P.x, P.z, 0],
-        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Laugarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Murumendiko hodeian, zazpi txingarrak berriro. Laugarrena… urrez piztu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["ATARRABI", "Nire itzala hazten ari da, txingar bakoitzarekin. Ez dakit zergatik… baina ez dut beldurrik.", "", 0, 41, 0],
         ["MIKELATS", "Lau. Harriak lo daude berriro. Baina hodeien gainean, Eatek ez du sorginik maite.", "", P.x, P.z, 0, null, "st_g4"],
-        ["ATARRABI", "Eate: haizearen eta suaren izpiritua. Hodeien gainean, Ortzian, nire anaiak bosgarren txingarra eman dio.", "", 0, 41, 0],
+        ["ATARRABI", "Eate: haizearen eta suaren izpiritua. Hodeien gainean, Ortzian, bosgarren txingarra gordetzen du, nire anaiaren trumoia bihotzean.", "", 0, 41, 0],
         ["AMAIUR", "Ortzira, beraz. Hodeien gainera.", "", P.x, P.z, 0],
       ],
       () => {
@@ -15754,9 +15777,9 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       [
         ["ATARRABI", "Amaiur! Gaur euria egin du, eta euri goxoa zen, ez kazkabarra. Txalapartak lasaiago jotzen du.", "", 0, 41, 0],
         ["AMAIUR", "Eate aske dago. Trumoi bat zeraman bihotzean, Mairu zaharrak bezala.", "", P.x, P.z, 0],
-        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Bosgarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Murumendiko hodeian, zazpi txingarrak berriro. Bosgarrena… urrez piztu da.", "", 20, -170, 120, [0, 30, 40]],
         ["MIKELATS", "Bost. Ekaitza ere galdu dut… Baina Zezengorrik ez du inoiz altxorrik uzten.", "", P.x, P.z, 0, null, "st_g5"],
-        ["ATARRABI", "Zezengorri amaren altxorren zaindaria zen. Orain, nire anaiaren txingarra zaintzen du, eguzkiaren leizean.", "", 0, 41, 0],
+        ["ATARRABI", "Zezengorri amaren altxorren zaindaria zen. Orain, amaren txingarra zaintzen du nire anaiarentzat, eguzkiaren leizean.", "", 0, 41, 0],
         ["AMAIUR", "Bi falta. Gero, Murumendira.", "", P.x, P.z, 0],
       ],
       () => {
@@ -15780,9 +15803,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ZAZPI.turnTo = 6;
     say(
       [
-        ["ATARRABI", "Amaiur! Bart, zerua gorri jarri da herriaren gainean, eta zezen baten orroa entzun da mendietan… eskerrak ziruditen.", "", 0, 41, 0],
+        ["ATARRABI", "Amaiur! Bart, zerua gorri jarri da herriaren gainean, eta zezen baten orroa entzun da mendietan… esker-oihu bat zirudien.", "", 0, 41, 0],
         ["AMAIUR", "Zezengorri aske dago. Altxorra itzuli du, eta eguzkiak berriro ikusten du haren leizea.", "", P.x, P.z, 0],
-        ["· · ·", "Murumendiko hodeian, zazpi argiak berriro. Seigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Murumendiko hodeian, zazpi txingarrak berriro. Seigarrena… urrez piztu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["ATARRABI", "Ia osorik dago nire itzala, Amaiur. Begira: eguzkiak badaki non utzi.", "", 0, 41, 0],
         ["MIKELATS", "Sei. Nekatuta zaude, sorgin? Lo egin… Akelarrean, Akerbeltz zain.", "", P.x, P.z, 0, null, "st_g6"],
         ["ATARRABI", "Akelarrea… Gaur gauean, ez itzali sutondoa, Amaiur. Sorginak lotan hegan egiten du: kontuz zure ametsekin.", "", 0, 41, 0],
         ["AMAIUR", "Akelarrea… Bat falta. Gero, Murumendira.", "", P.x, P.z, 0],
@@ -18105,7 +18129,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         persist();
         itemGet("bihotza", L("TARTALOREN BIHOTZA"), L("Arnasa bat gehiago. Kobako artaldea lasai dago orain."), () => {
           title("TARTALO ASKE", "");
-          notify(L("Irten kobatik hegoaldeko arkutik. Herrian, Irati zain."), "", 6);
+          notify(L("Irten kobatik hegoaldeko arkutik. Herrian, Atarrabi zain."), "", 6);
           hud();
         });
       },
@@ -18766,7 +18790,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
           "arimak10",
           [
             ["KATTALIN", "Hamar! Eta azkenak… nire amonaren izena zuen. Bere argia ere bidean galduta zegoen."],
-            ["KATTALIN", "Esan du: «Anboton, Mariren etxean, zazpigarren atea. Erritmoa eraman, eta ez beldurtu ilunpeaz.»"],
+            ["KATTALIN", "Esan du: «Murumendin, Mariren etxean, ekaitzaren atea. Lo-kanta eraman, eta ez beldurtu ilunpeaz.»"],
           ],
           () => pieceGet("arimak10"),
         );
@@ -19436,7 +19460,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       if (P.y < F.y0 - 0.6 || P.y > F.y1 - 0.75) continue;
       if (-(d.x * F.nx + d.z * F.nz) / len < 0.55) continue;
       if (!ivyLive(F)) {
-        notifyOnce("heura-izotza", L("Heura izoztuta dago: ezin zara heldu. UDAN bizirik dago…"), "");
+        notifyOnce("heura-izotza", L("Heura izoztuta dago: ezin zaio heldu. UDAN bizirik dago…"), "");
         continue;
       }
       climbStart(F, along);
@@ -20269,7 +20293,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       kind: "kanpaia",
       time: 7,
       runes: [[E(46), 9.6, -9, -1], [E(48), 9.6, 0, 1], [E(46), 9.6, 9, -1]],
-      hint: "Hiru kanpaia sarearen atzean. Jo denak SORGINKERIAz, elkarren segidan — bat NEGUAN bakarrik ikusten da!",
+      hint: "Hiru kanpai sarearen atzean. Jo denak SORGINKERIAz, elkarren segidan — bat NEGUAN bakarrik ikusten da!",
       onSolve: () => {
         openDoor(DOORDEF.jBg);
         title("SAREA ZABALDU DA", "");
@@ -20332,7 +20356,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     crackWall("jE-crack", E(-15.2), -36, 1.4, 5.9, 5.6, { onBreak: () => notify(L("Harria apurtu da: mendebaldean, dorre bat."), "", 3.5) });
     corridor(E(-18), -36, 6, 6, "x");
     /* ---- J6: Jentilen dorrea ---- */
-    room("J6", E(-36), -36, 30, 30, { area: "jF", name: "MAIRUEN DORREA", desc: "Zutabe erraldoi bat, heuraz estalia. Inguruan, lau kanpaia.", doors: { e: 0, s: 0 }, fog: [12, 80], wallH: 20 });
+    room("J6", E(-36), -36, 30, 30, { area: "jF", name: "MAIRUEN DORREA", desc: "Zutabe erraldoi bat, heuraz estalia. Inguruan, lau kanpai.", doors: { e: 0, s: 0 }, fog: [12, 80], wallH: 20 });
     const pil = slab({ x: E(-36), z: -36, y: 12, w: 8, d: 8, h: 12, area: "jF" });
     pil.slick = true;
     DGJ.ivyF = ivySide(pil, "s", 0, { phase: 0, id: "jF-heura" });
@@ -20353,7 +20377,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       kind: "kanpaia",
       time: 10,
       runes: cols.map(([cx, cz, era]) => [E(cx), 11.6, cz, era]),
-      hint: "Lau kanpaia zutabeen gainean. Jo denak, elkarren segidan: goitik hobeto…",
+      hint: "Lau kanpai zutabeen gainean. Jo denak, elkarren segidan: goitik hobeto…",
       onSolve: () => {
         revealChest(DGJ.bigChest);
         title("KANPAIAK BATERA", "");
@@ -20862,9 +20886,9 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       [
         ["· · ·", "Bularretik itzal bat atera zaio, ekaitz-hodei txiki bat bezala, eta harrien artean desagertu da.", "", ERR.x, ERR.z, 8],
         ["MAIRU ZAHARRA", "…Isiltasuna. Mende askoan lehen aldiz, ez dago trumoirik nire buruan.", "", ERR.x, ERR.z, 9],
-        ["MAIRU ZAHARRA", "Mikelatsek ekaitz bat sartu zidan bularrean, eta txingarra eraman. Mairuen indarra bere alde nahi zuen: harriak jaurti, mendiak astindu…", "", ERR.x, ERR.z, 9],
+        ["MAIRU ZAHARRA", "Mikelatsek ekaitz bat sartu zidan bularrean, txingarra beretzat gorde nezan. Mairuen indarra bere alde nahi zuen: harriak jaurti, mendiak astindu…", "", ERR.x, ERR.z, 9],
         ["AMAIUR", "Lau txingar itzulita. Hiru falta dira. Non daude?", "", P.x, P.z, 0],
-        ["MAIRU ZAHARRA", "Hodeien gainean, Ortzian: Eatek, haizearen eta suaren izpirituak, bosgarrena dauka. Ortzadarretik igotzen ziren jentilak.", "", ERR.x, ERR.z, 9],
+        ["MAIRU ZAHARRA", "Hodeien gainean, Ortzian: Eatek, haizearen eta suaren izpirituak, bosgarrena dauka. Ortzadarra da bidea.", "", ERR.x, ERR.z, 9],
         ["MAIRU ZAHARRA", "Gorde tximista-harria, sorgin txikia. Ekaitzak zure alde jo dezala.", "", ERR.x, ERR.z, 9],
       ],
       () => {
@@ -20925,7 +20949,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     const R = DGJ.rooms,
       it = (k) => saved.items.includes(k);
     if (!isCleared("jB-bells"))
-      return ROOM.cur === R.J2 ? ["Hiru kanpaia sarearen atzean: jo denak elkarren segidan (bat NEGUAN bakarrik ikusten da).", [R.J2.x + 11, 0, 9.6]] : ["Ekialdeko ertz garaia: HEURA, UDAN bizirik. Igo eta ekialdera.", [R.J1.x + 10, 3.6, 0]];
+      return ROOM.cur === R.J2 ? ["Hiru kanpai sarearen atzean: jo denak elkarren segidan (bat NEGUAN bakarrik ikusten da).", [R.J2.x + 11, 0, 9.6]] : ["Ekialdeko ertz garaia: HEURA, UDAN bizirik. Igo eta ekialdera.", [R.J1.x + 10, 3.6, 0]];
     if (!isCleared("J3")) return ["Harresia: mairuen zaindariak. Kolpea iristean, ALDARATU.", [R.J3.x, R.J3.z, 6]];
     if (!saved.doors.includes("jC-e") && !(saved.keyz.jentil > 0)) return ["Kutxa: harresiaren erdian.", [R.J3.x, R.J3.z, 6]];
     if (!saved.doors.includes("jC-e")) return ["Harresiaren ekialdeko atea: giltza txikia.", [R.J3.x + 13, R.J3.z, 6]];
@@ -21820,7 +21844,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       SND.wake();
       shake(0.25);
       title("ORTZADARRA", "");
-      notify(L("Harrespilako harriek kantatu dute, eta ortzadar bat jaio da: jentilen zubia, zerura!"), "", 6);
+      notify(L("Harrespilako harriek kantatu dute, eta ortzadar bat jaio da: zerurako zubia!"), "", 6);
       hud();
       return;
     }
@@ -21828,7 +21852,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       notify(L("Ortzik entzun zaitu: zeruan zaude jada."), "", 2.6);
       return;
     }
-    notify(L("Zerua urrun dago hemendik… Harrespilan jo, jentilen harrien erdian."), "", 3.5);
+    notify(L("Zerua urrun dago hemendik… Harrespilan jo, harri zaharren erdian."), "", 3.5);
   }
   function ortzadarUpdate(dt) {
     if (!ORZ.mesh) return;
@@ -21928,7 +21952,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     skyRoom("Z3", ZE(0), -62, 24, 24, {
       area: "zC",
       name: "ZERUKO PLAZA",
-      desc: "Jentilen plaza zaharra, hodeien gainean. Itzalak zain.",
+      desc: "Ortziren plaza zaharra, hodeien gainean. Itzalak zain.",
       waves: [[["eye", -1, 2], ["grunt", -1, 1]], [["grunt", 0, 2], ["eye", 1, 1]], [["brute", -1, 1], ["eye", 0, 1], ["eye", 1, 1]]],
       diff: 1.3,
       hpK: 1.45,
@@ -21952,7 +21976,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     skyBridge(ZE(18.5), -62, 13.4, 3.6, 0, "zC");
     /* ---- Z4: Haize-errota ---- */
     skyIsland({ x: ZE(34), z: -62, y: 0, r: 9.2, depth: 13, area: "zD" });
-    skyRoom("Z4", ZE(34), -62, 18.4, 18.4, { rx: 9.2, area: "zD", name: "HAIZE-ERROTA", desc: "Jentilen haize-errota, geldirik. Haize-adar batek esnatuko luke…" });
+    skyRoom("Z4", ZE(34), -62, 18.4, 18.4, { rx: 9.2, area: "zD", name: "HAIZE-ERROTA", desc: "Haize-errota zahar bat, geldirik. Haize-adar batek esnatuko luke…" });
     millBuild(ZE(39), -68.2);
     liftBuild(ZE(34), -73.2);
     /* goiko ertza (y 9) eta giltza txikiko atea */
@@ -21990,7 +22014,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       kind: "kanpaia",
       time: 9,
       runes: [[ZE(-54.5), 17.6, -57.5, -1], [ZE(-37.5), 17.6, -57.5, 1], [ZE(-46), 17.6, -53.6, -1]],
-      hint: "Hiru ekaitz-kanpaia dorrearen inguruan. Jo denak SORGINKERIAz, elkarren segidan (bat NEGUAN bakarrik).",
+      hint: "Hiru ekaitz-kanpai dorrearen inguruan. Jo denak SORGINKERIAz, elkarren segidan (bat NEGUAN bakarrik).",
       onSolve: () => {
         revealChest(DGZ.bigChest);
         title("KANPAIAK BATERA", "");
@@ -22163,7 +22187,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       say(
         [
           ["· · ·", "Ortzadarraren amaieran, hodeien gainean: uharte zaharrak airean, eta urrunean, Murumendi, ekaitz beltz batean bilduta.", "", ZE(0), -40, 0, [ZE(18), 14, 26]],
-          ["AMAIUR", "Ortzia… Hemendik igotzen ziren jentilak izarretara, amonak zioenez.", "", P.x, P.z, 0],
+          ["AMAIUR", "Ortzia… Hodeien gaineko uharteak, amonaren ipuinetan bezala.", "", P.x, P.z, 0],
           ["AMAIUR", "Trumoia entzuten da iparrean. Eate, zalantzarik gabe.", "", P.x, P.z, 0],
         ],
         () => notify(L("Iparrera, hodei-zubietatik. Hodeiak UDAN trinkoak dira: aldatu urtaroa airean."), "", 6),
@@ -22194,7 +22218,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     /* lainoa: hurbil → pista */
     if (!saved.cleared.includes("zB-laino") && Math.hypot(P.x - ZE(10), P.z + 33) < 11) notifyOnce("zB-laino-hint", hasHorn() ? L("Laino trinkoa hodeien artean… HAIZE-ADARRAk uxatuko luke.") : L("Laino trinkoa hodeien artean… haize bolada batek uxatuko luke."), "");
     if (ROOM.cur === DGZ.rooms.Z4 && !isCleared("zD-lift")) {
-      notifyOnce("zD-mill-hint", L("Jentilen haize-errota, geldirik. Igogailuaren gainetik, HAIZE-ADARRAz putz egin errotari."), "");
+      notifyOnce("zD-mill-hint", L("Haize-errota zahar bat, geldirik. Igogailuaren gainetik, HAIZE-ADARRAz putz egin errotari."), "");
       if (ZR.lift && ZR.lift.y > 8.9) saved.cleared.push("zD-lift");
     }
     odeiUpdateZone(dt);
@@ -22222,8 +22246,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       it = (k) => saved.items.includes(k);
     /* Odei aske: zerua amaituta (Herensugea, hodeien beste aldean) */
     if (saved.flags.includes("odei")) {
-      if (!saved.flags.includes("irati-odei")) return ["Itzuli ortzadarretik (hegoan): herrian, Irati zain.", [DGZ.exitArch.x, DGZ.exitArch.z, 0]];
-      if (!saved.flags.includes("herensugea")) return ["Odeiren hodei zuria (ortzadarraren muturrean): SUGE-MENDIRA.", HZ.cloud ? [HZ.cloud.position.x, HZ.cloud.position.z, 0] : null];
+      if (!saved.flags.includes("irati-odei")) return ["Itzuli ortzadarretik (hegoan): herrian, Atarrabi zain.", [DGZ.exitArch.x, DGZ.exitArch.z, 0]];
+      if (!saved.flags.includes("herensugea")) return ["Eateren hodei zuria (ortzadarraren muturrean): ZEZEN-HARPERA.", HZ.cloud ? [HZ.cloud.position.x, HZ.cloud.position.z, 0] : null];
       return ["Ortzadarra (hegoan): haranera.", [DGZ.exitArch.x, DGZ.exitArch.z, 0]];
     }
     if (!isCleared("Z3")) return ROOM.cur === R.Z3 ? ["Zeruko plaza: garaitu itzalak (ertzetik kontuz).", [R.Z3.x, R.Z3.z, 0]] : ["Iparrera hodei-zubietatik: hodeiak UDAN trinkoak dira. Aldatu urtaroa airean.", [R.Z3.x, -51, 0]];
@@ -22238,7 +22262,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       if (ROOM.cur === R.Z6) return isCleared("zF-bells") ? ["Dorrea: igo heura UDAN; goian, kutxa.", [ZE(-46), -60.8, 14]] : ["Hiru ekaitz-kanpaiak, elkarren segidan (bat NEGUAN bakarrik).", [ZE(-46), -56, 14]];
       return ["Plazaren mendebaldean, haize-zutabea (NEGUAN): jauzi bikoitza eta eutsi JAUZIari — planeatu gora, dorreraino.", [ZE(-21), -62, 0]];
     }
-    return saved.doors.includes(DGZ.bossDoor) ? ["Ekaitzaren begia: ODEI.", [Z7.x, Z7.z + 10, Z7.y]] : ["Zeruko eskailerak iparrean: ekaitz-hesiaren ate handia (giltza nagusia).", [ZE(0), -112, 18]];
+    return saved.doors.includes(DGZ.bossDoor) ? ["Ekaitzaren begia: EATE.", [Z7.x, Z7.z + 10, Z7.y]] : ["Zeruko eskailerak iparrean: ekaitz-hesiaren ate handia (giltza nagusia).", [ZE(0), -112, 18]];
   };
   /* ==================================================================
      ODEI · trumoiaren hodeia (bosgarren zaindaria), Mikelatsek gaiztotua
@@ -22338,6 +22362,27 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     /* haize-boladaren aurka: HAIZE-ADARRA */
     ODEI.wind = windable({ x: Z7.x, y: Z7.y + ODEI_HOVER, z: Z7.z, r: 5, dy: 30, range: 26, live: () => ODEI.state === "inhale" || ODEI.state === "gust", gust: () => odeiHornCounter() });
     if (saved.flags.includes("odei")) odeiFreed(true);
+    /* IA-modeloa (Flux → Tripo, fal.ai; Blender): ekaitzaren izpiritua, sugar-ileak eta hodei-zutabea.
+       Bularrean, bihotza (ekaitz-harria); hodei-bolak inguruan, txikiago. Ez badago, hodei-buru prozedurala. */
+    aiModel("eate", (sc) => {
+      if (!sc || !ODEI.g || ODEI.ai) return;
+      const A = aiInstance(sc, 14, 0.3);
+      A.m.position.y = -14 * 0.62;
+      ODEI.g.add(A.m);
+      for (const m of A.mats) m.transparent = true;
+      ODEI.ai = A;
+      ODEI.mouth.visible = false;
+      for (const e of ODEI.eyes) e.visible = false;
+      for (const P0 of ODEI.puffs) {
+        P0.base.set(P0.base.x * 1.3, P0.base.y * 0.8 - 3.2, P0.base.z * 1.3 - 0.4);
+        P0.m.scale.multiplyScalar(0.48);
+      }
+      /* aurpegiko hodei-bola handia: IA-gorputzak ordezkatzen du */
+      ODEI.puffs[0].m.visible = false;
+      /* (askatuta badago, ODEI.state === "freed" da jada: eguneraketak itxura zuria ematen dio.
+         Ez deitu odeiFreed() hemen: modeloa beranduago kargatzen da, eta BOSS.on itzaliko luke
+         beste borroka batean — adib. Zezengorrirenean) */
+    });
   }
   function odeiHome() {
     ODEI.x = Z7.x;
@@ -22438,7 +22483,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     FB.bossHit(w.x, w.y, w.z);
     damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.5 }, n);
     ODEI.flash = 0.25;
-    bossBar("ODEI", (ODEI.rounds - 1 + Math.max(0, ODEI.hp) / ODEI_HP) / 3);
+    bossBar("EATE", (ODEI.rounds - 1 + Math.max(0, ODEI.hp) / ODEI_HP) / 3);
     if (ODEI.hp > 0) return;
     ODEI.rounds--;
     ODEI.stats.rounds++;
@@ -22530,7 +22575,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       const k = 1 + op * 1.4 + swell;
       p.m.position.set(p.base.x * k + Math.sin(time * 0.9 + p.ph) * 0.3, p.base.y * (1 + op * 0.8) + Math.sin(time * 1.3 + p.ph) * 0.25, p.base.z * k);
     }
-    ODEI.mat.opacity = ODEI.state === "freed" ? 0.9 : 1 - op * 0.55;
+    ODEI.mat.opacity = (ODEI.ai ? 0.78 : 1) * (ODEI.state === "freed" ? 0.9 : 1 - op * 0.55);
     ODEI.mat.transparent = ODEI.mat.opacity < 1;
     ODEI.flash = Math.max(0, ODEI.flash - dt);
     ODEI.cough = Math.max(0, ODEI.cough - dt);
@@ -22539,7 +22584,14 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ODEI.mat.emissiveIntensity = ODEI.state === "freed" ? 0.25 : 0.55 + fl * 1.6;
     ODEI.mat.emissive.set(fl && ODEI.state !== "freed" ? "#3a3480" : ODEI.state === "freed" ? "#cfe3f5" : "#120d22");
     ODEI.mouth.scale.y = mix(ODEI.mouth.scale.y, ODEI.state === "inhale" ? 1.1 : ODEI.state === "gust" ? 0.8 : ODEI.cough > 0 ? 0.6 + Math.sin(time * 30) * 0.3 : 0.25, 1 - Math.exp(-dt * 8));
-    for (const e of ODEI.eyes) e.visible = op < 0.6 && !(ODEI.state === "freed" && e.isMesh && e.geometry.type === "BoxGeometry");
+    for (const e of ODEI.eyes) e.visible = !ODEI.ai && op < 0.6 && !(ODEI.state === "freed" && e.isMesh && e.geometry.type === "BoxGeometry");
+    if (ODEI.ai)
+      for (const m of ODEI.ai.mats) {
+        m.opacity = ODEI.state === "freed" ? 0.92 : 1 - op * 0.72;
+        m.depthWrite = m.opacity > 0.9;
+        m.emissiveIntensity = ODEI.state === "freed" ? 0.55 : 0.3 + fl * 0.9 + op * 0.25;
+        m.emissive.set(ODEI.state === "freed" ? "#fff2d8" : fl ? "#c9c2ff" : "#ffffff");
+      }
     const vul = BOSSK.odei.vulnerable();
     ODEI.core.material.emissiveIntensity = op > 0.3 ? (vul ? 3 : 1.6) + Math.sin(time * 10) * 0.4 : 0.6;
     ODEI.coreGlow.material.opacity = op * (0.6 + Math.sin(time * 10) * 0.2);
@@ -22752,7 +22804,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     say(
       [
         ["· · ·", "Hodei beltza zabaldu da, eta haren erdian itzal bat apurtu da, kristal bat bezala. Hodei zuri bat geratu da, euri-usaina zeramala.", "", ODEI.x, ODEI.z, ODEI.y - 2],
-        ["EATE", "…Arnasa. Lurrari euria eman nahi nion, ez harria. Mikelatsek trumoia sartu zidan bihotzean, txingarraren ordainetan.", "", ODEI.x, ODEI.z, ODEI.y - 2],
+        ["EATE", "…Arnasa. Lurrari euria eman nahi nion, ez harria. Mikelatsek trumoia sartu zidan bihotzean, txingarra beretzat gorde nezan.", "", ODEI.x, ODEI.z, ODEI.y - 2],
         ["AMAIUR", "Bost txingar itzulita. Bi falta dira. Non daude?", "", P.x, P.z, P.y],
         ["EATE", "Hodeien beste aldean, eguzkiaren leizean: Zezengorri, altxorren zaindaria. Eta sorginen leizean, Akerbeltz. Biak Mikelatsen menpe.", "", ODEI.x, ODEI.z, ODEI.y - 2],
         ["EATE", "Eta haien gainean, Murumendi, ekaitzaren etxea. Hartu nire bihotza, sorgin: euriak ere badaki itzultzen.", "", ODEI.x, ODEI.z, ODEI.y - 2],
@@ -22766,7 +22818,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         persist();
         itemGet("bihotza", L("EATEREN BIHOTZA"), L("Arnasa bat gehiago. Hodeiek euri goxoa ekarriko dute berriro."), () => {
           title("EATE ASKE", "");
-          notify(L("Ekaitz-hesia desagertu da. Itzuli ortzadarretik (hegoan): herrian, Irati zain."), "", 6);
+          notify(L("Ekaitz-hesia desagertu da. Itzuli ortzadarretik (hegoan): herrian, Atarrabi zain."), "", 6);
           hud();
         });
       },
@@ -22950,7 +23002,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
           return voice("PEIO", [L("Nor dabil gau honetan? A, sorgina zara! Badakizu zergatik deitzen den etxe hau Pellonea? Pello bost minutu lehenago jaio zelako. Bidegabekeria hutsa."), L("…Pellok dio lo egiteko. Egunez etorri, eta erritmo berri bat irakatsiko dizugu.")]);
         case "arrantzalenea":
           if (!home("txomin")) return quiet(night ? L("Inork ez du erantzuten. Txomin kaian dago, gauez ere: izotzari begira, itsasoa noiz askatuko.") : L("Inork ez du erantzuten. Txomin kaian egoten da egunez, txalupa zaharraren ondoan."));
-          return voice("TXOMIN", [f("herensugea") ? L("Herensuge urre bat ikusi dut itsasoaren gainean, hegan! Lehenengo, beldurra. Gero… txalupari begira zegoen, laguntzeko moduan.") : f("odei") ? L("Gaur euria egin du itsasoan. Izotza ahultzen ari da, neska: udan, berriro arrantzara!") : L("Gauez itsasoa entzuten dut… izotza karraska. Egunen batean, berriro aterako naiz.")]);
+          return voice("TXOMIN", [f("herensugea") ? L("Zezen gorri bat ikusi dut hodeien artean, sutan! Lehenengo, beldurra. Gero… txalupa inguruko izotza urtzen hasi zen.") : f("odei") ? L("Gaur euria egin du itsasoan. Izotza ahultzen ari da, neska: udan, berriro arrantzara!") : L("Gauez itsasoa entzuten dut… izotza karraska. Egunen batean, berriro aterako naiz.")]);
         case "okinenea": {
           const fresh = time - HOUSE.breadT > 90;
           if (P.hp < P.maxHp && fresh) {
@@ -22970,7 +23022,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
               persist();
               itemGet("botila", L("SENDABELAR-BOTILA"), L("Bizitzak amaitzean, berez erabiltzen da. Orain: ") + saved.potions + ".");
             });
-          return voice("MIKELEN AMONA", [night ? (f("irati-herensuge") ? L("Ixo! Mikel lotan dago… Amets gaiztoak ditu azkenaldian. Nik kantu zahar bat kantatzen diot ohe ondoan: Ingumaren aurka, betidanik.") : L("Ixo! Mikel lotan dago. Ametsetan ere pilotan jokatzen du, ostikoka ohean.")) : f("odei") ? L("Atzo euria egin zuen, euri goxoa. Nire belaunek ere eskertu dute.") : L("Mikel? Frontoian, betiko moduan. Pilota baino ez du buruan.")]);
+          return voice("MIKELEN AMONA", [night ? (f("irati-herensuge") ? L("Ixo! Mikel lotan dago… Amets gaiztoak ditu azkenaldian: adarrak eta dantzak. Nik lo-kanta zahar bat kantatzen diot ohe ondoan.") : L("Ixo! Mikel lotan dago. Ametsetan ere pilotan jokatzen du, ostikoka ohean.")) : f("odei") ? L("Atzo euria egin zuen, euri goxoa. Nire belaunek ere eskertu dute.") : L("Mikel? Frontoian, betiko moduan. Pilota baino ez du buruan.")]);
         case "belarrenea":
           return quiet(night ? L("Inork ez du erantzuten: Kattalin elizan dago, argizaiolak pizten. Atean, eguzkilore lehor bat iltzatuta.") : L("Inork ez du erantzuten. Atean, eguzkilore lehor bat iltzatuta: gaueko izakiak uxatzeko, amonek zioten bezala."));
         case "artzainenea":
@@ -23028,7 +23080,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     { flag: "errolan", name: "TXIMISTA-HARRIA", text: "Mairu zaharraren ekaitz-harriaren zati bat. Eskuan, oraindik epel dago.", kind: "tximista" },
     { flag: "odei", name: "EURI-URA", text: "Eateren lehen euri goxoa, beirazko ontzi batean. Argiak ortzadarra egiten du barruan.", kind: "euria" },
     { flag: "herensugea", name: "ZEZENGORRIREN TXINPARTA", text: "Zezengorriren suaren txinparta bat, urrezkoa. Sutan jarrita ere, hotz; eskuan, bihotz baten taupadak.", kind: "ezkata" },
-    { flag: "inguma", name: "SORGIN-HAUTSAREN ZORROA", text: "Hutsik, baina barruan hauts urre pixka bat geratzen da: gauez, distira egiten du. Lo-kanta, ahopean, beti.", kind: "zorroa" },
+    { flag: "inguma", name: "SORGIN-HAUTSAREN ZORROA", text: "Hutsik, baina barruan urre-hauts pixka bat geratzen da: gauez, distira egiten du. Lo-kanta, ahopean, beti.", kind: "zorroa" },
   ];
   function mementoMesh(kind) {
     const g = new T.Group();
@@ -23408,7 +23460,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
                 ? "Lamien kantuak berriro ibaian… Zure amak ere maite zituen. Jan zerbait, eta zoaz."
                 : f("basajaun")
                   ? "Basajaun askatu duzu? Ondo. Basoak ez du ahazten nork lagundu dion."
-                  : "Leizeek deitzen dute? Badakit, laztana. Nik ere entzun nituen, zure adinean. Zoaz, baina itzuli afaltzera.";
+                  : "Leizeek deitzen dute? …Jan zerbait, laztana, eta itzuli afaltzera.";
     say([["AMONA", L(t), "", A.x, A.z, 0]]);
   }
   function amonaTxingarra() {
@@ -23421,7 +23473,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         ["AMONA", "Sorgina naiz, Amaiur. Zure adinean, nik ere entzun nuen leizeen deia.", "", A.x, A.z, 0, null, "tx_n2"],
         ["AMONA", "Sutondo hau ez da edozein: Marik berak piztu zuen, herria zaintzeko. Ez da inoiz itzaltzen.", "", H.x, H.z, 0, null, "tx_n3"],
         ["AMAIUR", "Baina deiaren gauean itzali zen.", "", P.x, P.z, 0, null, "tx_a2"],
-        ["AMONA", "Bai. Mikelatsek bere hotza bidali zuen tximinian behera. Horregatik, hau zuretzat da.", "", A.x, A.z, 0, null, "tx_n4"],
+        ["AMONA", "Bai. Mikelatsek bere hotza bidali zuen tximinian behera, eta zuk piztu zenuen berriro. Horregatik da zuretzat.", "", A.x, A.z, 0, null, "tx_n4"],
         ["AMONA", "Txingar bat, gure sutik. Elurraren azpian uda lo dago; txingarrak esnatuko du, une batez.", "", H.x, H.z, 0, null, "tx_n5"],
         ["AMAIUR", "Uda… Hiru urte dira uda ikusi ez dudala.", "", P.x, P.z, 0, null, "tx_a3"],
         ["AMONA", "Ez ahaztu: zuk esnatzen duzun bitartean bakarrik irauten du. Negua ez da oraindik joango.", "", A.x, A.z, 0, null, "tx_n6"],
@@ -23461,13 +23513,13 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   function homeIrati() {
     const f = (k) => saved.flags.includes(k);
     const t = f("inguma")
-      ? L("Ahizparen marrazkia: zazpi argi berde mendi baten gainean, eta behean, Iturraldeko tximinia, kerik gabe. Lehen ez zegoen hor.")
+      ? L("Ahizparen marrazkiaren ondoan, zuk bart margotua: zazpi txingar mendi baten gainean, eta behean, Iturraldeko tximinia, kerik gabe.")
       : f("herensugea")
         ? L("Marrazkian, zezen gorri bat dago orain, hodeien gainean. Zuk margotu duzu, lotan?")
         : f("odei")
-          ? L("Marrazkiaren hutsuneetan, euri-tanta txiki batzuk. Ez dakizu nork margotu dituen.")
+          ? L("Marrazkiaren hutsuneetan, euri-tanta txiki batzuk: zuk margotu dituzu, Eateren euria gogoan.")
           : f("errolan")
-            ? L("Ahizparen marrazkia: mendi bat, eta haren gainean, zazpi argi txiki. Lau berdez margotu dituzu, konturatu gabe.")
+            ? L("Ahizparen marrazkia: mendi bat, eta haren gainean, zazpi txingar txiki. Lau urrez margotu dituzu, konturatu gabe.")
             : f("basajaun")
               ? L("Marrazkiaren ondoan, haren idazkera: «Txalapartak ez du inoiz bakarrik jotzen». Orain, leizeek jotzen dute.")
               : L("Ahizparen txokoa: haren txalaparta txikia eta marrazki bat, ekaitz bat itsasoaren gainean. Hiru negu dira ez dela itzuli.");
@@ -23757,7 +23809,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     C.hitT = 0;
     if (C.on && C.latch) return;
     if (C.kind !== "any" && C.kind !== kind) {
-      const want = C.kind === "sun" ? L("Kristal urreak EGUZKIA behar du: UDAN bakarrik sartzen da.") : L("Kristal urdinak ILARGIA behar du: NEGUAN bakarrik sartzen da.");
+      const want = C.kind === "sun" ? L("Urrezko kristalak EGUZKIA behar du: UDAN bakarrik sartzen da.") : L("Kristal urdinak ILARGIA behar du: NEGUAN bakarrik sartzen da.");
       notifyOnce("kristal-" + C.kind, want, "");
       return;
     }
@@ -24574,10 +24626,19 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     /* ---- H7: Herensugearen habia ---- */
     room("H7", E(0), -117, 42, 42, { y: SGY, area: "hG", name: "ZEZENGORRIREN ALTXORTEGIA", desc: "Urrea, kea eta arnasa bero bat. Altxor-pilen artean, zerbait mugitzen da.", doors: { s: 0 }, floors: [[E(0), -111, 42, 30]], wallH: 22 });
     lavaPool(E(0), -132, 42, 12, SGY - 1.4);
+    /* basaltozko ertza labaren ondoan (bultzadak ez du jokalaria labara botatzen) */
+    wallBlock(E(0), -126.5, 42, 1, 0, SGY - 1.4, 2.3, true);
     /* argi-zutabeak eta estalpeak (su-arnasaren aurka) */
     DGH.shaftsH = [[-12, -104], [12, -104], [-15, -117.5], [15, -117.5]].map(([sx, sz], i) => lightShaft({ id: "hG-argia" + i, x: E(sx), z: sz, y: SGY, kind: "both", r: 1.45 }));
     /* estalpe baxuak: su-arnasatik babesten dute; ISPILUAren argia gainetik pasatzen da */
     for (const [cx, cz, w, d] of [[-7, -108.5, 2.4, 1.4], [7, -108.5, 2.4, 1.4], [-18, -110.5, 1.4, 2.4], [18, -110.5, 1.4, 2.4], [0, -116, 2.8, 1.4]]) coverBlock(E(cx), cz, w, d, 1.5, SGY);
+    /* argi-zutabe bakoitzaren aurrean, erdirantz (2.3 m), estalpe baxua (1.3 m): babesa argiaren ondoan */
+    for (const [sx, sz] of [[-12, -104], [12, -104], [-15, -117.5], [15, -117.5]]) {
+      const dx = 0 - sx,
+        dz = -121.5 - sz,
+        dd = Math.hypot(dx, dz);
+      coverBlock(E(sx + (dx / dd) * 2.3), sz + (dz / dd) * 2.3, 2.2, 1.1, 1.3, SGY);
+    }
     for (const [sx, sz, sr] of [[-4, -112, 2.6], [9, -118, 2.2], [-11, -121, 2], [3, -101, 1.6]]) scorch(E(sx), sz, SGY, sr);
     hoard(E(-17), -123, SGY, 8, 1.6);
     hoard(E(17.5), -123.5, SGY, 8, 1.6);
@@ -24628,7 +24689,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     say(
       [
         ["EATE", "Sorgin. Nire zati txiki bat utzi dizut hemen: hodei zuri bat, euri-usaina duena.", "", c.x, c.z, c.y],
-        ["EATE", "Hodeien beste aldean, ZEZEN-HARPEA, eguzkiaren leizea. Haren barruan, Zezengorri: sua botatzen du sudurretik. Eguzkiak bakarrik itsutzen ditu haren begiak.", "", c.x, c.z, c.y],
+        ["EATE", "Hodeien beste aldean, ZEZEN-HARPEA, eguzkiaren leizea. Haren barruan, Zezengorri: sua botatzen du sudurretik. Haren begiak eguzkiak eta ilargiak bakarrik itsutzen dituzte.", "", c.x, c.z, c.y],
         ["AMAIUR", "Eraman nazazu, beraz. Eguzkia aurkituko dut.", "", P.x, P.z, P.y],
       ],
       () => {
@@ -24727,7 +24788,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       if (!saved.doors.includes("hC-w")) return ["Mendebaldeko atea: giltza txikia.", [R.H3.x - 13.6, R.H3.z, SGY]];
       return isCleared("hD-mini") ? ["Ispilu-zainaren kutxa ireki.", [R.H4.x, -82, SGY]] : ["Mendebaldean: ispilu-zainaren gela.", [R.H4.x, R.H4.z, SGY]];
     }
-    if (!saved.doors.includes("hC-e")) return ["Habiako eguzki-zuloa (UDAN): ISPILUA, barren artetik kristal urrera.", [DGH.shaftC.x, DGH.shaftC.z, SGY]];
+    if (!saved.doors.includes("hC-e")) return ["Habiako eguzki-zuloa (UDAN): ISPILUA, barren artetik urrezko kristalera.", [DGH.shaftC.x, DGH.shaftC.z, SGY]];
     if (!saved.doors.includes("hE-n")) return ["Ispiluen aretoa: ispilu-harriak BIRATU. Sarea EGUZKIAz, kristal urdina ILARGIAz.", [DGH.shaftE.x, DGH.shaftE.z, SGY]];
     if (!has(DGH.bigKey)) return isCleared("hF-kristalak") ? ["Giltza nagusiaren kutxa.", [DGH.bigChest.x, DGH.bigChest.z, SGY]] : ["Kristalen gela: hiru kristalak piztu (urrea, urdina, zuria).", [DGH.shaftF.x, DGH.shaftF.z, SGY]];
     if (!flag("herensugea")) return saved.doors.includes(DGH.bossDoor) ? ["Zezengorriren altxortegia. Argia begietara.", [R.H7.x, R.H7.z + 10, SGY]] : ["Altxortegiko ate handia (iparrean): giltza nagusia.", [R.H3.x, R.H3.z - 13, SGY]];
@@ -24746,8 +24807,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
      Hiru txanda: I begi urreak, II begi urdinak, III bat urrea eta bestea urdina (biak, segidan).
      Barne-IDak (ZB, zb*, herensugea bandera) bere horretan; BOSS.kind = "zezen".
      ========================================================================= */
-  const ZB = { g: null, body: null, head: null, legs: [], tail: null, eyes: [], ember: null, nose: null, heads: [], state: "sleep", t: 0, round: -1, seenIntro: false, x: 0, y: 0, z: 0, a: PI, atkCd: 2, hp: 0, max: 6, light: 0, sunT: 0, moonT: 0, stun: 0, run: null, marks: [], fires: [], breathCone: null, breathT: 0, flash: 0, gallop: 0, stats: { light: 0, parry: 0, reflect: 0, crash: 0 } };
-  const ZB_HP = [6, 6, 10];
+  const ZB = { g: null, body: null, head: null, legs: [], tail: null, eyes: [], ember: null, nose: null, heads: [], state: "sleep", t: 0, round: -1, seenIntro: false, x: 0, y: 0, z: 0, a: PI, atkCd: 2, hp: 0, max: 6, light: 0, sunT: 0, moonT: 0, stun: 0, run: null, marks: [], fires: [], breathCone: null, breathT: 0, flash: 0, gallop: 0, stats: { light: 0, parry: 0, reflect: 0, crash: 0 }, sunL: 0, moonL: 0, winDmg: 0, tele: null, cone: null, rings: [] };
+  const ZB_HP = [6, 6, 9];
+  /* leiho bakoitzeko kalte-muga (lurrean): hiru kolpe, gero altxatu (borroka zikloka, ez botoi-zaparrada) */
+  const ZB_WIN = 3;
   const ZB_EYE = ["sun", "moon", "both"];
   const EYE_COL = { sun: "#ffc933", moon: "#6fd0ff" };
   const ZV = new T.Vector3();
@@ -24760,6 +24823,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ZB.a = 0;
     const g = new T.Group();
     g.position.set(ZB.x, ZB.y, ZB.z);
+    g.rotation.order = "YXZ";
     BP.add(g);
     ZB.g = g;
     const hide = new T.MeshStandardMaterial({ color: "#8a1f14", roughness: 0.6, metalness: 0.05, flatShading: true, emissive: new T.Color("#2a0603"), emissiveIntensity: 0.45 }),
@@ -24837,10 +24901,113 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ZB.breathCone.renderOrder = 7;
     ZB.breathCone.visible = false;
     BP.add(ZB.breathCone);
+    /* lurreko abisuak: oldarraldiaren bidea (zerrenda gorria) eta su-arnasaren konoa (sektorea) */
+    const tg = new T.PlaneGeometry(1, 1);
+    tg.rotateX(-PI / 2);
+    tg.translate(0, 0, 0.5);
+    ZB.tele = new T.Mesh(tg, new T.MeshBasicMaterial({ color: "#ff3b2a", transparent: true, opacity: 0, depthWrite: false, blending: T.AdditiveBlending }));
+    ZB.tele.renderOrder = 3;
+    ZB.tele.visible = false;
+    BP.add(ZB.tele);
+    ZB.cone = new T.Mesh(new T.CircleGeometry(10, 28, -PI / 2 - 0.36, 0.72), new T.MeshBasicMaterial({ color: "#ff7a2a", transparent: true, opacity: 0, depthWrite: false, side: T.DoubleSide, blending: T.AdditiveBlending }));
+    ZB.cone.geometry.rotateX(-PI / 2);
+    ZB.cone.renderOrder = 3;
+    ZB.cone.visible = false;
+    BP.add(ZB.cone);
     ZB.solid = { x: ZB.x, z: ZB.z, r: 1.9, h: 3.4, y: SGY, pillar: true, mov: true };
     solids.push(ZB.solid);
     zbEyes();
     if (flag("herensugea")) zbFreed(true);
+    /* IA-modeloa (Flux → Tripo → Blender-eko hezurdura, tools/leizeak/models/ai/rig_zezen.py):
+       hezurrak pibota prozeduralek gidatzen dituzte; ez badago (?ia=0, ?gfx=0), gorputz prozedurala */
+    aiModel("zezengorri", (sc) => zbAi(sc));
+  }
+  function zbAi(sc) {
+    if (!sc || !ZB.g || ZB.ai) return;
+    const mats = [];
+    sc.traverse((n) => {
+      if (!n.isMesh) return;
+      n.frustumCulled = false;
+      n.material = n.material.clone();
+      if (n.material.map) {
+        n.material.emissiveMap = n.material.map;
+        n.material.emissive = new T.Color("#ffffff");
+        n.material.emissiveIntensity = 0.2;
+      }
+      mats.push(n.material);
+    });
+    const mk = (nm) => sc.getObjectByName(nm),
+      eyeL = mk("eye_L"),
+      eyeR = mk("eye_R"),
+      fore = mk("forehead"),
+      snout = mk("snout");
+    if (!eyeL || !eyeR || !fore || !snout) return;
+    /* prozeduralak ezkutatu; begien distira, txingarra eta sudur-sua IA-buruaren marketara */
+    ZB.g.traverse((n) => {
+      if (n.isMesh && n !== ZB.ember) n.visible = false;
+    });
+    sc.rotation.set(0, 0, 0);
+    sc.position.set(0, 0, 0);
+    ZB.g.add(sc);
+    ZB.g.updateMatrixWorld(true);
+    const bones = {},
+      X = new T.Vector3(1, 0, 0),
+      Y = new T.Vector3(0, 1, 0),
+      qr = new T.Quaternion(),
+      qb = new T.Quaternion();
+    sc.getWorldQuaternion(qr).invert();
+    sc.traverse((n) => {
+      if (!n.isBone) return;
+      n.getWorldQuaternion(qb);
+      const inv = qr.clone().multiply(qb).invert();
+      bones[n.name] = { b: n, rest: n.quaternion.clone(), ax: X.clone().applyQuaternion(inv), ay: Y.clone().applyQuaternion(inv), u: 0 };
+    });
+    const neck = new T.Vector3(),
+      w = new T.Vector3();
+    (bones.head ? bones.head.b : snout).getWorldPosition(neck);
+    for (const E of ZB.eyes) {
+      const M = E.side > 0 ? eyeL : eyeR;
+      M.getWorldPosition(w);
+      w.add(w.clone().sub(neck).setY(0).normalize().multiplyScalar(0.14));
+      E.halo.position.copy(M.worldToLocal(w));
+      E.halo.scale.setScalar(0.9);
+      M.add(E.halo);
+    }
+    fore.add(ZB.ember);
+    ZB.ember.position.set(0, 0, 0);
+    snout.add(ZB.nose);
+    ZB.nose.position.set(0, 0, 0);
+    ZB.ai = { sc, mats, bones, snout };
+  }
+  /* IA-hezurdura: lauhazka (belaunak tolestuz), lurrera belauniko, burua (prozeduralaren angelu berak) */
+  const AQ = new T.Quaternion(),
+    AQ2 = new T.Quaternion();
+  function aiTurn(B, ax, ay = 0) {
+    B.b.quaternion.copy(B.rest).multiply(AQ.setFromAxisAngle(B.ax, ax)).multiply(AQ2.setFromAxisAngle(B.ay, ay));
+  }
+  function zbAiPose(dt, run, down) {
+    const A = ZB.ai,
+      k = 1 - Math.exp(-dt * 16);
+    for (const Lg of ZB.legs) {
+      const id = "leg_" + (Lg.front ? "F" : "B") + "_" + (Lg.side > 0 ? "L" : "R"),
+        up = A.bones[id + "_up"],
+        lo = A.bones[id + "_lo"];
+      if (!up || !lo) continue;
+      const ph = ZB.gallop + (Lg.front ? 0 : PI) + (Lg.side > 0 ? 0.6 : 0);
+      let tu = Lg.pv.rotation.x,
+        tl = 0;
+      if (down) {
+        tu = Lg.front ? -1.1 : 1.0;
+        tl = Lg.front ? 2.0 : -1.9;
+      } else if (run) tl = (Lg.front ? 1 : -1) * Math.max(0, Math.cos(ph)) * 0.9;
+      else if (ZB.state === "paw" && Lg.front && Lg.side > 0) tl = 0.7 + Math.sin(ZB.t * 14) * 0.4;
+      up.u = mix(up.u, tu, k);
+      lo.u = mix(lo.u, tl, k);
+      aiTurn(up, up.u);
+      aiTurn(lo, lo.u);
+    }
+    if (A.bones.head) aiTurn(A.bones.head, ZB.head.rotation.x, ZB.head.rotation.y);
+    for (const m of A.mats) m.emissiveIntensity = 0.2 + ZB.flash * 1.1;
   }
   /* begien kolorea txandaren arabera (III: ezkerra urrea, eskuina urdina) */
   function zbEyes() {
@@ -24852,9 +25019,15 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       E.halo.material.color.set(c);
     }
   }
-  const zbAwake = () => ZB.state === "idle" || ZB.state === "paw" || ZB.state === "breath" || ZB.state === "spit";
+  const zbAwake = () => ZB.state === "idle" || ZB.state === "paw" || ZB.state === "breath" || ZB.state === "spit" || ZB.state === "daze";
+  /* begiak zabalik: erasoa prestatzean eta zorabiatuta bakarrik (atsedenean, erdi itxita) */
+  const zbEyesOpen = () => ZB.state === "paw" || ZB.state === "breath" || ZB.state === "spit" || ZB.state === "daze";
   /* buruaren mundu-posizioa (ahoa / begiak) */
   function zbHeadPos(out) {
+    if (ZB.ai) {
+      ZB.ai.snout.getWorldPosition(out);
+      return out.set(out.x + Math.sin(ZB.g.rotation.y) * 0.35, out.y, out.z + Math.cos(ZB.g.rotation.y) * 0.35);
+    }
     ZB.head.updateWorldMatrix(true, false);
     return out.set(0, 0, 1.4).applyMatrix4(ZB.head.matrixWorld);
   }
@@ -24878,7 +25051,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       SND.roar();
       shake(0.6);
       zbRound(0);
-      notify(L("Begi urreak: EGUZKIA (UDA). Argi-zutabe batean, ISPILUA begietara: itsututa, hormaren kontra joko du. Erasoan, saihestu (BULTZADA)!"), "", 7);
+      notify(L("Begi urrezkoak: EGUZKIA (UDA). Erasoa prestatzen duenean, argi-zutabe batetik ISPILUA begietara: itsututa, hormaren kontra joko du. Oldarraldia: saihestu (BULTZADA) edo estalpe baten atzean!"), "", 8);
     };
     if (ZB.seenIntro) return fight();
     ZB.seenIntro = true;
@@ -24895,7 +25068,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   function zbRound(n) {
     ZB.round = n;
     ZB.hp = ZB.max = ZB_HP[n];
-    ZB.light = ZB.sunT = ZB.moonT = 0;
+    ZB.light = ZB.sunT = ZB.moonT = ZB.sunL = ZB.moonL = 0;
     zbEyes();
     bossBar("ZEZENGORRI", zbTotal());
     if (n === 1) notify(L("Begiak urdin bihurtu zaizkio! Orain: ILARGIA (NEGUA), argi-zutabe batean."), "", 6);
@@ -24910,7 +25083,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ZB.state = "down";
     ZB.stun = dur || 4.6;
     ZB.run = null;
-    ZB.light = ZB.sunT = ZB.moonT = 0;
+    ZB.winDmg = 0;
+    ZB.g.rotation.x = 0;
+    zbTeleOff();
+    ZB.light = ZB.sunT = ZB.moonT = ZB.sunL = ZB.moonL = 0;
     ZB.breathCone.visible = false;
     ZB.nose.material.opacity = 0;
     ZB.ember.visible = true;
@@ -24922,79 +25098,132 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   }
   function zbHit(n) {
     if (ZB.state !== "down") return;
+    n = Math.min(n, ZB_WIN - ZB.winDmg);
+    if (n <= 0) return;
+    ZB.winDmg += n;
     ZB.hp -= n;
     ZB.flash = 1;
     SND.hit ? SND.hit(1) : SND.thud();
-    fxBurst(ZB.x, SGY + 3.4, ZB.z, { n: 16, speed: 3, up: 2, life: 0.5, size: 0.3, color: "#ffb347", grav: 3 });
+    ZB.ember.getWorldPosition(ZV);
+    fxBurst(ZV.x, ZV.y, ZV.z, { n: 16, speed: 3, up: 2, life: 0.5, size: 0.3, color: "#ffb347", grav: 3 });
+    damageNumber({ x: ZV.x, y: ZV.y, z: ZV.z, H: 0.5 }, n);
     bossBar("ZEZENGORRI", zbTotal());
-    if (ZB.hp > 0) return;
+    if (ZB.hp > 0 && ZB.winDmg < ZB_WIN) return;
+    FB.bossHit(ZV.x, ZV.y, ZV.z);
+    if (ZB.hp > 0) return zbRise(L("Altxatu da! Berriro: argia begietara, erasoa prestatzen duenean."));
     if (ZB.round < 2) {
-      ZB.state = "idle";
-      ZB.ember.visible = false;
-      ZB.atkCd = 2.2;
-      SND.roar();
+      zbRise(null, 1.6);
       return zbRound(ZB.round + 1);
     }
     zbDefeat();
   }
+  /* altxatu: TXINGARRA ezkutatu, orroa (txanda berrian, 1.6 s zauriezin: begiak itxita) */
+  function zbRise(msg, roar = 0) {
+    ZB.ember.visible = false;
+    ZB.state = roar ? "roar" : "idle";
+    ZB.stun = roar;
+    ZB.atkCd = roar ? 2 : 1.4;
+    SND.roar();
+    shake(0.35);
+    if (roar) fxRing(ZB.x, SGY + 0.2, ZB.z, ZB.round + 1 === 1 ? EYE_COL.moon : EYE_COL.sun, 9, 1.1);
+    if (msg) notify(msg, "", 3.2);
+  }
+  /* zorabiatuta (estalpearen kontra, su-bola itzulia, argiak erasoa etenda): begiak zabalik, argiak bikoitz */
+  function zbDaze(secs, msg) {
+    ZB.state = "daze";
+    ZB.stun = secs;
+    ZB.run = null;
+    ZB.breathCone.visible = false;
+    ZB.nose.material.opacity = 0;
+    zbTeleOff();
+    if (msg) notify(msg, "", 2.6);
+  }
+  function zbTeleOff() {
+    if (ZB.tele) ZB.tele.visible = false;
+    if (ZB.cone) ZB.cone.visible = false;
+  }
+  /* gorputzaren kapsula (buztanetik muturrera): oldarraldiaren kolpea */
+  function zbBodyDist(px, pz) {
+    const dx = Math.sin(ZB.a),
+      dz = Math.cos(ZB.a),
+      t = clamp((px - ZB.x) * dx + (pz - ZB.z) * dz, -2.4, ZB.ai ? 3.4 : 3.9);
+    return Math.hypot(px - (ZB.x + dx * t), pz - (ZB.z + dz * t));
+  }
   /* EGUZKI-ISPILUA begietara (ispilua.js, beamHit-etik) */
   function zbLight(kind, dt) {
     if (!zbAwake()) return;
-    const need = ZB_EYE[ZB.round];
+    if (!zbEyesOpen()) {
+      notifyOnce("zb-squint", L("Begiak erdi itxita ditu. Erasoa prestatzen duenean (harea hankaz, arnasa hartzean), orduan: ARGIA!"), "");
+      return;
+    }
+    const need = ZB_EYE[ZB.round],
+      k = ZB.state === "daze" ? 2 : 1;
+    if (need !== "both" && need !== kind) {
+      notifyOnce("zb-wrong-" + need, need === "sun" ? L("Haren begiak urrezkoak dira: EGUZKIA behar dute (UDA).") : L("Haren begiak urdinak dira: ILARGIA behar dute (NEGUA)."), "");
+      if (frame % 40 === 0) {
+        zbHeadPos(ZV);
+        fxBurst(ZV.x, ZV.y, ZV.z, { n: 8, speed: 3, up: 1, life: 0.3, size: 0.18, color: EYE_COL[kind], grav: 2 });
+        SND.clang(0.3);
+      }
+      return;
+    }
+    /* argia jasotzen: erasoa eten (zorabiatuta, begiak zabalik) */
+    if (ZB.state === "breath" || ZB.state === "spit") zbDaze(1.2);
     if (need === "both") {
-      if (kind === "sun") ZB.sunT = Math.max(ZB.sunT, 3.5);
-      else ZB.moonT = Math.max(ZB.moonT, 3.5);
+      const key = kind === "sun" ? "sunL" : "moonL",
+        tk = kind === "sun" ? "sunT" : "moonT";
+      if (ZB[tk] > 0) return;
+      ZB[key] += (dt / 0.4) * k;
+      if (frame % 3 === 0) fxBurst(ZB.x, SGY + 3.2, ZB.z, { n: 2, speed: 2, up: 1, life: 0.3, size: 0.16, color: EYE_COL[kind], grav: 1 });
+      if (ZB[key] < 1) return;
+      ZB[key] = 0;
+      ZB[tk] = 3.5;
       if (ZB.sunT > 0 && ZB.moonT > 0) {
         ZB.stats.light++;
         return zbBlind();
       }
-      notifyOnce("zb-both-" + kind, kind === "sun" ? L("Begi urrea itsutu da! Orain, ILARGIA begi urdinera: NEGURA, azkar!") : L("Begi urdina itsutu da! Orain, EGUZKIA begi urrera: UDARA, azkar!"), "");
+      notify(kind === "sun" ? L("Urrezko begia itsutu da! Orain, ILARGIA begi urdinera: NEGURA, azkar!") : L("Begi urdina itsutu da! Orain, EGUZKIA urrezko begira: UDARA, azkar!"), "", 3);
       return;
     }
-    if (need !== kind) {
-      notifyOnce("zb-wrong-" + need, need === "sun" ? L("Haren begiak urreak dira: EGUZKIA behar dute (UDA).") : L("Haren begiak urdinak dira: ILARGIA behar dute (NEGUA)."), "");
-      return;
-    }
-    /* argia jasotzen: erasoa eten */
-    if (ZB.state === "breath" || ZB.state === "spit") {
-      ZB.state = "idle";
-      ZB.breathCone.visible = false;
-      ZB.nose.material.opacity = 0;
-    }
-    ZB.light += dt / 0.55;
+    ZB.light += (dt / 0.55) * k;
     if (frame % 3 === 0) fxBurst(ZB.x, SGY + 3.2, ZB.z, { n: 2, speed: 2, up: 1, life: 0.3, size: 0.16, color: EYE_COL[kind], grav: 1 });
     if (ZB.light >= 1) {
       ZB.stats.light++;
       zbBlind();
     }
   }
-  /* itsu: korrika itsuan, hormaren edo estalpe baten kontra */
   function zbBlind() {
     ZB.state = "blind";
     ZB.t = 0;
-    ZB.light = ZB.sunT = ZB.moonT = 0;
+    ZB.light = ZB.sunT = ZB.moonT = ZB.sunL = ZB.moonL = 0;
+    ZB.breathCone.visible = false;
+    ZB.nose.material.opacity = 0;
+    zbTeleOff();
     const a = Math.atan2(P.x - ZB.x, P.z - ZB.z) + (Math.random() < 0.5 ? 1 : -1) * (0.9 + Math.random() * 0.8);
-    ZB.run = { dx: Math.sin(a), dz: Math.cos(a), sp: 13, blind: true, d: 0 };
-    ZB.a = a;
+    ZB.run = { dx: Math.sin(a), dz: Math.cos(a), sp: 13, blind: true, d: 0, rear: 0.5 };
     SND.roar();
-    notify(L("Itsututa! Korrika itsuan…"), "", 2.4);
+    shake(0.3);
+    notify(L("Itsututa! Atzeko hanketan altxatu da… eta korrika itsuan!"), "", 2.4);
   }
   /* oldarraldia: abisua (hankaz arrastatu), gero zuzen */
   function zbCharge() {
     const a = Math.atan2(P.x - ZB.x, P.z - ZB.z);
     ZB.a = a;
     ZB.run = { dx: Math.sin(a), dz: Math.cos(a), sp: 15, blind: false, d: 0, hit: false };
+    zbTeleOff();
     ZB.state = "charge";
     ZB.t = 0;
     SND.roar();
   }
   /* estalpeak eta hormak: korrikan, aurrean? */
-  function zbBlocked(x, z) {
+  function zbBlocked(x, z, sx, sz) {
     const R = DGH.bossRoom;
-    if (x < R.x - 19 || x > R.x + 19 || z < -124.5 || z > -97.5) return true;
+    if (x < R.x - 19 || x > R.x + 19 || z < -124.5 || z > -97.5) return "wall";
+    if (sx !== undefined && (sx < R.x - 20.6 || sx > R.x + 20.6 || sz < -127.2 || sz > -96.6)) return "wall";
     for (const s of solids) {
       if (s === ZB.solid || s.h < 1.2 || s.y + s.h < SGY + 1 || Math.abs(s.x - R.x) > 22 || s.z > -94 || s.z < -128) continue;
-      if (Math.hypot(x - s.x, z - s.z) < s.r + ZB_R * 0.8) return true;
+      if (Math.hypot(x - s.x, z - s.z) < s.r + ZB_R * 0.8) return "cover";
+      if (sx !== undefined && Math.hypot(sx - s.x, sz - s.z) < s.r + 0.5) return "cover";
     }
     return false;
   }
@@ -25003,7 +25232,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       dz = z1 - z0,
       d = Math.hypot(dx, dz) || 1;
     for (const s of solids) {
-      if (s === ZB.solid || s.h < 1.5 || s.y + s.h < SGY + 1.2 || s.noBeam) continue;
+      if (s === ZB.solid || s.h < 1.2 || s.y + s.h < SGY + 1.1 || s.noBeam) continue;
       if (rayCircle(x0, z0, dx / d, dz / d, s.x, s.z, s.r, d) >= 0) return true;
     }
     return false;
@@ -25023,7 +25252,13 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       m.add(fl);
       m.position.copy(ZV);
       scene.add(m);
-      SHOTS.push({ m, x: ZV.x, z: ZV.z, y: ZV.y, vx: dx / T0, vz: dz / T0, sp: td / T0, t: 0, era: 2, rock: true, fire: true, floor: SGY, vy: (SGY + 0.5 - ZV.y + 0.5 * 16 * T0 * T0) / T0, onLand: (s) => zbFirePatch(s.x, s.z, 1.5, 2.4) });
+      SHOTS.push({ m, x: ZV.x, z: ZV.z, y: ZV.y, vx: dx / T0, vz: dz / T0, sp: td / T0, t: 0, era: 2, rock: true, fire: true, zb: true, floor: SGY, vy: (SGY + 0.5 - ZV.y + 0.5 * 16 * T0 * T0) / T0, onLand: (s) => zbFirePatch(s.x, s.z, 1.5, 2.4) });
+      /* erortze-lekua: eraztun laranja lurrean, hegaldiak irauten duen bitartean */
+      const rg = new T.Mesh(new T.RingGeometry(1.2, 1.55, 28), new T.MeshBasicMaterial({ color: "#ff8a2a", transparent: true, opacity: 0.6, depthWrite: false, blending: T.AdditiveBlending }));
+      rg.rotation.x = -PI / 2;
+      rg.position.set(tx, SGY + 0.06, tz);
+      ZONES[DGH.id].group.add(rg);
+      ZB.rings.push({ m: rg, t: 0, T: T0 });
     }
     SND.flame();
   }
@@ -25064,16 +25299,27 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       else if (ZB.state === "paw" && Lg.front && Lg.side > 0) r = -0.4 + Math.sin(ZB.t * 14) * 0.5;
       Lg.pv.rotation.x = mix(Lg.pv.rotation.x, down ? (Lg.front ? -1.35 : 1.35) : r, 1 - Math.exp(-dt * 10));
     }
-    const lowY = down ? -1.45 : run ? 0.15 * Math.abs(Math.sin(ZB.gallop)) : Math.sin(time * 1.4) * 0.04;
+    const rear = !!(ZB.run && ZB.run.rear > 0),
+      lowY = down ? (ZB.ai ? -0.95 : -1.45) : rear ? 0.55 : run ? 0.15 * Math.abs(Math.sin(ZB.gallop)) : Math.sin(time * 1.4) * 0.04;
     ZB.g.position.y = mix(ZB.g.position.y, SGY + lowY, 1 - Math.exp(-dt * 8));
+    ZB.g.rotation.x = mix(ZB.g.rotation.x, rear ? -0.38 : 0, 1 - Math.exp(-dt * 12));
     const hx = ZB.state === "breath" ? -0.25 : run || ZB.state === "paw" ? 0.45 : down ? 0.35 : Math.sin(time * 0.9) * 0.06;
     ZB.head.rotation.x = mix(ZB.head.rotation.x, hx, 1 - Math.exp(-dt * 8));
-    ZB.head.rotation.y = ZB.state === "blind" ? Math.sin(time * 18) * 0.25 : mix(ZB.head.rotation.y, 0, 1 - Math.exp(-dt * 6));
+    ZB.head.rotation.y = ZB.state === "blind" ? Math.sin(time * 18) * 0.25 : ZB.state === "daze" ? Math.sin(time * 7) * 0.32 : mix(ZB.head.rotation.y, 0, 1 - Math.exp(-dt * 6));
     ZB.tail.rotation.z = Math.sin(time * (run ? 9 : 2.2)) * 0.4;
-    for (const E of ZB.eyes) E.halo.material.opacity = ZB.state === "blind" ? 0.15 + Math.random() * 0.5 : down ? 0.1 : 0.45 + ZB.light * 0.5;
+    /* begiak: erdi itxita atsedenean, zabalik erasoa prestatzean (argia metatuz), itsutuak grisak (III) */
+    const open = zbEyesOpen();
+    for (const E of ZB.eyes) {
+      const blindT = ZB.round === 2 ? (E.side < 0 ? ZB.sunT : ZB.moonT) : 0,
+        lk = ZB.round === 2 ? (E.side < 0 ? ZB.sunL : ZB.moonL) : ZB.light;
+      E.halo.material.opacity = ZB.state === "blind" ? 0.15 + Math.random() * 0.5 : down || ZB.state === "roar" ? 0.1 : blindT > 0 ? 0.12 : open ? 0.55 + lk * 0.45 : 0.16;
+      E.halo.scale.setScalar((ZB.ai ? 0.9 : 1.1) * (open && !blindT ? 1.15 + lk * 0.5 : 0.75));
+      if (ZB.round === 2) E.halo.material.color.set(blindT > 0 ? "#6b6b6b" : E.side < 0 ? EYE_COL.sun : EYE_COL.moon);
+    }
     ZB.mat.emissiveIntensity = 0.45 + ZB.flash * 1.2;
     ZB.ember.material.emissiveIntensity = 1.6 + Math.sin(time * 8) * 0.5;
     ZB.g.rotation.y = mix(ZB.g.rotation.y, ZB.a, 1 - Math.exp(-dt * (run ? 20 : 4)));
+    if (ZB.ai) zbAiPose(dt, run, down);
   }
   function zbUpdate(dt) {
     if (!ZB.g || ZONE.cur !== "herensuge") return;
@@ -25095,6 +25341,18 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ZB.sunT = Math.max(0, ZB.sunT - dt);
     ZB.moonT = Math.max(0, ZB.moonT - dt);
     ZB.light = Math.max(0, ZB.light - dt * 0.35);
+    ZB.sunL = Math.max(0, ZB.sunL - dt * 0.35);
+    ZB.moonL = Math.max(0, ZB.moonL - dt * 0.35);
+    for (let i = ZB.rings.length - 1; i >= 0; i--) {
+      const Rg = ZB.rings[i];
+      Rg.t += dt;
+      Rg.m.material.opacity = 0.5 + 0.4 * Math.abs(Math.sin(time * 10));
+      Rg.m.scale.setScalar(1 + Math.max(0, 1 - Rg.t / Rg.T) * 0.6);
+      if (Rg.t > Rg.T + 0.1) {
+        Rg.m.parent && Rg.m.parent.remove(Rg.m);
+        ZB.rings.splice(i, 1);
+      }
+    }
     /* sua lurrean */
     for (let i = ZB.fires.length - 1; i >= 0; i--) {
       const F = ZB.fires[i];
@@ -25116,44 +25374,71 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       ZB.a += Math.atan2(Math.sin(want - ZB.a), Math.cos(want - ZB.a)) * Math.min(1, dt * 3);
       ZB.nose.material.opacity = 0.5 + Math.sin(time * 20) * 0.3;
       if (Math.random() < dt * 14) fxBurst(ZB.x + Math.sin(ZB.a + 0.6) * 1.6, SGY + 0.2, ZB.z + Math.cos(ZB.a + 0.6) * 1.6, { n: 3, speed: 1.6, up: 1.4, life: 0.6, size: 0.35, color: "#c8a080", grav: 2 });
+      /* abisua lurrean: oldarraldiaren bidea (3.6 m zabal), jokalariarengana */
+      const Tl = ZB.tele;
+      Tl.visible = true;
+      Tl.position.set(ZB.x + Math.sin(ZB.a) * 1.5, SGY + 0.06, ZB.z + Math.cos(ZB.a) * 1.5);
+      Tl.rotation.y = ZB.a;
+      Tl.scale.set(3.6, 1, Math.min(30, Math.hypot(P.x - ZB.x, P.z - ZB.z) + 8));
+      Tl.material.opacity = 0.3 + 0.4 * Math.min(1, ZB.t / 1.15) + Math.sin(time * 16) * 0.1;
+      if (Math.floor(ZB.t * 3.4) !== Math.floor((ZB.t - dt) * 3.4)) SND.thud();
       if (ZB.t > 1.15) {
         ZB.nose.material.opacity = 0;
         zbCharge();
       }
     } else if (ZB.state === "charge" || ZB.state === "blind") {
-      const Rn = ZB.run,
-        step = Rn.sp * dt,
-        nx = ZB.x + Rn.dx * step,
-        nz = ZB.z + Rn.dz * step;
-      if (zbBlocked(nx + Rn.dx * 1.2, nz + Rn.dz * 1.2)) {
-        /* talka: itsu bazegoen (edo estalpe/harri bat), lurrera; bestela, gelditu eta biratu */
-        ZB.a = Math.atan2(Rn.dx, Rn.dz);
-        if (Rn.blind) zbDown("crash", 4.6);
-        else if (ZB.round >= 0 && Math.random() < 0.45) zbDown("crash", 2.6);
-        else {
-          ZB.state = "idle";
-          ZB.atkCd = 1.4;
-          shake(0.3);
-          SND.thud();
-        }
+      const Rn = ZB.run;
+      if (Rn.rear > 0) {
+        /* itsututa: atzeko hanketan altxatuta, orroka (irakurtzeko unea) */
+        Rn.rear -= dt;
+        if (Rn.rear <= 0) ZB.a = Math.atan2(Rn.dx, Rn.dz);
       } else {
-        ZB.x = nx;
-        ZB.z = nz;
-        Rn.d += step;
-        if (!Rn.hit && Math.hypot(P.x - ZB.x, P.z - ZB.z) < ZB_R + 0.3 && P.y < SGY + 2.2) {
-          Rn.hit = true;
-          playerHit(1, ZB.x, ZB.z);
-        }
-        if (Math.random() < dt * 20) fxBurst(ZB.x - Rn.dx * 2, SGY + 0.2, ZB.z - Rn.dz * 2, { n: 2, speed: 1.4, up: 1, life: 0.5, size: 0.4, color: "#c8a080", grav: 2 });
-        if (!Rn.blind && Rn.d > 30) {
-          ZB.state = "idle";
-          ZB.atkCd = 1.6;
+        const step = Rn.sp * dt,
+          nx = ZB.x + Rn.dx * step,
+          nz = ZB.z + Rn.dz * step,
+          hit = zbBlocked(nx + Rn.dx * 1.2, nz + Rn.dz * 1.2, nx + Rn.dx * (ZB.ai ? 3.2 : 3.8), nz + Rn.dz * (ZB.ai ? 3.2 : 3.8));
+        if (hit) {
+          /* talka: itsu → lurrera (TXINGARRA); estalpea → zorabiatuta (begiak zabalik); horma → gelditu eta biratu */
+          ZB.a = Math.atan2(Rn.dx, Rn.dz);
+          if (Rn.blind) zbDown("crash", 4.6);
+          else if (hit === "cover") {
+            shake(0.45);
+            SND.thud();
+            zbDaze(1.5, L("Estalpearen kontra! Zorabiatuta, begiak zabalik: ARGIA, orain!"));
+          } else {
+            ZB.state = "idle";
+            ZB.run = null;
+            ZB.atkCd = 1.4;
+            shake(0.3);
+            SND.thud();
+          }
+        } else {
+          ZB.x = nx;
+          ZB.z = nz;
+          Rn.d += step;
+          if (!Rn.hit && P.y < SGY + 2.2 && zbBodyDist(P.x, P.z) < 1.5) {
+            Rn.hit = true;
+            playerHit(2, ZB.x, ZB.z);
+          }
+          if (Math.random() < dt * 20) fxBurst(ZB.x - Rn.dx * 2, SGY + 0.2, ZB.z - Rn.dz * 2, { n: 2, speed: 1.4, up: 1, life: 0.5, size: 0.4, color: "#c8a080", grav: 2 });
+          if (!Rn.blind && Rn.d > 30) {
+            ZB.state = "idle";
+            ZB.run = null;
+            ZB.atkCd = 1.6;
+          }
         }
       }
     } else if (ZB.state === "breath") {
       zbHeadPos(ZV);
+      if (ZB.breathT === 0) SND.breath && SND.breath();
       ZB.breathT += dt;
       ZB.nose.material.opacity = Math.min(1, ZB.breathT * 1.5);
+      /* abisua lurrean: su-arnasaren konoa (10 m, 0.36 rad), prestatzean ere bai */
+      const Cn = ZB.cone;
+      Cn.visible = true;
+      Cn.position.set(ZV.x, SGY + 0.07, ZV.z);
+      Cn.rotation.y = ZB.a;
+      Cn.material.opacity = ZB.breathT < 0.8 ? 0.25 + 0.35 * (ZB.breathT / 0.8) + Math.sin(time * 18) * 0.08 : 0.45;
       if (ZB.breathT > 0.8) {
         /* sua: konoa aurrera, apur bat jokalariarengana biratuz */
         ZB.a += Math.atan2(Math.sin(want - ZB.a), Math.cos(want - ZB.a)) * Math.min(1, dt * 0.9);
@@ -25170,10 +25455,12 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
           dz = P.z - ZV.z,
           d = Math.hypot(dx, dz),
           off = Math.abs(Math.atan2(Math.sin(Math.atan2(dx, dz) - ZB.a), Math.cos(Math.atan2(dx, dz) - ZB.a)));
-        if (d < len && off < ang && P.y < SGY + 2 && !zbCovered(ZV.x, ZV.z, P.x, P.z)) playerHit(1, ZV.x, ZV.z);
+        /* estalpearen atzean, babestuta; haren GAINEAN, ez */
+        if (d < len && off < ang && P.y < SGY + 2.4 && (P.y > SGY + 1.1 || !zbCovered(ZV.x, ZV.z, P.x, P.z))) playerHit(1, ZV.x, ZV.z);
       }
       if (ZB.breathT > 2.5) {
         ZB.breathCone.visible = false;
+        ZB.cone.visible = false;
         ZB.nose.material.opacity = 0;
         ZB.state = "idle";
         ZB.atkCd = 1.8;
@@ -25193,11 +25480,12 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       }
     } else if (ZB.state === "down") {
       ZB.stun -= dt;
+      if (ZB.stun <= 0) zbRise();
+    } else if (ZB.state === "daze" || ZB.state === "roar") {
+      ZB.stun -= dt;
       if (ZB.stun <= 0) {
         ZB.state = "idle";
-        ZB.ember.visible = false;
-        ZB.atkCd = 1.4;
-        SND.roar();
+        ZB.atkCd = Math.max(ZB.atkCd, 1.1);
       }
     }
     ZB.solid.x = ZB.x;
@@ -25217,7 +25505,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     stagger: () => {
       if (!zbAwake()) return;
       ZB.stats.reflect++;
-      zbDown("reflect", 3.6);
+      zbDaze(2, L("Su-bola itzulia! Zorabiatuta: ARGIA begietara, orain!"));
     },
     /* EGUZKI-ISPILUA: begiak (buruaren inguruan) */
     beamHit: (x, y, z, dx, dz, maxD) => {
@@ -25232,8 +25520,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     BOSS.dead = true;
     ZB.state = "freed";
     ZB.t = 0;
-    for (const F of ZB.fires) F.m.parent && F.m.parent.remove(F.m);
-    ZB.fires.length = 0;
+    zbPurge();
+    zbTeleOff();
     for (const e of ENEMIES) if (e.state !== "dead") killEnemy(e);
     ZB.breathCone.visible = false;
     ROOM.fight = null;
@@ -25303,13 +25591,30 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ZB.x = DGH.bossRoom.x;
     ZB.z = -121.5;
     ZB.a = 0;
-    for (const F of ZB.fires) F.m.parent && F.m.parent.remove(F.m);
-    ZB.fires.length = 0;
+    Object.assign(ZB, { spat: false, light: 0, sunT: 0, moonT: 0, sunL: 0, moonL: 0, stun: 0, winDmg: 0 });
+    ZB.g.position.set(ZB.x, SGY, ZB.z);
+    ZB.g.rotation.set(0, 0, 0);
+    ZB.solid.x = ZB.x;
+    ZB.solid.z = ZB.z;
+    zbPurge();
     ZB.breathCone.visible = false;
+    zbTeleOff();
     ZB.ember.visible = false;
     ZB.nose.material.opacity = 0;
     zbEyes();
     bossBar(null);
+  }
+  /* sua lurrean, eraztunak eta hegan dauden su-bolak kendu */
+  function zbPurge() {
+    for (const F of ZB.fires) F.m.parent && F.m.parent.remove(F.m);
+    ZB.fires.length = 0;
+    for (const Rg of ZB.rings) Rg.m.parent && Rg.m.parent.remove(Rg.m);
+    ZB.rings.length = 0;
+    for (let i = SHOTS.length - 1; i >= 0; i--)
+      if (SHOTS[i].zb) {
+        scene.remove(SHOTS[i].m);
+        SHOTS.splice(i, 1);
+      }
   }
   /* ==================================================================
      AHOTSAK · pertsonaien ahotsak (sintetikoak; ikus tools/leizeak/ahotsak/)
@@ -25321,7 +25626,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
      distortsiorik eta abiadura-aldaketarik gabe: argi entzun behar da), INGUMA ametsetik (dardara
      leuna, modulatutako atzerapena eta presentzia: beldurgarria, baina ulergarria), AMAIUR hurbil eta lehor. Hitz egitean musika jaisten da.
      ================================================================== */
-  const VOICE_LINES = {"pro_g1":["MIKELATS","Entzuten duzu, anaia? Zure txalapartak deika… eta inork ez dio erantzuten."],"pro_g2":["MIKELATS","Zazpi txingar, zazpi leize. Laster, amaren sua nirea izango da."],"pro_i1":["ATARRABI","Sorgin… Entzuten didazu? Ez izan beldurrik. Kriseiluaren sugarretik hitz egiten dizut."],"pro_a1":["AMAIUR","Kriseilua… hitz egiten ari da? Nor zara?"],"pro_i2":["ATARRABI","Atarrabi naiz. Lurraren azpitik deitzen dizut, leizeetatik."],"pro_i3":["ATARRABI","Hiru gau dira txalapartak bakarrik jotzen duela. Ez da haizea: leizeak dira, laguntza eske."],"pro_a2":["AMAIUR","Leizeek… deitzen dute?"],"pro_i4":["ATARRABI","Isilik orain. Gaur gauean, ekaitzak belarriak ditu."],"pro_i5":["ATARRABI","Zure amonaren sua itzali da, eta inoiz ez da itzaltzen. Piztu, sorgin, zure sorginkeriaz."],"pro_i6":["ATARRABI","Hori da. Orain, begiratu gora, ganbarara. Amonaren kutxan, txalaparta-makilak."],"pro_i6b":["ATARRABI","Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."],"pro_i7":["ATARRABI","Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Leizeek galdetzen dute; zuk erantzun."],"pro_a3":["AMAIUR","Atea izoztuta dago."],"pro_i8":["ATARRABI","Nire anaiaren kazkabarra da. Sua, sorgin: urtu."],"pro_g3":["MIKELATS","Sorgin bat, anaia? Hain txikia… Zein polita."],"pro_i9":["ATARRABI","Kontuz. Mikelatsen begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."],"pro_i10":["ATARRABI","Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."],"pro_g4":["MIKELATS","Hor zaude… sorgin txikia."],"pro_g5":["MIKELATS","Ikusten… zaitut."],"pro_i11":["ATARRABI","Plazan, itzalak txalapartaren inguruan. Mikelatsen soldaduak dira."],"pro_i12":["ATARRABI","Finkatu bat, eta jo. Gero, hurrengoa."],"pro_i13":["ATARRABI","Begira, sorgin. Egunsentia."],"pro_a4":["AMAIUR","Ikusten zaitut… baina ez duzu itzalik."],"pro_i14":["ATARRABI","Ez. Leize batean galdu nuen, aspaldi. Horregatik ez naiz eguzkitan luzaro geratzen."],"pro_i15":["ATARRABI","Mikelats nire anaia da. Amaren zazpi txingarrak lapurtzen ari da, zaindariak gaiztotuz. Basajaun lehena."],"pro_i16":["ATARRABI","Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni txalapartaren ondoan egongo naiz."],"pro_a5":["AMAIUR","Zure ama… Mari da?"],"pro_g6":["MIKELATS","Zatoz, sorgin. Leizeek… zure izena ikasiko dute."],"dei_i1":["ATARRABI","Hemen nago, Amaiur. Zer behar duzu?"],"dei_i2":["ATARRABI","Kontuz ibili, Amaiur."],"dz_leizea1":["ATARRABI","Basajaunen leizea. Basoaren bihotza da. Itzalak barruan daude."],"dz_leizea2":["ATARRABI","Sutegiak itzalita? Badakizu zer egin."],"dz_lamia1":["ATARRABI","Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."],"dz_lamia2":["ATARRABI","Hemen urak zure sorginkeriari erantzuten dio: esnatu ura, edo izoztu. Bilatu bidea bietan."],"dz_tartalo1":["ATARRABI","Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."],"dz_tartalo2":["MIKELATS","Ilunpea nire etxea da, sorgin. Ongi… etorri."],"dz_tartalo3":["ATARRABI","Ez entzun. Argia da hemen zure armarik onena."],"dz_jentil1":["ATARRABI","Mairubaratza. Jentilak baino lehen, mairuak bizi ziren hemen, harriak altxatzen."],"dz_jentil2":["ATARRABI","Harri hauek gogoratzen dute. Entzun, eta jo."],"dz_zerua1":["ATARRABI","Ortzia. Hodeien gainean zaude, Amaiur. Ez begiratu behera."],"dz_zerua2":["ATARRABI","Haizeak gora eramango zaitu. Fidatu enararen hegoez."],"dz_herensuge1":["ATARRABI","Zezen-harpea. Beroa sentitzen dut hemendik ere."],"dz_herensuge2":["MIKELATS","Zezengorrik altxorra zaintzen du, sorgin. Eta altxorra… nire txingarra da."],"dz_herensuge3":["ATARRABI","Eguzkiak itsutzen du. Beti itsutzen du."],"c7_i1":["ATARRABI","Akerbeltz… Sorginen leizean, akelarrearen erdian. Mikelatsek bere txingarra eman dio."],"c7_a1":["AMAIUR","Nire ametsetan sartu da. Haren adarrak ikusi ditut, sutondoaren ondoan."],"c7_i2":["ATARRABI","Entzun ondo: akelarrera ez da oinez joaten. Sorginak lotan hegan egiten du, gorputza ohean utzita."],"c7_i3":["ATARRABI","Lo-kantak hiru bertso ditu. Bat Kattalinek daki, bestea Txominek. Hirugarrena… jentil zaharrak, gauez."],"c7_i4":["ATARRABI","Hiru bertsoak. Orain, jo nirekin: txalapartak gogoratuko du."],"c7_i5":["ATARRABI","Eta hau: sorgin-hautsa, amaren leizekoa. Bota Akerbeltzi, eta aleak kontatzen hasiko da."],"c7_a2":["AMAIUR","Gaur gauean lo egingo dut. Eta akelarrera hegan egingo dut."],"c7_i6":["ATARRABI","Akelarrean, ez dantzatu, Amaiur. Egunsentira arte dantzatzen duena, han geratzen da."],"c7_n1":["AKERBELTZ","Ongi etorri akelarrera, sorgin txikia. Hemen, gaua ez da inoiz amaitzen."],"c7_f1":["SORGINAK","Dantza, sorgin! Dantza gurekin, egunsentira arte!"],"c7_a3":["AMAIUR","Ez naiz dantzara etorri. Txingarraren bila nator."],"c7_n2":["AKERBELTZ","Ausarta zara. Baina akelarrean… dena da nirea."],"c7_n3":["AKERBELTZ","Lotan zaude, Amaiur. Eta lotan dagoenak… ez du borrokatzen."],"c7_a4":["AMAIUR","Hartu, Akerbeltz! Kontatu ale guztiak, egunsentira arte!"],"c7_n4":["AKERBELTZ","Bat, bi, hiru… Ez! Ez dut kontatu nahi!"],"c7_n5":["AKERBELTZ","Zure amona ere akelarrera etorri zen, gaztetan. Galdetu iezaiozu!"],"c7_n6":["AKERBELTZ","Lo-kanta… Ez! Ez jo hori!"],"c7_n7":["AKERBELTZ","Lo… lo egingo dut… betiko…"],"c7_i7":["ATARRABI","Amaiur. Esnatu. Egunsentia da. Zazpigarren txingarra… zurekin dago."],"c7_a5":["AMAIUR","Zazpi txingar. Orain, Mikelats."],"c7_g1":["MIKELATS","Zazpi txingar… Ondo, sorgin. Ekarri Murumendira. Zure amona… nirekin dago."],"c7_a6":["AMAIUR","Amona…?"],"c7_i8":["ATARRABI","Barkatu, Amaiur. Ez dizut dena esan. Zure amonaren sutondoa amaren zortzigarren sua da."],"st_g1":["MIKELATS","Anaiak sorgin bat aurkitu du. Txingar bat itzuli diozu amari… Sei ditut oraindik."],"st_g3":["MIKELATS","Hiru txingar galdu ditut. Baina negua nirea da, eta zure amonaren sua… hura ere nahi dut."],"st_g4":["MIKELATS","Lau. Harriak lo daude berriro. Baina hodeien gainean, Eatek ez du sorginik maite."],"st_g5":["MIKELATS","Bost. Ekaitza ere galdu dut… Baina Zezengorrik ez du inoiz altxorrik uzten."],"st_g6":["MIKELATS","Sei. Nekatuta zaude, sorgin? Lo egin… Akelarrean, Akerbeltz zain."],"c7_p1":["SORGINAK","Sorgin berri bat! Zatoz, zatoz dantzara!"],"c7_p2":["AMAIUR","Non nago? Hau ez da Iturralde…"],"c7_p3":["AKERBELTZ","Akelarrean zaude, sorgin. Zure amonak ere hemen dantzatu zuen, aspaldi."],"c7_p4":["AKERBELTZ","Akerbeltz naiz. Gaur esnatzen utziko zaitut. Hurrengoan… ez."],"o1_i1":["AHIZPA","Txomin itsasoan dago, eta ekaitza dator! Kanpaia jo behar dut!"],"o1_a1":["AMAIUR","Ez, ez joan! Gaua da. Amonak esan zuen: gauez, ez irten."],"o1_i2":["AHIZPA","Itsasoak ez daki zer ordu den. Nik joko dut; zuk, itxaron."],"o1_g1":["GAUEKO","Gaua… gauekoentzat da."],"o2_n1":["AMONA","Txalapartak bi ahots ditu, neskatoak: batak galdetzen du, eta besteak erantzuten du."],"o2_n2":["AMONA","Eta gogoratu beti: eguna egunekoentzat, gaua gauekoentzat. Gauez, etxean."],"o2_i1":["AHIZPA","Eta gauez txalaparta jotzen badugu, amona?"],"o2_n3":["AMONA","Orduan, leizeek erantzungo dizuete. Eta leizeek ez dute ahazten."],"o3_a1":["AMONA","Mariren bi semeak, Atarrabi eta Mikelats, Etsairen leizean ikasi zuten, zazpi urtez."],"o3_a2":["AMONA","Azkena irteten zenak bertan geratu behar zuen. Atarrabi azkena izan zen… eta itzala utzi zuen."],"o3_i1":["AMONA","Itzalik gabe bizi da ordutik. Eta bere anaiak hartu zuen itzal hura."],"o4_m1":["MARI","Sorgin gaztea: zure sutondoan nire sua egongo da. Ez dadila inoiz itzali."],"o4_n1":["AMONA","Mari, zure sua nik zainduko dut. Herriak ez du jakin behar."],"o5_m1":["MARI","Basajaun, Lamia, Tartalo, Mairu, Eate, Zezengorri eta Akerbeltz: bakoitzak txingar bat gordeko du."],"o5_m2":["MARI","Zazpi txingar, zazpi leize. Eta zortzigarrena, Iturralden: herriaren sua."],"o5_g1":["MIKELATS","Zazpi txingar… eta niri, ezer ez. Ama, ni ere zure semea naiz."],"o6_g1":["MIKELATS","Anaia beti izan da argia, eta ni, ekaitza. Herriek haren izena bedeinkatzen zuten."],"o6_g2":["MIKELATS","Haren itzala gorde nuen leizean. Itzal batekin, armada bat egin daiteke."],"o6_i1":["ATARRABI","Mikelats… itzuli nire itzala."],"o6_g3":["MIKELATS","Zure itzala? Orain nirea da, anaia. Eta negua ere bai."],"o7_i1":["ATARRABI","Leizeetan zazpi urte ikasi nuen. Ez nuen jakin anaia galtzen ari nintzela."],"o7_i2":["ATARRABI","Ez da gaiztoa jaio. Ahaztua sentitu zen, eta ahaztuak ekaitzak egiten ditu."],"o7_i3":["ATARRABI","Ez dut hil nahi. Lo egin dezala, mendiaren azpian, ekaitza baretu arte."],"f_i1":["ATARRABI","Mikelatsek zure amona eraman du Murumendira. Zortzigarren sua nahi du."],"f_a1":["AMAIUR","Nola iritsiko naiz? Murumendi hodeien gainean dago."],"f_n1":["MARI","Sorgin. Igo nirekin. Sua naiz, baina ez dut erretzen."],"f_a2":["AMAIUR","Mari…! Esnatu zara!"],"f_g1":["MIKELATS","Iritsi zara, sorgin. Zazpi txingar ekarri dizkidazu… eta zortzigarrena hemen dago."],"f_g2":["MIKELATS","Zure amonaren sua. Harekin, amaren lekua nirea izango da."],"f_a3":["AMAIUR","Ez duzu ukituko. Zatoz, Mikelats!"],"f_g3":["MIKELATS","Kazkabarra! Erori, sorgin!"],"f_g4":["MIKELATS","Itzalak! Nire anaiaren itzala… nire armada!"],"f_i2":["ATARRABI","Nire itzala da! Argia eman, Amaiur: txingarren argia!"],"f_m1":["MARI","Mikelats. Itzala ez da zurea. Itzuli zure anaiari."],"f_m2":["MARI","Mendiaren azpian lo egingo duzu, seme, ekaitza baretu arte."],"f_g5":["MIKELATS","Ama… negu hau ez da nirea. Gau batek ekarri zuen…"],"f_a4":["AMAIUR","Gau batek…?"],"f_g6":["MARI","Bai. Gau batek ekarri zuen, eta beste gau batek eramango du. Lau negu barru, kanpaiak joko du."],"f_i3":["ATARRABI","Amaiur… nire itzala. Begira: lurrean dago berriro."],"f_a5":["AMAIUR","Eta orain? Zurekin etorriko zara herrira?"],"f_i4":["ATARRABI","Ez. Amaren ondoan geratuko naiz, anaia zaintzen. Leizeek ez dute zure izena ahaztuko."],"f_n2":["AMONA","Etxera, laztana. Gure sutondoa zain dago."],"hp_n1":["MARI","Kazkabarra… Mikelatsek ez gaitu gora utziko. Mendiak bide bat du barrutik. Igo zuk, sorgin."],"hp_a1":["AMAIUR","Mendiaren barrutik, beraz. Isilik, eta itzalean."],"hp_i1":["ATARRABI","Amaiur, entzuten nauzu? Leize hauek nire anaiaren itzalek zaintzen dituzte. Ez zaitzatela ikusi."],"hp_i2":["ATARRABI","Kriseiluaren argia haien begirada da. Ez sartu bertan: itxaron, eta pasatu bizkarretik."],"hp_i3":["ATARRABI","Nire ahotsa zurekin dago. Goiko izkinan, haien urratsak entzungo dituzu."],"hp_i4":["ATARRABI","Ate ondoko hori ez da mugituko. Makilaz hormari jo: tok, tok. Hotsera joango da."],"hp_i5":["ATARRABI","Atzetik hurbiltzen bazara, oharkabean, lo egin dezake. Isil-isilik."],"hp_i6":["ATARRABI","Hari horiek neguko izotza dira. Udan ez daude."],"hp_i7":["ATARRABI","Hor da atea. Gailurra gainean dago, Amaiur. Zure amona ere bai."],"hp_g1":["MIKELATS","Ikusten zaitut, sorgin. Nire mendian zaude."],"tx_n1":["AMONA","Etorri, laztana. Eseri sutondoan. Hiru txingar itzuli dizkiozu Mariri."],"tx_a1":["AMAIUR","Nola dakizu hori?"],"tx_n2":["AMONA","Sorgina naiz, Amaiur. Zure adinean, nik ere entzun nuen leizeen deia."],"tx_n3":["AMONA","Sutondo hau ez da edozein: Marik berak piztu zuen, herria zaintzeko. Ez da inoiz itzaltzen."],"tx_a2":["AMAIUR","Baina deiaren gauean itzali zen."],"tx_n4":["AMONA","Bai. Mikelatsek bere hotza bidali zuen tximinian behera. Horregatik, hau zuretzat da."],"tx_n5":["AMONA","Txingar bat, gure sutik. Elurraren azpian uda lo dago; txingarrak esnatuko du, une batez."],"tx_a3":["AMAIUR","Uda… Hiru urte dira uda ikusi ez dudala."],"tx_n6":["AMONA","Ez ahaztu: zuk esnatzen duzun bitartean bakarrik irauten du. Negua ez da oraindik joango."]};
+  const VOICE_LINES = {"pro_g1":["MIKELATS","Entzuten duzu, anaia? Zure txalapartak deika… eta inork ez dio erantzuten."],"pro_g2":["MIKELATS","Zazpi txingar, zazpi leize. Laster, amaren sua nirea izango da."],"pro_i1":["ATARRABI","Sorgin… Entzuten didazu? Ez izan beldurrik. Kriseiluaren sugarretik hitz egiten dizut."],"pro_a1":["AMAIUR","Kriseilua… hitz egiten ari da? Nor zara?"],"pro_i2":["ATARRABI","Atarrabi naiz. Lurraren azpitik deitzen dizut, leizeetatik."],"pro_i3":["ATARRABI","Hiru gau dira txalapartak bakarrik jotzen duela. Ez da haizea: leizeak dira, laguntza eske."],"pro_a2":["AMAIUR","Leizeek… deitzen dute?"],"pro_i4":["ATARRABI","Isilik orain. Gaur gauean, ekaitzak belarriak ditu."],"pro_i5":["ATARRABI","Zure amonaren sua itzali da, eta inoiz ez da itzaltzen. Amona Goikoetxean dago gaur gauean, gaixoak zaintzen. Piztu sua, sorgin, zure sorginkeriaz."],"pro_i6":["ATARRABI","Hori da. Orain, begiratu gora, ganbarara. Amonaren kutxan, txalaparta-makilak."],"pro_i6b":["ATARRABI","Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."],"pro_i7":["ATARRABI","Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Leizeek galdetzen dute; zuk erantzun."],"pro_a3":["AMAIUR","Atea izoztuta dago."],"pro_i8":["ATARRABI","Nire anaiaren kazkabarra da. Sua, sorgin: urtu."],"pro_g3":["MIKELATS","Sorgin bat, anaia? Hain txikia… Zein polita."],"pro_i9":["ATARRABI","Kontuz. Mikelatsen begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."],"pro_i10":["ATARRABI","Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."],"pro_g4":["MIKELATS","Hor zaude… sorgin txikia."],"pro_g5":["MIKELATS","Ikusten… zaitut."],"pro_i11":["ATARRABI","Plazan, itzalak txalapartaren inguruan. Mikelatsen soldaduak dira."],"pro_i12":["ATARRABI","Finkatu bat, eta jo. Gero, hurrengoa."],"pro_i13":["ATARRABI","Begira, sorgin. Egunsentia."],"pro_a4":["AMAIUR","Ikusten zaitut… baina ez duzu itzalik."],"pro_i14":["ATARRABI","Ez. Leize batean galdu nuen, aspaldi. Eguzkiak ez daki non utzi nire itzala."],"pro_i15":["ATARRABI","Mikelats nire anaia da. Zaindariak gaiztotu ditu, amaren zazpi txingarrak beretzat gorde ditzaten. Amak lo egiten du, txingarrak hozten zaizkion bitartean. Basajaun lehena."],"pro_i16":["ATARRABI","Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni txalapartaren ondoan egongo naiz."],"pro_a5":["AMAIUR","Zure ama… Mari da?"],"pro_g6":["MIKELATS","Zatoz, sorgin. Leizeek… zure izena ikasiko dute."],"dei_i1":["ATARRABI","Hemen nago, Amaiur. Zer behar duzu?"],"dei_i2":["ATARRABI","Kontuz ibili, Amaiur."],"dz_leizea1":["ATARRABI","Basajaunen leizea. Basoaren bihotza da. Itzalak barruan daude."],"dz_leizea2":["ATARRABI","Sutegiak itzalita? Badakizu zer egin."],"dz_lamia1":["ATARRABI","Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."],"dz_lamia2":["ATARRABI","Hemen urak zure sorginkeriari erantzuten dio: esnatu ura, edo izoztu. Bilatu bidea bietan."],"dz_tartalo1":["ATARRABI","Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."],"dz_tartalo2":["MIKELATS","Ilunpea nire etxea da, sorgin. Ongi… etorri."],"dz_tartalo3":["ATARRABI","Ez entzun. Argia da hemen zure armarik onena."],"dz_jentil1":["ATARRABI","Mairubaratza. Jentilak baino lehen, mairuak bizi ziren hemen, harriak altxatzen."],"dz_jentil2":["ATARRABI","Harri hauek gogoratzen dute. Entzun, eta jo."],"dz_zerua1":["ATARRABI","Ortzia. Hodeien gainean zaude, Amaiur. Ez begiratu behera."],"dz_zerua2":["ATARRABI","Haizeak gora eramango zaitu. Fidatu enararen hegoez."],"dz_herensuge1":["ATARRABI","Zezen-harpea. Beroa sentitzen dut hemendik ere."],"dz_herensuge2":["MIKELATS","Zezengorrik altxorra zaintzen du, sorgin. Eta altxorra… nire txingarra da."],"dz_herensuge3":["ATARRABI","Eguzkiak eta ilargiak itsutzen dute. Ispilua, Amaiur."],"c7_i1":["ATARRABI","Akerbeltz… Sorginen leizean, akelarrearen erdian. Zazpigarren txingarra hark gordetzen du, nire anaiaren itzalpean."],"c7_a1":["AMAIUR","Nire ametsetan sartu da. Haren adarrak ikusi ditut, sutondoaren ondoan."],"c7_i2":["ATARRABI","Entzun ondo: akelarrera ez da oinez joaten. Sorginak lotan hegan egiten du, gorputza ohean utzita."],"c7_i3":["ATARRABI","Lo-kantak hiru bertso ditu. Bat Kattalinek daki, bestea Txominek. Hirugarrena… jentil zaharrak, gauez."],"c7_i4":["ATARRABI","Hiru bertsoak. Orain, jo nirekin: txalapartak gogoratuko du."],"c7_i5":["ATARRABI","Eta hau: sorgin-hautsa, amaren leizekoa. Bota Akerbeltzi, eta aleak kontatzen hasiko da."],"c7_a2":["AMAIUR","Gaur gauean lo egingo dut. Eta akelarrera hegan egingo dut."],"c7_i6":["ATARRABI","Akelarrean, ez dantzatu, Amaiur. Egunsentira arte dantzatzen duena, han geratzen da."],"c7_n1":["AKERBELTZ","Ongi etorri akelarrera, sorgin txikia. Hemen, gaua ez da inoiz amaitzen."],"c7_f1":["SORGINAK","Dantza, sorgin! Dantza gurekin, egunsentira arte!"],"c7_a3":["AMAIUR","Ez naiz dantzara etorri. Txingarraren bila nator."],"c7_n2":["AKERBELTZ","Ausarta zara. Baina akelarrean… dena da nirea."],"c7_n3":["AKERBELTZ","Lotan zaude, Amaiur. Eta lotan dagoenak… ez du borrokatzen."],"c7_a4":["AMAIUR","Hartu, Akerbeltz! Kontatu ale guztiak, egunsentira arte!"],"c7_n4":["AKERBELTZ","Bat, bi, hiru… Ez! Ez dut kontatu nahi!"],"c7_n5":["AKERBELTZ","Zure amona ere akelarrera etorri zen, gaztetan. Galdetu iezaiozu!"],"c7_n6":["AKERBELTZ","Lo-kanta… Ez! Ez jo hori!"],"c7_n7":["AKERBELTZ","Lo… lo egingo dut… betiko…"],"c7_i7":["ATARRABI","Amaiur. Esnatu. Egunsentia da. Zazpigarren txingarra… zurekin dago."],"c7_a5":["AMAIUR","Zazpi txingar. Orain, Mikelats."],"c7_g1":["MIKELATS","Zazpi txingar… Ondo, sorgin. Baina zortzigarrena falta zait. Zure amona… nirekin dago."],"c7_a6":["AMAIUR","Amona…?"],"c7_i8":["ATARRABI","Barkatu, Amaiur. Hau aurreikusi behar nuen: zortzigarren suarekin, amaren lekua hartu nahi du."],"st_g1":["MIKELATS","Anaiak sorgin bat aurkitu du. Txingar bat itzuli diozu amari… Sei ditut oraindik."],"st_g3":["MIKELATS","Hiru txingar galdu ditut. Baina negua nirea da, eta zure amonaren sua… hura ere nahi dut."],"st_g4":["MIKELATS","Lau. Harriak lo daude berriro. Baina hodeien gainean, Eatek ez du sorginik maite."],"st_g5":["MIKELATS","Bost. Ekaitza ere galdu dut… Baina Zezengorrik ez du inoiz altxorrik uzten."],"st_g6":["MIKELATS","Sei. Nekatuta zaude, sorgin? Lo egin… Akelarrean, Akerbeltz zain."],"c7_p1":["SORGINAK","Sorgin berri bat! Zatoz, zatoz dantzara!"],"c7_p2":["AMAIUR","Non nago? Hau ez da Iturralde…"],"c7_p3":["AKERBELTZ","Akelarrean zaude, sorgin. Zure amonak ere hemen dantzatu zuen, aspaldi."],"c7_p4":["AKERBELTZ","Akerbeltz naiz. Gaur esnatzen utziko zaitut. Hurrengoan… ez."],"o1_i1":["AHIZPA","Txomin itsasoan dago, eta ekaitza dator! Kanpaia jo behar dut!"],"o1_a1":["AMAIUR","Ez, ez joan! Gaua da. Amonak esan zuen: gauez, ez irten."],"o1_i2":["AHIZPA","Itsasoak ez daki zer ordu den. Nik joko dut; zuk, itxaron."],"o1_g1":["GAUEKO","Gaua… gauekoentzat da."],"o2_n1":["AMONA","Txalapartak bi ahots ditu, neskatoak: batak galdetzen du, eta besteak erantzuten du."],"o2_n2":["AMONA","Eta gogoratu beti: eguna egunekoentzat, gaua gauekoentzat. Gauez, etxean."],"o2_i1":["AHIZPA","Eta gauez txalaparta jotzen badugu, amona?"],"o2_n3":["AMONA","Orduan, leizeek erantzungo dizuete. Eta leizeek ez dute ahazten."],"o3_a1":["AMONA","Mariren bi semeak, Atarrabi eta Mikelats, Etsairen leizean ikasi zuten, zazpi urtez."],"o3_a2":["AMONA","Azkena irteten zenak bertan geratu behar zuen. Atarrabi azkena izan zen… eta itzala utzi zuen."],"o3_i1":["AMONA","Itzalik gabe bizi da ordutik. Eta bere anaiak hartu zuen itzal hura."],"o4_m1":["MARI","Sorgin gaztea: zure sutondoan nire sua egongo da. Ez dadila inoiz itzali."],"o4_n1":["AMONA","Mari, zure sua nik zainduko dut. Herriak ez du jakin behar."],"o5_m1":["MARI","Basajaun, Lamia, Tartalo, Mairu, Eate, Zezengorri eta Akerbeltz: bakoitzak txingar bat gordeko du."],"o5_m2":["MARI","Zazpi txingar, zazpi leize. Eta zortzigarrena, Iturralden: herriaren sua."],"o5_g1":["MIKELATS","Zazpi txingar… eta niri, ezer ez. Ama, ni ere zure semea naiz."],"o6_g1":["MIKELATS","Anaia beti izan da argia, eta ni, ekaitza. Herriek haren izena bedeinkatzen zuten."],"o6_g2":["MIKELATS","Haren itzala gorde nuen leizean. Itzal batekin, armada bat egin daiteke."],"o6_i1":["ATARRABI","Mikelats… itzuli nire itzala."],"o6_g3":["MIKELATS","Zure itzala? Orain nirea da, anaia. Eta negua ere bai."],"o7_i1":["ATARRABI","Leizeetan zazpi urte ikasi nuen. Ez nuen jakin anaia galtzen ari nintzela."],"o7_i2":["ATARRABI","Ez da gaiztoa jaio. Ahaztua sentitu zen, eta ahaztuak ekaitzak egiten ditu."],"o7_i3":["ATARRABI","Ez dut hil nahi. Lo egin dezala, mendiaren azpian, ekaitza baretu arte."],"f_i1":["ATARRABI","Mikelatsek zure amona eraman du Murumendira. Zortzigarren sua nahi du."],"f_a1":["AMAIUR","Nola iritsiko naiz? Murumendi hodeien gainean dago."],"f_n1":["MARI","Sorgin. Igo nirekin. Sua naiz, baina ez dut erretzen."],"f_a2":["AMAIUR","Mari…! Esnatu zara!"],"f_g1":["MIKELATS","Iritsi zara, sorgin. Amak bere zazpi txingarrak ditu berriro… baina zortzigarrena hemen dago."],"f_g2":["MIKELATS","Zure amonaren sua. Harekin, amaren lekua nirea izango da."],"f_a3":["AMAIUR","Ez duzu ukituko. Zatoz, Mikelats!"],"f_g3":["MIKELATS","Kazkabarra! Erori, sorgin!"],"f_g4":["MIKELATS","Itzalak! Nire anaiaren itzala… nire armada!"],"f_i2":["ATARRABI","Nire itzala da! Argia eman, Amaiur: txingarren argia!"],"f_m1":["MARI","Mikelats. Itzala ez da zurea. Itzuli zure anaiari."],"f_m2":["MARI","Mendiaren azpian lo egingo duzu, seme, ekaitza baretu arte."],"f_g5":["MIKELATS","Ama… negu hau ez da nirea. Gau batek ekarri zuen…"],"f_a4":["AMAIUR","Gau batek…?"],"f_g6":["MARI","Bai. Gau batek ekarri zuen, eta beste gau batek eramango du. Lau negu barru, kanpaiak joko du."],"f_i3":["ATARRABI","Amaiur… nire itzala. Begira: lurrean dago berriro."],"f_a5":["AMAIUR","Eta orain? Zurekin etorriko zara herrira?"],"f_i4":["ATARRABI","Ez. Amaren ondoan geratuko naiz, anaia zaintzen. Leizeek ez dute zure izena ahaztuko."],"f_n2":["AMONA","Etxera, laztana. Gure sutondoa zain dago."],"hp_n1":["MARI","Kazkabarra… Mikelatsek ez gaitu gora utziko. Mendiak bide bat du barrutik. Igo zuk, sorgin."],"hp_a1":["AMAIUR","Mendiaren barrutik, beraz. Isilik, eta itzalean."],"hp_i1":["ATARRABI","Amaiur, entzuten nauzu? Leize hauek nire anaiaren itzalek zaintzen dituzte. Ez zaitzatela ikusi."],"hp_i2":["ATARRABI","Kriseiluaren argia haien begirada da. Ez sartu bertan: itxaron, eta pasatu bizkarretik."],"hp_i3":["ATARRABI","Nire ahotsa zurekin dago. Goiko izkinan, haien urratsak entzungo dituzu."],"hp_i4":["ATARRABI","Ate ondoko hori ez da mugituko. Makilaz hormari jo: tok, tok. Hotsera joango da."],"hp_i5":["ATARRABI","Atzetik hurbiltzen bazara, oharkabean, lo egin dezake. Isil-isilik."],"hp_i6":["ATARRABI","Hari horiek neguko izotza dira. Udan ez daude."],"hp_i7":["ATARRABI","Hor da atea. Gailurra gainean dago, Amaiur. Zure amona ere bai."],"hp_g1":["MIKELATS","Ikusten zaitut, sorgin. Nire mendian zaude."],"tx_n1":["AMONA","Etorri, laztana. Eseri sutondoan. Hiru txingar itzuli dizkiozu Mariri."],"tx_a1":["AMAIUR","Nola dakizu hori?"],"tx_n2":["AMONA","Sorgina naiz, Amaiur. Zure adinean, nik ere entzun nuen leizeen deia."],"tx_n3":["AMONA","Sutondo hau ez da edozein: Marik berak piztu zuen, herria zaintzeko. Ez da inoiz itzaltzen."],"tx_a2":["AMAIUR","Baina deiaren gauean itzali zen."],"tx_n4":["AMONA","Bai. Mikelatsek bere hotza bidali zuen tximinian behera, eta zuk piztu zenuen berriro. Horregatik da zuretzat."],"tx_n5":["AMONA","Txingar bat, gure sutik. Elurraren azpian uda lo dago; txingarrak esnatuko du, une batez."],"tx_a3":["AMAIUR","Uda… Hiru urte dira uda ikusi ez dudala."],"tx_n6":["AMONA","Ez ahaztu: zuk esnatzen duzun bitartean bakarrik irauten du. Negua ez da oraindik joango."]};
   /* build-ean: dauden mp3-en zerrenda (lerro berriak, ahotsa sortu arte, testua bakarrik: eskaerarik ez) */
   const VOICE_HAVE = new Set(["hp_a1","o1_g1","o1_i1","o2_i1","o2_n1","o2_n2","pro_a3"] || []);
   const VOICE = { base: "/assets/voice/leizeak/", buf: new Map(), wait: new Map(), cur: null, an: null, data: null, chains: {}, level: 0 };
@@ -26461,10 +26766,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     return ["Egunsentia.", null];
   }
   /* ==================================================================
-     IZAR-HAUTSA · amonaren hauts-zorroa (ametseko tresna, diseinu propioa)
+     SORGIN-HAUTSA · amonaren hauts-zorroa (ametseko tresna, diseinu propioa)
      Ingumaren aurkako konjuru zaharrak dio: «zeruan izarrak, lurrean belarrak,
      itsasoan hareak: denak kontatu arte, ez etorri enegana». itzal-izakiek
-     ezin diote kontatzeari utzi: Z (edo IZARRAK botoia) → hauts-eskukada aurrera:
+     ezin diote kontatzeari utzi: Z (edo HAUTSA botoia) → hauts-eskukada aurrera:
      · itzalak, saguzarrak, mamuak… KONTATZEN geratzen dira (geldi, kalte bikoitza);
      · IZAR-LAINOAN (ametsa leun dagoen tokietan) hautsak izar-plataforma bat
        sortzen du jaurti den altueran: zubiak hutsunean, eta jauziaren goienean
@@ -26753,7 +27058,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     }
     gatesUpdate(dt);
   }
-  /* IZARRAK botoia (ctxPower): hautsak zerbait egingo luke hemen? */
+  /* HAUTSA botoia (ctxPower): hautsak zerbait egingo luke hemen? */
   function dustUseful() {
     const grp = ZONES[ZONE.cur].group;
     if (HAUTS.mists.some((M) => M.group === grp && Math.abs(P.x - M.x) < M.w / 2 + 5 && Math.abs(P.z - M.z) < M.d / 2 + 5)) return true;
@@ -26869,7 +27174,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
           at,
         );
       const pouch = () =>
-        itemGet("hautsa", L("SORGIN-HAUTSA"), L("Mariren leizeko hauts urrea. Bota: itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Akelarreko lainoan, hautsak plataformak sortzen ditu; airean botaz gero, eskailerak. ") + (mobile ? L("HAUTSA botoia agertzen da behar denean.") : L("Z tekla.")), () => {
+        itemGet("hautsa", L("SORGIN-HAUTSA"), L("Mariren leizeko urre-hautsa. Bota: itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Akelarreko lainoan, hautsak plataformak sortzen ditu; airean botaz gero, eskailerak. ") + (mobile ? L("HAUTSA botoia agertzen da behar denean.") : L("Z tekla.")), () => {
           if (!saved.items.includes("hautsa")) saved.items.push("hautsa");
           persist();
           translate();
@@ -26992,7 +27297,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       [
         V("c7_a5", P.x, P.z, P.y),
         ["· · ·", "Herriko txalapartak bakarrik jo du, astiro, egunsentiarekin. Murumendi aldetik, kazkabar-haize bat.", "", P.x, P.z, P.y],
-        ["· · ·", "Murumendiko hodeian, zazpi argiak. Zazpigarrena… berde bihurtu da. Baina Iturraldeko tximiniak ez du kerik.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Murumendiko hodeian, zazpi txingarrak. Zazpigarrena… urrez piztu da. Baina Iturraldeko tximiniak ez du kerik.", "", 20, -170, 120, [0, 30, 40]],
         V("c7_g1", 20, -170, 120, [0, 30, 40]),
         V("c7_a6", P.x, P.z, P.y),
         V("c7_i8", 0, 41, 0),
@@ -27201,33 +27506,39 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     AM.floaters.push({ g, y0: y, ph: x * 0.3 + z * 0.17, spin: kind === "liburuak" ? 0.3 : 0.08 });
     return g;
   }
-  /* erloju geldituak (OIHARTZUN-en erlojua gogoratuz): esfera, orratzak eta zenbaki-markak */
+  /* sorgin-erratzak hegan (akelarreko atrezzoa): kirtena, lotura eta isats-adaxkak; kirtenak astiro kulunkatzen dira */
   function stoppedClock(x, y, z, r = 1.6) {
     const g = new T.Group(),
-      face = new T.Mesh(new T.CircleGeometry(r, 36), material("#efe6d2")),
-      rim = new T.Mesh(new T.TorusGeometry(r, r * 0.08, 6, 36), material("#b48a3e", 0.3));
-    g.add(face, rim);
-    for (let i = 0; i < 12; i++) {
-      const a = (i / 12) * TAU,
-        mk = new T.Mesh(new T.BoxGeometry(r * 0.06, r * 0.18, 0.04), material("#3a2a1a"));
-      mk.position.set(Math.sin(a) * r * 0.82, Math.cos(a) * r * 0.82, 0.02);
-      mk.rotation.z = -a;
-      g.add(mk);
+      wood = material("#6b4a2e"),
+      straw = material("#c9a35a"),
+      band = material("#3a2a1a");
+    const hand1 = new T.Group(),
+      hand2 = new T.Group();
+    g.add(hand1);
+    hand1.add(hand2);
+    const stick = new T.Mesh(new T.CylinderGeometry(r * 0.05, r * 0.06, r * 2.4, 7), wood);
+    stick.rotation.z = PI / 2;
+    hand2.add(stick);
+    const tie = new T.Mesh(new T.CylinderGeometry(r * 0.12, r * 0.12, r * 0.12, 8), band);
+    tie.rotation.z = PI / 2;
+    tie.position.x = -r * 1.1;
+    hand2.add(tie);
+    for (let i = 0; i < 9; i++) {
+      const a = (i / 9) * TAU,
+        tw = new T.Mesh(new T.ConeGeometry(r * 0.09, r * 1.1, 4), straw);
+      tw.rotation.z = PI / 2 + Math.cos(a) * 0.18;
+      tw.rotation.x = Math.sin(a) * 0.18;
+      tw.position.set(-r * 1.65, Math.cos(a) * r * 0.12, Math.sin(a) * r * 0.12);
+      hand2.add(tw);
     }
-    const hand1 = new T.Mesh(new T.BoxGeometry(r * 0.07, r * 0.75, 0.05), material("#1a1410")),
-      hand2 = new T.Mesh(new T.BoxGeometry(r * 0.05, r * 0.5, 0.05), material("#1a1410"));
-    hand1.geometry.translate(0, r * 0.35, 0.04);
-    hand2.geometry.translate(0, r * 0.22, 0.05);
-    hand1.rotation.z = -2.2;
-    hand2.rotation.z = -0.4;
-    g.add(hand1, hand2);
-    /* arrakala: erlojua hautsita */
-    const crack = new T.Mesh(new T.BoxGeometry(r * 1.4, r * 0.03, 0.03), material("#6a5a4a"));
-    crack.rotation.z = 0.7;
-    crack.position.z = 0.03;
-    g.add(crack);
+    /* distira lila (sorginkeria) */
+    const halo = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#b28cff", transparent: true, opacity: 0.35, blending: T.AdditiveBlending, depthWrite: false }));
+    halo.scale.setScalar(r * 2.2);
+    halo.position.x = -r * 1.5;
+    hand2.add(halo);
+    hand1.rotation.z = -0.25;
     g.position.set(x, y, z);
-    g.lookAt(x, y, z + 10);
+    g.rotation.y = (x * 0.37 + z * 0.11) % TAU;
     BP.add(g);
     AM.clocks.push({ g, y0: y, ph: x + z, hand1, hand2 });
     return g;
@@ -27431,8 +27742,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     for (const C of AM.clocks) {
       C.g.position.y = C.y0 + Math.sin(time * 0.5 + C.ph) * 0.5;
       C.g.visible = !camNear(C.g, 9);
-      /* orratzak dardaraka: denbora ez da igarotzen */
-      C.hand1.rotation.z = -2.2 + Math.sin(time * 9 + C.ph) * 0.02;
+      /* erratzak astiro kulunkan, haizerik gabe */
+      C.hand1.rotation.z = -0.25 + Math.sin(time * 0.9 + C.ph) * 0.12;
     }
     if (AM.motes) AM.motes.rotation.y += dt * 0.004;
     /* sehaska geldi → giltza nagusiaren kutxa agerian */
@@ -27510,7 +27821,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
      haren aurka, seaska-kantaren hiru bertsoak, hiru fasetan:
        1 ZERUAN IZARRAK ... goian hegan: izar-euria (EZKUTUAz itzuli → zorabiatuta) eta murgiltzea
                             (itzala lurrean: alde egin). Murgildu ondoren, nekatuta behean →
-                            IZAR-HAUTSA → KONTATZEN → zauritu.
+                            SORGIN-HAUTSA → KONTATZEN → zauritu.
        2 LURREAN BELARRAK . amets-belarrak lurrean (NEGUAN mina; UDAN belar hutsak) eta
                             hiru Inguma: ENTZUN (txalaparta) → benetakoa urre-distiraz → hautsa.
                             Faltsuak, jotzean, mamu bihurtzen dira.
@@ -27531,8 +27842,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   PORTRAIT_OF.INGUMA = "inguma";
   PORTRAIT_OF.AKERBELTZ = "akerbeltz";
   PORTRAIT_OF["IRATI?"] = "unknown";
-  const ING_HP = 10,
-    ING_R = 2.4;
+  const ING_HP = 8,
+    ING_R = 2.4,
+    /* leiho bakoitzeko kalte-muga (kontatzen): lau, gero esnatu (fase bakoitza bi ziklotan) */
+    ING_WIN = 4;
   /* ametseko hitzak (jokoa gelditu gabe): ahotsa eta azpititulua */
   function bark(id) {
     if (ING.said[id]) return;
@@ -27672,7 +27985,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       ING.fakes.push({ ...F, x: R.x, y: 3, z: R.z, alive: true, t: 0 });
     }
     /* murgiltzearen itzala lurrean */
-    ING.shadow = new T.Mesh(new T.CircleGeometry(2.4, 28), new T.MeshBasicMaterial({ color: "#2a0a3a", transparent: true, opacity: 0, depthWrite: false }));
+    ING.shadow = new T.Mesh(new T.CircleGeometry(2.4, 28), new T.MeshBasicMaterial({ color: "#c58bff", transparent: true, opacity: 0, depthWrite: false, blending: T.AdditiveBlending }));
     ING.shadow.rotation.x = -PI / 2;
     ING.shadow.position.y = 0.06;
     ING.shadow.renderOrder = 3;
@@ -27710,12 +28023,13 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ING.seenIntro = true;
     vsay(["c7_n3", "c7_a4"], fight, { AKERBELTZ: [ING.x, ING.z, 2.4] });
   }
-  /* kontatzen hasi (IZAR-HAUTSA): zaurgarri */
+  /* kontatzen hasi (SORGIN-HAUTSA): zaurgarri */
   function ingumaCount(secs = 4.5) {
     ING.state = "count";
     ING.t = 0;
     ING.countT = secs;
     ING.countN = 0;
+    ING.winDmg = 0;
     ING.stats.counts++;
     bark("c7_n4");
     SND.wake();
@@ -27742,11 +28056,16 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   function ingumaHit(n) {
     if (!BOSS.vulnerable()) return;
     /* lokartuta eta kontatzen: kalte bikoitza */
-    const k = ING.state === "count" && ING.lullBoth ? 2 : 1;
-    ING.hp -= n * k;
+    const k = ING.state === "count" && ING.lullBoth ? 2 : 1,
+      dmg = Math.min(n * k, ING_WIN - (ING.winDmg || 0));
+    if (dmg <= 0) return;
+    ING.winDmg = (ING.winDmg || 0) + dmg;
+    ING.hp -= dmg;
     const w = BOSS.weak();
     FB.bossHit(w.x, w.y, w.z);
-    damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.5 }, n * k);
+    damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.5 }, dmg);
+    /* leihoa beteta: kontatzeari utzi (esnatu) */
+    if (ING.hp > 0 && ING.winDmg >= ING_WIN) ING.countT = Math.min(ING.countT, 0.05);
     ING.flash = 0.25;
     bossBar("AKERBELTZ", (3 - ING.phase + Math.max(0, ING.hp) / ING_HP) / 3);
     if (ING.hp > 0) return;
@@ -27781,13 +28100,17 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       return true;
     }
     if (ING.state !== "sit") return true;
+    if (Math.hypot(P.x - ING.bed.x, P.z - ING.bed.z) > 7) {
+      notify(L("Urrunegi! LO-KANTA tronutik gertu jo behar da (zazpi metro), hare-haizearen kontra."), "", 3.5);
+      return true;
+    }
     ING.state = "lull";
     ING.t = 0;
     ING.crush = Math.max(0, ING.crush - 0.4);
     ING.stats.lull++;
     bark("c7_n6");
     fxBurst(ING.x, ING.y + 2, ING.z, { n: 40, speed: 2, up: 1, life: 1.4, size: 0.3, color: "#e6dcff", grav: -0.3 });
-    notify(L("Lokartzen ari da! Orain: jo (eta SORGIN-HAUTSA: kalte bikoitza)."), "", 4);
+    notify(L("Lokartzen ari da! Orain: SORGIN-HAUTSA (Z), eta jo: kalte bikoitza!"), "", 4);
     return true;
   }
   /* itzulitako izarra: zorabiatuta (hautsarentzat leihoa) */
@@ -27807,7 +28130,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     fxBurst(F.x, F.y + 2, F.z, { n: 30, speed: 3, life: 0.8, size: 0.35, color: "#cbb8ff", grav: -0.5 });
     SND.whoosh();
     if (ENEMIES.filter((e) => e.state !== "dead").length < 3) {
-      const e = spawnEnemy("mamua", -1, F.x, F.z, 0);
+      const e = spawnEnemy("mamua", 1, F.x, F.z, 0);
       e.room = ingR();
     }
     notifyOnce("inguma-faltsua", L("Faltsua! Mamu bihurtu da. Benetakoa: ENTZUN (txalaparta)."), "");
@@ -27860,7 +28183,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       updateMaxHp();
       P.hp = P.maxHp;
       persist();
-      itemGet("bihotza", L("AKERBELTZEN BIHOTZA"), L("Arnasa bat gehiago. Zazpigarren txingarra amaren leizera itzuli da."), () => ametsaWake());
+      itemGet("bihotza", L("AKERBELTZEN BIHOTZA"), L("Arnasa bat gehiago. Zazpigarren txingarra Mariren leizera itzuli da."), () => ametsaWake());
     }, { AKERBELTZ: [ING.x, ING.z, ING.y] });
   }
   /* --------------------------- eguneraketa --------------------------- */
@@ -27919,6 +28242,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         ING.state = "dive";
         ING.t = 0;
         ING.from = { x: ING.x, y: ING.y, z: ING.z };
+        SND.crackle && SND.crackle();
       }
     } else if (ING.state === "dive") {
       const k = Math.min(1, t / 0.38);
@@ -27928,10 +28252,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       if (k >= 1) {
         shake(0.45);
         fxRing(ING.x, 0.15, ING.z, "#7a5cff", 4, 0.5);
-        if (Math.hypot(P.x - ING.x, P.z - ING.z) < 2.4 && P.y < 2.5 && P.dashT <= 0) playerHit(1, ING.x, ING.z);
+        if (Math.hypot(P.x - ING.x, P.z - ING.z) < 2.4 && P.y < 2.5 && P.dashT <= 0) playerHit(2, ING.x, ING.z);
         ING.state = "tired";
         ING.t = 0;
-        notifyOnce("inguma-nekatuta", L("Nekatuta, behean! IZAR-HAUTSA (Z) bota: kontatzen hasiko da."), "");
+        notifyOnce("inguma-nekatuta", L("Nekatuta, behean! SORGIN-HAUTSA (Z) bota: kontatzen hasiko da."), "");
       }
     } else if (ING.state === "tired" || ING.state === "stagger") {
       /* zorabiatuta (izarra itzulita) erortzen da; nekatuta, behean arnasestuka */
@@ -27956,9 +28280,12 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     if (ING.phase === 2) {
       ING.reveal = TXALA.reveal > 0 ? 1 : Math.max(0, ING.reveal - dt * 0.5);
       ING.swap += dt;
-      if (ING.swap > 7 && ING.state === "float2") {
+      if (ING.swap > 6 && ING.state === "float2") {
         ING.swap = 0;
         ING.realI = (ING.realI + 1 + Math.floor(Math.random() * 2)) % 3;
+        /* lekuz aldatzean, ENTZUN-en distira itzali: berriro entzun behar da */
+        ING.reveal = 0;
+        TXALA.reveal = 0;
         SND.whoosh();
       }
       const slots = [0, 1, 2].map((i) => {
@@ -28006,7 +28333,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         if (phase === 1 && G.hurtT <= 0 && Math.hypot(P.x - G.x, P.z - G.z) < G.r && P.y < 1 && !respawnTimer) {
           G.hurtT = 1.2;
           playerHit(1, G.x, G.z);
-          notifyOnce("amets-belarrak", L("Amets-belarrak! NEGUAN mina; UDAN belar hutsak dira."), "");
+          notifyOnce("amets-belarrak", L("Akelarre-belarrak! NEGUAN mina; UDAN belar hutsak dira."), "");
         }
       }
     }
@@ -28036,7 +28363,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       ING.x = mix(ING.x, ING.bed.x + 3.2, 1 - Math.exp(-dt * 2));
       ING.z = mix(ING.z, ING.bed.z + 2.5, 1 - Math.exp(-dt * 2));
       if (Math.random() < dt * 2) damageNumber({ x: ING.x, y: ty + 4.2, z: ING.z, H: 0.4 }, "z z", "#d9c8ff");
-      if (t > 7) {
+      if (t > 4) {
         ING.state = "sit";
         ING.t = 0;
       }
@@ -28070,7 +28397,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         m.emissiveIntensity = ING.flash > 0 ? 1.1 : ING.phase === 2 && ING.reveal > 0.05 ? 0.6 : 0.22;
       }
     for (const [i, A] of ING.arms.entries()) A.rotation.x = ING.state === "diveWind" ? -1.6 : ING.state === "sit" ? -0.6 + Math.sin(t * 3 + i) * 0.2 : Math.sin(t * 2 + i * 2) * 0.25;
-    ING.aura.material.opacity = 0.35 + Math.sin(t * 3) * 0.1;
+    ING.aura.material.opacity = counting || asleep ? 0.6 + Math.sin(t * (asleep ? 2.4 : 9)) * 0.25 : ING.state === "diveWind" ? 0.75 : 0.3 + Math.sin(t * 3) * 0.08;
+    ING.aura.material.color.set(asleep ? "#e6dcff" : counting ? "#c9b6ff" : ING.state === "diveWind" ? "#ff8ad8" : "#9a4cff");
     /* murgiltzearen itzala */
     ING.shadow.material.opacity = ING.state === "diveWind" ? 0.25 + 0.4 * Math.min(1, t / 1.1) : 0;
     if (ING.dive) ING.shadow.position.set(ING.dive.x, 0.06, ING.dive.z);
@@ -28090,7 +28418,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     bossBar(null);
   }
   BOSSK.inguma = {
-    vulnerable: () => ING.state === "count" || ING.state === "lull",
+    vulnerable: () => ING.state === "count",
     weak: () => ({ x: ING.x, y: ING.y + 3.9 * ING.scale, z: ING.z }),
     center: () => ({ x: ING.x, y: ING.y, z: ING.z, h: 4.5 * ING.scale, r: 2.6 }),
     hit: (n) => ingumaHit(n),
@@ -28611,11 +28939,11 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
      ================================================================== */
   const OROIT = { actors: {}, bell: null, clock: null, timer: 0, last: 0 };
   const OROIT_LIST = [
-    { flag: "basajaun", n: "I", name: "GAU BELTZA", when: "HIRU NEGU LEHENAGO · KAIA", sum: "Gau Beltzaren gauean, ekaitz bat. Nire ahizpak kaiko kanpaia jo zuen, Txomin itsasotik deitzeko. Ez zen itzuli." },
+    { flag: "basajaun", n: "I", name: "GAU BELTZA", when: "HIRU NEGU LEHENAGO · KAIA", sum: "Gau Beltzaren gauean, ekaitz bat. Nire ahizpak kaiko kanpaia jo zuen, Txomin itsasotik deitzeko. Txomin itzuli zen; bera, ez." },
     { flag: "lamia", n: "II", name: "AMONA", when: "HAMAR URTE LEHENAGO · PLAZA", sum: "Amonak txalaparta irakatsi zigun: batak galdetzen du, besteak erantzuten du. Eguna egunekoentzat, gaua gauekoentzat." },
     { flag: "tartalo", n: "III", name: "ATARRABIREN ITZALA", when: "AMONAREN IPUINA · ETSAIREN LEIZEA", sum: "Mariren bi semeek Etsairen leizean ikasi zuten. Atarrabi azkena irten zen, eta itzala utzi zuen; anaiak hartu zuen." },
     { flag: "errolan", n: "IV", name: "ZORTZIGARREN SUA", when: "BERROGEITA HAMAR URTE LEHENAGO · ITURRALDE", sum: "Marik bere sua utzi zuen Iturraldeko sutondoan, herria zaintzeko. Amona gaztea zen, eta zaintzea hitz eman zuen." },
-    { flag: "odei", n: "V", name: "ZAZPI TXINGARRAK", when: "ANTZINA · MARIREN LEIZEA", sum: "Marik zazpi txingar eman zizkien zazpi zaindariei. Mikelatsi, ezer ez. Haren ekaitzak gorri bihurtu zituen." },
+    { flag: "odei", n: "V", name: "ZAZPI TXINGARRAK", when: "BERROGEITA HAMAR URTE LEHENAGO · MARIREN LEIZEA", sum: "Marik zazpi txingar eman zizkien zazpi zaindariei. Mikelatsi, ezer ez. Haren ekaitzak gorri bihurtu zituen." },
     { flag: "herensugea", n: "VI", name: "MIKELATS", when: "ANTZINA ETA ORAIN · EKAITZAREN GAUA", sum: "Mikelatsek anaiaren itzala gorde zuen leizean. Itzal hartatik egin ditu bere soldaduak." },
     { flag: "inguma", n: "VII", name: "ANAIAK", when: "ORAIN · MURUMENDI", sum: "Atarrabik ez du anaia hil nahi: lo egin dezala, mendiaren azpian, ekaitza baretu arte." },
   ];
@@ -28773,7 +29101,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
             OROIT.actors.irati.g.visible = false;
             for (let n = 0; n < 3; n++) setTimeout(() => FILM.on && SND.echo(1 - n * 0.3), n * 1300);
           }, tick: () => (OROIT.bell.swing.rotation.z = Math.sin(time * 5) * 0.4 * Math.max(0, 1 - FILM.t / 4)) }),
-          OSH({ d: 4.6, night: 0.95, say: "o1_g1", fade: "out", cam: [[2, 7, 70], [0, 10, 64]], look: [[8, 30, -60], [8, 62, -96]], tick: (dt, k) => proEyesOpen(k) }),
+          OSH({ d: 4.6, night: 0.95, say: "o1_g1", fade: "out", cam: [[2, 7, 70], [0, 10, 64]], look: [[8, 30, -60], [8, 62, -96]] }),
         ];
       case 1: /* AMONA */
         return [
@@ -28814,7 +29142,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
             if (!MARI.m) mariCliffMesh();
             MARI.t = 0;
           }, tick: (dt) => mariFlight(dt) }),
-          OSH({ d: 5.2, night: 0.85, text: ["· · ·", "Sorgin gazteak sutondoan gorde zuen txingarra. Ordutik, Iturralden ez da sua inoiz itzali."], fade: "out", cam: [[0, 4, 46], [0, 3, 40]], look: [[0, 30, -20], [0, 60, -80]], on: () => setTimeout(() => FILM.on && SND.echo(0.6), 600), tick: (dt) => mariFlight(dt) }),
+          OSH({ d: 5.2, night: 0.85, text: ["· · ·", "Sorgin gazteak sutondoan gorde zuen txingarra. Ordutik, Iturralden ez zen sua inoiz itzali, deiaren gauera arte."], fade: "out", cam: [[0, 4, 46], [0, 3, 40]], look: [[0, 30, -20], [0, 60, -80]], on: () => setTimeout(() => FILM.on && SND.echo(0.6), 600), tick: (dt) => mariFlight(dt) }),
         ];
       case 4: /* ZAZPI TXINGARRAK */
         return [
@@ -28953,9 +29281,13 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   ZONES.anboto = { name: "MURUMENDI · GAILURRA", outdoor: true, sky: true, anboto: true, fallY: -24, platforms: [], phaseObjects: [], solids: [], hazards: [], group: null };
   const AN = { built: false, round: 0, stage: "", tx: null, stones: [], lit: 0, gaueko: null, eyes: [], mouth: null, glow: null, clouds: [], dawn: 0, flash: 0, amona: null, cage: null };
   const AN_SPAWN = { x: ANX, y: 0, z: 9, a: PI };
+  /* borroka-eremua: uhartea (elipsea); jokalaria eta itzalak barruan */
+  const MK_ARENA = { id: "gailurra", x: ANX, z: 0, rx: 14.6, rz: 12.6, y: 0, w: 29, d: 25, boss: true };
+  /* leiho bakoitzeko kalte-muga: hiru kolpe, gero altxatu */
+  const MK_WIN = 3;
   /* MIKELATS: borrokako gorputza (hegan) — egoera, fasea, bizia eta erasoak */
-  const MK = { on: false, g: null, root: null, mixer: null, acts: {}, cur: "", cloak: null, crown: [], eyes: [], aura: null, state: "", phase: 0, hp: 0, t: 0, x: ANX, y: 5, z: -4, tx: ANX, tz: -4, retarget: 0, atkCd: 2.4, marks: [], bolts: [], stun: 0, waves: 0, burn: 0, flash: 0, top: 4.4 };
-  const MK_HP = [0, 3, 3, 0];
+  const MK = { on: false, g: null, root: null, mixer: null, acts: {}, cur: "", cloak: null, crown: [], eyes: [], aura: null, state: "", phase: 0, hp: 0, t: 0, x: ANX, y: 5, z: -4, tx: ANX, tz: -4, retarget: 0, atkCd: 2.4, marks: [], bolts: [], stun: 0, waves: 0, burn: 0, flash: 0, top: 4.4, wind: 0, winDmg: 0, tiredT: 0 };
+  const MK_HP = [0, 6, 6, 0];
   const AN_FOG_NIGHT = new T.Color("#141a2e"),
     AN_FOG_DAWN = new T.Color("#e9b08c");
   /* ------------------------------ eraikuntza ------------------------------ */
@@ -29013,7 +29345,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       orb.scale.setScalar(2.2);
       BP.add(orb);
       const S = { x, z, orb, k: 0, lit: false };
-      S.rune = { rune: true, x, y: orb.position.y, z, r: 1.3, lit: false, live: () => ZONE.cur === "anboto" && MK.on && MK.state === "hover" && (MK.phase === 1 || MK.phase === 3) && !S.lit, hit: () => mkStone(S) };
+      S.rune = { rune: true, x, y: orb.position.y, z, r: 1.3, lit: false, needFire: true, fireMsg: "Zutarria ez da sorginkeria arruntaz pizten: SUA behar du (kargatu sorginkeria, SUGAR-IZPIA).", live: () => ZONE.cur === "anboto" && MK.on && MK.state === "hover" && (MK.phase === 1 || MK.phase === 3) && !S.lit, hit: () => mkStone(S) };
       RUNES.push(S.rune);
       AN.stones.push(S);
     }
@@ -29095,7 +29427,15 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     if (!AN.built || ZONE.cur !== "anboto") return;
     AN.flash = Math.max(0, AN.flash - dt * 3);
     /* tximistak ekaitzean (egunsentia arte) */
-    if (AN.dawn < 0.3 && Math.random() < dt * (MK.on ? 0.25 : 0.12)) {
+    if (AN.stage === "retry" && !cinematic && !FILM.on) {
+      AN.retryT -= dt;
+      if (AN.retryT <= 0 && P.grounded) {
+        AN.stage = "fight";
+        mkStart();
+        hud();
+      }
+    }
+    if (AN.dawn < 0.3 && Math.random() < dt * (MK.on ? 0.05 : 0.12)) {
       AN.flash = 1;
       setTimeout(() => SND.thunder && SND.thunder(), 280);
     }
@@ -29199,7 +29539,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         AN.dawn = 0;
         /* zinema lehenik (FILM.on): kokapen-errotulua zinemak berak idazten du, ez bikoiztu */
         anbotoArrive();
-        enterZone("anboto", { ...AN_SPAWN }, true);
+        enterZone("anboto", { ...AN_SPAWN, cp: true }, true);
       },
     );
   }
@@ -29281,7 +29621,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   }
   function mkAnim(name, once) {
     const a = MK.acts[name];
-    if (!a || MK.cur === name) return;
+    if (!a || (MK.cur === name && !once)) return;
     const old = MK.acts[MK.cur];
     a.reset();
     a.setLoop(once ? T.LoopOnce : T.LoopRepeat);
@@ -29299,10 +29639,12 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     BOSS.on = true;
     BOSS.dead = false;
     BOSS.kind = "mikelats";
-    ROOM.fight = null;
+    BOSS.weakR = 1.7;
+    ROOM.fight = MK_ARENA;
+    Object.assign(MK, { wind: 0, winDmg: 0, tiredT: 0, retarget: 0 });
     title("MIKELATS", "");
     bossBar("MIKELATS", 1);
-    notify(L("Haren kapa Atarrabiren itzala da: ez dago zauritzerik. Piztu ZUTARRIAK sorginkeriaz: txingarren argiak kapa erreko du!"), "", 7);
+    notify(L("Haren kapa Atarrabiren itzala da: ez dago zauritzerik. Piztu ZUTARRIAK SUAREKIN (sorginkeria kargatuta, SUGAR-IZPIA): txingarren argiak kapa erreko du!"), "", 8);
   }
   const mkLit = () => AN.stones.filter((S) => S.lit).length;
   function mkStone(S) {
@@ -29324,6 +29666,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   function mkDown(secs, msg) {
     MK.state = "down";
     MK.stun = secs;
+    MK.winDmg = 0;
+    MK.wind = 0;
     MK.burn = 1;
     MK.tx = ANX + (MK.x - ANX) * 0.3;
     MK.tz = -2 + (MK.z + 2) * 0.3;
@@ -29334,15 +29678,23 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   }
   function mkHit(n) {
     if (MK.state !== "down") return;
+    n = Math.min(n, MK_WIN - MK.winDmg);
+    if (n <= 0) return;
+    MK.winDmg += n;
     MK.hp -= n;
     MK.flash = 1;
     SND.hit ? SND.hit(1) : SND.thud();
     fxBurst(MK.x, MK.y + MK.top * 0.6, MK.z, { n: 18, speed: 3, up: 2, life: 0.6, size: 0.3, color: "#bfe8ff", grav: 2 });
+    damageNumber({ x: MK.x, y: MK.y + MK.top * 0.6, z: MK.z, H: 0.5 }, n);
     bossBar("MIKELATS", mkTotal());
+    if (MK.hp > 0 && MK.winDmg < MK_WIN) return;
+    FB.bossHit(MK.x, MK.y + MK.top * 0.6, MK.z);
     if (MK.hp <= 0) {
       if (MK.phase === 1) return mkPhase2();
       if (MK.phase === 2) return mkPhase3();
     }
+    /* leihoa itxita: altxatu (I: zutarri bat itzali; II: oleada berria) */
+    MK.stun = 0;
   }
   /* bizi-barra: hiru fase (III-n, zutarriak) */
   function mkTotal() {
@@ -29362,22 +29714,35 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       () => {
         MK.state = "summon";
         MK.waves = 0;
+        MK.atkCd = 2.4;
         mkWave();
-        notify(L("Itzalak UDAN bakarrik zauritzen dira (begi urreak): ALDATU urtaroa, Q!"), "", 6);
+        notify(L("Itzal hauek UDAN zauritzen dira (urrezko begiak): ALDATU urtaroa, Q!"), "", 6);
       },
     );
   }
+  /* oleadak: I (3, urrezkoak), II (4, urrezkoak eta urdinak), III (indartsu bat eta bi begi) */
   function mkWave() {
     MK.waves++;
-    const n = MK.waves === 1 ? 3 : 4;
-    for (let i = 0; i < n; i++) {
-      const a = (i / n) * TAU + MK.waves,
+    const W = MK.waves,
+      list = W === 1 ? ["grunt", "grunt", "grunt"] : W === 2 ? ["grunt", "grunt", "grunt", "grunt"] : ["brute", "eye", "eye"];
+    for (let i = 0; i < list.length; i++) {
+      let a = (i / list.length) * TAU + W,
         x = ANX + Math.cos(a) * 6.5,
-        z = -1 + Math.sin(a) * 5.5,
-        era = MK.waves === 1 ? 0 : i % 2;
-      const e = spawnEnemy("grunt", era, x, z, 0);
+        z = -1 + Math.sin(a) * 5.5;
+      /* ez agertu jokalariaren ondoan (3 m) */
+      for (let k = 0; k < 6 && Math.hypot(x - P.x, z - P.z) < 3; k++) {
+        a += 0.7;
+        x = ANX + Math.cos(a) * 6.5;
+        z = -1 + Math.sin(a) * 5.5;
+      }
+      const era = W === 1 ? 0 : W === 2 ? i % 2 : i === 0 ? -1 : (i + 1) % 2;
+      const e = spawnEnemy(list[i], era, x, z, 0);
       e.mk = true;
+      e.room = MK_ARENA;
+      e.K = W === 3 ? 1.25 : 1;
     }
+    if (W === 2) notify(L("Begi urdinak ere bai: horiek NEGUAN zauritzen dira. ALDATU, behar denean!"), "", 5);
+    if (W === 3) notify(L("Itzal handi bat eta bi begi: azkena!"), "", 3.5);
   }
   function mkPhase3() {
     MK.phase = 3;
@@ -29387,18 +29752,22 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       MK.state = "hover";
       MK.atkCd = 1.6;
       MK.cloak.material.opacity = 0.82;
+      MK.comb = saved.items.includes("orrazia");
       notify(L("Ekaitza! Piztu beste ZUTARRIAK (zazpiak), kazkabarraren artean."), "", 5);
+      if (MK.comb) setTimeout(() => notify(L("Amonaren orrazia distiraka: kazkabarra baretzen ari da!"), "", 4), 2600);
     });
   }
   function mkTired() {
     MK.state = "tired";
+    MK.tiredT = 12;
+    MK.atkCd = 3;
     MK.tx = ANX;
-    MK.tz = -3;
+    MK.tz = 2;
     MK.burn = 1;
     SND.stinger(true);
     mkAnim("Death_A", true);
     bossBar("MIKELATS", 0.02);
-    notify(L("Mikelats nekatuta dago. Jo LO-KANTA (◀ ▶ ◀ ▶ ◀): lo egin dezala, mendiaren azpian."), "", 8);
+    notify(L("Mikelats nekatuta dago. Jo LO-KANTA (◀ ▶ ◀ ▶ ◀), azkar: lo egin dezala, mendiaren azpian!"), "", 8);
     coach("mk-lokanta", "B", "B: txalaparta → LO-KANTA (◀ ▶ ◀ ▶ ◀)", "", "useBtn", "TXALAPARTA → LO-KANTA (◀ ▶ ◀ ▶ ◀)", "");
   }
   /* LO-KANTA gailurrean (seaska.js-ko seaskaEffect-etik): true → kudeatuta */
@@ -29412,9 +29781,9 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     MK.on = false;
     BOSS.dead = true;
     BOSS.on = false;
+    ROOM.fight = null;
     bossBar(null);
-    for (const M of MK.marks) M.m.parent && M.m.parent.remove(M.m);
-    MK.marks.length = 0;
+    mkMarksClear();
     for (const e of ENEMIES) if (e.mk && e.state !== "dead") killEnemy(e);
     coachDone("mk-lokanta");
     fxRing(MK.x, 0.3, MK.z, "#c9b6ff", 9, 1.2);
@@ -29424,16 +29793,46 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   /* kazkabar-zirkuluak eta tximistak (abisua lurrean, gero kolpea) */
   function mkMark(x, z, kind) {
     const bolt = kind === "bolt",
-      m = new T.Mesh(new T.RingGeometry(bolt ? 1.1 : 1.3, bolt ? 1.4 : 1.6, 24), new T.MeshBasicMaterial({ color: bolt ? "#bfe8ff" : "#e8f3ff", transparent: true, opacity: 0.8, depthWrite: false }));
+      m = new T.Mesh(new T.RingGeometry(bolt ? 1.1 : 1.3, bolt ? 1.45 : 1.6, 24), new T.MeshBasicMaterial({ color: bolt ? "#ffe066" : "#8fd3ff", transparent: true, opacity: 0.8, depthWrite: false }));
     m.rotation.x = -PI / 2;
     m.position.set(x, 0.07, z);
     ZONES.anboto.group.add(m);
-    MK.marks.push({ x, z, t: 0, fuse: bolt ? 0.9 : 1.25, m, kind });
+    let col = null;
+    if (bolt) {
+      /* tximista: argi-zutabea hazten (kolpearen unea irakurgarri) */
+      col = new T.Mesh(new T.CylinderGeometry(0.5, 0.5, 1, 10, 1, true), new T.MeshBasicMaterial({ color: "#fff1a8", transparent: true, opacity: 0, blending: T.AdditiveBlending, depthWrite: false, side: T.DoubleSide }));
+      col.position.set(x, 0, z);
+      ZONES.anboto.group.add(col);
+    }
+    /* amonaren orrazia (III): kazkabarrak denbora gehiago uzten du ihes egiteko */
+    MK.marks.push({ x, z, t: 0, fuse: bolt ? 0.9 : MK.comb && MK.phase === 3 ? 1.6 : 1.25, m, col, kind });
   }
   const mkOnIsland = (x, z) => Math.hypot((x - ANX) / 14, (z - 0) / 12) < 1;
+  function mkMarksClear() {
+    for (const M of MK.marks) {
+      M.m.parent && M.m.parent.remove(M.m);
+      if (M.col) M.col.parent && M.col.parent.remove(M.col);
+    }
+    MK.marks.length = 0;
+  }
+  /* bossReset-etik (bizitzak amaituta): gailurrean berriro, zinemarik gabe (I fasetik) */
+  function mikelatsReset() {
+    if (!(MK.on && BOSS.kind === "mikelats" && !BOSS.dead)) return;
+    MK.on = false;
+    BOSS.on = false;
+    MK.state = "hover";
+    MK.wind = 0;
+    mkMarksClear();
+    clearEnemies();
+    ROOM.fight = null;
+    bossBar(null);
+    AN.stage = "retry";
+    AN.retryT = 2.4;
+  }
   function mkAttack() {
     mkAnim("Spellcast_Shoot", true);
     MK.flash = 0.6;
+    SND.crackle && SND.crackle();
     const hard = MK.phase === 3,
       kind = Math.random() < (hard ? 0.45 : 0.35) ? "bolt" : "hail";
     if (kind === "bolt") {
@@ -29464,18 +29863,25 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       M.t += dt;
       M.m.material.opacity = 0.4 + 0.4 * Math.abs(Math.sin(time * 12));
       M.m.scale.setScalar(1 + (1 - M.t / M.fuse) * 0.4);
+      if (M.col) {
+        const k = M.t / M.fuse;
+        M.col.scale.set(0.4 + k * 0.6, 0.1 + k * 14, 0.4 + k * 0.6);
+        M.col.position.y = (0.1 + k * 14) / 2;
+        M.col.material.opacity = 0.1 + k * 0.4;
+      }
       if (M.t >= M.fuse) {
         if (M.kind === "bolt") {
           AN.flash = 1;
           SND.thunder && SND.thunder();
           fxBurst(M.x, 0.5, M.z, { n: 30, speed: 6, up: 6, life: 0.5, size: 0.35, color: "#dff4ff", grav: 4 });
-          if (Math.hypot(P.x - M.x, P.z - M.z) < 1.5 && P.y < 1.8) playerHit(1, M.x, M.z);
+          if (Math.hypot(P.x - M.x, P.z - M.z) < 1.5 && P.y < 1.8) playerHit(MK.phase === 3 ? 2 : 1, M.x, M.z);
         } else {
           fxBurst(M.x, 0.4, M.z, { n: 22, speed: 4, up: 3, life: 0.6, size: 0.3, color: "#e8f3ff", grav: 9 });
           SND.thud();
           if (Math.hypot(P.x - M.x, P.z - M.z) < 1.7 && P.y < 1.6) playerHit(1, M.x, M.z);
         }
         M.m.parent && M.m.parent.remove(M.m);
+        if (M.col) M.col.parent && M.col.parent.remove(M.col);
         MK.marks.splice(i, 1);
       }
     }
@@ -29490,7 +29896,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       MK.tz = -2 + Math.sin(a) * 5;
       MK.retarget = 3 + Math.random() * 2;
     }
-    const ty = low ? 0 : high ? 9 + Math.sin(time * 0.8) : 4.5 + Math.sin(time * 1.3) * 0.5;
+    const ty = low ? 0 : high ? 9 + Math.sin(time * 0.8) : 4.5 + Math.sin(time * 1.3) * 0.5 + (MK.wind > 0 ? 1.1 : 0);
     MK.x = mix(MK.x, MK.tx, 1 - Math.exp(-dt * (low ? 3 : 1.2)));
     MK.z = mix(MK.z, MK.tz, 1 - Math.exp(-dt * (low ? 3 : 1.2)));
     MK.y = mix(MK.y, ty, 1 - Math.exp(-dt * (low ? 4 : 1.5)));
@@ -29504,29 +29910,61 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         m.emissive.setRGB(1, 1 - MK.burn * 0.55, 1 - MK.burn * 0.85);
         m.emissiveIntensity = 0.38 + MK.burn * 0.5 + MK.flash * 0.8;
       }
-    MK.aura.material.opacity = 0.35 + MK.flash * 0.5;
+    MK.aura.material.opacity = 0.35 + MK.flash * 0.5 + (MK.wind > 0 ? 0.55 + Math.sin(time * 30) * 0.1 : 0);
     if (MK.burn > 0.2 && Math.random() < dt * 20) fxBurst(MK.x, MK.y + MK.top * 0.4, MK.z, { n: 2, speed: 1, up: 2, life: 0.6, size: 0.3, color: "#ff9a3a", grav: -2 });
     if (MK.state === "hover") {
-      MK.atkCd -= dt;
-      if (MK.atkCd <= 0 && !cinematic && !FILM.on) mkAttack();
+      if (MK.wind > 0) {
+        /* prestaketa (0.5 s): igo, aura distiratsu, txinpartak → erasoa */
+        MK.wind -= dt;
+        if (MK.wind <= 0 && !cinematic && !FILM.on) mkAttack();
+      } else {
+        MK.atkCd -= dt;
+        if (MK.atkCd <= 0 && !cinematic && !FILM.on) {
+          MK.wind = 0.5;
+          SND.crackle && SND.crackle();
+        }
+      }
     } else if (MK.state === "down") {
       MK.stun -= dt;
       if (MK.stun <= 0) {
-        /* altxatu: I fasean, zutarri bat itzali (berriro piztu behar da) */
+        /* altxatu: I fasean, zutarri bat itzali (berriro piztu behar da); II-n, oleada berria */
         MK.state = MK.phase === 2 ? "summon" : "hover";
         MK.atkCd = 1.2;
+        MK.wind = 0;
         if (MK.phase === 1) {
           const S = AN.stones.filter((s) => s.lit).pop();
           if (S) S.lit = S.rune.lit = false;
           AN.lit = mkLit();
           notify(L("Mikelats altxatu da! Zutarri bat itzali du: piztu berriro."), "", 4);
+        } else if (MK.phase === 2) {
+          MK.waves = 1;
+          notify(L("Mikelats altxatu da! Itzal gehiago deitzen ditu…"), "", 3.5);
         }
         mkAnim("Idle");
       }
     } else if (MK.state === "summon") {
+      /* deitzen ari den bitartean ere kazkabarra (erdia bezain maiz) */
+      MK.atkCd -= dt * 0.5;
+      if (MK.atkCd <= 0 && !cinematic && !FILM.on) mkAttack();
       if (!ENEMIES.some((e) => e.mk && e.state !== "dead")) {
-        if (MK.waves < 2) mkWave();
+        if (MK.waves < 3) mkWave();
         else mkDown(8, L("Armada desegin da! Mikelats lurrera erori da: jo, orain!"));
+      }
+    } else if (MK.state === "tired") {
+      /* nekatuta: 12 s LO-KANTArako; kazkabarra ahul (% 30); bestela, altxatu eta bi zutarri itzali */
+      MK.tiredT -= dt;
+      MK.atkCd -= dt * 0.3;
+      if (MK.atkCd <= 0 && !cinematic && !FILM.on && !TXALA.on) mkAttack();
+      if (MK.tiredT <= 0 && !TXALA.on) {
+        MK.state = "hover";
+        MK.atkCd = 1.6;
+        MK.burn = 0;
+        for (const S of AN.stones.filter((s) => s.lit).slice(-2)) S.lit = S.rune.lit = false;
+        AN.lit = mkLit();
+        bossBar("MIKELATS", mkTotal());
+        mkAnim("Idle");
+        SND.roar && SND.roar();
+        notify(L("Mikelats berriro altxatu da! Bi zutarri itzali ditu: piztu, eta LO-KANTA azkarrago!"), "", 5);
       }
     }
   }
@@ -29549,7 +29987,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       [
         {
           d: 5.4,
-          text: ["· · ·", "Mikelats lurrean etzan da, lo. Haren kapa beltza askatu da, eta itzal bat bezala irristatu da harkaitzen gainetik."],
+          text: ["· · ·", "Mikelats lurrean etzan da, begiak ixten. Haren kapa beltza askatu da, eta itzal bat bezala irristatu da harkaitzen gainetik."],
           cam: [[ANX + 8, 4, 8], [ANX + 5, 5, 5]],
           look: [[S0.x, 1, S0.z], [ANX, 2, -8]],
           on: () => {
@@ -29632,7 +30070,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         },
         {
           d: 6,
-          text: ["· · ·", "Iturralden, sutondoa piztuta dago berriro. Eta plazan, txalapartak ez du gehiago bakarrik jotzen."],
+          text: ["· · ·", "Iturralden, sutondoa piztuta dago berriro. Plazan, amonak galdetzen du, eta Amaiurrek erantzuten."],
           cam: [[0.6, 2.4, 24.6], [0.2, 2, 25.8]],
           look: [0, 1.2, 29.4],
           tick: (dt) => {
@@ -30745,7 +31183,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         AN.stage = "arrive";
         AN.dawn = 0;
         anbotoArrive();
-        enterZone("anboto", { ...AN_SPAWN }, true);
+        enterZone("anboto", { ...AN_SPAWN, cp: true }, true);
       },
     );
   }
@@ -31739,6 +32177,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     $("chapterTitle").textContent = L(a, b);
     titleTimer = 2.8;
     $("chapterTitle").style.opacity = 1;
+    /* izenburua agerian: urtaroaren etiketa (goian, erdian) une batez ezkutatu, ez gainjartzeko */
+    document.body.classList.add("titling");
   }
   /* gune berria: izena eta deskribapena txartel bakarrean (lehen bisitan bakarrik) */
   function areaTitle(name, desc) {
@@ -31751,6 +32191,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     }
     titleTimer = 2.8;
     el.style.opacity = 1;
+    document.body.classList.add("titling");
   }
   function clearInput() {
     jumpHeld = false;
@@ -32544,7 +32985,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       P.dashReady = true;
       P.dashes = Math.max(P.dashes, 1);
       P.vy = Math.max(P.vy, 2.3);
-      notify("Beste une bat. Beste bultzada bat.", "Otro instante. Otro impulso.", 1.7);
+      notify("Urtaro berria, bultzada berria!", "", 1.7);
     }
     setPhaseVisual();
     FB.shift();
@@ -32674,7 +33115,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     /* ENARA: jauzi bikoitzaren ondoren JAUZIari eutsi → planeatu */
     glideCheck();
     if (CHAIN.state === "pull") {
-      /* SUGAARREN KATEA: eraztunerantz tiraka (grabitaterik gabe) */
+      /* BASAJAUNEN KATEA: eraztunerantz tiraka (grabitaterik gabe) */
       const v = chainPullVel();
       P.vx = v.x;
       P.vy = v.y;
@@ -33133,6 +33574,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         look.y += 1.6 * CAM.bossK;
         offset.y *= 1 - 0.12 * CAM.bossK;
       }
+      /* Mikelats (deitzean 9-10 m-ra igotzen da): begirada gorago, koadrotik ez ateratzeko */
+      if (BOSS.kind === "mikelats") look.y += clamp((MK.y - P.y) * 0.3, 0, 3.5) * CAM.bossK;
       if (tall) {
         /* harkaitza altxatzean: kamera gorago eta urrunago (harria ikusteko) */
         CAM.liftK = mix(CAM.liftK || 0, ERR.state === "lift" || ERR.state === "throw" ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -33246,7 +33689,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         "SORGINKERIA: J, klika edo botoia. Izpiak bakarrik bilatzen du helburua; mantendu: INDARRA (eztanda) eta, bitartean, EZKUTUA: aurretik datozen proiektilak itzultzen ditu. FINKATU (T edo ◎): helburu bat finkatu; kamerak eta izpiek hari jarraitzen diote.\n\n" +
         "URTAROA (Q): URREA uda, URDINA negua. Plataforma batzuk urtaro batean bakarrik daude, eta itzal bakoitza bere begien koloreko urtaroan bakarrik zauritzen da.\n\n" +
         "TXALAPARTA (B): bi makila, EZKERRA eta ESKUINA. Espirituek erritmo bat jotzen dute; zuk errepikatu. Ikasitako erritmoak edonon jo daitezke: ESNATU (◀ ◀ ▶) jentil-harriak altxatzen ditu, ENTZUN (▶ ◀ ▶ ▶) ezkutukoa erakusten du.\n\n" +
-        "LEIZEAN: giltza txikiek ateak irekitzen dituzte; giltza nagusiak, ate handia. Kutxa bakoitzak zerbait du. Lehen leizearen tresna: SUGAARREN KATEA (C) — suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.\n\n" +
+        "LEIZEAN: giltza txikiek ateak irekitzen dituzte; giltza nagusiak, ate handia. Kutxa bakoitzak zerbait du. Lehen leizearen tresna: BASAJAUNEN KATEA (C) — suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.\n\n" +
         "ESKU MAGIKOA (G): kaxak arrastatu, biratu eta pilatu. Lau ARNASA-ZATIrekin, arnasa bat gehiago.\n\n" +
         "KAMERA: GOITIK (lehenetsia) edo ATZETIK (O edo menua); hatzarekin edo saguaren eskuineko botoiarekin biratu eta hurbildu. BEGIRATU (I edo begia): Amaiurren begietatik, geldirik. HORMA: hormaren kontra une batez → itsatsita, eta izkinatik begiratu.\n\n" +
         "SIGILOA (Mikelatsen itzalak): haien argi-konoetatik kanpo, itzal-zokoetan eta astiro. TOK-TOK (E hormaren ondoan) hotsera erakartzen ditu; LOTARAZI (E atzetik) lotan uzten ditu. Ikusiz gero: ezkutatu eta itxaron.",
@@ -33269,12 +33712,12 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         "\n" + L("Txanponak: ") + saved.coins +
         (saved.potions ? "\n" + L("Sendabelar-botilak: ") + saved.potions : "") +
         "\n" + L("Erritmoak: ") + (txalaKnown().map((k) => RHYTHMS[k].name + " " + seqText(RHYTHMS[k].seq)).join(" · ") || "—") +
-        "\n" + L("Tresnak: ") + ([saved.items.includes("katea") && "SUGAARREN KATEA", saved.items.includes("giltzanagusia") && !saved.doors.includes("dD-n") && "GILTZA NAGUSIA"].filter(Boolean).join(" · ") || "—"),
+        "\n" + L("Tresnak: ") + ([saved.items.includes("katea") && "BASAJAUNEN KATEA", saved.items.includes("giltzanagusia") && !saved.doors.includes("dD-n") && "GILTZA NAGUSIA"].filter(Boolean).join(" · ") || "—"),
       "",
       [
         [L("JARRAITU"), () => {}],
         [L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)],
-        ...(saved.flags.includes("intro") || saved.flags.includes("pro-deia") ? [[L("DEITU · IRATI"), () => setTimeout(iratiCall, 0)]] : []),
+        ...(saved.flags.includes("intro") || saved.flags.includes("pro-deia") ? [[L("DEITU · ATARRABI"), () => setTimeout(iratiCall, 0)]] : []),
         [L("KONTROLAK"), help],
         [
           L("LAGUNTZA: ") + (saved.assist ? "BAI" : "EZ"),
@@ -33527,7 +33970,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         L("Egileak eta iturriak"),
         "",
         L(
-          "OIHARTZUN-en bigarren atala: joko berria eta originala. Istorioa, pertsonaiak, mailak, txalapartaren mekanika, musika eta soinu guztiak joko honetarako sortu dira (musika eta soinuak jokoak berak sortzen ditu, Web Audio bidez).\n\n" +
+          "GAU BELTZAren aurreko istorioa: joko berria eta originala. Istorioa, pertsonaiak, mailak, txalapartaren mekanika, musika eta soinu guztiak joko honetarako sortu dira (musika eta soinuak jokoak berak sortzen ditu, Web Audio bidez).\n\n" +
             "Euskal mitologia (Mari, Atarrabi, Mikelats, Basajaun, mairuak, Akerbeltz) herri-ondarea da; hemen modu librean kontatzen da.\n\n" +
             "Pertsonaiak, animazioak, herria eta leizeko piezak: Kay Lousberg / KayKit, CC0. Testurak eta zeruak: Poly Haven eta ambientCG, CC0. Motorra: three.js r128, MIT.",
         ),
@@ -33731,7 +34174,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     titleTimer -= dt;
     hudQuiet(dt);
     if (subTimer <= 0) $("subtitle").style.opacity = 0;
-    if (titleTimer <= 0) $("chapterTitle").style.opacity = 0;
+    if (titleTimer <= 0 && $("chapterTitle").style.opacity !== "0") {
+      $("chapterTitle").style.opacity = 0;
+      document.body.classList.remove("titling");
+    }
     shiftFlash = Math.max(0, shiftFlash - dt * 2.8);
     $("phaseFlash").style.opacity = shiftFlash * 0.35;
     if (frame % 8 === 0) hud();
@@ -33874,7 +34320,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     c.intr = intr;
     cin.classList.toggle("deia", call);
     cin.classList.toggle("intrusion", intr);
-    $("cineTag").textContent = call ? (intr ? "OIHARTZUN-DEIA · ▶ ▶ ▶ ▶ · ?" : "OIHARTZUN-DEIA · ◀ ◀ ▶") : "LEIZEEN DEIA";
+    $("cineTag").textContent = call ? (intr ? "KRISELU-DEIA · ▶ ▶ ▶ ▶ · ?" : "KRISELU-DEIA · ◀ ◀ ▶") : "LEIZEEN DEIA";
     if (intr) SND.static(1);
     $("cineWho").textContent = sh[0];
     $("cineText").textContent = "";
@@ -33915,6 +34361,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     $("hud").style.opacity = "1";
     $("touch").style.visibility = "";
     $("chapterTitle").style.opacity = 0;
+    document.body.classList.remove("titling");
     titleTimer = 0;
     storyAfterScene();
     hud();
@@ -34022,8 +34469,8 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     if (hasBomb() && TXB.n > 0 && (crackNear(11) || (BOSS.on && BOSS.bombAim && BOSS.bombAim()))) return ["bomb", L("TXIMISTA"), "cyan", bombThrow];
     /* ENTZUN behar den lekuan (ezkutuko harriak) */
     if (saved.rhythms.includes("entzun") && TXALA.reveal <= 0 && platforms.some((s) => s.hidden && Math.hypot(s.x - P.x, s.z - P.z) < 18)) return ["txala", L("TXALAPARTA"), "violet", txalaOpen];
-    /* IZAR-HAUTSA: izar-lainoa, ate-zainak, ametseko etsaiak edo Inguma */
-    if (hasDust() && dustUseful()) return ["dust", L("IZARRAK"), "violet", dustThrow];
+    /* SORGIN-HAUTSA: izar-lainoa, ate-zainak, ametseko etsaiak edo Inguma */
+    if (hasDust() && dustUseful()) return ["dust", L("HAUTSA"), "violet", dustThrow];
     return null;
   }
   function ctxUpdate() {
@@ -34046,10 +34493,10 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     if (!started || paused || cinematic || TXALA.on) return;
     const opts = [];
     if (saved.rhythms.length) opts.push([L("TXALAPARTA") + kb(" · B"), txalaOpen]);
-    if (hasChain()) opts.push([L("SUGAARREN KATEA") + kb(" · C"), chainFire]);
+    if (hasChain()) opts.push([L("BASAJAUNEN KATEA") + kb(" · C"), chainFire]);
     if (hasHorn()) opts.push([L("HAIZE-ADARRA") + kb(" · V"), hornBlow]);
     if (hasBomb()) opts.push([L("TXIMISTARRIA") + kb(" · X"), bombThrow]);
-    if (hasDust()) opts.push([L("IZAR-HAUTSA") + kb(" · Z"), dustThrow]);
+    if (hasDust()) opts.push([L("SORGIN-HAUTSA") + kb(" · Z"), dustThrow]);
     opts.push([L("FINKATU") + kb(" · T"), lockToggle]);
     opts.push([L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)]);
     const Z = zoneHere();
@@ -34066,7 +34513,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
         (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
         (hasWings() ? L("ENARA: jauzi bikoitza eta eutsi JAUZIari — planeatu; haize-zutabeek gora eramaten zaituzte.") + "\n\n" : "") +
         (saved.items.includes("ispilua") ? L("EGUZKI-ISPILUA: argi-zutabe batean, eutsi SORGINKERIAri eta apuntatu. Udan eguzkia, neguan ilargia. Ispilu-harriak: BIRATU.") + "\n\n" : "") +
-        (hasDust() ? L("IZAR-HAUTSA: bota, eta gaueko izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, izar-plataformak; airean, izar-eskailerak.") + "\n\n" : "") +
+        (hasDust() ? L("SORGIN-HAUTSA: bota, eta itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Akelarreko lainoan, plataformak; airean, eskailerak.") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",

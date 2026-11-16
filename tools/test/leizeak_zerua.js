@@ -433,7 +433,7 @@ const { launch } = require('./_browser');
     for (let k = 0; k < 150 && g.cinematicState() && g.ZAZPI.green < 5; k++) g.step(1 / 30, false);
     return g.ZAZPI.green;
   });
-  ok(green === 5, 'zazpi argiak: bosgarrena berde (Odei aske)', green);
+  ok(green === 5, 'zazpi txingarrak: bosgarrena urrez (Eate aske)', green);
   await skip();
   ok(await flag('irati-odei'), 'Atarrabi: Eateren berria (amaiera)');
 

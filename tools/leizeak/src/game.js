@@ -1975,6 +1975,8 @@
     $("chapterTitle").textContent = L(a, b);
     titleTimer = 2.8;
     $("chapterTitle").style.opacity = 1;
+    /* izenburua agerian: urtaroaren etiketa (goian, erdian) une batez ezkutatu, ez gainjartzeko */
+    document.body.classList.add("titling");
   }
   /* gune berria: izena eta deskribapena txartel bakarrean (lehen bisitan bakarrik) */
   function areaTitle(name, desc) {
@@ -1987,6 +1989,7 @@
     }
     titleTimer = 2.8;
     el.style.opacity = 1;
+    document.body.classList.add("titling");
   }
   function clearInput() {
     jumpHeld = false;
@@ -2780,7 +2783,7 @@
       P.dashReady = true;
       P.dashes = Math.max(P.dashes, 1);
       P.vy = Math.max(P.vy, 2.3);
-      notify("Beste une bat. Beste bultzada bat.", "Otro instante. Otro impulso.", 1.7);
+      notify("Urtaro berria, bultzada berria!", "", 1.7);
     }
     setPhaseVisual();
     FB.shift();
@@ -2910,7 +2913,7 @@
     /* ENARA: jauzi bikoitzaren ondoren JAUZIari eutsi → planeatu */
     glideCheck();
     if (CHAIN.state === "pull") {
-      /* SUGAARREN KATEA: eraztunerantz tiraka (grabitaterik gabe) */
+      /* BASAJAUNEN KATEA: eraztunerantz tiraka (grabitaterik gabe) */
       const v = chainPullVel();
       P.vx = v.x;
       P.vy = v.y;
@@ -3369,6 +3372,8 @@
         look.y += 1.6 * CAM.bossK;
         offset.y *= 1 - 0.12 * CAM.bossK;
       }
+      /* Mikelats (deitzean 9-10 m-ra igotzen da): begirada gorago, koadrotik ez ateratzeko */
+      if (BOSS.kind === "mikelats") look.y += clamp((MK.y - P.y) * 0.3, 0, 3.5) * CAM.bossK;
       if (tall) {
         /* harkaitza altxatzean: kamera gorago eta urrunago (harria ikusteko) */
         CAM.liftK = mix(CAM.liftK || 0, ERR.state === "lift" || ERR.state === "throw" ? 1 : 0, 1 - Math.exp(-dt * 3));
@@ -3482,7 +3487,7 @@
         "SORGINKERIA: J, klika edo botoia. Izpiak bakarrik bilatzen du helburua; mantendu: INDARRA (eztanda) eta, bitartean, EZKUTUA: aurretik datozen proiektilak itzultzen ditu. FINKATU (T edo ◎): helburu bat finkatu; kamerak eta izpiek hari jarraitzen diote.\n\n" +
         "URTAROA (Q): URREA uda, URDINA negua. Plataforma batzuk urtaro batean bakarrik daude, eta itzal bakoitza bere begien koloreko urtaroan bakarrik zauritzen da.\n\n" +
         "TXALAPARTA (B): bi makila, EZKERRA eta ESKUINA. Espirituek erritmo bat jotzen dute; zuk errepikatu. Ikasitako erritmoak edonon jo daitezke: ESNATU (◀ ◀ ▶) jentil-harriak altxatzen ditu, ENTZUN (▶ ◀ ▶ ▶) ezkutukoa erakusten du.\n\n" +
-        "LEIZEAN: giltza txikiek ateak irekitzen dituzte; giltza nagusiak, ate handia. Kutxa bakoitzak zerbait du. Lehen leizearen tresna: SUGAARREN KATEA (C) — suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.\n\n" +
+        "LEIZEAN: giltza txikiek ateak irekitzen dituzte; giltza nagusiak, ate handia. Kutxa bakoitzak zerbait du. Lehen leizearen tresna: BASAJAUNEN KATEA (C) — suge-eraztunetara tiratu, kaxak erakarri, etsaiak zorabiatu.\n\n" +
         "ESKU MAGIKOA (G): kaxak arrastatu, biratu eta pilatu. Lau ARNASA-ZATIrekin, arnasa bat gehiago.\n\n" +
         "KAMERA: GOITIK (lehenetsia) edo ATZETIK (O edo menua); hatzarekin edo saguaren eskuineko botoiarekin biratu eta hurbildu. BEGIRATU (I edo begia): Amaiurren begietatik, geldirik. HORMA: hormaren kontra une batez → itsatsita, eta izkinatik begiratu.\n\n" +
         "SIGILOA (Mikelatsen itzalak): haien argi-konoetatik kanpo, itzal-zokoetan eta astiro. TOK-TOK (E hormaren ondoan) hotsera erakartzen ditu; LOTARAZI (E atzetik) lotan uzten ditu. Ikusiz gero: ezkutatu eta itxaron.",
@@ -3505,12 +3510,12 @@
         "\n" + L("Txanponak: ") + saved.coins +
         (saved.potions ? "\n" + L("Sendabelar-botilak: ") + saved.potions : "") +
         "\n" + L("Erritmoak: ") + (txalaKnown().map((k) => RHYTHMS[k].name + " " + seqText(RHYTHMS[k].seq)).join(" · ") || "—") +
-        "\n" + L("Tresnak: ") + ([saved.items.includes("katea") && "SUGAARREN KATEA", saved.items.includes("giltzanagusia") && !saved.doors.includes("dD-n") && "GILTZA NAGUSIA"].filter(Boolean).join(" · ") || "—"),
+        "\n" + L("Tresnak: ") + ([saved.items.includes("katea") && "BASAJAUNEN KATEA", saved.items.includes("giltzanagusia") && !saved.doors.includes("dD-n") && "GILTZA NAGUSIA"].filter(Boolean).join(" · ") || "—"),
       "",
       [
         [L("JARRAITU"), () => {}],
         [L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)],
-        ...(saved.flags.includes("intro") || saved.flags.includes("pro-deia") ? [[L("DEITU · IRATI"), () => setTimeout(iratiCall, 0)]] : []),
+        ...(saved.flags.includes("intro") || saved.flags.includes("pro-deia") ? [[L("DEITU · ATARRABI"), () => setTimeout(iratiCall, 0)]] : []),
         [L("KONTROLAK"), help],
         [
           L("LAGUNTZA: ") + (saved.assist ? "BAI" : "EZ"),
@@ -3763,7 +3768,7 @@
         L("Egileak eta iturriak"),
         "",
         L(
-          "OIHARTZUN-en bigarren atala: joko berria eta originala. Istorioa, pertsonaiak, mailak, txalapartaren mekanika, musika eta soinu guztiak joko honetarako sortu dira (musika eta soinuak jokoak berak sortzen ditu, Web Audio bidez).\n\n" +
+          "GAU BELTZAren aurreko istorioa: joko berria eta originala. Istorioa, pertsonaiak, mailak, txalapartaren mekanika, musika eta soinu guztiak joko honetarako sortu dira (musika eta soinuak jokoak berak sortzen ditu, Web Audio bidez).\n\n" +
             "Euskal mitologia (Mari, Atarrabi, Mikelats, Basajaun, mairuak, Akerbeltz) herri-ondarea da; hemen modu librean kontatzen da.\n\n" +
             "Pertsonaiak, animazioak, herria eta leizeko piezak: Kay Lousberg / KayKit, CC0. Testurak eta zeruak: Poly Haven eta ambientCG, CC0. Motorra: three.js r128, MIT.",
         ),
@@ -3967,7 +3972,10 @@
     titleTimer -= dt;
     hudQuiet(dt);
     if (subTimer <= 0) $("subtitle").style.opacity = 0;
-    if (titleTimer <= 0) $("chapterTitle").style.opacity = 0;
+    if (titleTimer <= 0 && $("chapterTitle").style.opacity !== "0") {
+      $("chapterTitle").style.opacity = 0;
+      document.body.classList.remove("titling");
+    }
     shiftFlash = Math.max(0, shiftFlash - dt * 2.8);
     $("phaseFlash").style.opacity = shiftFlash * 0.35;
     if (frame % 8 === 0) hud();
@@ -4110,7 +4118,7 @@
     c.intr = intr;
     cin.classList.toggle("deia", call);
     cin.classList.toggle("intrusion", intr);
-    $("cineTag").textContent = call ? (intr ? "OIHARTZUN-DEIA · ▶ ▶ ▶ ▶ · ?" : "OIHARTZUN-DEIA · ◀ ◀ ▶") : "LEIZEEN DEIA";
+    $("cineTag").textContent = call ? (intr ? "KRISELU-DEIA · ▶ ▶ ▶ ▶ · ?" : "KRISELU-DEIA · ◀ ◀ ▶") : "LEIZEEN DEIA";
     if (intr) SND.static(1);
     $("cineWho").textContent = sh[0];
     $("cineText").textContent = "";
@@ -4151,6 +4159,7 @@
     $("hud").style.opacity = "1";
     $("touch").style.visibility = "";
     $("chapterTitle").style.opacity = 0;
+    document.body.classList.remove("titling");
     titleTimer = 0;
     storyAfterScene();
     hud();
@@ -4258,8 +4267,8 @@
     if (hasBomb() && TXB.n > 0 && (crackNear(11) || (BOSS.on && BOSS.bombAim && BOSS.bombAim()))) return ["bomb", L("TXIMISTA"), "cyan", bombThrow];
     /* ENTZUN behar den lekuan (ezkutuko harriak) */
     if (saved.rhythms.includes("entzun") && TXALA.reveal <= 0 && platforms.some((s) => s.hidden && Math.hypot(s.x - P.x, s.z - P.z) < 18)) return ["txala", L("TXALAPARTA"), "violet", txalaOpen];
-    /* IZAR-HAUTSA: izar-lainoa, ate-zainak, ametseko etsaiak edo Inguma */
-    if (hasDust() && dustUseful()) return ["dust", L("IZARRAK"), "violet", dustThrow];
+    /* SORGIN-HAUTSA: izar-lainoa, ate-zainak, ametseko etsaiak edo Inguma */
+    if (hasDust() && dustUseful()) return ["dust", L("HAUTSA"), "violet", dustThrow];
     return null;
   }
   function ctxUpdate() {
@@ -4282,10 +4291,10 @@
     if (!started || paused || cinematic || TXALA.on) return;
     const opts = [];
     if (saved.rhythms.length) opts.push([L("TXALAPARTA") + kb(" · B"), txalaOpen]);
-    if (hasChain()) opts.push([L("SUGAARREN KATEA") + kb(" · C"), chainFire]);
+    if (hasChain()) opts.push([L("BASAJAUNEN KATEA") + kb(" · C"), chainFire]);
     if (hasHorn()) opts.push([L("HAIZE-ADARRA") + kb(" · V"), hornBlow]);
     if (hasBomb()) opts.push([L("TXIMISTARRIA") + kb(" · X"), bombThrow]);
-    if (hasDust()) opts.push([L("IZAR-HAUTSA") + kb(" · Z"), dustThrow]);
+    if (hasDust()) opts.push([L("SORGIN-HAUTSA") + kb(" · Z"), dustThrow]);
     opts.push([L("FINKATU") + kb(" · T"), lockToggle]);
     opts.push([L("EGUNKARIA") + kb(" · L"), () => setTimeout(questLog, 0)]);
     const Z = zoneHere();
@@ -4302,7 +4311,7 @@
         (hasBomb() ? L("TXIMISTARRIA: jaurti, eta trumoiak harri arrakalatuak apurtzen ditu (urrun egon!).") + "\n\n" : "") +
         (hasWings() ? L("ENARA: jauzi bikoitza eta eutsi JAUZIari — planeatu; haize-zutabeek gora eramaten zaituzte.") + "\n\n" : "") +
         (saved.items.includes("ispilua") ? L("EGUZKI-ISPILUA: argi-zutabe batean, eutsi SORGINKERIAri eta apuntatu. Udan eguzkia, neguan ilargia. Ispilu-harriak: BIRATU.") + "\n\n" : "") +
-        (hasDust() ? L("IZAR-HAUTSA: bota, eta gaueko izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, izar-plataformak; airean, izar-eskailerak.") + "\n\n" : "") +
+        (hasDust() ? L("SORGIN-HAUTSA: bota, eta itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Akelarreko lainoan, plataformak; airean, eskailerak.") + "\n\n" : "") +
         L("FINKATU: helburu bat finkatu (berriro sakatuz, hurrengoa).") +
         (saved.potions ? "\n\n" + L("Sendabelar-botilak: ") + saved.potions + L(" (bizitzak amaitzean, berez erabiltzen dira)") : ""),
       "",
