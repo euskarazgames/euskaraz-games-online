@@ -119,6 +119,8 @@
     SND.sing ? SND.sing(0.8) : SND.wake();
     /* akelarrean: galdara (ametsa.js) eta Akerbeltz (inguma.js) */
     if (ZONE.cur === "ametsa" && ametsaSeaska()) return;
+    /* Murumendin: Mikelats lokartu (anboto.js) */
+    if (ZONE.cur === "anboto" && mikelatsLull()) return;
     let n = 0;
     for (const e of ENEMIES) {
       if (e.state === "dead" || e.state === "spawn" || Math.hypot(e.x - P.x, e.z - P.z) > 12) continue;

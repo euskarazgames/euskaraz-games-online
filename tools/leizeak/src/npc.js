@@ -98,6 +98,14 @@
   function npcsUpdate(dt) {
     if (ZONE.cur !== "ibarra") return;
     for (const N of NPCS) {
+      /* amaieraren ondoren, Atarrabi Mariren ondoan geratu da */
+      if (N.id === "irati" && saved.flags.includes("anboto")) {
+        if (!N.away) Object.assign(N, { away: true });
+        N.g.visible = false;
+        if (N.halo) N.halo.visible = false;
+        if (N.solid) N.solid.r = 0;
+        continue;
+      }
       const d = Math.hypot(P.x - N.x, P.z - N.z);
       /* gauez etxera (eta goizean itzuli): egutegia jokalariaren urruntasunetik aparte */
       if (npcNight(N, dt)) {

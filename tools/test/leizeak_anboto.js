@@ -1,9 +1,10 @@
-// LEIZEEN DEIA: OROITZAPENAK eta azken atala (ANBOTO) — bot-a, ?test kakoekin.
+// LEIZEEN DEIA: OROITZAPENAK eta azken atala (MURUMENDI, Mikelats) — bot-a, ?test kakoekin.
 // Erabili: NODE_PATH=$(npm root -g) node tools/test/leizeak_anboto.js http://127.0.0.1:8091/games/leizeak.html [pantaila-argazkien-karpeta]
 // 1 · zazpi oroitzapenak (plano guztiak benetako begiztan, azkar aurreratuta): banderak eta egunkaria.
-// 2 · Inguma ondoren: plazan Irati → suzko bola → ANBOTO (gailurra) → duelua harrizko txalapartan:
-//     lau eta bost kolpe (Amaiur bakarrik) eta zazpi kolpe BI AHOTSEZ (Amaiurrek ◀, Iratik ▶ berez);
-//     huts egitean, berriro galdezka → amaiera eta epilogoa → haranean, Irati bizirik (mamurik gabe).
+// 2 · Akerbeltzen ondoren: plazan Atarrabi → Mariren suzko bola → MURUMENDI (gailurra) → MIKELATS:
+//     I kazkabarra (zirkuluak lurrean; hiru zutarri → kapa erre → lurrera → jo), II itzal-armada (bi uhin,
+//     UDAN zauritzen dira), III ekaitza (zazpi zutarriak → nekatuta → LO-KANTA) → amaiera eta epilogoa
+//     (kaiko kanpaia izotzean) → haranean, Atarrabi ez dago plazan.
 const { launch } = require('./_browser');
 (async () => {
   const [url, shots] = process.argv.slice(2);
@@ -21,7 +22,7 @@ const { launch } = require('./_browser');
   await ev(() => {
     localStorage.clear();
     const s = __game.saved;
-    s.flags.push('intro', 'irati1', 'atea', 'leizea', 'basajaun', 'cliff', 'ardiak', 'lamia', 'irati-lamia', 'lepoa', 'tartalo', 'irati-tartalo', 'jentil', 'jentilatea', 'errolan', 'irati-errolan', 'ortzadarra', 'odei', 'irati-odei', 'sutondoa', 'etxea', 'kattalin', 'txomin', 'herensugea', 'irati-herensuge', 'inguma-ametsa', 'seaska', 'seaska-kanta', 'inguma', 'irati-inguma', 'harpeak');
+    s.flags.push('intro', 'irati1', 'atea', 'leizea', 'basajaun', 'cliff', 'ardiak', 'lamia', 'irati-lamia', 'lepoa', 'tartalo', 'irati-tartalo', 'giroa', 'jentil', 'jentilatea', 'errolan', 'irati-errolan', 'ortzadarra', 'odei', 'irati-odei', 'sutondoa', 'etxea', 'kattalin', 'txomin', 'herensugea', 'irati-herensuge', 'inguma-ametsa', 'seaska', 'seaska-kanta', 'inguma', 'irati-inguma', 'harpeak');
     s.rhythms.push('esnatu', 'entzun', 'ortzi', 'eguzkilore', 'seaska');
     s.items.push('makilak', 'katea', 'adarra', 'sugarra', 'tximistarria', 'enara', 'ispilua');
     s.hearts = 7;
@@ -61,7 +62,7 @@ const { launch } = require('./_browser');
     ok(!(await ev(() => document.body.classList.contains('oroit'))), '  sepia kenduta');
   }
   const log = await ev(() => __game.oroitLog());
-  ok(/OROITZAPENAK · 7 \/ 7/.test(log) && /AHIZPAK/.test(log), 'egunkarian zazpi oroitzapen');
+  ok(/OROITZAPENAK · 7 \/ 7/.test(log) && /ANAIAK/.test(log), 'egunkarian zazpi oroitzapen');
   /* Iturralden: oroigarrien apala → GOGORATU (eszena haranean, gero etxera itzuli) */
   await ev(() => { const g = __game; g.homeEnter(); for (let i = 0; i < 240; i++) { g.tick(1 / 120); g.zoneFadeUpdate(1 / 120); } });
   ok(await ev(() => __game.ZONE.cur === 'etxea'), 'Iturralden');
@@ -76,79 +77,80 @@ const { launch } = require('./_browser');
   await ev(() => { const g = __game; g.teleport(g.DGE.exitArch.x, g.DGE.exitArch.z + 3.6, 0); for (let i = 0; i < 240; i++) { g.tick(1 / 120); g.zoneFadeUpdate(1 / 120); } });
   ok(await ev(() => __game.ZONE.cur === 'ibarra'), 'kanpora (haranera)');
 
-  /* ---------------- 2 · plazan Irati → Anbotora ---------------- */
+  /* ---------------- 2 · plazan Atarrabi → Murumendira ---------------- */
   let obj = await ev(() => __game.objective());
-  ok(/Anbotora/.test(obj[0]), 'helburua: Anbotora', obj[0]);
+  ok(/Murumendira/.test(obj[0]), 'helburua: Murumendira', obj[0]);
   await ev(() => { const g = __game, N = g.NPCS.find((n) => n.id === 'irati'); g.teleport(N.x + 1.4, N.z + 1.2, 0); for (let i = 0; i < 6; i++) g.tick(1 / 120); g.talkTo(N); });
-  ok(!!(await ev(() => __game.cinematicState())), 'Iratiren eszena (suzko bola)');
+  ok(!!(await ev(() => __game.cinematicState())), 'Atarrabiren eszena (suzko bola)');
   await skipScenes();
   ok(await ev(() => __game.FILM.on), 'hegaldiaren zinema');
   await playFilm();
   await T(4);
-  ok(await ev(() => __game.ZONE.cur === 'anboto'), 'ANBOTO zona', await ev(() => __game.ZONE.cur));
-  /* (playFilm-ek iritsierako zinema ere jotzen du: Gaueko agertu eta "Galdetu, Gaueko") */
+  ok(await ev(() => __game.ZONE.cur === 'anboto'), 'MURUMENDI zona', await ev(() => __game.ZONE.cur));
+  /* (playFilm-ek iritsierako zinema ere jotzen du: Mikelats eta amona kaiolan) */
   await playFilm();
   await T(10);
-  ok(await ev(() => __game.AN.stage === 'duel'), 'duelua prest', await ev(() => __game.AN.stage));
+  let mk = await ev(() => ({ stage: __game.AN.stage, on: __game.MK.on, phase: __game.MK.phase, state: __game.MK.state, kind: __game.BOSS.kind, boss: __game.BOSS.on }));
+  ok(mk.stage === 'fight' && mk.on && mk.phase === 1 && mk.state === 'hover' && mk.kind === 'mikelats' && mk.boss, 'MIKELATS: borroka hasita (I)', JSON.stringify(mk));
   obj = await ev(() => __game.objective());
-  ok(/ERANTZUN/.test(obj[0]), 'helburua: ERANTZUN', obj[0]);
-  await shot('anboto_gailurra');
-  /* gailurrean ibili (plataforma ondo) */
+  ok(/zutarriak/.test(obj[0]), 'helburua: zutarriak', obj[0]);
+  await shot('murumendi_gailurra');
   const st = await ev(() => { const g = __game; return { y: g.P.y, gr: g.P.grounded, z: g.P.z }; });
   ok(st.gr && Math.abs(st.y) < 0.3, 'gailurrean zutik', JSON.stringify(st));
 
-  /* ---------------- 3 · duelua ---------------- */
-  const toTx = () => ev(() => { const g = __game; g.teleport(g.AN.tx.x, g.AN.tx.z + 2, 0); g.P.angle = Math.PI; for (let i = 0; i < 8; i++) g.tick(1 / 120); const a = g.actionHere(); return a ? a.kind + ':' + a.label : null; });
-  ok((await toTx()) === 'txala:ERANTZUN', 'txalapartan: ERANTZUN');
-  const answer = (opts = {}) => ev((opts) => {
-    const g = __game;
-    for (let i = 0; i < 2400 && !(g.TXALA.call && g.TXALA.call.phase === 'answer'); i++) g.tick(1 / 120);
-    const C = g.TXALA.call;
-    if (!C) return { err: 'deirik ez' };
-    const seq = C.seq.slice();
-    if (opts.wrong) { g.txalaHit(seq[0] === 'L' ? 'R' : 'L'); for (let i = 0; i < 30; i++) g.tick(1 / 120); return { seq: seq.join(''), phase: C.phase }; }
-    for (let k = 0; k < seq.length; k++) {
-      if (C.duet && seq[k] === 'R') { for (let i = 0; i < 90 && C.i <= k; i++) g.tick(1 / 120); continue; }
-      g.txalaHit(seq[k]);
-      for (let i = 0; i < 20; i++) g.tick(1 / 120);
-    }
-    for (let i = 0; i < 120; i++) g.tick(1 / 120);
-    return { seq: seq.join(''), duet: !!C.duet, success: !!C.success, on: g.TXALA.on };
-  }, opts);
-  await ev(() => __game.interact());
-  ok(await ev(() => __game.TXALA.on && /GAUEKOREN DEIA · I/.test(document.getElementById('txTitle').textContent)), 'lehen deia (Gaueko)');
-  let r = await answer({ wrong: true });
-  ok(r.phase === 'wait' || r.phase === 'listen', 'huts egin → berriro galdezka', JSON.stringify(r));
-  r = await answer();
-  ok(r.seq === 'LRRL' && !r.on, 'I: erantzuna ondo', JSON.stringify(r));
-  ok(await ev(() => __game.AN.round === 1 && __game.AN.lit === 2), 'bi zutarri piztuta');
+  /* ---------------- 3 · I: kazkabarra eta zutarriak ---------------- */
+  const hail = await ev(() => {
+    const g = __game, hp0 = g.P.hp;
+    g.MK.atkCd = 0;
+    g.tick(1 / 120);
+    const n = g.MK.marks.length;
+    for (let i = 0; i < 240; i++) g.tick(1 / 120);
+    return { n, hp0, hp: g.P.hp, left: g.MK.marks.length };
+  });
+  ok(hail.n >= 1 && hail.left === 0, 'erasoa: zirkuluak lurrean, gero kolpea', JSON.stringify(hail));
+  ok(hail.hp < hail.hp0, 'zirkuluaren barruan: zauritua', JSON.stringify(hail));
+  ok(await ev(() => !__game.BOSS.vulnerable()), 'kapak babesten du (ez da zauritzen)');
+  await ev(() => { const g = __game; g.P.hp = g.P.maxHp; for (const S of g.AN.stones.slice(0, 3)) S.rune.hit(); for (let i = 0; i < 30; i++) g.tick(1 / 120); });
+  mk = await ev(() => ({ lit: __game.AN.lit, state: __game.MK.state, vul: __game.BOSS.vulnerable() }));
+  ok(mk.lit === 3 && mk.state === 'down' && mk.vul, 'hiru zutarri → kapa erre, lurrera', JSON.stringify(mk));
+  await ev(() => { const g = __game; for (let n = 0; n < 3; n++) g.BOSS.hit(1); });
   await playFilm();
-  await T(80);
-  ok(await ev(() => __game.TXALA.on), 'bigarren deia berez');
-  r = await answer();
-  ok(r.seq === 'RLLRL' && !r.on, 'II: erantzuna ondo', JSON.stringify(r));
-  ok(await ev(() => __game.AN.round === 2 && __game.AN.lit === 4), 'lau zutarri piztuta');
+  await T(20);
+  /* ---------------- 4 · II: itzal-armada (UDAN zauritzen dira) ---------------- */
+  mk = await ev(() => ({ phase: __game.MK.phase, state: __game.MK.state, en: __game.ENEMIES.filter((e) => e.mk && e.state !== 'dead').length, era: __game.ENEMIES.filter((e) => e.mk).map((e) => e.era) }));
+  ok(mk.phase === 2 && mk.state === 'summon' && mk.en === 3 && mk.era.every((x) => x === 0), 'II: lehen uhina (hiru itzal, UDAKOAK)', JSON.stringify(mk));
+  const wave = async () => ev(() => { const g = __game; for (const e of g.ENEMIES) if (e.mk && e.state !== 'dead') g.killEnemy(e); for (let i = 0; i < 240; i++) g.tick(1 / 120); return { en: g.ENEMIES.filter((e) => e.mk && e.state !== 'dead').length, waves: g.MK.waves, state: g.MK.state }; });
+  let w = await wave();
+  ok(w.waves === 2 && w.en === 4, 'bigarren uhina (lau itzal)', JSON.stringify(w));
+  w = await wave();
+  ok(w.state === 'down', 'armada desegin → lurrera', JSON.stringify(w));
+  await ev(() => { const g = __game; for (let n = 0; n < 3; n++) g.BOSS.hit(1); });
   await playFilm();
-  await T(80);
-  ok(await ev(() => __game.TXALA.on && __game.TXALA.call && __game.TXALA.call.duet), 'hirugarrena: BI AHOTSEZ');
-  ok(await ev(() => document.querySelectorAll('#txSeq i.ir').length === 4), 'Iratiren kolpeak markatuta (▶ ×4)');
-  r = await answer();
-  ok(r.seq === 'LRLRRLR' && !r.on, 'III: bi ahotsez ondo', JSON.stringify(r));
-  ok(await ev(() => __game.AN.lit === 7 && __game.AN.stage === 'end'), 'zazpi zutarriak; amaiera');
-  await shot('anboto_amaiera');
-  /* ---------------- 4 · amaiera eta epilogoa ---------------- */
+  await T(20);
+  /* ---------------- 5 · III: ekaitza → nekatuta → LO-KANTA ---------------- */
+  mk = await ev(() => ({ phase: __game.MK.phase, state: __game.MK.state }));
+  ok(mk.phase === 3 && mk.state === 'hover', 'III: ekaitza', JSON.stringify(mk));
+  await ev(() => { const g = __game; for (const S of g.AN.stones) if (!S.lit) S.rune.hit(); for (let i = 0; i < 30; i++) g.tick(1 / 120); });
+  mk = await ev(() => ({ lit: __game.AN.lit, state: __game.MK.state, obj: __game.objective()[0] }));
+  ok(mk.lit === 7 && mk.state === 'tired' && /LO-KANTA/.test(mk.obj), 'zazpi zutarriak → nekatuta (LO-KANTA)', JSON.stringify(mk));
+  await shot('murumendi_nekatuta');
+  await ev(() => { const g = __game; g.txalaOpen(); });
+  for (const s of ['L', 'R', 'L', 'R', 'L']) { await ev((s) => { __game.txalaHit(s); for (let i = 0; i < 14; i++) __game.tick(1 / 120); }, s); }
+  await ev(() => { window.__hold = false; });
+  await page.waitForTimeout(1400);
+  await ev(() => { window.__hold = true; });
+  mk = await ev(() => ({ state: __game.MK.state, dead: __game.BOSS.dead, stage: __game.AN.stage, film: __game.FILM.on }));
+  ok(mk.state === 'sleep' && mk.dead && mk.stage === 'end', 'LO-KANTA: Mikelats lo; amaiera', JSON.stringify(mk));
+  /* ---------------- 6 · amaiera eta epilogoa ---------------- */
   const nShots = await playFilm(30);
   ok(nShots >= 12, 'amaierako zinema (planoak: ' + nShots + ')');
   await T(10);
   ok(await flag('anboto'), 'bandera: anboto');
   ok(await ev(() => __game.ZONE.cur === 'ibarra'), 'haranean berriro');
-  ok(await ev(() => { const N = __game.NPCS.find((n) => n.id === 'irati'); let solid = true; N.root.traverse((m) => { if (m.isMesh && m.material.transparent) solid = false; }); return solid && N.body; }), 'Irati bizirik (mamurik gabe)');
+  await T(10);
+  ok(await ev(() => { const N = __game.NPCS.find((n) => n.id === 'irati'); return !N.g.visible; }), 'Atarrabi Mariren ondoan geratu da (plazan ez)');
   obj = await ev(() => __game.objective());
   ok(/Harana zurea/.test(obj[0]), 'helburua: harana zurea', obj[0]);
-  await ev(() => { const g = __game, N = g.NPCS.find((n) => n.id === 'irati'); g.teleport(N.x + 1.4, N.z + 1.2, 0); for (let i = 0; i < 6; i++) g.tick(1 / 120); g.talkTo(N); });
-  const said = await ev(() => document.getElementById('cineText') ? document.getElementById('cineText').textContent : '');
-  ok(await ev(() => !!__game.cinematicState()), 'Iratirekin hitz egin (amaieraren ondoren)', said.slice(0, 60));
-  await skipScenes();
   await shot('epilogoa');
 
   if (errs.length) { console.log('ERROREAK:\n' + errs.slice(0, 8).join('\n')); fails += errs.length; } else console.log('ERRORERIK EZ');
