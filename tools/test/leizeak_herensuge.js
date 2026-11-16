@@ -458,7 +458,8 @@ const { launch } = require('./_browser');
     for (let k = 0; k < 4; k++) g.tick(1 / 120);
     return { state: Z.state, seen, r0, reflect: Z.stats.reflect, hp: g.P.hp, max: g.P.maxHp };
   });
-  ok(st.reflect === st.r0 + 1 && (st.state === 'daze' || st.seen === 'daze'), 'EZKUTUA: su-bola itzulia → zorabiatuta (begiak zabalik)', S(st));
+  /* (III-n hiru su-bola: bi batera itzul daitezke) */
+  ok(st.reflect > st.r0 && (st.state === 'daze' || st.seen === 'daze'), 'EZKUTUA: su-bola itzulia → zorabiatuta (begiak zabalik)', S(st));
   await ev(() => { const g = __game; g.ZB.stun = 0; for (let k = 0; k < 20; k++) g.tick(1 / 120); });
   await calm();
   /* III: lehenik EGUZKIA (UDA), gero ILARGIA (NEGUA) */
