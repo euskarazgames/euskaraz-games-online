@@ -3340,7 +3340,7 @@
       tall = BOSS.on && BOSS.kind === "errolan",
       /* Odei (zeruan): kamera urrunago, begirada gorago; planeatzean ere urrunago */
       cloud = BOSS.on && BOSS.kind === "odei",
-      dragon = BOSS.on && BOSS.kind === "zazpi",
+      dragon = BOSS.on && (BOSS.kind === "zazpi" || BOSS.kind === "zezen"),
       /* GOITIK (etsai nagusirik gabe): goitik eta hurbil — kanpoan 52°, leizean 57° (gela gehiena ikusgai) */
       goitik = CAM.mode === "goitik" && !BOSS.on;
     CAM.gk = mix(CAM.gk ?? (goitik ? 1 : 0), goitik ? 1 : 0, 1 - Math.exp(-dt * 3));

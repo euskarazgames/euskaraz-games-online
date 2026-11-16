@@ -1,10 +1,10 @@
-// LEIZEEN DEIA: HERENSUGEAREN HAITZULOA hasieratik amaierara (bot-a, ?test kakoekin, tick-ak eskuz).
+// LEIZEEN DEIA: ZEZEN-HARPEA hasieratik amaierara (bot-a, ?test kakoekin, tick-ak eskuz).
 // Erabili: NODE_PATH=$(npm root -g) node tools/test/leizeak_herensuge.js http://127.0.0.1:8091/games/leizeak.html [pantaila-argazkien-karpeta]
 // Zerua: Odeiren hodeia → SUGE-MENDIA → sare beltza (SUA) → laba-arroila (lurrazala ORAINEAN, bero-zutabea
 // IRAGANEAN, ENARA) → saguzarrak → habia (borroka, giltza, sutondoa) → ispilu-zaina (EGUZKI-ISPILUA) →
 // eguzki-zuloa (barrak) → ispiluen aretoa (BIRATU, sarea EGUZKIAz, kristala ILARGIAz) → kristalen gela
-// (giltza nagusia) → HERENSUGEA (argia begietara, ALDARATU, su-bola itzuli, estalpea, azken burua bi argiekin)
-// → herensugearen hegaldia herrira → Irati: seigarren argia → etxean lo: Inguma.
+// (giltza nagusia) → ZEZENGORRI (oldarraldia, argia begietara → itsu → hormaren kontra → txingarra; III: bi argiak)
+// → Eateren hodei zuria herrira → Atarrabi: seigarren txingarra → etxean lo: akelarrea.
 const { launch } = require('./_browser');
 (async () => {
   const [url, shots] = process.argv.slice(2);
@@ -115,7 +115,7 @@ const { launch } = require('./_browser');
 
   /* 0 · haranean: helburua → zerua, Odeiren hodeia */
   let o = await ev(() => __game.objective());
-  ok(/Odeiren hodei/.test(o[0]) && /SUGE-MENDIRA/.test(o[0]), 'haraneko helburua: Odeiren hodeia, SUGE-MENDIRA', o[0]);
+  ok(/hodei zuri/.test(o[0]) && /ZEZEN-HARPERA/.test(o[0]), 'haraneko helburua: hodei zuria, ZEZEN-HARPERA', o[0]);
   await ev(() => { __game.enterZone('zerua', { x: 1800, y: 0, z: 4, a: 0, cp: true }, true); });
   await T(40);
   await skip();
@@ -338,156 +338,88 @@ const { launch } = require('./_browser');
   await open();
   ok(await ev(() => __game.saved.items.includes('giltzanagusia-herensuge')), 'GILTZA NAGUSIA (kristalen gela)');
 
-  /* 8 · HERENSUGEA */
+  /* 8 · ZEZENGORRI */
   await tp(E(0), 6, -87.2);
   await faceTo(E(0), -90);
   const bd = await open();
   ok(bd === 'door' && (await doorOpen('hC-n')), 'ate handia: giltza nagusia', bd);
   o = await ev(() => __game.objective());
-  ok(/habia/i.test(o[0]), 'helburua: Herensugearen habia', o[0]);
+  ok(/altxortegia/i.test(o[0]), 'helburua: Zezengorriren altxortegia', o[0]);
   ok(await ev(() => { const g = __game; g.P.hp = g.P.maxHp; return true; }), '');
   p = await route([[E(0), -94], [E(0), -101.5]]);
   await T(60);
-  ok((await ev(() => __game.cinematicState())) || (await ev(() => __game.BOSS.on)), 'habian: HERENSUGEA esnatu (eszena)', S(p));
+  ok((await ev(() => __game.cinematicState())) || (await ev(() => __game.BOSS.on)), 'altxortegian: ZEZENGORRI esnatu (eszena)', S(p));
   await skip();
   await T(30);
-  st = await ev(() => ({ on: __game.BOSS.on, kind: __game.BOSS.kind, round: __game.ZB.round, states: __game.ZB.heads.map((H) => H.state) }));
-  ok(st.on && st.kind === 'zazpi' && st.round === 0 && st.states[1] === 'rise' && st.states[5] === 'rise' && st.states[3] === 'sleep', 'borroka: bi buru esnatu (1 eta 5)', S(st));
-  await T(260);
+  st = await ev(() => ({ on: __game.BOSS.on, kind: __game.BOSS.kind, round: __game.ZB.round, state: __game.ZB.state }));
+  ok(st.on && st.kind === 'zezen' && st.round === 0 && st.state === 'idle', 'borroka: Zezengorri esna (I, begi urreak)', S(st));
   /* erasoak gelditu (probetarako) */
-  const calm = () => ev(() => { const g = __game; g.ZB.atkCd = 99; for (const H of g.ZB.heads) if (H.state.startsWith('bite') || H.state.startsWith('breath') || H.state === 'spit') { H.state = 'idle'; H.t = 0; } g.ZB.breathCone.visible = false; for (const s of g.SHOTS) g.scene.remove(s.m); g.SHOTS.length = 0; });
+  const calm = () => ev(() => { const g = __game; g.ZB.atkCd = 99; if (g.ZB.state !== 'down') g.ZB.state = 'idle'; g.ZB.run = null; g.ZB.breathCone.visible = false; for (const s of g.SHOTS) g.scene.remove(s.m); g.SHOTS.length = 0; });
   await calm();
-  await shot('06_herensugea');
-  /* a · ILARGIA begi urdinetara (1. burua) */
-  ok((await era(1)) === 1, 'ORAINA (ilargia)');
-  await calm();
-  const beamHead = (i, shaft, secs) => ev(([i, shaft, secs]) => {
-    const g = __game, H = g.ZB.heads[i], S0 = g.SHAFTS.find((s) => s.id === 'hG-argia' + shaft);
-    g.teleport(S0.x, S0.z, 6);
+  await shot('06_zezengorri');
+  /* oldarraldia: abisua (hankaz), gero korrika zuzen → jokalaria zauritua */
+  st = await ev(() => {
+    const g = __game, Z = g.ZB;
+    g.teleport(Z.x + 9, Z.z + 1, 6);
     for (let k = 0; k < 10; k++) g.tick(1 / 120);
-    g.ZB.atkCd = 99;
-    const a = Math.atan2(H.pos.x - g.P.x, H.pos.z - g.P.z);
-    g.P.angle = a;
-    g.ATK.hold = true;
-    let maxL = 0, endK = null;
-    for (let k = 0; k < Math.round(secs * 120) && H.state !== 'down'; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); maxL = Math.max(maxL, H.light); if (g.MIR.end) endK = g.MIR.end.k; }
-    g.ATK.hold = false;
-    for (let k = 0; k < 20; k++) g.tick(1 / 120);
-    return { state: H.state, maxL: +maxL.toFixed(2), endK, mir: g.MIR.kind };
-  }, [i, shaft, secs]);
-  let bh = await beamHead(1, 0, 2.5);
-  ok(bh.state === 'down' && bh.endK === 'boss', 'ILARGIA begi urdinetara: burua lurrera', S(bh));
-  /* eztarriko itzal-harria: SORGINKERIA */
-  const bolts = await ev(() => {
-    const g = __game, H = g.ZB.heads[1];
-    g.teleport(H.pos.x + 3, H.pos.z + 4, 6);
-    for (let k = 0; k < 30; k++) g.tick(1 / 120);
-    const hp0 = H.hp;
-    for (let n = 0; n < 4; n++) { g.MAG.cd = 0; g.attack(); for (let k = 0; k < 60; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); } }
-    return { hp0, hp: H.hp, vul: g.BOSS.vulnerable() };
-  });
-  ok(bolts.hp < bolts.hp0, 'SORGINKERIA eztarriko itzal-harrian (zauritu)', S(bolts));
-  await ev(() => { const g = __game, H = g.ZB.heads[1]; if (H.state !== 'down') g.zbDown(H, 4, 'light'); for (let k = 0; k < 60; k++) g.tick(1 / 120); g.zbHit(H.hp); for (let k = 0; k < 10; k++) g.tick(1 / 120); });
-  ok((await ev(() => __game.ZB.heads[1].state)) === 'dead', 'lehen burua itzalita');
-  /* b · okerreko argia: ezer ez (5. burua, urrea, ILARGIArekin) */
-  await calm();
-  bh = await beamHead(5, 1, 1.4);
-  ok(bh.state !== 'down' && bh.maxL === 0, 'ILARGIAk ez ditu begi urreak itxi', S(bh));
-  /* c · ALDARATU hozka (5. burua) */
-  await calm();
-  const parry = await ev(() => {
-    const g = __game, H = g.ZB.heads[5];
     g.P.hp = g.P.maxHp;
-    g.teleport(H.pos.x - 2, H.pos.z + 7, 6);
-    for (let k = 0; k < 20; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); }
-    H.state = 'bite_wind'; H.t = 0; H.atk0 = g.time ? g.time() : 0;
-    g.ZB.focus = H;
-    let pressed = false, hp0 = g.P.hp;
-    for (let k = 0; k < 400 && H.state !== 'down' && H.state !== 'bite_rec'; k++) {
-      g.ZB.atkCd = 99;
-      g.P.angle = Math.atan2(H.pos.x - g.P.x, H.pos.z - g.P.z);
-      if (H.state === 'bite' && !pressed && Math.hypot(H.pos.x - g.P.x, H.pos.z - g.P.z) < 4.5) { g.guardPress(); pressed = true; }
-      g.tick(1 / 120);
-    }
-    return { state: H.state, pressed, hp0, hp: g.P.hp, parry: g.ZB.stats.parry || 0 };
-  });
-  ok(parry.state === 'down' && parry.parry >= 1 && parry.hp === parry.hp0, 'ALDARATU hozka: burua lurrera (zauririk gabe)', S(parry));
-  await ev(() => { const g = __game, H = g.ZB.heads[5]; if (H.state !== 'down') g.zbDown(H, 4, 'light'); for (let k = 0; k < 60; k++) g.tick(1 / 120); g.zbHit(H.hp); });
-  await T(30);
-  st = await ev(() => ({ state: __game.ZB.state, title: document.getElementById('chapterTitle').textContent }));
-  ok(st.state === 'roar', 'bi buru itzalita: orroa', S(st));
-  await T(320);
-  st = await ev(() => ({ round: __game.ZB.round, states: __game.ZB.heads.map((H) => H.state), bats: __game.ENEMIES.filter((e) => e.type === 'bat' && e.state !== 'dead').length }));
-  ok(st.round === 1 && st.bats >= 2, 'bigarren txanda: 0. eta 6. buruak, saguzarrak', S(st));
-  await killAll();
-  await T(240);
-  /* d · su-bola itzuli (EZKUTUA) → burua zorabiatu (0. burua) */
-  await calm();
-  const refl = await ev(() => {
-    const g = __game, H = g.ZB.heads[0];
-    g.P.hp = g.P.maxHp;
-    g.teleport(2400 - 5, -111, 6);
-    for (let k = 0; k < 20; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); }
-    g.P.angle = Math.atan2(H.pos.x - g.P.x, H.pos.z - g.P.z);
-    H.state = 'spit'; H.t = 0; H.spat = false; g.ZB.focus = H;
-    g.MAG.cd = 0; g.ATK.hold = true;
-    let back = false;
-    for (let k = 0; k < 500 && H.state !== 'down'; k++) {
-      g.ZB.atkCd = 99;
-      g.P.angle = Math.atan2(H.pos.x - g.P.x, H.pos.z - g.P.z);
-      g.tick(1 / 120);
-      if (g.SHOTS.some((s) => s.back)) back = true;
-    }
-    g.ATK.hold = false;
-    for (let k = 0; k < 20; k++) g.tick(1 / 120);
-    return { state: H.state, back, reflect: g.ZB.stats.reflect || 0, hp: g.P.hp };
-  });
-  ok(refl.back && refl.state === 'down' && refl.reflect >= 1, 'EZKUTUA: su-bola itzuli → burua zorabiatuta', S(refl));
-  await ev(() => { const g = __game, H = g.ZB.heads[0]; if (H.state !== 'down') g.zbDown(H, 4, 'light'); for (let k = 0; k < 60; k++) g.tick(1 / 120); g.zbHit(H.hp); });
-  /* e · su-arnasa: estalpean ez, agerian bai (6. burua) */
-  await calm();
-  const breath = (x, z) => ev(([x, z]) => {
-    const g = __game, H = g.ZB.heads[6];
-    g.P.hp = g.P.maxHp;
-    g.teleport(x, z, 6);
-    for (let k = 0; k < 140; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); }
-    H.state = 'breath_wind'; H.t = 0;
     const hp0 = g.P.hp;
-    let saw = false;
-    for (let k = 0; k < 500 && (H.state === 'breath_wind' || H.state === 'breath'); k++) { g.ZB.atkCd = 99; g.teleport(x, z, 6); g.tick(1 / 120); if (g.ZB.breathCone.visible) saw = true; }
-    return { hp0, hp: g.P.hp, saw };
-  }, [x, z]);
-  const covered = await breath(E(7), -106.6);
-  ok(covered.saw && covered.hp === covered.hp0, 'su-arnasa: estalpearen atzean, salbu', S(covered));
-  await T(150);
-  const openB = await breath(E(13), -110);
-  ok(openB.saw && openB.hp < openB.hp0, 'su-arnasa: agerian, erre', S(openB));
-  await ev(() => { const g = __game; g.P.hp = g.P.maxHp; });
-  await ev(() => { const g = __game, H = g.ZB.heads[6]; g.zbDown(H, 4, 'light'); for (let k = 0; k < 60; k++) g.tick(1 / 120); g.zbHit(H.hp); });
-  await T(360);
-  await killAll();
-  st = await ev(() => ({ round: __game.ZB.round }));
-  ok(st.round === 2, 'hirugarren txanda (2. eta 4. buruak, su-euria)', S(st));
-  const rain = await ev(() => { const g = __game; let n = 0; for (let k = 0; k < 900; k++) { g.ZB.atkCd = 99; g.P.hp = g.P.maxHp; g.tick(1 / 120); n = Math.max(n, g.ZB.marks.length); } return n; });
-  ok(rain >= 1, 'su-euria: zirkuluak lurrean', rain);
-  await ev(() => { const g = __game; for (const i of [2, 4]) { const H = g.ZB.heads[i]; g.zbDown(H, 4, 'light'); for (let k = 0; k < 60; k++) g.tick(1 / 120); g.zbHit(H.hp); for (let k = 0; k < 10; k++) g.tick(1 / 120); } });
-  await T(380);
-  await killAll();
-  st = await ev(() => ({ round: __game.ZB.round, s3: __game.ZB.heads[3].state }));
-  ok(st.round === 3 && (st.s3 === 'idle' || st.s3 === 'rise'), 'azken burua (erdikoa) esna', S(st));
-  await T(120);
-  /* f · azken burua: EGUZKIA eta ILARGIA, bata bestearen atzetik */
+    Z.state = 'paw';
+    Z.t = 0;
+    let saw = '';
+    for (let k = 0; k < 360; k++) { g.tick(1 / 120); if (Z.state === 'charge') saw = 'charge'; if (g.P.hp < hp0) break; }
+    return { saw, hp0, hp: g.P.hp, state: Z.state };
+  });
+  ok(st.saw === 'charge' && st.hp < st.hp0, 'ERASOA: abisua eta oldarraldia (zauritua)', S(st));
+  await T(240);
   await calm();
-  ok((await era(0)) === 0, 'IRAGANA');
-  bh = await beamHead(3, 2, 1.2);
-  st = await ev(() => ({ state: __game.ZB.heads[3].state, sun: __game.ZB.heads[3].sunT > 0, moon: __game.ZB.heads[3].moonT > 0 }));
-  ok(st.sun && !st.moon && st.state !== 'down', 'EGUZKIA: begi urrea itxita (oraindik zutik)', S({ bh, st }));
-  await ev(() => { const g = __game; for (let k = 0; k < 240 && g.state().phaseCooldown > 0; k++) g.tick(1 / 120); g.switchPhase(); for (let k = 0; k < 20; k++) g.tick(1 / 120); });
-  bh = await beamHead(3, 2, 1.6);
-  ok(bh.state === 'down', 'ILARGIA berehala: begi biak itxita → azken burua lurrera', S(bh));
-  await ev(() => { const g = __game, H = g.ZB.heads[3]; if (H.state !== 'down') g.zbDown(H, 5, 'light'); for (let k = 0; k < 60; k++) g.tick(1 / 120); g.zbHit(H.hp); });
+  await ev(() => { const g = __game; g.P.hp = g.P.maxHp; if (g.phase() !== 0) g.switchPhase(); for (let k = 0; k < 40; k++) g.tick(1 / 120); });
+  const beamBull = (shaft, secs) => ev(([shaft, secs]) => {
+    const g = __game, S0 = g.SHAFTS.find((s) => s.id === 'hG-argia' + shaft);
+    g.teleport(S0.x, S0.z, 6);
+    for (let k = 0; k < 10; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); }
+    const hp = new THREE.Vector3();
+    g.ZB.head.getWorldPosition(hp);
+    const a = Math.atan2(hp.x - g.P.x, hp.z - g.P.z);
+    g.P.angle = a;
+    g.hero.rotation.y = a;
+    g.ATK.hold = true;
+    let maxL = 0;
+    for (let k = 0; k < Math.round(secs * 120) && g.ZB.state !== 'blind' && g.ZB.state !== 'down'; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); maxL = Math.max(maxL, g.ZB.light); }
+    g.ATK.hold = false;
+    const first = g.ZB.state;
+    for (let k = 0; k < 900 && g.ZB.state === 'blind'; k++) g.tick(1 / 120);
+    return { first, state: g.ZB.state, maxL: +maxL.toFixed(2), mir: g.MIR.kind };
+  }, [shaft, secs]);
+  let bh = await beamBull(0, 3);
+  ok(bh.first === 'blind' && bh.state === 'down', 'EGUZKIA begi urreetara → itsu → hormaren kontra → lurrera', S(bh));
+  ok(await ev(() => __game.BOSS.vulnerable() && __game.ZB.ember.visible), 'bekokiko TXINGARRA agerian');
+  await ev(() => { const g = __game; g.zbHit(g.ZB.hp); for (let k = 0; k < 30; k++) g.tick(1 / 120); });
+  ok(await ev(() => __game.ZB.round === 1), 'II: begi urdinak');
+  await calm();
+  /* II: ILARGIA (NEGUA) */
+  await ev(() => { const g = __game; if (g.phase() !== 1) g.switchPhase(); for (let k = 0; k < 40; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); } });
+  bh = await beamBull(1, 3);
+  ok(bh.maxL > 0.9 && bh.state === 'down', 'ILARGIA begi urdinetara → itsu → lurrera', S(bh));
+  await ev(() => { const g = __game; g.zbHit(g.ZB.hp); for (let k = 0; k < 30; k++) g.tick(1 / 120); });
+  ok(await ev(() => __game.ZB.round === 2), 'III: begi bat urrea, bestea urdina');
+  await calm();
+  /* su-bola itzulia (EZKUTUA): zorabiatuta */
+  st = await ev(() => { const g = __game; g.BOSS.stagger(); return { state: g.ZB.state, reflect: g.ZB.stats.reflect }; });
+  ok(st.state === 'down' && st.reflect === 1, 'su-bola itzulia → lurrera', S(st));
+  await ev(() => { const g = __game; g.ZB.stun = 0; for (let k = 0; k < 20; k++) g.tick(1 / 120); });
+  await calm();
+  /* III: lehenik EGUZKIA (UDA), gero ILARGIA (NEGUA) */
+  await ev(() => { const g = __game; if (g.phase() !== 0) g.switchPhase(); for (let k = 0; k < 40; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); } });
+  bh = await beamBull(0, 0.6);
+  st = await ev(() => ({ sun: __game.ZB.sunT > 0, state: __game.ZB.state }));
+  ok(st.sun && st.state !== 'blind', 'III: begi urrea itsututa (bat bakarrik)', S(st));
+  await ev(() => { const g = __game; g.switchPhase(); for (let k = 0; k < 30; k++) { g.ZB.atkCd = 99; g.tick(1 / 120); } });
+  bh = await beamBull(1, 3);
+  ok(bh.state === 'down', 'III: ILARGIA ere → itsu → lurrera', S(bh));
+  await ev(() => { const g = __game; g.zbHit(g.ZB.hp); });
   await T(30);
-  ok(await ev(() => __game.BOSS.dead && __game.cinematicState()), 'HERENSUGEA garaituta (eszena)');
+  ok(await ev(() => __game.BOSS.dead && __game.cinematicState()), 'ZEZENGORRI garaituta (eszena)');
   await shot('07_askatuta');
   await skip();
   await T(30);
@@ -495,17 +427,17 @@ const { launch } = require('./_browser');
   await T(120);
   await skip();
   await T(120);
-  st = await ev(() => ({ zone: __game.ZONE.cur, flag: __game.saved.flags.includes('herensugea'), hearts: __game.saved.hearts, max: __game.P.maxHp, heads: __game.ZB.heads.map((H) => H.state) }));
-  ok(st.flag && st.hearts >= 6, 'HERENSUGEA aske: bandera, arnasa bat gehiago', S(st));
-  ok(st.zone === 'ibarra', 'herensugearen hegaldia: herrira', S(st));
-  ok(st.heads.filter((h) => h === 'gone').length === 6 && st.heads[3] === 'free', 'sei buruak errauts, bat bakarra aske', S(st.heads));
+  st = await ev(() => ({ zone: __game.ZONE.cur, flag: __game.saved.flags.includes('herensugea'), hearts: __game.saved.hearts, max: __game.P.maxHp, state: __game.ZB.state }));
+  ok(st.flag && st.hearts >= 6, 'ZEZENGORRI aske: bandera, arnasa bat gehiago', S(st));
+  ok(st.zone === 'ibarra', 'hodei zuria: herrira', S(st));
+  ok(st.state === 'freed', 'Zezengorri lasai (askatuta)', S(st));
 
-  /* 9 · herrian: Irati → seigarren argia; etxean lo → Inguma */
+  /* 9 · herrian: Atarrabi → seigarren txingarra; etxean lo → akelarrea */
   o = await ev(() => __game.objective());
-  ok(/Irati/.test(o[0]), 'helburua: Iratiri kontatu', o[0]);
+  ok(/Atarrabi/.test(o[0]), 'helburua: Atarrabiri kontatu', o[0]);
   await ev(() => { const g = __game, N = g.NPCS.find((n) => n.id === 'irati'); g.teleport(N.x + 1.2, N.z + 1.2, N.y || 0); for (let i = 0; i < 6; i++) g.tick(1 / 120); g.talkTo(N); });
   await T(30);
-  ok(await ev(() => __game.ZAZPI.turnTo === 6), 'Iratiren eszena: seigarren argia berde');
+  ok(await ev(() => __game.ZAZPI.turnTo === 6), 'Atarrabiren eszena: seigarren txingarra berde');
   await skip();
   await T(60);
   ok(await flag('irati-herensuge'), 'irati-herensuge');
@@ -516,11 +448,11 @@ const { launch } = require('./_browser');
   await page.click('#choices button:first-child');
   await T(10);
   st = await ev(() => ({ cine: !!__game.cinematicState(), flag: __game.saved.flags.includes('inguma-ametsa') }));
-  ok(/OHEA/.test(bed || '') && st.cine && st.flag, 'etxean lo: Ingumaren ametsa', S({ bed, st }));
+  ok(/OHEA/.test(bed || '') && st.cine && st.flag, 'etxean lo: akelarrea (Akerbeltz)', S({ bed, st }));
   await skip();
   await T(30);
   const mem = await ev(() => __game.DGE.mementos.find((m) => m.flag === 'herensugea').g.visible);
-  ok(mem, 'oroitzapenen apala: herensuge-ezkata');
+  ok(mem, 'oroitzapenen apala: Zezengorriren txinparta');
 
   ok(errs.length === 0, 'errorerik ez', errs.slice(0, 5).join('\n'));
   console.log(fails ? `\n${fails} HUTS` : '\nDENA ONDO');

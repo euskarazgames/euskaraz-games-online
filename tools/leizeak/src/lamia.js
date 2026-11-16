@@ -7,7 +7,7 @@
        L2 Errotaren gela ...... ubidea eta errota: gurpilak (ur biziarekin) mendebaldeko barrak
                                 altxatzen ditu; iparrean giltzadun atea; ekialdean bi haize-errota
        L3 Lamien korua ........ borroka → GILTZA TXIKIA
-       L5 Herensugearen putzua  etsai ertaina: azaleratzean IZOTZA → izotzak harrapatzen
+       L5 Sugearen putzua ...... etsai ertaina: azaleratzean IZOTZA → izotzak harrapatzen
                                 du → buruko harribitxia jo → HAIZE-ADARRA
        L6 Balsen aintzira ..... balsa (ur biziarekin) adarraz bultzatu; ur-jauziaren atzean GILTZA
                                 NAGUSIA; lainoaren azpian uhartetxo bat
@@ -295,7 +295,7 @@
     /* ---- L5: Herensugearen putzua ---- */
     room("L5", E(0), -78, 30, 30, {
       area: "lD",
-      name: "HERENSUGEAREN PUTZUA",
+      name: "SUGEAREN PUTZUA",
       desc: "Putzuaren hondoan zerbait mugitzen da…",
       doors: { s: 0, n: 0 },
       floors: [[E(0), -67.5, 30, 9], [E(0), -88.5, 30, 9], [E(-10.5), -78, 9, 12], [E(10.5), -78, 9, 12]],
@@ -496,9 +496,9 @@
     serpentPick();
     SND.stinger(false);
     shake(0.4);
-    title("HERENSUGE GAZTEA", "");
+    title("LAMIEN SUGEA", "");
     notify(L("Azaleratzen denean, ALDATU: IZOTZA! Harrapatuta geratuko da!"), "", 5);
-    bossBar("HERENSUGE GAZTEA", 1);
+    bossBar("LAMIEN SUGEA", 1);
   }
   function serpentSpit() {
     const o = { x: SERP.head.position.x, y: SERP.hy - 0.2, z: SERP.head.position.z },
@@ -564,7 +564,7 @@
         } else if (phase === 1) {
           /* izotzaren azpian zain: itzalek presioa egiten dute */
           SERP.hint += dt;
-          if (SERP.hint > 1.5) notifyOnce("serp-ice", L("Herensugea izotzaren azpian dago. UR BIZIAREKIN azaleratzen da!"), "");
+          if (SERP.hint > 1.5) notifyOnce("serp-ice", L("Sugea izotzaren azpian dago. UR BIZIAREKIN azaleratzen da!"), "");
           if (SERP.t > 7 && enemiesAlive() < 2) {
             SERP.t = 0.06;
             spawnWave([["eye", 1, 1]], R);
@@ -623,7 +623,7 @@
           if (!saved.cleared.includes("lD-boss")) saved.cleared.push("lD-boss");
           persist();
           SND.stinger(true);
-          title("HERENSUGEA GARAITUTA", "");
+          title("SUGEA GARAITUTA", "");
           revealChest(DGL.hornChest);
           notify(L("Kutxa bat agertu da hegoaldeko pasabidean."), "", 4);
         }
@@ -667,7 +667,7 @@
       const w = BOSS.weak();
       FB.bossHit(w.x, w.y, w.z);
       damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.4 }, n);
-      bossBar("HERENSUGE GAZTEA", (SERP.rounds - 1 + Math.max(0, SERP.hp) / SERP_HP) / 3);
+      bossBar("LAMIEN SUGEA", (SERP.rounds - 1 + Math.max(0, SERP.hp) / SERP_HP) / 3);
       if (SERP.hp <= 0) {
         SERP.rounds--;
         SERP.hp = SERP_HP;
@@ -1167,9 +1167,9 @@
     if (!isCleared("L3") && (saved.keyz.lamia || 0) === 0 && !saved.doors.includes("lB-n"))
       return ROOM.cur === R.L2 && P.z > -36 ? ["Mendebaldeko barrak gurpilak altxatzen ditu (UR BIZIA). Ubidea, berriz, IZOTZAREKIN…", [R.L2.x - 12, -45, 0]] : ["Lamien korua, mendebaldean.", [R.L3.x, R.L3.z, 0]];
     if (!saved.doors.includes("lB-n")) return ["Errotaren gelako iparreko atea: giltza txikia.", [R.L2.x, -51, 0]];
-    if (!isCleared("lD-boss")) return ["Herensugearen putzua. Azaleratzen denean: IZOTZA!", [R.L5.x, R.L5.z + 6, 0]];
+    if (!isCleared("lD-boss")) return ["Sugearen putzua. Azaleratzen denean: IZOTZA!", [R.L5.x, R.L5.z + 6, 0]];
     if (!saved.items.includes("adarra")) return ["Kutxa ireki: putzuaren hegoaldean.", [R.L5.x, -67.5, 0]];
     if (!saved.items.includes(DGL.bigKey)) return saved.doors.includes("lB-e") ? ["Aintzira: balsa UR BIZIAREKIN, adarraz bultzatu ur-jauziraino.", [R.L6.x - 6, -45, 0]] : ["Errotaren gelako ekialdeko atea: bi haize-errotari putz (ADARRA · V).", [R.L2.x + 12, -45, 0]];
-    if (!f("lamia")) return saved.doors.includes("lD-n") ? ["Lamia Iluna. Lainoa uxatu, igerian dagoela izoztu.", [R.L7.x, R.L7.z + 12, 0]] : ["Herensugearen putzuko iparreko ate handia: giltza nagusia.", [R.L5.x, -90, 0]];
+    if (!f("lamia")) return saved.doors.includes("lD-n") ? ["Lamia Iluna. Lainoa uxatu, igerian dagoela izoztu.", [R.L7.x, R.L7.z + 12, 0]] : ["Sugearen putzuko iparreko ate handia: giltza nagusia.", [R.L5.x, -90, 0]];
     return ["Irten leizetik hegoaldeko arkutik.", [DGL.exitArch.x, DGL.exitArch.z, 0]];
   };

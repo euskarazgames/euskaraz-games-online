@@ -1,5 +1,5 @@
   /* ==================================================================
-     EGUZKI-ISPILUA · Herensugearen haitzuloko tresna (diseinu propioa)
+     EGUZKI-ISPILUA · Zezen-harpeko tresna (diseinu propioa)
      Sabaiko arrakaletatik argia sartzen da haitzulora: UDAN eguzkia (urrea),
      NEGUAN ilargia (zilarra). Argi-zutabe batean, eutsi SORGINKERIAri: Amaiurrek
      ispilua altxatzen du eta izpia jaurtitzen (makilarekin apuntatu; askatu: jaitsi).

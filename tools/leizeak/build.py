@@ -70,6 +70,9 @@ def include(text):
     def sub(m):
         return include((SRC / m.group(1)).read_text(encoding='utf-8').rstrip('\n'))
     text = re.sub(r'^[ \t]*/\* @include ([\w.-]+) \*/[ \t]*$', sub, text, flags=re.M)
+    # /* @voices */: dauden ahots-fitxategien zerrenda (falta direnak ez eskatzeko: 404rik ez)
+    have = sorted(p.stem for p in (ROOT / 'public/assets/voice/leizeak').glob('*.mp3'))
+    text = text.replace('/* @voices */ null', json.dumps(have, separators=(',', ':')))
     return re.sub(r'/\* @json ([\w./-]+) \*/', lambda m: json.dumps(json.loads((SRC / m.group(1)).read_text(encoding='utf-8')), ensure_ascii=False, separators=(',', ':')), text)
 
 

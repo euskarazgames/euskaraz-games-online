@@ -9,15 +9,20 @@
      leuna, modulatutako atzerapena eta presentzia: beldurgarria, baina ulergarria), AMAIUR hurbil eta lehor. Hitz egitean musika jaisten da.
      ================================================================== */
   const VOICE_LINES = /* @json ../ahotsak/lerroak.json */;
+  /* build-ean: dauden mp3-en zerrenda (lerro berriak, ahotsa sortu arte, testua bakarrik: eskaerarik ez) */
+  const VOICE_HAVE = new Set(/* @voices */ null || []);
   const VOICE = { base: "/assets/voice/leizeak/", buf: new Map(), wait: new Map(), cur: null, an: null, data: null, chains: {}, level: 0 };
   const voiceLine = (id) => VOICE_LINES[id] || ["", ""];
   function voiceLoad(id) {
     if (VOICE.buf.has(id)) return Promise.resolve(VOICE.buf.get(id));
     if (VOICE.wait.has(id)) return VOICE.wait.get(id);
     const ctx = SND.ctx;
-    if (!ctx || !VOICE_LINES[id]) return Promise.resolve(null);
-    const inl = window.LEIZEAK_VOICES,
-      url = inl && inl[id] ? inl[id] : VOICE.base + id + ".mp3";
+    const inl = window.LEIZEAK_VOICES;
+    if (!ctx || !VOICE_LINES[id] || !(VOICE_HAVE.has(id) || (inl && inl[id]))) {
+      VOICE.buf.set(id, null);
+      return Promise.resolve(null);
+    }
+    const url = inl && inl[id] ? inl[id] : VOICE.base + id + ".mp3";
     const p = fetch(url)
       .then((r) => (r.ok ? r.arrayBuffer() : null))
       .then((ab) => (ab ? new Promise((res) => ctx.decodeAudioData(ab, res, () => res(null))) : null))

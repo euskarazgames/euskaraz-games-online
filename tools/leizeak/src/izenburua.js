@@ -16,7 +16,7 @@
     ["#ff5a2a", 1.3] /* Tartalo */,
     ["#76e030", 1.6] /* Jentilak */,
     ["#7fb6ff", 1.6] /* Odei */,
-    ["#ff7a12", 1.8] /* Herensugea */,
+    ["#ff7a12", 1.8] /* Zezengorri */,
     ["#a462ff", 2.2] /* Inguma */,
   ];
   const TITLE_FOG = new T.Color("#e2a983");
