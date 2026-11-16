@@ -326,6 +326,22 @@
     g.add(MK.aura);
     g.position.set(MK.x, MK.y, MK.z);
     g.visible = false;
+    /* IA-modeloa (Tripo): prest dagoenean, gorputz prozedurala ordezkatzen du (koroa eta kapa barne) */
+    aiModel("mikelats", (sc) => {
+      if (!sc || MK.ai) return;
+      const A = aiInstance(sc, 6.2, 0.38);
+      MK.ai = A;
+      if (MK.root) MK.root.visible = false;
+      for (const c of MK.crown) c.visible = false;
+      g.add(A.m);
+      const k = 6.2 / MK.top;
+      MK.top = 6.2;
+      MK.cloak.scale.set(1.15 * k, k, 1.15 * k);
+      MK.cloak.position.y *= k;
+      for (const e of MK.eyes) e.position.set(e.position.x * 1.1, 6.2 * 0.84, 0.55);
+      MK.aura.position.y = 3.1;
+      MK.aura.scale.setScalar(12);
+    });
   }
   function mkAnim(name, once) {
     const a = MK.acts[name];
@@ -544,8 +560,14 @@
     MK.y = mix(MK.y, ty, 1 - Math.exp(-dt * (low ? 4 : 1.5)));
     MK.g.position.set(MK.x, MK.y, MK.z);
     MK.g.rotation.y = Math.atan2(P.x - MK.x, P.z - MK.z);
-    MK.cloak.material.opacity = 0.82 * (1 - MK.burn * 0.8);
+    MK.cloak.material.opacity = (MK.ai ? 0.3 : 0.82) * (1 - MK.burn * 0.8);
     MK.cloak.material.color.setRGB(0.02 + MK.burn * 0.9, 0.03 + MK.burn * 0.4, 0.05);
+    /* IA-modeloa: erretzean laranja, kolpean zuri */
+    if (MK.ai)
+      for (const m of MK.ai.mats) {
+        m.emissive.setRGB(1, 1 - MK.burn * 0.55, 1 - MK.burn * 0.85);
+        m.emissiveIntensity = 0.38 + MK.burn * 0.5 + MK.flash * 0.8;
+      }
     MK.aura.material.opacity = 0.35 + MK.flash * 0.5;
     if (MK.burn > 0.2 && Math.random() < dt * 20) fxBurst(MK.x, MK.y + MK.top * 0.4, MK.z, { n: 2, speed: 1, up: 2, life: 0.6, size: 0.3, color: "#ff9a3a", grav: -2 });
     if (MK.state === "hover") {

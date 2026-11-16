@@ -1,0 +1,14 @@
+{
+ "concept": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "Akerbeltz, a black he-goat spirit from Basque folklore standing upright on two legs, big curled ram horns, amber eyes with horizontal pupils, long goatee, wearing a long dark purple hooded robe with a frayed hem, mystical and old, hands open. stylized low-poly 3D game character, clean hand-painted colors, chunky readable shapes, full body visible from head to feet, front three-quarter view, neutral A-pose, centered, plain pure white background, soft even studio lighting, no shadows on the background, no text, no logo, no frame, single character only",
+  "seed": 7,
+  "url": "https://v3b.fal.media/files/b/0ab2b9b4/8OoPDhwjX-SCjoL8JqVXh.jpg"
+ },
+ "tripo": {
+  "model": "tripo3d/tripo/v2.5/image-to-3d",
+  "task_id": "fa0a5f4b-9cf5-4fee-b92e-8492a99a4637",
+  "faces": 9000,
+  "url": "https://v3b.fal.media/files/b/0ab2b9c1/npYqfmLgXI2lm8d35O5mc_tripo_model_fa0a5f4b-9cf5-4fee-b92e-8492a99a4637.glb"
+ }
+}

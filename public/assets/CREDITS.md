@@ -94,3 +94,18 @@ Lerroak eta sortzeko scripta: `tools/leizeak/ahotsak/` (`lerroak.json`, `sortu.p
 - Naturaltasuna: UTMOS22 "strong" ([prj-beatrice/utmos22-torch-native](https://huggingface.co/prj-beatrice/utmos22-torch-native),
   MIT; SpeechMOS eta UTMOS22-n oinarritua), hautagai naturalena aukeratzeko. Bi ereduak lokalean bakarrik
   erabiltzen dira; ez dira jokoarekin banatzen.
+
+## LEIZEEN DEIA · IA-modeloak (etsai nagusiak)
+
+`models/leizeak/*.glb` (Mikelats, Akerbeltz…): **diseinu propioak** (euskal mitologia, gure eran), honela sortuak:
+kontzeptu-irudia [FLUX.1 [dev]](https://fal.ai/models/fal-ai/flux/dev) ereduarekin (fal.ai), irudi horretatik 3D
+modeloa [Tripo v2.5](https://fal.ai/models/tripo3d/tripo/v2.5/image-to-3d) ereduarekin (fal.ai), eta
+[Blender](https://www.blender.org/)-ekin garbituta (eskala, jatorria, poligonoak, 1024 px testura) eta
+meshoptimizer-ekin trinkotuta. Scriptak, testuak (prompt) eta kontzeptuak: `tools/leizeak/models/ai/`
+(`sortu_3d.py`, `garbitu.py`, `<izena>/meta.json`, `<izena>/concept.jpg`). Ez da beste jokoen edukirik erabili.
+Modelorik gabe (edo `?gfx=0`, `?ia=0`), jokoak lehengo gorputz prozeduralak erabiltzen ditu.
+
+## LEIZEEN DEIA · estudioa (agenteak)
+
+`.claude/agents/`: [Claude Code Game Studios](https://github.com/Donchitos/claude-code-game-studios)
+proiektuko agenteen hautaketa, egokitua (MIT; lizentzia: `.claude/LICENSE-claude-code-game-studios.txt`).

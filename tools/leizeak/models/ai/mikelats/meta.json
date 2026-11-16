@@ -1,0 +1,14 @@
+{
+ "concept": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "Mikelats, a tall stern storm lord from Basque mythology, young man with a pale blue-grey face and glowing icy blue eyes, a crown of jagged white hail ice spikes, dark navy armor with thin cyan lightning cracks, a long tattered black cloak made of living shadow that covers his feet, arms slightly open, menacing but noble. stylized low-poly 3D game character, clean hand-painted colors, chunky readable shapes, full body visible from head to feet, front three-quarter view, neutral A-pose, centered, plain pure white background, soft even studio lighting, no shadows on the background, no text, no logo, no frame, single character only",
+  "seed": 7,
+  "url": "https://v3b.fal.media/files/b/0ab2b9b4/rS_pAg_QYKsQj4VcZrmdL.jpg"
+ },
+ "tripo": {
+  "model": "tripo3d/tripo/v2.5/image-to-3d",
+  "task_id": "47a6f35f-1489-480c-a7f4-e834e9f37095",
+  "faces": 9000,
+  "url": "https://v3b.fal.media/files/b/0ab2b9bb/67AEpCkahb5iCixaloz4Q_tripo_model_47a6f35f-1489-480c-a7f4-e834e9f37095.glb"
+ }
+}

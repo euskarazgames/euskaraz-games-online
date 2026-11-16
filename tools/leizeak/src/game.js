@@ -1902,6 +1902,7 @@
   /* @include boss.js */
   /* @include story.js */
   /* @include denbora.js */
+  /* @include aimodels.js */
   /* @include lamia.js */
   /* @include tartalo.js */
   /* @include gaua.js */

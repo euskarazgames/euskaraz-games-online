@@ -22,7 +22,8 @@ hautagai batzuk sortzen dira (lehena gutiziatsua, besteak laginketa leunarekin) 
   gehitzen du; ereduaren iraupen-kalkuluak puntuazioari ia denborarik ez dio ematen, eta azken hitzak
   galtzen ziren.
 Lerroak: lerroak.json · erreferentziak: erref/<pertsonaia>.flac + erref.json (speed: antzezpenaren
-abiadura). AMONA eta ANDERE pertsonaia bera dira (erreferentzia bera).
+abiadura). AMONA eta ANDERE pertsonaia bera dira (erreferentzia bera); AHIZPA → irati, SORGINAK → inguma.
+Pertsonaia berrien erreferentziak (ATARRABI, MIKELATS, AKERBELTZ): diseinua.py (ahots-diseinua, inor klonatu gabe).
 Lizentziak: OmniVoice kodea Apache-2.0; aurrez entrenatutako pisuak CC-BY-NC (merkataritzaz kanpo).
 """
 import argparse, json, pathlib, re, subprocess, sys, tempfile, unicodedata
@@ -30,7 +31,7 @@ import argparse, json, pathlib, re, subprocess, sys, tempfile, unicodedata
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 OUT = ROOT / 'public/assets/voice/leizeak'
-ALIAS = {'amona': 'andere', 'irati?': 'irati'}
+ALIAS = {'amona': 'andere', 'irati?': 'irati', 'ahizpa': 'irati', 'sorginak': 'inguma'}
 
 
 def norm(s):

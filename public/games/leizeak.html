@@ -15837,6 +15837,61 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     }
   }
   /* ==================================================================
+     IA-MODELOAK · etsai nagusien itxura berria (diseinu propioa: Flux → Tripo, fal.ai bidez;
+     Blender-ek garbitua eta meshopt-ek trinkotua: tools/leizeak/models/ai/). Behar denean
+     kargatzen dira (/assets/models/leizeak/<izena>.glb). Ez badaude, edo ?gfx=0 (EGFX gabe),
+     lehengo gorputz prozeduralak bere horretan geratzen dira.
+     ================================================================== */
+  const AIM = { cache: {}, wait: {}, loader: null };
+  function aiModel(name, cb) {
+    if (!EG || new URLSearchParams(location.search).get("ia") === "0") return cb && cb(null);
+    if (name in AIM.cache) return cb && cb(AIM.cache[name]);
+    (AIM.wait[name] ||= []).push(cb);
+    if (AIM.wait[name].length > 1) return;
+    if (!AIM.loader) {
+      AIM.loader = new T.GLTFLoader();
+      if (typeof MeshoptDecoder !== "undefined") AIM.loader.setMeshoptDecoder(MeshoptDecoder);
+    }
+    const done = (sc) => {
+      AIM.cache[name] = sc;
+      const list = AIM.wait[name];
+      AIM.wait[name] = [];
+      for (const f of list) f && f(sc);
+    };
+    AIM.loader.load(
+      "/assets/models/leizeak/" + name + ".glb",
+      (g) => {
+        g.scene.traverse((n) => {
+          if (!n.isMesh) return;
+          n.castShadow = true;
+          n.receiveShadow = false;
+        });
+        done(g.scene);
+      },
+      undefined,
+      () => done(null),
+    );
+  }
+  /* instantzia bat: materialak propioak (distira, tindua), testura bera argituta (ilunpean irakurgarri) */
+  function aiInstance(sc, height, glow = 0.18) {
+    const m = sc.clone(true),
+      mats = [];
+    m.traverse((n) => {
+      if (!n.isMesh) return;
+      n.material = n.material.clone();
+      if (n.material.map) {
+        n.material.emissiveMap = n.material.map;
+        n.material.emissive = new T.Color("#ffffff");
+        n.material.emissiveIntensity = glow;
+      }
+      mats.push(n.material);
+    });
+    const box = new T.Box3().setFromObject(m),
+      h = box.max.y - box.min.y || 1;
+    m.scale.setScalar(height / h);
+    return { m, mats };
+  }
+  /* ==================================================================
      LAMIEN LEIZEA · bigarren leizea (diseinu propioa) — ura, izotza eta haizea
        Lehen ekitaldian ez dago garairik: leize honetan urak Amaiurren sorginkeriari erantzuten dio, eta
        garaien botoi berak ura esnatzen (UR BIZIA, barruko "uda") edo izozten (IZOTZA, barruko
@@ -27567,7 +27622,16 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     aura.position.y = 2.6;
     aura.scale.setScalar(7);
     g.add(aura);
-    return { g, body, eyes, smile, arms, aura, cloth };
+    const R = { g, body, eyes, smile, arms, aura, cloth };
+    /* IA-modeloa (Tripo): prest dagoenean, gorputz prozedurala ezkutatu (aura eta pibotak bai) */
+    aiModel("akerbeltz", (sc) => {
+      if (!sc || R.ai) return;
+      const A = aiInstance(sc, 4.7, 0.22);
+      R.ai = A;
+      g.traverse((n) => n.isMesh && (n.visible = false));
+      g.add(A.m);
+    });
+    return R;
   }
   function ingumaBuild() {
     const R = DGA.bossRoom;
@@ -27596,6 +27660,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ING.bed = { x: R.x, z: R.z - 9, g: bed, mound };
     const M = ingumaMesh();
     Object.assign(ING, M);
+    ING.mesh = M;
     ING.g.position.set(R.x, 7, R.z - 9);
     BP.add(ING.g);
     for (let i = 0; i < 2; i++) {
@@ -27997,6 +28062,11 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     }
     ING.cloth.emissive.set(ING.flash > 0 ? "#ffffff" : ING.phase === 2 && ING.reveal > 0.05 ? "#a07a20" : "#2a1450");
     ING.cloth.emissiveIntensity = ING.flash > 0 ? 1.8 : 0.5;
+    if (ING.mesh && ING.mesh.ai)
+      for (const m of ING.mesh.ai.mats) {
+        m.emissive.set(ING.flash > 0 ? "#ffffff" : ING.phase === 2 && ING.reveal > 0.05 ? "#ffd27a" : "#ffffff");
+        m.emissiveIntensity = ING.flash > 0 ? 1.1 : ING.phase === 2 && ING.reveal > 0.05 ? 0.6 : 0.22;
+      }
     for (const [i, A] of ING.arms.entries()) A.rotation.x = ING.state === "diveWind" ? -1.6 : ING.state === "sit" ? -0.6 + Math.sin(t * 3 + i) * 0.2 : Math.sin(t * 2 + i * 2) * 0.25;
     ING.aura.material.opacity = 0.35 + Math.sin(t * 3) * 0.1;
     /* murgiltzearen itzala */
@@ -29190,6 +29260,22 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     g.add(MK.aura);
     g.position.set(MK.x, MK.y, MK.z);
     g.visible = false;
+    /* IA-modeloa (Tripo): prest dagoenean, gorputz prozedurala ordezkatzen du (koroa eta kapa barne) */
+    aiModel("mikelats", (sc) => {
+      if (!sc || MK.ai) return;
+      const A = aiInstance(sc, 6.2, 0.38);
+      MK.ai = A;
+      if (MK.root) MK.root.visible = false;
+      for (const c of MK.crown) c.visible = false;
+      g.add(A.m);
+      const k = 6.2 / MK.top;
+      MK.top = 6.2;
+      MK.cloak.scale.set(1.15 * k, k, 1.15 * k);
+      MK.cloak.position.y *= k;
+      for (const e of MK.eyes) e.position.set(e.position.x * 1.1, 6.2 * 0.84, 0.55);
+      MK.aura.position.y = 3.1;
+      MK.aura.scale.setScalar(12);
+    });
   }
   function mkAnim(name, once) {
     const a = MK.acts[name];
@@ -29408,8 +29494,14 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     MK.y = mix(MK.y, ty, 1 - Math.exp(-dt * (low ? 4 : 1.5)));
     MK.g.position.set(MK.x, MK.y, MK.z);
     MK.g.rotation.y = Math.atan2(P.x - MK.x, P.z - MK.z);
-    MK.cloak.material.opacity = 0.82 * (1 - MK.burn * 0.8);
+    MK.cloak.material.opacity = (MK.ai ? 0.3 : 0.82) * (1 - MK.burn * 0.8);
     MK.cloak.material.color.setRGB(0.02 + MK.burn * 0.9, 0.03 + MK.burn * 0.4, 0.05);
+    /* IA-modeloa: erretzean laranja, kolpean zuri */
+    if (MK.ai)
+      for (const m of MK.ai.mats) {
+        m.emissive.setRGB(1, 1 - MK.burn * 0.55, 1 - MK.burn * 0.85);
+        m.emissiveIntensity = 0.38 + MK.burn * 0.5 + MK.flash * 0.8;
+      }
     MK.aura.material.opacity = 0.35 + MK.flash * 0.5;
     if (MK.burn > 0.2 && Math.random() < dt * 20) fxBurst(MK.x, MK.y + MK.top * 0.4, MK.z, { n: 2, speed: 1, up: 2, life: 0.6, size: 0.3, color: "#ff9a3a", grav: -2 });
     if (MK.state === "hover") {

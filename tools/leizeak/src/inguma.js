@@ -119,7 +119,16 @@
     aura.position.y = 2.6;
     aura.scale.setScalar(7);
     g.add(aura);
-    return { g, body, eyes, smile, arms, aura, cloth };
+    const R = { g, body, eyes, smile, arms, aura, cloth };
+    /* IA-modeloa (Tripo): prest dagoenean, gorputz prozedurala ezkutatu (aura eta pibotak bai) */
+    aiModel("akerbeltz", (sc) => {
+      if (!sc || R.ai) return;
+      const A = aiInstance(sc, 4.7, 0.22);
+      R.ai = A;
+      g.traverse((n) => n.isMesh && (n.visible = false));
+      g.add(A.m);
+    });
+    return R;
   }
   function ingumaBuild() {
     const R = DGA.bossRoom;
@@ -148,6 +157,7 @@
     ING.bed = { x: R.x, z: R.z - 9, g: bed, mound };
     const M = ingumaMesh();
     Object.assign(ING, M);
+    ING.mesh = M;
     ING.g.position.set(R.x, 7, R.z - 9);
     BP.add(ING.g);
     for (let i = 0; i < 2; i++) {
@@ -549,6 +559,11 @@
     }
     ING.cloth.emissive.set(ING.flash > 0 ? "#ffffff" : ING.phase === 2 && ING.reveal > 0.05 ? "#a07a20" : "#2a1450");
     ING.cloth.emissiveIntensity = ING.flash > 0 ? 1.8 : 0.5;
+    if (ING.mesh && ING.mesh.ai)
+      for (const m of ING.mesh.ai.mats) {
+        m.emissive.set(ING.flash > 0 ? "#ffffff" : ING.phase === 2 && ING.reveal > 0.05 ? "#ffd27a" : "#ffffff");
+        m.emissiveIntensity = ING.flash > 0 ? 1.1 : ING.phase === 2 && ING.reveal > 0.05 ? 0.6 : 0.22;
+      }
     for (const [i, A] of ING.arms.entries()) A.rotation.x = ING.state === "diveWind" ? -1.6 : ING.state === "sit" ? -0.6 + Math.sin(t * 3 + i) * 0.2 : Math.sin(t * 2 + i * 2) * 0.25;
     ING.aura.material.opacity = 0.35 + Math.sin(t * 3) * 0.1;
     /* murgiltzearen itzala */
