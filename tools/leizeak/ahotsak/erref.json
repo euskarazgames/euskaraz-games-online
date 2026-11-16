@@ -46,5 +46,29 @@
   "seed": 31,
   "speed": 0.88,
   "oharra": "v3: mari_5 (UTMOS 3.95)"
+ },
+ "atarrabi": {
+  "wav": "erref/atarrabi.flac",
+  "text": "Leizeek deitzen dizute, sorgin. Lurraren azpitik, kriseiluaren sugarretik hitz egiten dizut.",
+  "instruct": "male, young adult, moderate pitch",
+  "seed": 2037,
+  "speed": 0.92,
+  "oharra": "aurrekuela: diseinatua (UTMOS ≈ 3.54, CER 0.011)"
+ },
+ "mikelats": {
+  "wav": "erref/mikelats.flac",
+  "text": "Kazkabarra nirea da, eta ekaitza ere bai. Zazpi txingarrak nireak izango dira.",
+  "instruct": "male, middle-aged, low pitch",
+  "seed": 2037,
+  "speed": 0.9,
+  "oharra": "aurrekuela: diseinatua (UTMOS ≈ 3.29, CER 0.013)"
+ },
+ "akerbeltz": {
+  "wav": "erref/akerbeltz.flac",
+  "text": "Ongi etorri akelarrera, sorgin txikia. Hemen, gaua ez da inoiz amaitzen.",
+  "instruct": "male, elderly, very low pitch",
+  "seed": 2111,
+  "speed": 0.88,
+  "oharra": "aurrekuela: diseinatua (UTMOS ≈ 4.24, CER 0.044)"
  }
 }
