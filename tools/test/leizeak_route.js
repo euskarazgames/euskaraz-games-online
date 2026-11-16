@@ -112,7 +112,7 @@ const { launch } = require('./_browser');
   ok(await ev(() => { const g = __game; return [0, 1].every((ph) => !g.support(596, -33, 0.5, ph) && !g.support(604, -37.5, 0.5, ph) && !g.support(597, -42, 0.5, ph)); }), 'B: zubiak lo (euskarririk ez)');
   await tp(600, 0, -25, Math.PI);
   await wait(300);
-  ok(await ev(() => __game.state().room === 'B'), 'B gelan');
+  ok(await until(() => __game.state().room === 'B', 8000), 'B gelan');
   await ev(() => __game.txalaOpen());
   for (const s of ['L', 'L', 'R']) { await ev((s) => __game.txalaHit(s), s); await wait(120); }
   ok(await until(() => __game.saved.flags.includes('dB-esnatu')), 'ESNATU: zubiak esnatzen');

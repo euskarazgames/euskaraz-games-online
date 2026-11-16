@@ -549,7 +549,7 @@
           [
             ["KATTALIN", "Eguzkilorea! Usaina… eguzkiarena. Amonak gure atean iltzatzen zuen, udazkenero."],
             ["KATTALIN", "Sorginak eta izpiritu gaiztoak ez dira eguzkilorea dagoen atetik sartzen: eguzkia dela uste dute, eta beldur dira."],
-            ["KATTALIN", "Entzun orain erritmo hau. Andererena zen. Eguzkiari deitzen dio… edo bidaltzen du."],
+            ["KATTALIN", "Entzun orain erritmo hau. Zure amonak irakatsi zidan, gazteak ginela. Eguzkiari deitzen dio… edo bidaltzen du."],
           ],
           () => txalaLearn("eguzkilore", "KATTALIN", () => {
             flagSet("arimak");
@@ -565,7 +565,7 @@
             ["KATTALIN", "Gaua, alaba. Gaua gauekoentzat, eguna egunekoentzat… Mikelatsen itzalak zelaietan dabiltza berriro."],
             ["KATTALIN", "Gure atean eguzkilore bat zegoen. Negu honek zimeldu du, eta etxea babesik gabe dago."],
             ["KATTALIN", "Harrespilako larrean hazten da, lurrean, eguzki txiki bat bezala. Baina udan bakarrik loratzen da… eta egunez."],
-            ["KATTALIN", "Ekarri bat, eta erakutsiko dizut Andereren erritmoa."],
+            ["KATTALIN", "Ekarri bat, eta erakutsiko dizut zure amonaren erritmoa."],
           ],
           () => flagSet("eguzkilore-bila"),
         );
@@ -596,7 +596,7 @@
         return give(
           "arimak10",
           [
-            ["KATTALIN", "Hamar! Eta azkenak… Andereren izena zuen. Nire amona. Bere argia ere bidean galduta zegoen."],
+            ["KATTALIN", "Hamar! Eta azkenak… nire amonaren izena zuen. Bere argia ere bidean galduta zegoen."],
             ["KATTALIN", "Esan du: «Anboton, Mariren etxean, zazpigarren atea. Erritmoa eraman, eta ez beldurtu ilunpeaz.»"],
           ],
           () => pieceGet("arimak10"),

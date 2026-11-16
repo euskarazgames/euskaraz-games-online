@@ -1,8 +1,8 @@
   /* ==================================================================
-     ANBOTOKO HARPEAK · sigilu-leizea (diseinu propioa), ANBOTOren gailurraren aurrean
-     Gauekoren ekaitzak Andereren suzko bola bota du mendi-magalean: Amaiurrek mendiaren barrutik
+     MURUMENDIKO HARPEAK · sigilu-leizea (diseinu propioa), MURUMENDIren gailurraren aurrean
+     Mikelatsen kazkabarrak Mariren suzko bola bota du mendi-magalean: Amaiurrek mendiaren barrutik
      igo behar du, Mikelatsen itzal-zaindarien artean, ikusia izan gabe (sigiloa.js).
-       A Suzko bolaren zuloa ... lurreratzea; Iratiren deia (oihartzun-radarra)
+       A Suzko bolaren zuloa ... lurreratzea; Atarrabiren deia (oihartzun-radarra)
        B Zaintza-gela .......... zaindari bat joan-etorrian: itxaron eta pasatu bizkarretik
        C Kutxen harpea ......... bi zaindari eta begi-harri bat: TOK-TOK eta LOTARAZI
        D Hari-pasabidea ........ izotz-hariak (neguan): jauzi edo udara
@@ -142,13 +142,13 @@
     if (HK.shaft) HK.shaft.material.opacity = 0.035 + HK.flash * 0.12;
     if (HK.pool) HK.pool.material.opacity = 0.3 + HK.flash * 0.5;
     if (HK.up) HK.up.material.opacity = 0.1 + Math.sin(time * 1.6) * 0.03;
-    /* gela berria: kontrol-puntua eta (behin) Iratiren deia */
+    /* gela berria: kontrol-puntua eta (behin) Atarrabiren deia */
     const R = HK_ROOMS[AREA.cur];
     if (R && !HK.called.includes(AREA.cur) && !cinematic && !FILM.on) {
       HK.called.push(AREA.cur);
       saved.cp = { zone: "harpeak", x: R.cp[0], y: 0, z: R.cp[1] };
       persist();
-      if (!(CALL_TEST && !window.__calls)) setTimeout(() => ZONE.cur === "harpeak" && !RING.on && SIG.phase !== 1 && deiaRing("IRATI", R.call, null, 5), 900);
+      if (!(CALL_TEST && !window.__calls)) setTimeout(() => ZONE.cur === "harpeak" && !RING.on && SIG.phase !== 1 && deiaRing("ATARRABI", R.call, null, 5), 900);
     }
     /* irakaspenak: TOK-TOK hormaren ondoan, LOTARAZI zaindari baten atzean */
     if (frame % 20 === 0 && !cinematic) {
@@ -173,7 +173,7 @@
     if (!HK.ending && P.z < HK.exitZ && Math.abs(P.x - KX) < 3.2) harpeakEnd();
   }
   /* ------------------------------ istorioa ------------------------------ */
-  /* ANBOTOra bidean (anbotoFlight): Gauekoren ekaitzak suzko bola bota du */
+  /* MURUMENDIra bidean (anbotoFlight): Mikelatsen kazkabarrak suzko bola bota du */
   function harpeakStart() {
     HK.called.length = 0;
     HK.ending = false;
@@ -187,7 +187,7 @@
         {
           d: 3.6,
           fade: "in",
-          cap: ["ANBOTOKO HARPEAK", "MENDIAREN BARRUA · 04:12"],
+          cap: ["MURUMENDIKO HARPEAK", "MENDIAREN BARRUA · 04:12"],
           cam: [[E(9), 13, 13], [E(6), 9, 10]],
           look: [[E(0), 0.5, 3], [E(0), 1, 3]],
           on: () => {
@@ -203,7 +203,7 @@
       () => {
         animate("Idle");
         hud();
-        if (!(CALL_TEST && !window.__calls)) setTimeout(() => ZONE.cur === "harpeak" && deiaRing("IRATI", ["hp_i1"], null, 3), 700);
+        if (!(CALL_TEST && !window.__calls)) setTimeout(() => ZONE.cur === "harpeak" && deiaRing("ATARRABI", ["hp_i1"], null, 3), 700);
       },
     );
   }
@@ -253,5 +253,5 @@
     if (!R) return "";
     const mm = Math.floor(R.secs / 60),
       ss = String(R.secs % 60).padStart(2, "0");
-    return "\n\n" + L("ANBOTOKO HARPEAK") + " · " + R.rank + "\n   " + L("Alarmak: ") + R.alarms + " · " + L("Lo: ") + R.sleeps + " · " + L("TOK-TOK: ") + R.knocks + " · " + mm + ":" + ss;
+    return "\n\n" + L("MURUMENDIKO HARPEAK") + " · " + R.rank + "\n   " + L("Alarmak: ") + R.alarms + " · " + L("Lo: ") + R.sleeps + " · " + L("TOK-TOK: ") + R.knocks + " · " + mm + ":" + ss;
   }

@@ -1,5 +1,6 @@
   /* ==================================================================
-     AMETSA · zazpigarren leizea (diseinu propioa) — Amaiurren ametsa, Ingumaren etxea
+     SORGINEN LEIZEA · zazpigarren leizea (diseinu propioa) — AKELARREA: sorginaren arima lotan
+     hegan doa (gorputza ohean); Akerbeltzen tronua. Barne-IDak "ametsa" bere horretan.
      Iturralden lo egin (SEASKA-KANTA eta hauts-zorroa eskuan) → izarrez betetako hutsunea:
      Amaiurren mantak uharte bihurtuta, altzariak hegan, erloju geldituak (denbora ez da igarotzen).
        M1 Ohe-uhartea .......... iritsiera; SUTONDOA; ohe erraldoia (ESNATU: etxera itzuli);
@@ -27,7 +28,7 @@
     exitTo: () => ({ x: DGE.bed.x + 1.8, y: 0, z: DGE.bed.z, a: PI / 2, cp: true }),
     exitZone: "etxea",
     bigKey: "giltzanagusia-ametsa",
-    bigKeyText: "Ingumaren ohe-gelara daraman ate handia irekitzen du.",
+    bigKeyText: "Akerbeltzen tronura daraman ate handia irekitzen du.",
     bossDoor: "aE-n",
     lights: [],
     torches: [],
@@ -259,7 +260,7 @@
   function buildAmetsa() {
     dungeonBegin(DGA);
     /* ---- M1: Ohe-uhartea ---- */
-    skyRoom("M1", AE(0), 0, 24, 24, { area: "aA", name: "OHE-UHARTEA", desc: "Zure ohea, baina erraldoia. Inguruan, izarrak eta isiltasuna.", rx: 12 });
+    skyRoom("M1", AE(0), 0, 24, 24, { area: "aA", name: "GORPUTZAREN OHEA", desc: "Zure ohea, lainoaren gainean: gorputza han dago, lotan. Ohera itzuli, esnatzeko.", rx: 12 });
     dreamIsland({ x: AE(0), z: 0, y: 0, r: 12, area: "aA", seed: 1 });
     /* ohe erraldoia (ESNATU) */
     const bed = new T.Group(),
@@ -287,7 +288,7 @@
     /* izar-lainoa: M1 → M2 (hutsunea) */
     starMist({ x: AE(0), z: -16.5, w: 9, d: 10, y0: -6, y1: 6 });
     /* ---- M2: Izar-eskailerak ---- */
-    skyRoom("M2", AE(0), -31, 18, 18, { area: "aB", name: "IZAR-ESKAILERAK", desc: "Goian, uharte txiki bat. Ez dago eskailerarik… zuk egin ezean.", rx: 9 });
+    skyRoom("M2", AE(0), -31, 18, 18, { area: "aB", name: "HAUTS-ESKAILERAK", desc: "Goian, uharte txiki bat. Ez dago eskailerarik… zuk egin ezean.", rx: 9 });
     dreamIsland({ x: AE(0), z: -31, y: 0, r: 9, area: "aB", seed: 2 });
     /* goiko uhartetxoa: giltza txikia (izar-eskailerak behar dira) */
     dreamIsland({ x: AE(6.5), z: -38, y: 9, r: 3.4, area: "aB", seed: 3, depth: 3 });
@@ -305,14 +306,14 @@
     /* ---- M3: Mamuen sukaldea (borroka) ---- */
     skyRoom("M3", AE(0), -62, 24, 22, {
       area: "aC",
-      name: "MAMUEN SUKALDEA",
+      name: "SORGINEN SUKALDEA",
       desc: "Mahai bat, aulkiak, lapikoak… eta maindireak, inor barruan ez dutela.",
       rx: 12,
       rz: 11,
       waves: [[["mamua", -1, 2]], [["mamua", -1, 2], ["grunt", 1, 1]], [["mamua", -1, 3]]],
       diff: 1.15,
       hpK: 1.3,
-      fightText: "Mamuak! Desagertu eta zure atzean agertzen dira. IZAR-HAUTSA: kontatzen hasten dira — orduan, kalte bikoitza.",
+      fightText: "Sorgin-itzalak! Desagertu eta zure atzean agertzen dira. SORGIN-HAUTSA: kontatzen hasten dira — orduan, kalte bikoitza.",
       onWin: () => {
         openDoor(DOORDEF.aCn);
         notify(L("Sukaldea isildu da. Iparreko barrak irekita."), "", 4);
@@ -333,7 +334,7 @@
     quiltBridge(AE(0), -97, 4, 9, 0, "aD");
     AM.gates.push(dustGate({ x: AE(0), z: -97.5, y: 0, w: 4, rot: 0 }));
     /* ---- M5: Sehaskaren uhartea ---- */
-    skyRoom("M5", AE(0), -114, 22, 22, { area: "aE", name: "SEHASKAREN UHARTEA", desc: "Sehaska bat, kulunkan, inork ukitu gabe. Txalaparta bat ondoan.", rx: 11 });
+    skyRoom("M5", AE(0), -114, 22, 22, { area: "aE", name: "GALDARAREN UHARTEA", desc: "Galdara bat, irakiten, inork ukitu gabe. Txalaparta bat ondoan.", rx: 11 });
     dreamIsland({ x: AE(0), z: -114, y: 0, r: 11, area: "aE", seed: 6 });
     cradleBuild(AE(0), 0, -117);
     AM.txala = txalapartaMesh(AE(5.5), 0, -110, -PI / 2, "aE");
@@ -346,7 +347,7 @@
     quiltBridge(AE(0), -130, 4, 10, 0, "aE");
     DOORDEF.aEn = door("aE-n", AE(0), -126, 0, 0, "boss");
     /* ---- M6: Ingumaren ohea (etsai nagusia) ---- */
-    skyRoom("M6", AE(0), -152, 36, 36, { area: "aF", name: "INGUMAREN OHEA", desc: "Ohe bat hutsunearen erdian. Norbait eserita dago gainean.", rx: 17 });
+    skyRoom("M6", AE(0), -152, 36, 36, { area: "aF", name: "AKERBELTZEN TRONUA", desc: "Harrizko tronu bat akelarrearen erdian. Norbait eserita dago gainean: adarrak ditu.", rx: 17 });
     dreamIsland({ x: AE(0), z: -152, y: 0, r: 17, area: "aF", seed: 7, depth: 14 });
     DGA.bossRoom = DGA.rooms.M6;
     ingumaBuild();
@@ -390,7 +391,7 @@
       SND.memory();
       fxRing(C.x, 0.2, C.z, "#e6dcff", 7, 1.2);
       fxBurst(C.x, 3, C.z, { n: 50, speed: 3, up: 2, life: 1.4, size: 0.34, color: "#f3ecff", grav: -0.6 });
-      title("SEHASKA GELDITU DA", "");
+      title("GALDARA ISILDU DA", "");
       AM.revealT = 0.9;
       return true;
     }
@@ -400,9 +401,9 @@
   function ametsaFakeCall() {
     if (AM.fake || saved.flags.includes("ametsa-deia")) return;
     AM.fake = true;
-    deiaRing("IRATI", ["c7_f1", "c7_a3", "c7_n2"], () => {
+    deiaRing("SORGINAK", ["c7_f1", "c7_a3", "c7_n2"], () => {
       flagSet("ametsa-deia");
-      notify(L("Inguma ahotsak egiten ditu. Sehaskaren ondoan, zerbait esnatzen da…"), "", 5);
+      notify(L("Akerbeltzek ahotsak egiten ditu. Galdararen ondoan, zerbait esnatzen da…"), "", 5);
     }, 4);
   }
   DGA.update = (dt) => {
@@ -426,7 +427,7 @@
     /* sehaska geldi → giltza nagusiaren kutxa agerian */
     if (AM.revealT > 0 && (AM.revealT -= dt) <= 0) {
       revealChest(DGA.bigChest);
-      notify(L("Sehaska isildu da. Giltza handi bat agertu da, haren ondoan."), "", 4.5);
+      notify(L("Galdara isildu da. Giltza handi bat agertu da, haren ondoan."), "", 4.5);
     }
     /* sehaska: kulunka (SEASKAren ondoren, geldi) */
     const Cr = AM.cradle;
@@ -436,7 +437,7 @@
       Cr.glowS.material.opacity = 0.35 + 0.3 * (1 - Cr.calm) + Math.sin(time * 2) * 0.08;
     }
     /* M1: lehen aldiz, izar-hautsaren pista */
-    if (ROOM.cur === R.M1 && P.z < -7 && P.grounded) notifyOnce("ametsa-hautsa", L("Hutsunea, eta izar-lainoa. Bota IZAR-HAUTSA lainora: izar-plataforma bat!"), "");
+    if (ROOM.cur === R.M1 && P.z < -7 && P.grounded) notifyOnce("ametsa-hautsa", L("Hutsunea, eta akelarre-lainoa. Bota SORGIN-HAUTSA lainora: plataforma bat!"), "");
     /* M5: dei faltsua, gero amets-gaiztoa */
     if (ROOM.cur === R.M5 && P.grounded && P.z < -105) ametsaFakeCall();
     if (R.M5 && !MINI.e && !ROOM.fight && !cinematic && !RING.on && ROOM.cur === R.M5 && saved.flags.includes("ametsa-deia") && !isCleared("aE-mini") && P.grounded && Math.hypot(P.x - R.M5.x, P.z - R.M5.z) < 9)
@@ -444,15 +445,15 @@
         R.M5,
         {
           type: "mamua",
-          name: "AMETS-GAIZTOA",
+          name: "AKELARRE-ITZALA",
           clearId: "aE-mini",
           hp: 36,
           scale: 2.2,
           K: 1.2,
           tint: "#cbb8ff",
           add: [["mamua", -1, 2]],
-          hint: "Amets-gaiztoa! Desagertu eta atzean agertzen da: IZAR-HAUTSA, eta kontatzen ari den bitartean, jo.",
-          onDead: () => notify(L("Amets-gaiztoa desagertu da. Sehaska kulunkan dago oraindik… SEASKA kantatu haren ondoan."), "", 6),
+          hint: "Akelarre-itzala! Desagertu eta atzean agertzen da: SORGIN-HAUTSA, eta kontatzen ari den bitartean, jo.",
+          onDead: () => notify(L("Itzala desagertu da. Galdarak irakiten jarraitzen du… LO-KANTA jo haren ondoan."), "", 6),
         },
         R.M5.x,
         R.M5.z + 2,
@@ -468,26 +469,26 @@
       return {
         kind: "hearth",
         label: L("ESNATU"),
-        fn: () => (done ? ametsaWake() : dialog(L("AMETSA"), L("Esnatu?"), "", L("Ohean etzan eta begiak ireki: Iturraldera itzuliko zara. Ametsa zain geratuko da."), "", [[L("ESNATU"), () => setTimeout(() => enterZone("etxea", DGA.exitTo()), 0)], [L("EZ ORAIN"), () => {}]])),
+        fn: () => (done ? ametsaWake() : dialog(L("AKELARREA"), L("Esnatu?"), "", L("Ohean etzan eta begiak ireki: Iturraldera itzuliko zara. Akelarrea zain geratuko da."), "", [[L("ESNATU"), () => setTimeout(() => enterZone("etxea", DGA.exitTo()), 0)], [L("EZ ORAIN"), () => {}]])),
       };
     return null;
   }
   DGA.objective = () => {
     const R = DGA.rooms,
       has = (k) => saved.items.includes(k);
-    if (saved.flags.includes("inguma")) return ["Ametsa amaituta. Esnatu (ohe erraldoia, hegoan).", [AM.wakeBed.x, AM.wakeBed.z + 3, 0]];
+    if (saved.flags.includes("inguma")) return ["Akelarrea amaituta. Esnatu (gorputzaren ohea, hegoan).", [AM.wakeBed.x, AM.wakeBed.z + 3, 0]];
     if (!saved.doors.includes("aB-n") && !(saved.keyz.ametsa > 0)) {
-      if (ROOM.cur === R.M1 || P.z > -21) return ["Iparrera, hutsunearen gainetik: IZAR-HAUTSA izar-lainora (Z) → izar-plataforma.", [AE(0), -16.5, 0]];
-      return ["Goiko uhartetxoa: jauzi bikoitza, eta AIREAN hautsa bota → izar-maila oinen azpian.", [AE(6.5), -38, 9]];
+      if (ROOM.cur === R.M1 || P.z > -21) return ["Iparrera, hutsunearen gainetik: SORGIN-HAUTSA lainora (Z) → plataforma.", [AE(0), -16.5, 0]];
+      return ["Goiko uhartetxoa: jauzi bikoitza, eta AIREAN hautsa bota → maila bat oinen azpian.", [AE(6.5), -38, 9]];
     }
     if (!saved.doors.includes("aB-n")) return ["Iparreko atea: giltza txikia.", [AE(0), -44, 0]];
-    if (!isCleared("M3")) return ["Mamuen sukaldea: IZAR-HAUTSA → kontatzen → kalte bikoitza.", [R.M3.x, R.M3.z, 0]];
+    if (!isCleared("M3")) return ["Sorginen sukaldea: SORGIN-HAUTSA → kontatzen → kalte bikoitza.", [R.M3.x, R.M3.z, 0]];
     if (!has(DGA.bigKey)) {
       if (P.z > -101) return ["Ate-zainak: hautsa bota → kontatzen hasten dira → pasa, amaitu aurretik.", [AE(0), -88, 0]];
-      if (!isCleared("aE-mini") && saved.flags.includes("ametsa-deia")) return ["Sehaskaren uhartea: amets-gaiztoa.", [R.M5.x, R.M5.z, 0]];
-      if (!isCleared("aD-seaska")) return ["Sehaskaren ondoan, txalaparta: SEASKA (◀ ▶ ◀ ▶ ◀).", [AM.txala.x, AM.txala.z, 0]];
-      return ["Giltza nagusiaren kutxa, sehaskaren ondoan.", [DGA.bigChest.x, DGA.bigChest.z, 0]];
+      if (!isCleared("aE-mini") && saved.flags.includes("ametsa-deia")) return ["Galdararen uhartea: akelarre-itzala.", [R.M5.x, R.M5.z, 0]];
+      if (!isCleared("aD-seaska")) return ["Galdararen ondoan, txalaparta: LO-KANTA (◀ ▶ ◀ ▶ ◀).", [AM.txala.x, AM.txala.z, 0]];
+      return ["Giltza nagusiaren kutxa, galdararen ondoan.", [DGA.bigChest.x, DGA.bigChest.z, 0]];
     }
     if (!saved.doors.includes(DGA.bossDoor)) return ["Iparrean, ate handia: giltza nagusia.", [AE(0), -124, 0]];
-    return ["Ingumaren ohea.", [R.M6.x, R.M6.z + 10, 0]];
+    return ["Akerbeltzen tronua.", [R.M6.x, R.M6.z + 10, 0]];
   };

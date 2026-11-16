@@ -2,19 +2,19 @@
      EGINKIZUNAK ETA MISTERIOAK
      · Egunkaria (L tekla, ⋯ menua edo pausa): istorioa eta bigarren mailako eginkizunak.
      · Ikurrak herritarren buru gainean: ! (zerbait berria) eta ? (emateko prest).
-     · OIHARTZUN-HARRIAK (7): ENTZUN haien ondoan → udako ahots bat (Andereren istorioa).
-       Zazpiak entzunda, Andereren etxeko zigilua desagertzen da.
+     · OIHARTZUN-HARRIAK (7): ENTZUN haien ondoan → amonaren ahotsa, gaztetan (bera ere leizeen
+       deiari erantzun zion). Zazpiak entzunda, SORGINENEKO zigilua desagertzen da.
      · Kattalinen sorgin-belarrak (3, UDAN bakarrik), Txominen sarea (badia izoztua,
        NEGUAN), Mikelen erronka (frontoiko jomugak), Maddiren burdin-harriak (5).
      ================================================================== */
   const ECHO_DEFS = [
-    { id: "eliza", x: -27, z: 15.5, y: null, lines: ["Ehun urte isilik… eta orain txalapartak berriro. Norbaitek entzuten badu: ni Andere naiz, Ibarrako sorgina."] },
+    { id: "eliza", x: -27, z: 15.5, y: null, lines: ["Norbaitek entzuten badu: ni Ibarrako sorgin gaztea naiz. Gaur gauean, leizeek nire izena esan dute."] },
     { id: "harrespila", x: 51, z: -59, y: 9, lines: ["Jentilek erakutsi zidaten: erritmo bakoitzak ate bat irekitzen du. Baita ixten ere. Ez ahaztu inoiz ixten dena."] },
-    { id: "ibaia", x: -50, z: -28.5, y: -0.4, lines: ["Gaueko erlojuan giltzapetu nuen. Marirekin itun bat egin nuen: haranaren ahotsa, haren ordainetan. Txalapartak isildu ziren."] },
-    { id: "urjauzia", x: 92.5, z: -31.6, y: -0.9, lines: ["Lamiei eman nien nire urrezko orrazia gordetzeko. Haiek bakarrik dakite zer ixten duen."] },
-    { id: "basoa", x: -32, z: -122, y: 5, past: true, lines: ["Erlojua hautsi denean, ituna ere hautsi da. Mariren sua libre dabil zeruan… eta nik daramat."] },
+    { id: "ibaia", x: -50, z: -28.5, y: -0.4, lines: ["Mariren semea ezagutu dut, itzalik gabeko mutil bat: Atarrabi. Irribarre egiten du, baina triste dago."] },
+    { id: "urjauzia", x: 92.5, z: -31.6, y: -0.9, lines: ["Lamiei eman nien nire urrezko orrazia gordetzeko. Akelarretik itzuli nintzen gauean: ez nuen gehiago behar."] },
+    { id: "basoa", x: -32, z: -122, y: 5, past: true, lines: ["Udan, basoak dena gogoratzen du. Neguan, lo dago. Ez ahaztu: negua ez da inoiz betikoa."] },
     { id: "lepoa", x: -81, z: -121, y: 12, lines: ["Tartalok begi bakarra du, baina ilunpean dena ikusten du. Argiak itsutzen du. Gogoratu: argia."] },
-    { id: "frontoia", x: -32, z: 34, y: 9.6, lines: ["Amaiur. Zu zara nire biloba. Zazpi harriak entzun badituzu, zatoz nire etxera. Atea zabalik egongo da."] },
+    { id: "frontoia", x: -32, z: 34, y: 9.6, lines: ["Leizeek berriro deitzen badute, ni zaharra izango naiz. Hau entzuten duzunak: zatoz nire etxe zaharrera. Atea zabalik egongo da."] },
   ];
   const ECHOES = [];
   const HERB_DEFS = [
@@ -177,21 +177,21 @@
     const n = saved.echoes.length;
     say(
       [
-        ["OIHARTZUN-HARRIA", "…tok… tok-tok… (iraganeko ahots bat harritik)", "", E.x, E.z, E.y],
-        ...E.lines.map((t) => ["ANDERE", t, "", E.x, E.z, E.y]),
+        ["OIHARTZUN-HARRIA", "…tok… tok-tok… (aspaldiko ahots bat harritik)", "", E.x, E.z, E.y],
+        ...E.lines.map((t) => ["AMONA GAZTEA", t, "", E.x, E.z, E.y]),
       ],
       () => {
         notify(L("Oihartzun-harriak: ") + n + " / 7", "", 3);
         if (n >= 7) {
           flagSet("andere-giltza");
           title("ZAZPI OIHARTZUN", "");
-          notify(L("Andereren etxeko zigilua ahuldu da (herriaren mendebaldean)."), "", 5);
+          notify(L("Sorgineneko zigilua ahuldu da (herriaren mendebaldean)."), "", 5);
         }
         hud();
       },
     );
   }
-  /* Andereren etxea: zazpi oihartzunekin zigilua desagertzen da */
+  /* SORGINENEA (amonaren etxe zaharra): zazpi oihartzunekin zigilua desagertzen da */
   function andereDoorNear() {
     return ZONE.cur === "ibarra" && !saved.flags.includes("andere") && Math.hypot(P.x - -36.8, P.z - 49.4) < 3;
   }
@@ -202,16 +202,16 @@
     say(
       [
         ["· · ·", "Zigilua urtu egiten da, izotza eguzkitan bezala. Barruan, mahai baten gainean, gutun bat eta argi epel bat.", "", -40, 48, 0],
-        ["ANDERE", "Amaiur: gutun hau irakurtzen baduzu, ituna hautsi da eta ni zeruan nabil, Mariren suarekin.", "", -40, 48, 0],
-        ["ANDERE", "Gaueko ez dago erlojuan. Zazpigarren leizean itxaroten du, Anboton. Zazpi zaindariek ireki behar dute bidea.", "", -40, 48, 0],
-        ["AMAIUR", "Amona… ez zinen hil. Zuk daramazu suzko bola.", "", P.x, P.z, P.y],
+        ["AMONA GAZTEA", "Leizeek deitzen badizute, ez beldurtu: erantzun. Nik ere erantzun nuen, zure adinean.", "", -40, 48, 0],
+        ["AMONA GAZTEA", "Sua zaindu. Gure sutondoa ez da gurea bakarrik: Mariren zortzigarren sua da, herriarena.", "", -40, 48, 0],
+        ["AMAIUR", "Amona… zuk ere egin zenuen bidaia hau. Eta ez zenidan inoiz kontatu.", "", P.x, P.z, P.y],
       ],
       () => {
         saved.hearts += 1;
         updateMaxHp();
         P.hp = P.maxHp;
         persist();
-        itemGet("bihotza", L("ANDERERENA ARNASA"), L("Arnasa bat gehiago. Andereren gutuna egunkarian gorde duzu."));
+        itemGet("bihotza", L("SORGIN GAZTEAREN ARNASA"), L("Arnasa bat gehiago. Amonaren gutuna egunkarian gorde duzu."));
       },
     );
   }
@@ -338,7 +338,7 @@
   }
   /* ------------------------------ elkarrizketak ------------------------------ */
   function talkMikel(N, f) {
-    if (f("mikel-ok")) return talk(N, [["MIKEL", ["Handitan zu bezalakoa izango naiz: frontoian txapeldun eta sorgin!", "Txomin zaharrak badia izoztuan galdu zuen sarea. Gaixoa.", "Andereren etxea sorgindua dago. Amonak dio ez hurbiltzeko."][Math.floor(time) % 3]]]);
+    if (f("mikel-ok")) return talk(N, [["MIKEL", ["Handitan zu bezalakoa izango naiz: frontoian txapeldun eta sorgin!", "Txomin zaharrak badia izoztuan galdu zuen sarea. Gaixoa.", "Sorginenea sorgindua dago. Amonak dio ez hurbiltzeko."][Math.floor(time) % 3]]]);
     talk(
       N,
       [
@@ -374,7 +374,7 @@
     return talk(N, [["TXOMIN", f("txomin-ok") ? "Itsasoa urtzen denean, arraina eramango dizut. Hitza." : "Sarea uhartetxoan dago, badiaren erdian. Neguan izotzak eusten du."]]);
   }
   function talkMaite(N) {
-    talk(N, [["MAITE", ["Ogia goizean, txalaparta gauez. Herri honek ez du lorik egiten.", "Andereren etxe hura… gauez argi urdin bat ikusten da leihoan.", "Ibaia izoztu zenetik, Txomin ez da itsasora atera.", "Oiloak ere urduri daude. Zerbait dator."][Math.floor(time * 0.7) % 4]]]);
+    talk(N, [["MAITE", ["Ogia goizean, txalaparta gauez. Herri honek ez du lorik egiten.", "Sorginenea, etxe zahar hura… gauez argi urdin bat ikusten da leihoan.", "Ibaia izoztu zenetik, Txomin ez da itsasora atera.", "Oiloak ere urduri daude. Zerbait dator."][Math.floor(time * 0.7) % 4]]]);
   }
   /* ------------------------------ egunkaria (L) ------------------------------ */
   function questLog() {
@@ -398,7 +398,7 @@
       L("EGUNKARIA"),
       L("Eginkizunak eta misterioak"),
       "",
-      L("ISTORIOA") + "\n" + objective()[0] + "\n\n" + L("BESTE EGINKIZUNAK") + "\n" + side.join("\n") + "\n\n" + L("Arnasa-zatiak: ") + pieces + " · " + L("Txanponak: ") + saved.coins + (f("andere") ? "\n\n" + L("ANDERE: «Gaueko ez dago erlojuan. Zazpigarren leizean itxaroten du, Anboton.»") : "") + (oroitLog() ? "\n\n" + oroitLog() : "") + harpeakLog(),
+      L("ISTORIOA") + "\n" + objective()[0] + "\n\n" + L("BESTE EGINKIZUNAK") + "\n" + side.join("\n") + "\n\n" + L("Arnasa-zatiak: ") + pieces + " · " + L("Txanponak: ") + saved.coins + (f("andere") ? "\n\n" + L("AMONA GAZTEA: «Gure sutondoa Mariren zortzigarren sua da, herriarena.»") : "") + (oroitLog() ? "\n\n" + oroitLog() : "") + harpeakLog(),
       "",
       [[L("ITXI"), () => {}]],
     );

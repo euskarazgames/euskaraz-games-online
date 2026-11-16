@@ -14,7 +14,7 @@
     eguzkilore: { seq: ["R", "R", "L", "L"], name: "EGUZKILORE", desc: "Eguzkiari dei: gauez egunsentia, egunez ilunabarra. Leizean, itzalak zorabiatzen ditu." },
     pottoka: { seq: ["L", "R", "L", "L"], name: "POTTOKA", desc: "Beltxari dei: haranean, Joanesen pottoka lauhazka etortzen da." },
     ortzi: { seq: ["L", "R", "R", "L", "R"], name: "ORTZI", desc: "Zeru zaharraren erritmoa: harrespilan, ortzadarra jaiotzen da — zerurako bidea." },
-    seaska: { seq: ["L", "R", "L", "R", "L"], name: "SEASKA", desc: "Amonaren seaska-kanta: itzalak lokartzen ditu. Ametsean, sehaskak eta Ingumak ere entzuten dute." },
+    seaska: { seq: ["L", "R", "L", "R", "L"], name: "LO-KANTA", desc: "Sorgin zaharren lo-kanta: itzalak lokartzen ditu. Akelarrean, galdarak eta Akerbeltzek ere entzuten dute." },
   };
   const seqText = (seq) => seq.map((s) => (s === "L" ? "◀" : "▶")).join(" ");
   /* plazako txalaparta: bi asto, hiru ohol luze eta lau makila (diseinu propioa) */

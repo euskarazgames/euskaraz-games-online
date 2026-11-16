@@ -1,5 +1,6 @@
   /* ==================================================================
-     INGUMA · zazpigarren zaindaria (diseinu propioa; euskal mitologiako amets gaiztoen izakia)
+     AKERBELTZ · zazpigarren zaindaria (diseinu propioa; euskal mitologiako aker beltza, akelarrean
+     Mikelatsek gaiztotua; barne-IDak "inguma" bere horretan)
      Lo daudenen bularrean esertzen da. Herri-konjuruak dio dena kontatu behar duela lehenik:
      haren aurka, seaska-kantaren hiru bertsoak, hiru fasetan:
        1 ZERUAN IZARRAK ... goian hegan: izar-euria (EZKUTUAz itzuli → zorabiatuta) eta murgiltzea
@@ -23,6 +24,7 @@
       '<path class="i3" d="M30 104q-4 8-10 13M70 104q4 8 10 13M38 108q-1 6-4 10M62 108q1 6 4 10" stroke-width="2" fill="none"/></svg>',
   });
   PORTRAIT_OF.INGUMA = "inguma";
+  PORTRAIT_OF.AKERBELTZ = "akerbeltz";
   PORTRAIT_OF["IRATI?"] = "unknown";
   const ING_HP = 10,
     ING_R = 2.4;
@@ -55,21 +57,44 @@
     const body = new T.Mesh(geo, cloth);
     body.castShadow = true;
     g.add(body);
-    /* burua: kaputxa iluna, bi begi zurbil handi eta irribarre mehea */
-    const head = new T.Mesh(new T.SphereGeometry(0.62, 16, 12), cloth);
-    head.position.y = 3.95;
-    head.scale.set(1, 1.15, 1);
+    /* AKERBELTZ: aker-burua — muturra luzea, adar kizkurrak, belarri zabalak, bizarra eta begi anbarrak */
+    const fur = new T.MeshStandardMaterial({ color: "#151018", emissive: new T.Color("#24123a"), emissiveIntensity: 0.4, roughness: 0.95 }),
+      horn = new T.MeshStandardMaterial({ color: "#5a4a3c", roughness: 0.6, metalness: 0.1, flatShading: true });
+    const head = new T.Mesh(new T.SphereGeometry(0.58, 16, 12), fur);
+    head.position.set(0, 4.0, 0.05);
+    head.scale.set(0.95, 1.05, 1.1);
     g.add(head);
+    const snout = new T.Mesh(new T.CylinderGeometry(0.22, 0.34, 0.85, 10), fur);
+    snout.position.set(0, 3.72, 0.55);
+    snout.rotation.x = 1.15;
+    g.add(snout);
+    const beard = new T.Mesh(new T.ConeGeometry(0.16, 0.7, 6), fur);
+    beard.position.set(0, 3.2, 0.62);
+    beard.rotation.x = PI + 0.25;
+    g.add(beard);
+    for (const s of [-1, 1]) {
+      const hp = new T.Group();
+      hp.position.set(s * 0.32, 4.42, -0.05);
+      const h = new T.Mesh(new T.TorusGeometry(0.42, 0.1, 8, 18, PI * 1.35), horn);
+      h.rotation.set(0, s * PI / 2, PI * 0.15);
+      h.position.set(s * 0.18, 0.05, -0.3);
+      hp.add(h);
+      g.add(hp);
+      const ear = new T.Mesh(new T.ConeGeometry(0.11, 0.55, 5), fur);
+      ear.position.set(s * 0.62, 4.0, 0);
+      ear.rotation.z = s * 1.75;
+      g.add(ear);
+    }
     const eyes = [];
     for (const s of [-1, 1]) {
-      const eye = new T.Mesh(new T.SphereGeometry(0.17, 10, 8), new T.MeshBasicMaterial({ color: "#f3ecff" }));
-      eye.position.set(s * 0.24, 4.05, 0.52);
-      eye.scale.set(1, 1.35, 0.6);
+      const eye = new T.Mesh(new T.SphereGeometry(0.13, 10, 8), new T.MeshBasicMaterial({ color: "#ffb02e" }));
+      eye.position.set(s * 0.26, 4.1, 0.45);
+      eye.scale.set(1.35, 0.8, 0.6);
       g.add(eye);
       eyes.push(eye);
     }
-    const smile = new T.Mesh(new T.TorusGeometry(0.26, 0.035, 5, 14, PI * 0.9), new T.MeshBasicMaterial({ color: "#f3ecff" }));
-    smile.position.set(0, 3.72, 0.55);
+    const smile = new T.Mesh(new T.TorusGeometry(0.16, 0.03, 5, 12, PI * 0.9), new T.MeshBasicMaterial({ color: "#3a2a40" }));
+    smile.position.set(0, 3.45, 0.86);
     smile.rotation.z = PI * 1.05;
     g.add(smile);
     /* beso luzeak eta hatz-atzaparrak */
@@ -90,7 +115,7 @@
       g.add(pivot);
       arms.push(pivot);
     }
-    const aura = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#7a5cff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.45 }));
+    const aura = new T.Sprite(new T.SpriteMaterial({ map: glowTexture, color: "#9a4cff", transparent: true, blending: T.AdditiveBlending, depthWrite: false, opacity: 0.45 }));
     aura.position.y = 2.6;
     aura.scale.setScalar(7);
     g.add(aura);
@@ -98,19 +123,19 @@
   }
   function ingumaBuild() {
     const R = DGA.bossRoom;
-    /* ohea arenaren iparrean: Amaiur lo (maindirepean), sorgin-txapela burkoan */
+    /* Akerbeltzen tronua arenaren iparrean: harrizko aulki handia, larru beltza eta sorgin-txapel zahar bat */
     const bed = new T.Group(),
-      frame = new T.Mesh(new T.BoxGeometry(3.4, 0.9, 5.2), material("#6e4a2c")),
-      sheet = new T.Mesh(new T.BoxGeometry(3.1, 0.3, 4.9), material("#f2efe6")),
-      mound = new T.Mesh(new T.SphereGeometry(1, 14, 10), material("#a8332a")),
-      pillow = new T.Mesh(new T.BoxGeometry(2.2, 0.35, 0.9), material("#fbf8f0")),
-      hat = new T.Mesh(new T.ConeGeometry(0.45, 1.1, 10), material("#3a3f7a")),
-      brim = new T.Mesh(new T.CylinderGeometry(0.75, 0.75, 0.06, 16), material("#3a3f7a"));
+      frame = new T.Mesh(new T.BoxGeometry(3.4, 0.9, 5.2), material("#3b3442")),
+      sheet = new T.Mesh(new T.BoxGeometry(3.1, 0.3, 4.9), material("#2a2430")),
+      mound = new T.Mesh(new T.SphereGeometry(1, 14, 10), material("#1a1420")),
+      pillow = new T.Mesh(new T.BoxGeometry(2.6, 3.4, 0.7), material("#3b3442")),
+      hat = new T.Mesh(new T.ConeGeometry(0.45, 1.1, 10), material("#4a2a5a")),
+      brim = new T.Mesh(new T.CylinderGeometry(0.75, 0.75, 0.06, 16), material("#4a2a5a"));
     frame.position.y = 0.45;
     sheet.position.y = 1.0;
-    mound.scale.set(1.25, 0.45, 2.1);
-    mound.position.set(0, 1.15, 0.5);
-    pillow.position.set(0, 1.25, -1.9);
+    mound.scale.set(1.25, 0.3, 1.8);
+    mound.position.set(0, 1.12, 0.5);
+    pillow.position.set(0, 2.45, -2.25);
     hat.position.set(0.2, 1.75, -1.85);
     hat.rotation.x = -0.9;
     brim.position.set(0.2, 1.5, -1.65);
@@ -160,15 +185,15 @@
     const fight = () => {
       ING.state = "float";
       ING.t = 0;
-      title("INGUMA", "");
+      title("AKERBELTZ", "");
       SND.roar();
       shake(0.5);
-      bossBar("INGUMA", 1);
-      notify(L("Goian hegan. Izarrak: EZKUTUA (eutsi SORGINKERIAri). Murgiltzean, alde egin; gero, nekatuta: IZAR-HAUTSA!"), "", 7);
+      bossBar("AKERBELTZ", 1);
+      notify(L("Goian, hegan. Su-izarrak: EZKUTUA (eutsi SORGINKERIAri). Murgiltzean, alde egin; gero, nekatuta: SORGIN-HAUTSA!"), "", 7);
     };
     if (ING.seenIntro) return fight();
     ING.seenIntro = true;
-    vsay(["c7_n3", "c7_a4"], fight, { INGUMA: [ING.x, ING.z, 2.4] });
+    vsay(["c7_n3", "c7_a4"], fight, { AKERBELTZ: [ING.x, ING.z, 2.4] });
   }
   /* kontatzen hasi (IZAR-HAUTSA): zaurgarri */
   function ingumaCount(secs = 4.5) {
@@ -208,7 +233,7 @@
     FB.bossHit(w.x, w.y, w.z);
     damageNumber({ x: w.x, y: w.y, z: w.z, H: 0.5 }, n * k);
     ING.flash = 0.25;
-    bossBar("INGUMA", (3 - ING.phase + Math.max(0, ING.hp) / ING_HP) / 3);
+    bossBar("AKERBELTZ", (3 - ING.phase + Math.max(0, ING.hp) / ING_HP) / 3);
     if (ING.hp > 0) return;
     if (ING.phase >= 3) return ingumaDefeat();
     ING.phase++;
@@ -223,21 +248,21 @@
       for (const F of ING.fakes) Object.assign(F, { alive: true, t: 0 });
       grassSpawn();
       bark("c7_n5");
-      notify(L("Hiru Inguma! Benetakoak bakarrik botatzen ditu izarrak — edo ENTZUN (txalaparta): urre-distira. Amets-belarrak: UDAN ez dute minik egiten."), "", 7);
+      notify(L("Hiru Akerbeltz! Benetakoak bakarrik botatzen ditu su-izarrak — edo ENTZUN (txalaparta): urre-distira. Akelarre-belarrak: UDAN ez dute minik egiten."), "", 7);
     } else {
       ING.state = "sit";
       ING.t = 0;
       ING.crush = 0;
       for (const F of ING.fakes) F.g.visible = false;
       grassClear();
-      notify(L("Ohean eseri da: amesgaiztoa betetzen ari da! SEASKA (◀ ▶ ◀ ▶ ◀): lokartu ezazu."), "", 7);
+      notify(L("Tronuan eseri da: akelarrea indartzen ari da! LO-KANTA (◀ ▶ ◀ ▶ ◀): lokartu ezazu."), "", 7);
     }
   }
   /* SEASKA (seaska.js → ametsaSeaska-tik) */
   function ingumaLullaby() {
     if (!BOSS.on || BOSS.kind !== "inguma") return false;
     if (ING.phase < 3) {
-      notify(L("Inguma barrez: «Oraindik ez, sorgin txikia!» — esna dago, hegan. Lehenik, kontatu dezala."), "", 3.5);
+      notify(L("Akerbeltz barrez: «Oraindik ez, sorgin txikia!» — esna dago, hegan. Lehenik, kontatu dezala."), "", 3.5);
       return true;
     }
     if (ING.state !== "sit") return true;
@@ -247,7 +272,7 @@
     ING.stats.lull++;
     bark("c7_n6");
     fxBurst(ING.x, ING.y + 2, ING.z, { n: 40, speed: 2, up: 1, life: 1.4, size: 0.3, color: "#e6dcff", grav: -0.3 });
-    notify(L("Lokartzen ari da! Orain: jo (eta IZAR-HAUTSA: kalte bikoitza)."), "", 4);
+    notify(L("Lokartzen ari da! Orain: jo (eta SORGIN-HAUTSA: kalte bikoitza)."), "", 4);
     return true;
   }
   /* itzulitako izarra: zorabiatuta (hautsarentzat leihoa) */
@@ -257,7 +282,7 @@
     ING.t = 0;
     SND.clang(0.7);
     fxBurst(ING.x, ING.y + 2, ING.z, { n: 30, speed: 4, life: 0.6, size: 0.3, color: "#fff1a8", grav: 2 });
-    notifyOnce("inguma-zorabiatu", L("Bere izarra itzuli zaio! Zorabiatuta: IZAR-HAUTSA orain!"), "");
+    notifyOnce("inguma-zorabiatu", L("Bere su-izarra itzuli zaio! Zorabiatuta: SORGIN-HAUTSA orain!"), "");
   }
   /* faltsua lehertu: mamu bat */
   function fakePop(F) {
@@ -320,8 +345,8 @@
       updateMaxHp();
       P.hp = P.maxHp;
       persist();
-      itemGet("bihotza", L("INGUMAREN KATEA, HAUTSIA"), L("Arnasa bat gehiago. Ametsak berriro zureak dira."), () => ametsaWake());
-    }, { INGUMA: [ING.x, ING.z, ING.y] });
+      itemGet("bihotza", L("AKERBELTZEN BIHOTZA"), L("Arnasa bat gehiago. Zazpigarren txingarra amaren leizera itzuli da."), () => ametsaWake());
+    }, { AKERBELTZ: [ING.x, ING.z, ING.y] });
   }
   /* --------------------------- eguneraketa --------------------------- */
   function ingumaUpdate(dt) {
@@ -488,7 +513,7 @@
         ING.crush = 0.35;
         playerHit(1, ING.bed.x, ING.bed.z);
         shake(0.6);
-        notify(L("Amesgaiztoak estutu zaitu! SEASKA, azkar (◀ ▶ ◀ ▶ ◀)!"), "", 3);
+        notify(L("Akelarreak estutu zaitu! LO-KANTA, azkar (◀ ▶ ◀ ▶ ◀)!"), "", 3);
       }
     } else if (ING.state === "lull") {
       P.wx = P.wz = 0;

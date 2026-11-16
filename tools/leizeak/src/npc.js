@@ -388,14 +388,14 @@
         () => flagSet("kattalin-belar"),
       );
     if (saved.herbs.length >= 3 && !f("belarrak-ok"))
-      return talk(N, [["KATTALIN", "Hiru belarrak! Usain honek nire amona gogorarazten dit… Andere. Hartu botilak, eta hau ere."]], () => {
+      return talk(N, [["KATTALIN", "Hiru belarrak! Usain honek nire amona gogorarazten dit. Hartu botilak, eta hau ere."]], () => {
         flagSet("belarrak-ok");
         saved.potions = 2;
         persist();
         pieceGet("belarrak");
       });
     if (!f("belarrak-ok") && f("kattalin-belar")) return talk(N, [["KATTALIN", "Lore urdinak udan bakarrik ikusten dira (ALDATU urtaroa). " + saved.herbs.length + " / 3."]]);
-    return talk(N, [["KATTALIN", ["Harrespilan jentil zahar bat bizi da, harrizkoa. Galdetu iezaiozu Mariri buruz.", "Andere… nire amona. Sorgina zen, zu bezala. Ehun urte dira desagertu zela.", "Gure aitonek esaten zuten: izena duen guztia bada."][Math.floor(time) % 3]]]);
+    return talk(N, [["KATTALIN", ["Harrespilan jentil zahar bat bizi da, harrizkoa. Galdetu iezaiozu Mariri buruz.", "Zure amona eta biok neska gazteak ginen elkarrekin. Bera beti joaten zen leizeetara; ni, belar bila.", "Gure aitonek esaten zuten: izena duen guztia bada."][Math.floor(time) % 3]]]);
   }
   function talkJentil(N, f) {
     if (seaskaTalk(N, f)) return;
@@ -550,4 +550,4 @@
       '<ellipse class="p5" cx="50" cy="44" rx="34" ry="12"/><path class="g2" d="M30 60l10 20M50 58v24M70 60l-10 20" stroke-width="2.4" fill="none"/>' +
       '<g class="eyes"><circle class="g2" cx="40" cy="44" r="2.4"/><circle class="g2" cx="60" cy="44" r="2.4"/></g></svg>',
   });
-  const PORTRAIT_OF = { LAMIA: "lamia", "LAMIA ILUNA": "lamiailuna", TARTALO: "tartalo", "TARTALO ILUNA": "tartalo", PELLO: "aitona", PEIO: "aitona", "PELLO ETA PEIO": "aitona", MADDI: "errementari", JOANES: "artzain", KATTALIN: "amona", "JENTIL ZAHARRA": "jentil", BASAJAUN: "basajaun", MARI: "mari", "HARRI-DANBORRA": "danbor", IRATI: "radio", ATARRABI: "atarrabi", MIKELATS: "mikelats", AKERBELTZ: "akerbeltz", SORGINAK: "sorginak", EATE: "eate", ZEZENGORRI: "zezengorri", "MAIRU ZAHARRA": "jentil", AMONA: "amona" };
+  const PORTRAIT_OF = { "AMONA GAZTEA": "amona", LAMIA: "lamia", "LAMIA ILUNA": "lamiailuna", TARTALO: "tartalo", "TARTALO ILUNA": "tartalo", PELLO: "aitona", PEIO: "aitona", "PELLO ETA PEIO": "aitona", MADDI: "errementari", JOANES: "artzain", KATTALIN: "amona", "JENTIL ZAHARRA": "jentil", BASAJAUN: "basajaun", MARI: "mari", "HARRI-DANBORRA": "danbor", IRATI: "radio", ATARRABI: "atarrabi", MIKELATS: "mikelats", AKERBELTZ: "akerbeltz", SORGINAK: "sorginak", EATE: "eate", ZEZENGORRI: "zezengorri", "MAIRU ZAHARRA": "jentil", AMONA: "amona" };

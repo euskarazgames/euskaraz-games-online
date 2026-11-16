@@ -3,8 +3,8 @@
      Herri txiki bat, baina bizia: etxe bakoitzak izena du (atearen gainean) eta norbait
      bizi da barruan. ATEA JO: eguna ala gaua, nor dagoen etxean eta istorioa nola doan,
      erantzun desberdinak (eta opari txiki batzuk). Mendietakoak itzultzen dira zaindariak
-     askatu ahala. ITURRALDE: Amaiur eta Iratiren etxea — barrura sartu daiteke:
-     sutondoa (atseden), ohea (eguna/gaua), Iratiren txokoa eta zaindarien oroitzapenak.
+     askatu ahala. ITURRALDE: Amaiur eta amonaren etxea — barrura sartu daiteke:
+     sutondoa (atseden), amona, ohea (eguna/gaua), ahizparen txokoa eta zaindarien oroitzapenak.
      ================================================================== */
   const HOUSE_DEFS = [
     { id: "pellonea", name: "PELLONEA", at: [17, 22], who: ["pello", "peio"] },
@@ -15,7 +15,7 @@
     { id: "belarrenea", name: "BELARRENEA", at: [33, 47], who: ["kattalin"] },
     { id: "artzainenea", name: "ARTZAINENEA", at: [-38, 22], who: ["joanes"] },
     { id: "mendieta", name: "MENDIETA", at: [40, 18] },
-    { id: "anderenea", name: "ANDERENEA", at: [-40, 48], sealed: true },
+    { id: "anderenea", name: "SORGINENEA", at: [-40, 48], sealed: true },
     { id: "olaberria", name: "OLABERRIA", at: [25, 43], who: ["maddi"] },
     { id: "ostatua", name: "OSTATUA", at: [2, 58] },
   ];
@@ -209,12 +209,12 @@
   };
   const MEMENTOS = [
     { flag: "basajaun", name: "BASAJAUNEN KIMUA", text: "Pago-kimu bat lapiko batean. Basajaunek eman zizun: «Basoak gogoratzen du».", kind: "kimua" },
-    { flag: "lamia", name: "LAMIAREN ORRAZIA", text: "Urrezko orrazia. Lamiak kantatzen zuenean, ibaia dantzan jartzen zen.", kind: "orrazia" },
+    { flag: "lamia", name: "AMONAREN ORRAZIA", text: "Urrezko orrazia, amonarena. Lamiek gorde zuten urte askoan; haiek kantatzen zutenean, ibaia dantzan jartzen zen.", kind: "orrazia" },
     { flag: "tartalo", name: "ARDI-ZINTZARRIA", text: "Tartaloren artaldeko zintzarria. Orain ardiak lasai bazkatzen dira lepoan.", kind: "zintzarria" },
-    { flag: "errolan", name: "TXIMISTA-HARRIA", text: "Errolanen ekaitz-harriaren zati bat. Eskuan, oraindik epel dago.", kind: "tximista" },
-    { flag: "odei", name: "EURI-URA", text: "Odeiren lehen euri goxoa, beirazko ontzi batean. Argiak ortzadarra egiten du barruan.", kind: "euria" },
-    { flag: "herensugea", name: "HERENSUGE-EZKATA", text: "Herensugearen ezkata bat, urrezkoa. Sutan jarrita ere, hotz; eskuan, bihotz baten taupadak.", kind: "ezkata" },
-    { flag: "inguma", name: "AMONAREN HAUTS-ZORROA", text: "Hutsik, baina barruan izar-hauts pixka bat geratzen da: gauez, distira egiten du. Seaska-kanta, ahopean, beti.", kind: "zorroa" },
+    { flag: "errolan", name: "TXIMISTA-HARRIA", text: "Mairu zaharraren ekaitz-harriaren zati bat. Eskuan, oraindik epel dago.", kind: "tximista" },
+    { flag: "odei", name: "EURI-URA", text: "Eateren lehen euri goxoa, beirazko ontzi batean. Argiak ortzadarra egiten du barruan.", kind: "euria" },
+    { flag: "herensugea", name: "ZEZENGORRIREN TXINPARTA", text: "Zezengorriren suaren txinparta bat, urrezkoa. Sutan jarrita ere, hotz; eskuan, bihotz baten taupadak.", kind: "ezkata" },
+    { flag: "inguma", name: "SORGIN-HAUTSAREN ZORROA", text: "Hutsik, baina barruan hauts urre pixka bat geratzen da: gauez, distira egiten du. Lo-kanta, ahopean, beti.", kind: "zorroa" },
   ];
   function mementoMesh(kind) {
     const g = new T.Group();
@@ -503,7 +503,7 @@
     candle(E(6.3), 1.12, -3.6);
     /* hitzaurrea: oihartzun-harria, ganbara eta Iratiren kutxa, izoztutako atea */
     proBuildHouse(E, D);
-    skyRoom("ETXEA", E(0), 0, W, D, { area: "etxeA", name: "ITURRALDE", desc: "Etxea. Sutondoa, ohea, Iratiren txokoa." });
+    skyRoom("ETXEA", E(0), 0, W, D, { area: "etxeA", name: "ITURRALDE", desc: "Etxea. Sutondoa, amona, ohea eta ahizparen txokoa." });
     dungeonEnd(DGE);
   }
   /* kandela: distira txikia eta zuzi-argia (gertuko bik argi errealak dituzte) */
@@ -519,8 +519,8 @@
     if (DGE.amona && DGE.amona.g.visible && near(DGE.amona, 2.3)) return { kind: "talk", label: L("AMONA"), fn: homeAmona };
     if (near(DGE.bed, 2.4)) return { kind: "hearth", label: L("OHEA · LO EGIN"), fn: homeSleep };
     if (near(DGE.shelf, 2.2)) return { kind: "talk", label: L("OROITZAPENAK"), fn: homeMementos };
-    if (near(DGE.irati, 2.0)) return { kind: "talk", label: L("IRATIREN TXOKOA"), fn: homeIrati };
-    if (near(DGE.table, 2.3) && saved.flags.includes("andere")) return { kind: "talk", label: L("ANDEREREN GUTUNA"), fn: homeLetter };
+    if (near(DGE.irati, 2.0)) return { kind: "talk", label: L("AHIZPAREN TXOKOA"), fn: homeIrati };
+    if (near(DGE.table, 2.3) && saved.flags.includes("andere")) return { kind: "talk", label: L("AMONAREN GUTUNA"), fn: homeLetter };
     return null;
   }
   function homeEnter() {
@@ -551,25 +551,25 @@
         flagSet("inguma-ametsa");
         return say(
           [
-            ["· · ·", "Amets bat. Iturralde, baina hutsik. Sutondoa itzalita. Txalapartak, urrunean, erritmo okerra jotzen du: atzekoz aurrera.", "", P.x, P.z, P.y],
-            ["IRATI?", "Amaiur… Amaiur, esnatu. Ni naiz… Irati.", "", P.x, P.z, P.y + 2, null, "c7_p1"],
-            ["AMAIUR", "Irati? Ez… Zu ez zara Irati.", "", P.x, P.z, P.y, null, "c7_p2"],
-            ["INGUMA", "Ametsetan ere ibiltzen naiz, sorgin. Zure ahizparen ahotsa ere badakit egiten.", "", P.x, P.z, P.y + 2, null, "c7_p3"],
-            ["INGUMA", "Inguma naiz. Gaur ez zaitut eramango. Laster… bai. Lo ona, sorgin txikia.", "", P.x, P.z, P.y + 2, null, "c7_p4"],
+            ["· · ·", "Amets bat. Iturralde, baina hutsik. Sutondoa itzalita. Urrunean, txalaparta eta barre-algarak: dantza bat, lainoaren gainean.", "", P.x, P.z, P.y],
+            ["SORGINAK", "Sorgin berri bat! Zatoz, zatoz dantzara!", "", P.x, P.z, P.y + 2, null, "c7_p1"],
+            ["AMAIUR", "Non nago? Hau ez da Iturralde…", "", P.x, P.z, P.y, null, "c7_p2"],
+            ["AKERBELTZ", "Akelarrean zaude, sorgin. Zure amonak ere hemen dantzatu zuen, aspaldi.", "", P.x, P.z, P.y + 2, null, "c7_p3"],
+            ["AKERBELTZ", "Akerbeltz naiz. Gaur esnatzen utziko zaitut. Hurrengoan… ez.", "", P.x, P.z, P.y + 2, null, "c7_p4"],
           ],
           () => {
             title(msg, "");
-            notify(L("Esnatu zara, izerditan. Ohe ondoan, kantu zahar bat entzun duzu… norbaitek kantatzen zuen?"), "", 6);
+            notify(L("Esnatu zara, izerditan. Sutondoan, amona: «Akelarrea? Plazan, Atarrabik badaki zer egin»."), "", 6);
           },
         );
       }
       title(msg, "");
       notify(L("Ondo lo egin duzu. Arnasa beteta."), "", 3);
     };
-    /* SEASKA-KANTA eta hauts-zorroa eskuan: Ingumaren ametsera (seaska.js) */
+    /* LO-KANTA eta sorgin-hautsa eskuan: akelarrera (seaska.js) */
     const dream = seaskaReady();
-    dialog(L("OHEA"), dream ? L("Ingumaren ametsa") : L("Lo egin?"), "", dream ? L("Hauts-zorroa eskuan, seaska-kanta ahopean. Lo egin, eta Ingumaren ametsera jaitsi?") : L("Amaren mantaren usaina. Kanpoan, txalapartak urrunean."), "", [
-      ...(dream ? [[L("AMETSERA"), () => setTimeout(ametsaEnter, 0)]] : []),
+    dialog(L("OHEA"), dream ? L("Akelarrea") : L("Lo egin?"), "", dream ? L("Sorgin-hautsa eskuan, lo-kanta ahopean. Lo egin, eta akelarrera hegan egin?") : L("Amaren mantaren usaina. Kanpoan, txalapartak urrunean."), "", [
+      ...(dream ? [[L("AKELARRERA"), () => setTimeout(ametsaEnter, 0)]] : []),
       [L("EGUNSENTIRA ARTE"), () => sleepTo(0.28, L("EGUN ON!"))],
       [L("ILUNABARRERA ARTE"), () => sleepTo(0.73, L("ARRATSALDE ON!"))],
       [L("EZ ORAIN"), () => {}],
@@ -642,24 +642,27 @@
       again.length ? [...again, [L("ITXI"), () => {}]] : null,
     );
   }
+  /* ahizparen txokoa (Gau Beltzaren gauean galdu zen; izenik ez da aipatzen) */
   function homeIrati() {
     const f = (k) => saved.flags.includes(k);
     const t = f("inguma")
-      ? L("Iratiren marrazkia: zazpi argi berde mendi baten gainean. Behean, bi ahizpa eskutik… eta haien itzala, bakarra, ilargi azpian. Lehen ez zegoen hor.")
+      ? L("Ahizparen marrazkia: zazpi argi berde mendi baten gainean, eta behean, Iturraldeko tximinia, kerik gabe. Lehen ez zegoen hor.")
       : f("herensugea")
-      ? L("Iratiren marrazkia, berriro: sei argi berde eta zazpigarrena, gorria. Behean, bi ahizpa… eta herensuge urre txiki bat, hegan, haien gainean.")
-      : f("odei")
-      ? L("Marrazkiaren ondoan, Iratiren idazkera: «Zazpi argi, eta behean bi ahizpa». Bost argi berde dira orain. Hutsuneetan, euri-tanta txiki batzuk: Iratik margotu zituen?")
-      : f("errolan")
-        ? L("Iratiren marrazkia: zazpi argi mendi baten gainean. Behean, bi neska txiki eskutik helduta. Lau argi berdez margotu dituzu, konturatu gabe.")
-        : f("basajaun")
-          ? L("Txalaparta txikiaren makilak, Iratiren eskuen neurrikoak. Haurretan: «Bi ahots ditu, Amaiur: batak galdetzen du, besteak erantzuten».")
-          : L("Iratiren txalaparta txikia eta marrazki bat: zazpi argi mendi baten gainean. Iratik beti esaten zuen: «Txalapartak ez du inoiz bakarrik jotzen».");
+        ? L("Marrazkian, zezen gorri bat dago orain, hodeien gainean. Zuk margotu duzu, lotan?")
+        : f("odei")
+          ? L("Marrazkiaren hutsuneetan, euri-tanta txiki batzuk. Ez dakizu nork margotu dituen.")
+          : f("errolan")
+            ? L("Ahizparen marrazkia: mendi bat, eta haren gainean, zazpi argi txiki. Lau berdez margotu dituzu, konturatu gabe.")
+            : f("basajaun")
+              ? L("Marrazkiaren ondoan, haren idazkera: «Txalapartak ez du inoiz bakarrik jotzen». Orain, leizeek jotzen dute.")
+              : L("Ahizparen txokoa: haren txalaparta txikia eta marrazki bat, ekaitz bat itsasoaren gainean. Hiru negu dira ez dela itzuli.");
     say([["· · ·", t, "", P.x, P.z, P.y]]);
   }
+
   function homeLetter() {
-    dialog(L("ANDERE"), L("Andereren gutuna"), "", L("«Amaiur: gutun hau irakurtzen baduzu, ituna hautsi da eta ni zeruan nabil, Mariren suarekin. Gaueko ez dago erlojuan. Zazpigarren leizean itxaroten du, Anboton. Zazpi zaindariek ireki behar dute bidea. Ez beldurtu: txalapartak ez du inoiz bakarrik jotzen.»"), "");
+    dialog(L("AMONA GAZTEA"), L("Amonaren gutuna"), "", L("«Leizeek deitzen badizute, ez beldurtu: erantzun. Nik ere erantzun nuen, zure adinean. Sua zaindu: gure sutondoa ez da gurea bakarrik, Mariren zortzigarren sua da, herriarena. Eta negua ez da inoiz betikoa.»"), "");
   }
+
   /* barruko eguneraketa: leihoa (eguna/gaua), oroitzapenak (agerian ala ez) */
   DGE.update = (dt) => {
     hearthsUpdate(dt);
@@ -689,7 +692,7 @@
     if (DGE.amona && f("irati-tartalo") && !f("giroa")) return ["Amonarekin hitz egin, sutondoan.", [DGE.amona.x, DGE.amona.z, 0]];
     /* zazpigarren atala: ohea (lehen amets gaiztoa, gero AMETSERA) eta, esnatu ondoren, kanpora */
     if (DGE.bed && f("irati-herensuge") && !f("inguma-ametsa")) return ["Ohean lo egin, sutondoa piztuta.", [DGE.bed.x, DGE.bed.z, 0]];
-    if (DGE.bed && seaskaReady()) return ["Ohean: AMETSERA (Ingumaren ametsa).", [DGE.bed.x, DGE.bed.z, 0]];
-    if (f("inguma") && !f("irati-inguma")) return ["Irten kanpora (hegoko atea): Anboto aldera begiratu.", [DGE.exitArch.x, DGE.exitArch.z, 0]];
+    if (DGE.bed && seaskaReady()) return ["Ohean: AKELARRERA (Akerbeltz).", [DGE.bed.x, DGE.bed.z, 0]];
+    if (f("inguma") && !f("irati-inguma")) return ["Irten kanpora (hegoko atea): Murumendi aldera begiratu.", [DGE.exitArch.x, DGE.exitArch.z, 0]];
     return ["Etxean: sutondoa (atseden), ohea (eguna edo gaua), oroitzapenak. Irten atetik (hegoan).", [DGE.exitArch.x, DGE.exitArch.z, 0]];
   };

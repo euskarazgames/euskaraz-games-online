@@ -1,31 +1,31 @@
   /* ==================================================================
      OROITZAPENAK · zazpi oroitzapen (diseinu propioa). Zaindari bat askatu eta haranera itzultzean,
-     iraganeko eszena labur bat (zinema, sepia eta bineta): kanpaia, amona, erlojua, Mari isildu zen
-     gaua, zazpi zaindariak, Gauekoren gaua eta Irati Anboton. Istorioaren muina, pixkanaka:
-       · Zazpi urte lehenago, ekaitz-gau batean, Iratik kaiko kanpaia jo zuen (gauez!) eta itsasoak
-         eraman zuen. Amaiurrek denbora gelditu zuen (OIHARTZUN: begizta) eta, duela urte bat, erlojua hautsi.
-       · Erlojua hautsi zenean, zazpi urte geldituak gauak irentsi zituen; Marik ahotsa zazpitan zatitu
-         zuen (zazpi dei, zazpi zaindari) eta amonak, Andere sorginak, haren sua zerura eraman zuen.
-       · Gauekok ez zuen Irati harrapatu: itsasotik atera zuen. Zazpi argiak Iratiren zazpi urteak dira.
+     iraganeko eszena labur bat (zinema, sepia eta bineta): Gau Beltza, amona, Atarrabiren itzala,
+     zortzigarren sua, zazpi txingarrak, Mikelats eta bi anaiak. Istorioaren muina, pixkanaka:
+       · Hiru negu lehenago, Gau Beltzaren gauean, Amaiurren ahizpak kaiko kanpaia jo zuen eta ez zen
+         itzuli (GAU BELTZAren istorioa); ordutik, negua.
+       · Mariren semeek Etsairen leizean ikasi zuten; Atarrabik itzala galdu zuen, eta Mikelatsek hartu.
+       · Marik zazpi txingar eman zizkien zazpi zaindariei, eta zortzigarrena Iturraldeko sutondoari
+         (amona gaztea zen). Mikelatsek, ezer ez: ekaitza bihurtu zen.
      Probetan (?test) ez dira bakarrik jotzen, window.__oroit ezarri ezean (botak ez eteteko).
      Egunkarian gordetzen dira (laburpena), eta Iturralden, oroigarriaren ondoan, berriro ikus daitezke.
      ================================================================== */
   const OROIT = { actors: {}, bell: null, clock: null, timer: 0, last: 0 };
   const OROIT_LIST = [
-    { flag: "basajaun", n: "I", name: "KANPAIA", when: "ZAZPI URTE LEHENAGO · KAIA", sum: "Ekaitz-gau batean, Iratik kaiko kanpaia jo zuen, Txomin itsasotik deitzeko. Gauez." },
+    { flag: "basajaun", n: "I", name: "GAU BELTZA", when: "HIRU NEGU LEHENAGO · KAIA", sum: "Gau Beltzaren gauean, ekaitz bat. Nire ahizpak kaiko kanpaia jo zuen, Txomin itsasotik deitzeko. Ez zen itzuli." },
     { flag: "lamia", n: "II", name: "AMONA", when: "HAMAR URTE LEHENAGO · PLAZA", sum: "Amonak txalaparta irakatsi zigun: batak galdetzen du, besteak erantzuten du. Eguna egunekoentzat, gaua gauekoentzat." },
-    { flag: "tartalo", n: "III", name: "ERLOJUA", when: "SEI URTE LEHENAGO · BADIA", sum: "Irati ez zen itzuli. Denbora gelditu nuen, eta herria begizta batean geratu zen, irratian haren ahotsa." },
-    { flag: "errolan", n: "IV", name: "MARI ISILDU ZEN GAUA", when: "DUELA URTE BAT · ERLOJUA HAUTSI ZEN GAUA", sum: "Zazpi urte geldituak gauak irentsi zituen. Marik ahotsa zazpitan zatitu zuen; amonak haren sua zerura eraman." },
-    { flag: "odei", n: "V", name: "ZAZPI ZAINDARIAK", when: "DUELA URTE BAT · ANBOTO", sum: "Zaindari bakoitzak urte bat gorde zuen, ahizpak etorri arte. Gauekok zazpi itzal bidali zituen haien bila." },
-    { flag: "herensugea", n: "VI", name: "GAUEKO", when: "ANTZINA ETA ORAIN · GAUEKOREN GAUA", sum: "Herriak gaua ahaztu zuen. Gauekok ez zuen Irati harrapatu: itsasotik atera zuen." },
-    { flag: "inguma", n: "VII", name: "AHIZPAK", when: "ORAIN · ANBOTOKO GAUA", sum: "Irati bizirik dago, Anboton. Zazpi argiak bere zazpi urteak dira. Txalapartak bi ahots behar ditu." },
+    { flag: "tartalo", n: "III", name: "ATARRABIREN ITZALA", when: "AMONAREN IPUINA · ETSAIREN LEIZEA", sum: "Mariren bi semeek Etsairen leizean ikasi zuten. Atarrabi azkena irten zen, eta itzala utzi zuen; anaiak hartu zuen." },
+    { flag: "errolan", n: "IV", name: "ZORTZIGARREN SUA", when: "BERROGEITA HAMAR URTE LEHENAGO · ITURRALDE", sum: "Marik bere sua utzi zuen Iturraldeko sutondoan, herria zaintzeko. Amona gaztea zen, eta zaintzea hitz eman zuen." },
+    { flag: "odei", n: "V", name: "ZAZPI TXINGARRAK", when: "ANTZINA · MARIREN LEIZEA", sum: "Marik zazpi txingar eman zizkien zazpi zaindariei. Mikelatsi, ezer ez. Haren ekaitzak gorri bihurtu zituen." },
+    { flag: "herensugea", n: "VI", name: "MIKELATS", when: "ANTZINA ETA ORAIN · EKAITZAREN GAUA", sum: "Mikelatsek anaiaren itzala gorde zuen leizean. Itzal hartatik egin ditu bere soldaduak." },
+    { flag: "inguma", n: "VII", name: "ANAIAK", when: "ORAIN · MURUMENDI", sum: "Atarrabik ez du anaia hil nahi: lo egin dezala, mendiaren azpian, ekaitza baretu arte." },
   ];
   const oroitSeen = (i) => saved.flags.includes("oroit-" + (i + 1));
   /* ---------------------------- aktoreak eta atrezzoa ---------------------------- */
   /* iraganeko pertsonaiak: herritarren eredu kaputxadunak, kolore propioekin */
   function oroitActor(id) {
     if (OROIT.actors[id]) return OROIT.actors[id];
-    const D = { irati: { model: "npc_hooded", tint: "#9fd0f0" }, iratiTxiki: { model: "npc_hooded", tint: "#9fd0f0", scale: 0.7 }, amaiurTxiki: { model: "npc_hooded", tint: "#8f7fd8", scale: 0.72 }, amona: { model: "npc_hooded", tint: "#b3a6c4" } }[id];
+    const D = { atarrabi: { model: "npc_rogue", tint: "#d9c39a" }, mikelats: { model: "npc_knight", tint: "#2a3448" }, irati: { model: "npc_hooded", tint: "#9fd0f0" }, iratiTxiki: { model: "npc_hooded", tint: "#9fd0f0", scale: 0.7 }, amaiurTxiki: { model: "npc_hooded", tint: "#8f7fd8", scale: 0.72 }, amona: { model: "npc_hooded", tint: "#b3a6c4" } }[id];
     const root = D && npcMesh(D);
     if (!root) return null;
     const g = new T.Group();
@@ -189,31 +189,22 @@
           OSH({ d: 3.8, night: 0.15, say: "o2_i1", cam: [[sp.x - 0.4, 1.05, sp.z - 0.4], [sp.x - 0.6, 1, sp.z - 0.6]], look: [sp.x - 1.1, 0.85, sp.z - 1.6] }),
           OSH({ d: 5, night: 0.15, say: "o2_n3", fade: "out", cam: [[sp.x + 0.4, 2.2, sp.z + 5.4], [sp.x + 0.2, 2.6, sp.z + 6.4]], look: [sp.x, 1.5, sp.z + 2.1] }),
         ];
-      case 2: /* ERLOJUA */
+      case 2: /* ATARRABIREN ITZALA: amonaren ipuina, plazan, ilunabarrean */
         return [
-          OSH({ d: 5, fade: "in", night: 0.4, cam: [[8, 4, 66], [8, 1, 72]], look: [[10, 10, 104], [10, 14, 104]], on: () => {
-            const C = oroitClock();
-            C.g.visible = true;
-            C.hh.rotation.z = -0.9;
-            C.mm.rotation.z = 2.2;
-            hero.position.set(8, dock.y, 84);
-            hero.rotation.y = 0;
-          }, tick: (dt) => (OROIT.clock.mm.rotation.z -= dt * 1.6 * Math.max(0, 1 - FILM.t / 3)) }),
-          OSH({ d: 4.6, night: 0.4, say: "o3_a1", cam: [() => faceCam(2.2, 0.3, -0.7), () => faceCam(1.7, 0.2, -0.4)], look: [faceLook, faceLook], key: "#ffd9b0", on: () => SND.freeze() }),
-          OSH({ d: 5.2, night: 0.4, text: ["· · ·", "Amaiurrek erlojua gelditu zuen. Itsasoa izoztu zen, eta herria begizta batean geratu."], cam: [[-6, 8, 70], [24, 8, 70]], look: [[10, 13, 104], [10, 15, 104]] }),
-          OSH({ d: 4.4, night: 0.4, say: "o3_a2", cam: [[7, -5.8, 88], [7.6, -5.8, 87.2]], look: [8, -5.9, 84] }),
-          OSH({ d: 5, night: 0.4, say: "o3_i1", vfx: "irati", fade: "out", cam: [[8, 2, 76], [8, 6, 70]], look: [10, 15, 104], tick: (dt, k) => {
-            OROIT.clock.face.material.opacity = 0.9 * (1 - k * 0.6);
-            if (k > 0.6 && !OROIT.clockCrack) {
-              OROIT.clockCrack = 1;
-              SND.stinger(true);
-              fxBurst(10, 16, 104, { n: 60, speed: 6, life: 1.4, size: 0.4, color: "#ffe2a8", grav: 2 });
-            }
+          OSH({ d: 4.8, fade: "in", night: 0.55, cam: [[10, 6, 22], [6.5, 3.6, 25.5]], look: [sp.x, 1.2, sp.z], on: () => {
+            oroitPlace("amona", sp.x, 0, sp.z + 2.1, PI);
+            oroitPlace("iratiTxiki", sp.x - 1.1, 0, sp.z - 1.6, 0);
+            oroitPlace("amaiurTxiki", sp.x + 1.1, 0, sp.z - 1.6, 0);
+            hero.position.set(0, -50, 0);
           } }),
+          OSH({ d: 5.2, night: 0.55, say: "o3_a1", cam: [[sp.x + 2.2, 1.9, sp.z - 1.4], [sp.x + 1.6, 1.8, sp.z - 0.8]], look: [sp.x, 1.5, sp.z + 2.1] }),
+          OSH({ d: 5.2, night: 0.7, text: ["· · ·", "Etsairen leizean, azkena irteten zena maisuarena zen. Atarrabik itzala utzi zion atean, eta ihes egin zuen."], cam: [[-6, 8, 50], [6, 10, 44]], look: [[0, 6, 20], [0, 30, -60]] }),
+          OSH({ d: 4.6, night: 0.55, say: "o3_a2", cam: [[sp.x - 3.2, 2.4, sp.z + 0.6], [sp.x - 2.6, 2.2, sp.z + 1.2]], look: [sp.x, 1.4, sp.z + 1.4] }),
+          OSH({ d: 5, night: 0.6, say: "o3_i1", fade: "out", cam: [[sp.x + 0.4, 2.2, sp.z + 5.4], [sp.x + 0.2, 2.6, sp.z + 6.4]], look: [sp.x, 1.5, sp.z + 2.1] }),
         ];
-      case 3: /* MARI ISILDU ZEN GAUA */
+      case 3: /* ZORTZIGARREN SUA: Mari Iturraldera jaitsi zen; sorgin gazteak sua zaintzea hitz eman */
         return [
-          OSH({ d: 5, fade: "in", night: 0.9, text: ["· · ·", "Erlojua hautsi zenean, zazpi urte geldituak askatu ziren. Gauak irentsi zituen."], cam: [[20, 14, -20], [16, 22, -40]], look: [[-20, 60, -280], [-28, 120, -320]] }),
+          OSH({ d: 5, fade: "in", night: 0.9, text: ["· · ·", "Antzina, Mari mendiz mendi zebilen, suzko bola batean. Gau batean, Ibarrara jaitsi zen."], cam: [[20, 14, -20], [16, 22, -40]], look: [[-20, 60, -280], [-28, 120, -320]] }),
           OSH({ d: 5.4, night: 0.9, say: "o4_m1", cam: [[16, 22, -40], [10, 30, -60]], look: [-28, 120, -320], on: () => {
             if (!ZAZPI.g) zazpiBuild();
             zazpiColors(0);
@@ -224,9 +215,9 @@
             if (!MARI.m) mariCliffMesh();
             MARI.t = 0;
           }, tick: (dt) => mariFlight(dt) }),
-          OSH({ d: 5.2, night: 0.85, text: ["· · ·", "Andere sorgina suzko bolarekin igo zen. Herrian, hileta-kanpaiak jo zituzten."], fade: "out", cam: [[0, 4, 46], [0, 3, 40]], look: [[0, 30, -20], [0, 60, -80]], on: () => setTimeout(() => FILM.on && SND.echo(0.6), 600), tick: (dt) => mariFlight(dt) }),
+          OSH({ d: 5.2, night: 0.85, text: ["· · ·", "Sorgin gazteak sutondoan gorde zuen txingarra. Ordutik, Iturralden ez da sua inoiz itzali."], fade: "out", cam: [[0, 4, 46], [0, 3, 40]], look: [[0, 30, -20], [0, 60, -80]], on: () => setTimeout(() => FILM.on && SND.echo(0.6), 600), tick: (dt) => mariFlight(dt) }),
         ];
-      case 4: /* ZAZPI ZAINDARIAK */
+      case 4: /* ZAZPI TXINGARRAK */
         return [
           OSH({ d: 5.4, fade: "in", night: 0.75, say: "o5_m1", cam: [[60, 40, 40], [20, 46, 0]], look: [[-10, 10, -130], [-40, 20, -140]], on: () => {
             if (!ZAZPI.g) zazpiBuild();
@@ -237,29 +228,29 @@
           OSH({ d: 5.2, night: 0.75, say: "o5_m2", cam: [[20, 46, 0], [10, 50, -20]], look: [20, 125, -170], tick: (dt) => zazpiUpdate(dt) }),
           OSH({ d: 5.2, night: 0.95, say: "o5_g1", fade: "out", cam: [[2, 7, 60], [0, 10, 54]], look: [[8, 40, -70], [8, 62, -96]], tick: (dt, k) => {
             proEyesOpen(k);
-            /* Gauekoren itzalak: zazpi argiak gorri bihurtzen dira */
+            /* Mikelatsen ekaitza: zazpi txingarrak gorri bihurtzen dira */
             if (k > 0.55 && ZAZPI.green) {
               zazpiColors(0);
               SND.stinger(false);
             }
           } }),
         ];
-      case 5: /* GAUEKO */
+      case 5: /* MIKELATS: anaiaren itzala */
         return [
           OSH({ d: 5.2, fade: "in", night: 0.9, say: "o6_g1", cam: [[-12, 5, 56], [-6, 4, 50]], look: [0, 2, 36], on: () => (hero.position.y = -50) }),
           OSH({ d: 5.6, night: 0.95, say: "o6_g2", cam: [[2, 7, 66], [0, 9, 60]], look: [[8, 40, -70], [8, 62, -96]], tick: (dt, k) => proEyesOpen(0.4 + k * 0.6) }),
           OSH({ d: 4.2, night: 1, say: "o6_i1", vfx: "dry", cam: [vc(2.2, 1.4, 3.2), vc(1.6, 1.3, 2.4)], look: vc(0, 1.2, 0), key: "#7f9fe0", on: () => {
             oroitVoid().visible = true;
-            oroitPlace("irati", OVD.x, OVD.y, OVD.z, 0.5);
+            oroitPlace("atarrabi", OVD.x, OVD.y, OVD.z, 0.5);
             proEyes().visible = false;
           } }),
           OSH({ d: 5.6, night: 1, say: "o6_g3", fade: "out", cam: [vc(1.6, 1.3, 2.4), vc(-3, 4, 6)], look: [vc(0, 1.2, 0), vc(0, 4, -6)], key: "#7f9fe0" }),
         ];
-      default: /* AHIZPAK */
+      default: /* ANAIAK: Atarrabi, hutsunean */
         return [
           OSH({ d: 5.6, fade: "in", night: 1, say: "o7_i1", vfx: "dry", cam: [vc(2.6, 1.6, 3.4), vc(1.8, 1.4, 2.6)], look: vc(0, 1.3, 0), key: "#9fb6e6", on: () => {
             oroitVoid().visible = true;
-            oroitPlace("irati", OVD.x, OVD.y, OVD.z, 0.5);
+            oroitPlace("atarrabi", OVD.x, OVD.y, OVD.z, 0.5);
             hero.position.y = -50;
             oroitOrbs();
           }, tick: oroitOrbsTick }),

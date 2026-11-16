@@ -1,20 +1,21 @@
   /* ==================================================================
-     SEASKA-KANTA · zazpigarren ataleko bidea (diseinu propioa, euskal ohitura zaharrean oinarritua)
-     Herri-konjuru zaharrak dio Ingumak dena kontatu behar duela etxera sartu aurretik:
-     zeruko izarrak, lurreko belarrak, itsasoko hareak. Amonaren seaska-kantak hiru bertso zituen:
-       · LURREAN BELARRAK ... Kattalinek daki (belar-biltzailea)
-       · ITSASOAN HAREAK .... Txominek (arrantzalea, kaian)
-       · ZERUAN IZARRAK ..... jentil zaharrak, GAUEZ bakarrik (izarrik gabe, ez dago bertsorik)
-     Hiru bertsoekin, Iratik SEASKA erritmoa irakasten du eta amonaren hauts-zorroa ematen
-     (IZAR-HAUTSA). Gauez, Iturralden lo egin → AMETSA (ametsa.js). Ingumaren ondoren: esnatu,
-     zazpigarren argia berde… eta Gauekoren deia (Anbotora).
+     LO-KANTA · zazpigarren ataleko bidea (diseinu propioa, euskal ohitura zaharretan oinarritua)
+     Herri-sinesmenak dio sorginek eta izpiritu gaiztoek kontatu egin behar dutela: atean
+     eguzkilorea badago, haren hortz guztiak; sarea zintzilik badago, haren begi guztiak. Sorgin
+     zaharren lo-kantak hiru bertso ditu:
+       · EGUZKILOREAREN HORTZAK ... Kattalinek daki (belar-biltzailea)
+       · SAREAREN BEGIAK .......... Txominek (arrantzalea, kaian)
+       · ORTZIKO IZARRAK .......... jentil zaharrak, GAUEZ bakarrik (izarrik gabe, ez dago bertsorik)
+     Hiru bertsoekin, Atarrabik LO-KANTA erritmoa irakasten du eta sorgin-hautsa ematen
+     (SORGIN-HAUTSA). Gauez, Iturralden lo egin → AKELARREA (ametsa.js). Akerbeltzen ondoren:
+     esnatu, zazpigarren txingarra… eta Mikelatsek amona eraman du (Murumendira).
      Banderak: inguma-ametsa → seaska → bertso-belar / bertso-hare / bertso-izar → seaska-kanta
      → ametsa → inguma → irati-inguma.
      ================================================================== */
   const BERTSOAK = [
-    { flag: "bertso-belar", name: "LURREAN BELARRAK", text: "«Lurrean belarrak, baso eta larreetan: kontatu, Inguma, belar guztiak banan-banan.»", who: "Kattalin" },
-    { flag: "bertso-hare", name: "ITSASOAN HAREAK", text: "«Itsasoan hareak, hondartzan eta hondoan: kontatu, Inguma, hare-ale guztiak.»", who: "Txomin" },
-    { flag: "bertso-izar", name: "ZERUAN IZARRAK", text: "«Zeruan izarrak, ortzi osoan: kontatu, Inguma, izar guztiak, bat bera ahaztu gabe.»", who: "jentil zaharra (gauez)" },
+    { flag: "bertso-belar", name: "EGUZKILOREAREN HORTZAK", text: "«Atean eguzkilorea, hortz eta orratz: kontatu, Akerbeltz, hortz guztiak banan-banan.»", who: "Kattalin" },
+    { flag: "bertso-hare", name: "SAREAREN BEGIAK", text: "«Arrantzalearen sarea, begi eta korapilo: kontatu, Akerbeltz, korapilo guztiak.»", who: "Txomin" },
+    { flag: "bertso-izar", name: "ORTZIKO IZARRAK", text: "«Ortziko izarrak, bat eta mila: kontatu, Akerbeltz, egunsentia iritsi arte.»", who: "jentil zaharra (gauez)" },
   ];
   const bertsoCount = () => BERTSOAK.filter((B) => saved.flags.includes(B.flag)).length;
   /* bertso bat jaso (une berezia) */
@@ -24,7 +25,7 @@
     flagSet(flagId);
     const n = bertsoCount();
     itemGet("bertsoa", L("BERTSOA: ") + B.name, B.text + "  (" + n + " / 3)", () => {
-      if (n >= 3) notify(L("Hiru bertsoak! Itzuli Iratirengana, plazara."), "", 5);
+      if (n >= 3) notify(L("Hiru bertsoak! Itzuli Atarrabirengana, plazara."), "", 5);
       else notify(L("Bertsoak: ") + n + " / 3 · " + BERTSOAK.filter((b) => !saved.flags.includes(b.flag)).map((b) => b.who).join(", "), "", 5);
       if (after) after();
     });
@@ -36,8 +37,8 @@
       talk(
         N,
         [
-          ["KATTALIN", "Amonaren seaska-kanta? Andere ere kantatzen zuen, belarrak lehortzen genituenean… Itxaron. Gogoratzen dut."],
-          ["KATTALIN", "«Lurrean belarrak, baso eta larreetan…» Ingumak belar bakoitza kontatu behar du. Horregatik ez zuen inoiz amaitzen."],
+          ["KATTALIN", "Sorgin zaharren lo-kanta? Zure amonak kantatzen zuen, belarrak lehortzen genituenean… Itxaron. Gogoratzen dut."],
+          ["KATTALIN", "«Atean eguzkilorea, hortz eta orratz…» Sorginak hortz bakoitza kontatu behar du sartu aurretik. Horregatik ez zuen inoiz amaitzen."],
         ],
         () => bertsoGet("bertso-belar"),
       );
@@ -47,8 +48,8 @@
       talk(
         N,
         [
-          ["TXOMIN", "Seaska-kanta… Zure amonak kantatzen zigun, txikitan, kaian, sareak josten genituen bitartean."],
-          ["TXOMIN", "«Itsasoan hareak, hondartzan eta hondoan…» Hondartzako hare guztiak, neska. Inor ez da sekula horiek kontatzera iritsi."],
+          ["TXOMIN", "Lo-kanta… Zure amonak kantatzen zigun, txikitan, kaian, sareak josten genituen bitartean."],
+          ["TXOMIN", "«Arrantzalearen sarea, begi eta korapilo…» Sare zahar batek mila korapilo ditu, neska. Inor ez da sekula horiek kontatzera iritsi."],
         ],
         () => bertsoGet("bertso-hare"),
       );
@@ -61,8 +62,8 @@
         talk(
           N,
           [
-            ["JENTIL ZAHARRA", "Begira gora. Gu, jentilak, izarrak kontatzen genituen gauez, ehun urtez. Inguma beti galtzen zen kontuan."],
-            ["JENTIL ZAHARRA", "«Zeruan izarrak, ortzi osoan…» Bat bera ahaztuz gero, berriro hasi behar du. Horregatik, egunsentia beti iristen da lehenago."],
+            ["JENTIL ZAHARRA", "Begira gora. Gu, jentilak, izarrak kontatzen genituen gauez, ehun urtez. Sorginak beti galtzen ziren kontuan."],
+            ["JENTIL ZAHARRA", "«Ortziko izarrak, bat eta mila…» Bat bera ahaztuz gero, berriro hasi behar da. Horregatik, egunsentia beti iristen da lehenago."],
           ],
           () => bertsoGet("bertso-izar"),
         );
@@ -70,13 +71,13 @@
     }
     return false;
   }
-  /* Irati (talkIrati-tik): true → kudeatuta */
+  /* Atarrabi (talkIrati-tik): true → kudeatuta */
   function seaskaIrati(N, f) {
-    const at = { IRATI: [N.x, N.z, N.y || 0] };
+    const at = { ATARRABI: [N.x, N.z, N.y || 0] };
     if (f("inguma-ametsa") && !f("seaska")) {
       vsay(["c7_i1", "c7_a1", "c7_i2", "c7_i3"], () => {
         flagSet("seaska");
-        title("SEASKA-KANTA", "");
+        title("LO-KANTA", "");
         notify(L("Hiru bertso: Kattalin, Txomin eta jentil zaharra (gauez, harrespilan)."), "", 6);
         hud();
       }, at);
@@ -84,39 +85,39 @@
     }
     if (f("seaska") && !f("seaska-kanta")) {
       if (bertsoCount() < 3) {
-        talk(N, [["IRATI", "Bertsoak: " + bertsoCount() + " / 3. " + BERTSOAK.filter((b) => !f(b.flag)).map((b) => b.who).join(", ") + "… Gogoratu: izarrena gauez bakarrik."]]);
+        talk(N, [["ATARRABI", "Bertsoak: " + bertsoCount() + " / 3. " + BERTSOAK.filter((b) => !f(b.flag)).map((b) => b.who).join(", ") + "… Gogoratu: izarrena gauez bakarrik."]]);
         return true;
       }
-      /* urratsak: Irati → SEASKA erritmoa → hauts-zorroa → Amaiur eta Iratiren abisua */
+      /* urratsak: Atarrabi → LO-KANTA erritmoa → sorgin-hautsa → Amaiur eta Atarrabiren abisua */
       const warn = () =>
         vsay(
           ["c7_a2", "c7_i6"],
           () => {
             flagSet("seaska-kanta");
-            coach("hautsa", "Z", "Z: IZAR-HAUTSA · bota, eta kontatzen hasiko dira", "", "useBtn", "IZARRAK: bota, eta kontatzen hasiko dira", "");
-            notify(L("Gauez, Iturralden: ohean, AMETSERA."), "", 6);
+            coach("hautsa", "Z", "Z: SORGIN-HAUTSA · bota, eta kontatzen hasiko dira", "", "useBtn", "HAUTSA: bota, eta kontatzen hasiko dira", "");
+            notify(L("Gauez, Iturralden: ohean, AKELARRERA."), "", 6);
             hud();
           },
           at,
         );
       const pouch = () =>
-        itemGet("hautsa", L("IZAR-HAUTSA"), L("Amonaren hauts-zorroa. Bota: itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Izar-lainoan, hautsak izar-plataformak sortzen ditu; airean botaz gero, izar-eskailerak. ") + (mobile ? L("IZARRAK botoia agertzen da behar denean.") : L("Z tekla.")), () => {
+        itemGet("hautsa", L("SORGIN-HAUTSA"), L("Mariren leizeko hauts urrea. Bota: itzal-izakiak KONTATZEN geratzen dira (geldi, kalte bikoitza). Akelarreko lainoan, hautsak plataformak sortzen ditu; airean botaz gero, eskailerak. ") + (mobile ? L("HAUTSA botoia agertzen da behar denean.") : L("Z tekla.")), () => {
           if (!saved.items.includes("hautsa")) saved.items.push("hautsa");
           persist();
           translate();
           warn();
         });
-      vsay(["c7_i4"], () => txalaLearn("seaska", "IRATI", () => vsay(["c7_i5"], pouch, at)), at);
+      vsay(["c7_i4"], () => txalaLearn("seaska", "ATARRABI", () => vsay(["c7_i5"], pouch, at)), at);
       return true;
     }
     return false;
   }
-  /* SEASKA erritmoa (txalaparta.js-ko rhythmEffect-etik) */
+  /* LO-KANTA erritmoa (txalaparta.js-ko rhythmEffect-etik; barne-IDa "seaska") */
   function seaskaEffect() {
     fxRing(P.x, P.y + 0.3, P.z, "#c9b6ff", 12, 1.1);
     fxBurst(P.x, P.y + 1.6, P.z, { n: 36, speed: 2.4, up: 1.5, life: 1.4, size: 0.3, color: "#e6dcff", grav: -0.4, drag: 1.5 });
     SND.sing ? SND.sing(0.8) : SND.wake();
-    /* ametsean: sehaska (ametsa.js) eta Inguma (inguma.js) */
+    /* akelarrean: galdara (ametsa.js) eta Akerbeltz (inguma.js) */
     if (ZONE.cur === "ametsa" && ametsaSeaska()) return;
     let n = 0;
     for (const e of ENEMIES) {
@@ -125,10 +126,10 @@
       damageNumber(e, "z z z", "#d9c8ff");
       n++;
     }
-    notify(n ? L("Seaska-kanta: inguruko itzalak lokartu dira.") : L("Seaska-kanta… lo egiteko kanta. Ametsetan du indarrik handiena."), "", 3);
+    notify(n ? L("Lo-kanta: inguruko itzalak lokartu dira.") : L("Lo-kanta… lo egiteko kanta. Akelarrean du indarrik handiena."), "", 3);
   }
 
-  /* ---------------------- ohetik ametsera (herria.js homeSleep: AMETSERA) ---------------------- */
+  /* ---------------------- ohetik akelarrera (herria.js homeSleep: AKELARRERA) ---------------------- */
   const seaskaReady = () => saved.flags.includes("seaska-kanta") && !saved.flags.includes("inguma");
   function ametsaEnter() {
     saved.tod = 0.02;
@@ -140,7 +141,7 @@
         {
           d: 4.6,
           fade: "in",
-          cap: ["ITURRALDE · 00:28", first ? "AMAIUR LO DAGO. EZ DAGO BAKARRIK." : "BERRIRO, AMETSERA."],
+          cap: ["ITURRALDE · 00:28", first ? "AMAIUR LO DAGO. HAREN ARIMA HEGAN DOA." : "BERRIRO, AKELARRERA."],
           on: () => {
             hero.position.set(DGE.bed.x, 0.84, DGE.bed.z + 1.15);
             if (actor) actor.rotation.x = -PI / 2;
@@ -165,13 +166,13 @@
         if (actor) actor.rotation.x = 0;
         flagSet("ametsa");
         enterZone("ametsa", { ...DGA.entry, cp: true }, true);
-        title("AMETSA", "");
+        title("AKELARREA", "");
         $("filmFade").style.opacity = 0;
       },
     );
   }
 
-  /* ---------------------- esnatu (Inguma garaituta) ---------------------- */
+  /* ---------------------- esnatu (Akerbeltz garaituta) ---------------------- */
   function ametsaWake() {
     saved.tod = 0.27;
     DAY.k = nightOf(0.27);
@@ -197,13 +198,13 @@
         P.angle = PI / 2;
         flagSet("inguma");
         deia(["c7_i7"], () => {
-          notify(L("Irten kanpora, eta begiratu Anboto aldera."), "", 6);
+          notify(L("Irten kanpora, eta begiratu Murumendi aldera."), "", 6);
           hud();
         });
       },
     );
   }
-  /* zazpigarren atalaren amaiera (Iturralde → haranera irtetean): zazpigarren argia berde, eta Gaueko */
+  /* zazpigarren atalaren amaiera (Iturralde → haranera irtetean): zazpigarren txingarra, eta Mikelatsek amona eraman du */
   function ingumaFinale() {
     const f = (k) => saved.flags.includes(k);
     if (!f("inguma") || f("irati-inguma") || ZONE.cur !== "ibarra" || cinematic || FILM.on) return;
@@ -220,8 +221,8 @@
     say(
       [
         V("c7_a5", P.x, P.z, P.y),
-        ["· · ·", "Herriko txalapartak bakarrik jo du, astiro, egunsentiarekin. Anboto aldetik, haize hotz bat.", "", P.x, P.z, P.y],
-        ["· · ·", "Anbotoko hodeian, zazpi argiak. Zazpigarrena… berde bihurtu da.", "", 20, -170, 120, [0, 30, 40]],
+        ["· · ·", "Herriko txalapartak bakarrik jo du, astiro, egunsentiarekin. Murumendi aldetik, kazkabar-haize bat.", "", P.x, P.z, P.y],
+        ["· · ·", "Murumendiko hodeian, zazpi argiak. Zazpigarrena… berde bihurtu da. Baina Iturraldeko tximiniak ez du kerik.", "", 20, -170, 120, [0, 30, 40]],
         V("c7_g1", 20, -170, 120, [0, 30, 40]),
         V("c7_a6", P.x, P.z, P.y),
         V("c7_i8", 0, 41, 0),
@@ -231,9 +232,9 @@
         ZAZPI.t = -1;
         ZAZPI.turn = false;
         if (ZAZPI.g) ZAZPI.g.visible = false;
-        notify(L("Zazpi zaindariak aske. Anbotoko hodeian, zazpi argi berde… eta Gaueko zain, Irati ere bai."), "", 8);
+        notify(L("Zazpi txingarrak itzulita. Baina Mikelatsek amona eraman du Murumendira: plazan, Atarrabi zain."), "", 8);
         hud();
-        /* zazpigarren oroitzapena: Irati Anboton (probetan, window.__oroit ezarrita bakarrik) */
+        /* zazpigarren oroitzapena: bi anaiak (probetan, window.__oroit ezarrita bakarrik) */
         if (!saved.flags.includes("oroit-7") && (!OROIT_TEST || window.__oroit)) setTimeout(() => oroitPlay(6), 1200);
       },
     );

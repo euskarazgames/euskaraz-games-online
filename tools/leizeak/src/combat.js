@@ -1266,7 +1266,7 @@
     if (!pool.length) return;
     const pick = pool.sort(() => Math.random() - 0.5).slice(0, 2);
     dialog(
-      "IRATI",
+      "ATARRABI",
       "Hartu nire oparia.",
       "Toma mi regalo.",
       pick.map((b) => L(b[1], b[2]) + " — " + L(b[3], b[4])).join("\n\n"),

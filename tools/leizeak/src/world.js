@@ -24,17 +24,17 @@
     portua: ["PORTUA", "Mari isildu zenetik, itsasoa izoztuta dago. Udan, txalupak ibiltzen ziren."],
     zelaiak: ["ZELAIAK", "Joanesen ardiak hemen bazkatzen ziren."],
     iparra: ["IPAR-ZELAIAK", "Ibaiaz bestaldean, harrespila zain dago."],
-    harrespila: ["HARRESPILA", "Jentilen harriak. Lo daude, ez hilda."],
+    harrespila: ["HARRESPILA", "Mairuek altxatutako harriak. Lo daude, ez hilda."],
     basoa: ["BASOA", "Basajaunen lurra. Zuhaitzek isilik begiratzen dute."],
     ataria: ["LEIZEAREN ATARIA", "Harri handi batek ixten du sarrera."],
-    ibaia: ["IBAIA", "Mari isildu zenetik ibaia izoztuta dago. Udan, ura bizi zen."],
+    ibaia: ["IBAIA", "Gau Beltzaz geroztik ibaia izoztuta dago. Udan, ura bizi zen."],
     arroila: ["HARRI-ARROILA", "Ur-jauziaren isiltasuna. Izotzak hemen ere hitz egiten du."],
     urjauzia: ["UR-JAUZIA", "Izotz-gortinaren atzean, ilunpe bat. Udan ura erortzen zen…"],
     lepoa: ["ARTZAINEN LEPOA", "Hemendik aurrera, Tartaloren lurrak. Ardi-hezurrak bidean."],
     kaia: ["KAIA", "Txalupa izotzean harrapatuta dago."],
     badia: ["BADIA IZOZTUA", "Itsasoak ere eutsi dio arnasari."],
     zuloa: ["LEIZE-ZULOA", "Ibaia lurrak irensten du hemen. Hondotik, norbaitek kantatzen duela dirudi."],
-    gailurra: ["ANBOTOKO GAILURRA", "Mariren etxea. Hodeien gainean, ekaitza; azpian, harana lo."],
+    gailurra: ["MURUMENDIKO GAILURRA", "Mikelatsen ekaitzaren etxea. Hodeien gainean, kazkabarra; azpian, harana lo."],
   };
   /* zona baterako eraikitzen: taldea eta zerrendak "globalak" bihurtu */
   function zoneBuild(id) {
