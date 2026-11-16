@@ -49,6 +49,13 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
 - `public/garena`, `public/ataria`, `src/ataria.js` — GARENA katalogoa (jokoetatik aparte).
 - `src/worker.js` — WebSocket zerbitzaria (Durable Objects) eta APIak.
 
+## Estudioa (agenteak)
+- `.claude/agents/`: 25 agente espezializatu (zuzendariak, buruak eta espezialistak: diseinua, narratiba,
+  maila-diseinua, programazioa, artea, audioa, QA, irisgarritasuna…), Claude Code Game Studios-etik hartuak
+  (MIT: `.claude/LICENSE-claude-code-game-studios.txt`) eta proiektu honetara egokituak (testuinguru-blokea
+  fitxategi bakoitzaren hasieran). Godot/Unity/Unreal eta sareko/zuzeneko jokoen espezialistak kanpo utzi dira.
+  Proiektuaren arauek (fitxategi hau) agenteen argibideen gainetik daude.
+
 ## Konbentzioak
 - Interfazeko testuak euskaraz. Commit mezuak ere euskaraz (historiaren estiloan).
 - Dena euskara hutsean: ez dago hizkuntza-hautatzailerik. Atariak beti `__EG_LANG="eu"` pasatzen du eta
