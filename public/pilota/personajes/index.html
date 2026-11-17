@@ -1,0 +1,75 @@
+<!doctype html><html lang="eu"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Euskaraz Games · Pilota 3D pertsonaiak (QA)</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#0b101b;color:#ecf3fb;font:16px/1.4 system-ui,Arial,sans-serif}
+header{padding:18px min(5vw,48px);border-bottom:1px solid #ffffff22;display:flex;justify-content:space-between;gap:15px;align-items:center}
+strong{font-size:21px;letter-spacing:-.045em}.mark{color:#ffad65}
+main{max-width:1240px;margin:18px auto;padding:0 20px;display:grid;grid-template-columns:1fr minmax(210px,320px);gap:18px}
+#canvas{height:min(68vh,660px);min-height:370px;border:1px solid #43516b;border-radius:22px;overflow:hidden;background:radial-gradient(circle at 55% 28%,#344456,#0b1823 75%);position:relative}
+#message{position:absolute;bottom:12px;left:14px;right:14px;text-align:center;color:#eee;font-size:13px;background:#111b29cc;padding:9px;border-radius:10px}
+aside{background:#141e2d;border:1px solid #344357;border-radius:22px;padding:17px}h1{margin:3px 0 12px;font-size:24px}p{color:#b7c9d9;font-size:13px}
+#players{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}button{border:1px solid #46586c;border-radius:12px;padding:11px 7px;background:#1e2c3d;color:#fff;font-weight:800;cursor:pointer}
+button.on,button:hover{background:#e68b4f;color:#152234;border-color:#ffa063}
+img{display:block;width:100%;max-height:255px;object-fit:contain;border-radius:10px;background:#293344;margin-top:15px}
+a{color:#ffbf91}footer{max-width:1240px;padding:8px 20px 30px;margin:auto;font-size:12px;color:#8cabb8}
+@media(max-width:720px){main{grid-template-columns:1fr}#canvas{height:52vh;min-height:310px}aside{order:-1}img{display:none}}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+</head><body>
+<header><strong>EUSKARAZ <span class="mark">GAMES</span> / PILOTA</strong><a href="/pilota/">Itzuli jokora</a></header>
+<main>
+<section id="canvas"><div id="message">3D eredua kargatzen…</div></section>
+<aside>
+<div class="mark">QA · FAL → BLENDER</div><h1>Pilotari berriak</h1>
+<p>Benetako jokorako behin-behineko 3D ereduak. Hau ikuskatzaile bat da, ez jokoaren ordezkoa.</p>
+<div id="players"></div>
+<img id="source" alt="Pilota 3D modeling reference">
+<p><b>Kontrolak:</b> arrastatu biratzeko, atximur egin zoomerako.</p>
+<p id="stats">Ile, aurpegi, bost hatz, besoen eta hanken proportzioak egiaztatu. Eskuz berrikusi behar dira hezurrak eta pisuak.</p>
+</aside>
+</main>
+<footer>Bertsio esperimentala. Ez aldatu jatorrizko animazioen fisika, sake arauak (3–7) edo denboraldia QA egin arte.</footer>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const C=[
+ {id:'jon',name:'JON',src:'https://v3b.fal.media/files/b/0ab2d728/QvHGVVAMfXwCBusYV7Eb5_58v0YDwC.png'},
+ {id:'lurra',name:'A. LURRA',src:'https://v3b.fal.media/files/b/0ab2d782/mK9GnBwOvaKVoxdr5B9n4_DE1p8Lnb.png'},
+ {id:'harri',name:'X. HARRI',src:'https://v3b.fal.media/files/b/0ab2d782/2ZGCzekgWYsfCV7BFkTH-_V4l4GlDi.png'},
+ {id:'mendibe',name:'U. MENDIBE',src:'https://v3b.fal.media/files/b/0ab2d782/pAQ9QR518J4QM_lv8N2hQ_8SPDbzNt.png'}
+];
+const canvas=document.getElementById('canvas'), msg=document.getElementById('message'), stats=document.getElementById('stats');
+const scene=new THREE.Scene();scene.background=new THREE.Color('#10202f');
+const camera=new THREE.PerspectiveCamera(34,1,.05,50);camera.position.set(2.5,1.45,3.5);
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'low-power'});
+renderer.setPixelRatio(Math.min(1.6,window.devicePixelRatio||1));renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;
+canvas.insertBefore(renderer.domElement,msg);renderer.domElement.style.width='100%';renderer.domElement.style.height='100%';
+const light=new THREE.DirectionalLight(0xffffff,2.5);light.position.set(-3,7,4);scene.add(light);
+const rim=new THREE.DirectionalLight(0xb2deff,1.7);rim.position.set(3,2,-4);scene.add(rim, new THREE.HemisphereLight(0xdaedff,0x515160,2.0));
+const controls=new OrbitControls(camera,renderer.domElement);controls.target.set(0,.91,0);controls.enableDamping=true;
+controls.maxPolarAngle=Math.PI*.85;controls.minDistance=1.7;controls.maxDistance=8;controls.autoRotate=true;controls.autoRotateSpeed=.65;
+const floor=new THREE.Mesh(new THREE.CircleGeometry(2.6,60),new THREE.MeshStandardMaterial({color:0x263c4c,roughness:.87}));floor.rotation.x=-Math.PI/2;scene.add(floor);
+let current=null,seq=0;
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+new ResizeObserver(resize).observe(canvas);resize();
+function showStatus(t){msg.textContent=t;msg.hidden=false}
+function select(c){
+ seq++;const n=seq;
+ [...document.querySelectorAll('#players button')].forEach(b=>b.classList.toggle('on',b.dataset.id===c.id));
+ document.getElementById('source').src=c.src;
+ if(current){scene.remove(current);current.traverse(o=>{if(o.isMesh){o.geometry?.dispose();if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material?.dispose()}});current=null}
+ showStatus(c.name+' · Kargatzen…');stats.textContent='3D eredua: '+c.id;
+ new GLTFLoader().load('../characters/'+c.id+'_optimized.glb',g=>{
+   if(n!==seq)return;
+   current=g.scene;scene.add(current);
+   const box=new THREE.Box3().setFromObject(current);
+   stats.textContent=c.name+' · '+box.getSize(new THREE.Vector3()).y.toFixed(2)+' m · GLB';
+   msg.hidden=true;
+ },undefined,e=>{if(n===seq){showStatus('Eredua ez dago prest. Blender-en konbertsioa begiratu GitHub Actions-en.');stats.textContent=e.message||'GLB falta';}});
+}
+for(const c of C){const b=document.createElement('button');b.textContent=c.name;b.dataset.id=c.id;b.onclick=()=>select(c);document.getElementById('players').append(b)}
+function frame(){requestAnimationFrame(frame);controls.update();renderer.render(scene,camera)}frame();select(C[0]);
+</script></body></html>
