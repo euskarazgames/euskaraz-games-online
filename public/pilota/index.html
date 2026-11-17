@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-2.0">
+<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-3.0-natural-contact">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Euskaraz Games · Herri Pilota · Pilotari Karrera</title>
 <style>
@@ -1287,7 +1287,7 @@ const Rig=(()=>{
   /* animazioa: egoeratik artikulazio-angeluak (Euler XYZ intrintsekoa) */
   update(dt,s){
    const st=this.st;Object.assign(st,s);
-   st.ph+=dt*(4.0+st.speed*7.8);
+   st.ph+=dt*(3.6+st.speed*7.1);
    const J=this.J,run=clamp(st.speed,0,1),rd=1-run*.7,A=this.A;
    const sn=Math.sin(st.ph),sR=Math.sin(st.ph+Math.PI),cs=Math.cos(st.ph);
    const set=(k,x,y,z)=>{const a=A[k];a[0]=x;a[1]=y;a[2]=z;};
@@ -1295,14 +1295,20 @@ const Rig=(()=>{
    set('pelvis',.17*rd+.10*run,sn*.10*run,0);
    set('spine',.20*rd+.16*run,-sn*.14*run,0);
    set('head',-.34*rd-.22*run,st.look*.45,0);
-   set('hipL',-.62*rd+sn*.95*run,0,.13*rd+.03);set('hipR',-.62*rd+sR*.95*run,0,-.13*rd-.03);
+   set('hipL',-.52*rd+sn*.78*run,0,.13*rd+.03);set('hipR',-.52*rd+sR*.78*run,0,-.13*rd-.03);
    set('knL',.82*rd+.12+clamp(-cs,0,1)*1.15*run,0,0);set('knR',.82*rd+.12+clamp(cs,0,1)*1.15*run,0,0);
    set('anL',-.36*rd-.05*run,0,-.06*rd);set('anR',-.36*rd-.05*run,0,.06*rd);
-   set('shL',-.48*rd-sn*.85*run,0,.34*rd+.08);set('shR',-.48*rd-sR*.85*run,0,-.34*rd-.08);
+   set('shL',-.48*rd-sn*.68*run,0,.34*rd+.08);set('shR',-.48*rd-sR*.68*run,0,-.34*rd-.08);
    set('elL',-1.62*rd-.75*run,0,-.55*rd);set('elR',-1.62*rd-.75*run,0,.55*rd);
    set('haL',-.2,0,0);set('haR',-.2,0,0);
    const mix=(k,t,w)=>{const a=A[k];for(let i=0;i<3;i++)a[i]=lerp(a[i],t[i],w);};
    let ground=1;
+   // An armed player winds up *before* the ball arrives, allowing a fluid release.
+   if(st.ready&&st.swing<=0&&st.dive<=0&&st.serve<=0){
+    const prep=st.readyKind==='lob'?[.30,-.10,-.30]:st.readyKind==='drop'?[-.65,-.05,-.55]:[.65,-.20,-.72];
+    mix('shR',prep,.75);mix('elR',[-1.10,0,.22],.75);
+    mix('spine',[.20,-.35,0],.45);
+   }
    /* kolpea */
    if(st.swing>0){
     const p=clamp(1-st.swing,0,1),k=st.swKind;
@@ -1323,6 +1329,14 @@ const Rig=(()=>{
      mix('spine',[.22,-.70*wind+1.15*hit-.25*fol,0],env);mix('pelvis',[.15,-.30*wind+.5*hit,0],env);
      mix('shL',[-1.0-.35*hit,0,.5],env);mix('elL',[-.8,0,-.2],env);mix('head',[-.3,.3*wind-.2*hit,0],env);
     }
+   }
+   // Low pelota: the pelotari bends knees and torso instead of stretching the arm.
+   if(st.contactTarget&&st.contactTarget[1]<1.2&&st.dive<=0){
+    const w=clamp((1.2-st.contactTarget[1])/.92,0,1)*sstep(0,.85,st.contactProgress);
+    mix('hipL',[-1.08,0,.16],w);mix('hipR',[-1.08,0,-.16],w);
+    mix('knL',[1.55,0,0],w);mix('knR',[1.55,0,0],w);
+    mix('anL',[-.4,0,0],w);mix('anR',[-.4,0,0],w);
+    mix('spine',[.62,-.15,0],w);
    }
    /* plantxa: lurrean eserita irristatu, besoa pilotara */
    if(st.dive>0){
@@ -1356,10 +1370,38 @@ const Rig=(()=>{
    /* oinak lurrean: aldaka jaitsi/igo txikiena orpoaren altuerara */
    const yl=J.anL.world[13],yr=J.anR.world[13];
    const target=lerp(.98+(.072-Math.min(yl,yr)),.24,1-ground);
-   J.pelvis.p[1]=target+(st.dive>0?0:Math.abs(cs)*.025*run);
+   const leap=st.contactTarget&&st.contactTarget[1]>1.85?clamp((st.contactTarget[1]-1.85)*.55,0,.42)*sstep(.15,.9,st.contactProgress):0;
+   J.pelvis.p[1]=target+(st.dive>0?0:Math.abs(cs)*.025*run)+leap;
    r.update(null);
+   // IK: drive the striking palm to the actual incoming ball centre during
+   // the short contact window; right shoulder + elbow remain articulated.
+   if(st.contactTarget&&st.swing>0&&st.contactProgress>0){
+    this.solveHandTarget(st.contactTarget,clamp(st.contactProgress*1.5,0,1));
+   }
    const bi=this.body.bindInv,T=this.tmp;
    for(let i=0;i<Body.SKEL.length;i++){M4.mul(T,J[Body.SKEL[i][0]].world,bi.subarray(i*16,i*16+16));this.B.set(T,i*16);}
+  }
+  solveHandTarget(target,weight){
+   if(!target||!target.every(Number.isFinite))return;
+   const root=this.root, J=this.J;
+   const dist2=(h)=>{const a=target[0]-h[0],b=target[1]-h[1],c=target[2]-h[2];return a*a+b*b+c*c;};
+   for(let pass=0;pass<5;pass++){
+    for(const name of ['shR','elR','shR','spine']){
+     const joint=J[name],axes=name==='shR'?[0,1,2]:name==='spine'?[0,1]:[0,2];
+     for(const axis of axes){
+      const v=joint.r[axis],before=this.handPos(),eps=.035;
+      joint.r[axis]=v+eps;root.update(null);const after=this.handPos();
+      joint.r[axis]=v;root.update(null);
+      const derivative=[(after[0]-before[0])/eps,(after[1]-before[1])/eps,(after[2]-before[2])/eps];
+      const err=[target[0]-before[0],target[1]-before[1],target[2]-before[2]];
+      const den=derivative[0]**2+derivative[1]**2+derivative[2]**2+.012;
+      const delta=clamp((err[0]*derivative[0]+err[1]*derivative[1]+err[2]*derivative[2])/den,-.32,.32);
+      joint.r[axis]=name==='spine'?(axis===0?clamp(v+delta*weight,-.75,1.2):clamp(v+delta*weight,-1,1)):clamp(v+delta*weight,-3.2,3.2);
+      root.update(null);
+      if(dist2(this.handPos())<.0025)return;
+     }
+    }
+   }
   }
   draw(mir){GL.litSkin(this.body.mesh,this.B,this.skinMat,mir,this.pal);for(const n of this.parts)if(!mir||n.mirror)GL.lit(n.mesh,n.world,n.mat,mir);}
   drawShadow(){GL.shadowSkin(this.body.mesh,this.B);for(const n of this.parts)if(n.shadow)GL.shadow(n.mesh,n.world);}
@@ -1624,14 +1666,14 @@ const Game=(()=>{
    a:{x:X0+.9,z:9.6,miss:false,t:0,swing:0,swKind:'flat',spd:0,yaw:Math.PI,dive:0,diveT:0,diveSide:1,down:0,cel:0,def:0,serveT:0},
    ai:{spd:5.4+lv*5.8,err:.15-lv*.13,pw:.40+lv*.55,aim:.3+lv*.62,sup:lv>.34,react:.32-lv*.24,dive:.25+lv*.6,lv},
    mark:{x:0,z:9,ready:false,on:false},stats:{rallies:0,best:0,perfect:0,tximista:0,dives:0,points:[]},
-   lastHit:null,canHit:false,pending:null};
+   lastHit:null,canHit:false,pending:null,strike:null,lastContact:null};
   const p=M.p,a=M.a,b=M.b;
   function aimPoint(){return {x:clamp(X0+p.aimX*4.5,C.XL+.5,C.XR-.5),y:C.FALTA+.5+(p.aimY*.5+.5)*5.4};}
   M.aimPoint=aimPoint;
   function setPhase(ph){M.phase=ph;M.phaseT=0;}
   function startServe(){
    M.live=false;M.wall=false;M.bounces=0;M.rally=0;M.speed=1;M.serving=false;M.spin=0;M.dropFlag=false;M.superBall=0;
-   p.charge=0;p.armed=false;M.turn=M.server;a.serveT=M.server==='a'?.95+RNG()*.5:0;
+   p.charge=0;p.armed=false;M.strike=null;M.turn=M.server;a.serveT=M.server==='a'?.95+RNG()*.5:0;
    p.dive=0;a.dive=0;p.down=0;a.down=0;
    setPhase('serve');emit('serve',{who:M.server});
   }
@@ -1678,7 +1720,37 @@ const Game=(()=>{
    const dB=dist(hx,hz,b.x,b.z);
    return clamp(clamp(1-Math.abs(dB-K.IDEAL_D)/1.3,0,1)*.42+clamp(1-Math.abs(b.y-K.IDEAL_H)/1.4,0,1)*.58,0,1);
   }
-  function doHit(divePen){
+  // The simulation waits for a short, visible wind-up and releases the ball
+  // from the animated palm, never from an arbitrary avatar-centre offset.
+  function beginStrike(who,kind,divePen,serve){
+   if(M.strike||M.phase==='point'||M.phase==='over')return false;
+   const o=who==='p'?p:a;
+   M.strike={who,kind,divePen:divePen||0,serve:!!serve,t:0,duration:serve?.13:.105};
+   o.swing=.79;o.swKind=kind;
+   if(who==='p')o.armed=false;
+   return true;
+  }
+  function doHit(divePen){return beginStrike('p',p.kind,divePen,false);}
+  function aiHit(divePen){
+   const serving=!M.live&&M.server==='a'&&M.rally===0;
+   const r=RNG(),kind=serving?'flat':r<.12?'lob':r<.24?'drop':'flat';
+   return beginStrike('a',kind,divePen,serving);
+  }
+  function playerServe(){return beginStrike('p','flat',0,true);}
+  function commitStrike(hand){
+   const s=M.strike;
+   if(!s||s.t<s.duration||!hand||!hand.every(Number.isFinite))return false;
+   const dx=b.x-hand[0],dy=b.y-hand[1],dz=b.z-hand[2];
+   M.lastContact={who:s.who,kind:s.kind,serve:s.serve,dist:Math.hypot(dx,dy,dz),at:M.t,hand:hand.slice(),ball:[b.x,b.y,b.z]};
+   // At impact the pelota has exactly the position of the striking palm.
+   b.x=clamp(hand[0],C.XL+.1,C.XR+C.PASS-.15);
+   b.y=Math.max(.28,hand[1]);b.z=clamp(hand[2],C.WALL+.3,C.BACK+2);
+   M.strike=null;
+   if(s.who==='p')return s.serve?playerServeNow():doHitNow(s.divePen);
+   return aiHitNow(s.divePen,s.kind);
+  }
+  M.commitStrike=commitStrike;
+  function doHitNow(divePen){
    if(M.serving&&M.rally>=1)M.serving=false;
    let q=quality(p.x,p.z)*(divePen||1);
    const pw=clamp(.3+p.charge*.7,.3,1);
@@ -1699,33 +1771,33 @@ const Game=(()=>{
     emit('popup',{k,c:q>.85?'#ffd45e':(q>.6?'#2ee59d':'#ff9a6a')});
     const was=p.sua;p.sua=clamp(p.sua+(q>.85?.22:(q>.6?.12:.05)),0,1);if(was<1&&p.sua>=1)emit('suafull',{});
    }
-   const fy=Math.max(.75,b.y);
-   const v=fitShot(p.x,fy,p.z,tx,ty,spd,spin,p.kind==='drop',p.kind==='drop'?99:C.BACK-.5);
+   const fy=Math.max(.28,b.y);
+   const v=fitShot(b.x,fy,b.z,tx,ty,spd,spin,p.kind==='drop',p.kind==='drop'?99:C.BACK-.5);
    /* kolpe txarrak okerrago doaz: zabal, txapara edo luze */
    v[0]+=(RNG()-.5)*2*err*1.6;v[1]+=(RNG()-.42)*2*err*1.1;
    b.vx=v[0];b.vy=v[1];b.vz=v[2];M.spin=spin;b.y=fy;b.y=fy;
    M.turn='a';M.bounces=0;M.wall=false;M.live=true;M.rally++;M.outCalled=false;M.inField=false;M.liveT=0;
-   p.swing=1;p.swKind=p.kind;const ch=p.charge;p.charge=0;p.armed=false;
+   p.swing=Math.max(p.swing,.45);p.swKind=p.kind;const ch=p.charge;p.charge=0;p.armed=false;
    a.miss=RNG()<M.ai.err*(p.kind==='drop'?.85:1);a.t=M.ai.react*(p.kind==='drop'?.55:1);
    M.lastHit={who:'p',kind:p.kind,q,pw,full};
    emit('hit',{who:'p',kind:p.kind,q,pw,ch,full,x:b.x,y:b.y,z:b.z,dive:!!divePen});
   }
-  function aiHit(divePen){
+  function aiHitNow(divePen,forcedKind){
    const isServe=(!M.live&&M.server==='a'&&M.rally===0);
    if(!isServe)M.serving=false;
    const ai=M.ai;
    const tx=clamp(X0-(p.x-X0)*ai.aim+(RNG()-.5)*5*(1-ai.aim),C.XL+.6,C.XR-.6);
-   const r=isServe?.5:RNG();let ty=C.FALTA+.75+RNG()*(3.7-2.1*ai.lv),spd=(15.6+ai.pw*10.7)*M.speed,kind='flat';
+   const r=isServe?.5:RNG();let ty=C.FALTA+.75+RNG()*(3.7-2.1*ai.lv),spd=(15.6+ai.pw*10.7)*M.speed,kind=forcedKind||'flat';
    if(isServe){ty=4.5+RNG()*.45;spd=22.0+RNG()*1.5;}
-   else if(r<.12){ty=7.0+RNG()*.9;spd=16.8;kind='lob';M.dropFlag=false;}
-   else if(r<.24){ty=C.FALTA+.25;spd=11;M.dropFlag=true;kind='drop';}
+   else if(kind==='lob'){ty=7.0+RNG()*.9;spd=16.8;M.dropFlag=false;}
+   else if(kind==='drop'){ty=C.FALTA+.25;spd=11;M.dropFlag=true;}
    else M.dropFlag=false;
    if(isServe)M.dropFlag=false;
    if(divePen)spd*=.85;
    M.superBall=0;
    if(ai.sup&&M.rally>5&&RNG()<.14&&!isServe&&!divePen){spd*=1.45;M.superBall=2;emit('popup',{k:'AURK_SUA',c:'#c58bff'});}
    M.speed=Math.min(1.45,M.speed+.035);
-   const fy=Math.max(.75,b.y),slip=!isServe&&RNG()<M.ai.err*.35,spin=isServe?0:(RNG()-.5)*2;
+   const fy=Math.max(.28,b.y),slip=!isServe&&RNG()<M.ai.err*.35,spin=isServe?0:(RNG()-.5)*2;
    let v;
    if(isServe){
      // Validate the predicted first bounce, as required by the 3–7 mark.
@@ -1735,8 +1807,8 @@ const Game=(()=>{
      const goal=(c3+c7)*.5;
      for(const power of [21,22,23,24]){
        for(const height of [4.0,4.5,5.0,5.5]){
-         const trial=fitShot(a.x,fy,a.z,tx,height,power,0,false,c7-.5);
-         const land=predict(a.x,fy,a.z,trial[0],trial[1],trial[2],0,false);
+         const trial=fitShot(b.x,fy,b.z,tx,height,power,0,false,c7-.5);
+         const land=predict(b.x,fy,b.z,trial[0],trial[1],trial[2],0,false);
          if(!land.wall||land.wy<C.FALTA+.20||land.x>C.XR-.2||land.x<C.XL+.2)continue;
          const safe=land.z>c3+.35&&land.z<c7-.35;
          if(!safe)continue;
@@ -1744,28 +1816,28 @@ const Game=(()=>{
          if(score<bestDist){bestDist=score;best=trial;}
        }
      }
-     v=best||fitShot(a.x,fy,a.z,tx,5.0,22.5,0,false,c7-.75);
+     v=best||fitShot(b.x,fy,b.z,tx,5.0,22.5,0,false,c7-.75);
      if(rareFault){ // deliberate, infrequent miss toward the short marker
-       v=fitShot(a.x,fy,a.z,tx,2.2,16,0,false,c7-.75);
+       v=fitShot(b.x,fy,b.z,tx,2.2,16,0,false,c7-.75);
      }
    }else{
-     v=fitShot(a.x,fy,a.z,tx,ty,spd,spin,kind==='drop',kind==='drop'?99:C.BACK-.5);
+     v=fitShot(b.x,fy,b.z,tx,ty,spd,spin,kind==='drop',kind==='drop'?99:C.BACK-.5);
      if(slip){v[0]+=(RNG()-.5)*1.5;v[1]+=(RNG()-.45)*1.3;}
    }
    b.vx=v[0];b.vy=v[1];b.vz=v[2];M.spin=spin;b.y=fy;
    M.turn='p';M.bounces=0;M.wall=false;M.live=true;M.rally++;M.outCalled=false;M.inField=false;M.liveT=0;
    M.serving=isServe&&M.serveRule;
-   a.swing=1;a.swKind=isServe?'flat':kind;
+   a.swing=Math.max(a.swing,.45);a.swKind=isServe?'flat':kind;
    M.lastHit={who:'a',kind};
    emit('hit',{who:'a',kind,serve:isServe,x:b.x,y:b.y,z:b.z,full:M.superBall===2,dive:!!divePen});
    if(isServe)setPhase('live');
   }
-  function playerServe(){
+  function playerServeNow(){
    const ap=aimPoint(),pw=clamp(.35+p.charge*.65,.35,1);
-   const v=fitShot(p.x,1.2,p.z,ap.x,Math.max(ap.y,C.FALTA+1.1),13.5+pw*8,p.aimX*1.3,false,C.BACK-.8);
-   b.vx=v[0];b.vy=v[1];b.vz=v[2];M.spin=p.aimX*1.3;b.y=1.2;
+   const v=fitShot(b.x,b.y,b.z,ap.x,Math.max(ap.y,C.FALTA+1.1),13.5+pw*8,p.aimX*1.3,false,C.BACK-.8);
+   b.vx=v[0];b.vy=v[1];b.vz=v[2];M.spin=p.aimX*1.3;
    M.turn='a';M.live=true;M.wall=false;M.bounces=0;M.rally=1;M.serving=M.serveRule;M.outCalled=false;M.inField=false;M.liveT=0;M.dropFlag=false;M.superBall=0;
-   p.swing=1;p.swKind='flat';p.charge=0;p.armed=false;
+   p.swing=Math.max(p.swing,.45);p.swKind='flat';p.charge=0;p.armed=false;
    a.miss=RNG()<M.ai.err*.7;a.t=M.ai.react;
    M.lastHit={who:'p',kind:'serve'};
    emit('hit',{who:'p',kind:'serve',q:.7,pw,x:b.x,y:b.y,z:b.z});
@@ -1824,6 +1896,15 @@ const Game=(()=>{
   function step(dt,inp){
    M.t+=dt;M.phaseT+=dt;
    p.swing=Math.max(0,p.swing-dt*2.6);a.swing=Math.max(0,a.swing-dt*2.6);
+   // Keep the pelota at its real pre-impact location during the short swing.
+   // Footwork smoothly closes the distance so the arm can actually reach it.
+   if(M.strike){
+    const k=M.strike,o=k.who==='p'?p:a;k.t+=dt;
+    if(!k.serve){const dx=b.x-o.x,dz=b.z-o.z,d=Math.hypot(dx,dz);
+     if(d>.52){const stride=Math.min(d-.52,13.5*dt);o.x=clamp(o.x+dx/d*stride,C.XL+.25,C.XR+C.PASS-.3);o.z=clamp(o.z+dz/d*stride,C.WALL+1.65,C.BACK+2.6);o.spd=clamp(stride/Math.max(dt,.001)/K.SPRINT,0,1);}
+    }
+    faceBall(dt);return;
+   }
    p.cel=Math.max(0,p.cel-dt*.55);a.cel=Math.max(0,a.cel-dt*.55);p.def=Math.max(0,p.def-dt*.6);a.def=Math.max(0,a.def-dt*.6);
    if(M.phase==='intro'){if(M.phaseT>(cfg.introT||2.2))startServe();faceBall(dt);return;}
    if(M.phase==='over'){faceBall(dt);return;}
@@ -2295,9 +2376,13 @@ const UI=(()=>{
    }
    if(M){
     const p=M.p,a=M.a;
-    me.update(paused?0:dt,{x:p.x,z:p.z,yaw:p.yaw,speed:p.spd,swing:p.swing,swKind:p.swKind,dive:p.dive>0?Math.max(p.dive,p.down>0?1:0):0,diveSide:p.diveSide,cel:p.cel,def:p.def,look:0,serve:(M.server==='p'&&(M.phase==='serve'||M.phase==='intro'))?1:0});
-    foe.update(paused?0:dt,{x:a.x,z:a.z,yaw:a.yaw,speed:a.spd,swing:a.swing,swKind:a.swKind,dive:a.dive>0?Math.max(a.dive,a.down>0?1:0):0,diveSide:a.diveSide,cel:a.cel,def:a.def,look:0,serve:(M.server==='a'&&(M.phase==='serve'||M.phase==='intro'))?1:0});
-    const b=M.b;const held=M.phase==='serve'||M.phase==='intro';
+    const b=M.b, cue=M.strike, contact=cue&&!cue.serve?[b.x,b.y,b.z]:null;
+    me.update(paused?0:dt,{x:p.x,z:p.z,yaw:p.yaw,speed:p.spd,swing:p.swing,swKind:p.swKind,dive:p.dive>0?Math.max(p.dive,p.down>0?1:0):0,diveSide:p.diveSide,cel:p.cel,def:p.def,look:0,serve:(M.server==='p'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:p.armed,readyKind:p.kind,contactTarget:cue&&cue.who==='p'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
+    foe.update(paused?0:dt,{x:a.x,z:a.z,yaw:a.yaw,speed:a.spd,swing:a.swing,swKind:a.swKind,dive:a.dive>0?Math.max(a.dive,a.down>0?1:0):0,diveSide:a.diveSide,cel:a.cel,def:a.def,look:0,serve:(M.server==='a'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:M.live&&M.turn==='a'&&M.wall,readyKind:'flat',contactTarget:cue&&cue.who==='a'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
+    // Trigger the impulse only AFTER the rig has moved its hand into contact.
+    // This also fixes serve release: the pelota departs from the real palm.
+    if(cue&&!paused&&cue.t>=cue.duration)M.commitStrike(cue.who==='p'?me.handPos():foe.handPos());
+    const held=M.phase==='serve'||M.phase==='intro';
     // In serve/intro, render the ball at the animated palm. In live play physics owns it.
     const hand=held?(M.server==='p'?me.handPos():foe.handPos()):null;
     ballNode.p=hand||[b.x,b.y,b.z];
@@ -2317,7 +2402,7 @@ const UI=(()=>{
  goMenu();
  requestAnimationFrame(t=>{last=t;frame(t);});
  /* testetarako */
- window.HPA={get M(){return M;},play,goMenu,pause,me,foe,setSlow:v=>slowT=v,snap:()=>{snapNext=true;},camW:()=>camSt.w,camDbg:()=>({P:camP.map(v=>+v.toFixed(2)),T:camT.map(v=>+v.toFixed(2)),fov:+camFov.toFixed(1),w:+camSt.w.toFixed(2),deep:+camSt.deep.toFixed(2),push:+camSt.push.toFixed(2),p:[+M.p.x.toFixed(2),+M.p.z.toFixed(2)],a:[+M.a.x.toFixed(2),+M.a.z.toFixed(2)],ph:M.phase})};
+ window.HPA={get M(){return M;},play,goMenu,pause,me,foe,contact:()=>M&&M.lastContact,setSlow:v=>slowT=v,snap:()=>{snapNext=true;},camW:()=>camSt.w,camDbg:()=>({P:camP.map(v=>+v.toFixed(2)),T:camT.map(v=>+v.toFixed(2)),fov:+camFov.toFixed(1),w:+camSt.w.toFixed(2),deep:+camSt.deep.toFixed(2),push:+camSt.push.toFixed(2),p:[+M.p.x.toFixed(2),+M.p.z.toFixed(2)],a:[+M.a.x.toFixed(2),+M.a.z.toFixed(2)],ph:M.phase})};
 })();
 
 
