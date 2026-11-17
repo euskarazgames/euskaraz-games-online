@@ -86,6 +86,17 @@ async function run(name,opts,allowGame=true){
     assert(Object.keys(r).length>=4,'Not all four characters loaded');
     assert(Object.values(r).every(q=>q.handSamples>=12),'One of the opponent hands cannot be tracked');
     console.log('ALL_MODELS',JSON.stringify(r));
+    // Alternative UV orientation comparison for Fal's textured GLB.
+    // Diagnostic-only: does not change production source assets or game logic.
+    try{
+      await page.goto(ORIGIN+'/pilota/?personajes3d=1&textureFlip=1',{waitUntil:'domcontentloaded',timeout:40000});
+      await page.waitForFunction(()=>Boolean(window.PILOTA_MODELS?.ready?.jon&&window.PILOTA_MODELS?.ready?.harri),{timeout:45000});
+      await page.locator('#career .matchcard button.primary').click({timeout:12000});
+      await page.waitForTimeout(450);
+      const flip=await page.screenshot({type:'jpeg',quality:46,timeout:55000});
+      console.log('QA_FLIP_JPEG_START '+flip.toString('base64')+' QA_FLIP_JPEG_END');
+    }catch(e){console.warn('UV alternative diagnostic unavailable:',String(e).slice(0,150));}
+
   }
   await context.close();
 }
