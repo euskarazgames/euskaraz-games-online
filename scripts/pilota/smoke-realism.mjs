@@ -57,11 +57,10 @@ async function run(name,opts,allowGame=true){
     assert(entered,'Career match did not start');
     await page.waitForTimeout(500);
     assert((await page.evaluate(()=>document.querySelector('#gl')?.width||0))>0);
-    const canvas=page.locator('#gl');
-    await page.screenshot({path:'reports/pilota/'+name+'-career.png',timeout:10000});
-    // Emit compact visual evidence for checking actual player anatomy.
+    // One JPEG capture only. Two back-to-back GPU screenshots can stall
+    // Chromium SwiftShader for >10 seconds even when the frame renders.
+    const jpg=await page.screenshot({path:'reports/pilota/'+name+'-career.jpg',type:'jpeg',quality:48,timeout:55000,animations:'disabled'});
     if(name==='desktop'){
-      const jpg=await page.screenshot({type:'jpeg',quality:42,timeout:10000});
       console.log('QA_SCENE_JPEG_START '+jpg.toString('base64')+' QA_SCENE_JPEG_END');
       // Capture the unaltered Fal UV atlas to diagnose jersey/skin mismatches.
       const atlas=await page.evaluate(async()=>{
