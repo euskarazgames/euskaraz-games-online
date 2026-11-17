@@ -1,6 +1,7 @@
-Vertices: 35043
+Vertices: 36327
 Triangles: 14500
 Height: 1.8 metres
 Materials: 1
+Arm extent: 0.3611
 Review: facial details, wrist deformation, hand contact, orientation, feet, shadows, mobile FPS.
 IMPORTANT: generated rig/weights are preliminary and not human-artist validated.
