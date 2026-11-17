@@ -82,6 +82,17 @@ async function run(name,opts,allowGame=true){
       });
       console.log('QA_ATLAS_JPEG_START '+atlas+' QA_ATLAS_JPEG_END');
     }
+    // Neck follows the incoming ball smoothly, and the realistic mesh wrist remains articulated.
+    const motion=await page.evaluate(()=>{
+      const p=window.HPA.me, start=p.gaze;
+      p.update(.016,{look:.7,swing:.5,swKind:'flat'});
+      const first=p.gaze, wrist=p.J.haR.r.slice();
+      p.update(.016,{look:.7,swing:.5,swKind:'flat'});
+      return {start,first,second:p.gaze,wrist};
+    });
+    assert(Number.isFinite(motion.second)&&Math.abs(motion.second)<=1,'Neck tracking exceeds safe bounds');
+    assert(motion.first>motion.start&&motion.second>motion.first,'Neck tracking is not smoothly interpolated');
+    assert(motion.wrist.every(Number.isFinite)&&motion.wrist.length===3,'Invalid wrist pose');
     const gameplay=await page.evaluate(()=>({phase:window.HPA.M?.phase||null,hand:window.HPA.me.handPos(),rival:window.HPA.foe._realName,ball:window.HPA.M?.ball,gl:document.querySelector('#gl').getContext('webgl2')?.getError()}));
     assert(gameplay.hand?.every(Number.isFinite),'Invalid contact position during gameplay');
     assert(gameplay.rival,'Missing rival in match');
