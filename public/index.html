@@ -124,7 +124,7 @@ body.playing{overflow:hidden}
 <div class="metrics"><div class="item" id="eg-star-metric"><strong id="egStars">0/108</strong><span>HIZKUNTZA-ERRONKAK</span></div><span class="dot">✦</span><div class="item"><strong>36</strong><span data-t="experiences">Joko-esperientzia</span></div><span class="dot">✦</span><div class="item"><strong>3</strong><span data-t="collections">Bilduma nagusi</span></div><span class="dot">✦</span><div class="item"><strong>EU</strong><span data-t="language">Euskara ardatz</span></div></div>
 <div class="continue-bar" id="continue"><div><strong id="continueTitle"></strong><div><span data-t="resume">Azken jokoa berriro ireki</span></div></div><button id="continueButton" data-t="keepPlaying">Jarraitu →</button></div>
 <section id="kirol" class="collection">
-<div class="section-top"><div><div class="eyebrow">01 / EUSKAL KIROLAK</div><h2>KIROL <span style="color:var(--accent)">CHALLENGE</span></h2><p data-t="sportsDesc">Pilota, zesta-punta eta artzain-txakurrak. Erronka azkarrak, lehiaketa eta kontrol dinamikoak.</p></div><a href="/klasiko/?joko=kirol" class="link" data-t="classic">Jatorrizko ataria ↗</a></div>
+<div class="section-top"><div><div class="eyebrow">01 / EUSKAL KIROLAK</div><h2>KIROL <span style="color:var(--accent)">CHALLENGE</span></h2><p data-t="sportsDesc">Pilota, zesta-punta eta artzain-txakurrak. Erronka azkarrak, lehiaketa eta kontrol dinamikoak.</p></div><a href="#kirol" class="link" data-t="classic">Jatorrizko ataria ↗</a></div>
 <div class="library" id="sports"></div></section>
 <section id="basoa" class="collection">
 <div class="section-top"><div><div class="eyebrow">02 / ISTORIOA ETA INFILTRAZIOA</div><h2>BASOA <span style="color:var(--accent)">SOLID</span></h2><p data-t="basoaDesc">Isiltasuna, espioitza, euskal mitologia eta misterioak. Bi abentura independente.</p></div></div><div class="library two" id="adventures"></div></section>
@@ -145,7 +145,7 @@ body.playing{overflow:hidden}
 "use strict";
 const newer=JSON.parse(document.getElementById("catalogue").textContent);
 const classics=[
-{id:"kc:pilota",legacy:"pilota",title:"Herri Pilota",category:"Kirola",series:"kirol",tag:"PILOTA · FRONTOIA",description:"Pilotariaren erronka: kolpeak, erreflexuak eta tantoak.",controls:"Geziak / WASD: mugitu. Egin jokaldiak jokoaren argibideei jarraituz.",art:"pilota"},
+{id:"kc:pilota",legacy:"pilota",title:"Herri Pilota · Karrera",category:"Kirola",series:"kirol",tag:"PILOTA · BANAKAKO DENBORALDIA",description:"Eskuz banaka: 10 jardunaldi, finalaurrekoa eta finala. Zure pilotariaren karrera.",controls:"Ezkerreko hatza: mugitu eta apuntatu · JO: jo · GLOBOA: globo · MOTZ: dejada. 22 tantora.",art:"pilota"},
 {id:"kc:zesta",legacy:"zesta",title:"Zesta Punta",category:"Kirola",series:"kirol",tag:"ZESTA-PUNTA · FRONTOIA",description:"Saskia, abiadura eta tanto luzeak. Frontoiaren erritmoa.",controls:"Jokoaren hasierako pantailan agertzen diren kontrolak erabili.",art:"zesta"},
 {id:"kc:artzain",legacy:"artzain",title:"Artzain Txakurrak",category:"Kirola",series:"kirol",tag:"HERRI KIROLAK · MENDIA",description:"Gidatu txakurra eta osatu artzainaren erronkak.",controls:"Jokoan bertan agertzen dira mugitzeko eta aginduak emateko kontrolak.",art:"artzain"},
 {id:"bs:basoa",legacy:"basoa",title:"Basoa Solid",category:"Infiltrazioa",series:"basoa",tag:"ZAZPI ZIGILUAK · INFILTRAZIOA",description:"Espioitza, isiltasuna eta euskal mitologiako sekretuak.",controls:"Jokoaren misio pantailan agertzen dira mugitzeko eta infiltratzeko aginduak.",art:"basoa"},
@@ -175,7 +175,7 @@ const isClassic=!!game.legacy;
 window.EGChallenges?.setGame(game.id);
 const frame=$("frame");frame.removeAttribute("sandbox");if(!isClassic)frame.setAttribute("sandbox","allow-scripts allow-pointer-lock allow-forms allow-downloads"); // opaque origin for third-party code
 $("instructions").textContent=game.controls||"Jokoaren argibideak."; $("instructions").classList.remove("visible");$("help").setAttribute("aria-expanded","false");$("spinner").classList.remove("hidden");$("spinner").textContent=word("loading");$("player").classList.add("open");document.body.classList.add("playing");
-frame.src=isClassic?"/klasiko/?joko="+encodeURIComponent(game.legacy):"/mundu-jolastuak/games/"+encodeURIComponent(game.slug)+"/";$("close").focus();try{history.replaceState(null,"",location.pathname+location.search+"#jolasten")}catch{}
+frame.src=isClassic?(game.id==="kc:pilota"?"/pilota/":"/klasiko/?joko="+encodeURIComponent(game.legacy)):"/mundu-jolastuak/games/"+encodeURIComponent(game.slug)+"/";$("close").focus();try{history.replaceState(null,"",location.pathname+location.search+"#jolasten")}catch{}
 }
 function closeGame(){window.EGChallenges?.close();$("player").classList.remove("open");document.body.classList.remove("playing");$("frame").src="about:blank";active=null;$("heroPlay").focus();try{history.replaceState(null,"",location.pathname+location.search)}catch{}}
 $("frame").addEventListener("load",()=>{$("spinner").classList.add("hidden")});
