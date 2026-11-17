@@ -1,7 +1,7 @@
 name: Pilota — Realistic athletes WebGL QA
 on:
   push:
-    branches: [feature/pilota-personajes-realistas-fal-blender]
+    branches: [feature/pilota-personajes-realistas-fal-blender, feature/pilota-animacion-natural-20261117]
     paths:
       - 'public/pilota/**'
       - 'scripts/pilota/smoke-realism.mjs'
