@@ -100,8 +100,24 @@ async function run(name,opts,allowGame=true){
   }
   await context.close();
 }
+async function viewerCapture(flip){
+ const ctx=await browser.newContext({viewport:{width:1180,height:780}});
+ const page=await ctx.newPage();
+ const dir=flip?'FLIP':'NORMAL';
+ page.on('pageerror',e=>console.log('3D_VIEWER_PAGEERROR_'+dir,e.message));
+ try{
+  await page.goto(ORIGIN+'/pilota/personajes/?textureFlip='+(flip?'1':'0'),{waitUntil:'domcontentloaded',timeout:30000});
+  await page.waitForFunction(()=>document.getElementById('message')?.hidden===true,null,{timeout:25000});
+  await page.waitForTimeout(900);
+  const jpg=await page.screenshot({path:'reports/pilota/viewer-'+dir+'.jpg',type:'jpeg',quality:60,timeout:45000});
+  console.log('QA_VIEWER_'+dir+'_JPEG_START '+jpg.toString('base64')+' QA_VIEWER_'+dir+'_JPEG_END');
+ }catch(e){console.log('OPTIONAL_VIEWER_UNAVAILABLE_'+dir,e.message.slice(0,220));}
+ await ctx.close();
+}
 try {
  await run('desktop',{viewport:{width:1440,height:900}});
+ await viewerCapture(false);
+ await viewerCapture(true);
  await run('mobile',{...devices['iPhone 13'],viewport:{width:390,height:844}},false);
  // Low-load fallback remains available and preserves career start.
  const ctx=await browser.newContext();
