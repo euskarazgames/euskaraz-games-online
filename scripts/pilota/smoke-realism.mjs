@@ -59,6 +59,11 @@ async function run(name,opts,allowGame=true){
     assert((await page.evaluate(()=>document.querySelector('#gl')?.width||0))>0);
     const canvas=page.locator('#gl');
     await page.screenshot({path:'reports/pilota/'+name+'-career.png',timeout:10000});
+    // Emit compact visual evidence for checking actual player anatomy.
+    if(name==='desktop'){
+      const jpg=await page.screenshot({type:'jpeg',quality:42,timeout:10000});
+      console.log('QA_SCENE_JPEG_START '+jpg.toString('base64')+' QA_SCENE_JPEG_END');
+    }
     const gameplay=await page.evaluate(()=>({phase:window.HPA.M?.phase||null,hand:window.HPA.me.handPos(),rival:window.HPA.foe._realName,ball:window.HPA.M?.ball,gl:document.querySelector('#gl').getContext('webgl2')?.getError()}));
     assert(gameplay.hand?.every(Number.isFinite),'Invalid contact position during gameplay');
     assert(gameplay.rival,'Missing rival in match');
