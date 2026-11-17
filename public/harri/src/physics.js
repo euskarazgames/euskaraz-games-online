@@ -35,8 +35,8 @@ export class Physics {
     // Y ardatza
     p.y += v.y * dt;
     const g = this.groundAt(p.x, p.z);
-    body.onGround = false; body.ground = null;
-    if (p.y <= g) { p.y = g; if (v.y < 0) v.y = 0; body.onGround = true; body.ground = 'lur'; }
+    const wasG = body.onGround; body.onGround = false; body.ground = null;
+    if (p.y <= g || (wasG && v.y <= 0 && p.y - g < .35)) { p.y = g; if (v.y < 0) v.y = 0; body.onGround = true; body.ground = 'lur'; }
     const min = { x: p.x - r, y: p.y, z: p.z - r }, max = { x: p.x + r, y: p.y + h, z: p.z + r };
     for (const b of this.boxesIn(min, max)) {
       const prevBottom = p.y - v.y * dt;

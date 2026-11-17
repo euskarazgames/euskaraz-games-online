@@ -77,16 +77,19 @@ html,body{margin:0;height:100%;background:#1a1410;color:var(--paper);font-family
 .tbtn{pointer-events:auto;position:absolute;width:64px;height:64px;border-radius:50%;border:2px solid #ffffff66;background:#2a1d14b0;color:#fff;font:700 11px/1.05 var(--ui-font);letter-spacing:.06em;text-transform:uppercase;display:grid;place-items:center;text-align:center;padding:4px;box-shadow:0 2px 8px #0008}
 .tbtn.pressed{background:#f0b24a;color:#2a1d14}
 .tbtn.big{width:78px;height:78px;font-size:12px}
-.tbtn[data-act=jump]{right:22px;bottom:calc(90px + env(safe-area-inset-bottom))}
-.tbtn[data-act=grab]{right:100px;bottom:calc(30px + env(safe-area-inset-bottom))}
-.tbtn[data-act=throw]{right:112px;bottom:calc(118px + env(safe-area-inset-bottom))}
-.tbtn[data-act=build]{right:24px;bottom:calc(180px + env(safe-area-inset-bottom))}
-.tbtn[data-act=join]{right:186px;bottom:calc(60px + env(safe-area-inset-bottom))}
-.tbtn[data-act=dash]{left:calc(50% + 50px);bottom:calc(12px + env(safe-area-inset-bottom));width:54px;height:54px;font-size:10px}
-.tbtn[data-act=pause]{right:12px;top:calc(50px + env(safe-area-inset-top));width:40px;height:40px;font-size:14px}
-.tbtn[data-act=cancel]{right:24px;bottom:calc(262px + env(safe-area-inset-bottom));display:none}
-.build .tbtn[data-act=cancel]{display:grid}
-.tbtn[data-act=pause]{display:grid}
+.tbtn[data-act=jump]{right:22px;bottom:calc(92px + env(safe-area-inset-bottom))}
+.tbtn[data-act=grab]{right:108px;bottom:calc(26px + env(safe-area-inset-bottom))}
+.tbtn[data-act=throw]{right:114px;bottom:calc(118px + env(safe-area-inset-bottom))}
+.tbtn[data-act=build]{right:24px;bottom:calc(182px + env(safe-area-inset-bottom));opacity:.55}
+.tbtn[data-act=drop]{right:192px;bottom:calc(52px + env(safe-area-inset-bottom));display:none}
+.carry .tbtn[data-act=build]{opacity:1;background:#3d5a2a;border-color:#bfe39a}
+.carry .tbtn[data-act=drop]{display:grid}
+.carry .tbtn[data-act=throw]{opacity:.45}
+.tbtn[data-act=dash]{left:calc(50% + 46px);bottom:calc(10px + env(safe-area-inset-bottom));width:54px;height:54px;font-size:10px}
+.tbtn[data-act=pause]{right:12px;top:calc(52px + env(safe-area-inset-top));width:40px;height:40px;font-size:14px}
+.cine #touch,.cine #hud{display:none}
+#skip{position:absolute;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));pointer-events:auto;display:none;font-size:13px;padding:10px 18px}
+.cine #skip{display:block}
 #mute{pointer-events:auto;position:absolute;right:12px;top:calc(12px + env(safe-area-inset-top));width:34px;height:34px;border-radius:50%;border:1px solid #fff5;background:#0006;color:#fff;font-size:14px;display:grid;place-items:center;cursor:pointer}
 .touch #mute{right:58px}
 #dbg{position:absolute;left:12px;bottom:calc(8px + env(safe-area-inset-bottom));font:11px/1.3 monospace;color:#fffa;white-space:pre;text-shadow:0 1px 2px #000;display:none}
@@ -100,6 +103,7 @@ html,body{margin:0;height:100%;background:#1a1410;color:var(--paper);font-family
 <body>
 <canvas id="gl" tabindex="0" aria-label="HARRI jokoa"></canvas>
 <div id="ui">
+  <div id="fade"></div>
   <div id="hud" aria-live="polite">
     <div class="hud-top">
       <div class="hud-label">Bizia</div>
@@ -121,14 +125,14 @@ html,body{margin:0;height:100%;background:#1a1410;color:var(--paper);font-family
     <div id="stickL"><div class="nub"></div></div>
     <button class="tbtn big" data-act="jump" type="button" aria-label="Jauzi">JAUZI</button>
     <button class="tbtn" data-act="grab" type="button" aria-label="Hartu edo desmuntatu">HARTU</button>
-    <button class="tbtn" data-act="throw" type="button" aria-label="Jaurti">JAURTI</button>
-    <button class="tbtn" data-act="build" type="button" aria-label="Eraiki">ERAIKI</button>
-    <button class="tbtn" data-act="join" type="button" aria-label="Lotu">LOTU</button>
+    <button class="tbtn" data-act="throw" type="button" aria-label="Jaurti (eutsi apuntatzeko)">JAURTI</button>
+    <button class="tbtn" data-act="build" type="button" aria-label="Eraiki eta lotu">ERAIKI</button>
+    <button class="tbtn" data-act="drop" type="button" aria-label="Blokea utzi">UTZI</button>
     <button class="tbtn" data-act="dash" type="button" aria-label="Bultzada">BULTZ.</button>
-    <button class="tbtn" data-act="cancel" type="button" aria-label="Utzi">UTZI</button>
     <button class="tbtn" data-act="pause" type="button" aria-label="Gelditu">II</button>
   </div>
   <button id="mute" type="button" aria-label="Soinua" title="Soinua (M)">♪</button>
+  <button id="skip" class="btn ghost" type="button">Saltatu ›</button>
   <div id="title">
     <div class="title-box">
       <h1>HARRI</h1>

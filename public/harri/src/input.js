@@ -1,7 +1,7 @@
 // Sarrera bateratua: teklatua, sagua (arrastatu / pointer lock), ukipena (joystick flotatzailea + botoiak), gamepad-a.
 const KEYMAP = {
   KeyW: 'up', ArrowUp: 'up', KeyS: 'down', ArrowDown: 'down', KeyA: 'left', ArrowLeft: 'left', KeyD: 'right', ArrowRight: 'right',
-  Space: 'jump', ShiftLeft: 'dash', ShiftRight: 'dash', KeyE: 'grab', KeyF: 'throw', KeyQ: 'build', KeyR: 'join', KeyX: 'cancel', Escape: 'pause', KeyP: 'pause', KeyM: 'mute', Enter: 'confirm',
+  Space: 'jump', ShiftLeft: 'dash', ShiftRight: 'dash', KeyE: 'grab', KeyF: 'throw', KeyQ: 'build', KeyR: 'build', KeyX: 'drop', Escape: 'pause', KeyP: 'pause', KeyM: 'mute', Enter: 'skip', KeyH: 'help',
 };
 export class Input {
   constructor(canvas) {
@@ -72,7 +72,7 @@ export class Input {
       const dz = v => Math.abs(v) < .18 ? 0 : v; const ax = dz(gp.axes[0] || 0), ay = dz(gp.axes[1] || 0);
       if (ax || ay) { this.move.x = ax; this.move.y = -ay; }
       this.look.dx += dz(gp.axes[2] || 0) * .06 * this.lookSens; this.look.dy += dz(gp.axes[3] || 0) * .05 * this.lookSens;
-      const map = { 0: 'jump', 1: 'dash', 2: 'grab', 3: 'throw', 4: 'join', 5: 'build', 6: 'build', 7: 'throw', 8: 'cancel', 9: 'pause' };
+      const map = { 0: 'jump', 1: 'dash', 2: 'grab', 3: 'throw', 4: 'drop', 5: 'build', 6: 'build', 7: 'throw', 8: 'skip', 9: 'pause' };
       for (const [i, a] of Object.entries(map)) { const on = !!gp.buttons[i]?.pressed; if (on && !this._gpPrev[i]) this._press(a); if (!on && this._gpPrev[i]) this._release(a); this._gpPrev[i] = on; }
     }
   }

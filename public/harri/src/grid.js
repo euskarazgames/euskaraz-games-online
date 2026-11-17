@@ -13,7 +13,7 @@ export class BuildGrid {
   get(i, j, k) { return this.cells.get(key(i, j, k)); }
   list() { return [...this.cells.values()]; }
   clear() { this.cells.clear(); this.byId.clear(); }
-  rests(i, j, k) { const g = this.env.groundTop(i, j); return Math.abs(g - k) <= 0.06; }
+  rests(i, j, k) { const g = this.env.groundTop(i, j); return g <= k + (this.env.tolUp ?? 0.06) && g >= k - (this.env.tolDown ?? 0.06); }
   anchored(i, j, k) { for (const [di, dj] of N4) if (this.env.solidCell(i + di, j + dj, k)) return true; return false; }
   /** Euskarri-mapa: key → dist (Infinity = euskarririk ez). extra: kontuan hartzeko bloke gehigarria {i,j,k}. without: kanpoan uzteko gakoa. */
   supportMap(extra = null, without = null) {
@@ -38,7 +38,7 @@ export class BuildGrid {
   canPlace(i, j, k) {
     if (this.has(i, j, k)) return { ok: false, reason: 'beteta' };
     if (this.env.solidCell(i, j, k)) return { ok: false, reason: 'lurra' };
-    if (this.env.groundTop(i, j) > k + 0.06) return { ok: false, reason: 'lurra' };
+    if (this.env.groundTop(i, j) > k + (this.env.tolUp ?? 0.06)) return { ok: false, reason: 'lurra' };
     const d = this.supportMap({ i, j, k }).get(key(i, j, k));
     if (!(d <= MAX_CANTILEVER)) return { ok: false, reason: 'euskarririk ez', dist: d };
     return { ok: true, dist: d, joins: this.joinsOf(i, j, k) };
