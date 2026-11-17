@@ -18,7 +18,18 @@ function inspectSkin(name){
  }
  return out;
 }
-for(const name of ['jon','harri','lurra','mendibe']) console.log('SOURCE_SKIN',JSON.stringify(inspectSkin(name)));
+for(const name of ['jon','harri','lurra','mendibe']){
+  const mesh=inspectSkin(name);
+  console.log('SOURCE_SKIN',JSON.stringify(mesh));
+  const raw=readFileSync('public/pilota/characters/'+name+'_skin.bin');
+  const n=raw.readUInt32LE(0);let malformed=0;
+  for(let i=0;i<n;i++){
+    const uv0=raw.readFloatLE(8+i*76+24), uv1=raw.readFloatLE(8+i*76+28);
+    if(!Number.isFinite(uv0)||!Number.isFinite(uv1)||uv0<-.015||uv1<-.015||uv0>1.015||uv1>1.015)malformed++;
+  }
+  assert(malformed<=Math.max(2,Math.ceil(n*.005)),name+' atlas UVs corrupted: '+malformed+'/'+n);
+  console.log('VALID_UV_ATLAS',name,{vertices:n,malformed});
+}
 // Recheck regenerated, body-width-calibrated Fal/Blender character weights.
 const ORIGIN=process.env.PILOTA_ORIGIN||'http://127.0.0.1:8799';
 const browser=await chromium.launch({headless:true,args:['--enable-webgl','--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader','--ignore-gpu-blocklist']});
