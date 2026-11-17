@@ -243,7 +243,10 @@ def main():
                 js=[float(q[0]) for q in joint]+[0.]* (4-len(joint))
                 ws=[float(q[1]) for q in joint]+[0.]* (4-len(joint))
                 # palette index 5 (white), texture mask 1, secondary index 5.
-                vertexdata.extend(list(p)+list(n)+[float(uv.x),1.-float(uv.y)]
+                # The game GL.tex uploads UV textures with flipY=false; the
+                # GLB viewer has the correct orientation with Blender V as-is.
+                # Do NOT invert V here (the original atlas appeared on faces).
+                vertexdata.extend(list(p)+list(n)+[float(uv.x),float(uv.y)]
                                   +[5.,1.,5.]+js+ws)
                 indexmap[key]=len(indexmap)
             indices.append(indexmap[key])
