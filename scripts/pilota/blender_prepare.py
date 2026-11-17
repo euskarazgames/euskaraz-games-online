@@ -19,6 +19,7 @@ def parse_args():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     ap = argparse.ArgumentParser()
     ap.add_argument("--source", required=True)
+    ap.add_argument("--texture", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--target-tris", type=int, default=14500)
     return ap.parse_args(argv)
@@ -143,11 +144,18 @@ def main():
 
     # Save diffuse texture for the custom WebGL skin shader; the source GLB is
     # also exported with its original material nodes for Blender artists.
-    img=base_color_image(obj)
-    if img is None: raise RuntimeError("No Base Color texture, review GLB in Blender.")
-    if not img.has_data: img.reload()
-    if not img.has_data: raise RuntimeError("Base Color texture unavailable.")
+    # Use Fal's separate texture output: some Blender glTF builds report packed
+    # image data unavailable even though a standalone PBR texture was returned.
+    img=bpy.data.images.load(arg.texture,check_existing=False)
+    if not img.has_data: raise RuntimeError("External Fal texture unavailable.")
     if max(img.size) > 1024: img.scale(1024, 1024)
+    for mat in obj.data.materials:
+        if mat and mat.use_nodes:
+            bsdfs=[n for n in mat.node_tree.nodes if n.type=="BSDF_PRINCIPLED"]
+            if bsdfs:
+                tex=mat.node_tree.nodes.new("ShaderNodeTexImage")
+                tex.image=img
+                mat.node_tree.links.new(tex.outputs["Color"],bsdfs[0].inputs["Base Color"])
     img.filepath_raw = str(dest) + "_diffuse.png"
     img.file_format = "PNG"
     img.save()

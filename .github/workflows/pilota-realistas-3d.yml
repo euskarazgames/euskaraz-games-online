@@ -42,9 +42,14 @@ jobs:
             curl --fail --location --retry 3 --connect-timeout 20 --max-time 240 \
               --silent --show-error "$url" -o "/tmp/pilota-$name.glb"
             test "$(stat -c%s "/tmp/pilota-$name.glb")" -gt 1000000
+            texture="$(python3 -c 'import json,sys; print(json.load(open("scripts/pilota/sources.json"))[sys.argv[1]]["texture"])' "$name")"
+            curl --fail --location --retry 3 --connect-timeout 20 --max-time 240 \
+              --silent --show-error "$texture" -o "/tmp/pilota-$name-texture.png"
+            test "$(stat -c%s "/tmp/pilota-$name-texture.png")" -gt 10000
             blender -b --factory-startup -t 2 \
               --python scripts/pilota/blender_prepare.py -- \
               --source "/tmp/pilota-$name.glb" \
+              --texture "/tmp/pilota-$name-texture.png" \
               --out "public/pilota/characters/$name" --target-tris 14500
             test -s "public/pilota/characters/${name}_skin.bin"
             test -s "public/pilota/characters/${name}_diffuse.png"
