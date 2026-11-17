@@ -147,7 +147,13 @@ def main():
     # Use Fal's separate texture output: some Blender glTF builds report packed
     # image data unavailable even though a standalone PBR texture was returned.
     img=bpy.data.images.load(arg.texture,check_existing=False)
-    if not img.has_data: raise RuntimeError("External Fal texture unavailable.")
+    try:
+        _=img.pixels[0]  # force lazy IO in Blender background mode
+    except Exception as exc:
+        raise RuntimeError("Cannot decode external Fal texture") from exc
+    if not img.has_data:
+        img.reload()
+        _=img.pixels[0]
     if max(img.size) > 1024: img.scale(1024, 1024)
     for mat in obj.data.materials:
         if mat and mat.use_nodes:

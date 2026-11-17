@@ -29,7 +29,7 @@ jobs:
       - name: Install Blender
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y blender python3-numpy
+          sudo apt-get install -y blender python3-numpy python3-pil
           blender --version | head -n 3
       - name: Generate rigged low-poly player models
         shell: bash
@@ -46,10 +46,11 @@ jobs:
             curl --fail --location --retry 3 --connect-timeout 20 --max-time 240 \
               --silent --show-error "$texture" -o "/tmp/pilota-$name-texture.png"
             test "$(stat -c%s "/tmp/pilota-$name-texture.png")" -gt 10000
+            python3 -c 'from PIL import Image; import sys; a=Image.open(sys.argv[1]); a.thumbnail((1024,1024)); a.convert("RGB").save(sys.argv[2],format="PNG"); print("NORMALIZED TEXTURE",a.size)' "/tmp/pilota-$name-texture.png" "/tmp/pilota-$name-rgb.png"
             blender -b --factory-startup -t 2 \
               --python scripts/pilota/blender_prepare.py -- \
               --source "/tmp/pilota-$name.glb" \
-              --texture "/tmp/pilota-$name-texture.png" \
+              --texture "/tmp/pilota-$name-rgb.png" \
               --out "public/pilota/characters/$name" --target-tris 14500
             test -s "public/pilota/characters/${name}_skin.bin"
             test -s "public/pilota/characters/${name}_diffuse.png"
