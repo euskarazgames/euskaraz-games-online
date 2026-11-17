@@ -55,6 +55,7 @@ jobs:
             test -s "public/pilota/characters/${name}_skin.bin"
             test -s "public/pilota/characters/${name}_diffuse.png"
             test -s "public/pilota/characters/${name}_optimized.glb"
+            node scripts/pilota/rebuild-skin-from-glb.mjs "$name"
             mv "public/pilota/characters/${name}_rig.blend" "/tmp/pilota-blender-projects/$name.blend"
             echo "::endgroup::"
           done

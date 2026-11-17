@@ -43,3 +43,5 @@ for(const [i,r] of ours.entries()){
  if(a>.05&&b>.05){far++;if(samples.length<8)samples.push({i,p:r.p,ours:r.uv,gltf:best,err:a,flipped:b});}
 }
 console.log('UV_COMPARE',JSON.stringify({id,ours:ours.length,gltf:rows.length,tot,same,flip,noMatch,far,ratioSame:same/tot,ratioFlip:flip/tot,samples,jsonMeshes:json.meshes.length},null,2));
+
+if(!tot||same/tot<.95||far/tot>.02){console.error('UV_GLTF_MATCH_FAILURE',id,{same,tot,far});process.exitCode=1;}
