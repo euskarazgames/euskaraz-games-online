@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d0f">
+<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-2.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>HERRI PILOTA · ARENA</title>
+<title>Euskaraz Games · Herri Pilota · Pilotari Karrera</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;background:#0b0d0f;color:#fff;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -194,7 +194,7 @@ body.match.paused .btn{display:none}
     <div class="chips" id="cRival"><div class="chip" data-v="0"><b>A. LURRA</b><small data-t="easy">ERRAZA</small></div><div class="chip on" data-v="1"><b>XABIER HARRI</b><small data-t="medium">ERTAINA</small></div><div class="chip" data-v="2"><b>U. MENDIBE</b><small data-t="hard">ZAILA</small></div></div>
     <div class="two">
       <div><div class="lbl" data-t="points">TANTOAK</div><div class="chips sm" id="cTarget"><div class="chip" data-v="12">12</div><div class="chip" data-v="18">18</div><div class="chip on" data-v="22">22</div></div></div>
-      <div><div class="lbl" data-t="serve">SAKEA</div><div class="chips sm" id="cServe"><div class="chip on" data-v="free" data-t="free">LIBREA</div><div class="chip" data-v="47">4–7</div></div></div>
+      <div><div class="lbl" data-t="serve">SAKEA</div><div class="chips sm" id="cServe"><div class="chip on" data-v="free" data-t="free">LIBREA</div><div class="chip" data-v="37">3–7</div></div></div>
     </div>
   </div>
   <div class="go" id="goPlay" data-t="play">JOKATU</div>
@@ -1338,6 +1338,12 @@ const Rig=(()=>{
     mix('shL',[.1,0,.2],w);mix('elL',[-.4,0,0],w);mix('spine',[-.06,.12,0],w);mix('head',[-.25,0,0],w);mix('pelvis',[0,0,0],w);
     mix('hipL',[-.12,0,.08],w);mix('hipR',[-.12,0,-.08],w);mix('knL',[.2,0,0],w);mix('knR',[.2,0,0],w);mix('anL',[-.08,0,0],w);mix('anR',[-.08,0,0],w);
    }
+   if(st.serve>0&&st.swing<=0){
+    // The serving hand cradles the ball in front of the body.
+    const w=st.serve;
+    mix('shR',[-.65,-.15,-.22],w);mix('elR',[-1.20,0,.20],w);mix('haR',[-.22,0,.1],w);
+    mix('spine',[.15,0,0],.3*w);
+   }
    if(st.def>0){
     const w=sstep(0,.3,st.def);
     mix('spine',[.34,0,0],w);mix('head',[.42,0,0],w);mix('shL',[.30,0,.72],w);mix('shR',[.30,0,-.72],w);mix('elL',[-1.75,0,0],w);mix('elR',[-1.75,0,0],w);
@@ -1357,7 +1363,7 @@ const Rig=(()=>{
   }
   draw(mir){GL.litSkin(this.body.mesh,this.B,this.skinMat,mir,this.pal);for(const n of this.parts)if(!mir||n.mirror)GL.lit(n.mesh,n.world,n.mat,mir);}
   drawShadow(){GL.shadowSkin(this.body.mesh,this.B);for(const n of this.parts)if(n.shadow)GL.shadow(n.mesh,n.world);}
-  handPos(){return M4.xform(this.J.haR.world,[0,-.08,.01]);}
+  handPos(){return M4.xform(this.J.haR.world,[0,-.08,.065]);}
  }
  Pelotari.JK=['pelvis','spine','head','shL','shR','elL','elR','haL','haR','hipL','hipR','knL','knR','anL','anR'];
  return {Pelotari,units};
@@ -1573,7 +1579,7 @@ const Game=(()=>{
  const C=COURT;
  const X0=(C.XL+C.XR)/2;
  const K={G:22,RUN:6.6,SPRINT:9.0,REACH:2.15,HMIN:.1,HMAX:2.75,IDEAL_D:1.1,IDEAL_H:.95,DIVE_EXTRA:1.25,ZMIN:2.3};
- const c4=C.WALL+4*C.CU,c7=C.WALL+7*C.CU;
+ const c3=C.WALL+3*C.CU,c4=C.WALL+4*C.CU,c7=C.WALL+7*C.CU;
  const dist=(ax,az,bx,bz)=>Math.hypot(ax-bx,az-bz);
  function solveShot(fx,fy,fz,tx,ty,zw,hs,g){
   const dx=tx-fx,dz=zw-fz,hd=Math.max(.8,Math.hypot(dx,dz)),time=hd/hs;
@@ -1613,10 +1619,10 @@ const Game=(()=>{
   const M={cfg,t:0,phase:'intro',phaseT:0,over:false,won:false,
    score:0,foe:0,target:cfg.target||22,server:cfg.firstServer||'p',rest:false,
    b:{x:0,y:1,z:12,vx:0,vy:0,vz:0},spin:0,live:false,wall:false,bounces:0,turn:'p',rally:0,speed:1,dropFlag:false,
-   serving:false,serveRule:cfg.serve==='47',inField:false,outCalled:false,superBall:0,liveT:0,
+   serving:false,serveRule:cfg.serve==='37'||cfg.serve==='47',inField:false,outCalled:false,superBall:0,liveT:0,
    p:{x:X0-.5,z:13.4,aimX:0,aimY:0,charge:0,armed:false,kind:'flat',swing:0,swKind:'flat',sua:0,dive:0,diveT:0,diveSide:1,down:0,spd:0,yaw:Math.PI,cel:0,def:0},
    a:{x:X0+.9,z:9.6,miss:false,t:0,swing:0,swKind:'flat',spd:0,yaw:Math.PI,dive:0,diveT:0,diveSide:1,down:0,cel:0,def:0,serveT:0},
-   ai:{spd:5.4+lv*5.8,err:.25-lv*.2,pw:.40+lv*.55,aim:.3+lv*.62,sup:lv>.34,react:.32-lv*.24,dive:.25+lv*.6,lv},
+   ai:{spd:5.4+lv*5.8,err:.15-lv*.13,pw:.40+lv*.55,aim:.3+lv*.62,sup:lv>.34,react:.32-lv*.24,dive:.25+lv*.6,lv},
    mark:{x:0,z:9,ready:false,on:false},stats:{rallies:0,best:0,perfect:0,tximista:0,dives:0,points:[]},
    lastHit:null,canHit:false,pending:null};
   const p=M.p,a=M.a,b=M.b;
@@ -1710,7 +1716,7 @@ const Game=(()=>{
    const ai=M.ai;
    const tx=clamp(X0-(p.x-X0)*ai.aim+(RNG()-.5)*5*(1-ai.aim),C.XL+.6,C.XR-.6);
    const r=isServe?.5:RNG();let ty=C.FALTA+.75+RNG()*(3.7-2.1*ai.lv),spd=(15.6+ai.pw*10.7)*M.speed,kind='flat';
-   if(isServe){ty=C.FALTA+1.6+RNG()*2.2;spd=(13.5+ai.pw*6);}
+   if(isServe){ty=4.5+RNG()*.45;spd=22.0+RNG()*1.5;}
    else if(r<.12){ty=7.0+RNG()*.9;spd=16.8;kind='lob';M.dropFlag=false;}
    else if(r<.24){ty=C.FALTA+.25;spd=11;M.dropFlag=true;kind='drop';}
    else M.dropFlag=false;
@@ -1719,9 +1725,33 @@ const Game=(()=>{
    M.superBall=0;
    if(ai.sup&&M.rally>5&&RNG()<.14&&!isServe&&!divePen){spd*=1.45;M.superBall=2;emit('popup',{k:'AURK_SUA',c:'#c58bff'});}
    M.speed=Math.min(1.45,M.speed+.035);
-   const fy=Math.max(.75,b.y),slip=RNG()<M.ai.err*.5,spin=(RNG()-.5)*2;
-   const v=fitShot(a.x,fy,a.z,tx,ty,spd,spin,kind==='drop',kind==='drop'?99:C.BACK-.5);
-   if(slip){v[0]+=(RNG()-.5)*2.2;v[1]+=(RNG()-.45)*2.0;}
+   const fy=Math.max(.75,b.y),slip=!isServe&&RNG()<M.ai.err*.35,spin=isServe?0:(RNG()-.5)*2;
+   let v;
+   if(isServe){
+     // Validate the predicted first bounce, as required by the 3–7 mark.
+     // An occasional real fault (~1.2%) keeps the match human, not random chaos.
+     const rareFault=RNG()<.012;
+     let best=null,bestDist=1e9;
+     const goal=(c3+c7)*.5;
+     for(const power of [21,22,23,24]){
+       for(const height of [4.0,4.5,5.0,5.5]){
+         const trial=fitShot(a.x,fy,a.z,tx,height,power,0,false,c7-.5);
+         const land=predict(a.x,fy,a.z,trial[0],trial[1],trial[2],0,false);
+         if(!land.wall||land.wy<C.FALTA+.20||land.x>C.XR-.2||land.x<C.XL+.2)continue;
+         const safe=land.z>c3+.35&&land.z<c7-.35;
+         if(!safe)continue;
+         const score=Math.abs(land.z-goal)+Math.abs(land.x-tx)*.04;
+         if(score<bestDist){bestDist=score;best=trial;}
+       }
+     }
+     v=best||fitShot(a.x,fy,a.z,tx,5.0,22.5,0,false,c7-.75);
+     if(rareFault){ // deliberate, infrequent miss toward the short marker
+       v=fitShot(a.x,fy,a.z,tx,2.2,16,0,false,c7-.75);
+     }
+   }else{
+     v=fitShot(a.x,fy,a.z,tx,ty,spd,spin,kind==='drop',kind==='drop'?99:C.BACK-.5);
+     if(slip){v[0]+=(RNG()-.5)*1.5;v[1]+=(RNG()-.45)*1.3;}
+   }
    b.vx=v[0];b.vy=v[1];b.vz=v[2];M.spin=spin;b.y=fy;
    M.turn='p';M.bounces=0;M.wall=false;M.live=true;M.rally++;M.outCalled=false;M.inField=false;M.liveT=0;
    M.serving=isServe&&M.serveRule;
@@ -1758,8 +1788,8 @@ const Game=(()=>{
     b.y=C.BR;const vIn=-b.vy;b.vy=vIn*(M.dropFlag?.58:.7);b.vx*=.95;b.vz*=M.dropFlag?.78:.95;
     M.bounces++;emit('bounce',{x:b.x,z:b.z,v:vIn});
     if(M.serving&&M.rally===1&&M.wall&&M.bounces===1){
-     M.serving=false;const tol=1.0;
-     if(b.z<c4-tol){emit('popup',{k:'SAKE_MOTZ',c:'#ff7a6a'});point(M.turn==='p','sake');return true;}
+     M.serving=false;const tol=.16;
+     if(b.z<c3-tol){emit('popup',{k:'SAKE_MOTZ',c:'#ff7a6a'});point(M.turn==='p','sake');return true;}
      if(b.z>c7+tol){emit('popup',{k:'SAKE_LUZE',c:'#ff7a6a'});point(M.turn==='p','sake');return true;}
      emit('popup',{k:'SAKE_ONA',c:'#2ee59d',small:1});
     }
@@ -1818,12 +1848,12 @@ const Game=(()=>{
    movePlayer(dt,inp,1);
    if(M.phase==='serve'){
     if(M.server==='p'){
-     b.x=p.x-.24;b.y=.95+Math.sin(M.t*3)*.16;b.z=p.z-.34;b.vx=b.vy=b.vz=0;
+     b.x=p.x-.24;b.y=1.3;b.z=p.z-.26;b.vx=b.vy=b.vz=0;
      if(p.armed&&!held&&M.phaseT>.25)playerServe();
      aiMove(dt,X0+.6,9.2,false);
     }else{
      a.serveT-=dt;aiMove(dt,X0+.7,10.4,false);
-     b.x=a.x-.24;b.y=.95+Math.sin(M.t*3)*.16;b.z=a.z-.34;b.vx=b.vy=b.vz=0;
+     b.x=a.x-.24;b.y=1.3;b.z=a.z-.26;b.vx=b.vy=b.vz=0;
      if(a.serveT<=0)aiHit();
     }
     faceBall(dt);M.mark.on=false;return;
@@ -1913,7 +1943,7 @@ const Game=(()=>{
   if(M.live&&M.turn==='p'&&p.armed){inp.mx=clamp(inp.mx+(st.aimX||0),-1,1);}
   return inp;
  }
- return {create,bot,K,X0,c4,c7,solveShot,predict,fitShot};
+ return {create,bot,K,X0,c3,c4,c7,solveShot,predict,fitShot};
 })();
 
 /* ==================================================================
@@ -2210,7 +2240,7 @@ const UI=(()=>{
  /* ---------- marrazketa ---------- */
  function drawChars(mir){
   me.draw(mir);foe.draw(mir);
-  GL.lit(ballNode.mesh,ballNode.world,ballNode.mat,mir);
+  if(M&&(M.live||M.phase==='serve'||M.phase==='intro'))GL.lit(ballNode.mesh,ballNode.world,ballNode.mat,mir);
  }
  let tAcc=0;
  function render(cam){
@@ -2224,7 +2254,7 @@ const UI=(()=>{
   for(const d of Arena.fxOpaque)if(!(hideLed&&d.led))GL.fx(d.m,I,d.mat);
   FX.drawDecals();
   GL.shadowBegin(.40);me.drawShadow();foe.drawShadow();
-  if(M&&M.b.y<6)GL.shadow(ballNode.mesh,ballNode.world);GL.shadowEnd();
+  if(M&&(M.live||M.phase==='serve'||M.phase==='intro')&&ballNode.p[1]<6)GL.shadow(ballNode.mesh,ballNode.world);GL.shadowEnd();
   drawChars(false);
   for(const d of Arena.fxAlpha)GL.fx(d.m,I,d.mat);
   for(const d of Arena.fxAdd)GL.fx(d.m,I,d.mat);
@@ -2233,8 +2263,8 @@ const UI=(()=>{
    for(const f of Arena.flares){const fl=.85+.15*Math.sin(tAcc*3+f[0]+f[2]);FX.sprite(BA,f[0],f[1],f[2],f[3],UV.dot,[1,.95,.85],.55*f[4]*fl);FX.sprite(BA,f[0],f[1],f[2],f[3]*1.6,UV.star,[1,.93,.8],.18*f[4]);}
    if(M){
     const b=M.b,live=M.live||M.phase==='serve';
-    FX.sprite(BA,b.x,b.y,b.z,.30,UV.dot,M.superBall===1?[.5,.9,1]:(M.superBall===2?[.8,.55,1]:[1,.98,.92]),M.superBall?.75:.38);
-    FX.flat(BN,b.x,.02,b.z,.16+b.y*.02,UV.dot,[0,0,0],clamp(.5-b.y*.08,.08,.5));
+    if(M.live){FX.sprite(BA,b.x,b.y,b.z,.30,UV.dot,M.superBall===1?[.5,.9,1]:(M.superBall===2?[.8,.55,1]:[1,.98,.92]),M.superBall?.75:.38);
+    FX.flat(BN,b.x,.02,b.z,.16+b.y*.02,UV.dot,[0,0,0],clamp(.5-b.y*.08,.08,.5));}
     if(mode==='match'&&!M.attract){
      if(M.mark.on&&M.live){const pu=.85+.15*Math.sin(tAcc*9);FX.flat(BN,M.mark.x,.03,M.mark.z,.42*pu,UV.ring,[1,.82,.3],.55);FX.flat(BA,M.mark.x,.035,M.mark.z,.16,UV.dot,[1,.85,.4],.35);}
      const can=M.canHit;FX.flat(can?BA:BN,M.p.x,.03,M.p.z,.78,UV.ring,can?[.35,1,.7]:[.85,.9,.95],can?.24:.08);
@@ -2265,9 +2295,12 @@ const UI=(()=>{
    }
    if(M){
     const p=M.p,a=M.a;
-    me.update(paused?0:dt,{x:p.x,z:p.z,yaw:p.yaw,speed:p.spd,swing:p.swing,swKind:p.swKind,dive:p.dive>0?Math.max(p.dive,p.down>0?1:0):0,diveSide:p.diveSide,cel:p.cel,def:p.def,look:0});
-    foe.update(paused?0:dt,{x:a.x,z:a.z,yaw:a.yaw,speed:a.spd,swing:a.swing,swKind:a.swKind,dive:a.dive>0?Math.max(a.dive,a.down>0?1:0):0,diveSide:a.diveSide,cel:a.cel,def:a.def,look:0});
-    const b=M.b;ballNode.p=[b.x,b.y,b.z];
+    me.update(paused?0:dt,{x:p.x,z:p.z,yaw:p.yaw,speed:p.spd,swing:p.swing,swKind:p.swKind,dive:p.dive>0?Math.max(p.dive,p.down>0?1:0):0,diveSide:p.diveSide,cel:p.cel,def:p.def,look:0,serve:(M.server==='p'&&(M.phase==='serve'||M.phase==='intro'))?1:0});
+    foe.update(paused?0:dt,{x:a.x,z:a.z,yaw:a.yaw,speed:a.spd,swing:a.swing,swKind:a.swKind,dive:a.dive>0?Math.max(a.dive,a.down>0?1:0):0,diveSide:a.diveSide,cel:a.cel,def:a.def,look:0,serve:(M.server==='a'&&(M.phase==='serve'||M.phase==='intro'))?1:0});
+    const b=M.b;const held=M.phase==='serve'||M.phase==='intro';
+    // In serve/intro, render the ball at the animated palm. In live play physics owns it.
+    const hand=held?(M.server==='p'?me.handPos():foe.handPos()):null;
+    ballNode.p=hand||[b.x,b.y,b.z];
     if(M.live&&!paused){ballNode.r[0]+=dt*Math.hypot(b.vz,b.vy)*1.6;ballNode.r[2]-=dt*b.vx*1.6;if(Math.hypot(b.vx,b.vy,b.vz)>7)FX.trailPush(b.x,b.y,b.z,trailCol);}
     else if(!M.live)FX.trailClear();
     ballNode.update(null);
@@ -2346,6 +2379,41 @@ const UI=(()=>{
   #career .toast{font-size:12px;color:#f6e5a8;min-height:19px}
   body.match #careerBadge{display:block}#careerBadge{position:fixed;left:50%;top:env(safe-area-inset-top);transform:translateX(-50%);z-index:11;pointer-events:none;display:none;background:#122a30cb;color:#e9f6f0;padding:5px 12px;border-radius:0 0 9px 9px;border:1px solid #ffffff30;border-top:0;white-space:nowrap;font:750 11px system-ui}
   @media(max-width:560px){#career .body{padding:14px}#career header{padding:14px}#career .stats{grid-template-columns:repeat(2,1fr)}#career .upgrades{grid-template-columns:1fr}#career .fixtures{grid-template-columns:1fr}#career .matchcard{padding:13px}#career .shell{max-height:96vh}}
+
+  /* HERRI PILOTA / PES-inspired but original cover + sports control room */
+  #career{background:linear-gradient(110deg,#050e19d9,#06182bcf);padding:clamp(8px,2vh,30px)}
+  #career .shell{width:min(1180px,100%);display:grid;grid-template-columns:minmax(265px,35%) minmax(0,65%);background:#071522;border:1px solid #ffffff30;box-shadow:0 35px 120px #000e;border-radius:22px;max-height:94vh;overflow:hidden}
+  #career .hero-cover{position:relative;min-height:580px;overflow:hidden;background:linear-gradient(180deg,#07162412,#06132230 42%,#03101df5),url('https://v3b.fal.media/files/b/0ab2d4d7/G-X4SivzQPo79PcDVyEgq_HOYO2q96.webp') center center/cover no-repeat,#1a3c53;border-right:1px solid #ffffff22;isolation:isolate}
+  #career .hero-cover:before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#071c32bd,#071c3200 28%,#04101bed 83%),linear-gradient(115deg,#174d6a22,transparent 65%);z-index:-0}
+  #career .cover-brand{position:absolute;z-index:1;top:23px;left:22px;background:#e5282c;padding:9px 12px;transform:skew(-8deg);box-shadow:8px 9px 0 #051928;font:950 11px/1 Arial,sans-serif;letter-spacing:.085em}
+  #career .cover-copy{position:absolute;z-index:1;bottom:28px;left:23px;right:18px;text-shadow:0 2px 20px #000d}
+  #career .cover-edition{font:900 11px Arial,sans-serif;letter-spacing:.21em;color:#ffcc89}
+  #career .cover-title{font:1000 clamp(44px,5vw,80px)/.82 Impact,'Arial Black',Arial,sans-serif;letter-spacing:-.05em;color:#fff;text-transform:uppercase;margin-top:12px;font-style:italic}
+  #career .cover-title strong{color:#fff}
+  #career .cover-sub{margin-top:16px;background:#f4f0e7;color:#0b2540;display:inline-block;padding:7px 13px;font:950 16px Arial,sans-serif;letter-spacing:.09em;transform:skew(-6deg)}
+  #career .cover-tag{font:800 10px Arial,sans-serif;letter-spacing:.07em;margin-top:16px;color:#e8edf6}
+  #career .career-content{min-width:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#405b73 transparent}
+  #career header{background:linear-gradient(95deg,#0b253c,#142d45 60%,#0a1b31);border-bottom:2px solid #e63134;padding:24px 26px 17px}
+  #career h1{font:950 clamp(23px,2.5vw,33px)/1.03 'Arial Black',Arial,sans-serif;letter-spacing:-.045em}
+  #career h1 span{color:#fa4c4b}
+  #career .sub{color:#d6e7f3;letter-spacing:.16em}
+  #career .body{background:linear-gradient(180deg,#101f32,#0b1728);padding:20px 25px 24px}
+  #career .tablist button{text-transform:uppercase;letter-spacing:.06em;border:0;border-bottom:3px solid transparent;border-radius:4px 4px 0 0;background:#ffffff09;color:#bfccdc}
+  #career .tablist button.on{background:#ffffff1b;border-bottom:3px solid #fa4447;color:#fff}
+  #career button.primary{background:linear-gradient(145deg,#ee3942,#b91528);color:white;border-color:#ff7270;box-shadow:0 7px 20px #da21344a;letter-spacing:.07em;padding:14px 21px}
+  #career button.primary:hover{background:linear-gradient(145deg,#ff555b,#cf2235)}
+  #career .matchcard{border:1px solid #537190;background:linear-gradient(110deg,#22446792,#102c47d4),repeating-linear-gradient(105deg,transparent 0 22px,#ffffff05 23px 25px);border-radius:12px;padding:22px;margin:16px 0;box-shadow:0 9px 30px #02081255}
+  #career .matchcard .versus{font:950 clamp(23px,2.5vw,35px)/1.15 'Arial Black',Arial,sans-serif;letter-spacing:-.045em}
+  #career .matchcard .versus em{background:#e72b34;color:white;padding:5px 9px;transform:skew(-8deg);display:inline-block;font-size:.56em;vertical-align:middle}
+  #career .matchcard .eyebrow{font:900 11px Arial,sans-serif;letter-spacing:.14em;color:#a3e5f6}
+  #career .league-progress{margin:0 0 20px;padding:12px 15px;border:1px solid #ffffff18;border-radius:10px;background:#ffffff0c}
+  #career .progress-heading{display:flex;justify-content:space-between;gap:12px;font:900 12px Arial,sans-serif;letter-spacing:.08em}
+  #career .progress-track{height:6px;border-radius:99px;background:#ffffff25;overflow:hidden;margin:9px 0}
+  #career .progress-track i{display:block;height:100%;background:linear-gradient(90deg,#e9263d,#ff8c69)}
+  #career .league-progress small{color:#99bbcb;font:800 10px Arial,sans-serif;letter-spacing:.09em}
+  #career .metric{background:#162b40;border-color:#35506c}#career .metric b{font-size:21px}#career .metric small{color:#acc9db}
+  #career .upgrade{background:#112a40;border-color:#375c77}#career .upgrade button:hover{border-color:#f35a61}
+  @media(max-width:760px){#career .shell{grid-template-columns:minmax(0,1fr);max-height:96vh;overflow-y:auto}#career .career-content{overflow:visible}#career .hero-cover{min-height:230px;height:28vh;max-height:350px;background-position:center 37%;border-right:0;border-bottom:2px solid #e63134}#career .cover-title{font-size:clamp(39px,9vw,63px);margin-top:6px}#career .cover-copy{bottom:15px}#career .cover-sub{font-size:13px;margin-top:8px}#career .cover-tag{margin-top:6px}#career .cover-brand{font-size:8px;padding:7px;top:12px;left:15px}#career header{padding:15px}#career .body{padding:15px}}
   `});document.head.appendChild(skin);
   const root=el('div',{id:'career'}),shell=el('div',{class:'shell'});root.append(shell);document.body.appendChild(root);
   const badge=el('div',{id:'careerBadge'});document.body.appendChild(badge);
@@ -2361,7 +2429,7 @@ const UI=(()=>{
   function sanitizeName(v){return String(v||'').normalize('NFKC').replace(/[^\p{L}\p{N} .'-]/gu,'').trim().slice(0,22)||'PILOTARIA';}
   function start(){if(!window.HPA){note(lang==='es'?'Este navegador no ofrece WebGL. Prueba Safari o Chrome con WebGL activado.':'WebGL ez dago erabilgarri. Probatu WebGL duen Safari edo Chrome.');return;}if(data.finished)return;const i=data.round;if(i>=FINALS)return;
     const [name,location,level]=current();active={season:data.season,round:i,ref:`${data.season}-${i}`};
-    UI.CFG.rival=0;UI.CFG.target=22;UI.CFG.serve='47';
+    UI.CFG.rival=0;UI.CFG.target=22;UI.CFG.serve='37';
     UI.RIVALS[0]={n:name,lv:Math.min(.98,level+(data.season-1)*.025),shirt:0xb3221c};
     Game.K.RUN=6.6+data.skills.speed*.18;Game.K.SPRINT=9.0+data.skills.speed*.24;
     Game.K.REACH=2.15+data.skills.reach*.06;
@@ -2384,8 +2452,26 @@ const UI=(()=>{
   function nextSeason(){const season=data.season+1,prev=data;window.HPA?.goMenu?.();root.classList.remove('show-end');data=blank(season,{...prev.record});data.name=prev.name;data.skills={...prev.skills};data.xp=prev.xp;save();lastEnd=null;pane='home';draw();}
   function changeLang(v){const ch=document.querySelector('#cLang .chip[data-v="'+v+'"]');if(ch)ch.click();lang=v;draw();}
   function draw(){const [n,loc,lv]=current();shell.replaceChildren();
-    const head=el('header',{},[el('div',{},[el('h1',{html:'HERRI PILOTA <span>· '+t('title')+'</span>'}),el('div',{class:'sub',text:t('solo')})]),el('div',{},[el('div',{class:'language'},['eu','es','en'].map(v=>el('button',{text:v.toUpperCase(),style:v===lang?'border-color:#9ef5fe;background:#447c84':'',onclick:()=>changeLang(v)}))),el('div',{class:'local',text:t('note')})])]);shell.append(head);
-    const body=el('div',{class:'body'});shell.append(body);
+    const promo=el('aside',{class:'hero-cover'},[
+      el('div',{class:'cover-brand',text:'EUSKARAZ GAMES  •  KIROL CHALLENGE'}),
+      el('div',{class:'cover-copy'},[
+        el('div',{class:'cover-edition',text:'DENBORALDIA · 2026'}),
+        el('div',{class:'cover-title',html:'HERRI<br><strong>PILOTA</strong>'}),
+        el('div',{class:'cover-sub',text:'PILOTARI KARRERA'}),
+        el('div',{class:'cover-tag',text:'BURUZ BURU  ·  3–7  ·  22 TANTO'})
+      ])
+    ]);
+    const content=el('div',{class:'career-content'});
+    shell.append(promo,content);
+    const head=el('header',{},[el('div',{},[el('h1',{html:'HERRI PILOTA <span>· '+t('title')+'</span>'}),el('div',{class:'sub',text:t('solo')})]),el('div',{},[el('div',{class:'language'},['eu','es','en'].map(v=>el('button',{text:v.toUpperCase(),style:v===lang?'border-color:#9ef5fe;background:#447c84':'',onclick:()=>changeLang(v)}))),el('div',{class:'local',text:t('note')})])]);content.append(head);
+    const body=el('div',{class:'body'});content.append(body);
+    if(pane==='home'&&!data.finished){
+      const progress=el('div',{class:'league-progress'},[
+        el('div',{class:'progress-heading'},[el('b',{text:'PILOTARI KARRERA'}),el('span',{text:`${Math.min(data.round+1,FINALS)} / ${FINALS}`})]),
+        el('div',{class:'progress-track'},[el('i',{style:`width:${(Math.min(data.round,FINALS)/FINALS*100).toFixed(1)}%`})]),
+        el('small',{text:'3–7  ·  22 TANTO  ·  BANAKAKO TXAPELKETA'})
+      ]);body.append(progress);
+    }
     const tabs=el('div',{class:'tablist'},[['home',t('match')],['calendar',t('calendar')],['table',t('table')]].map(([id,label])=>el('button',{class:pane===id||pane==='result'&&id==='home'?'on':'',text:label,onclick:()=>{pane=id;lastEnd=null;draw();}})));
     body.append(tabs);
     const overallW=data.results.filter(x=>x.won).length;
