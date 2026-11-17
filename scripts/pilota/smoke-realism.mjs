@@ -94,6 +94,30 @@ async function run(name,opts,allowGame=true){
     assert(Math.abs(motion.target-motion.first)<Math.abs(motion.target-motion.start) &&
       Math.abs(motion.target-motion.second)<Math.abs(motion.target-motion.first),'Neck tracking is not smoothly interpolated');
     assert(motion.wrist.every(Number.isFinite)&&motion.wrist.length===3,'Invalid wrist pose');
+    // Three representative shots: force the wrist and elbow IK onto a near-field target.
+    const ik=await page.evaluate(()=>{
+      const p=window.HPA.me, out=[];
+      for(const [kind,offset] of [['flat',[.08,.06,.04]],['lob',[.07,.12,.03]],['drop',[.05,-.12,.03]]]){
+        const h=p.handPos(),target=h.map((v,i)=>v+offset[i]);
+        p.update(.016,{swing:.60,swKind:kind,contactTarget:target,contactProgress:1,ready:false,speed:0});
+        const wrist=p.J.haR.r.slice(),elbow=p.J.elR.r.slice();
+        out.push({kind,error:p.contactError,wrist,elbow});
+      }
+      return out;
+    });
+    assert(ik.every(t=>Number.isFinite(t.error)&&t.error<.30),'Pelotari palm IK missed nearby pelota: '+JSON.stringify(ik));
+    assert(ik.every(t=>t.elbow[0]>=-2.751&&t.elbow[0]<=.151),'Elbow over-extended during contact');
+    console.log('PALM_IK_3_SHOTS',name,JSON.stringify(ik));
+    // An actual match impulse must originate near the visible palm, not an avatar-centre offset.
+    await page.evaluate(()=>{
+      const g=window.HPA, m=g.M, h=g.me.handPos();
+      m.phase='live';m.live=true;m.wall=true;m.turn='p';m.server='p';m.strike={who:'p',kind:'flat',divePen:0,serve:false,t:0,duration:.105};
+      m.p.swing=.79;m.p.swKind='flat';m.b.x=h[0]+.07;m.b.y=h[1]+.05;m.b.z=h[2]+.06;
+    });
+    await page.waitForFunction(()=>!!window.HPA?.contact(),{timeout:4500});
+    const impact=await page.evaluate(()=>window.HPA.contact());
+    console.log('PALM_BALL_IMPACT',name,JSON.stringify(impact));
+    assert(Number.isFinite(impact.dist)&&impact.dist<.34,'Hand-ball impact missed during simulated rally: '+impact.dist);
     const gameplay=await page.evaluate(()=>({phase:window.HPA.M?.phase||null,hand:window.HPA.me.handPos(),rival:window.HPA.foe._realName,ball:window.HPA.M?.ball,gl:document.querySelector('#gl').getContext('webgl2')?.getError()}));
     assert(gameplay.hand?.every(Number.isFinite),'Invalid contact position during gameplay');
     assert(gameplay.rival,'Missing rival in match');
