@@ -2527,7 +2527,7 @@ const UI=(()=>{
   #career h1{font-size:clamp(23px,4vw,40px);letter-spacing:-.06em;margin:0;font-weight:950;line-height:1.03}#career h1 span{color:#8de2ed}
   #career .sub{font:700 11px/1.5 system-ui;letter-spacing:.16em;color:#bcdbdc;margin-top:7px}
   #career .local{font-size:10px;letter-spacing:.08em;color:#d9d6cb}
-  #career .language{display:flex;gap:6px}#career .language button{min-width:45px}
+  #career .language{display:flex;gap:6px}#career .language button{min-width:45px}#career .visual-toggle{margin-top:7px}#career .visual-toggle button{width:100%;font-size:10px;letter-spacing:.05em;background:#1e4660;border-color:#4585a5;padding:8px 10px}
   #career button{border:1px solid #ffffff36;background:#32434c;color:#fff;padding:10px 13px;border-radius:10px;font-weight:800;cursor:pointer}#career button:hover{border-color:#78ebff;background:#385867}#career button.primary{color:#09242a;background:#8ce3e7;border-color:#baf4fb}#career button.primary:hover{background:#baf6fa}#career button:disabled{opacity:.45;cursor:not-allowed}
   #career .body{padding:19px 24px 22px}#career .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
   #career .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 20px;width:auto}#career .metric{border:1px solid #ffffff21;background:#fff1;border-radius:11px;padding:10px 12px;text-align:left}#career .metric b{font-size:24px;color:#fff;display:block}#career .metric small{font-size:10px;font-weight:750;color:#b5cfd5;display:block;letter-spacing:.1em}
@@ -2629,7 +2629,7 @@ const UI=(()=>{
     ]);
     const content=el('div',{class:'career-content'});
     shell.append(promo,content);
-    const head=el('header',{},[el('div',{},[el('h1',{html:'HERRI PILOTA <span>· '+t('title')+'</span>'}),el('div',{class:'sub',text:t('solo')})]),el('div',{},[el('div',{class:'language'},['eu','es','en'].map(v=>el('button',{text:v.toUpperCase(),style:v===lang?'border-color:#9ef5fe;background:#447c84':'',onclick:()=>changeLang(v)}))),el('div',{class:'local',text:t('note')})])]);content.append(head);
+    const head=el('header',{},[el('div',{},[el('h1',{html:'HERRI PILOTA <span>· '+t('title')+'</span>'}),el('div',{class:'sub',text:t('solo')})]),el('div',{},[el('div',{class:'language'},['eu','es','en'].map(v=>el('button',{text:v.toUpperCase(),style:v===lang?'border-color:#9ef5fe;background:#447c84':'',onclick:()=>changeLang(v)}))),el('div',{class:'visual-toggle'},[el('button',{text:(window.PILOTA_MODELS?.active?(lang==='eu'?'GRAFIKOAK · ERREALISTA':lang==='es'?'GRÁFICOS · REALISTA':'GRAPHICS · REALISTIC'):(lang==='eu'?'GRAFIKOAK · AZKARRA':lang==='es'?'GRÁFICOS · RÁPIDO':'GRAPHICS · FAST')),onclick:()=>{const next=!window.PILOTA_MODELS?.active;localStorage.setItem('hpa_real_3d',next?'on':'off');const url=new URL(location.href);url.searchParams.delete('personajes3d');location.assign(url.href);}})]),el('div',{class:'local',text:t('note')})])]);content.append(head);
     const body=el('div',{class:'body'});content.append(body);
     if(pane==='home'&&!data.finished){
       const progress=el('div',{class:'league-progress'},[
