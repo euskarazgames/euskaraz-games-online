@@ -63,6 +63,14 @@ async function run(name,opts,allowGame=true){
     if(name==='desktop'){
       const jpg=await page.screenshot({type:'jpeg',quality:42,timeout:10000});
       console.log('QA_SCENE_JPEG_START '+jpg.toString('base64')+' QA_SCENE_JPEG_END');
+      // Capture the unaltered Fal UV atlas to diagnose jersey/skin mismatches.
+      const atlas=await page.evaluate(async()=>{
+        const im=new Image(); im.src='/pilota/characters/jon_diffuse.png';await im.decode();
+        const can=document.createElement('canvas');can.width=512;can.height=512;
+        const c=can.getContext('2d');c.drawImage(im,0,0,512,512);
+        return can.toDataURL('image/jpeg',.61).split(',')[1];
+      });
+      console.log('QA_ATLAS_JPEG_START '+atlas+' QA_ATLAS_JPEG_END');
     }
     const gameplay=await page.evaluate(()=>({phase:window.HPA.M?.phase||null,hand:window.HPA.me.handPos(),rival:window.HPA.foe._realName,ball:window.HPA.M?.ball,gl:document.querySelector('#gl').getContext('webgl2')?.getError()}));
     assert(gameplay.hand?.every(Number.isFinite),'Invalid contact position during gameplay');
