@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-3.1-realism-preview">
+<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-4.0-realism-studio">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Euskaraz Games · Herri Pilota · Pilotari Karrera</title>
 <style>
@@ -1405,7 +1405,7 @@ const Rig=(()=>{
   }
   draw(mir){GL.litSkin(this.realMesh||this.body.mesh,this.B,this.realMat||this.skinMat,mir,this.realPal||this.pal);if(!this.realMesh)for(const n of this.parts)if(!mir||n.mirror)GL.lit(n.mesh,n.world,n.mat,mir);}
   drawShadow(){GL.shadowSkin(this.realMesh||this.body.mesh,this.B);if(!this.realMesh)for(const n of this.parts)if(n.shadow)GL.shadow(n.mesh,n.world);}
-  handPos(){return M4.xform(this.J.haR.world,[0,-.08,.065]);}
+  handPos(){return M4.xform(this.J.haR.world,this.realPalmLocal||[0,-.08,.065]);}
  }
  Pelotari.JK=['pelvis','spine','head','shL','shR','elL','elR','haL','haR','hipL','hipR','knL','knR','anL','anR'];
  return {Pelotari,units};
@@ -2179,34 +2179,85 @@ const UI=(()=>{
  const BLUE={shirt:0x1f6aa5,shirtCss:'#1f6aa5',num:3,accent:0x2a6bb8};
  const RED={shirt:0xb3221c,shirtCss:'#b3221c',num:5,accent:0x9a1a1a,skin:0xc4875f,hair:0x1c140e};
  const me=new Rig.Pelotari(BLUE),foe=new Rig.Pelotari(RED);
-  // Opt-in visual preview: ?personajes3d=1. Procedural renderer stays default.
-  async function loadRiggedCharacter(pilotari,name){
-    const base='/pilota/characters/'+name;
-    const r=await fetch(base+'_skin.bin',{cache:'no-store'});
-    if(!r.ok)throw Error('Skin unavailable: '+name+' '+r.status);
-    const data=await r.arrayBuffer();
-    if(data.byteLength<8)throw Error('Invalid skin header');
-    const view=new DataView(data),nv=view.getUint32(0,true),ni=view.getUint32(4,true);
-    if(nv<100||nv>65535||ni<100||ni>150000||data.byteLength!==8+nv*76+ni*2)throw Error('Invalid skin mesh: '+name);
-    const verts=new Float32Array(data.slice(8,8+nv*76));
-    const indices=new Uint16Array(data.slice(8+nv*76));
-    const img=new Image();img.decoding='async';img.src=base+'_diffuse.png';
-    await img.decode();
-    if(pilotari===foe && pilotari._requestedAsset!==name)return;
-    pilotari.realMesh=GL.meshSkin(verts,indices);
-    pilotari.realMat={tex:GL.tex(img,{repeat:false}),col:[1,1,1],rough:.68,spec:.19,rim:.15};
-    pilotari.realPal=new Float32Array(24).fill(1);
-    console.info('Herri Pilota custom 3D loaded',name,nv,ni/3);
+  // Browser-ready models share the existing contact IK, scoring and physics.
+  // \`?personajes3d=0\` disables photorealism, and ?personajes3d=1 forces it on.
+  const realModelParams=new URLSearchParams(location.search);
+  const realModelChoice=realModelParams.get('personajes3d');
+  let realPlayersEnabled=realModelChoice==='1'||(realModelChoice!=='0'&&localStorage.getItem('hpa_real_3d')!=='off');
+  const modelPool=new Map(), modelLoadState={ready:{},failed:{},active:realPlayersEnabled};
+  window.PILOTA_MODELS=modelLoadState;
+  function palmLocalForMesh(verts,skinned){
+    // Find genuinely right-hand-weighted vertices in the Fal mesh. The generated
+    // geometry is in Body.SKEL bind coordinates, so this works with the current IK.
+    const id=Body.BI.haR, n=verts.length/19;
+    let sum=[0,0,0],total=0,seen=0;
+    for(let i=0;i<n;i++){
+      const j=i*19,x=verts[j],y=verts[j+1],z=verts[j+2];
+      if(x>-.23||y<.74||y>1.35)continue;
+      let w=0;
+      for(let a=0;a<4;a++)if(Math.round(verts[j+11+a])===id)w+=verts[j+15+a];
+      if(w<.65)continue;
+      // Palm rather than the middle of the forearm: pick distal, high-weight samples.
+      w*=Math.max(.1,Math.min(1,(-x-.26)/.28));
+      sum[0]+=x*w;sum[1]+=y*w;sum[2]+=z*w;total+=w;seen++;
+    }
+    if(seen<12||total<3)return null;
+    const p=sum.map(v=>v/total);
+    const inv=skinned.body.bindInv.subarray(id*16,id*16+16);
+    const local=M4.xform(inv,p);
+    const d=Math.hypot(local[0],local[1],local[2]);
+    if(!local.every(Number.isFinite)||d>.78)return null;
+    return {local,vertices:seen,bindPalm:p};
   }
-  const realPlayersEnabled=new URLSearchParams(location.search).get('personajes3d')==='1';
-  if(realPlayersEnabled)loadRiggedCharacter(me,'jon').catch(e=>console.warn('Original hero retained:',e.message));
+  function createModelAsset(name){
+    const base='/pilota/characters/'+name;
+    return (async()=>{
+      const [r,img]=await Promise.all([
+        fetch(base+'_skin.bin',{cache:'force-cache'}),
+        new Promise((resolve,reject)=>{const image=new Image();image.decoding='async';image.onload=()=>resolve(image);image.onerror=()=>reject(Error('Missing texture '+name));image.src=base+'_diffuse.png';})
+      ]);
+      if(!r.ok)throw Error('Missing model '+name+' ('+r.status+')');
+      const buf=await r.arrayBuffer();
+      if(buf.byteLength<8)throw Error('Invalid model header '+name);
+      const dv=new DataView(buf),nv=dv.getUint32(0,true),ni=dv.getUint32(4,true);
+      if(nv<100||nv>65535||ni<100||ni>150000||ni%3||buf.byteLength!==8+nv*76+ni*2)
+        throw Error('Invalid model dimensions '+name);
+      const verts=new Float32Array(buf.slice(8,8+nv*76));
+      const faces=new Uint16Array(buf.slice(8+nv*76));
+      // Guard against corrupted uploads or malformed vertex attributes.
+      for(let k=0;k<Math.min(verts.length,19000);k++)
+        if(!Number.isFinite(verts[k]))throw Error('Non-finite vertex '+name);
+      const asset={name,mesh:GL.meshSkin(verts,faces),
+        mat:{tex:GL.tex(img,{repeat:false,aniso:4}),col:[1,1,1],rough:.82,spec:.09,rim:.1},
+        pal:new Float32Array(24).fill(1),verts,vertices:nv,triangles:ni/3};
+      return asset;
+    })();
+  }
+  function getModelAsset(name){
+    if(!modelPool.has(name))modelPool.set(name,createModelAsset(name).catch(e=>{
+      modelPool.delete(name);modelLoadState.failed[name]=String(e.message||e);throw e;
+    }));
+    return modelPool.get(name);
+  }
+  async function loadRiggedCharacter(pilotari,name){
+    const data=await getModelAsset(name);
+    if(!realPlayersEnabled)return;
+    if(pilotari===foe&&pilotari._requestedAsset!==name)return;
+    const palm=palmLocalForMesh(data.verts,pilotari);
+    pilotari.realMesh=data.mesh;pilotari.realMat=data.mat;pilotari.realPal=data.pal;
+    pilotari.realPalmLocal=palm?.local||null;
+    pilotari._realName=name;
+    modelLoadState.ready[name]={verts:data.vertices,tris:data.triangles,
+      handSamples:palm?.vertices||0,palmLocal:palm?.local||null};
+    console.info('HERRI_PILOTA_3D_READY',name,data.vertices,data.triangles,'palm',palm?.vertices||0);
+  }
+  if(realPlayersEnabled)loadRiggedCharacter(me,'jon').catch(e=>console.warn('Player 3D fallback:',e.message));
   function previewOpponent(name){
     if(!realPlayersEnabled)return;
     const id=/LURRA/i.test(name)?'lurra':/MENDIBE/i.test(name)?'mendibe':'harri';
     if(foe._requestedAsset===id)return;
-    foe._requestedAsset=id;
-    foe.realMesh=null;
-    loadRiggedCharacter(foe,id).catch(e=>console.warn('Original rival retained:',e.message));
+    foe._requestedAsset=id;foe.realMesh=null;foe.realPalmLocal=null;foe._realName=null;
+    loadRiggedCharacter(foe,id).catch(e=>console.warn('Opponent 3D fallback:',e.message));
   }
 
  const ballMesh=Geo.upload(Geo.sphere(C.BR,18,12))[0];
