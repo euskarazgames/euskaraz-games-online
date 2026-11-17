@@ -67,7 +67,16 @@ jobs:
           git add public/pilota/characters/
           if ! git diff --cached --quiet; then
             git commit -m 'Generate four Blender-processed 3D pelotari preview assets'
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            # A concurrent asset QA commit may update the branch while Blender runs.
+            # Rebase generated files onto the current head; never force-push.
+            pushed=0
+            for attempt in 1 2 3; do
+              git fetch origin "${GITHUB_REF_NAME}"
+              git rebase "origin/${GITHUB_REF_NAME}"
+              if git push origin "HEAD:${GITHUB_REF_NAME}"; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = 1
           fi
       - name: Preserve editable Blender sources and QA logs
         if: always()
