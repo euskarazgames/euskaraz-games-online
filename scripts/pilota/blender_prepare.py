@@ -68,10 +68,24 @@ def game(v):
 def blend_to_game_bone(p):
     return (p[0], -p[2], p[1])
 
-def weights(p):
-    """Deterministic nearest-four heat approximation; artist must review."""
+def weights(p, arm_extent):
+    """Weight fit to each athlete's body: realistic hand motion needs palm bones.
+
+    Original Fal bodies are not identical in shoulder width or arm reach.
+    Rather than treating all as a generic 1.8 m body, adapt lateral rig
+    anchors to the actual mesh. Clamp extremity palms to mostly hand influence.
+    """
+    arm_scale=max(.58,min(1.15,arm_extent/.54))
+    # A mesh hand can extend much less laterally than the standard bind pose.
+    # If the finger/knuckle points blend with the elbow, it appears detached
+    # from the contact marker during the fastest pelota strikes.
+    if .70 < p[1] < 1.28 and abs(p[0]) > arm_extent*.76:
+        return [(8,.92),(7,.08)] if p[0]<0 else [(5,.92),(4,.08)]
     scores = []
     for i, (a, b) in enumerate(SEG):
+        if 3 <= i <= 8:
+            a=(a[0]*arm_scale,a[1],a[2])
+            b=(b[0]*arm_scale,b[1],b[2])
         ab = [b[k] - a[k] for k in range(3)]
         t = sum((p[k] - a[k]) * ab[k] for k in range(3)) / (sum(q*q for q in ab) + 1e-8)
         t = max(0., min(1., t))
@@ -170,9 +184,11 @@ def main():
 
     for i, (name, _, _) in enumerate(BONES):
         obj.vertex_groups.new(name=name)
+    arm_extent=max(abs(v.co.x) for v in obj.data.vertices)
+    print(f"PLAYER_ARM_EXTENT={arm_extent:.4f}")
     vert_weights = []
     for v in obj.data.vertices:
-        vv=weights(game(v.co))
+        vv=weights(game(v.co),arm_extent)
         vert_weights.append(vv)
         for idx,w in vv:
             obj.vertex_groups[BONES[idx][0]].add([v.index],float(w),"REPLACE")
@@ -239,7 +255,7 @@ def main():
         f.write(struct.pack("<"+str(len(indices))+"H",*indices))
     with open(str(dest)+"_report.txt","w") as f:
         f.write(f"Vertices: {len(indexmap)}\nTriangles: {len(indices)//3}\n")
-        f.write(f"Height: 1.8 metres\nMaterials: {len(obj.data.materials)}\n")
+        f.write(f"Height: 1.8 metres\nMaterials: {len(obj.data.materials)}\nArm extent: {arm_extent:.4f}\n")
         f.write("Review: facial details, wrist deformation, hand contact, orientation, feet, shadows, mobile FPS.\n")
         f.write("IMPORTANT: generated rig/weights are preliminary and not human-artist validated.\n")
     print("BLENDER_PILOTARI_READY",dest,len(indexmap),len(indices)//3)
