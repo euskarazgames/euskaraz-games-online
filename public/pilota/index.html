@@ -2230,7 +2230,7 @@ const UI=(()=>{
       for(let k=0;k<Math.min(verts.length,19000);k++)
         if(!Number.isFinite(verts[k]))throw Error('Non-finite vertex '+name);
       const asset={name,mesh:GL.meshSkin(verts,faces),
-        mat:{tex:GL.tex(img,{repeat:false,aniso:4,flipY:realModelParams.get('textureFlip')!=='0'}),col:[1,1,1],rough:.82,spec:.09,rim:.1},
+        mat:{tex:GL.tex(img,{repeat:false,aniso:4,flipY:realModelParams.get('textureFlip')==='1'}),col:[1,1,1],rough:.82,spec:.09,rim:.1},
         pal:new Float32Array(24).fill(1),verts,vertices:nv,triangles:ni/3};
       return asset;
     })();
