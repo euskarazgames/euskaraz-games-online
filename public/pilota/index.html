@@ -477,7 +477,9 @@ void main(){vec4 t=texture2D(uTex,vUv);gl_FragColor=vec4(vC.rgb*t.rgb,vC.a*t.a);
  function tex(src,o){o=o||{};
   const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,!!o.flipY);
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
   const pot=isPow2(src.width)&&isPow2(src.height);
   const rep=(o.repeat!==false)&&(pot||isGL2);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,rep?gl.REPEAT:gl.CLAMP_TO_EDGE);
@@ -2228,7 +2230,7 @@ const UI=(()=>{
       for(let k=0;k<Math.min(verts.length,19000);k++)
         if(!Number.isFinite(verts[k]))throw Error('Non-finite vertex '+name);
       const asset={name,mesh:GL.meshSkin(verts,faces),
-        mat:{tex:GL.tex(img,{repeat:false,aniso:4}),col:[1,1,1],rough:.82,spec:.09,rim:.1},
+        mat:{tex:GL.tex(img,{repeat:false,aniso:4,flipY:realModelParams.get('textureFlip')==='1'}),col:[1,1,1],rough:.82,spec:.09,rim:.1},
         pal:new Float32Array(24).fill(1),verts,vertices:nv,triangles:ni/3};
       return asset;
     })();
