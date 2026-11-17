@@ -1,0 +1,22 @@
+{
+  "jon": {
+    "glb": "https://v3b.fal.media/files/b/0ab2d756/0758dr5EEmhhcCq0q4T--_model.glb",
+    "reference": "https://v3b.fal.media/files/b/0ab2d728/QvHGVVAMfXwCBusYV7Eb5_58v0YDwC.png",
+    "texture": "https://v3b.fal.media/files/b/0ab2d755/0nLkDjyjhZMQejCJ-p8IM_texture_pbr_20250901.png"
+  },
+  "lurra": {
+    "glb": "https://v3b.fal.media/files/b/0ab2d7a6/LgIb4Py9UkbnfPvz_Qv72_model.glb",
+    "reference": "https://v3b.fal.media/files/b/0ab2d782/mK9GnBwOvaKVoxdr5B9n4_DE1p8Lnb.png",
+    "texture": "https://v3b.fal.media/files/b/0ab2d7a5/fJHILOMNEwiaeiW2Tymj7_texture_pbr_20250901.png"
+  },
+  "harri": {
+    "glb": "https://v3b.fal.media/files/b/0ab2d7a7/J9qkMn7KrqhjBdz4w4nJT_model.glb",
+    "reference": "https://v3b.fal.media/files/b/0ab2d782/2ZGCzekgWYsfCV7BFkTH-_V4l4GlDi.png",
+    "texture": "https://v3b.fal.media/files/b/0ab2d7a6/B-8GXm3C7c9SrAQUMOqqd_texture_pbr_20250901.png"
+  },
+  "mendibe": {
+    "glb": "https://v3b.fal.media/files/b/0ab2d7a6/wRZfkT8TovZSKeBGQq3EW_model.glb",
+    "reference": "https://v3b.fal.media/files/b/0ab2d782/pAQ9QR518J4QM_lv8N2hQ_8SPDbzNt.png",
+    "texture": "https://v3b.fal.media/files/b/0ab2d7a5/nevtZZD-qDRunBeQpavdj_texture_pbr_20250901.png"
+  }
+}

@@ -1,0 +1,44 @@
+name: Export Herri Pilota HTML + 3D game resources
+on:
+  push:
+    branches:
+      - feature/pilota-personajes-realistas-fal-blender
+    paths:
+      - '.github/workflows/export-pilota-html.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check game HTML and all 3D assets
+        run: |
+          set -e
+          test -s public/pilota/index.html
+          for name in jon lurra harri mendibe; do
+            test -s "public/pilota/characters/${name}_skin.bin"
+            test -s "public/pilota/characters/${name}_diffuse.png"
+            test -s "public/pilota/characters/${name}_optimized.glb"
+          done
+          python3 - <<'PY'
+          from pathlib import Path
+          h=Path('public/pilota/index.html').read_text()
+          assert 'PILOTARI KARRERA' in h and 'HERRI PILOTA' in h
+          assert 'realPlayersEnabled' in h
+          print('HTML_BYTES',len(h.encode()))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HERRI_PILOTA_REALISTA_HTML_Y_RECURSOS
+          path: |
+            public/pilota/index.html
+            public/pilota/cover.webp
+            public/pilota/characters/*
+            public/pilota/personajes/index.html
+          if-no-files-found: error
+          retention-days: 7

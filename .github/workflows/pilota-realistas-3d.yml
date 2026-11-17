@@ -1,0 +1,91 @@
+name: Pilota realism — Fal to Blender 3D assets
+on:
+  push:
+    branches:
+      - feature/pilota-personajes-realistas-fal-blender
+    paths:
+      - 'scripts/pilota/sources.json'
+      - 'scripts/pilota/blender_prepare.py'
+      - '.github/workflows/pilota-realistas-3d.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pilota-blender-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate-assets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Install Blender
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y blender python3-numpy python3-pil
+          blender --version | head -n 3
+      - name: Generate rigged low-poly player models
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/pilota/characters /tmp/pilota-blender-projects
+          for name in jon lurra harri mendibe; do
+            echo "::group::Build character $name"
+            url="$(python3 -c 'import json,sys; print(json.load(open("scripts/pilota/sources.json"))[sys.argv[1]]["glb"])' "$name")"
+            curl --fail --location --retry 3 --connect-timeout 20 --max-time 240 \
+              --silent --show-error "$url" -o "/tmp/pilota-$name.glb"
+            test "$(stat -c%s "/tmp/pilota-$name.glb")" -gt 1000000
+            texture="$(python3 -c 'import json,sys; print(json.load(open("scripts/pilota/sources.json"))[sys.argv[1]]["texture"])' "$name")"
+            curl --fail --location --retry 3 --connect-timeout 20 --max-time 240 \
+              --silent --show-error "$texture" -o "/tmp/pilota-$name-texture.png"
+            test "$(stat -c%s "/tmp/pilota-$name-texture.png")" -gt 10000
+            python3 -c 'from PIL import Image; import sys; a=Image.open(sys.argv[1]); a.thumbnail((1024,1024)); a.convert("RGB").save(sys.argv[2],format="PNG"); print("NORMALIZED TEXTURE",a.size)' "/tmp/pilota-$name-texture.png" "/tmp/pilota-$name-rgb.png"
+            blender -b --factory-startup -t 2 \
+              --python scripts/pilota/blender_prepare.py -- \
+              --source "/tmp/pilota-$name.glb" \
+              --texture "/tmp/pilota-$name-rgb.png" \
+              --out "public/pilota/characters/$name" --target-tris 14500
+            test -s "public/pilota/characters/${name}_skin.bin"
+            test -s "public/pilota/characters/${name}_diffuse.png"
+            test -s "public/pilota/characters/${name}_optimized.glb"
+            node scripts/pilota/rebuild-skin-from-glb.mjs "$name"
+            mv "public/pilota/characters/${name}_rig.blend" "/tmp/pilota-blender-projects/$name.blend"
+            echo "::endgroup::"
+          done
+      - name: Publish preview assets only to feature branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Euskaraz Games Asset Bot'
+          git config user.email 'actions@github.com'
+          git add public/pilota/characters/
+          if ! git diff --cached --quiet; then
+            git commit -m 'Generate four Blender-processed 3D pelotari preview assets'
+            # A concurrent asset QA commit may update the branch while Blender runs.
+            # Rebase generated files onto the current head; never force-push.
+            pushed=0
+            for attempt in 1 2 3; do
+              git fetch origin "${GITHUB_REF_NAME}"
+              git rebase "origin/${GITHUB_REF_NAME}"
+              if git push origin "HEAD:${GITHUB_REF_NAME}"; then pushed=1; break; fi
+              sleep 2
+            done
+            test "$pushed" = 1
+          fi
+      - name: Preserve editable Blender sources and QA logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pilota-blender-rigs-${{ github.run_number }}
+          path: |
+            /tmp/pilota-blender-projects/*.blend
+            public/pilota/characters/*_report.txt
+          retention-days: 14
+          if-no-files-found: warn

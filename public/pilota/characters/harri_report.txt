@@ -1,0 +1,8 @@
+Vertices: 12160
+Triangles: 14500
+Height: 1.8 metres
+Materials: 1
+Arm extent: 0.3611
+Review: facial details, wrist deformation, hand contact, orientation, feet, shadows, mobile FPS.
+IMPORTANT: generated rig/weights are preliminary and not human-artist validated.
+UV rebuild from GLB TEXCOORD_0: {"name":"harri","vertices":12206,"triangles":14500,"uvOutOfRange":0,"unmatched":0,"nearLookups":0,"skinBytes":1014664,"primitives":1,"sourceVertices":12160}

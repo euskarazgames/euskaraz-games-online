@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-3.0-natural-contact">
+<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-4.1-correct-uv">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Euskaraz Games · Herri Pilota · Pilotari Karrera</title>
 <style>
@@ -477,7 +477,9 @@ void main(){vec4 t=texture2D(uTex,vUv);gl_FragColor=vec4(vC.rgb*t.rgb,vC.a*t.a);
  function tex(src,o){o=o||{};
   const t=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,t);
   gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,!!o.flipY);
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,src);
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
   const pot=isPow2(src.width)&&isPow2(src.height);
   const rep=(o.repeat!==false)&&(pot||isGL2);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,rep?gl.REPEAT:gl.CLAMP_TO_EDGE);
@@ -1403,9 +1405,9 @@ const Rig=(()=>{
     }
    }
   }
-  draw(mir){GL.litSkin(this.body.mesh,this.B,this.skinMat,mir,this.pal);for(const n of this.parts)if(!mir||n.mirror)GL.lit(n.mesh,n.world,n.mat,mir);}
-  drawShadow(){GL.shadowSkin(this.body.mesh,this.B);for(const n of this.parts)if(n.shadow)GL.shadow(n.mesh,n.world);}
-  handPos(){return M4.xform(this.J.haR.world,[0,-.08,.065]);}
+  draw(mir){GL.litSkin(this.realMesh||this.body.mesh,this.B,this.realMat||this.skinMat,mir,this.realPal||this.pal);if(!this.realMesh)for(const n of this.parts)if(!mir||n.mirror)GL.lit(n.mesh,n.world,n.mat,mir);}
+  drawShadow(){GL.shadowSkin(this.realMesh||this.body.mesh,this.B);if(!this.realMesh)for(const n of this.parts)if(n.shadow)GL.shadow(n.mesh,n.world);}
+  handPos(){return M4.xform(this.J.haR.world,this.realPalmLocal||[0,-.08,.065]);}
  }
  Pelotari.JK=['pelvis','spine','head','shL','shR','elL','elR','haL','haR','hipL','hipR','knL','knR','anL','anR'];
  return {Pelotari,units};
@@ -2179,6 +2181,87 @@ const UI=(()=>{
  const BLUE={shirt:0x1f6aa5,shirtCss:'#1f6aa5',num:3,accent:0x2a6bb8};
  const RED={shirt:0xb3221c,shirtCss:'#b3221c',num:5,accent:0x9a1a1a,skin:0xc4875f,hair:0x1c140e};
  const me=new Rig.Pelotari(BLUE),foe=new Rig.Pelotari(RED);
+  // Browser-ready models share the existing contact IK, scoring and physics.
+  // \`?personajes3d=0\` disables photorealism, and ?personajes3d=1 forces it on.
+  const realModelParams=new URLSearchParams(location.search);
+  const realModelChoice=realModelParams.get('personajes3d');
+  let realPlayersEnabled=realModelChoice==='1'||(realModelChoice!=='0'&&localStorage.getItem('hpa_real_3d')!=='off');
+  const modelPool=new Map(), modelLoadState={ready:{},failed:{},active:realPlayersEnabled};
+  window.PILOTA_MODELS=modelLoadState;
+  function palmLocalForMesh(verts,skinned){
+    // Find genuinely right-hand-weighted vertices in the Fal mesh. The generated
+    // geometry is in Body.SKEL bind coordinates, so this works with the current IK.
+    const id=Body.BI.haR, n=verts.length/19;
+    let sum=[0,0,0],total=0,seen=0;
+    for(let i=0;i<n;i++){
+      const j=i*19,x=verts[j],y=verts[j+1],z=verts[j+2];
+      if(x>-.23||y<.74||y>1.35)continue;
+      let w=0;
+      for(let a=0;a<4;a++)if(Math.round(verts[j+11+a])===id)w+=verts[j+15+a];
+      if(w<.65)continue;
+      // Palm rather than the middle of the forearm: pick distal, high-weight samples.
+      w*=Math.max(.1,Math.min(1,(-x-.26)/.28));
+      sum[0]+=x*w;sum[1]+=y*w;sum[2]+=z*w;total+=w;seen++;
+    }
+    if(seen<12||total<3)return null;
+    const p=sum.map(v=>v/total);
+    const inv=skinned.body.bindInv.subarray(id*16,id*16+16);
+    const local=M4.xform(inv,p);
+    const d=Math.hypot(local[0],local[1],local[2]);
+    if(!local.every(Number.isFinite)||d>.78)return null;
+    return {local,vertices:seen,bindPalm:p};
+  }
+  function createModelAsset(name){
+    const base='/pilota/characters/'+name;
+    return (async()=>{
+      const [r,img]=await Promise.all([
+        fetch(base+'_skin.bin',{cache:'force-cache'}),
+        new Promise((resolve,reject)=>{const image=new Image();image.decoding='async';image.onload=()=>resolve(image);image.onerror=()=>reject(Error('Missing texture '+name));image.src=base+'_diffuse.png';})
+      ]);
+      if(!r.ok)throw Error('Missing model '+name+' ('+r.status+')');
+      const buf=await r.arrayBuffer();
+      if(buf.byteLength<8)throw Error('Invalid model header '+name);
+      const dv=new DataView(buf),nv=dv.getUint32(0,true),ni=dv.getUint32(4,true);
+      if(nv<100||nv>65535||ni<100||ni>150000||ni%3||buf.byteLength!==8+nv*76+ni*2)
+        throw Error('Invalid model dimensions '+name);
+      const verts=new Float32Array(buf.slice(8,8+nv*76));
+      const faces=new Uint16Array(buf.slice(8+nv*76));
+      // Guard against corrupted uploads or malformed vertex attributes.
+      for(let k=0;k<Math.min(verts.length,19000);k++)
+        if(!Number.isFinite(verts[k]))throw Error('Non-finite vertex '+name);
+      const asset={name,mesh:GL.meshSkin(verts,faces),
+        mat:{tex:GL.tex(img,{repeat:false,aniso:4,flipY:realModelParams.get('textureFlip')==='1'}),col:[1,1,1],rough:.82,spec:.09,rim:.1},
+        pal:new Float32Array(24).fill(1),verts,vertices:nv,triangles:ni/3};
+      return asset;
+    })();
+  }
+  function getModelAsset(name){
+    if(!modelPool.has(name))modelPool.set(name,createModelAsset(name).catch(e=>{
+      modelPool.delete(name);modelLoadState.failed[name]=String(e.message||e);throw e;
+    }));
+    return modelPool.get(name);
+  }
+  async function loadRiggedCharacter(pilotari,name){
+    const data=await getModelAsset(name);
+    if(!realPlayersEnabled)return;
+    if(pilotari===foe&&pilotari._requestedAsset!==name)return;
+    const palm=palmLocalForMesh(data.verts,pilotari);
+    pilotari.realMesh=data.mesh;pilotari.realMat=data.mat;pilotari.realPal=data.pal;
+    pilotari.realPalmLocal=palm?.local||null;
+    pilotari._realName=name;
+    modelLoadState.ready[name]={verts:data.vertices,tris:data.triangles,
+      handSamples:palm?.vertices||0,palmLocal:palm?.local||null};
+    console.info('HERRI_PILOTA_3D_READY',name,data.vertices,data.triangles,'palm',palm?.vertices||0);
+  }
+  if(realPlayersEnabled)loadRiggedCharacter(me,'jon').catch(e=>console.warn('Player 3D fallback:',e.message));
+  function previewOpponent(name){
+    if(!realPlayersEnabled)return;
+    const id=/LURRA/i.test(name)?'lurra':/MENDIBE/i.test(name)?'mendibe':'harri';
+    if(foe._requestedAsset===id)return;
+    foe._requestedAsset=id;foe.realMesh=null;foe.realPalmLocal=null;foe._realName=null;
+    loadRiggedCharacter(foe,id).catch(e=>console.warn('Opponent 3D fallback:',e.message));
+  }
+
  const ballMesh=Geo.upload(Geo.sphere(C.BR,18,12))[0];
  const ballNode=new Node(ballMesh,{tex:Arena.tex.ball,col:[1.08,1.05,1.0],rough:.45,spec:.35,rim:.25,emi:[.06,.06,.055]});
  const I=M4.create();
@@ -2191,7 +2274,7 @@ const UI=(()=>{
  const camP=[X0,6,26],camT=[X0,2,4];let camFov=62,orbit=0,introFrom=null,snapNext=false;
  const botSt={pressD:1.8,noise:.6,react:.2};
  function newMatch(attract){
-  const r=UI.RIVALS[UI.CFG.rival]||UI.RIVALS[1];rival=r;
+  const r=UI.RIVALS[UI.CFG.rival]||UI.RIVALS[1];rival=r;previewOpponent(r.n);
   SEED=(Date.now()&0xffff)+7;
   M=Game.create(attract?{level:.5,target:999,introT:.3}:{level:r.lv,target:UI.CFG.target,serve:UI.CFG.serve,introT:2.4},onEvent);
   M.attract=!!attract;FX.trailClear();resultShown=false;overT=0;
@@ -2446,7 +2529,7 @@ const UI=(()=>{
   #career h1{font-size:clamp(23px,4vw,40px);letter-spacing:-.06em;margin:0;font-weight:950;line-height:1.03}#career h1 span{color:#8de2ed}
   #career .sub{font:700 11px/1.5 system-ui;letter-spacing:.16em;color:#bcdbdc;margin-top:7px}
   #career .local{font-size:10px;letter-spacing:.08em;color:#d9d6cb}
-  #career .language{display:flex;gap:6px}#career .language button{min-width:45px}
+  #career .language{display:flex;gap:6px}#career .language button{min-width:45px}#career .visual-toggle{margin-top:7px}#career .visual-toggle button{width:100%;font-size:10px;letter-spacing:.05em;background:#1e4660;border-color:#4585a5;padding:8px 10px}
   #career button{border:1px solid #ffffff36;background:#32434c;color:#fff;padding:10px 13px;border-radius:10px;font-weight:800;cursor:pointer}#career button:hover{border-color:#78ebff;background:#385867}#career button.primary{color:#09242a;background:#8ce3e7;border-color:#baf4fb}#career button.primary:hover{background:#baf6fa}#career button:disabled{opacity:.45;cursor:not-allowed}
   #career .body{padding:19px 24px 22px}#career .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:space-between}
   #career .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0 20px;width:auto}#career .metric{border:1px solid #ffffff21;background:#fff1;border-radius:11px;padding:10px 12px;text-align:left}#career .metric b{font-size:24px;color:#fff;display:block}#career .metric small{font-size:10px;font-weight:750;color:#b5cfd5;display:block;letter-spacing:.1em}
@@ -2548,7 +2631,7 @@ const UI=(()=>{
     ]);
     const content=el('div',{class:'career-content'});
     shell.append(promo,content);
-    const head=el('header',{},[el('div',{},[el('h1',{html:'HERRI PILOTA <span>· '+t('title')+'</span>'}),el('div',{class:'sub',text:t('solo')})]),el('div',{},[el('div',{class:'language'},['eu','es','en'].map(v=>el('button',{text:v.toUpperCase(),style:v===lang?'border-color:#9ef5fe;background:#447c84':'',onclick:()=>changeLang(v)}))),el('div',{class:'local',text:t('note')})])]);content.append(head);
+    const head=el('header',{},[el('div',{},[el('h1',{html:'HERRI PILOTA <span>· '+t('title')+'</span>'}),el('div',{class:'sub',text:t('solo')})]),el('div',{},[el('div',{class:'language'},['eu','es','en'].map(v=>el('button',{text:v.toUpperCase(),style:v===lang?'border-color:#9ef5fe;background:#447c84':'',onclick:()=>changeLang(v)}))),el('div',{class:'visual-toggle'},[el('button',{text:(window.PILOTA_MODELS?.active?(lang==='eu'?'GRAFIKOAK · ERREALISTA':lang==='es'?'GRÁFICOS · REALISTA':'GRAPHICS · REALISTIC'):(lang==='eu'?'GRAFIKOAK · AZKARRA':lang==='es'?'GRÁFICOS · RÁPIDO':'GRAPHICS · FAST')),onclick:()=>{const next=!window.PILOTA_MODELS?.active;localStorage.setItem('hpa_real_3d',next?'on':'off');const url=new URL(location.href);url.searchParams.delete('personajes3d');location.assign(url.href);}})]),el('div',{class:'local',text:t('note')})])]);content.append(head);
     const body=el('div',{class:'body'});content.append(body);
     if(pane==='home'&&!data.finished){
       const progress=el('div',{class:'league-progress'},[
