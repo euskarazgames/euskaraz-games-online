@@ -1,0 +1,14 @@
+{
+  "name": "herri-pilota-v46-render-free",
+  "version": "46.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.cjs"
+  },
+  "dependencies": {
+    "ws": "8.18.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
