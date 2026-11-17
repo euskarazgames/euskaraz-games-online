@@ -1,0 +1,9 @@
+{
+ "azala": {
+  "model": "fal-ai/flux-pro/kontext",
+  "prompt": "Painterly game key art illustration, wide 16:9 landscape. The same small friendly mossy stone golem character from the reference (rounded warm grey stones, green moss with tiny white daisies on its head, big amber eyes, smooth unmarked stone chest) stands on a grassy dirt path in the foreground, smiling. Behind him on a green hill, an Iron Age Basque hillfort: round dry-stone huts with conical straw thatch roofs and a wooden palisade. Golden early morning light, soft mist, rolling green Basque mountains in the distance, wildflowers. Rich hand-painted colors, cinematic depth. No text, no letters, no logo, no symbols, no emblems.",
+  "seed": 31,
+  "url": "https://v3b.fal.media/files/b/0ab2d298/3XwU_5Kbog67Xyv_ywM0f_c40913a9af934b39a8979b3af0be15a8.png",
+  "input": "concept.png"
+ }
+}

@@ -1,0 +1,44 @@
+{
+ "rock": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "solid warm tan-grey granite stone surface, fine grey and beige mineral speckles, subtle cracks, a few small pale green and ochre lichen spots. uniform close-up material surface texture, the entire image is evenly covered with the same material, repeating pattern with no focal point and no empty area, orthographic view straight down, stylized hand-painted game texture, flat even diffuse lighting, no cast shadows, no vignette, warm natural colors, no text, no letters, no symbols",
+  "seed": 11,
+  "url": "https://v3b.fal.media/files/b/0ab2d28f/3_I3fyEYoFFRMa_qNzvSN.jpg"
+ },
+ "moss": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "thick soft green moss carpet with small variations of yellow-green and dark green tufts. uniform close-up material surface texture, the entire image is evenly covered with the same material, repeating pattern with no focal point and no empty area, orthographic view straight down, stylized hand-painted game texture, flat even diffuse lighting, no cast shadows, no vignette, warm natural colors, no text, no letters, no symbols",
+  "seed": 12,
+  "url": "https://v3b.fal.media/files/b/0ab2d290/i2Aw71aNfWjauuUCqb89k.jpg"
+ },
+ "grass": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "stylized lush green meadow grass seen from above, short grass blades, a few tiny scattered white daisies. uniform close-up material surface texture, the entire image is evenly covered with the same material, repeating pattern with no focal point and no empty area, orthographic view straight down, stylized hand-painted game texture, flat even diffuse lighting, no cast shadows, no vignette, warm natural colors, no text, no letters, no symbols",
+  "seed": 13,
+  "url": "https://v3b.fal.media/files/b/0ab2d291/HPiMkUcy_zjii4fxHzSBa.jpg"
+ },
+ "dirt": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "packed brown earth footpath with tiny pebbles and fine soil texture. uniform close-up material surface texture, the entire image is evenly covered with the same material, repeating pattern with no focal point and no empty area, orthographic view straight down, stylized hand-painted game texture, flat even diffuse lighting, no cast shadows, no vignette, warm natural colors, no text, no letters, no symbols",
+  "seed": 14,
+  "url": "https://v3b.fal.media/files/b/0ab2d292/q5ModHmXjrOr2WtKOm3NE.jpg"
+ },
+ "block": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "roughly dressed warm grey granite stone face, coarse granular grain, fine diagonal chisel tool marks, small chips and a few faint ochre stains. uniform close-up material surface texture, the entire image is evenly covered with the same material, repeating pattern with no focal point and no empty area, orthographic view straight down, stylized hand-painted game texture, flat even diffuse lighting, no cast shadows, no vignette, warm natural colors, no text, no letters, no symbols",
+  "seed": 25,
+  "url": "https://v3b.fal.media/files/b/0ab2d2ac/XpBfaJ6dZf1_4qdRu-9fq.jpg"
+ },
+ "thatch": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "golden straw thatch roof, long parallel bundles of dry straw running vertically. uniform close-up material surface texture, the entire image is evenly covered with the same material, repeating pattern with no focal point and no empty area, orthographic view straight down, stylized hand-painted game texture, flat even diffuse lighting, no cast shadows, no vignette, warm natural colors, no text, no letters, no symbols",
+  "seed": 16,
+  "url": "https://v3b.fal.media/files/b/0ab2d293/uB4kXgQmh0Cm07W2qM7K6.jpg"
+ },
+ "wood": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "weathered grey-brown oak wooden planks running horizontally, visible grain and a few knots. uniform close-up material surface texture, the entire image is evenly covered with the same material, repeating pattern with no focal point and no empty area, orthographic view straight down, stylized hand-painted game texture, flat even diffuse lighting, no cast shadows, no vignette, warm natural colors, no text, no letters, no symbols",
+  "seed": 17,
+  "url": "https://v3b.fal.media/files/b/0ab2d294/_nMe8XsXZY4RGX6aT-dmp.jpg"
+ }
+}

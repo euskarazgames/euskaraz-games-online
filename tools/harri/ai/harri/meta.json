@@ -1,0 +1,17 @@
+{
+ "concept": {
+  "model": "fal-ai/flux-pro/kontext",
+  "prompt": "Show the exact same small stone golem character from the left figure (front view), alone, full body from head to feet, standing in a relaxed A-pose with both arms held slightly away from the body so there is clear space between arms and torso, legs slightly apart, facing the camera straight on, symmetrical. Keep the same warm tan-grey rounded stones, green moss and small white daisies on the head and shoulders, the same big amber eyes and friendly face. The chest is smooth natural stone with no symbols, no marks, no carvings. Plain pure white background, soft even studio lighting, no shadow, no text, single character only, remove the second figure.",
+  "seed": 21,
+  "url": "https://v3b.fal.media/files/b/0ab2d28c/XG0YB7BlRuFmHWorne3Oe_1240be9eb8d1474f828b6790e5d0309a.png",
+  "input": "plate02_crop.png (02 lamina, (598, 18, 790, 226))"
+ },
+ "tripo": {
+  "model": "tripo3d/tripo/v2.5/image-to-3d",
+  "seed": 21,
+  "face_limit": 12000,
+  "texture": "standard",
+  "task_id": "fbc82374-844f-460b-95fb-71b0af1f7c07",
+  "url": "https://v3b.fal.media/files/b/0ab2d296/fLrFgBYc_r9z5fEmFokJk_tripo_model_fbc82374-844f-460b-95fb-71b0af1f7c07.glb"
+ }
+}
