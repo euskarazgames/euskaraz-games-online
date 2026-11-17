@@ -1280,6 +1280,7 @@ const Rig=(()=>{
    }
    this.parts=[];root.each(n=>{if(n.mesh)this.parts.push(n);});
    this.st={x:0,z:0,yaw:Math.PI,speed:0,ph:Math.random()*6,swing:0,swKind:'flat',dive:0,diveSide:1,cel:0,def:0,look:0,serve:0};
+    this.gaze=0; // Smooth neck tracking, independent of the gameplay simulation.
    this.A={};for(const k of Pelotari.JK)this.A[k]=[0,0,0];
    const BD=Body.gpu();this.body=BD;this.B=new Float32Array(16*16);this.tmp=M4.create();
    this.skinMat={tex:M.shirtT.tex,col:[1,1,1],rough:.6,spec:.17,rim:.2};
@@ -1292,11 +1293,14 @@ const Rig=(()=>{
    st.ph+=dt*(3.6+st.speed*7.1);
    const J=this.J,run=clamp(st.speed,0,1),rd=1-run*.7,A=this.A;
    const sn=Math.sin(st.ph),sR=Math.sin(st.ph+Math.PI),cs=Math.cos(st.ph);
+    // The player's neck follows the pelota without instant or unnatural head snaps.
+    const gazeTarget=clamp(Number.isFinite(st.look)?st.look:0,-1,1);
+    this.gaze+=(gazeTarget-this.gaze)*(1-Math.exp(-Math.max(0,Math.min(dt,.05))*9));
    const set=(k,x,y,z)=>{const a=A[k];a[0]=x;a[1]=y;a[2]=z;};
    /* prest jarrera + korrika */
    set('pelvis',.17*rd+.10*run,sn*.10*run,0);
    set('spine',.20*rd+.16*run,-sn*.14*run,0);
-   set('head',-.34*rd-.22*run,st.look*.45,0);
+   set('head',-.34*rd-.22*run,this.gaze*.52,0);
    set('hipL',-.52*rd+sn*.78*run,0,.13*rd+.03);set('hipR',-.52*rd+sR*.78*run,0,-.13*rd-.03);
    set('knL',.82*rd+.12+clamp(-cs,0,1)*1.15*run,0,0);set('knR',.82*rd+.12+clamp(cs,0,1)*1.15*run,0,0);
    set('anL',-.36*rd-.05*run,0,-.06*rd);set('anR',-.36*rd-.05*run,0,.06*rd);
@@ -1317,16 +1321,22 @@ const Rig=(()=>{
     const env=sstep(0,.10,p)*(1-sstep(.80,1,p));
     const wind=sstep(0,.36,p),hit=sstep(.34,.56,p),fol=sstep(.56,1,p);
     if(k==='lob'){
+      // Release a high lob with a restrained wrist roll and open-palm follow-through.
+      mix('haR',[.14*wind-.48*hit+.16*fol,-.12*hit,.10*wind],env*.82);
      mix('shR',[1.0*wind-3.2*hit+.8*fol,0,-.25-.15*hit],env);mix('elR',[-.3,0,.1],env);
      mix('spine',[.36*wind-.3*hit,-.3*wind+.4*hit,0],env);
      mix('knL',[1.25,0,0],env*wind*(1-hit));mix('knR',[1.25,0,0],env*wind*(1-hit));mix('hipL',[-.95,0,.15],env*wind*(1-hit));mix('hipR',[-.95,0,-.15],env*wind*(1-hit));
      mix('anL',[-.3,0,0],env*wind*(1-hit));mix('anR',[-.3,0,0],env*wind*(1-hit));
     }else if(k==='drop'){
+      // Cortada / motz: soften and flex the wrist instead of snapping the whole arm.
+      mix('haR',[-.20-.32*hit,.10*wind,-.15*hit],env*.85);
      mix('shR',[-.2-.8*hit+.25*fol,0,-.45],env);mix('elR',[-.8+.5*hit,0,.2],env);
      mix('spine',[.48,-.15*wind+.25*hit,0],env);
      mix('knL',[1.35,0,0],env);mix('knR',[1.35,0,0],env);mix('hipL',[-1.05,0,.17],env);mix('hipR',[-1.05,0,-.17],env);
      mix('anL',[-.28,0,0],env);mix('anR',[-.28,0,0],env);
     }else{
+      // Mano strike: a visible but bounded wrist acceleration at the contact frame.
+      mix('haR',[-.20*wind+.45*hit-.18*fol,-.08*wind+.10*hit,-.10*hit],env*.90);
      mix('shR',[1.05*wind-2.65*hit+.9*fol,0,-1.1*wind+.6*hit+.25*fol],env);mix('elR',[-1.35*wind+1.2*hit-.45*fol,0,0],env);
      mix('spine',[.22,-.70*wind+1.15*hit-.25*fol,0],env);mix('pelvis',[.15,-.30*wind+.5*hit,0],env);
      mix('shL',[-1.0-.35*hit,0,.5],env);mix('elL',[-.8,0,-.2],env);mix('head',[-.3,.3*wind-.2*hit,0],env);
@@ -2460,8 +2470,10 @@ const UI=(()=>{
    if(M){
     const p=M.p,a=M.a;
     const b=M.b, cue=M.strike, contact=cue&&!cue.serve?[b.x,b.y,b.z]:null;
-    me.update(paused?0:dt,{x:p.x,z:p.z,yaw:p.yaw,speed:p.spd,swing:p.swing,swKind:p.swKind,dive:p.dive>0?Math.max(p.dive,p.down>0?1:0):0,diveSide:p.diveSide,cel:p.cel,def:p.def,look:0,serve:(M.server==='p'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:p.armed,readyKind:p.kind,contactTarget:cue&&cue.who==='p'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
-    foe.update(paused?0:dt,{x:a.x,z:a.z,yaw:a.yaw,speed:a.spd,swing:a.swing,swKind:a.swKind,dive:a.dive>0?Math.max(a.dive,a.down>0?1:0):0,diveSide:a.diveSide,cel:a.cel,def:a.def,look:0,serve:(M.server==='a'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:M.live&&M.turn==='a'&&M.wall,readyKind:'flat',contactTarget:cue&&cue.who==='a'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
+     const ballGaze=(o)=>{const towards=Math.atan2(b.x-o.x,b.z-o.z);
+       return clamp(Math.atan2(Math.sin(towards-o.yaw),Math.cos(towards-o.yaw)),-1,1);};
+    me.update(paused?0:dt,{x:p.x,z:p.z,yaw:p.yaw,speed:p.spd,swing:p.swing,swKind:p.swKind,dive:p.dive>0?Math.max(p.dive,p.down>0?1:0):0,diveSide:p.diveSide,cel:p.cel,def:p.def,look:M.live?ballGaze(p):0,serve:(M.server==='p'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:p.armed,readyKind:p.kind,contactTarget:cue&&cue.who==='p'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
+    foe.update(paused?0:dt,{x:a.x,z:a.z,yaw:a.yaw,speed:a.spd,swing:a.swing,swKind:a.swKind,dive:a.dive>0?Math.max(a.dive,a.down>0?1:0):0,diveSide:a.diveSide,cel:a.cel,def:a.def,look:M.live?ballGaze(a):0,serve:(M.server==='a'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:M.live&&M.turn==='a'&&M.wall,readyKind:'flat',contactTarget:cue&&cue.who==='a'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
     // Trigger the impulse only AFTER the rig has moved its hand into contact.
     // This also fixes serve release: the pelota departs from the real palm.
     if(cue&&!paused&&cue.t>=cue.duration)M.commitStrike(cue.who==='p'?me.handPos():foe.handPos());
