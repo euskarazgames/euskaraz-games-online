@@ -68,7 +68,7 @@ function select(c){
    // Blender's portable GLB exports rig/UV geometry; texture is loaded
    // separately to avoid headless GLB material-packing bugs.
    const texture=new THREE.TextureLoader().load('../characters/'+c.id+'_diffuse.png');
-   texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;
+   texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=new URLSearchParams(location.search).get('textureFlip')==='1';
    current.traverse(o=>{if(o.isMesh)o.material=new THREE.MeshStandardMaterial({map:texture,roughness:.85,side:THREE.DoubleSide})});
    scene.add(current);
    const box=new THREE.Box3().setFromObject(current);
