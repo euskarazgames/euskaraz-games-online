@@ -1,0 +1,66 @@
+name: Pilota — Realistic athletes WebGL QA
+on:
+  push:
+    branches: [feature/pilota-personajes-realistas-fal-blender]
+    paths:
+      - 'public/pilota/**'
+      - 'scripts/pilota/smoke-realism.mjs'
+      - '.github/workflows/pilota-realism-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pilota-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate HTML embedded JavaScript
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          html=Path('public/pilota/index.html').read_text()
+          blocks=re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>',html,re.I)
+          assert len(blocks)>=2,'Game scripts not found'
+          for i,script in enumerate(blocks):
+              p=Path('/tmp/pilota-js-%d.js'%i)
+              p.write_text(script)
+          PY
+          for s in /tmp/pilota-js-*.js; do node --check "$s"; done
+      - name: Start local static web server
+        run: |
+          mkdir -p reports/pilota
+          python3 -m http.server 8799 --bind 127.0.0.1 --directory public >/tmp/pilota-http.log 2>&1 &
+          echo $! > /tmp/pilota-http.pid
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8799/pilota/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/pilota-http.log
+          exit 1
+      - name: Install Playwright test browser
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.58.1
+          npx playwright install --with-deps chromium
+      - name: Test desktop/mobile WebGL players, gameplay and fallback
+        env:
+          PILOTA_ORIGIN: http://127.0.0.1:8799
+        run: node scripts/pilota/smoke-realism.mjs
+      - name: Save screenshots and browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pilota-realism-QA-${{ github.run_number }}
+          path: |
+            reports/pilota/
+            /tmp/pilota-http.log
+          retention-days: 7
+          if-no-files-found: ignore
