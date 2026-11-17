@@ -24,6 +24,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Compare Blender UV maps to game meshes
+        run: |
+          for name in jon lurra harri mendibe; do node scripts/pilota/compare-uv.mjs "$name"; done
       - name: Validate HTML embedded JavaScript
         shell: bash
         run: |
