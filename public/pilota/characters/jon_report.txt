@@ -1,7 +1,8 @@
-Vertices: 36647
+Vertices: 12269
 Triangles: 14500
 Height: 1.8 metres
 Materials: 1
 Arm extent: 0.5383
 Review: facial details, wrist deformation, hand contact, orientation, feet, shadows, mobile FPS.
 IMPORTANT: generated rig/weights are preliminary and not human-artist validated.
+UV rebuild from GLB TEXCOORD_0: {"name":"jon","vertices":12296,"triangles":14500,"uvOutOfRange":0,"unmatched":0,"nearLookups":0,"skinBytes":1021504,"primitives":1,"sourceVertices":12269}

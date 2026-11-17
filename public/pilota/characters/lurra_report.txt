@@ -1,7 +1,8 @@
-Vertices: 39382
+Vertices: 15229
 Triangles: 14500
 Height: 1.8 metres
 Materials: 1
 Arm extent: 0.4844
 Review: facial details, wrist deformation, hand contact, orientation, feet, shadows, mobile FPS.
 IMPORTANT: generated rig/weights are preliminary and not human-artist validated.
+UV rebuild from GLB TEXCOORD_0: {"name":"lurra","vertices":15282,"triangles":14500,"uvOutOfRange":0,"unmatched":0,"nearLookups":0,"skinBytes":1248440,"primitives":1,"sourceVertices":15229}
