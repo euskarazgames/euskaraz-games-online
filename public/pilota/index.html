@@ -1281,6 +1281,7 @@ const Rig=(()=>{
    this.parts=[];root.each(n=>{if(n.mesh)this.parts.push(n);});
    this.st={x:0,z:0,yaw:Math.PI,speed:0,ph:Math.random()*6,swing:0,swKind:'flat',dive:0,diveSide:1,cel:0,def:0,look:0,serve:0};
     this.gaze=0; // Smooth neck tracking, independent of the gameplay simulation.
+    this.contactError=null; // Approximate metres to actual palm contact; never modifies match scoring.
    this.A={};for(const k of Pelotari.JK)this.A[k]=[0,0,0];
    const BD=Body.gpu();this.body=BD;this.B=new Float32Array(16*16);this.tmp=M4.create();
    this.skinMat={tex:M.shirtT.tex,col:[1,1,1],rough:.6,spec:.17,rim:.2};
@@ -1387,8 +1388,11 @@ const Rig=(()=>{
    r.update(null);
    // IK: drive the striking palm to the actual incoming ball centre during
    // the short contact window; right shoulder + elbow remain articulated.
+   this.contactError=null;
    if(st.contactTarget&&st.swing>0&&st.contactProgress>0){
     this.solveHandTarget(st.contactTarget,clamp(st.contactProgress*1.5,0,1));
+    const h=this.handPos();
+    this.contactError=Math.hypot(st.contactTarget[0]-h[0],st.contactTarget[1]-h[1],st.contactTarget[2]-h[2]);
    }
    const bi=this.body.bindInv,T=this.tmp;
    for(let i=0;i<Body.SKEL.length;i++){M4.mul(T,J[Body.SKEL[i][0]].world,bi.subarray(i*16,i*16+16));this.B.set(T,i*16);}
@@ -1398,8 +1402,9 @@ const Rig=(()=>{
    const root=this.root, J=this.J;
    const dist2=(h)=>{const a=target[0]-h[0],b=target[1]-h[1],c=target[2]-h[2];return a*a+b*b+c*c;};
    for(let pass=0;pass<5;pass++){
-    for(const name of ['shR','elR','shR','spine']){
-     const joint=J[name],axes=name==='shR'?[0,1,2]:name==='spine'?[0,1]:[0,2];
+    // Reach from shoulder, flex elbow and align palm without hyperextending joints.
+    for(const name of ['shR','elR','haR','shR','spine']){
+     const joint=J[name],axes=name==='shR'?[0,1,2]:name==='spine'?[0,1]:name==='haR'?[0,2]:[0,2];
      for(const axis of axes){
       const v=joint.r[axis],before=this.handPos(),eps=.035;
       joint.r[axis]=v+eps;root.update(null);const after=this.handPos();
@@ -1408,7 +1413,11 @@ const Rig=(()=>{
       const err=[target[0]-before[0],target[1]-before[1],target[2]-before[2]];
       const den=derivative[0]**2+derivative[1]**2+derivative[2]**2+.012;
       const delta=clamp((err[0]*derivative[0]+err[1]*derivative[1]+err[2]*derivative[2])/den,-.32,.32);
-      joint.r[axis]=name==='spine'?(axis===0?clamp(v+delta*weight,-.75,1.2):clamp(v+delta*weight,-1,1)):clamp(v+delta*weight,-3.2,3.2);
+      const limits=name==='spine'?{0:[-.65,1.0],1:[-.8,.8]}:
+        name==='shR'?{0:[-3.05,2.35],1:[-1.7,1.7],2:[-2.15,2.15]}:
+        name==='elR'?{0:[-2.75,.15],2:[-.95,.95]}:{0:[-.95,.95],2:[-.75,.75]};
+      const lim=limits[axis];
+      joint.r[axis]=clamp(v+delta*weight*(name==='haR'?.8:1),lim[0],lim[1]);
       root.update(null);
       if(dist2(this.handPos())<.0025)return;
      }
@@ -1417,7 +1426,11 @@ const Rig=(()=>{
   }
   draw(mir){GL.litSkin(this.realMesh||this.body.mesh,this.B,this.realMat||this.skinMat,mir,this.realPal||this.pal);if(!this.realMesh)for(const n of this.parts)if(!mir||n.mirror)GL.lit(n.mesh,n.world,n.mat,mir);}
   drawShadow(){GL.shadowSkin(this.realMesh||this.body.mesh,this.B);if(!this.realMesh)for(const n of this.parts)if(n.shadow)GL.shadow(n.mesh,n.world);}
-  handPos(){return M4.xform(this.J.haR.world,this.realPalmLocal||[0,-.08,.065]);}
+  handPos(){
+   // Return a contact point just outside palm skin so the pelota never clips through the hand at serve.
+   const p=this.realPalmLocal||[0,-.08,.065];
+   return M4.xform(this.J.haR.world,[p[0],p[1],p[2]+.052]);
+  }
  }
  Pelotari.JK=['pelvis','spine','head','shL','shR','elL','elR','haL','haR','hipL','hipR','knL','knR','anL','anR'];
  return {Pelotari,units};
