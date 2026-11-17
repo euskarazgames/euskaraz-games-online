@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-3.0-natural-contact">
+<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-3.1-realism-preview">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Euskaraz Games · Herri Pilota · Pilotari Karrera</title>
 <style>
@@ -1403,8 +1403,8 @@ const Rig=(()=>{
     }
    }
   }
-  draw(mir){GL.litSkin(this.body.mesh,this.B,this.skinMat,mir,this.pal);for(const n of this.parts)if(!mir||n.mirror)GL.lit(n.mesh,n.world,n.mat,mir);}
-  drawShadow(){GL.shadowSkin(this.body.mesh,this.B);for(const n of this.parts)if(n.shadow)GL.shadow(n.mesh,n.world);}
+  draw(mir){GL.litSkin(this.realMesh||this.body.mesh,this.B,this.realMat||this.skinMat,mir,this.realPal||this.pal);if(!this.realMesh)for(const n of this.parts)if(!mir||n.mirror)GL.lit(n.mesh,n.world,n.mat,mir);}
+  drawShadow(){GL.shadowSkin(this.realMesh||this.body.mesh,this.B);if(!this.realMesh)for(const n of this.parts)if(n.shadow)GL.shadow(n.mesh,n.world);}
   handPos(){return M4.xform(this.J.haR.world,[0,-.08,.065]);}
  }
  Pelotari.JK=['pelvis','spine','head','shL','shR','elL','elR','haL','haR','hipL','hipR','knL','knR','anL','anR'];
@@ -2179,6 +2179,29 @@ const UI=(()=>{
  const BLUE={shirt:0x1f6aa5,shirtCss:'#1f6aa5',num:3,accent:0x2a6bb8};
  const RED={shirt:0xb3221c,shirtCss:'#b3221c',num:5,accent:0x9a1a1a,skin:0xc4875f,hair:0x1c140e};
  const me=new Rig.Pelotari(BLUE),foe=new Rig.Pelotari(RED);
+  // Opt-in visual preview: ?personajes3d=1. Procedural renderer stays default.
+  async function loadRiggedCharacter(pilotari,name){
+    const base='/pilota/characters/'+name;
+    const r=await fetch(base+'_skin.bin',{cache:'no-store'});
+    if(!r.ok)throw Error('Skin unavailable: '+name+' '+r.status);
+    const data=await r.arrayBuffer();
+    if(data.byteLength<8)throw Error('Invalid skin header');
+    const view=new DataView(data),nv=view.getUint32(0,true),ni=view.getUint32(4,true);
+    if(nv<100||nv>65535||ni<100||ni>150000||data.byteLength!==8+nv*76+ni*2)throw Error('Invalid skin mesh: '+name);
+    const verts=new Float32Array(data.slice(8,8+nv*76));
+    const indices=new Uint16Array(data.slice(8+nv*76));
+    const img=new Image();img.decoding='async';img.src=base+'_diffuse.png';
+    await img.decode();
+    pilotari.realMesh=GL.meshSkin(verts,indices);
+    pilotari.realMat={tex:GL.tex(img,{repeat:false}),col:[1,1,1],rough:.68,spec:.19,rim:.15};
+    pilotari.realPal=new Float32Array(24).fill(1);
+    console.info('Herri Pilota custom 3D loaded',name,nv,ni/3);
+  }
+  if(new URLSearchParams(location.search).get('personajes3d')==='1'){
+    loadRiggedCharacter(me,'jon').catch(e=>console.warn('Original hero retained:',e.message));
+    loadRiggedCharacter(foe,'harri').catch(e=>console.warn('Original rival retained:',e.message));
+  }
+
  const ballMesh=Geo.upload(Geo.sphere(C.BR,18,12))[0];
  const ballNode=new Node(ballMesh,{tex:Arena.tex.ball,col:[1.08,1.05,1.0],rough:.45,spec:.35,rim:.25,emi:[.06,.06,.055]});
  const I=M4.create();
