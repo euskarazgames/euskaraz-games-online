@@ -181,6 +181,16 @@ def main():
     img.save()
     uvlayer=obj.data.uv_layers.active
     if uvlayer is None: raise RuntimeError("No UVs in source mesh.")
+    # Snapshot UV floats prior to Blender save/export; RNA references can go
+    # stale, producing values in the hundreds instead of normalized atlas UVs.
+    uv_snap=[(float(loop.uv.x),float(loop.uv.y)) for loop in uvlayer.data]
+    if len(uv_snap)!=len(obj.data.loops):raise RuntimeError("UV loop count mismatch")
+    bad=[(i,uv) for i,uv in enumerate(uv_snap)
+        if not all(math.isfinite(v) and -.0001<=v<=1.0001 for v in uv)]
+    print('UV_SNAPSHOT',len(uv_snap),'bad',len(bad),
+          'rangeU',(min(u for u,v in uv_snap),max(u for u,v in uv_snap)),
+          'rangeV',(min(v for u,v in uv_snap),max(v for u,v in uv_snap)))
+    if bad:raise RuntimeError("Corrupt source UVs: "+str(bad[:4]))
 
     for i, (name, _, _) in enumerate(BONES):
         obj.vertex_groups.new(name=name)
@@ -233,8 +243,8 @@ def main():
         for loop_id in tri.loops:
             lp=obj.data.loops[loop_id]
             vid=lp.vertex_index
-            uv=uvlayer.data[loop_id].uv
-            key=(vid,round(float(uv.x),5),round(float(uv.y),5))
+            uv=uv_snap[loop_id]
+            key=(vid,round(uv[0],5),round(uv[1],5))
             if key not in indexmap:
                 v=obj.data.vertices[vid]
                 p=game(v.co)
@@ -246,7 +256,7 @@ def main():
                 # The game GL.tex uploads UV textures with flipY=false; the
                 # GLB viewer has the correct orientation with Blender V as-is.
                 # Do NOT invert V here (the original atlas appeared on faces).
-                vertexdata.extend(list(p)+list(n)+[float(uv.x),float(uv.y)]
+                vertexdata.extend(list(p)+list(n)+[float(uv[0]),float(uv[1])]
                                   +[5.,1.,5.]+js+ws)
                 indexmap[key]=len(indexmap)
             indices.append(indexmap[key])
