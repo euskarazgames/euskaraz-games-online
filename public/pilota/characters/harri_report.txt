@@ -1,4 +1,4 @@
-Vertices: 36327
+Vertices: 36609
 Triangles: 14500
 Height: 1.8 metres
 Materials: 1
