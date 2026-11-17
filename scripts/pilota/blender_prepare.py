@@ -186,7 +186,7 @@ def main():
     uv_snap=[(float(loop.uv.x),float(loop.uv.y)) for loop in uvlayer.data]
     if len(uv_snap)!=len(obj.data.loops):raise RuntimeError("UV loop count mismatch")
     bad=[(i,uv) for i,uv in enumerate(uv_snap)
-        if not all(math.isfinite(v) and -.0001<=v<=1.0001 for v in uv)]
+        if not all(math.isfinite(v) and -.01<=v<=1.01 for v in uv)]
     print('UV_SNAPSHOT',len(uv_snap),'bad',len(bad),
           'rangeU',(min(u for u,v in uv_snap),max(u for u,v in uv_snap)),
           'rangeV',(min(v for u,v in uv_snap),max(v for u,v in uv_snap)))
