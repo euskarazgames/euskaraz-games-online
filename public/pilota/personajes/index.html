@@ -64,7 +64,13 @@ function select(c){
  showStatus(c.name+' · Kargatzen…');stats.textContent='3D eredua: '+c.id;
  new GLTFLoader().load('../characters/'+c.id+'_optimized.glb',g=>{
    if(n!==seq)return;
-   current=g.scene;scene.add(current);
+   current=g.scene;
+   // Blender's portable GLB exports rig/UV geometry; texture is loaded
+   // separately to avoid headless GLB material-packing bugs.
+   const texture=new THREE.TextureLoader().load('../characters/'+c.id+'_diffuse.png');
+   texture.colorSpace=THREE.SRGBColorSpace;texture.flipY=false;
+   current.traverse(o=>{if(o.isMesh)o.material=new THREE.MeshStandardMaterial({map:texture,roughness:.85,side:THREE.DoubleSide})});
+   scene.add(current);
    const box=new THREE.Box3().setFromObject(current);
    stats.textContent=c.name+' · '+box.getSize(new THREE.Vector3()).y.toFixed(2)+' m · GLB';
    msg.hidden=true;

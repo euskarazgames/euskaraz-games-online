@@ -205,7 +205,7 @@ def main():
 
     # Independently export the static, Blender-friendly preview GLB.
     bpy.ops.export_scene.gltf(filepath=str(dest)+"_optimized.glb",export_format="GLB",
-                              use_selection=True,export_yup=True)
+                              use_selection=True,export_yup=True,export_materials="NONE")
 
     # Export compact 19-float vertex format matching GL.meshSkin in the game.
     # Each vertex: position(3), normal(3), uv(2), material(3), joints(4), weights(4).
