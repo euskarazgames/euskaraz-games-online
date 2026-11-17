@@ -2192,14 +2192,21 @@ const UI=(()=>{
     const indices=new Uint16Array(data.slice(8+nv*76));
     const img=new Image();img.decoding='async';img.src=base+'_diffuse.png';
     await img.decode();
+    if(pilotari===foe && pilotari._requestedAsset!==name)return;
     pilotari.realMesh=GL.meshSkin(verts,indices);
     pilotari.realMat={tex:GL.tex(img,{repeat:false}),col:[1,1,1],rough:.68,spec:.19,rim:.15};
     pilotari.realPal=new Float32Array(24).fill(1);
     console.info('Herri Pilota custom 3D loaded',name,nv,ni/3);
   }
-  if(new URLSearchParams(location.search).get('personajes3d')==='1'){
-    loadRiggedCharacter(me,'jon').catch(e=>console.warn('Original hero retained:',e.message));
-    loadRiggedCharacter(foe,'harri').catch(e=>console.warn('Original rival retained:',e.message));
+  const realPlayersEnabled=new URLSearchParams(location.search).get('personajes3d')==='1';
+  if(realPlayersEnabled)loadRiggedCharacter(me,'jon').catch(e=>console.warn('Original hero retained:',e.message));
+  function previewOpponent(name){
+    if(!realPlayersEnabled)return;
+    const id=/LURRA/i.test(name)?'lurra':/MENDIBE/i.test(name)?'mendibe':'harri';
+    if(foe._requestedAsset===id)return;
+    foe._requestedAsset=id;
+    foe.realMesh=null;
+    loadRiggedCharacter(foe,id).catch(e=>console.warn('Original rival retained:',e.message));
   }
 
  const ballMesh=Geo.upload(Geo.sphere(C.BR,18,12))[0];
@@ -2214,7 +2221,7 @@ const UI=(()=>{
  const camP=[X0,6,26],camT=[X0,2,4];let camFov=62,orbit=0,introFrom=null,snapNext=false;
  const botSt={pressD:1.8,noise:.6,react:.2};
  function newMatch(attract){
-  const r=UI.RIVALS[UI.CFG.rival]||UI.RIVALS[1];rival=r;
+  const r=UI.RIVALS[UI.CFG.rival]||UI.RIVALS[1];rival=r;previewOpponent(r.n);
   SEED=(Date.now()&0xffff)+7;
   M=Game.create(attract?{level:.5,target:999,introT:.3}:{level:r.lv,target:UI.CFG.target,serve:UI.CFG.serve,introT:2.4},onEvent);
   M.attract=!!attract;FX.trailClear();resultShown=false;overT=0;
