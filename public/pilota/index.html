@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-4.0-realism-studio">
+<meta name="theme-color" content="#0b0d0f"><meta name="eg-pilota-release" content="career-pro-4.1-correct-uv">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Euskaraz Games · Herri Pilota · Pilotari Karrera</title>
 <style>
@@ -2230,7 +2230,7 @@ const UI=(()=>{
       for(let k=0;k<Math.min(verts.length,19000);k++)
         if(!Number.isFinite(verts[k]))throw Error('Non-finite vertex '+name);
       const asset={name,mesh:GL.meshSkin(verts,faces),
-        mat:{tex:GL.tex(img,{repeat:false,aniso:4,flipY:realModelParams.get('textureFlip')==='1'}),col:[1,1,1],rough:.82,spec:.09,rim:.1},
+        mat:{tex:GL.tex(img,{repeat:false,aniso:4,flipY:realModelParams.get('textureFlip')!=='0'}),col:[1,1,1],rough:.82,spec:.09,rim:.1},
         pal:new Float32Array(24).fill(1),verts,vertices:nv,triangles:ni/3};
       return asset;
     })();
