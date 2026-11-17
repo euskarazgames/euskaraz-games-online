@@ -1,5 +1,24 @@
 import { chromium, devices } from 'playwright';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+function inspectSkin(name){
+ const b=readFileSync('public/pilota/characters/'+name+'_skin.bin');
+ const vertices=b.readUInt32LE(0), out={name,vertices,hand8:0,hand7:0,hand5:0,bounds:{min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]},dominant: {min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]}};
+ for(let i=0;i<vertices;i++){
+  const off=8+i*76;
+  const xyz=[b.readFloatLE(off),b.readFloatLE(off+4),b.readFloatLE(off+8)];
+  xyz.forEach((v,j)=>{out.bounds.min[j]=Math.min(v,out.bounds.min[j]);out.bounds.max[j]=Math.max(v,out.bounds.max[j]);});
+  let w8=0,w7=0,w5=0;
+  for(let j=0;j<4;j++){
+   const id=Math.round(b.readFloatLE(off+44+j*4)),w=b.readFloatLE(off+60+j*4);
+   if(id===8)w8+=w;if(id===7)w7+=w;if(id===5)w5+=w;
+  }
+  if(w8>.65){out.hand8++;xyz.forEach((v,j)=>{out.dominant.min[j]=Math.min(v,out.dominant.min[j]);out.dominant.max[j]=Math.max(v,out.dominant.max[j]);});}
+  if(w7>.65)out.hand7++;if(w5>.65)out.hand5++;
+ }
+ return out;
+}
+for(const name of ['jon','harri','lurra','mendibe']) console.log('SOURCE_SKIN',JSON.stringify(inspectSkin(name)));
 const ORIGIN=process.env.PILOTA_ORIGIN||'http://127.0.0.1:8799';
 const browser=await chromium.launch({headless:true,args:['--enable-webgl','--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader','--ignore-gpu-blocklist']});
 const report=[];
@@ -23,6 +42,7 @@ async function run(name,opts,allowGame=true){
       canvasWidth:document.querySelector('#gl').width,canvasHeight:document.querySelector('#gl').height,
       intro:!!document.querySelector('#menu'),career:!!document.querySelector('#career .hero-cover')};
   });
+  console.log('BROWSER_MODELS',name,JSON.stringify(stats));
   assert(stats.meReady&&stats.foeReady,'Both photoreal characters must be visible');
   assert(stats.loaded.every(z=>z.vertices>5000&&z.vertices<=65535&&z.triangles>=10000&&z.triangles<=15000),'Mesh size out of range');
   assert(stats.loaded.every(z=>z.palm>=12),'Right palm on each character must have source geometry samples');
