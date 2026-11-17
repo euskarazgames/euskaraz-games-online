@@ -1,31 +1,33 @@
 {
  "pro_g1": {
-  "who": "GAUEKO",
-  "mos": 3.54,
+  "who": "MIKELATS",
+  "text": "Entzuten duzu, anaia? Zure txalapartak deika… eta inork ez dio erantzuten.",
+  "mos": 3.42,
   "cer": 0.0,
   "cand": 1,
-  "seed": 105131,
-  "dur": 2.42,
-  "asr": "Jo, txalaparta, jo, eta deitu iezaiozu."
+  "seed": 203731,
+  "dur": 5.15,
+  "asr": "Entzuten duzu anaia, zure txalapartak, deika eta inork ez dio erantzuten."
  },
  "pro_g2": {
-  "who": "GAUEKO",
-  "mos": 3.92,
-  "cer": 0.021,
+  "who": "MIKELATS",
+  "text": "Zazpi txingar, zazpi leize. Laster, amaren sua nirea izango da.",
+  "mos": 3.73,
+  "cer": 0.0,
   "cand": 0,
-  "seed": 105100,
-  "dur": 3.19,
-  "asr": "Zazpi leize, zazpi zaindari, eta zorgin bakar bat."
+  "seed": 203700,
+  "dur": 4.13,
+  "asr": "Zazpi txingar, zazpi leize, laster amaren sua nirea izango da."
  },
  "pro_i1": {
-  "who": "IRATI",
-  "text": "Amaiur. Entzuten didazu? Ez esan ezer. Entzun bakarrik.",
-  "mos": 4.12,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 100031,
-  "dur": 3.92,
-  "asr": "Amaiur, entzuten didazu ez esan ezer, entzun bakarrik."
+  "who": "ATARRABI",
+  "text": "Sorgin… Entzuten didazu? Ez izan beldurrik. Kriseiluaren sugarretik hitz egiten dizut.",
+  "mos": 3.42,
+  "cer": 0.049,
+  "cand": 0,
+  "seed": 203700,
+  "dur": 5.99,
+  "asr": "Sorgin, entzuten didazu ez ez izan beldurrik, krisailuaren sugarretik hitz egiten dizut."
  },
  "pro_a1": {
   "who": "AMAIUR",
@@ -38,280 +40,304 @@
   "asr": "Irati, harriaren barruan zaude?"
  },
  "pro_i2": {
-  "who": "IRATI",
-  "mos": 3.5,
-  "cer": 0.0,
+  "who": "ATARRABI",
+  "text": "Atarrabi naiz. Lurraren azpitik deitzen dizut, leizeetatik.",
+  "mos": 3.22,
+  "cer": 0.018,
   "cand": 0,
-  "seed": 100000,
-  "dur": 3.32,
-  "asr": "Oihartzun bat naiz, zuk gogoratzen nauzun bitartean, hemen nago."
+  "seed": 203700,
+  "dur": 3.73,
+  "asr": "Atarra bi naiz, lurraren azpitik deitzen dizut, leizeetatik."
  },
  "pro_i3": {
-  "who": "IRATI",
-  "mos": 3.47,
-  "cer": 0.012,
+  "who": "ATARRABI",
+  "text": "Hiru gau dira txalapartak bakarrik jotzen duela. Ez da haizea: leizeak dira, laguntza eske.",
+  "mos": 3.51,
+  "cer": 0.046,
   "cand": 0,
-  "seed": 100000,
-  "dur": 4.43,
-  "asr": "Hiru gaudira txalapartak bakarrik jotzen duela, ez da Mari, norbaitek deitzen zaitu."
+  "seed": 203700,
+  "dur": 4.83,
+  "asr": "Hiru gaudira txalapartak bakarrik jotzen duela, ez da haizea, leizeak dira laguntzazke."
  },
  "pro_i4": {
-  "who": "IRATI",
-  "mos": 3.76,
+  "who": "ATARRABI",
+  "text": "Isilik orain. Gaur gauean, ekaitzak belarriak ditu.",
+  "mos": 3.19,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100000,
-  "dur": 2.55,
-  "asr": "Isilik, ilunpean izenek belarriak dituzte."
+  "seed": 203700,
+  "dur": 3.32,
+  "asr": "Isilik orain, gaur gauean, ekaitzak belarriak ditu."
  },
  "pro_i5": {
-  "who": "IRATI",
-  "text": "Lehenik, argia. Piztu sutondoa zure sorginkeriaz.",
-  "mos": 3.64,
-  "cer": 0.022,
+  "who": "ATARRABI",
+  "text": "Zure amonaren sua itzali da, eta inoiz ez da itzaltzen. Amona Goikoetxean dago gaur gauean, gaixoak zaintzen. Piztu sua, sorgin, zure sorginkeriaz.",
+  "mos": 3.41,
+  "cer": 0.0,
   "cand": 0,
-  "seed": 100500,
-  "dur": 2.72,
-  "asr": "Lehenik, argia, piztu zutondoa zure sorginkeriaz."
+  "seed": 203700,
+  "dur": 8.99,
+  "asr": "Zure amonaren sua itzali da, eta inoiz ez da itzaltzen.  Amona goikoetxean dago gaur gauean, gaixoak zaintzen, piztu sua, sorgin, zure sorginkeriaz."
  },
  "pro_i6": {
-  "who": "IRATI",
-  "mos": 4.11,
+  "who": "ATARRABI",
+  "text": "Hori da. Orain, begiratu gora, ganbarara. Amonaren kutxan, txalaparta-makilak.",
+  "mos": 3.74,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100000,
-  "dur": 3.83,
-  "asr": "Hori da, orain begiratu gora ganbarara, nire makilak han daude oraindik."
+  "seed": 203700,
+  "dur": 5.15,
+  "asr": "Hori da, orain begiratu gora ganbarara, amonaren kutxan txalaparta makilak."
  },
  "pro_i6b": {
-  "who": "IRATI",
+  "who": "ATARRABI",
   "text": "Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro.",
-  "mos": 3.62,
+  "mos": 3.43,
   "cer": 0.0,
-  "cand": 2,
-  "seed": 100564,
-  "dur": 3.43,
+  "cand": 0,
+  "seed": 203706,
+  "dur": 3.73,
   "asr": "Ganbara garaiegi dago jauzi batentzat, airean jauzi berriro."
  },
  "pro_i7": {
-  "who": "IRATI",
-  "mos": 3.81,
-  "cer": 0.041,
+  "who": "ATARRABI",
+  "text": "Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Leizeek galdetzen dute; zuk erantzun.",
+  "mos": 3.98,
+  "cer": 0.0,
   "cand": 0,
-  "seed": 100000,
-  "dur": 3.94,
-  "asr": "Txalapartak bi haus ditu, batak galdetzen du, besteak erantzuten, ez ahaztu."
+  "seed": 203706,
+  "dur": 5.75,
+  "asr": "Txalapartak bi ahots ditu, batak galdetzen du, besteak erantzuten, leizeek galdetzen dute, zuk erantzun."
  },
  "pro_i8": {
-  "who": "IRATI",
-  "mos": 3.84,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 100031,
-  "dur": 4.37,
-  "asr": "Gauekoren negua da, baina gogoratu udako atea zabalik, gogoratu eta zeharkatu."
+  "who": "ATARRABI",
+  "text": "Nire anaiaren kazkabarra da. Sua, sorgin: urtu.",
+  "mos": 3.37,
+  "cer": 0.023,
+  "cand": 0,
+  "seed": 203706,
+  "dur": 2.62,
+  "asr": "Nire anaiaren kaskabarra da, sua sorgin urtu."
  },
  "pro_i9": {
-  "who": "IRATI",
-  "mos": 3.88,
-  "cer": 0.0,
+  "who": "ATARRABI",
+  "text": "Kontuz. Mikelatsen begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu.",
+  "mos": 3.46,
+  "cer": 0.013,
   "cand": 0,
-  "seed": 100000,
-  "dur": 4.56,
-  "asr": "Kontuz, gauekoren begiak kalean dabiltza, argiak ukitzen bazaitu, ikusiko zaitu."
+  "seed": 203706,
+  "dur": 5.54,
+  "asr": "Kontuz, Mikelatzen begiak kalean dabiltza, argiak ukitzen bazaitu, ikusiko zaitu."
  },
  "pro_i10": {
-  "who": "IRATI",
-  "mos": 3.99,
+  "who": "ATARRABI",
+  "text": "Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten.",
+  "mos": 3.89,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100000,
-  "dur": 3.77,
+  "seed": 203706,
+  "dur": 4.45,
   "asr": "Itxaron itzalean, edo pasatu ziztu bizian, bultzadan ez zaitu ikusten."
  },
  "pro_i11": {
-  "who": "IRATI",
-  "text": "Plazan, itzalak txalapartaren inguruan. Begiak urrezkoak badituzte, iraganean bakarrik zauritzen dira.",
-  "mos": 3.71,
-  "cer": 0.01,
-  "cand": 1,
-  "seed": 100533,
-  "dur": 6.05,
-  "asr": "Plazan, itzalak txalapartaren inguruan, begiak urrezkoak baituzte iraganean bakarrik zauritzen dira."
+  "who": "ATARRABI",
+  "text": "Plazan, itzalak txalapartaren inguruan. Mikelatsen soldaduak dira.",
+  "mos": 3.8,
+  "cer": 0.016,
+  "cand": 0,
+  "seed": 203706,
+  "dur": 4.26,
+  "asr": "Plazan, itzalak txalapartaren inguruan, Mikelatzen soldaduak dira."
  },
  "pro_i12": {
-  "who": "IRATI",
-  "mos": 3.6,
-  "cer": 0.0,
+  "who": "ATARRABI",
+  "text": "Finkatu bat, eta jo. Gero, hurrengoa.",
+  "mos": 3.85,
+  "cer": 0.03,
   "cand": 0,
-  "seed": 100006,
-  "dur": 2.08,
-  "asr": "Finkatu bat eta jo, gero hurrengoa."
+  "seed": 203712,
+  "dur": 2.51,
+  "asr": "Finkatu bat eta go, gero hurrengoa."
  },
  "pro_i13": {
-  "who": "IRATI",
-  "mos": 4.05,
-  "cer": 0.0,
+  "who": "ATARRABI",
+  "text": "Begira, sorgin. Egunsentia.",
+  "mos": 3.45,
+  "cer": 0.042,
   "cand": 0,
-  "seed": 100006,
-  "dur": 1.85,
-  "asr": "Begira amaiur, egunsentia."
+  "seed": 203712,
+  "dur": 2.13,
+  "asr": "Begira, zorgin, egunsentia."
  },
  "pro_i14": {
-  "who": "IRATI",
-  "mos": 3.72,
-  "cer": 0.015,
+  "who": "ATARRABI",
+  "text": "Ez. Leize batean galdu nuen, aspaldi. Eguzkiak ez daki non utzi nire itzala.",
+  "mos": 3.94,
+  "cer": 0.0,
   "cand": 0,
-  "seed": 100006,
-  "dur": 3.47,
-  "asr": "Ez naiz mamua, oihartzuna naiz eta egunsentean argiago entzuten naiz."
+  "seed": 203712,
+  "dur": 4.96,
+  "asr": "Ez, leize batean galdu nuen, aspaldi, eguzkiak ez daki non utzi nire itzala."
  },
  "pro_i15": {
-  "who": "IRATI",
-  "mos": 4.09,
-  "cer": 0.01,
+  "who": "ATARRABI",
+  "text": "Mikelats nire anaia da. Zaindariak gaiztotu ditu, amaren zazpi txingarrak beretzat gorde ditzaten. Amak lo egiten du, txingarrak hozten zaizkion bitartean. Basajaun lehena.",
+  "mos": 3.24,
+  "cer": 0.012,
   "cand": 0,
-  "seed": 100006,
-  "dur": 5.71,
-  "asr": "Mari isildu egin da, eta haren leizeak itxi, gauekoren itzalak izakiak gaiztotzen ari dira, basa jaun lehena."
+  "seed": 203712,
+  "dur": 11.13,
+  "asr": "Mikelatz nire anaia da, zaindariak gaiztotu ditu amaren zazpi txingarrak beretzat gorde ditzaten, amak lo egiten du, txingarrak hozten zaizkion bitartean, basa jaun lehena."
  },
  "pro_i16": {
-  "who": "IRATI",
-  "mos": 4.15,
-  "cer": 0.013,
+  "who": "ATARRABI",
+  "text": "Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni txalapartaren ondoan egongo naiz.",
+  "mos": 3.86,
+  "cer": 0.011,
   "cand": 0,
-  "seed": 100006,
-  "dur": 4.37,
-  "asr": "Ikasi erritmoak pello eta pehiorengandik, gero, basoko leizea, ni hemen egongo naiz."
+  "seed": 203712,
+  "dur": 6.43,
+  "asr": "Ikasi erritmoak pello eta pehiorengandik, gero basoko leizea, ni txalapartaren ondoan egongo naiz."
  },
  "dei_i1": {
-  "who": "IRATI",
-  "mos": 3.67,
+  "who": "ATARRABI",
+  "text": "Hemen nago, Amaiur. Zer behar duzu?",
+  "mos": 3.63,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100012,
-  "dur": 2.04,
-  "asr": "Hemen nago amaiur, zer behar duzu?"
+  "seed": 203712,
+  "dur": 2.4,
+  "asr": "Hemen nago, amaiur, zer behar duzu?"
  },
  "dei_i2": {
-  "who": "IRATI",
-  "mos": 4.14,
+  "who": "ATARRABI",
+  "text": "Kontuz ibili, Amaiur.",
+  "mos": 3.61,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100012,
-  "dur": 1.31,
-  "asr": "Kontuz ibili amaiur."
+  "seed": 203718,
+  "dur": 1.53,
+  "asr": "Kontuz ibili, amaiur."
  },
  "dz_leizea1": {
-  "who": "IRATI",
-  "mos": 3.52,
-  "cer": 0.015,
-  "cand": 0,
-  "seed": 100012,
-  "dur": 3.85,
-  "asr": "Basa jaunen leizea, basoaren bihotza da, amaiur, itzalak barruan daude."
- },
- "dz_leizea2": {
-  "who": "IRATI",
-  "text": "Sutegiak itzalita? Badakizu zer egin. Eta gogoratu: begien kolorea, garaia.",
-  "mos": 3.84,
-  "cer": 0.0,
-  "cand": 0,
-  "seed": 100504,
-  "dur": 4.41,
-  "asr": "Sutegiak itzalita, badakizu zer egin, eta gogoratu, begien kolorea garaia."
- },
- "dz_lamia1": {
-  "who": "IRATI",
-  "mos": 4.24,
-  "cer": 0.0,
-  "cand": 0,
-  "seed": 100012,
-  "dur": 3.68,
-  "asr": "Lamien leizea, lehen kantuz betetzen zen, orain izotza baino ez."
- },
- "dz_lamia2": {
-  "who": "IRATI",
-  "text": "Izotza orainekoa da. Iraganean, ura dabil. Bilatu bidea bietan.",
-  "mos": 3.67,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 100535,
-  "dur": 3.9,
-  "asr": "Izotza orainekoa da, iraganean ura dabil, bilatu bidea bietan."
- },
- "dz_tartalo1": {
-  "who": "IRATI",
-  "mos": 3.56,
+  "who": "ATARRABI",
+  "text": "Basajaunen leizea. Basoaren bihotza da. Itzalak barruan daude.",
+  "mos": 3.88,
   "cer": 0.017,
   "cand": 0,
-  "seed": 100018,
-  "dur": 3.21,
-  "asr": "Tartaloren kova, begi bakarra du eta ilunpean dena ikusten du."
+  "seed": 203718,
+  "dur": 4.39,
+  "asr": "Basa jaunen leizea, basoaren bihotza da, itzalak barruan daude."
  },
- "dz_tartalo3": {
-  "who": "IRATI",
-  "mos": 3.56,
-  "cer": 0.0,
-  "cand": 0,
-  "seed": 100018,
-  "dur": 2.47,
-  "asr": "Ez entzun, argia da hemen zure armarik onena."
- },
- "dz_jentil1": {
-  "who": "IRATI",
-  "mos": 3.67,
-  "cer": 0.025,
-  "cand": 0,
-  "seed": 100018,
-  "dur": 4.43,
-  "asr": "Jentil baratza, jentileak harri bihurtu ziren, zeruan argi bitxi bat ikusi zutenean."
- },
- "dz_jentil2": {
-  "who": "IRATI",
-  "mos": 3.83,
-  "cer": 0.0,
-  "cand": 0,
-  "seed": 100018,
-  "dur": 2.27,
-  "asr": "Harri hauek gogoratzen dute, entzun eta jo."
- },
- "dz_zerua1": {
-  "who": "IRATI",
+ "dz_leizea2": {
+  "who": "ATARRABI",
+  "text": "Sutegiak itzalita? Badakizu zer egin.",
   "mos": 3.77,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100018,
-  "dur": 2.72,
-  "asr": "Hodeien gainean zaude, amaiur, ez begiratu behera."
+  "seed": 203718,
+  "dur": 2.66,
+  "asr": "Sutegiak itzalita, badakizu zer egin."
  },
- "dz_zerua2": {
-  "who": "IRATI",
-  "mos": 4.02,
-  "cer": 0.06,
-  "cand": 0,
-  "seed": 100018,
-  "dur": 2.87,
-  "asr": "Haizeak gora eramango zaitu, fidatuen araren egoez."
- },
- "dz_herensuge1": {
-  "who": "IRATI",
-  "mos": 3.91,
-  "cer": 0.054,
-  "cand": 1,
-  "seed": 100031,
-  "dur": 2.89,
-  "asr": "Heren sujearen aitzuloa, beroa sentitzen dut hemendik ere."
- },
- "dz_herensuge3": {
-  "who": "IRATI",
-  "text": "Argiak erakutsiko dizu. Beti erakusten du.",
-  "mos": 3.88,
+ "dz_lamia1": {
+  "who": "ATARRABI",
+  "text": "Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez.",
+  "mos": 4.2,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100000,
-  "dur": 2.59,
-  "asr": "Argiak erakutsiko dizu, beti erakusten du."
+  "seed": 203718,
+  "dur": 4.37,
+  "asr": "Lamien leizea, lehen kantuz betetzen zen, orain izotza baino ez."
+ },
+ "dz_lamia2": {
+  "who": "ATARRABI",
+  "text": "Hemen urak zure sorginkeriari erantzuten dio: esnatu ura, edo izoztu. Bilatu bidea bietan.",
+  "mos": 3.48,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203718,
+  "dur": 5.33,
+  "asr": "Hemen urak zure sorginkeriari erantzuten dio, esnatu ura edo izoztu, bilatu bidea bietan."
+ },
+ "dz_tartalo1": {
+  "who": "ATARRABI",
+  "text": "Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du.",
+  "mos": 3.48,
+  "cer": 0.017,
+  "cand": 0,
+  "seed": 203718,
+  "dur": 4.11,
+  "asr": "Tartaloren kova, begi bakarra du, eta ilunpean dena ikusten du."
+ },
+ "dz_tartalo3": {
+  "who": "ATARRABI",
+  "text": "Ez entzun. Argia da hemen zure armarik onena.",
+  "mos": 3.47,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203724,
+  "dur": 2.81,
+  "asr": "Ez entzun, argia da hemen zure armarik onena."
+ },
+ "dz_jentil1": {
+  "who": "ATARRABI",
+  "text": "Mairubaratza. Jentilak baino lehen, mairuak bizi ziren hemen, harriak altxatzen.",
+  "mos": 4.13,
+  "cer": 0.039,
+  "cand": 0,
+  "seed": 203724,
+  "dur": 5.03,
+  "asr": "Mahiru baratza, jentilak baino lehen, mahiruak bizi ziren hemen, harriak altxatzen."
+ },
+ "dz_jentil2": {
+  "who": "ATARRABI",
+  "text": "Harri hauek gogoratzen dute. Entzun, eta jo.",
+  "mos": 3.69,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203724,
+  "dur": 2.85,
+  "asr": "Harri hauek gogoratzen dute, entzun eta jo."
+ },
+ "dz_zerua1": {
+  "who": "ATARRABI",
+  "text": "Ortzia. Hodeien gainean zaude, Amaiur. Ez begiratu behera.",
+  "mos": 3.61,
+  "cer": 0.019,
+  "cand": 0,
+  "seed": 203724,
+  "dur": 3.81,
+  "asr": "Hortzia, hodeien gainean zaude, amaiur, ez begiratu behera."
+ },
+ "dz_zerua2": {
+  "who": "ATARRABI",
+  "text": "Haizeak gora eramango zaitu. Fidatu enararen hegoez.",
+  "mos": 3.44,
+  "cer": 0.02,
+  "cand": 0,
+  "seed": 203724,
+  "dur": 3.34,
+  "asr": "Haizeak gora eramango zaitu, fidatu enararen egoez."
+ },
+ "dz_herensuge1": {
+  "who": "ATARRABI",
+  "text": "Zezen-harpea. Beroa sentitzen dut hemendik ere.",
+  "mos": 3.96,
+  "cer": 0.022,
+  "cand": 0,
+  "seed": 203724,
+  "dur": 3.26,
+  "asr": "Zezen arpea, beroa sentitzen dut hemendik ere."
+ },
+ "dz_herensuge3": {
+  "who": "ATARRABI",
+  "text": "Eguzkiak eta ilargiak itsutzen dute. Ispilua, Amaiur.",
+  "mos": 3.85,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203730,
+  "dur": 3.47,
+  "asr": "Eguzkiak eta ilargiak itsutzen dute, ispilua amaiur."
  },
  "pro_a2": {
   "who": "AMAIUR",
@@ -350,113 +376,124 @@
   "asr": "Oraingoan ez zaitut galduko."
  },
  "pro_g3": {
-  "who": "GAUEKO",
-  "mos": 3.71,
-  "cer": 0.026,
-  "cand": 1,
-  "seed": 105131,
-  "dur": 2.55,
-  "asr": "Aizpak elkarrekin, berriro, zein polita."
+  "who": "MIKELATS",
+  "text": "Sorgin bat, anaia? Hain txikia… Zein polita.",
+  "mos": 3.66,
+  "cer": 0.05,
+  "cand": 0,
+  "seed": 203700,
+  "dur": 3.55,
+  "asr": "Zorgin bat anaia, hain txikia, zain polita."
  },
  "pro_g4": {
-  "who": "GAUEKO",
-  "mos": 3.53,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 105131,
-  "dur": 1.46,
-  "asr": "Hor zaude, sorgin txikia."
+  "who": "MIKELATS",
+  "text": "Hor zaude… sorgin txikia.",
+  "mos": 3.43,
+  "cer": 0.043,
+  "cand": 0,
+  "seed": 203700,
+  "dur": 2.32,
+  "asr": "Hor zaude, zorgin txikia."
  },
  "pro_g5": {
-  "who": "GAUEKO",
-  "mos": 3.97,
-  "cer": 0.0,
-  "cand": 0,
-  "seed": 105100,
-  "dur": 1.44,
-  "asr": "Ikusten, zaitut."
- },
- "pro_g6": {
-  "who": "GAUEKO",
-  "mos": 3.7,
-  "cer": 0.0,
-  "cand": 0,
-  "seed": 105100,
-  "dur": 2.79,
-  "asr": "Zatoz, sorgin, leizeek zure izena dakite."
- },
- "dz_tartalo2": {
-  "who": "GAUEKO",
-  "mos": 3.6,
-  "cer": 0.025,
-  "cand": 0,
-  "seed": 105106,
-  "dur": 2.53,
-  "asr": "Ilunpea nire etxea da zorgin, ongi etorri."
- },
- "dz_herensuge2": {
-  "who": "GAUEKO",
-  "mos": 3.81,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 105131,
-  "dur": 2.91,
-  "asr": "Zazpi buru, zazpi gezur, zein da egia sorgin?"
- },
- "c7_i1": {
-  "who": "IRATI",
-  "mos": 3.95,
-  "cer": 0.039,
-  "cand": 1,
-  "seed": 100037,
-  "dur": 2.77,
-  "asr": "Inguma amonak ez zuen inoizaren izena ozen esaten."
- },
- "c7_i2": {
-  "who": "IRATI",
-  "mos": 3.6,
-  "cer": 0.008,
-  "cand": 0,
-  "seed": 100024,
-  "dur": 6.75,
-  "asr": "Orduan entzun ondo, ingumak dena kontatu behar du, izarrak, belarrak, areak, kontatzen ari den bitartean ezin du inor ukitu."
- },
- "c7_i3": {
-  "who": "IRATI",
-  "mos": 3.62,
-  "cer": 0.04,
-  "cand": 0,
-  "seed": 100024,
-  "dur": 7.14,
-  "asr": "Amonaren zehazka kantak hiru bertso zituen, bat katalinek daki, bestea tximinek, hirugarrena, jentil zaharrak gauez izarren azpian."
- },
- "c7_i4": {
-  "who": "IRATI",
-  "text": "Hiru bertsoak. Orain, kantatu nirekin: txalapartak gogoratuko du.",
-  "mos": 3.95,
+  "who": "MIKELATS",
+  "text": "Ikusten… zaitut.",
+  "mos": 3.29,
   "cer": 0.0,
   "cand": 2,
-  "seed": 100566,
-  "dur": 3.83,
-  "asr": "Hiru bertsoak, orain kantatu nirekin, txalapartak gogoratuko du."
+  "seed": 203762,
+  "dur": 1.42,
+  "asr": "Ikusten zaitut."
+ },
+ "pro_g6": {
+  "who": "MIKELATS",
+  "text": "Zatoz, sorgin. Leizeek… zure izena ikasiko dute.",
+  "mos": 3.47,
+  "cer": 0.023,
+  "cand": 0,
+  "seed": 203700,
+  "dur": 3.87,
+  "asr": "Zatoz zorgin, leizeek zure izena ikasiko dute."
+ },
+ "dz_tartalo2": {
+  "who": "MIKELATS",
+  "text": "Ilunpea nire etxea da, sorgin. Ongi… etorri.",
+  "mos": 3.14,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203706,
+  "dur": 3.21,
+  "asr": "Ilunpea nire etxea da sorgin, ongi, etorri."
+ },
+ "dz_herensuge2": {
+  "who": "MIKELATS",
+  "text": "Zezengorrik altxorra zaintzen du, sorgin. Eta altxorra… nire txingarra da.",
+  "mos": 2.72,
+  "cer": 0.0,
+  "cand": 2,
+  "seed": 203762,
+  "dur": 5.05,
+  "asr": "Zezengorrik altxorra zaintzen du sorgin, eta altxorra nire txingarra da."
+ },
+ "c7_i1": {
+  "who": "ATARRABI",
+  "text": "Akerbeltz… Sorginen leizean, akelarrearen erdian. Zazpigarren txingarra hark gordetzen du, nire anaiaren itzalpean.",
+  "mos": 3.1,
+  "cer": 0.018,
+  "cand": 0,
+  "seed": 203730,
+  "dur": 7.52,
+  "asr": "Aker beltz, sorginen leizean, Akelarrearen erdian. Zazpigarren txingarra har gordetzen du, nire anaiaren itzalpean."
+ },
+ "c7_i2": {
+  "who": "ATARRABI",
+  "text": "Entzun ondo: akelarrera ez da oinez joaten. Sorginak lotan hegan egiten du, gorputza ohean utzita.",
+  "mos": 3.61,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203730,
+  "dur": 5.56,
+  "asr": "Entzun ondo, akelarrera ez da oinez joaten, sorginak lotan hegan egiten du, gorputza ohean utzita."
+ },
+ "c7_i3": {
+  "who": "ATARRABI",
+  "text": "Lo-kantak hiru bertso ditu. Bat Kattalinek daki, bestea Txominek. Hirugarrena… jentil zaharrak, gauez.",
+  "mos": 3.64,
+  "cer": 0.021,
+  "cand": 0,
+  "seed": 203730,
+  "dur": 7.01,
+  "asr": "Lokantak hiru bertso ditu. Bat katalinek daki, bestea txominek, hirugarrena, jentil zaharrak gauez."
+ },
+ "c7_i4": {
+  "who": "ATARRABI",
+  "text": "Hiru bertsoak. Orain, jo nirekin: txalapartak gogoratuko du.",
+  "mos": 3.4,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203730,
+  "dur": 3.43,
+  "asr": "Hiru bertsoak, orain jo nirekin txalapartak gogoratuko du."
  },
  "c7_i5": {
-  "who": "IRATI",
-  "mos": 4.07,
-  "cer": 0.025,
+  "who": "ATARRABI",
+  "text": "Eta hau: sorgin-hautsa, amaren leizekoa. Bota Akerbeltzi, eta aleak kontatzen hasiko da.",
+  "mos": 3.78,
+  "cer": 0.036,
   "cand": 0,
-  "seed": 100030,
-  "dur": 4.43,
-  "asr": "Eta hau, amonaren hau zorroa, izar hautsa, bota ingumari eta kontatzen hasiko da."
+  "seed": 203730,
+  "dur": 4.98,
+  "asr": "Eta hau, sorgin hautsa amaren leizekoa, botak erbeltzi eta aleak kontatzen hasiko da."
  },
  "c7_i6": {
-  "who": "IRATI",
-  "mos": 4.07,
-  "cer": 0.011,
+  "who": "ATARRABI",
+  "text": "Akelarrean, ez dantzatu, Amaiur. Egunsentira arte dantzatzen duena, han geratzen da.",
+  "mos": 3.65,
+  "cer": 0.0,
   "cand": 0,
-  "seed": 100030,
-  "dur": 4.75,
-  "asr": "Ez fidatu nire ahotsaz ametxean Amaiur, benetako iratik ez du inoiz zure izena oihukatzen."
+  "seed": 203736,
+  "dur": 5.15,
+  "asr": "Akelarrean ez dantzatu amaiur, egunsentira arte dantzatzen duena han geratzen da."
  },
  "c7_f1": {
   "who": "IRATI?",
@@ -469,23 +506,24 @@
   "asr": "Amaiur, amaiur, hemen nago, etorri azkar."
  },
  "c7_i7": {
-  "who": "IRATI",
-  "mos": 3.6,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 100037,
-  "dur": 3.04,
-  "asr": "Amaiur, esnatu, egunsentia da, zazpigarren argia, berdea."
- },
- "c7_i8": {
-  "who": "IRATI",
-  "text": "Amaiur… ez dakit nola esan. Oihartzun bat baino gehiago naiz. Eta Gauekok badaki.",
-  "mos": 3.52,
+  "who": "ATARRABI",
+  "text": "Amaiur. Esnatu. Egunsentia da. Zazpigarren txingarra… zurekin dago.",
+  "mos": 3.23,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100506,
-  "dur": 4.79,
-  "asr": "Amaiur ez dakit nola esan, oihartzun bat baino gehiago naiz, eta gauekok badaki."
+  "seed": 203736,
+  "dur": 5.2,
+  "asr": "Amaiur, esnatu, egunsentia da, zazpigarren txingarra zurekin dago."
+ },
+ "c7_i8": {
+  "who": "ATARRABI",
+  "text": "Barkatu, Amaiur. Hau aurreikusi behar nuen: zortzigarren suarekin, amaren lekua hartu nahi du.",
+  "mos": 3.48,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203736,
+  "dur": 5.69,
+  "asr": "Barkatu amaiur, hau aurreikusi behar nuen, zortzigarren suarekin amaren lekua hartu nahi du."
  },
  "c7_p1": {
   "who": "IRATI?",
@@ -646,59 +684,64 @@
   "asr": "Inguma naiz, gaur ez zaitut eramango, laster, bai, lona, sorgin txikia."
  },
  "c7_g1": {
-  "who": "GAUEKO",
-  "mos": 3.67,
-  "cer": 0.063,
-  "cand": 0,
-  "seed": 105106,
-  "dur": 4.32,
-  "asr": "Zazpi argi ondo zorgin, etorrian botora, zure aizpa nirekin dago."
+  "who": "MIKELATS",
+  "text": "Zazpi txingar… Ondo, sorgin. Baina zortzigarrena falta zait. Zure amona… nirekin dago.",
+  "mos": 3.16,
+  "cer": 0.013,
+  "cand": 2,
+  "seed": 203762,
+  "dur": 7.44,
+  "asr": "Zazpi txingar ondo zorgin, baina zortzigarrena falta zait, zure amona nirekin dago."
  },
  "st_g1": {
-  "who": "GAUEKO",
-  "mos": 3.64,
-  "cer": 0.011,
+  "who": "MIKELATS",
+  "text": "Anaiak sorgin bat aurkitu du. Txingar bat itzuli diozu amari… Sei ditut oraindik.",
+  "mos": 3.47,
+  "cer": 0.0,
   "cand": 0,
-  "seed": 105106,
-  "dur": 6.78,
-  "asr": "Txalapartak deitzen du, sorgin, nik ere entzuten dut zazpi leize, zazpi zaindari eta su bakarrik."
+  "seed": 203706,
+  "dur": 5.39,
+  "asr": "Anaiak sorgin bat aurkitu du, txingar bat itzuli diozu amari, sei ditut oraindik."
  },
  "st_g3": {
-  "who": "GAUEKO",
-  "mos": 3.78,
-  "cer": 0.008,
-  "cand": 0,
-  "seed": 105106,
-  "dur": 8.55,
-  "asr": "Hiru zaindari, zorgin, lau falta, eta Anboton mariren etxean ni zain, txalaparta jo nahi duzu? Jo, bada, nik ere badakit dantzan."
+  "who": "MIKELATS",
+  "text": "Hiru txingar galdu ditut. Baina negua nirea da, eta zure amonaren sua… hura ere nahi dut.",
+  "mos": 3.24,
+  "cer": 0.035,
+  "cand": 1,
+  "seed": 203731,
+  "dur": 6.43,
+  "asr": "Hiru txingar galdu ditut, baina neguan irea da, eta zure amonaren sua, ura ere nahi dut."
  },
  "st_g4": {
-  "who": "GAUEKO",
-  "mos": 3.71,
-  "cer": 0.009,
-  "cand": 0,
-  "seed": 105106,
-  "dur": 7.01,
-  "asr": "Lau, ondo kontatzen duzu, zorgin, baina hodeien gainean, jentilen zeruan, nire hiru zaindari gogorrenak zain daude."
+  "who": "MIKELATS",
+  "text": "Lau. Harriak lo daude berriro. Baina hodeien gainean, Eatek ez du sorginik maite.",
+  "mos": 3.34,
+  "cer": 0.013,
+  "cand": 1,
+  "seed": 203737,
+  "dur": 5.73,
+  "asr": "Lau, harriak lo daude berriro, baina hodeien gainean, ehatek ez du sorginik maite."
  },
  "st_g5": {
-  "who": "GAUEKO",
-  "text": "Bost. Ondo dabil zure txalaparta, sorgin. Baina Herensugeak ez du kanpairik entzuten… eta Ingumak ametsetan harrapatzen ditu ausartenak ere.",
-  "mos": 3.54,
-  "cer": 0.007,
-  "cand": 0,
-  "seed": 105600,
-  "dur": 9.49,
-  "asr": "Bost, ondo dabil zure txalaparta, sorgin, baina herensujeak ez du kanpairik entzuten, eta ingumak ametsetan harrapatzen ditu ausartenak ere."
- },
- "st_g6": {
-  "who": "GAUEKO",
-  "mos": 3.85,
+  "who": "MIKELATS",
+  "text": "Bost. Ekaitza ere galdu dut… Baina Zezengorrik ez du inoiz altxorrik uzten.",
+  "mos": 3.27,
   "cer": 0.0,
   "cand": 1,
-  "seed": 105137,
-  "dur": 7.16,
-  "asr": "Sei, esna zaude oraindik sorgin txikia laster lo egingo duzu, eta ametsetan nire azken zaindaria zain, inguma."
+  "seed": 203737,
+  "dur": 6.01,
+  "asr": "Bost, ekaitza ere galdu dut, baina zezengorrik ez du inoiz altxorrik uzten."
+ },
+ "st_g6": {
+  "who": "MIKELATS",
+  "text": "Sei. Nekatuta zaude, sorgin? Lo egin… Akelarrean, Akerbeltz zain.",
+  "mos": 3.18,
+  "cer": 0.034,
+  "cand": 0,
+  "seed": 203712,
+  "dur": 5.05,
+  "asr": "Sei, nekatuta zaude zorgin, lo egin, akelarrean aker beltz zain."
  },
  "o1_g1": {
   "who": "GAUEKO",
@@ -710,85 +753,94 @@
   "asr": "Gaua gauekoentzat da."
  },
  "o5_g1": {
-  "who": "GAUEKO",
-  "mos": 3.6,
+  "who": "MIKELATS",
+  "text": "Zazpi txingar… eta niri, ezer ez. Ama, ni ere zure semea naiz.",
+  "mos": 3.41,
   "cer": 0.0,
-  "cand": 0,
-  "seed": 105112,
-  "dur": 3.64,
-  "asr": "Zazpi zaindari eta zazpi itzal, urteak gauarenak dira Mari."
+  "cand": 1,
+  "seed": 203737,
+  "dur": 4.56,
+  "asr": "Zazpi txingar eta niri ezer ez, ama ni ere zure semea naiz."
  },
  "o6_g1": {
-  "who": "GAUEKO",
-  "mos": 3.61,
-  "cer": 0.015,
-  "cand": 0,
-  "seed": 105112,
-  "dur": 4.43,
-  "asr": "Lehen herriak gaua errespetatzen zuen, argi zaiolak kantuak isiltasuna."
+  "who": "MIKELATS",
+  "text": "Anaia beti izan da argia, eta ni, ekaitza. Herriek haren izena bedeinkatzen zuten.",
+  "mos": 3.34,
+  "cer": 0.026,
+  "cand": 2,
+  "seed": 203768,
+  "dur": 6.31,
+  "asr": "Anaia beti izan da argia, eta ni, ekaitza. Herriekaren izena bedeinkatzen zuten."
  },
  "o6_g2": {
-  "who": "GAUEKO",
-  "mos": 3.65,
-  "cer": 0.035,
-  "cand": 2,
-  "seed": 105162,
-  "dur": 5.56,
-  "asr": "Gero, ahaztu egin ninduten, gaua beldurra baino ez zen, eta beldurrak itzalakiten ditu."
+  "who": "MIKELATS",
+  "text": "Haren itzala gorde nuen leizean. Itzal batekin, armada bat egin daiteke.",
+  "mos": 3.32,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203712,
+  "dur": 4.96,
+  "asr": "Haren itzala gorde nuen leizean, itzal batekin, armada bat egin daiteke."
  },
  "o6_g3": {
-  "who": "GAUEKO",
-  "mos": 3.79,
+  "who": "MIKELATS",
+  "text": "Zure itzala? Orain nirea da, anaia. Eta negua ere bai.",
+  "mos": 3.5,
   "cer": 0.0,
   "cand": 0,
-  "seed": 105118,
-  "dur": 5.24,
-  "asr": "Ez zaitut harrapatu neska, itsasotik atera zintudan, gauak bereak zaintzen ditu."
+  "seed": 203712,
+  "dur": 3.87,
+  "asr": "Zure itzala, orain nirea da, anaia, eta negua ere bai."
  },
  "f_g1": {
-  "who": "GAUEKO",
-  "mos": 3.71,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 105137,
-  "dur": 3.79,
-  "asr": "Iritsi zara, sorgin, zazpi urte, zazpi zaindari eta orain zu."
+  "who": "MIKELATS",
+  "text": "Iritsi zara, sorgin. Amak bere zazpi txingarrak ditu berriro… baina zortzigarrena hemen dago.",
+  "mos": 2.98,
+  "cer": 0.022,
+  "cand": 2,
+  "seed": 203768,
+  "dur": 6.84,
+  "asr": "Iritzi zara, zorgin. Amak bere zazpi txingarrak ditu berriro, baina zortzigarrena hemen dago."
  },
  "f_g2": {
-  "who": "GAUEKO",
-  "mos": 3.64,
-  "cer": 0.039,
-  "cand": 2,
-  "seed": 105162,
-  "dur": 4.94,
-  "asr": "Zure aizpa gauak atera zuen itsasotik, eta gauak ez du ezerde balde itzultzen."
+  "who": "MIKELATS",
+  "text": "Zure amonaren sua. Harekin, amaren lekua nirea izango da.",
+  "mos": 3.63,
+  "cer": 0.037,
+  "cand": 0,
+  "seed": 203718,
+  "dur": 4.24,
+  "asr": "Zure amonaren sua, harekin, amaren lekuan irea izango da."
  },
  "f_g3": {
-  "who": "GAUEKO",
-  "mos": 3.57,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 105137,
-  "dur": 2.13,
-  "asr": "Ondo, baina gauak luzeagoak dira."
+  "who": "MIKELATS",
+  "text": "Kazkabarra! Erori, sorgin!",
+  "mos": 3.0,
+  "cer": 0.087,
+  "cand": 2,
+  "seed": 203768,
+  "dur": 1.98,
+  "asr": "Kaskabarra, erori zorgin."
  },
  "f_g4": {
-  "who": "GAUEKO",
-  "mos": 4.08,
-  "cer": 0.0,
+  "who": "MIKELATS",
+  "text": "Itzalak! Nire anaiaren itzala… nire armada!",
+  "mos": 3.78,
+  "cer": 0.025,
   "cand": 0,
-  "seed": 105118,
-  "dur": 2.89,
-  "asr": "Zazpi kolpe, zazpi urte, bakarrik ezin duzu."
+  "seed": 203718,
+  "dur": 3.41,
+  "asr": "Itzalak, nire anaiaren itzala, nire arma da."
  },
  "f_g5": {
-  "who": "GAUEKO",
-  "mos": 3.69,
+  "who": "MIKELATS",
+  "text": "Ama… negu hau ez da nirea. Gau batek ekarri zuen…",
+  "mos": 3.59,
   "cer": 0.0,
-  "cand": 1,
-  "seed": 105137,
-  "dur": 2.02,
-  "asr": "Gaua nirea, eta errespetatuko dute."
+  "cand": 0,
+  "seed": 203718,
+  "dur": 3.6,
+  "asr": "Ama, negu hau ez da nirea, gau batek ekarri zuen."
  },
  "f_g6": {
   "who": "GAUEKO",
@@ -836,79 +888,84 @@
   "asr": "Utzi joaten amaiur, erlojua zure eskuetan dago."
  },
  "o6_i1": {
-  "who": "IRATI",
-  "text": "Gaueko… zergatik nauzu hemen?",
-  "mos": 3.65,
-  "cer": 0.0,
+  "who": "ATARRABI",
+  "text": "Mikelats… itzuli nire itzala.",
+  "mos": 3.96,
+  "cer": 0.037,
   "cand": 0,
-  "seed": 100508,
-  "dur": 1.76,
-  "asr": "Gaueko, zergatik nauzu hemen?"
+  "seed": 203736,
+  "dur": 1.68,
+  "asr": "Mikelatz itzuli nire itzala."
  },
  "o7_i1": {
-  "who": "IRATI",
-  "mos": 3.7,
+  "who": "ATARRABI",
+  "text": "Leizeetan zazpi urte ikasi nuen. Ez nuen jakin anaia galtzen ari nintzela.",
+  "mos": 3.64,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100036,
-  "dur": 4.05,
-  "asr": "Zazpi urte kontatu ditut ilunpean, amaiur, zazpi argi, bat urte bakoitzeko."
+  "seed": 203736,
+  "dur": 4.47,
+  "asr": "Leizeetan zazpi urte ikasi nuen, ez nuen jakin anaia galtzen ari nintzela."
  },
  "o7_i2": {
-  "who": "IRATI",
-  "mos": 3.91,
+  "who": "ATARRABI",
+  "text": "Ez da gaiztoa jaio. Ahaztua sentitu zen, eta ahaztuak ekaitzak egiten ditu.",
+  "mos": 3.26,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100042,
-  "dur": 4.58,
-  "asr": "Ez naiz oihartzun bat, bizirik nago, gaueko ez da nire kartzelaria, nire zaindaria da."
+  "seed": 203736,
+  "dur": 4.47,
+  "asr": "Ez da gaiztoa jaio, ahaztua sentitu zen, eta ahaztuak ekaitzak egiten ditu."
  },
  "o7_i3": {
-  "who": "IRATI",
-  "text": "Baina gauak ez du ezer itzultzen debalde. Txalapartak bi ahots behar ditu.",
-  "mos": 3.55,
-  "cer": 0.028,
-  "cand": 1,
-  "seed": 100031,
-  "dur": 4.05,
-  "asr": "Baina gauak ez du ezer itzultzen debalde, txalapartak bi ahoz behar ditu."
+  "who": "ATARRABI",
+  "text": "Ez dut hil nahi. Lo egin dezala, mendiaren azpian, ekaitza baretu arte.",
+  "mos": 3.87,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203742,
+  "dur": 4.24,
+  "asr": "Ez dut hil nahi, lo egin dezala mendiaren azpian, ekaitza baretu arte."
  },
  "f_i1": {
-  "who": "IRATI",
-  "mos": 3.51,
-  "cer": 0.0,
+  "who": "ATARRABI",
+  "text": "Mikelatsek zure amona eraman du Murumendira. Zortzigarren sua nahi du.",
+  "mos": 3.13,
+  "cer": 0.059,
   "cand": 0,
-  "seed": 100042,
-  "dur": 4.19,
-  "asr": "Zazpi argiak berde daude, Anboton nago Mariren etxean, etorri nire bila, Amaiur."
+  "seed": 203742,
+  "dur": 3.96,
+  "asr": "Mikel Hatzek zure amona eraman du murumen dira, zortzigarren sua nahi du."
  },
  "f_i2": {
-  "who": "IRATI",
-  "text": "Ez dago bakarrik! Txalapartak bi ahots ditu!",
-  "mos": 3.51,
-  "cer": 0.048,
-  "cand": 1,
-  "seed": 100031,
-  "dur": 2.53,
-  "asr": "Ez dago bakarrik, txalapartak bi ahoz ditu."
- },
- "f_i3": {
-  "who": "IRATI",
-  "mos": 4.07,
+  "who": "ATARRABI",
+  "text": "Nire itzala da! Argia eman, Amaiur: txingarren argia!",
+  "mos": 3.03,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100042,
-  "dur": 1.76,
-  "asr": "Amaiur, zure eskua epela da."
+  "seed": 203742,
+  "dur": 3.38,
+  "asr": "Nire itzala da, argia eman, amaiur, txingarren argia."
+ },
+ "f_i3": {
+  "who": "ATARRABI",
+  "text": "Amaiur… nire itzala. Begira: lurrean dago berriro.",
+  "mos": 3.45,
+  "cer": 0.0,
+  "cand": 0,
+  "seed": 203742,
+  "dur": 3.13,
+  "asr": "Amaiur nire itzala, begira lurrean dago berriro."
  },
  "f_i4": {
-  "who": "IRATI",
-  "mos": 3.81,
-  "cer": 0.0,
-  "cand": 1,
-  "seed": 100043,
-  "dur": 2.27,
-  "asr": "Eta zazpi urte erantzuten, goazen etxera."
+  "who": "ATARRABI",
+  "text": "Ez. Amaren ondoan geratuko naiz, anaia zaintzen. Leizeek ez dute zure izena ahaztuko.",
+  "mos": 4.14,
+  "cer": 0.012,
+  "cand": 0,
+  "seed": 203742,
+  "dur": 5.65,
+  "asr": "Ez, amaren ondoan geratuko naiz anaia zaintzen. Leizeek ez dute zure izen ahaztuko."
  },
  "o1_a1": {
   "who": "AMAIUR",
@@ -1106,14 +1163,14 @@
   "asr": "Mendiaren barrutik, beraz, isilik eta itzalean."
  },
  "hp_i1": {
-  "who": "IRATI",
-  "text": "Amaiur, entzuten nauzu? Leize hauek Gauekoren itzalek zaintzen dituzte. Ez zaitzatela ikusi.",
-  "mos": 4.01,
+  "who": "ATARRABI",
+  "text": "Amaiur, entzuten nauzu? Leize hauek nire anaiaren itzalek zaintzen dituzte. Ez zaitzatela ikusi.",
+  "mos": 3.4,
   "cer": 0.0,
   "cand": 0,
-  "seed": 100000,
-  "dur": 5.3,
-  "asr": "Amaiur, entzuten nauzu, leize hauek gauekoren itzalek zaintzen dituzte, ez zaitzatela ikusi."
+  "seed": 203742,
+  "dur": 6.26,
+  "asr": "Amaiur entzuten nauzu, leize hauek nire anaiaren itzalek zaintzen dituzte, ez zaitzatela ikusi."
  },
  "hp_i2": {
   "who": "IRATI",
@@ -1176,13 +1233,13 @@
   "asr": "Hor da atea, gailurra gainean dago, amaiur, entzuten dizut."
  },
  "hp_g1": {
-  "who": "GAUEKO",
-  "text": "Ikusten zaitut, sorgin. Nire etxean zaude.",
-  "mos": 3.76,
-  "cer": 0.026,
-  "cand": 0,
-  "seed": 105100,
-  "dur": 2.59,
-  "asr": "Ikusten zaitut, zorgin, nire etxean zaude."
+  "who": "MIKELATS",
+  "text": "Ikusten zaitut, sorgin. Nire mendian zaude.",
+  "mos": 3.3,
+  "cer": 0.025,
+  "cand": 2,
+  "seed": 203774,
+  "dur": 3.21,
+  "asr": "Ikusten zaitut, zorgin, nire mendian zaude."
  }
 }

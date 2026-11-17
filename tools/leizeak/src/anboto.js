@@ -875,9 +875,9 @@
   }
   /* azken atalaren helburua (ZONE anboto) */
   function anbotoObjective() {
-    if (MK.on && MK.phase === 1) return ["Mikelatsen kapa: piztu zutarriak sorginkeriaz (" + mkLit() + " / 3), eta jo lurrera erortzen denean.", null];
-    if (MK.on && MK.phase === 2) return ["Itzal-armada: UDAN zauritzen dira (ALDATU, Q).", null];
-    if (MK.on && MK.phase === 3 && MK.state !== "tired") return ["Ekaitza: piztu zazpi zutarriak (" + mkLit() + " / 7).", null];
+    if (MK.on && MK.phase === 1) return ["Mikelatsen kapa: piztu zutarriak SUAREKIN, sorginkeria kargatuta (" + mkLit() + " / 3), eta jo lurrera erortzen denean.", null];
+    if (MK.on && MK.phase === 2) return ["Itzal-armada: urrezko begiak UDAN, urdinak NEGUAN (ALDATU, Q).", null];
+    if (MK.on && MK.phase === 3 && MK.state !== "tired") return ["Ekaitza: piztu zazpi zutarriak SUAREKIN (" + mkLit() + " / 7).", null];
     if (MK.state === "tired") return ["LO-KANTA (◀ ▶ ◀ ▶ ◀): lo egin dezala Mikelatsek.", AN.tx ? [AN.tx.x, AN.tx.z + 1.6, 0] : null];
     return ["Murumendi: amona askatu.", null];
   }

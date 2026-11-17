@@ -484,6 +484,63 @@
     g.position.set(ERR.x, 0, ERR.z);
     errAnim("Idle");
     if (saved.flags.includes("errolan")) errFreed(true);
+    /* IA-modeloa (Flux → Tripo, fal.ai; Blender: rig_mairu.py): menhir bizia, pertsonaien hezurdura berarekin.
+       KayKit klipak berak erabiltzen ditu (errotazioak); giltzadurak menhirrarenak dira. Ez badago, harrizko zalduna. */
+    aiModel("mairu", (sc) => errAi(sc));
+  }
+  function errAi(sc) {
+    if (!sc || !ERR.g || ERR.ai) return;
+    const coreM = sc.getObjectByName("core"),
+      hipsN = sc.getObjectByName("hips"),
+      hipsK = ERR.root.getObjectByName("hips");
+    if (!coreM || !hipsN) return;
+    const mats = [];
+    sc.traverse((n) => {
+      if (!n.isMesh) return;
+      n.frustumCulled = false;
+      n.castShadow = true;
+      n.material = n.material.clone();
+      if (n.material.map) {
+        n.material.emissiveMap = n.material.map;
+        n.material.emissive = new T.Color("#ffffff");
+        n.material.emissiveIntensity = 0.16;
+      }
+      mats.push(n.material);
+    });
+    /* hips-en kokapena: klipek KayKit-en balioak dakartzate → menhirraren atseden-jarrerara desplazatu */
+    const dH = hipsN.position.clone().sub(hipsK ? hipsK.position : hipsN.position);
+    const retarget = (c) =>
+      new T.AnimationClip(
+        c.name,
+        c.duration,
+        c.tracks
+          .filter((t) => !/\.(position|scale)$/.test(t.name) || /^hips\.position$/.test(t.name))
+          .map((t) => {
+            if (!/^hips\.position$/.test(t.name)) return t;
+            const n = t.clone();
+            for (let i = 0; i < n.values.length; i += 3) {
+              n.values[i] += dH.x;
+              n.values[i + 1] += dH.y;
+              n.values[i + 2] += dH.z;
+            }
+            return n;
+          }),
+      );
+    sc.scale.setScalar(ERR_SC);
+    ERR.mixer.stopAllAction();
+    ERR.g.remove(ERR.root);
+    ERR.g.add(sc);
+    coreM.add(ERR.core);
+    ERR.core.position.set(0, 0, 0);
+    const mixer = new T.AnimationMixer(sc),
+      acts = {};
+    for (const c of [...models.mage.animations, ...(models.skel_minion ? models.skel_minion.animations : [])]) acts[c.name] = mixer.clipAction(retarget(c));
+    Object.assign(ERR, { root: sc, mixer, acts, ai: { mats }, cur: "" });
+    sc.updateMatrixWorld(true);
+    const hb = new T.Box3().setFromObject(sc);
+    if (!hb.isEmpty()) ERR.h = hb.max.y;
+    errAnim("Idle");
+    if (ERR.state === "freed") for (const m of mats) m.emissiveIntensity = 0.1;
   }
   function errAnim(name, once, ts = 1) {
     const a = ERR.acts[name];
@@ -869,12 +926,14 @@
     ERR.state = "freed";
     if (!ERR.g) return;
     ERR.g.position.y = 0;
-    ERR.root.traverse((n) => {
-      if (n.isMesh && n.material.emissive && n.material !== ERR.core.material) {
-        n.material.color.set("#b9ae98");
-        n.material.emissive.set("#000000");
-      }
-    });
+    if (ERR.ai) for (const m of ERR.ai.mats) m.emissiveIntensity = 0.1;
+    else
+      ERR.root.traverse((n) => {
+        if (n.isMesh && n.material.emissive && n.material !== ERR.core.material) {
+          n.material.color.set("#b9ae98");
+          n.material.emissive.set("#000000");
+        }
+      });
     ERR.eyeMat.color.set("#ffd27a");
     ERR.core.visible = false;
     ERR.light.color.set("#ffe2b0");

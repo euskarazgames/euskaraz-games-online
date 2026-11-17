@@ -20526,6 +20526,63 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     g.position.set(ERR.x, 0, ERR.z);
     errAnim("Idle");
     if (saved.flags.includes("errolan")) errFreed(true);
+    /* IA-modeloa (Flux → Tripo, fal.ai; Blender: rig_mairu.py): menhir bizia, pertsonaien hezurdura berarekin.
+       KayKit klipak berak erabiltzen ditu (errotazioak); giltzadurak menhirrarenak dira. Ez badago, harrizko zalduna. */
+    aiModel("mairu", (sc) => errAi(sc));
+  }
+  function errAi(sc) {
+    if (!sc || !ERR.g || ERR.ai) return;
+    const coreM = sc.getObjectByName("core"),
+      hipsN = sc.getObjectByName("hips"),
+      hipsK = ERR.root.getObjectByName("hips");
+    if (!coreM || !hipsN) return;
+    const mats = [];
+    sc.traverse((n) => {
+      if (!n.isMesh) return;
+      n.frustumCulled = false;
+      n.castShadow = true;
+      n.material = n.material.clone();
+      if (n.material.map) {
+        n.material.emissiveMap = n.material.map;
+        n.material.emissive = new T.Color("#ffffff");
+        n.material.emissiveIntensity = 0.16;
+      }
+      mats.push(n.material);
+    });
+    /* hips-en kokapena: klipek KayKit-en balioak dakartzate → menhirraren atseden-jarrerara desplazatu */
+    const dH = hipsN.position.clone().sub(hipsK ? hipsK.position : hipsN.position);
+    const retarget = (c) =>
+      new T.AnimationClip(
+        c.name,
+        c.duration,
+        c.tracks
+          .filter((t) => !/\.(position|scale)$/.test(t.name) || /^hips\.position$/.test(t.name))
+          .map((t) => {
+            if (!/^hips\.position$/.test(t.name)) return t;
+            const n = t.clone();
+            for (let i = 0; i < n.values.length; i += 3) {
+              n.values[i] += dH.x;
+              n.values[i + 1] += dH.y;
+              n.values[i + 2] += dH.z;
+            }
+            return n;
+          }),
+      );
+    sc.scale.setScalar(ERR_SC);
+    ERR.mixer.stopAllAction();
+    ERR.g.remove(ERR.root);
+    ERR.g.add(sc);
+    coreM.add(ERR.core);
+    ERR.core.position.set(0, 0, 0);
+    const mixer = new T.AnimationMixer(sc),
+      acts = {};
+    for (const c of [...models.mage.animations, ...(models.skel_minion ? models.skel_minion.animations : [])]) acts[c.name] = mixer.clipAction(retarget(c));
+    Object.assign(ERR, { root: sc, mixer, acts, ai: { mats }, cur: "" });
+    sc.updateMatrixWorld(true);
+    const hb = new T.Box3().setFromObject(sc);
+    if (!hb.isEmpty()) ERR.h = hb.max.y;
+    errAnim("Idle");
+    if (ERR.state === "freed") for (const m of mats) m.emissiveIntensity = 0.1;
   }
   function errAnim(name, once, ts = 1) {
     const a = ERR.acts[name];
@@ -20911,12 +20968,14 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     ERR.state = "freed";
     if (!ERR.g) return;
     ERR.g.position.y = 0;
-    ERR.root.traverse((n) => {
-      if (n.isMesh && n.material.emissive && n.material !== ERR.core.material) {
-        n.material.color.set("#b9ae98");
-        n.material.emissive.set("#000000");
-      }
-    });
+    if (ERR.ai) for (const m of ERR.ai.mats) m.emissiveIntensity = 0.1;
+    else
+      ERR.root.traverse((n) => {
+        if (n.isMesh && n.material.emissive && n.material !== ERR.core.material) {
+          n.material.color.set("#b9ae98");
+          n.material.emissive.set("#000000");
+        }
+      });
     ERR.eyeMat.color.set("#ffd27a");
     ERR.core.visible = false;
     ERR.light.color.set("#ffe2b0");
@@ -25628,7 +25687,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
      ================================================================== */
   const VOICE_LINES = {"pro_g1":["MIKELATS","Entzuten duzu, anaia? Zure txalapartak deika… eta inork ez dio erantzuten."],"pro_g2":["MIKELATS","Zazpi txingar, zazpi leize. Laster, amaren sua nirea izango da."],"pro_i1":["ATARRABI","Sorgin… Entzuten didazu? Ez izan beldurrik. Kriseiluaren sugarretik hitz egiten dizut."],"pro_a1":["AMAIUR","Kriseilua… hitz egiten ari da? Nor zara?"],"pro_i2":["ATARRABI","Atarrabi naiz. Lurraren azpitik deitzen dizut, leizeetatik."],"pro_i3":["ATARRABI","Hiru gau dira txalapartak bakarrik jotzen duela. Ez da haizea: leizeak dira, laguntza eske."],"pro_a2":["AMAIUR","Leizeek… deitzen dute?"],"pro_i4":["ATARRABI","Isilik orain. Gaur gauean, ekaitzak belarriak ditu."],"pro_i5":["ATARRABI","Zure amonaren sua itzali da, eta inoiz ez da itzaltzen. Amona Goikoetxean dago gaur gauean, gaixoak zaintzen. Piztu sua, sorgin, zure sorginkeriaz."],"pro_i6":["ATARRABI","Hori da. Orain, begiratu gora, ganbarara. Amonaren kutxan, txalaparta-makilak."],"pro_i6b":["ATARRABI","Ganbara garaiegi dago jauzi batentzat. Airean, jauzi berriro."],"pro_i7":["ATARRABI","Txalapartak bi ahots ditu: batak galdetzen du, besteak erantzuten. Leizeek galdetzen dute; zuk erantzun."],"pro_a3":["AMAIUR","Atea izoztuta dago."],"pro_i8":["ATARRABI","Nire anaiaren kazkabarra da. Sua, sorgin: urtu."],"pro_g3":["MIKELATS","Sorgin bat, anaia? Hain txikia… Zein polita."],"pro_i9":["ATARRABI","Kontuz. Mikelatsen begiak kalean dabiltza. Argiak ukitzen bazaitu, ikusiko zaitu."],"pro_i10":["ATARRABI","Itxaron itzalean. Edo pasatu ziztu bizian: bultzadan, ez zaitu ikusten."],"pro_g4":["MIKELATS","Hor zaude… sorgin txikia."],"pro_g5":["MIKELATS","Ikusten… zaitut."],"pro_i11":["ATARRABI","Plazan, itzalak txalapartaren inguruan. Mikelatsen soldaduak dira."],"pro_i12":["ATARRABI","Finkatu bat, eta jo. Gero, hurrengoa."],"pro_i13":["ATARRABI","Begira, sorgin. Egunsentia."],"pro_a4":["AMAIUR","Ikusten zaitut… baina ez duzu itzalik."],"pro_i14":["ATARRABI","Ez. Leize batean galdu nuen, aspaldi. Eguzkiak ez daki non utzi nire itzala."],"pro_i15":["ATARRABI","Mikelats nire anaia da. Zaindariak gaiztotu ditu, amaren zazpi txingarrak beretzat gorde ditzaten. Amak lo egiten du, txingarrak hozten zaizkion bitartean. Basajaun lehena."],"pro_i16":["ATARRABI","Ikasi erritmoak Pello eta Peiorengandik. Gero, basoko leizea. Ni txalapartaren ondoan egongo naiz."],"pro_a5":["AMAIUR","Zure ama… Mari da?"],"pro_g6":["MIKELATS","Zatoz, sorgin. Leizeek… zure izena ikasiko dute."],"dei_i1":["ATARRABI","Hemen nago, Amaiur. Zer behar duzu?"],"dei_i2":["ATARRABI","Kontuz ibili, Amaiur."],"dz_leizea1":["ATARRABI","Basajaunen leizea. Basoaren bihotza da. Itzalak barruan daude."],"dz_leizea2":["ATARRABI","Sutegiak itzalita? Badakizu zer egin."],"dz_lamia1":["ATARRABI","Lamien leizea. Lehen, kantuz betetzen zen. Orain, izotza baino ez."],"dz_lamia2":["ATARRABI","Hemen urak zure sorginkeriari erantzuten dio: esnatu ura, edo izoztu. Bilatu bidea bietan."],"dz_tartalo1":["ATARRABI","Tartaloren koba. Begi bakarra du, eta ilunpean dena ikusten du."],"dz_tartalo2":["MIKELATS","Ilunpea nire etxea da, sorgin. Ongi… etorri."],"dz_tartalo3":["ATARRABI","Ez entzun. Argia da hemen zure armarik onena."],"dz_jentil1":["ATARRABI","Mairubaratza. Jentilak baino lehen, mairuak bizi ziren hemen, harriak altxatzen."],"dz_jentil2":["ATARRABI","Harri hauek gogoratzen dute. Entzun, eta jo."],"dz_zerua1":["ATARRABI","Ortzia. Hodeien gainean zaude, Amaiur. Ez begiratu behera."],"dz_zerua2":["ATARRABI","Haizeak gora eramango zaitu. Fidatu enararen hegoez."],"dz_herensuge1":["ATARRABI","Zezen-harpea. Beroa sentitzen dut hemendik ere."],"dz_herensuge2":["MIKELATS","Zezengorrik altxorra zaintzen du, sorgin. Eta altxorra… nire txingarra da."],"dz_herensuge3":["ATARRABI","Eguzkiak eta ilargiak itsutzen dute. Ispilua, Amaiur."],"c7_i1":["ATARRABI","Akerbeltz… Sorginen leizean, akelarrearen erdian. Zazpigarren txingarra hark gordetzen du, nire anaiaren itzalpean."],"c7_a1":["AMAIUR","Nire ametsetan sartu da. Haren adarrak ikusi ditut, sutondoaren ondoan."],"c7_i2":["ATARRABI","Entzun ondo: akelarrera ez da oinez joaten. Sorginak lotan hegan egiten du, gorputza ohean utzita."],"c7_i3":["ATARRABI","Lo-kantak hiru bertso ditu. Bat Kattalinek daki, bestea Txominek. Hirugarrena… jentil zaharrak, gauez."],"c7_i4":["ATARRABI","Hiru bertsoak. Orain, jo nirekin: txalapartak gogoratuko du."],"c7_i5":["ATARRABI","Eta hau: sorgin-hautsa, amaren leizekoa. Bota Akerbeltzi, eta aleak kontatzen hasiko da."],"c7_a2":["AMAIUR","Gaur gauean lo egingo dut. Eta akelarrera hegan egingo dut."],"c7_i6":["ATARRABI","Akelarrean, ez dantzatu, Amaiur. Egunsentira arte dantzatzen duena, han geratzen da."],"c7_n1":["AKERBELTZ","Ongi etorri akelarrera, sorgin txikia. Hemen, gaua ez da inoiz amaitzen."],"c7_f1":["SORGINAK","Dantza, sorgin! Dantza gurekin, egunsentira arte!"],"c7_a3":["AMAIUR","Ez naiz dantzara etorri. Txingarraren bila nator."],"c7_n2":["AKERBELTZ","Ausarta zara. Baina akelarrean… dena da nirea."],"c7_n3":["AKERBELTZ","Lotan zaude, Amaiur. Eta lotan dagoenak… ez du borrokatzen."],"c7_a4":["AMAIUR","Hartu, Akerbeltz! Kontatu ale guztiak, egunsentira arte!"],"c7_n4":["AKERBELTZ","Bat, bi, hiru… Ez! Ez dut kontatu nahi!"],"c7_n5":["AKERBELTZ","Zure amona ere akelarrera etorri zen, gaztetan. Galdetu iezaiozu!"],"c7_n6":["AKERBELTZ","Lo-kanta… Ez! Ez jo hori!"],"c7_n7":["AKERBELTZ","Lo… lo egingo dut… betiko…"],"c7_i7":["ATARRABI","Amaiur. Esnatu. Egunsentia da. Zazpigarren txingarra… zurekin dago."],"c7_a5":["AMAIUR","Zazpi txingar. Orain, Mikelats."],"c7_g1":["MIKELATS","Zazpi txingar… Ondo, sorgin. Baina zortzigarrena falta zait. Zure amona… nirekin dago."],"c7_a6":["AMAIUR","Amona…?"],"c7_i8":["ATARRABI","Barkatu, Amaiur. Hau aurreikusi behar nuen: zortzigarren suarekin, amaren lekua hartu nahi du."],"st_g1":["MIKELATS","Anaiak sorgin bat aurkitu du. Txingar bat itzuli diozu amari… Sei ditut oraindik."],"st_g3":["MIKELATS","Hiru txingar galdu ditut. Baina negua nirea da, eta zure amonaren sua… hura ere nahi dut."],"st_g4":["MIKELATS","Lau. Harriak lo daude berriro. Baina hodeien gainean, Eatek ez du sorginik maite."],"st_g5":["MIKELATS","Bost. Ekaitza ere galdu dut… Baina Zezengorrik ez du inoiz altxorrik uzten."],"st_g6":["MIKELATS","Sei. Nekatuta zaude, sorgin? Lo egin… Akelarrean, Akerbeltz zain."],"c7_p1":["SORGINAK","Sorgin berri bat! Zatoz, zatoz dantzara!"],"c7_p2":["AMAIUR","Non nago? Hau ez da Iturralde…"],"c7_p3":["AKERBELTZ","Akelarrean zaude, sorgin. Zure amonak ere hemen dantzatu zuen, aspaldi."],"c7_p4":["AKERBELTZ","Akerbeltz naiz. Gaur esnatzen utziko zaitut. Hurrengoan… ez."],"o1_i1":["AHIZPA","Txomin itsasoan dago, eta ekaitza dator! Kanpaia jo behar dut!"],"o1_a1":["AMAIUR","Ez, ez joan! Gaua da. Amonak esan zuen: gauez, ez irten."],"o1_i2":["AHIZPA","Itsasoak ez daki zer ordu den. Nik joko dut; zuk, itxaron."],"o1_g1":["GAUEKO","Gaua… gauekoentzat da."],"o2_n1":["AMONA","Txalapartak bi ahots ditu, neskatoak: batak galdetzen du, eta besteak erantzuten du."],"o2_n2":["AMONA","Eta gogoratu beti: eguna egunekoentzat, gaua gauekoentzat. Gauez, etxean."],"o2_i1":["AHIZPA","Eta gauez txalaparta jotzen badugu, amona?"],"o2_n3":["AMONA","Orduan, leizeek erantzungo dizuete. Eta leizeek ez dute ahazten."],"o3_a1":["AMONA","Mariren bi semeak, Atarrabi eta Mikelats, Etsairen leizean ikasi zuten, zazpi urtez."],"o3_a2":["AMONA","Azkena irteten zenak bertan geratu behar zuen. Atarrabi azkena izan zen… eta itzala utzi zuen."],"o3_i1":["AMONA","Itzalik gabe bizi da ordutik. Eta bere anaiak hartu zuen itzal hura."],"o4_m1":["MARI","Sorgin gaztea: zure sutondoan nire sua egongo da. Ez dadila inoiz itzali."],"o4_n1":["AMONA","Mari, zure sua nik zainduko dut. Herriak ez du jakin behar."],"o5_m1":["MARI","Basajaun, Lamia, Tartalo, Mairu, Eate, Zezengorri eta Akerbeltz: bakoitzak txingar bat gordeko du."],"o5_m2":["MARI","Zazpi txingar, zazpi leize. Eta zortzigarrena, Iturralden: herriaren sua."],"o5_g1":["MIKELATS","Zazpi txingar… eta niri, ezer ez. Ama, ni ere zure semea naiz."],"o6_g1":["MIKELATS","Anaia beti izan da argia, eta ni, ekaitza. Herriek haren izena bedeinkatzen zuten."],"o6_g2":["MIKELATS","Haren itzala gorde nuen leizean. Itzal batekin, armada bat egin daiteke."],"o6_i1":["ATARRABI","Mikelats… itzuli nire itzala."],"o6_g3":["MIKELATS","Zure itzala? Orain nirea da, anaia. Eta negua ere bai."],"o7_i1":["ATARRABI","Leizeetan zazpi urte ikasi nuen. Ez nuen jakin anaia galtzen ari nintzela."],"o7_i2":["ATARRABI","Ez da gaiztoa jaio. Ahaztua sentitu zen, eta ahaztuak ekaitzak egiten ditu."],"o7_i3":["ATARRABI","Ez dut hil nahi. Lo egin dezala, mendiaren azpian, ekaitza baretu arte."],"f_i1":["ATARRABI","Mikelatsek zure amona eraman du Murumendira. Zortzigarren sua nahi du."],"f_a1":["AMAIUR","Nola iritsiko naiz? Murumendi hodeien gainean dago."],"f_n1":["MARI","Sorgin. Igo nirekin. Sua naiz, baina ez dut erretzen."],"f_a2":["AMAIUR","Mari…! Esnatu zara!"],"f_g1":["MIKELATS","Iritsi zara, sorgin. Amak bere zazpi txingarrak ditu berriro… baina zortzigarrena hemen dago."],"f_g2":["MIKELATS","Zure amonaren sua. Harekin, amaren lekua nirea izango da."],"f_a3":["AMAIUR","Ez duzu ukituko. Zatoz, Mikelats!"],"f_g3":["MIKELATS","Kazkabarra! Erori, sorgin!"],"f_g4":["MIKELATS","Itzalak! Nire anaiaren itzala… nire armada!"],"f_i2":["ATARRABI","Nire itzala da! Argia eman, Amaiur: txingarren argia!"],"f_m1":["MARI","Mikelats. Itzala ez da zurea. Itzuli zure anaiari."],"f_m2":["MARI","Mendiaren azpian lo egingo duzu, seme, ekaitza baretu arte."],"f_g5":["MIKELATS","Ama… negu hau ez da nirea. Gau batek ekarri zuen…"],"f_a4":["AMAIUR","Gau batek…?"],"f_g6":["MARI","Bai. Gau batek ekarri zuen, eta beste gau batek eramango du. Lau negu barru, kanpaiak joko du."],"f_i3":["ATARRABI","Amaiur… nire itzala. Begira: lurrean dago berriro."],"f_a5":["AMAIUR","Eta orain? Zurekin etorriko zara herrira?"],"f_i4":["ATARRABI","Ez. Amaren ondoan geratuko naiz, anaia zaintzen. Leizeek ez dute zure izena ahaztuko."],"f_n2":["AMONA","Etxera, laztana. Gure sutondoa zain dago."],"hp_n1":["MARI","Kazkabarra… Mikelatsek ez gaitu gora utziko. Mendiak bide bat du barrutik. Igo zuk, sorgin."],"hp_a1":["AMAIUR","Mendiaren barrutik, beraz. Isilik, eta itzalean."],"hp_i1":["ATARRABI","Amaiur, entzuten nauzu? Leize hauek nire anaiaren itzalek zaintzen dituzte. Ez zaitzatela ikusi."],"hp_i2":["ATARRABI","Kriseiluaren argia haien begirada da. Ez sartu bertan: itxaron, eta pasatu bizkarretik."],"hp_i3":["ATARRABI","Nire ahotsa zurekin dago. Goiko izkinan, haien urratsak entzungo dituzu."],"hp_i4":["ATARRABI","Ate ondoko hori ez da mugituko. Makilaz hormari jo: tok, tok. Hotsera joango da."],"hp_i5":["ATARRABI","Atzetik hurbiltzen bazara, oharkabean, lo egin dezake. Isil-isilik."],"hp_i6":["ATARRABI","Hari horiek neguko izotza dira. Udan ez daude."],"hp_i7":["ATARRABI","Hor da atea. Gailurra gainean dago, Amaiur. Zure amona ere bai."],"hp_g1":["MIKELATS","Ikusten zaitut, sorgin. Nire mendian zaude."],"tx_n1":["AMONA","Etorri, laztana. Eseri sutondoan. Hiru txingar itzuli dizkiozu Mariri."],"tx_a1":["AMAIUR","Nola dakizu hori?"],"tx_n2":["AMONA","Sorgina naiz, Amaiur. Zure adinean, nik ere entzun nuen leizeen deia."],"tx_n3":["AMONA","Sutondo hau ez da edozein: Marik berak piztu zuen, herria zaintzeko. Ez da inoiz itzaltzen."],"tx_a2":["AMAIUR","Baina deiaren gauean itzali zen."],"tx_n4":["AMONA","Bai. Mikelatsek bere hotza bidali zuen tximinian behera, eta zuk piztu zenuen berriro. Horregatik da zuretzat."],"tx_n5":["AMONA","Txingar bat, gure sutik. Elurraren azpian uda lo dago; txingarrak esnatuko du, une batez."],"tx_a3":["AMAIUR","Uda… Hiru urte dira uda ikusi ez dudala."],"tx_n6":["AMONA","Ez ahaztu: zuk esnatzen duzun bitartean bakarrik irauten du. Negua ez da oraindik joango."]};
   /* build-ean: dauden mp3-en zerrenda (lerro berriak, ahotsa sortu arte, testua bakarrik: eskaerarik ez) */
-  const VOICE_HAVE = new Set(["hp_a1","o1_g1","o1_i1","o2_i1","o2_n1","o2_n2","pro_a3"] || []);
+  const VOICE_HAVE = new Set(["c7_g1","c7_i1","c7_i2","c7_i3","c7_i4","c7_i5","c7_i6","c7_i7","c7_i8","dei_i1","dei_i2","dz_herensuge1","dz_herensuge2","dz_herensuge3","dz_jentil1","dz_jentil2","dz_lamia1","dz_lamia2","dz_leizea1","dz_leizea2","dz_tartalo1","dz_tartalo2","dz_tartalo3","dz_zerua1","dz_zerua2","f_g1","f_g2","f_g3","f_g4","f_g5","f_i1","f_i2","f_i3","f_i4","hp_a1","hp_g1","hp_i1","o1_g1","o1_i1","o2_i1","o2_n1","o2_n2","o5_g1","o6_g1","o6_g2","o6_g3","o6_i1","o7_i1","o7_i2","o7_i3","pro_a3","pro_g1","pro_g2","pro_g3","pro_g4","pro_g5","pro_g6","pro_i1","pro_i10","pro_i11","pro_i12","pro_i13","pro_i14","pro_i15","pro_i16","pro_i2","pro_i3","pro_i4","pro_i5","pro_i6","pro_i6b","pro_i7","pro_i8","pro_i9","st_g1","st_g3","st_g4","st_g5","st_g6"] || []);
   const VOICE = { base: "/assets/voice/leizeak/", buf: new Map(), wait: new Map(), cur: null, an: null, data: null, chains: {}, level: 0 };
   const voiceLine = (id) => VOICE_LINES[id] || ["", ""];
   function voiceLoad(id) {
@@ -30139,9 +30198,9 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   }
   /* azken atalaren helburua (ZONE anboto) */
   function anbotoObjective() {
-    if (MK.on && MK.phase === 1) return ["Mikelatsen kapa: piztu zutarriak sorginkeriaz (" + mkLit() + " / 3), eta jo lurrera erortzen denean.", null];
-    if (MK.on && MK.phase === 2) return ["Itzal-armada: UDAN zauritzen dira (ALDATU, Q).", null];
-    if (MK.on && MK.phase === 3 && MK.state !== "tired") return ["Ekaitza: piztu zazpi zutarriak (" + mkLit() + " / 7).", null];
+    if (MK.on && MK.phase === 1) return ["Mikelatsen kapa: piztu zutarriak SUAREKIN, sorginkeria kargatuta (" + mkLit() + " / 3), eta jo lurrera erortzen denean.", null];
+    if (MK.on && MK.phase === 2) return ["Itzal-armada: urrezko begiak UDAN, urdinak NEGUAN (ALDATU, Q).", null];
+    if (MK.on && MK.phase === 3 && MK.state !== "tired") return ["Ekaitza: piztu zazpi zutarriak SUAREKIN (" + mkLit() + " / 7).", null];
     if (MK.state === "tired") return ["LO-KANTA (◀ ▶ ◀ ▶ ◀): lo egin dezala Mikelatsek.", AN.tx ? [AN.tx.x, AN.tx.z + 1.6, 0] : null];
     return ["Murumendi: amona askatu.", null];
   }

@@ -1,0 +1,14 @@
+{
+ "concept": {
+  "model": "fal-ai/flux/dev",
+  "prompt": "Mairu Zaharra, an ancient stone giant from Basque folklore, a mairu who raised dolmens: stocky body built of grey granite blocks with green moss and lichen, faint amber glowing cracks, a big head with deep-set amber eyes and a long stone beard, short thick legs, chunky arms, cute stylized chibi proportions with a big head, standing in a strict T-pose like a 3D rigging reference: both arms fully extended straight out horizontally at shoulder height, like an airplane, hands open, legs slightly apart, symmetrical, front view. stylized low-poly 3D game character, clean hand-painted colors, chunky readable shapes, full body visible from head to feet, front view, T-pose, centered, plain pure white background, soft even studio lighting, no shadows on the background, no text, no logo, no frame, single character only",
+  "seed": 23,
+  "url": "https://v3b.fal.media/files/b/0ab2c27d/2mHuSNm9RuSC0CVxJIJSR.jpg"
+ },
+ "tripo": {
+  "model": "tripo3d/tripo/v2.5/image-to-3d",
+  "task_id": "3594c29f-82ca-49e8-8e03-58e88b4b10c6",
+  "faces": 10000,
+  "url": "https://v3b.fal.media/files/b/0ab2c28b/3vIUOgx_8pIwd_5JCZFlj_tripo_model_3594c29f-82ca-49e8-8e03-58e88b4b10c6.glb"
+ }
+}

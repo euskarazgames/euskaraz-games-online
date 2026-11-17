@@ -35,7 +35,7 @@ Euskarazko joko-ataria, Cloudflare Workers-en (GitHub-etik automatikoki hedatua,
   begi-harriak, izotz-hariak), harpeak.js (ANBOTOKO HARPEAK: sigilu-leizea, gailurraren aurretik),
   denbora.js (garaia istorioaren bihurgunean bakarrik: `canPhase()`, Lamien leizean ura/izotza),
   aimodels.js (IA-MODELOAK: etsai nagusien GLB-ak `public/assets/models/leizeak/`-tik, behar denean; `?ia=0`;
-  iturburua `tools/leizeak/models/ai/`: sortu_3d.py (Flux → Tripo, fal.ai), garbitu.py eta rig_zezen.py (Blender)),
+  iturburua `tools/leizeak/models/ai/`: sortu_3d.py (Flux → Tripo, fal.ai), garbitu.py, rig_zezen.py eta rig_mairu.py (Blender)),
   nabi.js (NABIGAZIOA: Recast & Detour, `tools/leizeak/vendor/`), fisika.js (FISIKA: Jolt, beranduago
   kargatua `public/assets/vendor/jolt-physics.js`-tik; `?fisika=0`), ik.js (begirada eta oinen IK)…).
   Azaleko letra-tipoa: `tools/leizeak/fonts/cinzel.woff2` (SIL OFL; build-ean base64). Ez editatu `public/games/leizeak.html` zuzenean:

@@ -30,6 +30,11 @@ ASSETS = {
                    'in a wide stance, all four legs clearly separated and fully visible, long curved ivory horns, '
                    'a glowing orange ember set in its forehead, ember cracks along its back, muscular shoulders, '
                    'side three-quarter view, whole animal from horns to tail'),
+    'mairu': ('Mairu Zaharra, an ancient stone giant from Basque folklore, a mairu who raised dolmens: stocky body built '
+              'of grey granite blocks with green moss and lichen, faint amber glowing cracks, a big head with deep-set amber '
+              'eyes and a long stone beard, short thick legs, chunky arms, cute stylized chibi proportions with a big head, '
+              'standing in a strict T-pose like a 3D rigging reference: both arms fully extended straight out horizontally '
+              'at shoulder height, like an airplane, hands open, legs slightly apart, symmetrical, front view'),
     'eate': ('Eate, an imposing storm god spirit from Basque folklore: the upper body of a tall gaunt adult figure '
              'made of dark slate-grey storm clouds, long flowing hair made of orange fire, glowing white lightning eyes, '
              'long arms with crackling lightning, no legs, the waist dissolving into a swirling column of dark cloud, '
@@ -73,7 +78,8 @@ def main():
         meta_p = d / 'meta.json'
         meta = json.loads(meta_p.read_text()) if meta_p.exists() else {}
         if not (d / 'concept.jpg').exists():
-            prompt = ASSETS[name] + '. ' + STYLE
+            style = STYLE.replace('front three-quarter view, neutral A-pose', 'front view, T-pose') if 'T-pose' in ASSETS[name] else STYLE
+            prompt = ASSETS[name] + '. ' + style
             r = call('fal-ai/flux/dev', {'prompt': prompt, 'image_size': 'portrait_4_3', 'num_inference_steps': 32, 'guidance_scale': 3.5, 'seed': a.seed, 'num_images': 1, 'enable_safety_checker': True})
             meta['concept'] = {'model': 'fal-ai/flux/dev', 'prompt': prompt, 'seed': a.seed, 'url': r['images'][0]['url']}
             fetch(r['images'][0]['url'], d / 'concept.jpg')

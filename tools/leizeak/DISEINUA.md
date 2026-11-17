@@ -491,9 +491,11 @@ aldatzen; pantailako izenak eta testuak bai.
 animazioak) → Blender (bpy: garbitu, poligonoak murriztu, eskala eta jatorria) → meshopt; behar denean
 kargatuak, eta modelorik gabe ere jokoak funtzionatzen du (lehengo prozedurazko gorputzak). Irudiak eta
 bideoak: fal.ai (saldoa dagoenean). Ahotsak: OmniVoice (ATARRABI eta MIKELATS ahots diseinatu berriak).
-Eginda: Mikelats, Akerbeltz, Zezengorri eta Eate (Flux → Tripo, fal.ai bidez; `models/ai/sortu_3d.py`).
+Eginda: Mikelats, Akerbeltz, Zezengorri, Eate eta Mairu Zaharra (Flux → Tripo, fal.ai bidez; `models/ai/sortu_3d.py`).
 Blender: `garbitu.py` (modelo estatikoak) eta `rig_zezen.py` (Zezengorriren hezurdura geometriatik: lau
 hanka belaunarekin, burua, eta markak — begiak, bekokia, muturra); jokoan, pibota prozeduralek gidatzen dute.
+Mairu Zaharra (menhir bizia, besoak eta hankak): `rig_mairu.py`-k pertsonaien KayKit hezurdurari lotzen dio
+(giltzadurak menhirrera egokituta, besoak behera atseden-jarreran); jokoak KayKit klipak erabiltzen ditu.
 
 **Etsai nagusien arauak (estudioaren berrikuspena, game-designer).** Fase bakoitza ziklo batzuetan, ez
 botoi-zaparrada batean: *leiho* bakoitzean kalte-muga (Zezengorri 3, Mikelats 3, Akerbeltz 4), gero altxatu.

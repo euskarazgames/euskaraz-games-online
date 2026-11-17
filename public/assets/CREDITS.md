@@ -80,7 +80,7 @@ Blasoia (lauburua, zazpi izar eta txalaparta-makila gurutzatuak) joko honetarako
 
 ## LEIZEEN DEIA · ahotsak (sintetikoak)
 
-`voice/leizeak/*.mp3`: Amaiur, Irati, Gaueko, Inguma, Andere (amona) eta Mari pertsonaien ahotsak, euskaraz, **sintetikoak**:
+`voice/leizeak/*.mp3`: Amaiur, Atarrabi, Mikelats, Akerbeltz, Amona, Mari (eta oroitzapenetan, Gaueko eta ahizpa) pertsonaien ahotsak, euskaraz, **sintetikoak**:
 [OmniVoice](https://github.com/k2-fsa/OmniVoice) ereduarekin sortuak (VoiceStudio-ren motorra). Ahots
 bakoitza "voice design" moduan diseinatu zen (generoa, adina eta tonua bakarrik); ez da inor klonatu.
 Lerroak eta sortzeko scripta: `tools/leizeak/ahotsak/` (`lerroak.json`, `sortu.py`, `erref/`).
@@ -97,12 +97,15 @@ Lerroak eta sortzeko scripta: `tools/leizeak/ahotsak/` (`lerroak.json`, `sortu.p
 
 ## LEIZEEN DEIA · IA-modeloak (etsai nagusiak)
 
-`models/leizeak/*.glb` (Mikelats, Akerbeltz…): **diseinu propioak** (euskal mitologia, gure eran), honela sortuak:
+`models/leizeak/*.glb` (Mikelats, Akerbeltz, Zezengorri, Eate, Mairu Zaharra): **diseinu propioak** (euskal mitologia, gure eran), honela sortuak:
 kontzeptu-irudia [FLUX.1 [dev]](https://fal.ai/models/fal-ai/flux/dev) ereduarekin (fal.ai), irudi horretatik 3D
 modeloa [Tripo v2.5](https://fal.ai/models/tripo3d/tripo/v2.5/image-to-3d) ereduarekin (fal.ai), eta
 [Blender](https://www.blender.org/)-ekin garbituta (eskala, jatorria, poligonoak, 1024 px testura) eta
 meshoptimizer-ekin trinkotuta. Scriptak, testuak (prompt) eta kontzeptuak: `tools/leizeak/models/ai/`
-(`sortu_3d.py`, `garbitu.py`, `<izena>/meta.json`, `<izena>/concept.jpg`). Ez da beste jokoen edukirik erabili.
+(`sortu_3d.py`, `garbitu.py`, `<izena>/meta.json`, `<izena>/concept.jpg`). Zezengorriren hezurdura Blender-en
+sortu da geometriatik (`rig_zezen.py`: lau hanka belaunarekin, burua eta markak); jokoak hezurrak prozeduralki
+mugitzen ditu. Mairu Zaharra (menhir bizia) jokoaren pertsonaien hezurdurari lotu zaio (`rig_mairu.py`: KayKit
+"Rig", CC0), haren animazioak erabiltzeko. Ez da beste jokoen edukirik erabili.
 Modelorik gabe (edo `?gfx=0`, `?ia=0`), jokoak lehengo gorputz prozeduralak erabiltzen ditu.
 
 ## LEIZEEN DEIA · estudioa (agenteak)
