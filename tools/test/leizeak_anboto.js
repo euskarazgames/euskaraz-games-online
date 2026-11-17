@@ -137,6 +137,16 @@ const { launch } = require('./_browser');
   /* ---------------- 4 · II: itzal-armada (UDAN zauritzen dira) ---------------- */
   mk = await ev(() => ({ phase: __game.MK.phase, state: __game.MK.state, en: __game.ENEMIES.filter((e) => e.mk && e.state !== 'dead').length, era: __game.ENEMIES.filter((e) => e.mk).map((e) => e.era) }));
   ok(mk.phase === 2 && mk.state === 'summon' && mk.en === 3 && mk.era.every((x) => x === 0), 'II: lehen uhina (hiru itzal, UDAKOAK)', JSON.stringify(mk));
+  /* Mikelatsen hotza: UDA 8 s-ro, gero NEGUA berriro */
+  mk = await ev(() => {
+    const g = __game;
+    if (g.phase() !== 0) g.switchPhase();
+    for (let i = 0; i < 30; i++) g.tick(1 / 120);
+    const p0 = g.phase();
+    for (let i = 0; i < 120 * 9; i++) { g.tick(1 / 120); g.P.hp = g.P.maxHp; }
+    return { p0, p1: g.phase() };
+  });
+  ok(mk.p0 === 0 && mk.p1 === 1, 'II: Mikelatsen hotza → negura itzuli (8 s)', JSON.stringify(mk));
   const wave = async () => ev(() => { const g = __game; for (const e of g.ENEMIES) if (e.mk && e.state !== 'dead') g.killEnemy(e); for (let i = 0; i < 240; i++) g.tick(1 / 120); return { en: g.ENEMIES.filter((e) => e.mk && e.state !== 'dead').length, waves: g.MK.waves, state: g.MK.state }; });
   let w = await wave();
   ok(w.waves === 2 && w.en === 4, 'bigarren uhina (lau itzal)', JSON.stringify(w));
@@ -157,7 +167,11 @@ const { launch } = require('./_browser');
   /* ---------------- 5 · III: ekaitza → nekatuta → LO-KANTA ---------------- */
   mk = await ev(() => ({ phase: __game.MK.phase, state: __game.MK.state }));
   ok(mk.phase === 3 && mk.state === 'hover', 'III: ekaitza', JSON.stringify(mk));
-  await ev(() => { const g = __game; for (const S of g.AN.stones) if (!S.lit) S.rune.hit(); for (let i = 0; i < 30; i++) g.tick(1 / 120); });
+  /* NEGUAN ez dira pizten (ekaitzean UDA behar da) */
+  mk = await ev(() => { const g = __game; if (g.phase() !== 1) g.switchPhase(); for (let i = 0; i < 30; i++) g.tick(1 / 120); const S = g.AN.stones.find((s) => !s.lit); S.rune.hit(); return { lit: S.lit, phase: g.phase() }; });
+  ok(!mk.lit && mk.phase === 1, 'III: NEGUAN zutarria ez da pizten', JSON.stringify(mk));
+  /* UDAN: zazpiak (eta hotzak 8 s-ren ondoren negura itzultzen du) */
+  await ev(() => { const g = __game; g.switchPhase(); for (let i = 0; i < 30; i++) g.tick(1 / 120); for (const S of g.AN.stones) if (!S.lit) S.rune.hit(); for (let i = 0; i < 30; i++) g.tick(1 / 120); });
   mk = await ev(() => ({ lit: __game.AN.lit, state: __game.MK.state, obj: __game.objective()[0] }));
   ok(mk.lit === 7 && mk.state === 'tired' && /LO-KANTA/.test(mk.obj), 'zazpi zutarriak → nekatuta (LO-KANTA)', JSON.stringify(mk));
   await shot('murumendi_nekatuta');

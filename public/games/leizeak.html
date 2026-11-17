@@ -29345,7 +29345,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   /* leiho bakoitzeko kalte-muga: hiru kolpe, gero altxatu */
   const MK_WIN = 3;
   /* MIKELATS: borrokako gorputza (hegan) — egoera, fasea, bizia eta erasoak */
-  const MK = { on: false, g: null, root: null, mixer: null, acts: {}, cur: "", cloak: null, crown: [], eyes: [], aura: null, state: "", phase: 0, hp: 0, t: 0, x: ANX, y: 5, z: -4, tx: ANX, tz: -4, retarget: 0, atkCd: 2.4, marks: [], bolts: [], stun: 0, waves: 0, burn: 0, flash: 0, top: 4.4, wind: 0, winDmg: 0, tiredT: 0 };
+  const MK = { on: false, g: null, root: null, mixer: null, acts: {}, cur: "", cloak: null, crown: [], eyes: [], aura: null, state: "", phase: 0, hp: 0, t: 0, x: ANX, y: 5, z: -4, tx: ANX, tz: -4, retarget: 0, atkCd: 2.4, marks: [], bolts: [], stun: 0, waves: 0, burn: 0, flash: 0, top: 4.4, wind: 0, winDmg: 0, tiredT: 0, coldT: 8, coldWarn: false };
   const MK_HP = [0, 6, 6, 0];
   const AN_FOG_NIGHT = new T.Color("#141a2e"),
     AN_FOG_DAWN = new T.Color("#e9b08c");
@@ -29700,7 +29700,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     BOSS.kind = "mikelats";
     BOSS.weakR = 1.7;
     ROOM.fight = MK_ARENA;
-    Object.assign(MK, { wind: 0, winDmg: 0, tiredT: 0, retarget: 0 });
+    Object.assign(MK, { wind: 0, winDmg: 0, tiredT: 0, retarget: 0, coldT: 8, coldWarn: false });
     title("MIKELATS", "");
     bossBar("MIKELATS", 1);
     notify(L("Haren kapa Atarrabiren itzala da: ez dago zauritzerik. Piztu ZUTARRIAK SUAREKIN (sorginkeria kargatuta, SUGAR-IZPIA): txingarren argiak kapa erreko du!"), "", 8);
@@ -29708,6 +29708,12 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   const mkLit = () => AN.stones.filter((S) => S.lit).length;
   function mkStone(S) {
     if (S.lit) return;
+    /* ekaitzean (III), zutarriek UDA behar dute: amonaren txingarra */
+    if (MK.phase === 3 && phase !== 0) {
+      notifyOnce("mk-uda", L("Ekaitzean, zutarriek UDA behar dute: ALDATU (Q), eta piztu SUAREKIN!"), "");
+      SND.clang && SND.clang(0.4);
+      return;
+    }
     S.lit = S.rune.lit = true;
     AN.lit = mkLit();
     SND.rune(true);
@@ -29812,7 +29818,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       MK.atkCd = 1.6;
       MK.cloak.material.opacity = 0.82;
       MK.comb = saved.items.includes("orrazia");
-      notify(L("Ekaitza! Piztu beste ZUTARRIAK (zazpiak), kazkabarraren artean."), "", 5);
+      notify(L("Ekaitza! Piztu beste ZUTARRIAK (zazpiak) UDAN, kazkabarraren artean. Mikelatsen hotzak negua dakar: txingarra berriro piztu!"), "", 6);
       if (MK.comb) setTimeout(() => notify(L("Amonaren orrazia distiraka: kazkabarra baretzen ari da!"), "", 4), 2600);
     });
   }
@@ -29873,6 +29879,35 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
       if (M.col) M.col.parent && M.col.parent.remove(M.col);
     }
     MK.marks.length = 0;
+  }
+  /* Mikelatsen hotza (II eta III): uda 8 s-ro bakarrik iraun dezake; gero negura itzultzen da (1.5 s-ko abisua).
+     Amonak esan zuen bezala: "Udak ez du luze irauten" — txingarra berriro piztu behar da. */
+  function mkColdUpdate(dt) {
+    if ((MK.phase !== 2 && MK.phase !== 3) || MK.state === "tired" || MK.state === "talk" || cinematic || FILM.on || phase !== 0) {
+      MK.coldT = 8;
+      MK.coldWarn = false;
+      return;
+    }
+    MK.coldT -= dt;
+    if (MK.coldT < 1.5 && !MK.coldWarn) {
+      MK.coldWarn = true;
+      notify(L("Mikelatsen hotza: txingarra itzaltzen ari da… negua dator!"), "", 1.6);
+      SND.hiss && SND.hiss();
+    }
+    if (MK.coldT > 0) return;
+    MK.coldT = 8;
+    MK.coldWarn = false;
+    phase = 1;
+    shiftFlash = 1;
+    setPhaseVisual();
+    eraWave();
+    if (!P.platform || P.platform.phase !== -1) {
+      P.platform = null;
+      P.grounded = false;
+    }
+    hud();
+    fxRing(P.x, P.y + 0.3, P.z, "#bfe8ff", 6, 0.6);
+    notifyOnce("mk-cold", L("Mikelatsen hotzak negura itzuli zaitu. Txingarra berriro: ALDATU (Q)!"), "");
   }
   /* bossReset-etik (bizitzak amaituta): gailurrean berriro, zinemarik gabe (I fasetik) */
   function mikelatsReset() {
@@ -29946,6 +29981,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
     }
     if (!MK.on) return;
     MK.t += dt;
+    mkColdUpdate(dt);
     /* mugimendua: hegan (borrokan), lurrean (behera, nekatuta) */
     const low = MK.state === "down" || MK.state === "tired",
       high = MK.state === "summon";
@@ -30200,7 +30236,7 @@ var RecastNav=(()=>{var eg=Object.defineProperty;var kS=Object.getOwnPropertyDes
   function anbotoObjective() {
     if (MK.on && MK.phase === 1) return ["Mikelatsen kapa: piztu zutarriak SUAREKIN, sorginkeria kargatuta (" + mkLit() + " / 3), eta jo lurrera erortzen denean.", null];
     if (MK.on && MK.phase === 2) return ["Itzal-armada: urrezko begiak UDAN, urdinak NEGUAN (ALDATU, Q).", null];
-    if (MK.on && MK.phase === 3 && MK.state !== "tired") return ["Ekaitza: piztu zazpi zutarriak SUAREKIN (" + mkLit() + " / 7).", null];
+    if (MK.on && MK.phase === 3 && MK.state !== "tired") return ["Ekaitza: piztu zazpi zutarriak SUAREKIN, UDAN (" + mkLit() + " / 7).", null];
     if (MK.state === "tired") return ["LO-KANTA (◀ ▶ ◀ ▶ ◀): lo egin dezala Mikelatsek.", AN.tx ? [AN.tx.x, AN.tx.z + 1.6, 0] : null];
     return ["Murumendi: amona askatu.", null];
   }
