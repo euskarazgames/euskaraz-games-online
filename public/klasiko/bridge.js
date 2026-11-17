@@ -1,6 +1,7 @@
 /* Euskaraz Games Klasikoa: deep links to preserved original game engine. */
 (()=>{
  const key=new URLSearchParams(location.search).get("joko");
+ if(key==="pilota"){location.replace("/pilota/");return;}
  if(!key||!["pilota","zesta","artzain","basoa","itsas","kirol"].includes(key))return;
  let attempts=0;
  function run(){
