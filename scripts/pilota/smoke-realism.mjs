@@ -19,6 +19,7 @@ function inspectSkin(name){
  return out;
 }
 for(const name of ['jon','harri','lurra','mendibe']) console.log('SOURCE_SKIN',JSON.stringify(inspectSkin(name)));
+// Recheck regenerated, body-width-calibrated Fal/Blender character weights.
 const ORIGIN=process.env.PILOTA_ORIGIN||'http://127.0.0.1:8799';
 const browser=await chromium.launch({headless:true,args:['--enable-webgl','--enable-unsafe-swiftshader','--use-gl=angle','--use-angle=swiftshader','--ignore-gpu-blocklist']});
 const report=[];
