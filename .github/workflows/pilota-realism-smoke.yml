@@ -5,6 +5,7 @@ on:
     paths:
       - 'public/pilota/**'
       - 'scripts/pilota/smoke-realism.mjs'
+      - 'scripts/pilota/compare-uv.mjs'
       - '.github/workflows/pilota-realism-smoke.yml'
   workflow_dispatch:
 
