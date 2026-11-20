@@ -1401,14 +1401,14 @@ const Rig=(()=>{
     this.gaze+=(gazeTarget-this.gaze)*(1-Math.exp(-Math.max(0,Math.min(dt,.05))*9));
    const set=(k,x,y,z)=>{const a=A[k];a[0]=x;a[1]=y;a[2]=z;};
    /* prest jarrera + korrika */
-   set('pelvis',.17*rd+.10*run,sn*.035*run,0);
-   set('spine',.20*rd+.16*run,-sn*.07*run,0);
-   set('head',-.34*rd-.22*run,this.gaze*.52,0);
-   set('hipL',-.52*rd+sn*.78*run,0,.065*rd+.014);set('hipR',-.52*rd+sR*.78*run,0,-.065*rd-.014);
-   set('knL',.82*rd+.12+clamp(-cs,0,1)*1.15*run,0,0);set('knR',.82*rd+.12+clamp(cs,0,1)*1.15*run,0,0);
-   set('anL',-.36*rd-.05*run,0,-.03*rd);set('anR',-.36*rd-.05*run,0,.03*rd);
-   set('shL',-.48*rd-sn*.68*run,0,.34*rd+.08);set('shR',-.48*rd-sR*.68*run,0,-.34*rd-.08);
-   set('elL',-1.62*rd-.75*run,0,-.55*rd);set('elR',-1.62*rd-.75*run,0,.55*rd);
+   set('pelvis',.045*rd+.10*run,sn*.035*run,0);
+   set('spine',.07*rd+.16*run,-sn*.07*run,0);
+   set('head',-.11*rd-.22*run,this.gaze*.52,0);
+   set('hipL',-.13*rd+sn*.78*run,0,.065*rd+.014);set('hipR',-.13*rd+sR*.78*run,0,-.065*rd-.014);
+   set('knL',.17*rd+.07+clamp(-cs,0,1)*1.15*run,0,0);set('knR',.17*rd+.07+clamp(cs,0,1)*1.15*run,0,0);
+   set('anL',-.10*rd-.05*run,0,-.03*rd);set('anR',-.10*rd-.05*run,0,.03*rd);
+   set('shL',-.22*rd-sn*.68*run,0,.34*rd+.08);set('shR',-.22*rd-sR*.68*run,0,-.34*rd-.08);
+   set('elL',-.72*rd-.75*run,0,-.55*rd);set('elR',-.72*rd-.75*run,0,.55*rd);
    set('haL',-.2,0,0);set('haR',-.2,0,0);
    const mix=(k,t,w)=>{const a=A[k];for(let i=0;i<3;i++)a[i]=lerp(a[i],t[i],w);};
    let ground=1;
@@ -1659,7 +1659,7 @@ const Rig=(()=>{
   placeFeet(dt,dx,dz,stride){
    const st=this.st,J=this.J,travel=Math.hypot(dx,dz),active=travel>.00015;
    const run=clamp(this.moveSpeed/8,0,1);
-   J.pelvis.p[1]=.79-.055*run;
+   J.pelvis.p[1]=.972-.11*run-(st.ready&&!st.serve?.025:0);
    this.root.update(null);
    if(!this.feet){
     this.feet={};
@@ -2029,7 +2029,7 @@ const Game=(()=>{
   function setPhase(ph){M.phase=ph;M.phaseT=0;}
   function startServe(){
    M.live=false;M.wall=false;M.bounces=0;M.rally=0;M.speed=1;M.serving=false;M.spin=0;M.dropFlag=false;M.superBall=0;
-   p.charge=0;p.armed=false;M.strike=null;M.turn=M.server;a.serveT=M.server==='a'?.95+RNG()*.5:0;
+   p.charge=0;p.armed=false;M.strike=null;M.serviceDrop=null;M.serviceHand=null;M.turn=M.server;a.serveT=M.server==='a'?.95+RNG()*.5:0;
    p.dive=0;a.dive=0;p.down=0;a.down=0;
    setPhase('serve');emit('serve',{who:M.server});
   }
@@ -2115,7 +2115,34 @@ const Game=(()=>{
    const r=RNG(),kind=serving?'flat':r<.12?'lob':r<.24?'drop':'flat';
    return beginStrike('a',kind,divePen,serving);
   }
-  function playerServe(){return beginStrike('p','flat',0,true);}
+  function releaseServe(who){
+   const o=who==='p'?p:a;
+   const hand=M.serviceHand||[o.x-.24,1.25,o.z-.26];
+   const height=Math.max(C.BR+.12,hand[1]),down=1.6;
+   const impact=Math.sqrt(down*down+2*K.G*(height-C.BR));
+   const floorTime=(impact-down)/K.G;
+   // The server drives the ball down; meet the rebound slightly before its apex.
+   const rebound=impact*.88,contactTime=floorTime+.79*rebound/K.G;
+   M.serviceDrop={who,t:0,height,down,floorTime,rebound,contactTime,bounced:false};
+   b.x=hand[0];b.y=height;b.z=hand[2];b.vx=b.vz=0;b.vy=-down;
+   p.armed=false;
+  }
+  function advanceServe(dt){
+   const d=M.serviceDrop;
+   d.t=Math.min(d.contactTime,d.t+dt);
+   const rise=d.t-d.floorTime;
+   if(rise<0){
+    b.y=d.height-d.down*d.t-.5*K.G*d.t*d.t;b.vy=-d.down-K.G*d.t;
+   }else{
+    if(!d.bounced){d.bounced=true;emit('bounce',{x:b.x,z:b.z,v:d.rebound/.88});}
+    b.y=C.BR+d.rebound*rise-.5*K.G*rise*rise;b.vy=d.rebound-K.G*rise;
+    const windup=.13;
+    if(d.t>=d.contactTime-windup){
+     if(!M.strike)beginStrike(d.who,'flat',0,true);
+     M.strike.t=d.t>=d.contactTime?windup:d.t-(d.contactTime-windup);
+    }
+   }
+  }
   function commitStrike(hand){
    const s=M.strike;
    if(!s||s.t<s.duration||!hand||!hand.every(Number.isFinite))return false;
@@ -2126,6 +2153,7 @@ const Game=(()=>{
    if(!s.serve&&M.lastContact.dist>.16){
     const o=s.who==='p'?p:a;o.retryAt=M.t+.18;M.strike=null;return false;
    }
+   if(s.serve){if(!M.serviceDrop?.bounced||b.vy<=0)return false;M.serviceDrop=null;}
    if(s.divePen)emit('popup',{k:'PLANTXA',c:'#7de8ff'});
    // At impact the pelota has exactly the position of the striking palm.
    b.x=clamp(hand[0],C.XL+.1,C.XR+C.PASS-.15);
@@ -2291,6 +2319,7 @@ const Game=(()=>{
    p.swing=Math.max(0,p.swing-dt*2.6);a.swing=Math.max(0,a.swing-dt*2.6);
    // Keep the pelota at its real pre-impact location during the short swing.
    // Footwork smoothly closes the distance so the arm can actually reach it.
+   if(M.serviceDrop){advanceServe(dt);return;}
    if(M.strike){
     const k=M.strike,o=k.who==='p'?p:a;k.t+=dt;
     if(k.divePen){
@@ -2326,12 +2355,12 @@ const Game=(()=>{
    if(M.phase==='serve'){
     if(M.server==='p'){
      b.x=p.x-.24;b.y=1.3;b.z=p.z-.26;b.vx=b.vy=b.vz=0;
-     if(p.armed&&!held&&M.phaseT>.25)playerServe();
+     if(p.armed&&!held&&M.phaseT>.25)releaseServe('p');
      aiMove(dt,X0+.45,14.0,false);
     }else{
      a.serveT-=dt;aiMove(dt,X0+.7,10.4,false);
      b.x=a.x-.24;b.y=1.3;b.z=a.z-.26;b.vx=b.vy=b.vz=0;
-     if(a.serveT<=0)aiHit();
+     if(a.serveT<=0)releaseServe('a');
     }
     faceBall(dt);M.mark.on=false;return;
    }
@@ -2920,24 +2949,25 @@ const UI=(()=>{
     if(M.attract)inp=Game.bot(M,botSt);
     else{inp=UI.read();}
     M.step(dt,inp);if(!M.attract)UI.consume();
-    if(M.attract&&M.phase==='serve'&&M.phaseT>3)M.startServe();
+    if(M.attract&&M.phase==='serve'&&M.phaseT>3&&!M.serviceDrop)M.startServe();
     if(M.over&&!M.attract&&!resultShown&&overT>3.2){resultShown=true;UI.result(M,rival.n);}
    }
    if(M){
     const p=M.p,a=M.a;
-    const b=M.b, cue=M.strike, contact=cue&&!cue.serve?[b.x,b.y,b.z]:null;
+    const b=M.b, cue=M.strike, contact=cue?[b.x,b.y,b.z]:null;
      const ballGaze=(o)=>{const towards=Math.atan2(b.x-o.x,b.z-o.z);
        return clamp(Math.atan2(Math.sin(towards-o.yaw),Math.cos(towards-o.yaw)),-1,1);};
-    me.update(paused?0:dt,{x:p.x,z:p.z,yaw:p.yaw,speed:p.spd,swing:p.swing,swKind:p.swKind,dive:p.dive,diveKind:p.diveKind,diveSide:p.diveSide,cel:p.cel,def:p.def,look:M.live?ballGaze(p):0,serve:(M.server==='p'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:p.armed,readyKind:p.kind,contactTarget:cue&&cue.who==='p'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
-    foe.update(paused?0:dt,{x:a.x,z:a.z,yaw:a.yaw,speed:a.spd,swing:a.swing,swKind:a.swKind,dive:a.dive,diveKind:a.diveKind,diveSide:a.diveSide,cel:a.cel,def:a.def,look:M.live?ballGaze(a):0,serve:(M.server==='a'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:M.live&&M.turn==='a'&&M.wall,readyKind:'flat',contactTarget:cue&&cue.who==='a'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
+    me.update(paused?0:dt,{x:p.x,z:p.z,yaw:p.yaw,speed:p.spd,swing:p.swing,swKind:p.swKind,dive:p.dive,diveKind:p.diveKind,diveSide:p.diveSide,cel:p.cel,def:p.def,look:M.live?ballGaze(p):0,serve:(!M.serviceDrop&&M.server==='p'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:p.armed,readyKind:p.kind,contactTarget:cue&&cue.who==='p'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
+    foe.update(paused?0:dt,{x:a.x,z:a.z,yaw:a.yaw,speed:a.spd,swing:a.swing,swKind:a.swKind,dive:a.dive,diveKind:a.diveKind,diveSide:a.diveSide,cel:a.cel,def:a.def,look:M.live?ballGaze(a):0,serve:(!M.serviceDrop&&M.server==='a'&&(M.phase==='serve'||M.phase==='intro'))?1:0,ready:M.live&&M.turn==='a'&&M.wall,readyKind:'flat',contactTarget:cue&&cue.who==='a'?contact:null,contactProgress:cue?cue.t/cue.duration:0});
     
     
     // Trigger the impulse only AFTER the rig has moved its hand into contact.
     // This also fixes serve release: the pelota departs from the real palm.
     if(cue&&!paused&&cue.t>=cue.duration)M.commitStrike(cue.who==='p'?me.handPos():foe.handPos());
-    const held=M.phase==='serve'||M.phase==='intro';
+    const held=(M.phase==='serve'&&!M.serviceDrop)||M.phase==='intro';
     // In serve/intro, render the ball at the animated palm. In live play physics owns it.
     const hand=held?(M.server==='p'?me.handPos():foe.handPos()):null;
+    if(hand)M.serviceHand=hand.slice();
     ballNode.p=hand||[b.x,b.y,b.z];
     if(M.live&&!paused){ballNode.r[0]+=dt*Math.hypot(b.vz,b.vy)*1.6;ballNode.r[2]-=dt*b.vx*1.6;if(Math.hypot(b.vx,b.vy,b.vz)>7)FX.trailPush(b.x,b.y,b.z,trailCol);}
     else if(!M.live)FX.trailClear();
