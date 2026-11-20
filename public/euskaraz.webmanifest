@@ -1,0 +1,11 @@
+{
+  "id": "/",
+  "name": "Euskaraz Games",
+  "short_name": "Euskaraz Games",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#090a0e",
+  "theme_color": "#090a0e",
+  "lang": "eu"
+}
